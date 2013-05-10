@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="WorldServer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="WorldServer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Objects" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Linker>
+			<Add library="mysql" />
+			<Add library="pthreadGC" />
+			<Add library="ws2_32" />
+		</Linker>
+		<Unit filename="..\Common\config.cpp" />
+		<Unit filename="..\Common\config.h" />
+		<Unit filename="..\Common\log.cpp" />
+		<Unit filename="..\Common\log.h" />
+		<Unit filename="..\Common\rosecrypt.cpp" />
+		<Unit filename="..\Common\rosecrypt.hpp" />
+		<Unit filename="..\Common\SocketBase.cpp" />
+		<Unit filename="..\Common\SocketClient.cpp" />
+		<Unit filename="..\Common\sockets.h" />
+		<Unit filename="..\Common\SocketServer.cpp" />
+		<Unit filename="..\World Server\chartype.h" />
+		<Unit filename="..\World Server\character.cpp" />
+		<Unit filename="..\World Server\character.h" />
+		<Unit filename="..\World Server\charevent.cpp" />
+		<Unit filename="..\World Server\charfunctions.cpp" />
+		<Unit filename="..\World Server\charstats.cpp" />
+		<Unit filename="..\World Server\mapfunctions.cpp" />
+		<Unit filename="..\World Server\worldmap.cpp" />
+		<Unit filename="..\World Server\worldmap.h" />
+		<Unit filename="..\World Server\battle.cpp" />
+		<Unit filename="..\World Server\WorldMonster.cpp" />
+		<Unit filename="..\World Server\WorldMonster.h" />
+		<Unit filename="..\World Server\Monster.cpp" />
+		<Unit filename="..\World Server\MonsterEvents.cpp" />
+		<Unit filename="..\World Server\monsterfunctions.cpp" />
+		<Unit filename="..\World Server\MonsterStats.cpp" />
+		<Unit filename="..\World Server\Buff.cpp" />
+		<Unit filename="..\World Server\player.cpp" />
+		<Unit filename="..\World Server\player.h" />
+		<Unit filename="..\World Server\playerdata.cpp" />
+		<Unit filename="..\World Server\playerfunctions.cpp" />
+		<Unit filename="..\World Server\playerstats.cpp" />
+		<Unit filename="..\World Server\WorldServer.h" />
+		<Unit filename="..\World Server\datatypes.h" />
+		<Unit filename="..\World Server\extrafunctions.cpp" />
+		<Unit filename="..\World Server\gmcmds.cpp" />
+		<Unit filename="..\World Server\main.cpp" />
+		<Unit filename="..\World Server\MainProcess.cpp" />
+		<Unit filename="..\World Server\Party.cpp" />
+		<Unit filename="..\World Server\party.h" />
+		<Unit filename="..\World Server\partyfunctions.cpp" />
+		<Unit filename="..\World Server\ServerFunctions.cpp" />
+		<Unit filename="..\World Server\startup.cpp" />
+		<Unit filename="..\World Server\worldpackets.cpp" />
+		<Unit filename="..\World Server\Worldprocess.cpp" />
+		<Unit filename="..\World Server\worldserver.cpp" />
+		<Unit filename="..\World Server\clan.cpp" />
+		<Unit filename="..\Common\database\database.h" />
+		<Unit filename="..\Common\database\database.cpp" />
+		<Unit filename="..\World Server\stbhandler.cpp" />
+		<Unit filename="..\World Server\stbhandler.h" />
+		<Unit filename="..\World Server\strhashing.cpp" />
+		<Unit filename="..\World Server\strhashing.h" />
+		<Unit filename="..\World Server\itemdata.cpp" />
+		<Unit filename="..\Common\globals.cpp" />
+		<Unit filename="..\World Server\quest\CIntStb.hpp" />
+		<Unit filename="..\World Server\quest\CRoseArray.hpp" />
+		<Unit filename="..\World Server\quest\CRoseFile.hpp" />
+		<Unit filename="..\World Server\quest\CStrStb.hpp" />
+		<Unit filename="..\World Server\quest\QuestActions.cpp" />
+		<Unit filename="..\World Server\quest\QuestActions.h" />
+		<Unit filename="..\World Server\quest\QuestConditions.cpp" />
+		<Unit filename="..\World Server\quest\QuestConditions.h" />
+		<Unit filename="..\World Server\quest\Quests.cpp" />
+		<Unit filename="..\World Server\quest\QuestTrigger.h" />
+		<Unit filename="..\World Server\playerquest.cpp" />
+		<Unit filename="..\World Server\aip\Aip.cpp" />
+		<Unit filename="..\World Server\aip\Aip.h" />
+		<Unit filename="..\World Server\aip\AiActions.cpp" />
+		<Unit filename="..\World Server\aip\AiActions.h" />
+		<Unit filename="..\World Server\aip\AiConditions.cpp" />
+		<Unit filename="..\World Server\aip\AiConditions.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
