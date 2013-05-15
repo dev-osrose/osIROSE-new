@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="CharServer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="CharServer" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Linker>
+					<Add option="-lpthreadGC2" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory='&quot;C:\Program Files (x86)\CodeBlocks\plugins\include&quot;' />
+		</Compiler>
+		<Linker>
+			<Add library="mysql" />
+			<Add library="pthreadgc" />
+			<Add library="ws2_32" />
+			<Add directory='&quot;C:\Program Files (x86)\CodeBlocks\plugins\lib&quot;' />
+		</Linker>
+		<Unit filename="..\Char Server\charclient.cpp" />
+		<Unit filename="..\Char Server\charpackets.cpp" />
+		<Unit filename="..\Char Server\charserver.cpp" />
+		<Unit filename="..\Char Server\charserver.h" />
+		<Unit filename="..\Char Server\clan.cpp" />
+		<Unit filename="..\Char Server\community.cpp" />
+		<Unit filename="..\Char Server\datatypes.h" />
+		<Unit filename="..\Char Server\extrafunctions.cpp" />
+		<Unit filename="..\Char Server\main.cpp" />
+		<Unit filename="..\Common\SocketBase.cpp" />
+		<Unit filename="..\Common\SocketClient.cpp" />
+		<Unit filename="..\Common\SocketServer.cpp" />
+		<Unit filename="..\Common\config.cpp" />
+		<Unit filename="..\Common\config.h" />
+		<Unit filename="..\Common\database\database.cpp" />
+		<Unit filename="..\Common\database\database.h" />
+		<Unit filename="..\Common\globals.cpp" />
+		<Unit filename="..\Common\log.cpp" />
+		<Unit filename="..\Common\log.h" />
+		<Unit filename="..\Common\rosecrypt.cpp" />
+		<Unit filename="..\Common\rosecrypt.hpp" />
+		<Unit filename="..\Common\sockets.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
