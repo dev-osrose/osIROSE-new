@@ -3685,10 +3685,14 @@ bool CWorldServer::pakRepairHammer( CPlayer* thisclient, CPacket* P )
 }
 // Repair npc
 bool CWorldServer::pakRepairItem( CPlayer* thisclient, CPacket* P )
+// FJMK May 2013: fixed the function, it now needs zulie.
+// Cost are calculated in function Repairprice, located in Extrafunctions.cpp
 {
     BYTE action = GETBYTE((*P),0);
     switch (action)
     {
+    case 16:    // The weapon dude in zant (found by FransK)
+    case 108:   // The weapon dude in zant (found by FransK)
     case 39:
     case 97:
     case 18:
@@ -3704,10 +3708,25 @@ bool CWorldServer::pakRepairItem( CPlayer* thisclient, CPacket* P )
         BYTE slot = GETBYTE((*P),2);
         if (!CheckInventorySlot( thisclient, slot)) return false;
         if (thisclient->items[slot].count<1) return true;
-        //Log( MSG_INFO,"Item socketed?: %i", thisclient->items[slot].socketed);
-        thisclient->items[slot].lifespan = 100;
-        //Log( MSG_INFO,"Item socketed?: %i", thisclient->items[slot].socketed);
-        //Still TODO: find where prices of storage and repair are and add it to the code.
+
+        CItem thisitem=thisclient->items[slot];
+        LONG bprice = EquipList[thisitem.itemtype].Index[thisitem.itemnum]->price;
+        // Get the repair cost.
+
+        LONG bcost=Repairprice(bprice,thisitem.durability,thisitem.lifespan);
+
+        if (thisclient->CharInfo->Zulies >= bcost){
+            // Client has enough zulies
+            // Take money and repair.
+            thisclient->CharInfo->Zulies -=bcost;
+            thisclient->items[slot].lifespan=100;
+            SendSysMsg( thisclient, "The item has been repaired." );
+        } else {
+            SendSysMsg( thisclient, "You don't have enough zuly to repair this item." );
+            return true;
+        }
+
+        // Send Packet to client.
         BEGINPACKET( pak, 0x7cd );
         ADDQWORD   ( pak, thisclient->CharInfo->Zulies );
         ADDBYTE    ( pak, 0x01 );
