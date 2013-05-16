@@ -1065,3 +1065,41 @@ UINT CWorldServer::GetFairyRange( UINT part )
 	if (part == 0) return Range1[GServer->FairyList.size()];
 	if (part == 1) return Range2[GServer->FairyList.size()];
 }
+
+LONG CWorldServer::Repairprice(UINT price, UINT durability, UINT lifespan){
+  /* ---------------------------------------------------------------------------------------------
+     Function RepairPrice()
+	 Rev: 1.0, May 2013
+
+	 This is the amount of zuly you will pay to repair any item at the NPC.
+	 Formula is reverse-engineered by Frans K, Converted to C++ from VB.net
+	-------------------------------------------------------------------------------------------------*/
+	double iDivisor        = 400;		// Constant, needed to get the pricefactor
+	double BaseFactor      = 0;			// Needed to compute the Increment and Start Offset.
+	double PriceFactor     = 0;			// Needed to rebuild the price to a constant factor
+	double PriceMultiplier = -1;			// Needed to compute the Multiplier Rate
+	double Incrementer     = 0;			// Incrementer, this is the repair price per percent loss of lifespan.
+	double retval          = 0;			// The value to be returned
+
+
+	// Get The Pricefactor and Multiplier
+	PriceFactor = double(price / iDivisor);		    // Needed for calculation of the BaseFactor
+	PriceMultiplier = double(price) * 0.001;		// Needed for calculation of the Multiplier
+	PriceMultiplier = 1 / PriceMultiplier;          // Final Touch. C++ seems to have some trouble with math.
+
+	// Get the Base Factor. these numbers are needed to get the increment and startoffset.
+	BaseFactor = (durability+10) * PriceFactor;
+	BaseFactor = BaseFactor/100;
+
+	// Get the Incrementer.
+	//Incrementer = (double(PriceMultiplier) * double(BaseFactor)) + double(BaseFactor);
+	Incrementer = PriceMultiplier  * BaseFactor;
+	Incrementer +=BaseFactor;
+	// Now we know enough to calculate the repair price.
+	// Start Amount = 10x Incrementer
+	// You pay for the amount the item needs to be repaired, so 100-Lifespan * Incrementer
+	retval = ((100-lifespan) * Incrementer) + (10 * Incrementer);
+
+	// Finally, round the number (just convert to long) and return it.
+	return long (retval);
+}
