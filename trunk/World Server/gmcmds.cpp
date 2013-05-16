@@ -311,6 +311,68 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
         SendPM(thisclient, line0 );
         return true;
     }
+ 
+    else if (strcmp(command, "go")==0) // Use SQL by Likol
+    {
+ 
+        if(Config.Command_Go > thisclient->Session->accesslevel)
+        {
+        DB->QFree( );
+        return true;
+        }
+        if ((tmp = strtok(NULL, " ")) == NULL) tmp = 0;
+        int loc = atoi(tmp);
+        int x = 0;
+        int y = 0;
+        int map = 0;
+        MYSQL_ROW row;
+        MYSQL_RES *result = NULL;
+        result = DB->QStore("SELECT lvlmin,map,locx,locy,mapname,lvlmax FROM list_golist WHERE isactive=1 AND loc=%i",loc);
+        row = mysql_fetch_row(result);
+        if (row==NULL)
+        {
+            SendPM(thisclient, "Please input a number after the go command, below is a list of places and their appropriate number");
+            DB->QFree( );
+            result = DB->QStore("SELECT loc,mapname FROM list_golist WHERE isactive=1");
+            while(row = mysql_fetch_row(result)) SendPM(thisclient, "%i = %s",atoi(row[0]),row[1]);
+            SendPM(thisclient, "Example; /go 1");
+            DB->QFree( );
+            return true;
+        }
+        else
+        {
+            if (thisclient->Stats->Level<atoi(row[0]))
+            {
+                SendPM(thisclient, "You need to be a least Level %i to visit %s!",atoi(row[0]),row[4]);
+                DB->QFree( );
+                return true;
+            }
+            if (thisclient->Stats->Level>atoi(row[5]))
+            {
+                SendPM(thisclient, "You need to be between Level %i and %i to visit %s !",atoi(row[0]),atoi(row[5]),row[4]);
+                DB->QFree( );
+                return true;
+            }
+            if ( thisclient->Stats->HP < (thisclient->Stats->MaxHP / 2) || thisclient->Stats->HP < 1 || thisclient->Session->inGame == false )
+            {
+                    SendPM(thisclient, "You need at least 50% HP in order to warp");
+                    DB->QFree( );
+                    return true;
+            }
+       fPoint coord;
+            int map = atoi(row[1]);
+            coord.x = atoi(row[2]);
+            coord.y = atoi(row[3]);
+            SendPM(thisclient, "teleport to map: %i",map);
+            MapList.Index[map]->TeleportPlayer( thisclient, coord, false );
+            Log( MSG_GMACTION, " %s : /go %i" , thisclient->CharInfo->charname, loc);
+            DB->QFree( );
+            return true;
+ 
+        }
+    }
+ 
+/*
     else if (strcmp(command, "go")==0) // AtCommandGo
     {
         if (Config.Command_Go > thisclient->Session->accesslevel)
@@ -405,6 +467,8 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
         }
         return true;
     }
+*/
+
     //******************************* START RESPAWN ***************************
     else if (strcmp(command, "SSPAWN")==0)
     {
