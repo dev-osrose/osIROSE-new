@@ -63,6 +63,7 @@
 #include <pthread.h>
 #include <vector>
 #include <csignal>
+#include "ePacketType.h"
 #include "log.h"
 #include "rosecrypt.hpp"
 #include "config.h"
@@ -114,59 +115,6 @@ using std::string;
 #define ENTITY_NPC 3
 
 // Structures
-// Packet information
-struct CPacket
-{
-    unsigned short	Size;            // Packet size
-    unsigned short	Command;         // Packet command
-    unsigned short	Unused;	         // unused
-    unsigned char	Buffer[0x400];	 // Packet data //0x600
-
-    CPacket( unsigned short mycommand=0, unsigned short mysize=6, unsigned short myunused=0 );
-    ~CPacket( );
-    void StartPacket( unsigned short mycommand, unsigned short mysize=6, unsigned short myunused=0 );
-    void AddByte( unsigned char value );
-    void AddWord( unsigned short value );
-    void AddDWord( unsigned value );
-    void AddQWord( unsigned long long value );
-    void AddFloat( float value );
-    void AddString( char* value );
-    void SetByte( unsigned short pos, unsigned char value );
-    void SetWord( unsigned short pos, unsigned short value );
-    void SetDWord( unsigned short pos, unsigned value );
-    void SetQWord( unsigned short pos, unsigned long long value );
-    void SetFloat( unsigned short pos, float value );
-    unsigned char GetByte( unsigned short pos );
-    unsigned short GetWord( unsigned short pos );
-    unsigned GetDWord( unsigned short pos );
-    unsigned long long GetQWord( unsigned short pos );
-    float GetFloat( unsigned short pos );
-    char* GetString( unsigned short pos );
-    // Functions added by Drakia
-    template <class T> void Add( T value )
-    {
-        *((T*)&Buffer[Size]) = value;
-        Size += sizeof(T);
-    }
-    void AddString( char* value, bool NullTerminate )
-    {
-        for (dword i = 0; i < strlen((const char*)value); i++)
-        {
-            Add<byte>(value[i]);
-        }
-        if (NullTerminate) Add<byte>(0);
-    }
-    template <class T> void AddString( char* value )
-    {
-        Add<T>(strlen((const char*)value));
-        AddString(value, false);
-    }
-    void AddBytes( byte* value, dword len )
-    {
-        for (dword i = 0; i < len; i++)
-            Add<byte>((byte)value[i]);
-    }
-};
 
 // SQL Configuration
 struct CROSEServerConfigSQL
@@ -333,7 +281,7 @@ public:
     SOCKET          sckISCII;
     bool			isActive;			// Is this socket connected?
     bool            isserver;
-    CCryptTable*	CryptTable;			// This is for decrypting incomming packets
+    CCryptTable*	CryptTable;			// This is for decrypting incoming packets
 #ifdef USE124
     char* csum;
     int csumlen;
