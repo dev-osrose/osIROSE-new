@@ -24,6 +24,7 @@
 #ifdef _WIN32
 
     #include <windows.h>
+		#include <winsock2.h>
     #define close closesocket
     #ifdef FD_SETSIZE
         #undef FD_SETSIZE
@@ -349,7 +350,6 @@ public:
     // Variables
     CROSEServerConfig	Config;	          // Hold server configuration
     int  maxfd;
-    MYSQL *mysql;
     virtual bool Ping( );       // Used to ping the mysql server
     vector<CClientSocket*>      ClientList;
     UINT                        ConnectedClients;
