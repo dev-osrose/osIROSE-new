@@ -35,6 +35,7 @@ bool CLoginServer::pakEncryptionRequest( CLoginClient* thisclient, CPacket* P )
     catch(...)
     {
         Log(MSG_ERROR, "pakEncryptionRequest");
+        return false;
     }
 }
 
@@ -43,13 +44,19 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 {
      try
      {
-    	if ( thisclient->isLoggedIn ) return false;
-    	MYSQL_ROW row;
+    	if ( thisclient->isLoggedIn )
+    		return false;
+
     	thisclient->username.assign( (const char*)&P->Buffer, 32, (P->Size-6-32)>16?16:P->Size-6-32 );
     	thisclient->password.assign( (const char*)&P->Buffer, 0, 32 );
-    	BEGINPACKET( pak, 0x708 );
+
+    	BEGINPACKET( pak, ePacketType::LSV_USER_LOGIN_REQ );
+
+    	MYSQL_ROW row;
     	MYSQL_RES *result = DB->QStore( "SELECT id,password,accesslevel,online FROM accounts WHERE username='%s'", thisclient->username.c_str() );
-    	if(result==NULL) return false;
+    	if(result == NULL)
+    		return false;
+
     	if( mysql_num_rows( result ) == 1 ) 
         {
     		row = mysql_fetch_row(result);
@@ -138,6 +145,7 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
     catch(...)
     {
         Log(MSG_ERROR, "Error in pakUserLogin");
+        return false;
     }
               
 }
@@ -175,6 +183,7 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
     catch(...)
     {
         Log(MSG_ERROR, "Error in pakGetServers");
+        return false;
     }
 }
 
@@ -220,6 +229,7 @@ bool CLoginServer::pakGetIP( CLoginClient* thisclient, CPacket* P )
     catch(...)
     {
         Log(MSG_ERROR, "Error in pakGetIP");
+        return false;
     }
 }
 
