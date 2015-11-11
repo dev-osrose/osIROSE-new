@@ -2,42 +2,42 @@
 
 CPacket::CPacket( unsigned short mycommand, unsigned short mysize, unsigned short myunused )
 {
-	Command = mycommand;
-	Size = mysize;
-	Unused = myunused;
+	Header.Command = mycommand;
+	Header.Size = mysize;
+	Header.Unused = myunused;
 }
 CPacket::~CPacket( ) { }
 ///*
 void CPacket::StartPacket( unsigned short mycommand, unsigned short mysize, unsigned short myunused )
 {
-	Command = mycommand;
-	Size = mysize;
-	Unused = myunused;
+	Header.Command = mycommand;
+	Header.Size = mysize;
+	Header.Unused = myunused;
 }
 void CPacket::AddByte( unsigned char value )
 {
-	Buffer[Size-6] = value;
-	Size += 1;
+	Buffer[Header.Size-6] = value;
+	Header.Size += 1;
 }
 void CPacket::AddWord( unsigned short value )
 {
-	*((unsigned short*)&Buffer[Size-6]) = value;
-	Size += 2;
+	*((unsigned short*)&Buffer[Header.Size-6]) = value;
+	Header.Size += 2;
 }
 void CPacket::AddDWord( unsigned value )
 {
-	*((unsigned*)&Buffer[Size-6]) = value;
-	Size += 4;
+	*((unsigned*)&Buffer[Header.Size-6]) = value;
+	Header.Size += 4;
 }
 void CPacket::AddQWord( unsigned long long value )
 {
-	*((unsigned long long*)&Buffer[Size-6]) = value;
-	Size += 8;
+	*((unsigned long long*)&Buffer[Header.Size-6]) = value;
+	Header.Size += 8;
 }
 void CPacket::AddFloat( float value )
 {
-	*((float*)&Buffer[Size-6]) = value;
-	Size += 4;
+	*((float*)&Buffer[Header.Size-6]) = value;
+	Header.Size += 4;
 }
 void CPacket::AddString( char* value )
 {

@@ -94,15 +94,15 @@ using std::vector;
 using std::map;
 using std::nothrow;
 using std::string;
-#define STARTPACKET(p,c,s) CPacket p; p.Command = c; p.Size = s;
+#define STARTPACKET(p,c,s) CPacket p; p.header.Command = c; p.header.Size = s;
 #define SETBYTE(p,o,v) p.Buffer[o]=v;
 #define SETWORD(p,o,v) *((unsigned short*)&p.Buffer[o])=v;
 #define SETDWORD(p,o,v) *((unsigned*)&p.Buffer[o])=v;
 #define SETQWORD(p,o,v) *((long long*)&p.Buffer[o])=v;
 #define SETFLOAT(p,o,v) *((float*)&p.Buffer[o])=v;
 
-#define BEGINPACKET(p,c) CPacket p; p.Command = c; p.Size = 6;
-#define RESETPACKET(p,c) p.Command = c; p.Size = 6;
+#define BEGINPACKET(p,c) CPacket p; p.header.Command = c; p.header.Size = 6;
+#define RESETPACKET(p,c) p.header.Command = c; p.header.Size = 6;
 #define ADDBYTE(p,v) { p.Buffer[p.Size-6]=v; p.Size+=1; }
 #define ADDWORD(p,v) { *((uint16_t*)&p.Buffer[p.Size-6])=v; p.Size+=2; }
 #define ADDDWORD(p,v) { *((unsigned*)&p.Buffer[p.Size-6])=v; p.Size+=4; }

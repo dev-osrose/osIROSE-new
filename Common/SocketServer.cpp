@@ -592,13 +592,13 @@ CServerSocket::OnClientDisconnect ( CClientSocket* thisclient )
 void
 CServerSocket::SendISCPacket ( CPacket* pak )
 {
-	send ( sckISC, (char*) pak, pak->Size, 0 );
+	send ( sckISC, (char*) pak, pak->Header.Size, 0 );
 }
 
 void
 CServerSocket::ReceivedISCPacket ( CPacket* pak )
 {
-	Log ( MSG_DEBUG, "GOT ISC PACKET (BASESERVER) - 0x%04x %04x", pak->Command, pak->Size );
+	Log ( MSG_DEBUG, "GOT ISC PACKET (BASESERVER) - 0x%04x %04x", pak->Header.Command, pak->Header.Size );
 }
 
 bool

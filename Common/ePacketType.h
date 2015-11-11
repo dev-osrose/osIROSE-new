@@ -31,51 +31,49 @@ enum ePacketType
 
 //TODO: Add structures for each type of packet so we don't have to use those nasty Add functions
 
-struct serverInfo
-{
-	uint16_t id;
-	uint8_t pad1;
-	uint16_t status;
-	//name as string
-};
-
-struct pakLSVServerReq
-{
-	uint32_t	lServerID;
-	uint8_t		bServerCount;
-	// serverInfo sServers[10]; // There is a better way to do this, just can't think of one ATM. -Raven
-};
-
 // Packet information
-struct CPacketHeader
+struct sPacketHeader
 {
 	uint16_t Size;		// Packet size
 	uint16_t Command;	// Packet command
 	uint16_t Unused;	// unused?
 };
 
-struct CPacketBody
+struct channelInfo
 {
-	union
-	{
-		unsigned char body[0];
-		//TODO: Add structs here
-		pakLSVServerReq s_pServerRequest; //TODO Change the naming convention later when we have more structures.
-	};
+	uint8_t ChannelID;
+	uint8_t pad1;
+	uint8_t pad2;
+	uint16_t Status;
+	uint32_t Right;
+	//Channel Name as string
+};
+
+struct pakChannel_List : public sPacketHeader
+{
+	uint32_t	lServerID;
+	uint8_t		bServerCount;
+	// channelInfo sServers[]; // There is a better way to do this, just can't think of one ATM. -Raven
 };
 
 struct CPacket
 {
-	unsigned short	Size;            // Packet size
-	unsigned short	Command;         // Packet command
-	unsigned short	Unused;	         // unused
-	unsigned char	Buffer[0x400];	 // Packet data //0x600
+	//unsigned short	Size;            // Packet size
+	//unsigned short	Command;         // Packet command
+	//unsigned short	Unused;	         // unused
+	//unsigned char		Buffer[0x7FF];	 // Packet data
 
-	//CPacketHeader header;
+	union
+	{
+		sPacketHeader	Header;
+		uint8_t Buffer[ 0x7FF ];
+
+		pakChannel_List pChannelList;
+	};
 
 	CPacket( unsigned short mycommand=0, unsigned short mysize=6, unsigned short myunused=0 );
 	~CPacket( );
-	///*
+
 	void StartPacket( unsigned short mycommand, unsigned short mysize=6, unsigned short myunused=0 );
 	void AddByte( unsigned char value );
 	void AddWord( unsigned short value );
@@ -99,8 +97,8 @@ struct CPacket
 	// Functions added by Drakia
 	template <class T> void Add( T value )
 	{
-		*((T*)&Buffer[Size]) = value;
-		Size += sizeof(T);
+		*((T*)&Buffer[Header.Size]) = value;
+		Header.Size += sizeof(T);
 	}
 	void AddString( char* value, bool NullTerminate )
 	{

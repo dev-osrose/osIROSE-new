@@ -35,11 +35,11 @@ int CDatabase::Connect( )
 		con->setSchema(Database);
 		stmt.reset( con->createStatement() );
 
-		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
+		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout") );
 
-		while( res->next() )
+		if( res->next() )
 		{
-			Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
+			Timeout = res->getInt(0) - 60; // Set the timeout to 1 minute before the connection will timeout
 		}
 	}
 	catch (sql::SQLException &err)
@@ -118,12 +118,8 @@ std::unique_ptr<sql::ResultSet> CDatabase::QStore( char *Format, ...)
 		if( res->next() == false )
 		{
 			Log( MSG_FATALERROR, "Could not execute query" );
-			if(Reconnect( ) == -1)
-			{
-				Log( MSG_FATALERROR, "Could not execute query" );
-				SQLMutex.unlock();
-				return nullptr;
-			}
+			SQLMutex.unlock();
+			return nullptr;
 		}
 	}
 	catch (sql::SQLException &err)

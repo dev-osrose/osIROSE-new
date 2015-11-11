@@ -44,7 +44,7 @@ bool CClientSocket::ReceiveData ()
 	// Calculate bytes to read to get the full packet
 	BytesToRead = PacketSize - PacketOffset;
 	// This should never happen, but it is integrated:
-	if ( BytesToRead > 0x400 - PacketOffset )
+	if ( BytesToRead > 0x7FF - PacketOffset )
 		return false;
 	if ( BytesToRead == 0 )
 		return false;
@@ -68,7 +68,7 @@ bool CClientSocket::ReceiveData ()
 		PacketSize = DecryptBufferHeader ( &CryptStatus, CryptTable, Buffer );
 #else
 		CPacket* header = (CPacket*)&Buffer;
-		PacketSize = header->Size;
+		PacketSize = header->Header.Size;
 #endif
 
 		// Did we receive an incorrect buffer?
@@ -98,8 +98,8 @@ bool CClientSocket::ReceiveData ()
 	FILE *fh = fopen ( "log/receivedpackets.log", "a+" );
 	if ( fh != NULL )
 	{
-		fprintf ( fh, "(SID:%08u) IN  %04x: ", sock, pak->Command );
-		for ( int i = 0; i < pak->Size - 6; ++i )
+		fprintf ( fh, "(SID:%08u) IN  %04x: ", sock, pak->Header.Command );
+		for ( int i = 0; i < pak->Header.Size - 6; ++i )
 			fprintf ( fh, "%02x ", (unsigned char) pak->Buffer[i] );
 		fprintf ( fh, "\n" );
 		fclose ( fh );
@@ -127,7 +127,7 @@ void CClientSocket::SendPacket ( CPacket *P )
 	//             THE SENDTOALL FUNCTIONS
 
 	unsigned char* Buffer = (unsigned char*) P;
-	unsigned Size = P->Size;
+	unsigned Size = P->Header.Size;
 #ifndef USE124
 	EncryptBuffer ( CryptTable, Buffer );
 #endif
