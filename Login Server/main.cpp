@@ -37,6 +37,9 @@ main ( int argc, char *argv[] )
 
 	CLoginServer *server = new ( nothrow ) CLoginServer ( fileconf );
 
+	if (server == nullptr)
+		return -1;
+
 	server->DB = new CDatabase ( server->Config.SQLServer.pcServer,
 															 server->Config.SQLServer.pcUserName,
 															 server->Config.SQLServer.pcPassword,
