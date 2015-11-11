@@ -1,4 +1,14 @@
 eclipse.preferences.version=1
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.433140607/BOOSTLIB/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.433140607/BOOSTLIB/operation=append
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.433140607/BOOSTLIB/value=C\:\\boost_1_59_0
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.433140607/append=true
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.debug.433140607/appendContributed=true
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.release.869226972/BOOSTLIB/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.release.869226972/BOOSTLIB/operation=append
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.release.869226972/BOOSTLIB/value=C\:\\boost_1_59_0
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.release.869226972/append=true
+environment/project/cdt.managedbuild.config.gnu.cygwin.exe.release.869226972/appendContributed=true
 org.eclipse.cdt.core.formatter.alignment_for_arguments_in_method_invocation=18
 org.eclipse.cdt.core.formatter.alignment_for_assignment=16
 org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=80
