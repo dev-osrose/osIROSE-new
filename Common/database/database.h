@@ -2,10 +2,17 @@
 #define _ROSE_DATABASE_
 #include "../sockets.h"
 
+#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+
 class CDatabase
 {
     public:
-        CDatabase( char* , char*, char*, char*, unsigned int, MYSQL* );
+        CDatabase( char* , char*, char*, char*, unsigned int );
         ~CDatabase( );
 
         char* Server;
@@ -15,19 +22,25 @@ class CDatabase
         unsigned int Port;
         unsigned int Timeout;
         time_t LastPing;
+
         int Connect( );
         int Reconnect( );
         void Disconnect( );
         bool QExecute( char *format,... );
-        MYSQL_RES* QUse( char *format,... );
-        MYSQL_RES* QStore( char *format,... );                
+        std::unique_ptr<sql::ResultSet> QUse( char *format,... );
+        std::unique_ptr<sql::ResultSet> QStore( char *format,... );
         bool DoSQL(char *Format, ...);
         void QFree( );
         bool Ping( );
         
-        MYSQL* Mysql;
-        MYSQL_RES* result;
-        pthread_mutex_t SQLMutex;
+        sql::Driver* driver;
+        std::unique_ptr<sql::Connection> con;
+        std::unique_ptr<sql::Statement> stmt;
+        std::mutex SQLMutex;
+
+        //MYSQL* Mysql;
+        //MYSQL_RES* result;
+        //pthread_mutex_t SQLMutex;
 };
 
 #endif

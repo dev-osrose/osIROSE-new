@@ -25,13 +25,12 @@
 
     #include <windows.h>
 		#include <winsock2.h>
-    #define close closesocket
+    //#define close closesocket
     #ifdef FD_SETSIZE
         #undef FD_SETSIZE
     #endif
     #define FD_SETSIZE	1024
 #else
-    #include <winsock2.h>
     #include <unistd.h>
     #include <netinet/in.h>
     #include <sys/socket.h>
@@ -45,44 +44,39 @@
     #define SOCKET_ERROR -1
     #define PVOID void *
     #define ioctlsocket ioctl
-    #define SOCKADDR struct sockaddr
+    #define SOCKADDR sockaddr
     #define closesocket close
 #endif
-#include <mysql/mysql.h>
+//#include <mysql/mysql.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cstdio>
+#include <csignal>
+
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdio>
+#include <string.h>
 #include <exception>
 #include <time.h>
 #include <assert.h>
 #include <math.h>
 #include <cmath>
 #include <map>
-#include <pthread.h>
-#include <vector>
-#include <csignal>
+
+//C++11
+#include <chrono>
+#include <thread>
+#include <mutex>
+//-----
+
 #include "ePacketType.h"
 #include "log.h"
 #include "rosecrypt.hpp"
 #include "config.h"
 #include "database/database.h"
 // Just some defs for easier use
-typedef char SBYTE;
-typedef unsigned char BYTE;
-typedef short SWORD;
-typedef unsigned short WORD;
-typedef long SDWORD;
-typedef unsigned long DWORD;
-typedef long long SQWORD;
-typedef unsigned long long QWORD;
-typedef unsigned __int8			byte;
-typedef unsigned __int16		word;
-typedef unsigned __int32		dword;
-typedef unsigned __int64		qword;
-typedef char*					strings;
+
 using std::cout;
 using std::endl;
 using std::system;
@@ -110,7 +104,7 @@ using std::string;
 #define GETDWORD(p,o) *((DWORD*)&p.Buffer[o])
 #define GETQWORD(p,o) *((QWORD*)&p.Buffer[o])
 #define GETFLOAT(p,o) *((float*)&p.Buffer[o])
-#define pi 3.1415926535897932384626433832795
+//#define pi 3.14159265358979323846
 #define r2d pi/180
 #define ZONE_SIZE 6400
 #define ENTITY_NPC 3
@@ -138,10 +132,10 @@ struct CROSEServerConfig
     unsigned	UserPerThread;	          // User per thread
     bool		AllowMultipleConnections; // Allow multiple connection from same ip?
     bool		StayInServerLoop;         // Server actived?
-    UINT        ServerID;                 //id from this server
-    UINT        ParentID;                 //id from the server to connect
+    uint32_t        ServerID;                 //id from this server
+    uint32_t        ParentID;                 //id from the server to connect
     char*       ServerName;               //Server name
-    UINT        ServerType;               //0 login - 1 server(char) - 2 channel(world)
+    uint32_t        ServerType;               //0 login - 1 server(char) - 2 channel(world)
 
     // LOGINSERVER
     unsigned int MinimumAccessLevel; // Minimum access level
@@ -163,16 +157,16 @@ struct CROSEServerConfig
     unsigned int WorldPort;
     unsigned int WorldsPort;
     unsigned int WorldPass;
-    UINT EXP_RATE;
-    UINT DROP_RATE;
-    UINT ZULY_RATE;
-    UINT AUTOSAVE;
-    UINT SAVETIME;
-    UINT MapDelay;
-    UINT VisualDelay;
-    UINT WorldDelay;
+    uint32_t EXP_RATE;
+    uint32_t DROP_RATE;
+    uint32_t ZULY_RATE;
+    uint32_t AUTOSAVE;
+    uint32_t SAVETIME;
+    uint32_t MapDelay;
+    uint32_t VisualDelay;
+    uint32_t WorldDelay;
     char* WELCOME_MSG;
-    UINT DROP_TYPE;
+    uint32_t DROP_TYPE;
     int MaxStat;
     int Partygap;
     int FairyMode;
@@ -277,12 +271,12 @@ public:
     CBaseSocket( );						// Constructor
     virtual ~CBaseSocket( );			// Destructor
     void	CloseSocket( void );		// Close Socket
-    SOCKET			sock;				// This is our socket
+    SOCKET					sock;				// This is our socket
     SOCKET          sckISC;             // Raven0123
     SOCKET          sckISCII;
-    bool			isActive;			// Is this socket connected?
+    bool						isActive;			// Is this socket connected?
     bool            isserver;
-    CCryptTable*	CryptTable;			// This is for decrypting incoming packets
+    CCryptTable*		CryptTable;			// This is for decrypting incoming packets
 #ifdef USE124
     char* csum;
     int csumlen;
@@ -352,10 +346,10 @@ public:
     int  maxfd;
     virtual bool Ping( );       // Used to ping the mysql server
     vector<CClientSocket*>      ClientList;
-    UINT                        ConnectedClients;
-    unsigned short				port;
-    struct sockaddr_in ain;
-    struct sockaddr_in sain;
+    uint32_t										ConnectedClients;
+    unsigned short							port;
+    struct sockaddr_in 					ain;
+    struct sockaddr_in 					sain;
 
     pthread_t                   threads[65535];
 

@@ -7,12 +7,23 @@
 
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
+/*
+typedef unsigned __int8			byte;
+typedef unsigned __int16		word;
+typedef unsigned __int32		dword;
+typedef unsigned __int64		qword;
+typedef char*					strings;*/
 
 enum ePacketType
 {
-	START_OFFSET = 0x700,
-	LSV_ENCRYPT_REQ = 0x703,
-	LSV_SERVER_REQ = 0x704,
+	PAKSTART = 0x700,
+	PAKCS_ALIVE = PAKSTART,
+	PAKSS_ERROR = PAKCS_ALIVE,
+	PAKSS_ANNOUNCE_TEXT,
+	PAKSW_ANNOUNCE_CHAT,
+	PAKCL_ACCEPT_REQ = 0x703,
+	PAKSL_CHANNEL_LIST_REPLY = 0x704,
+
 	LSV_LOGIN_REQ = 0x708,
 	LSV_SRV_SELECT_REQ = 0x70a,
 	EPACKETMAX
@@ -64,6 +75,7 @@ struct CPacket
 
 	CPacket( unsigned short mycommand=0, unsigned short mysize=6, unsigned short myunused=0 );
 	~CPacket( );
+	/*
 	void StartPacket( unsigned short mycommand, unsigned short mysize=6, unsigned short myunused=0 );
 	void AddByte( unsigned char value );
 	void AddWord( unsigned short value );
@@ -106,6 +118,7 @@ struct CPacket
 		for (dword i = 0; i < len; i++)
 			Add<byte>((byte)value[i]);
 	}
+	*/
 };
 
 #endif /* EPACKETTYPE_H_ */

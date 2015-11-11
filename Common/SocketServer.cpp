@@ -22,7 +22,7 @@
 
 // Constructor
 CServerSocket::CServerSocket () :
-port ( 0 ), maxfd ( 0 )
+maxfd ( 0 ), port ( 0 )
 {
 #ifdef USE124
 	csum = new char [0x200];
@@ -86,8 +86,7 @@ CServerSocket::StartServer ()
 		sckISC = socket ( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISC == INVALID_SOCKET )
 		{
-			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)",
-						WSAGetLastError () );
+			//Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
 			return false;
 		}
 		int optval = 1;
@@ -126,8 +125,7 @@ CServerSocket::StartServer ()
 		sckISC = socket ( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISC == INVALID_SOCKET )
 		{
-			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)",
-						WSAGetLastError () );
+			//Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
 			return false;
 		}
 		ain.sin_family = AF_INET;
@@ -136,8 +134,7 @@ CServerSocket::StartServer ()
 		if ( connect ( sckISC, (const sockaddr*) &ain,
 									 sizeof( ain ) ) == SOCKET_ERROR )
 		{
-			Log ( MSG_ERROR, "Could not connect to ISC (WSK2 ERROR: %i)",
-						WSAGetLastError () );
+			//Log ( MSG_ERROR, "Could not connect to ISC (WSK2 ERROR: %i)", WSAGetLastError () );
 			closesocket ( sckISC );
 			sckISC = INVALID_SOCKET;
 			return false;
@@ -146,8 +143,7 @@ CServerSocket::StartServer ()
 		sckISCII = socket ( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISCII == INVALID_SOCKET )
 		{
-			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)",
-						WSAGetLastError () );
+			//Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
 			return false;
 		}
 		int optval = 1;
@@ -180,12 +176,10 @@ CServerSocket::StartServer ()
 	}
 	if ( LOG_THISSERVER == LOG_LOGIN_SERVER )
 	{
-		struct sockaddr_in ain;
 		sckISC = socket ( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISC == INVALID_SOCKET )
 		{
-			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)",
-						WSAGetLastError () );
+			//Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
 			return false;
 		}
 	}
@@ -225,9 +219,9 @@ bool
 CClientSocket::ISCThread ()
 {
 	unsigned char buffer[0x400];
-	unsigned recvd = 0;
-	unsigned bufsize = 0;
-	unsigned readlen = 6;
+	int recvd = 0;
+	uint32_t bufsize = 0;
+	uint32_t readlen = 6;
 	bool go = true;
 
 	do
@@ -397,7 +391,7 @@ CServerSocket::ServerLoop ()
 void
 CServerSocket::FillFDS ( fd_set* fds )
 {
-	for ( UINT i = 0; i < ClientList.size (); i++ )
+	for ( uint32_t i = 0; i < ClientList.size (); i++ )
 	{
 		CClientSocket* client = ClientList.at ( i );
 		if ( client->isActive )
@@ -417,7 +411,7 @@ CServerSocket::FillFDS ( fd_set* fds )
 void
 CServerSocket::HandleClients ( fd_set* fds )
 {
-	for ( UINT i = 0; i < ClientList.size (); i++ )
+	for ( uint32_t i = 0; i < ClientList.size (); i++ )
 	{
 		CClientSocket* client = ClientList.at ( i );
 
@@ -478,7 +472,7 @@ CServerSocket::AddUser ( SOCKET sock, sockaddr_in* ClientInfo, bool server )
 	}
 	thisclient->ClientIP = "";
 	thisclient->ClientIP = inet_ntoa ( ClientInfo->sin_addr );
-	char *tmp;
+
 	memset ( &thisclient->ClientSubNet, '\0', 12 );
 	sprintf ( thisclient->ClientSubNet, "%i.%i.%i",
 						( ClientInfo->sin_addr.s_addr ) & 0xFF,
@@ -514,7 +508,7 @@ CServerSocket::DisconnectClient ( CClientSocket* thisclient )
 	closesocket ( thisclient->sock );
 	thisclient->isActive = false;
 	thisclient->sock = INVALID_SOCKET;
-	for ( UINT i = 0; i < ClientList.size (); i++ )
+	for ( uint32_t i = 0; i < ClientList.size (); i++ )
 	{
 		CClientSocket* client = ClientList.at ( i );
 		if ( client == thisclient )
@@ -604,8 +598,7 @@ CServerSocket::SendISCPacket ( CPacket* pak )
 void
 CServerSocket::ReceivedISCPacket ( CPacket* pak )
 {
-	Log ( MSG_DEBUG, "GOT ISC PACKET (BASESERVER) - 0x%04x %04x", pak->Command,
-				pak->Size );
+	Log ( MSG_DEBUG, "GOT ISC PACKET (BASESERVER) - 0x%04x %04x", pak->Command, pak->Size );
 }
 
 bool

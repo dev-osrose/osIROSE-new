@@ -4,6 +4,7 @@
     #include <cstdio>
 #endif
 #include <cstdio>
+#include <cstdarg>
 #include "log.h"
 
 // Basic colors
@@ -28,8 +29,10 @@ typedef enum
 } COLORS;
 
 // Our base colors
+#ifdef _WIN32
 static int __BACKGROUND = BLACK;
 static int __FOREGROUND = LIGHTGRAY;
+#endif
 
 // Change console text color
 void textcolor(int color)
@@ -48,7 +51,8 @@ void Log( enum msg_type flag, char *Format, ... )
 	va_list ap;	      // For arguments
 	va_start( ap, Format );
 
-	switch (flag) {
+	switch (flag)
+	{
 		case MSG_NONE: // direct printf replacement
 			textcolor(WHITE);
 			vprintf( Format, ap );
@@ -97,14 +101,16 @@ void Log( enum msg_type flag, char *Format, ... )
 			textcolor(MAGENTA);
 			printf("[GM ACTION]: ");
 			break;	   
-        case MSG_START:
-            textcolor(MAGENTA);
-            vprintf( Format, ap );
-            printf( "\r\n" );
-            break;                    								
+		case MSG_START:
+			textcolor(MAGENTA);
+			vprintf( Format, ap );
+			printf( "\r\n" );
+			break;
+		default:
+			break;
 	}
 	textcolor(LIGHTGRAY);
-	if(flag!=MSG_QUERY)
+	if(flag != MSG_QUERY)
 	{
     	vprintf( Format, ap );
     	printf( (flag==MSG_LOAD) ? "\r" : "\n" );

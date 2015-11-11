@@ -21,7 +21,7 @@
 #include "sockets.h"
 
 // Constructor
-CBaseSocket::CBaseSocket( ) : sckISC(NULL), sckISCII(NULL), CryptTable(NULL), isserver(false)
+CBaseSocket::CBaseSocket( ) : sckISC(INVALID_SOCKET), sckISCII(INVALID_SOCKET), isserver(false), CryptTable(nullptr)
 {
 	sock = INVALID_SOCKET;
 	isActive = false;

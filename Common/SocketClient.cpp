@@ -23,7 +23,7 @@
 
 // Constructor
 CClientSocket::CClientSocket () :
-		player ( NULL ), GS ( NULL )
+		GS ( nullptr ), player ( nullptr )
 {
 	PacketSize = 6;		// Starting size
 	PacketOffset = 0;		// No bytes read, yet.
@@ -142,7 +142,7 @@ void CClientSocket::SendPacketCpy ( CPacket *P )
 {
 	CPacket NewPacket;
 
-	memcpy ( &NewPacket, P, sizeof(CPacket) );
+	memcpy( &NewPacket, P, sizeof(CPacket) );
 	SendPacket ( &NewPacket );
 }
 
