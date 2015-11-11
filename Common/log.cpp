@@ -115,27 +115,27 @@ void Log( enum msg_type flag, char *Format, ... )
 		vprintf( Format, ap );
 		printf( (flag==MSG_LOAD) ? "\r" : "\n" );
 	}
-	FILE *fh;
+	FILE *fh = nullptr;
 	switch(LOG_THISSERVER)
 	{
 		case LOG_LOGIN_SERVER:
-			fh = fopen(LOG_DIRECTORY LOG_FILENAME_LOGINFILE, "a+" );
+			fopen_s(&fh, LOG_DIRECTORY LOG_FILENAME_LOGINFILE, "a+" );
 			break;
 		case LOG_CHARACTER_SERVER:
-			fh = fopen(LOG_DIRECTORY LOG_FILENAME_CHARFILE, "a+" );
+			fopen_s(&fh, LOG_DIRECTORY LOG_FILENAME_CHARFILE, "a+");
 			break;
 		case LOG_WORLD_SERVER:
-			fh = fopen(LOG_DIRECTORY LOG_FILENAME_WORLDFILE, "a+" );
+			fopen_s(&fh, LOG_DIRECTORY LOG_FILENAME_WORLDFILE, "a+");
 			break;
 		case LOG_SAME_FILE:
-			fh = fopen(LOG_DIRECTORY LOG_DEFAULT_FILE, "a+" );
+			fopen_s(&fh, LOG_DIRECTORY LOG_DEFAULT_FILE, "a+");
 			break;
 	}
 	if(flag==MSG_QUERY)
 	{
 		if(fh != NULL)
 			fclose(fh);
-		fh = fopen(LOG_DIRECTORY "queries.txt", "a+" );
+		fopen_s(&fh, LOG_DIRECTORY "queries.txt", "a+");
 	}
 	if ( fh != NULL ) 
 	{

@@ -117,7 +117,7 @@ void CLoginServer::LoadConfigurations( char* file )
 bool CLoginServer::OnReceivePacket( CClientSocket* thisclient, CPacket *P )
 {
 	//TODO:: Change these magic numbers into an enum so we what wtf is going on -Raven
-	switch( P->Command )
+	switch( P->Header.Command )
 	{
 	case 0x703: return pakEncryptionRequest( (CLoginClient*)thisclient, P );
 	case 0x708: return pakUserLogin        ( (CLoginClient*)thisclient, P );
@@ -125,7 +125,7 @@ bool CLoginServer::OnReceivePacket( CClientSocket* thisclient, CPacket *P )
 	case 0x70a: return pakGetIP            ( (CLoginClient*)thisclient, P );
 	case 0x808: return true;
 	default:
-		Log( MSG_WARNING, "[%i]Login Server Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Command, P->Size );
+		Log(MSG_WARNING, "[%i]Login Server Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Header.Command, P->Header.Size);
 		break;
 	}
 	return true;

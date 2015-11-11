@@ -95,7 +95,8 @@ bool CClientSocket::ReceiveData ()
 #endif
 	CPacket* pak = (CPacket*) &Buffer;
 
-	FILE *fh = fopen ( "log/receivedpackets.log", "a+" );
+	FILE *fh = nullptr;
+	fopen_s(&fh, "log/receivedpackets.log", "a+");
 	if ( fh != NULL )
 	{
 		fprintf ( fh, "(SID:%08u) IN  %04x: ", sock, pak->Header.Command );
@@ -147,40 +148,38 @@ void CClientSocket::SendPacketCpy ( CPacket *P )
 }
 
 // Handle client socket (threads)
-PVOID ClientMainThread ( PVOID ClientSocket )
+PVOID CClientSocket::ClientMainThread()
 {
-	CClientSocket* thisplayer = (CClientSocket*) ClientSocket;
 	fd_set fds;
-	while ( thisplayer->isActive )
+	while (this->isActive)
 	{
 		FD_ZERO( &fds );
-		FD_SET( thisplayer->sock, &fds );
-		int Select = select ( (thisplayer->sock + 1), &fds, nullptr, nullptr, nullptr );
+		FD_SET(this->sock, &fds);
+		int Select = select((this->sock + 1), &fds, nullptr, nullptr, nullptr);
 
 		if ( Select == SOCKET_ERROR )
 		{
 			Log ( MSG_ERROR, NULL, "Error in Select" );
-			thisplayer->isActive = false;
+			this->isActive = false;
 		}
 		else
 		{
-			if ( FD_ISSET( thisplayer->sock, &fds ) )
+			if (FD_ISSET(this->sock, &fds))
 			{
-				if ( thisplayer->isserver == true )
+				if (this->isserver == true)
 				{
 					//Log( MSG_INFO,"ISC PACKET");
-					thisplayer->ISCThread ();
+					this->ISCThread();
 				}
-				else if ( !thisplayer->ReceiveData () )
+				else if (!this->ReceiveData())
 				{
-					thisplayer->isActive = false;
+					this->isActive = false;
 				}
 			}
 		}
 
 	}
-	thisplayer->GS->DisconnectClient ( thisplayer );
-	pthread_exit ( NULL );
+	this->GS->DisconnectClient(this);
 	return 0;
 }
 

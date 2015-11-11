@@ -22,6 +22,11 @@ class CDatabase
         bool QExecute( char *format,... );
         std::unique_ptr<sql::ResultSet> QUse( char *format,... );
         std::unique_ptr<sql::ResultSet> QStore( char *format,... );
+
+		// Prepare statements
+		sql::PreparedStatement* QPrepare(char *format);
+		void QPrepareFree();
+		//----------------
         bool DoSQL(char *Format, ...);
         void QFree( );
         bool Ping( );
@@ -29,7 +34,9 @@ class CDatabase
         sql::Driver* driver;
         std::unique_ptr<sql::Connection> con;
         std::unique_ptr<sql::Statement> stmt;
-        std::mutex SQLMutex;
+		std::unique_ptr<sql::PreparedStatement> pstmt;
+		std::mutex SQLMutex;
+		std::mutex SQLPrepareMutex;
 
         //MYSQL* Mysql;
         //MYSQL_RES* result;

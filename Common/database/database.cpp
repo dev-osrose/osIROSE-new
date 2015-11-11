@@ -35,16 +35,16 @@ int CDatabase::Connect( )
 		con->setSchema(Database);
 		stmt.reset( con->createStatement() );
 
-		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout") );
+		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
 
-		if( res->next() )
+		if( res->rowsCount() )
 		{
-			Timeout = res->getInt(0) - 60; // Set the timeout to 1 minute before the connection will timeout
+			Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
 		}
 	}
 	catch (sql::SQLException &err)
 	{
-		Log( MSG_FATALERROR, "Error connecting to MySQL server: %s\n", err.getErrorCode());
+		Log( MSG_FATALERROR, "Error connecting to MySQL server: %s\n", err.what());
 		return -1;
 	}
 
@@ -73,10 +73,10 @@ int CDatabase::Reconnect( )
 // execute query
 bool CDatabase::QExecute( char *Format,... )
 {
-	char query[80000];
+	char query[2048];
 	va_list ap; 
 	va_start( ap, Format );
-	vsprintf( query, Format, ap ); 
+	vsprintf_s(query, 2048, Format, ap);
 	va_end  ( ap );
 
 	Log( MSG_QUERY, query );
@@ -104,7 +104,7 @@ std::unique_ptr<sql::ResultSet> CDatabase::QStore( char *Format, ...)
 	char query[1024];
 	va_list ap;
 	va_start( ap, Format );
-	vsprintf( query, Format, ap );
+	vsprintf_s(query, 1024, Format, ap);
 	va_end  ( ap );
 
 	Log( MSG_QUERY, query );
@@ -130,12 +130,32 @@ std::unique_ptr<sql::ResultSet> CDatabase::QStore( char *Format, ...)
 	return res;
 }
 
-std::unique_ptr<sql::ResultSet> CDatabase::QUse( char *Format, ...)
+sql::PreparedStatement* CDatabase::QPrepare(char *format)
+{
+	SQLPrepareMutex.lock();
+	try
+	{
+		pstmt.reset( con->prepareStatement(format) );
+	}
+	catch (sql::SQLException &err)
+	{
+		Log(MSG_FATALERROR, "Could not execute query: %s\n", err.what());
+		SQLPrepareMutex.unlock();
+	}
+	return pstmt.get();
+}
+
+void CDatabase::QPrepareFree()
+{
+	SQLPrepareMutex.unlock();
+}
+
+std::unique_ptr<sql::ResultSet> CDatabase::QUse(char *Format, ...)
 {
 	char query[1024];
 	va_list ap; 
 	va_start( ap, Format );
-	vsprintf( query, Format, ap ); 
+	vsprintf_s( query, 1024, Format, ap ); 
 	va_end  ( ap );
 
 	return QStore( query );

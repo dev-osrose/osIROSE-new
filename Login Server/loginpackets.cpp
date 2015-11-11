@@ -53,15 +53,18 @@ CLoginServer::pakUserLogin ( CLoginClient* thisclient, CPacket* P )
 
 		thisclient->username.assign (
 				(const char*) &P->Buffer, 32,
-				( P->Size - 6 - 32 ) > 16 ? 16 : P->Size - 6 - 32 );
+				(P->Header.Size - 6 - 32) > 16 ? 16 : P->Header.Size - 6 - 32);
 		thisclient->password.assign ( (const char*) &P->Buffer, 0, 32 );
 
-		BEGINPACKET( pak, ePacketType::LSV_LOGIN_REQ );
 
-		std::unique_ptr<sql::ResultSet> result =
-				DB->QStore (
-						"SELECT id,password,accesslevel,online FROM accounts WHERE username='%s'",
-						thisclient->username.c_str () );
+		CPacket pak( ePacketType::LSV_LOGIN_REQ );
+
+		sql::PreparedStatement* prep = DB->QPrepare("CALL UserLogin('?')");
+		prep->setString(1, thisclient->username);
+
+		std::unique_ptr<sql::ResultSet> result( prep->executeQuery() );
+		DB->QPrepareFree();
+			
 		if ( result == NULL )
 			return false;
 
@@ -69,18 +72,19 @@ CLoginServer::pakUserLogin ( CLoginClient* thisclient, CPacket* P )
 		{
 			int res = 0;
 #ifdef _WIN32
-			res = ( result->getString ( 1 ) != thisclient->password );
+			res = ( result->getString ( 2 ) != thisclient->password );
 #else
-			res = ( result->getString ( 1 ) != thisclient->password );
+			res = ( result->getString ( 2 ) != thisclient->password );
 #endif
 			if ( res == 0 )
 			{
-				if ( result->getInt ( 3 ) == 1 )
+				if ( result->getInt ( 4 ) == 1 )
 				{   // characters is already logged
 					Log ( MSG_WARNING, "Account %s try re-login",
 								thisclient->username.c_str () );
-					ADDBYTE( pak, 4 );
-					ADDDWORD( pak, 0 );
+
+					pak.Add<uint8_t>(5);
+					pak.Add<uint32_t>(0);
 					thisclient->SendPacket ( &pak );
 
 					DB->QExecute (
@@ -88,40 +92,40 @@ CLoginServer::pakUserLogin ( CLoginClient* thisclient, CPacket* P )
 							thisclient->username.c_str () );
 					return true;
 				}
-				thisclient->accesslevel = result->getInt ( 2 );
+				thisclient->accesslevel = result->getInt ( 3 );
 				if ( thisclient->accesslevel < Config.MinimumAccessLevel )
 				{ //The server are under inspection
-					ADDBYTE( pak, 0 );
-					ADDDWORD( pak, 0 );
+					pak.Add<uint8_t>(0);
+					pak.Add<uint32_t>(0);
 					thisclient->SendPacket ( &pak );
 					return true;
 				}
 				if ( thisclient->accesslevel > 0 )
 				{
-					thisclient->userid = result->getInt ( 0 );
+					thisclient->userid = result->getInt ( 1 );
 					thisclient->isLoggedIn = true;
 
 					//OK!
-					ADDDWORD( pak, 0x0c000000 ); //ADDDWORD( pak, 0x6f000000 );
-					ADDBYTE( pak, 0 );
+					pak.Add<uint32_t>( 0x0c000000 );
+					pak.Add<uint8_t>(0);
 					result = DB->QStore ( "SELECT id,name FROM channels WHERE owner=0" );
 
-					if ( result == NULL )
+					if ( result->rowsCount() == 0 )
 						return false;
 
-					while ( result->next () )
+					result->beforeFirst();
+					while( result->next() )
 					{
 						if ( Config.Testserver )
 						{
-							ADDBYTE( pak, 63 + result->getInt ( 0 ) );
+							pak.Add<uint8_t>(63 + result->getInt(1));
 						}
 						else
 						{
-							ADDBYTE( pak, 48 + result->getInt ( 0 ) );
+							pak.Add<uint8_t>(48 + result->getInt(1));
 						}
-						ADDSTRING( pak, result->getString ( 1 ).c_str() );
-						ADDBYTE( pak, 0 );
-						ADDDWORD( pak, result->getInt ( 0 ) );
+						pak.AddString(result->getString(2).c_str(), true);
+						pak.Add<uint32_t>(result->getInt(1));
 					}
 				}
 				else
@@ -142,10 +146,17 @@ CLoginServer::pakUserLogin ( CLoginClient* thisclient, CPacket* P )
 		{
 			if ( Config.CreateLoginAccount )
 			{
-				if ( !DB->QExecute (
-						"INSERT into accounts (username,password,accesslevel) values ('%s','%s',100)",
-						thisclient->username.c_str (), thisclient->password.c_str () ) )
+				sql::PreparedStatement* prep = DB->QPrepare("INSERT into accounts (username,password,accesslevel) values (?,?,?)");
+				prep->setString	( 1, thisclient->username );
+				prep->setString	( 2, thisclient->password );
+				prep->setInt	( 3, 100 );
+
+				if ( !prep->execute() )
+				{
+					DB->QPrepareFree();
 					return true;
+				}
+				DB->QPrepareFree();
 				Log ( MSG_INFO, "New Account created '%s'",
 							thisclient->username.c_str () );
 			}
@@ -192,16 +203,16 @@ CLoginServer::pakGetServers ( CLoginClient* thisclient, CPacket* P )
 		ADDBYTE( pak, (uint8_t )result->rowsCount() ); //old function
 		while ( result->next() )
 		{
-			uint32_t connected = result->getInt( 2 );
-			uint32_t maxconnections = result->getInt( 3 );
-			uint8_t id = result->getInt( 0 );
+			uint32_t connected = result->getInt( 3 );
+			uint32_t maxconnections = result->getInt( 4 );
+			uint8_t id = result->getInt( 1 );
 			uint8_t status = ( ( 100 * connected )
 					/ ( maxconnections == 0 ? 1 : maxconnections ) ) & 0xff;
 
 			ADDWORD( pak, id );
 			ADDBYTE( pak, 0 );
 			ADDWORD( pak, status );
-			ADDSTRING( pak, result->getString( 1 ).c_str() ); // Name
+			ADDSTRING( pak, result->getString( 2 ).c_str() ); // Name
 			ADDBYTE( pak, 0 );
 		}
 
@@ -248,15 +259,15 @@ CLoginServer::pakGetIP ( CLoginClient* thisclient, CPacket* P )
 			return true;
 		}
 
-		uint32_t connected = result->getInt(2);
-		uint32_t maxconnections = result->getInt(3);
+		uint32_t connected = result->getInt(3);
+		uint32_t maxconnections = result->getInt(4);
 
 		ADDBYTE( pak, 0 ); //atoi(row[0]) ); // What is status? It's NULL in tables - Drakia
 		ADDDWORD( pak, thisclient->userid );
 		ADDDWORD( pak, 0x87654321 );
-		ADDSTRING( pak, result->getString(0).c_str() );
+		ADDSTRING( pak, result->getString(1).c_str() );
 		ADDBYTE( pak, 0 );
-		ADDWORD( pak, result->getInt(1) );
+		ADDWORD( pak, result->getInt(2) );
 		thisclient->SendPacket ( &pak );
 		return true;
 	}

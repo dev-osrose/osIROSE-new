@@ -113,6 +113,10 @@ void GenerateCryptTables( CCryptTable* &CryptTables, unsigned ModValue )
 
 	// Allocate memory for structure
 	CryptTables			= (CCryptTable*)malloc(  sizeof( CCryptTable ) );
+	
+	if (CryptTables == nullptr)
+		return;
+	
 	CryptTables->Tables	= (unsigned  **)calloc( 16, sizeof( unsigned ) );
 
 	// Prepare values

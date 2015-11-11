@@ -25,7 +25,7 @@ bool ConfigGetEntry( char *pcFile, char *pcNameMust, char* &pcResult )
 
 	// Open file
 	FILE *fh;
-	fh = fopen(pcFile, "r" );
+	fopen_s(&fh, pcFile, "r" );
 	if ( fh==NULL ) return false;
 	
 	do
@@ -82,8 +82,9 @@ bool ConfigGetEntry( char *pcFile, char *pcNameMust, char* &pcResult )
 char *ConfigGetString( char *pcFile, char *pcName, char *pcDefault )
 {
 	char *pcRet, *pcRetReal, *pcRetOld;
-	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) ) return strdup( pcDefault );
-	if (pcRet==0) return strdup( pcDefault );
+	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) ) 
+		return _strdup( pcDefault );
+	if (pcRet == 0) return _strdup(pcDefault);
 	pcRetOld = pcRet;
 	if ( *pcRet=='"' )
 	{
@@ -91,7 +92,7 @@ char *ConfigGetString( char *pcFile, char *pcName, char *pcDefault )
 		pcRet[ strlen(pcRet) - 1 ] = 0;
 	}
 	
-	pcRetReal = strdup( pcRet );
+	pcRetReal = _strdup(pcRet);
 	free( pcRetOld );
 	
 	return pcRetReal;

@@ -100,7 +100,7 @@ struct CPacket
 		*((T*)&Buffer[Header.Size]) = value;
 		Header.Size += sizeof(T);
 	}
-	void AddString( char* value, bool NullTerminate )
+	void AddString( const char* value, bool NullTerminate )
 	{
 		for (uint32_t i = 0; i < strlen((const char*)value); i++)
 		{
@@ -108,7 +108,7 @@ struct CPacket
 		}
 		if (NullTerminate) Add<uint8_t>(0);
 	}
-	template <class T> void AddString( char* value )
+	template <class T> void AddString( const char* value )
 	{
 		Add<T>(strlen((const char*)value));
 		AddString(value, false);

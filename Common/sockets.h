@@ -24,8 +24,7 @@
 #ifdef _WIN32
 
     #include <windows.h>
-		#include <winsock2.h>
-    //#define close closesocket
+    #define close closesocket
     #ifdef FD_SETSIZE
         #undef FD_SETSIZE
     #endif
@@ -94,20 +93,20 @@ using std::vector;
 using std::map;
 using std::nothrow;
 using std::string;
-#define STARTPACKET(p,c,s) CPacket p; p.header.Command = c; p.header.Size = s;
+#define STARTPACKET(p,c,s) CPacket p; p.Header.Command = c; p.Header.Size = s;
 #define SETBYTE(p,o,v) p.Buffer[o]=v;
 #define SETWORD(p,o,v) *((unsigned short*)&p.Buffer[o])=v;
 #define SETDWORD(p,o,v) *((unsigned*)&p.Buffer[o])=v;
 #define SETQWORD(p,o,v) *((long long*)&p.Buffer[o])=v;
 #define SETFLOAT(p,o,v) *((float*)&p.Buffer[o])=v;
 
-#define BEGINPACKET(p,c) CPacket p; p.header.Command = c; p.header.Size = 6;
-#define RESETPACKET(p,c) p.header.Command = c; p.header.Size = 6;
-#define ADDBYTE(p,v) { p.Buffer[p.Size-6]=v; p.Size+=1; }
-#define ADDWORD(p,v) { *((uint16_t*)&p.Buffer[p.Size-6])=v; p.Size+=2; }
-#define ADDDWORD(p,v) { *((unsigned*)&p.Buffer[p.Size-6])=v; p.Size+=4; }
-#define ADDQWORD(p,v) { *((uint64_t*)&p.Buffer[p.Size-6])=v; p.Size+=8; }
-#define ADDFLOAT(p,v) { *((float*)&p.Buffer[p.Size-6])=v; p.Size+=4; }
+#define BEGINPACKET(p,c) CPacket p; p.Header.Command = c; p.Header.Size = 6;
+#define RESETPACKET(p,c) p.Header.Command = c; p.Header.Size = 6;
+#define ADDBYTE(p,v) { p.Buffer[p.Header.Size-6]=v; p.Header.Size+=1; }
+#define ADDWORD(p,v) { *((uint16_t*)&p.Buffer[p.Header.Size-6])=v; p.Header.Size+=2; }
+#define ADDDWORD(p,v) { *((unsigned*)&p.Buffer[p.Header.Size-6])=v; p.Header.Size+=4; }
+#define ADDQWORD(p,v) { *((uint64_t*)&p.Buffer[p.Header.Size-6])=v; p.Header.Size+=8; }
+#define ADDFLOAT(p,v) { *((float*)&p.Buffer[p.Header.Size-6])=v; p.Header.Size+=4; }
 #define ADDSTRING(p,v) { for(int q=0; q<(int)strlen((char*)v); q++) ADDBYTE(p,(v)[q]); }
 #define GETBYTE(p,o) (p.Buffer[o])
 #define GETWORD(p,o) *((WORD*)&p.Buffer[o])
@@ -308,6 +307,8 @@ public:
     bool ISCThread(); // Raven0123
     struct sockaddr_in clientinfo;
     void* player;
+
+	PVOID ClientMainThread();
 #ifdef USE124
     char* ct;
 #endif
@@ -361,7 +362,7 @@ public:
     struct sockaddr_in 					ain;
     struct sockaddr_in 					sain;
 
-    pthread_t                   threads[65535];
+    std::thread                   threads[65535];
 
     void SendISCPacket( CPacket* pak ); // Raven0123
 };

@@ -474,15 +474,14 @@ CServerSocket::AddUser ( SOCKET sock, sockaddr_in* ClientInfo, bool server )
 	thisclient->ClientIP = inet_ntoa ( ClientInfo->sin_addr );
 
 	memset ( &thisclient->ClientSubNet, '\0', 12 );
-	sprintf ( thisclient->ClientSubNet, "%i.%i.%i",
+	sprintf_s( thisclient->ClientSubNet, 12, "%i.%i.%i",
 						( ClientInfo->sin_addr.s_addr ) & 0xFF,
 						( ClientInfo->sin_addr.s_addr >> 8 ) & 0xFF,
 						( ClientInfo->sin_addr.s_addr >> 16 ) & 0xFF );
 	ClientList.push_back ( thisclient );
 	if ( Config.usethreads )
 	{
-		pthread_create ( &threads[sock], NULL, ClientMainThread,
-										 (PVOID) thisclient );
+		threads[sock] = std::thread([thisclient] { thisclient->ClientMainThread(); });
 	}
 	memcpy ( &thisclient->clientinfo, ClientInfo, sizeof(struct sockaddr_in) );
 	if ( server == true )
