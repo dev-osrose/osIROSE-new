@@ -142,7 +142,7 @@ sql::PreparedStatement* CDatabase::QPrepare(char *format)
 		Log(MSG_FATALERROR, "Could not execute query: %s\n", err.what());
 		SQLPrepareMutex.unlock();
 	}
-	return pstmt.get();
+	return pstmt.get(); // Not that safe, but as long as we don't hold on to the PTR we should be good :D
 }
 
 void CDatabase::QPrepareFree()
@@ -161,31 +161,11 @@ std::unique_ptr<sql::ResultSet> CDatabase::QUse(char *Format, ...)
 	return QStore( query );
 }
 
-bool CDatabase::DoSQL(char *Format, ...)
-{/*
-	int retval;
-	char Buffer[1024];
-
-	va_list ap; va_start( ap, Format );
-	vsprintf( Buffer, Format, ap ); 
-	va_end  ( ap );
-
-	retval = mysql_query( Mysql, Buffer );
-	if( retval != 0 )
-		Log( MSG_ERROR, "MySQL Query Error '%s'", mysql_error( Mysql ) );
-	return (retval == 0);*/
-	return false;
-}
-
-void CDatabase::QFree( )
-{
-}
-
 bool CDatabase::Ping( )
 {
 	if ( time( NULL ) > ( LastPing + Timeout ) )
 	{
-		Log(MSG_INFO, "MySql Ping");
+		//Log(MSG_INFO, "MySql Ping");
 		LastPing = time( NULL );
 
 		try
@@ -201,7 +181,7 @@ bool CDatabase::Ping( )
 		{
 			Log( MSG_FATALERROR, "MySQL Ping Failed: %s\n", err.what() );
 		}
-		Log( MSG_INFO, "MySql Pong, new Timeout: %d seconds", Timeout);
+		//Log( MSG_INFO, "MySql Pong, new Timeout: %d seconds", Timeout);
 	}
 	return true;
 }

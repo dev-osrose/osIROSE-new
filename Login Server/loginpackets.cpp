@@ -87,9 +87,11 @@ CLoginServer::pakUserLogin ( CLoginClient* thisclient, CPacket* P )
 					pak.Add<uint32_t>(0);
 					thisclient->SendPacket ( &pak );
 
-					DB->QExecute (
-							"update accounts set login_count=1 WHERE username='%s'",
-							thisclient->username.c_str () );
+					sql::PreparedStatement* prep = DB->QPrepare("update accounts set login_count=1 WHERE username='?'");
+					prep->setString(1, thisclient->username);
+					prep->execute();
+					DB->QPrepareFree();
+
 					return true;
 				}
 				thisclient->accesslevel = result->getInt ( 3 );
@@ -191,9 +193,11 @@ CLoginServer::pakGetServers ( CLoginClient* thisclient, CPacket* P )
 			return false;
 
 		unsigned servernum = GETDWORD( ( *P ), 0 );
-		std::unique_ptr<sql::ResultSet> result = DB->QStore (
-				"SELECT id,name,connected,maxconnections FROM channels WHERE owner=%i",
-				servernum );
+
+		sql::PreparedStatement* prep = DB->QPrepare("SELECT id,name,connected,maxconnections FROM channels WHERE owner=?");
+		prep->setInt(1, servernum);
+		std::unique_ptr<sql::ResultSet> result( prep->executeQuery() );
+		DB->QPrepareFree();
 
 		if ( result == NULL )
 			return false;
@@ -240,14 +244,20 @@ CLoginServer::pakGetIP ( CLoginClient* thisclient, CPacket* P )
 
 		BEGINPACKET( pak, 0x70a );
 
-		if ( !DB->QExecute (
-				"UPDATE accounts SET lastsvr=%i,lastip='%s' WHERE id=%i", channelnum,
-				inet_ntoa ( thisclient->clientinfo.sin_addr ), thisclient->userid ) )
+		sql::PreparedStatement* prep = DB->QPrepare("UPDATE accounts SET lastsvr=?,lastip='?' WHERE id=?");
+		prep->setInt(1, channelnum);
+		prep->setString(2, inet_ntoa(thisclient->clientinfo.sin_addr));
+		prep->setInt(3, thisclient->userid);
+		bool bRes = prep->execute();
+		DB->QPrepareFree();
+
+		if (bRes == false)
 			return false;
 
-		std::unique_ptr<sql::ResultSet> result = DB->QStore (
-				"SELECT host,port,connected,maxconnections FROM channels WHERE id=%i",
-				servernum );
+		sql::PreparedStatement* prep = DB->QPrepare("SELECT host,port,connected,maxconnections FROM channels WHERE id=?");
+		prep->setInt(1, servernum);
+		std::unique_ptr<sql::ResultSet> result(prep->executeQuery());
+		DB->QPrepareFree();
 
 		if ( result == NULL )
 			return false;

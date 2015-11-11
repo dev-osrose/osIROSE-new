@@ -25,10 +25,10 @@ class CDatabase
 
 		// Prepare statements
 		sql::PreparedStatement* QPrepare(char *format);
+		
+		// We may be able to get rid of this 
 		void QPrepareFree();
 		//----------------
-        bool DoSQL(char *Format, ...);
-        void QFree( );
         bool Ping( );
         
         sql::Driver* driver;
@@ -37,10 +37,6 @@ class CDatabase
 		std::unique_ptr<sql::PreparedStatement> pstmt;
 		std::mutex SQLMutex;
 		std::mutex SQLPrepareMutex;
-
-        //MYSQL* Mysql;
-        //MYSQL_RES* result;
-        //pthread_mutex_t SQLMutex;
 };
 
 #endif
