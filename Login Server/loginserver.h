@@ -32,10 +32,10 @@ class CLoginClient : public CClientSocket
     	~CLoginClient ( );     // destructor    
         // Variables
     	bool isLoggedIn;
-    	UINT userid;
+    	uint32_t userid;
     	string username;
     	string password;
-    	WORD accesslevel;	
+    	uint16_t accesslevel;
 };
 
 // Server class

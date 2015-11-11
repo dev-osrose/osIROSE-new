@@ -75,7 +75,7 @@ struct CPacket
 
 	CPacket( unsigned short mycommand=0, unsigned short mysize=6, unsigned short myunused=0 );
 	~CPacket( );
-	/*
+	///*
 	void StartPacket( unsigned short mycommand, unsigned short mysize=6, unsigned short myunused=0 );
 	void AddByte( unsigned char value );
 	void AddWord( unsigned short value );
@@ -94,6 +94,8 @@ struct CPacket
 	unsigned long long GetQWord( unsigned short pos );
 	float GetFloat( unsigned short pos );
 	char* GetString( unsigned short pos );
+
+
 	// Functions added by Drakia
 	template <class T> void Add( T value )
 	{
@@ -102,23 +104,23 @@ struct CPacket
 	}
 	void AddString( char* value, bool NullTerminate )
 	{
-		for (dword i = 0; i < strlen((const char*)value); i++)
+		for (uint32_t i = 0; i < strlen((const char*)value); i++)
 		{
-			Add<byte>(value[i]);
+			Add<uint8_t>(value[i]);
 		}
-		if (NullTerminate) Add<byte>(0);
+		if (NullTerminate) Add<uint8_t>(0);
 	}
 	template <class T> void AddString( char* value )
 	{
 		Add<T>(strlen((const char*)value));
 		AddString(value, false);
 	}
-	void AddBytes( byte* value, dword len )
+	void AddBytes( uint8_t* value, uint32_t len )
 	{
-		for (dword i = 0; i < len; i++)
-			Add<byte>((byte)value[i]);
+		for (uint32_t i = 0; i < len; i++)
+			Add<uint8_t>((uint8_t)value[i]);
 	}
-	*/
+	//*/
 };
 
 #endif /* EPACKETTYPE_H_ */

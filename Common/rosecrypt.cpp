@@ -59,7 +59,7 @@ unsigned ctGenerateNextValue( CCryptTable *CryptTables, CCryptTableControlStruct
 	int Value = ControlStruct->ValueTableMod[ ControlStruct->CurTableMod ];
 
 	// Update generatecount, depending on the current TableMod
-	ControlStruct->CountTableMod            [ ControlStruct->CurTableMod ];
+	ControlStruct->CountTableMod            [ ControlStruct->CurTableMod ]; // I really have no idea wtf this is doing! -Raven
 
 	// Calculate and return the next value
 	switch ( ControlStruct->CurTableMod )

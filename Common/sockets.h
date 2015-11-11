@@ -53,6 +53,7 @@
 #include <cstdio>
 #include <csignal>
 
+#include <memory>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -68,6 +69,15 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+//-----
+
+// MySQL
+#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
 //-----
 
 #include "ePacketType.h"
@@ -94,15 +104,15 @@ using std::string;
 #define BEGINPACKET(p,c) CPacket p; p.Command = c; p.Size = 6;
 #define RESETPACKET(p,c) p.Command = c; p.Size = 6;
 #define ADDBYTE(p,v) { p.Buffer[p.Size-6]=v; p.Size+=1; }
-#define ADDWORD(p,v) { *((WORD*)&p.Buffer[p.Size-6])=v; p.Size+=2; }
+#define ADDWORD(p,v) { *((uint16_t*)&p.Buffer[p.Size-6])=v; p.Size+=2; }
 #define ADDDWORD(p,v) { *((unsigned*)&p.Buffer[p.Size-6])=v; p.Size+=4; }
-#define ADDQWORD(p,v) { *((QWORD*)&p.Buffer[p.Size-6])=v; p.Size+=8; }
+#define ADDQWORD(p,v) { *((uint64_t*)&p.Buffer[p.Size-6])=v; p.Size+=8; }
 #define ADDFLOAT(p,v) { *((float*)&p.Buffer[p.Size-6])=v; p.Size+=4; }
 #define ADDSTRING(p,v) { for(int q=0; q<(int)strlen((char*)v); q++) ADDBYTE(p,(v)[q]); }
 #define GETBYTE(p,o) (p.Buffer[o])
 #define GETWORD(p,o) *((WORD*)&p.Buffer[o])
-#define GETDWORD(p,o) *((DWORD*)&p.Buffer[o])
-#define GETQWORD(p,o) *((QWORD*)&p.Buffer[o])
+#define GETDWORD(p,o) *((uint32_t*)&p.Buffer[o])
+#define GETQWORD(p,o) *((uint64_t*)&p.Buffer[o])
 #define GETFLOAT(p,o) *((float*)&p.Buffer[o])
 //#define pi 3.14159265358979323846
 #define r2d pi/180

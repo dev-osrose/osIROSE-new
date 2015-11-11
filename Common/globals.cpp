@@ -7,7 +7,7 @@ CPacket::CPacket( unsigned short mycommand, unsigned short mysize, unsigned shor
 	Unused = myunused;
 }
 CPacket::~CPacket( ) { }
-/*
+///*
 void CPacket::StartPacket( unsigned short mycommand, unsigned short mysize, unsigned short myunused )
 {
 	Command = mycommand;
@@ -89,4 +89,4 @@ char* CPacket::GetString( unsigned short pos )
 {
 	return (char*)&Buffer[pos];
 }
-*/
+//*/

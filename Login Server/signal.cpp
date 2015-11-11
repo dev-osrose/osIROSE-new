@@ -37,8 +37,10 @@ void StartSignal( )
     signal( SIGILL, HandleSignal );
     signal( SIGFPE, HandleSignal );        
     signal( SIGSEGV, HandleSignal );
-    signal( SIGTERM, HandleSignal );        
-    signal( SIGBREAK, HandleSignal );        
+    signal( SIGTERM, HandleSignal );
+#ifdef _WIN32
+    signal( SIGBREAK, HandleSignal ); // This is windows only
+#endif
     signal( SIGABRT, HandleSignal );          
 }
 
@@ -49,7 +51,9 @@ void StopSignal( )
     signal( SIGFPE, 0 );        
     signal( SIGSEGV, 0 );
     signal( SIGTERM, 0 );        
-    signal( SIGBREAK, 0 );        
+#ifdef _WIN32
+    signal( SIGBREAK, 0 ); // This is windows only
+#endif
     signal( SIGABRT, 0 );          
 }
 

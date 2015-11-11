@@ -29,15 +29,23 @@ void CDatabase::Disconnect( )
 int CDatabase::Connect( )
 {
 	Log( MSG_INFO, "Connecting to MySQL" );
-	con.reset( driver->connect(Server, Username, Password) );
-	con->setSchema(Database);
-	stmt.reset( con->createStatement() );
-
-	std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
-
-	while( res->next() )
+	try
 	{
-		Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
+		con.reset( driver->connect(Server, Username, Password) );
+		con->setSchema(Database);
+		stmt.reset( con->createStatement() );
+
+		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
+
+		while( res->next() )
+		{
+			Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
+		}
+	}
+	catch (sql::SQLException &err)
+	{
+		Log( MSG_FATALERROR, "Error connecting to MySQL server: %s\n", err.getErrorCode());
+		return -1;
 	}
 
 	Log( MSG_INFO, "MySQL Ping Timeout: %d seconds", Timeout );
@@ -105,17 +113,17 @@ std::unique_ptr<sql::ResultSet> CDatabase::QStore( char *Format, ...)
 	SQLMutex.lock();
 	try
 	{
-			stmt.reset( con->createStatement() );
-			res.reset( stmt->executeQuery( query ) );
-			if( res->next() == false )
+		stmt.reset( con->createStatement() );
+		res.reset( stmt->executeQuery( query ) );
+		if( res->next() == false )
+		{
+			Log( MSG_FATALERROR, "Could not execute query" );
+			if(Reconnect( ) == -1)
 			{
 				Log( MSG_FATALERROR, "Could not execute query" );
-				if(Reconnect( ) == -1)
-				{
-					Log( MSG_FATALERROR, "Could not execute query" );
-					SQLMutex.unlock();
-					return nullptr;
-				}
+				SQLMutex.unlock();
+				return nullptr;
+			}
 		}
 	}
 	catch (sql::SQLException &err)
