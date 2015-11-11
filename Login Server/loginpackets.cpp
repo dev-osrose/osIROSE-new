@@ -254,7 +254,7 @@ CLoginServer::pakGetIP ( CLoginClient* thisclient, CPacket* P )
 		if (bRes == false)
 			return false;
 
-		sql::PreparedStatement* prep = DB->QPrepare("SELECT host,port,connected,maxconnections FROM channels WHERE id=?");
+		prep = DB->QPrepare("SELECT host,port,connected,maxconnections FROM channels WHERE id=?");
 		prep->setInt(1, servernum);
 		std::unique_ptr<sql::ResultSet> result(prep->executeQuery());
 		DB->QPrepareFree();
