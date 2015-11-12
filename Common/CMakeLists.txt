@@ -10,9 +10,14 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(defines "")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(std "")
-	set(warnings "/W4 /WX /EHsc")
+	set(warnings "/EHsc")
 	set(errors "")
 	set(defines "")
+	
+	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/Common.vcxproj.user" "<?xml version=\"1.0\" encoding=\"utf-8\"?> 
+<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"> 
+	<Import Project=\"${CMAKE_HOME_DIRECTORY}/AZGStudioProjectSettings.props\" /> 
+</Project>" )
 endif()
 
 if (NOT CONFIGURED_ONCE)

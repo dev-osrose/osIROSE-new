@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 
 project("World Server")
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(std "-std=c++11")
 	set(warnings "-Wall -Wextra -Werror -Wno-write-strings")
@@ -9,9 +13,15 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(defines "")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(std "")
-	set(warnings "/W4 /WX /EHsc")
+	set(warnings "/EHsc")
 	set(errors "")
 	set(defines "")
+	
+	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/WorldServer.vcxproj.user" "<?xml version=\"1.0\" encoding=\"utf-8\"?> 
+<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"> 
+	<Import Project=\"${CMAKE_HOME_DIRECTORY}/AZGStudioProjectSettings.props\" /> 
+</Project>" )
+	
 endif()
 
 if (NOT CONFIGURED_ONCE)
@@ -28,7 +38,7 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-list( fileHandlers
+list( APPEND fileHandlers
 		./aip/AiActions.cpp
 		./aip/AiConditions.cpp
 		./aip/Aip.cpp
@@ -36,7 +46,7 @@ list( fileHandlers
 		./quest/QuestConditions.cpp
 		./quest/Quests.cpp )
 
-list( mainSource 
+list( APPEND mainSource 
 	battle.cpp
 	Buff.cpp
 	character.cpp
@@ -73,7 +83,7 @@ list( mainSource
 	
 
 add_executable(WorldServer ${mainSource} ${fileHandlers})
-target_link_libraries(CharServer Common mysqlcppconn-static mysqlclient)
+target_link_libraries(WorldServer Common mysqlcppconn-static mysqlclient)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

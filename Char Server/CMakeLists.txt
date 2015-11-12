@@ -9,9 +9,15 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(defines "")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(std "")
-	set(warnings "/W4 /WX /EHsc")
+	set(warnings "/EHsc")
 	set(errors "")
 	set(defines "")
+	
+	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/CharServer.vcxproj.user" "<?xml version=\"1.0\" encoding=\"utf-8\"?> 
+<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"> 
+	<Import Project=\"${CMAKE_HOME_DIRECTORY}/AZGStudioProjectSettings.props\" /> 
+</Project>" )
+	
 endif()
 
 if (NOT CONFIGURED_ONCE)
@@ -28,7 +34,7 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(CharServer main.cpp extrafunction.cpp signal.cpp community.cpp clan.cpp charserver.cpp charpackets.cpp charclient.cpp)
+add_executable(CharServer main.cpp extrafunctions.cpp signal.cpp community.cpp clan.cpp charserver.cpp charpackets.cpp charclient.cpp)
 target_link_libraries(CharServer Common mysqlcppconn-static mysqlclient)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
