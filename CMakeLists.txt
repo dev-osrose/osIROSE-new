@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
-set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project("osIROSE")
 
@@ -21,11 +20,6 @@ if (NOT CONFIGURED_ONCE)
     set(CMAKE_CXX_FLAGS "${std} ${defines} ${warnings} ${errors}"
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
-
-#include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
-#include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/3rdParty/include)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 add_subdirectory(Common)
 add_subdirectory("Login Server")
