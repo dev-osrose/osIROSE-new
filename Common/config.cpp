@@ -14,6 +14,13 @@
 #include <cstdlib>
 #include <ctype.h>
 
+#if defined(__unix)
+	#define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))
+	#define _strdup(Args) strdup(Args)
+	#define sprintf_s(buffer, buffer_size, stringbuffer, ...) (sprintf(buffer, stringbuffer, __VA_ARGS__))
+	#define vsprintf_s(buffer, buffer_size, stringbuffer, ...) (vsprintf(buffer, stringbuffer, __VA_ARGS__))
+#endif
+
 // Find the entry
 bool ConfigGetEntry( char *pcFile, char *pcNameMust, char* &pcResult )
 {

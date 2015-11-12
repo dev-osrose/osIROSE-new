@@ -115,7 +115,7 @@ CServerSocket::StartServer ()
 			sckISC = INVALID_SOCKET;
 			return false;
 		}
-		Log ( MSG_INFO, "opened ISC poort %i", 29110 );
+		Log ( MSG_INFO, "opened ISC port %i", 29110 );
 
 	}
 
@@ -571,6 +571,9 @@ CServerSocket::OnServerDie ()
 bool
 CServerSocket::OnReceivePacket ( CClientSocket* thisclient, CPacket *P )
 {
+	(void)thisclient;
+	(void)P;
+
 	return true;
 }
 
@@ -578,6 +581,7 @@ CServerSocket::OnReceivePacket ( CClientSocket* thisclient, CPacket *P )
 bool
 CServerSocket::OnClientConnect ( CClientSocket* thisclient )
 {
+	(void)thisclient;
 	return true;
 }
 
@@ -585,6 +589,7 @@ CServerSocket::OnClientConnect ( CClientSocket* thisclient )
 void
 CServerSocket::OnClientDisconnect ( CClientSocket* thisclient )
 {
+	(void)thisclient;
 }
 
 // Raven0123

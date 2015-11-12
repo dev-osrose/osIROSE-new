@@ -26,6 +26,7 @@
 bool
 CLoginServer::pakEncryptionRequest ( CLoginClient* thisclient, CPacket* P )
 {
+	(void)P;
 	try
 	{
 		thisclient->CryptStatus.CurAddValue = rand () | ( rand () << 16 );
@@ -269,8 +270,8 @@ CLoginServer::pakGetIP ( CLoginClient* thisclient, CPacket* P )
 			return true;
 		}
 
-		uint32_t connected = result->getInt(3);
-		uint32_t maxconnections = result->getInt(4);
+		//uint32_t connected = result->getInt(3);
+		//uint32_t maxconnections = result->getInt(4);
 
 		ADDBYTE( pak, 0 ); //atoi(row[0]) ); // What is status? It's NULL in tables - Drakia
 		ADDDWORD( pak, thisclient->userid );

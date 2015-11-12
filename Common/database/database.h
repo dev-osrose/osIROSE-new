@@ -13,7 +13,7 @@ class CDatabase
         char* Password;
         char* Database;
         unsigned int Port;
-        unsigned int Timeout;
+        int Timeout;
         time_t LastPing;
 
         int Connect( );

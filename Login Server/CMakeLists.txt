@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
-set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+#set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
-project("osIROSE")
-
-enable_testing()
+project("Login Server")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(std "-std=c++11")
@@ -22,15 +20,17 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
-#include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
-#include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/3rdParty/include)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
+# 3rd Party Libaries
+include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
+			${CMAKE_HOME_DIRECTORY}/3rdParty/include)
+link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
-add_subdirectory(Common)
-add_subdirectory("Login Server")
-#add_subdirectory("Char Server")
-#add_subdirectory("World Server")
+
+# Our Stuff 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(LoginServer main.cpp loginserver.cpp extrafunction.cpp loginclient.cpp loginpackets.cpp signal.cpp)
+target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
