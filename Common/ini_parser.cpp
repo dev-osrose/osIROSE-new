@@ -43,10 +43,11 @@
 #define _S_IWRITE S_IWRITE
 #endif
 
-static const wchar_t*     g_NewLineW  = L"\r\n";
+
 static const char*        g_NewLineA  = "\r\n";
 static const unsigned int g_NewLineLn = 2;
 #ifdef __UNICODE
+static const wchar_t*     g_NewLineW  = L"\r\n";
 unsigned int ReadWriteIniKeyValueStringW( const wchar_t* const lpSection, const wchar_t* const lpKey, const wchar_t* const lpDefaultValue, const wchar_t* const szPathAndFile, bool isWriteMode, wchar_t* lpReturnString, unsigned int* uReturnStringLength, bool stripValueLeadingWhitespaces, bool stripValueTrailingWhitespaces )
 {
 	std::basic_fstream< wchar_t >::pos_type posNewLineBeginning, posEnd;
@@ -446,31 +447,31 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 		{
 			//check for valid section format: " [ section_name ]"
 			index = line.find_first_not_of( whitespace ); //find first non whitespace
-			if ( index == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 				continue;
 			if ( line[ index ] != L'[' )
 				continue; //the first non whitespace char must be opening brace
 			int indexSectionBegin, indexAfterSectionEnd;
 			indexSectionBegin = line.find_first_not_of( whitespace, index + 1 ); //find first non whitespace char after the opening brace
-			if ( indexSectionBegin == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexSectionBegin == std::wstring::npos )
 				continue;
 			if ( lpSection != 0 )
 			{
 				index = line.find( lpSection, index ); //check if at that position is the searched section name
-				if ( index == std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 					continue;
 				if ( index != indexSectionBegin )
 					continue;
 			}
 			indexAfterSectionEnd = line.find( L']', indexSectionBegin + 1 ); //find first whitespace or closing brace char after the section name
-			if ( indexAfterSectionEnd == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexAfterSectionEnd == std::wstring::npos )
 				continue;
 			int indexComment = line.find( L';', indexSectionBegin ); //check if there is comment in the section name
-			if ( indexComment != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexComment != std::wstring::npos )
 				if ( indexComment <= indexAfterSectionEnd )
 					continue;                                                      //if the comment is between the sectionname and the ']' (for example: [section ; ])
 			index = line.find_last_not_of( whitespace, indexAfterSectionEnd - 1 ); //strip all the trailing white spaces
-			if ( index != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 				indexAfterSectionEnd = index + 1;
 
 			index = indexAfterSectionEnd - indexSectionBegin; //from here index contains now the sieze of the section
@@ -488,7 +489,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 		else
 		{
 			index = line.find_first_not_of( whitespace );
-			if ( index == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 				continue;
 			if ( line[ index ] == L'[' ) //we have reached the next section without finding the key
 			{
@@ -521,23 +522,23 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			if ( lpKey != 0 )
 			{
 				index = line.find( key, indexKey ); //check if at that position is the searched key name
-				if ( index == std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 					continue;
 				if ( indexKey != index )
 					continue; //the key must be the first non whitespace char in the line
 			}
 			int indexEqual;
 			indexEqual = line.find( L'=', index + 1 ); //find first '=' char after the key name
-			if ( indexEqual == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexEqual == std::wstring::npos )
 				continue;
 			int indexComment = line.find( L';' ); //check if there is comment prior the equal character
-			if ( indexComment != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexComment != std::wstring::npos )
 				if ( indexComment <= indexEqual )
 					continue; //if the comment is between the sectionname and the ']' (for example: [section ; ])
 
 			int indexAfterKeyEnd = indexEqual;
 			index                = line.find_last_not_of( whitespace, indexAfterKeyEnd - 1 ); //strip all the trailing white spaces
-			if ( index != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 				indexAfterKeyEnd = index + 1;
 			index                = indexAfterKeyEnd - indexKey; //index contains the size of the key
 			if ( lpKey == 0 )
@@ -555,7 +556,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			if ( stripValueLeadingWhitespaces )
 			{
 				index = line.find_first_not_of( whitespace, indexValue ); //skip the whitespace chars between '=' and the value
-				if ( index != std::wstring::npos )                        // if no value for this key has been found
+				if ( (decltype(std::wstring::npos))index != std::wstring::npos )                        // if no value for this key has been found
 					indexValue = index;
 			}
 
@@ -565,7 +566,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			//
 			//search for comment on this line. An unescaped comment character marks the end of the value
 			index = indexValue - 1;
-			while ( ( index = line.find( L';', index + 1 ) ) != std::wstring::npos ) //search for every next comment character ';'
+			while ( (decltype(std::wstring::npos))( index = line.find( L';', index + 1 ) ) != std::wstring::npos ) //search for every next comment character ';'
 			{
 				int  index2   = index;
 				bool bEscaped = false;
@@ -581,7 +582,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 					line.erase( index, 1 ); //remove the escape character '\' from the combination "\;"
 				}
 			}
-			if ( index != std::wstring::npos ) //if we didn't enter the above loop (so there is no comment character on this row)
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos ) //if we didn't enter the above loop (so there is no comment character on this row)
 				indexAfterValueEnd = index;
 			else
 				indexAfterValueEnd = line.size( );
@@ -589,7 +590,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			if ( stripValueTrailingWhitespaces && ( indexAfterValueEnd > indexValue ) )
 			{
 				index = line.find_last_not_of( whitespace, indexAfterValueEnd - 1 ); //strip all the trailing white spaces
-				if ( index != std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 					indexAfterValueEnd = index + 1;
 			}
 
@@ -817,31 +818,31 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 		{
 			//check for valid section format: " [ section_name ]"
 			index = line.find_first_not_of( whitespace ); //find first non whitespace
-			if ( index == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 				continue;
 			if ( line[ index ] != L'[' )
 				continue; //the first non whitespace char must be opening brace
 			int indexSectionBegin, indexAfterSectionEnd;
 			indexSectionBegin = line.find_first_not_of( whitespace, index + 1 ); //find first non whitespace char after the opening brace
-			if ( indexSectionBegin == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexSectionBegin == std::wstring::npos )
 				continue;
 			if ( lpSection != 0 )
 			{
 				index = line.find( lpSection, index ); //check if at that position is the searched section name
-				if ( index == std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 					continue;
 				if ( index != indexSectionBegin )
 					continue;
 			}
 			indexAfterSectionEnd = line.find( L']', indexSectionBegin + 1 ); //find first whitespace or closing brace char after the section name
-			if ( indexAfterSectionEnd == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexAfterSectionEnd == std::wstring::npos )
 				continue;
 			int indexComment = line.find( L';', indexSectionBegin ); //check if there is comment in the section name
-			if ( indexComment != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexComment != std::wstring::npos )
 				if ( indexComment <= indexAfterSectionEnd )
 					continue;                                                      //if the comment is between the sectionname and the ']' (for example: [section ; ])
 			index = line.find_last_not_of( whitespace, indexAfterSectionEnd - 1 ); //strip all the trailing white spaces
-			if ( index != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 				indexAfterSectionEnd = index + 1;
 
 			index = indexAfterSectionEnd - indexSectionBegin; //from here index contains now the sieze of the section
@@ -859,7 +860,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 		else
 		{
 			index = line.find_first_not_of( whitespace );
-			if ( index == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 				continue;
 			if ( line[ index ] == L'[' ) //we have reached the next section without finding the key
 			{
@@ -894,23 +895,23 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			if ( lpKey != 0 )
 			{
 				index = line.find( key, indexKey ); //check if at that position is the searched key name
-				if ( index == std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index == std::wstring::npos )
 					continue;
 				if ( indexKey != index )
 					continue; //the key must be the first non whitespace char in the line
 			}
 			int indexEqual;
 			indexEqual = line.find( L'=', index + 1 ); //find first '=' char after the key name
-			if ( indexEqual == std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexEqual == std::wstring::npos )
 				continue;
 			int indexComment = line.find( L';' ); //check if there is comment prior the equal character
-			if ( indexComment != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))indexComment != std::wstring::npos )
 				if ( indexComment <= indexEqual )
 					continue; //if the comment is between the sectionname and the ']' (for example: [section ; ])
 
 			int indexAfterKeyEnd = indexEqual;
 			index                = line.find_last_not_of( whitespace, indexAfterKeyEnd - 1 ); //strip all the trailing white spaces
-			if ( index != std::wstring::npos )
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 				indexAfterKeyEnd = index + 1;
 			index                = indexAfterKeyEnd - indexKey; //index contains the size of the key
 			if ( lpKey == 0 )
@@ -928,7 +929,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			//if (stripValueLeadingWhitespaces)
 			{
 				index = line.find_first_not_of( whitespace, indexValue ); //skip the whitespace chars between '=' and the value
-				if ( index != std::wstring::npos )                        // if no value for this key has been found
+				if ( (decltype(std::wstring::npos))index != std::wstring::npos )                        // if no value for this key has been found
 					indexValue = index;
 			}
 
@@ -938,7 +939,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			//
 			//search for comment on this line. An unescaped comment character marks the end of the value
 			index = indexValue - 1;
-			while ( ( index = line.find( L';', index + 1 ) ) != std::wstring::npos ) //search for every next comment character ';'
+			while ( (decltype(std::wstring::npos))( index = line.find( L';', index + 1 ) ) != std::wstring::npos ) //search for every next comment character ';'
 			{
 				int  index2   = index;
 				bool bEscaped = false;
@@ -954,7 +955,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 					line.erase( index, 1 ); //remove the escape character '\' from the combination "\;"
 				}
 			}
-			if ( index != std::wstring::npos ) //if we didn't enter the above loop (so there is no comment character on this row)
+			if ( (decltype(std::wstring::npos))index != std::wstring::npos ) //if we didn't enter the above loop (so there is no comment character on this row)
 				indexAfterValueEnd = index;
 			else
 				indexAfterValueEnd = line.size( );
@@ -962,7 +963,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			if ( ( indexAfterValueEnd > indexValue ) )
 			{
 				index = line.find_last_not_of( whitespace, indexAfterValueEnd - 1 ); //strip all the trailing white spaces
-				if ( index != std::wstring::npos )
+				if ( (decltype(std::wstring::npos))index != std::wstring::npos )
 					indexAfterValueEnd = index + 1;
 			}
 
