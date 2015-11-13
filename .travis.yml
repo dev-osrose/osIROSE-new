@@ -7,7 +7,6 @@ addons:
   apt_packages:
     - libboost-all-dev
     - cmake
-    - libmysqlcppconn-dev
     
 before_install:
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
