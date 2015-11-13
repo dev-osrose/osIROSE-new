@@ -24,14 +24,13 @@
 CLoginServer::CLoginServer( string fn )
 {
 	filename = fn;
-	LoadConfigurations( (char*)filename.c_str() );
+	LoadConfigurations( (char*)filename.c_str( ) );
 	GServer = this;
 }
 
-// Destructor	
+// Destructor
 CLoginServer::~CLoginServer( )
 {
-
 }
 
 // Create client socket (alloc memory)
@@ -39,17 +38,17 @@ CLoginClient* CLoginServer::CreateClientSocket( )
 {
 	try
 	{
-		CLoginClient* thisclient = new (nothrow) CLoginClient( );
+		CLoginClient* thisclient = new ( nothrow ) CLoginClient( );
 
-		if(thisclient == NULL)
+		if ( thisclient == NULL )
 			return NULL;
 
 		thisclient->GS = this;
 		return thisclient;
 	}
-	catch(...)
+	catch ( ... )
 	{
-		Log(MSG_ERROR, "Error in CreateClientSocket");
+		Log( MSG_ERROR, "Error in CreateClientSocket" );
 		return NULL;
 	}
 }
@@ -68,9 +67,9 @@ void CLoginServer::DeleteClientSocket( CClientSocket* thisclient )
 		Log( MSG_INFO, "User disconnected" );
 		delete (CLoginClient*)thisclient;
 	}
-	catch(...)
+	catch ( ... )
 	{
-		Log(MSG_ERROR, "Error in DeleteClientSocket");
+		Log( MSG_ERROR, "Error in DeleteClientSocket" );
 	}
 }
 
@@ -86,51 +85,52 @@ void CLoginServer::LoadConfigurations( char* file )
 	try
 	{
 		//Database
-		Config.SQLServer.pcServer   = ConfigGetString ( file, "mysql_host", "localhost" );
-		Config.SQLServer.pcDatabase = ConfigGetString ( file, "mysql_database", "irose2" );
-		Config.SQLServer.pcUserName = ConfigGetString ( file, "mysql_user", "root" );
-		Config.SQLServer.pcPassword = ConfigGetString ( file, "mysql_pass", "root" );
-		Config.SQLServer.pcPort     = ConfigGetInt    ( file, "mysql_port", 3306 );
+		Config.SQLServer.pcServer   = ConfigGetString( file, "mysql_host", "localhost" );
+		Config.SQLServer.pcDatabase = ConfigGetString( file, "mysql_database", "irose2" );
+		Config.SQLServer.pcUserName = ConfigGetString( file, "mysql_user", "root" );
+		Config.SQLServer.pcPassword = ConfigGetString( file, "mysql_pass", "root" );
+		Config.SQLServer.pcPort     = ConfigGetInt( file, "mysql_port", 3306 );
 		//Server
-		Config.ServerID             = ConfigGetInt    ( file, "serverid", 0 );
-		Config.ServerType           = 0; // Login is always 0
-		Config.LoginIP              = ConfigGetString ( file, "serverip", "127.0.0.1" );
-		Config.LoginPort            = ConfigGetInt    ( file, "serverport", 29000 );
-		Config.ServerName           = ConfigGetString ( file, "servername", "Loginserver" );
+		Config.ServerID   = ConfigGetInt( file, "serverid", 0 );
+		Config.ServerType = 0; // Login is always 0
+		Config.LoginIP    = ConfigGetString( file, "serverip", "127.0.0.1" );
+		Config.LoginPort  = ConfigGetInt( file, "serverport", 29000 );
+		Config.ServerName = ConfigGetString( file, "servername", "Loginserver" );
 		//Passwords
-		Config.LoginPass            = ConfigGetInt    ( file, "loginpass", 123456 );
-		Config.CharPass             = ConfigGetInt    ( file, "charpass", 123456 );
-		Config.WorldPass            = ConfigGetInt    ( file, "worldpass", 123456 );
+		Config.LoginPass = ConfigGetInt( file, "loginpass", 123456 );
+		Config.CharPass  = ConfigGetInt( file, "charpass", 123456 );
+		Config.WorldPass = ConfigGetInt( file, "worldpass", 123456 );
 		//Login
-		Config.MinimumAccessLevel   = ConfigGetInt    ( file, "accesslevel", 100 );
-		Config.usethreads           = ConfigGetInt    ( file, "usethreads", 0 )==0?false:true;
-		Config.CreateLoginAccount   = ConfigGetInt    ( file, "CreateLoginAccount", 0 )==0?false:true;
-		Config.Testserver           = ConfigGetInt    ( file, "Testserver", 1 )==0?false:true;
+		Config.MinimumAccessLevel = ConfigGetInt( file, "accesslevel", 100 );
+		Config.usethreads         = ConfigGetInt( file, "usethreads", 0 ) == 0 ? false : true;
+		Config.CreateLoginAccount = ConfigGetInt( file, "CreateLoginAccount", 0 ) == 0 ? false : true;
+		Config.Testserver         = ConfigGetInt( file, "Testserver", 1 ) == 0 ? false : true;
 	}
-	catch(...)
+	catch ( ... )
 	{
-		Log(MSG_FATALERROR, "Error parsing configuration file");
+		Log( MSG_FATALERROR, "Error parsing configuration file" );
 	}
 }
 
 // Handle packets
-bool CLoginServer::OnReceivePacket( CClientSocket* thisclient, CPacket *P )
+bool CLoginServer::OnReceivePacket( CClientSocket* thisclient, CPacket* P )
 {
 	//TODO:: Change these magic numbers into an enum so we what wtf is going on -Raven
-	switch( P->Header.Command )
+	switch ( P->Header.Command )
 	{
 	case 0x703: return pakEncryptionRequest( (CLoginClient*)thisclient, P );
-	case 0x708: return pakUserLogin        ( (CLoginClient*)thisclient, P );
-	case 0x704: return pakGetServers       ( (CLoginClient*)thisclient, P );
-	case 0x70a: return pakGetIP            ( (CLoginClient*)thisclient, P );
+	case 0x708: return pakUserLogin( (CLoginClient*)thisclient, P );
+	case 0x704: return pakGetServers( (CLoginClient*)thisclient, P );
+	case 0x70a: return pakGetIP( (CLoginClient*)thisclient, P );
 	case 0x808: return true;
 	default:
-		Log(MSG_WARNING, "[%i]Login Server Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Header.Command, P->Header.Size);
+		Log( MSG_WARNING, "[%i]Login Server Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Header.Command, P->Header.Size );
 		break;
 	}
 	return true;
 }
 
-bool CLoginServer::Ping( ) {
+bool CLoginServer::Ping( )
+{
 	return DB->Ping( );
 }

@@ -24,6 +24,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="signal.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{90DCB1E2-89A3-4367-A9CA-120BDD88FEF8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

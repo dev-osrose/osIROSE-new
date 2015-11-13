@@ -27,51 +27,49 @@
 // Player class
 class CLoginClient : public CClientSocket
 {
-    public:
-    	CLoginClient ( );      // Constructor
-    	~CLoginClient ( );     // destructor    
-        // Variables
-    	bool isLoggedIn;
-    	uint32_t userid;
-    	string username;
-    	string password;
-    	uint16_t accesslevel;
+	public:
+	CLoginClient( );  // Constructor
+	~CLoginClient( ); // destructor
+	                  // Variables
+	bool     isLoggedIn;
+	uint32_t userid;
+	string   username;
+	string   password;
+	uint16_t accesslevel;
 };
 
 // Server class
 class CLoginServer : public CServerSocket
 {
-    public:
-    	CLoginServer ( string );  // Constructor
-    	~CLoginServer( );                         // Destructor
-    	
-    	//Functions
-        CLoginClient* CreateClientSocket( );      // Create a client
-    	void DeleteClientSocket( CClientSocket* thisclient ); // Delete a client
-    	void LoadEncryption( );
-    	bool OnReceivePacket( CClientSocket* thisclient, CPacket* P );    
-        bool OnServerReady(void);	
-        void LoadConfigurations( char* );
-        bool Ping( );
-	   // Packets
-    	bool pakEncryptionRequest( CLoginClient* thisclient, CPacket* P );
-        bool pakConnectToChar( CLoginClient* thisclient, CPacket *P );
-    	bool pakUserLogin( CLoginClient* thisclient, CPacket* P );
-    	bool pakGetServers( CLoginClient* thisclient, CPacket* P );
-    	bool pakGetIP( CLoginClient* thisclient, CPacket* P );	    	
-    	    
-        // Variables	
-        string   filename;
-        vector<CServers*>          ServerList;            // list of channels;
-        
-        CDatabase *DB;
+	public:
+	CLoginServer( string ); // Constructor
+	~CLoginServer( );       // Destructor
+
+	//Functions
+	CLoginClient* CreateClientSocket( );                           // Create a client
+	void          DeleteClientSocket( CClientSocket* thisclient ); // Delete a client
+	void          LoadEncryption( );
+	bool          OnReceivePacket( CClientSocket* thisclient, CPacket* P );
+	bool          OnServerReady( void );
+	void          LoadConfigurations( char* );
+	bool          Ping( );
+	// Packets
+	bool pakEncryptionRequest( CLoginClient* thisclient, CPacket* P );
+	bool pakConnectToChar( CLoginClient* thisclient, CPacket* P );
+	bool pakUserLogin( CLoginClient* thisclient, CPacket* P );
+	bool pakGetServers( CLoginClient* thisclient, CPacket* P );
+	bool pakGetIP( CLoginClient* thisclient, CPacket* P );
+
+	// Variables
+	string              filename;
+	vector< CServers* > ServerList; // list of channels;
+
+	CDatabase* DB;
 };
 
-void StartSignal( );
-void StopSignal( );
-void HandleSignal( int num );
+void                       StartSignal( );
+void                       StopSignal( );
+void                       HandleSignal( int num );
 extern class CLoginServer* GServer;
 
 #endif
-
-

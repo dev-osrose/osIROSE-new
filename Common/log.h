@@ -7,33 +7,34 @@
 
 // Log path
 #ifdef _WIN32
-#	define LOG_DIRECTORY "log/"
+#define LOG_DIRECTORY "log/"
 #endif
 
 #ifdef __unix__
-#	define LOG_DIRECTORY "/var/log/roseserver/"
+#define LOG_DIRECTORY "/var/log/roseserver/"
 #endif
 
-#define LOG_LOGIN_SERVER		0x01
-#define LOG_CHARACTER_SERVER	0x02
-#define LOG_WORLD_SERVER     	0x03
-#define LOG_SAME_FILE           0x04
+#define LOG_LOGIN_SERVER 0x01
+#define LOG_CHARACTER_SERVER 0x02
+#define LOG_WORLD_SERVER 0x03
+#define LOG_SAME_FILE 0x04
 
 // Log File names
 extern unsigned char LOG_THISSERVER;
-#define LOG_FILENAME_LOGINFILE  "loginserver.log"
-#define LOG_FILENAME_CHARFILE   "charserver.log"
-#define LOG_FILENAME_WORLDFILE  "worldserver.log"
-#define LOG_DEFAULT_FILE        "server.log"
-#define LOG_FILENAME_ERRORFILE  "errors.log"
+#define LOG_FILENAME_LOGINFILE "loginserver.log"
+#define LOG_FILENAME_CHARFILE "charserver.log"
+#define LOG_FILENAME_WORLDFILE "worldserver.log"
+#define LOG_DEFAULT_FILE "server.log"
+#define LOG_FILENAME_ERRORFILE "errors.log"
 
 #define LOG_LOGINPACKETS "loginpacket.log"
-#define LOG_CHARPACKETS  "charpackets.log"
+#define LOG_CHARPACKETS "charpackets.log"
 #define LOG_WORLDPACKETS "worldpackets.log"
 #define LOG_DEFAULTPACKETS "packets.log"
 
 // Error Types
-enum msg_type {
+enum msg_type
+{
 	MSG_NONE,
 	MSG_STATUS,
 	MSG_SQL,

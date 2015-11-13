@@ -23,15 +23,14 @@
 // Constructor
 CLoginClient::CLoginClient( )
 {
-	userid = 0;
-	isLoggedIn = false;
+	userid      = 0;
+	isLoggedIn  = false;
 	accesslevel = 0;
-	username.reserve(17);
-	password.reserve(33);		
+	username.reserve( 17 );
+	password.reserve( 33 );
 }
 
 // Deconstructor
 CLoginClient::~CLoginClient( )
 {
-    
 }

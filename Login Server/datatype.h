@@ -21,8 +21,8 @@
 // Server list
 struct CServers
 {
-    uint32_t id;
-    char* ip;
-    uint32_t port;
-    SOCKET sock;
+	uint32_t id;
+	char*    ip;
+	uint32_t port;
+	SOCKET   sock;
 };

@@ -20,52 +20,54 @@
  */
 #include "loginserver.h"
 
-unsigned char LOG_THISSERVER = 0;
+unsigned char       LOG_THISSERVER = 0;
 class CLoginServer* GServer;
 
 // Main Funtion
-int
-main ( int argc, char *argv[] )
+int main( int argc, char* argv[] )
 {
 	LOG_THISSERVER = LOG_LOGIN_SERVER;
-	InitWinSocket ();
+	InitWinSocket( );
 	string fileconf = "loginserver.conf";
 	if ( argc > 1 )
 	{
-		fileconf = argv[1];
+		fileconf = argv[ 1 ];
 	}
 
-	CLoginServer *server = new ( nothrow ) CLoginServer ( fileconf );
+	CLoginServer* server = new ( nothrow ) CLoginServer( fileconf );
 
-	if (server == nullptr)
+	if ( server == nullptr )
 		return -1;
 
-	server->DB = new CDatabase ( server->Config.SQLServer.pcServer,
-															 server->Config.SQLServer.pcUserName,
-															 server->Config.SQLServer.pcPassword,
-															 server->Config.SQLServer.pcDatabase,
-															 server->Config.SQLServer.pcPort );
-
 	server->port = server->Config.LoginPort;
+	server->DB = new CDatabase( server->Config.SQLServer.pcServer,
+	                            server->Config.SQLServer.pcUserName,
+	                            server->Config.SQLServer.pcPassword,
+	                            server->Config.SQLServer.pcDatabase,
+	                            server->Config.SQLServer.pcPort );
+
 	if ( server->Config.usethreads )
-		Log ( MSG_INFO, "Using Threads" );
+		Log( MSG_INFO, "Using Threads" );
 
 	// Start server
-	if ( server->DB->Connect () == 0 )
-		Log ( MSG_INFO, "Connected to MySQL server" );
+	if ( server->DB->Connect( ) == 0 )
+	{
+		Log( MSG_INFO, "Connected to MySQL server" );
+	}
 	else
 	{
 		delete server;
 #ifdef _WIN32
-		system("pause");
+		system( "pause" );
 #endif
 		return -1;
 	}
-	server->LoadEncryption ();
-	server->StartServer ();
-	server->DB->Disconnect ();
+	server->LoadEncryption( );
+	server->StartServer( );
+	
 	// Close server
+	server->DB->Disconnect();
 	delete server;
-	CloseWinSocket ();
+	CloseWinSocket( );
 	return EXIT_SUCCESS;
 }

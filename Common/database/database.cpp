@@ -2,17 +2,17 @@
 #include "../log.h"
 
 // constructor
-CDatabase::CDatabase( char* server , char* username, char* password, char* database, unsigned int port)
+CDatabase::CDatabase( char* server, char* username, char* password, char* database, unsigned int port )
 {
-	Server = server;
+	Server   = server;
 	Username = username;
 	Password = password;
 	Database = database;
-	Port = port;
+	Port     = port;
 	LastPing = time( NULL );
-	Timeout = 0;
+	Timeout  = 0;
 
-	driver = get_driver_instance();
+	driver = get_driver_instance( );
 }
 
 // deconstructor
@@ -23,7 +23,7 @@ CDatabase::~CDatabase( )
 // disconnect from mysql
 void CDatabase::Disconnect( )
 {
-	con->close();
+	con->close( );
 }
 
 int CDatabase::Connect( )
@@ -31,20 +31,20 @@ int CDatabase::Connect( )
 	Log( MSG_INFO, "Connecting to MySQL" );
 	try
 	{
-		con.reset( driver->connect(Server, Username, Password) );
-		con->setSchema(Database);
-		stmt.reset( con->createStatement() );
+		con.reset( driver->connect( Server, Username, Password ) );
+		con->setSchema( Database );
+		stmt.reset( con->createStatement( ) );
 
-		std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
+		std::unique_ptr< sql::ResultSet > res( this->QStore( "SELECT @@wait_timeout AS _timeout" ) );
 
-		if( res->rowsCount() )
+		if ( res->rowsCount( ) )
 		{
-			Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
+			Timeout = res->getInt( "_timeout" ) - 60; // Set the timeout to 1 minute before the connection will timeout
 		}
 	}
-	catch (sql::SQLException &err)
+	catch ( sql::SQLException& err )
 	{
-		Log( MSG_FATALERROR, "Error connecting to MySQL server: %s\n", err.what());
+		Log( MSG_FATALERROR, "Error connecting to MySQL server: %s\n", err.what( ) );
 		return -1;
 	}
 
@@ -59,104 +59,104 @@ int CDatabase::Reconnect( )
 
 	try
 	{
-		if( con->reconnect() )
+		if ( con->reconnect( ) )
 			return 0;
 	}
-	catch (sql::SQLException &err)
+	catch ( sql::SQLException& err )
 	{
-		Log( MSG_FATALERROR, "Error reconnecting to MySQL server: %s\n", err.getErrorCode());
+		Log( MSG_FATALERROR, "Error reconnecting to MySQL server: %s\n", err.getErrorCode( ) );
 	}
 
 	return -1;
 }
 
 // execute query
-bool CDatabase::QExecute( char *Format,... )
+bool CDatabase::QExecute( char* Format, ... )
 {
-	char query[2048];
-	va_list ap; 
+	char    query[ 2048 ];
+	va_list ap;
 	va_start( ap, Format );
-	vsprintf_s(query, 2048, Format, ap);
-	va_end  ( ap );
+	vsprintf_s( query, 2048, Format, ap );
+	va_end( ap );
 
 	Log( MSG_QUERY, query );
-	SQLMutex.lock();
+	SQLMutex.lock( );
 	try
 	{
-		stmt.reset( con->createStatement() );
-		if( stmt->execute( query ) != true )
+		stmt.reset( con->createStatement( ) );
+		if ( stmt->execute( query ) != true )
 		{
 			Log( MSG_FATALERROR, "Could not execute query" );
 			return false;
 		}
 	}
-	catch (sql::SQLException &err)
+	catch ( sql::SQLException& err )
 	{
-		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what() );
+		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
 	}
 
-	SQLMutex.unlock();
+	SQLMutex.unlock( );
 	return true;
 }
 
-std::unique_ptr<sql::ResultSet> CDatabase::QStore( char *Format, ...)
+std::unique_ptr< sql::ResultSet > CDatabase::QStore( char* Format, ... )
 {
-	char query[1024];
+	char    query[ 1024 ];
 	va_list ap;
 	va_start( ap, Format );
-	vsprintf_s(query, 1024, Format, ap);
-	va_end  ( ap );
+	vsprintf_s( query, 1024, Format, ap );
+	va_end( ap );
 
 	Log( MSG_QUERY, query );
 
-	std::unique_ptr<sql::ResultSet> res;
-	SQLMutex.lock();
+	std::unique_ptr< sql::ResultSet > res;
+	SQLMutex.lock( );
 	try
 	{
-		stmt.reset( con->createStatement() );
+		stmt.reset( con->createStatement( ) );
 		res.reset( stmt->executeQuery( query ) );
-		if( res->next() == false )
+		if ( res->next( ) == false )
 		{
 			Log( MSG_FATALERROR, "Could not execute query" );
-			SQLMutex.unlock();
+			SQLMutex.unlock( );
 			return nullptr;
 		}
 	}
-	catch (sql::SQLException &err)
+	catch ( sql::SQLException& err )
 	{
-		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what() );
+		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
 	}
-	SQLMutex.unlock();
+	SQLMutex.unlock( );
 	return res;
 }
 
-sql::PreparedStatement* CDatabase::QPrepare(char *format)
+sql::PreparedStatement* CDatabase::QPrepare( char* format )
 {
-	SQLPrepareMutex.lock();
+	SQLPrepareMutex.lock( );
 	try
 	{
-		pstmt.reset( con->prepareStatement(format) );
+		pstmt.reset( con->prepareStatement( format ) );
 	}
-	catch (sql::SQLException &err)
+	catch ( sql::SQLException& err )
 	{
-		Log(MSG_FATALERROR, "Could not execute query: %s\n", err.what());
-		SQLPrepareMutex.unlock();
+		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
+		SQLPrepareMutex.unlock( );
 	}
-	return pstmt.get(); // Not that safe, but as long as we don't hold on to the PTR we should be good :D
+	return pstmt.get( ); // Not that safe, but as long as we don't hold on to the PTR we should be good :D
 }
 
-void CDatabase::QPrepareFree()
+void CDatabase::QPrepareFree( )
 {
-	SQLPrepareMutex.unlock();
+	SQLPrepareMutex.unlock( );
 }
 
-std::unique_ptr<sql::ResultSet> CDatabase::QUse(char *Format, ...)
+std::unique_ptr< sql::ResultSet > CDatabase::QUse( char* Format, ... )
 {
-	char query[1024];
-	va_list ap; 
+	char    query[ 1024 ];
+	va_list ap;
 	va_start( ap, Format );
-	vsprintf_s( query, 1024, Format, ap ); 
-	va_end  ( ap );
+	vsprintf_s( query, 1024, Format, ap );
+	va_end( ap );
 
 	return QStore( query );
 }
@@ -170,16 +170,16 @@ bool CDatabase::Ping( )
 
 		try
 		{
-			std::unique_ptr<sql::ResultSet> res( this->QStore("SELECT @@wait_timeout AS _timeout") );
+			std::unique_ptr< sql::ResultSet > res( this->QStore( "SELECT @@wait_timeout AS _timeout" ) );
 
-			while( res->next() )
+			while ( res->next( ) )
 			{
-				Timeout = res->getInt("_timeout") - 60; // Set the timeout to 1 minute before the connection will timeout
+				Timeout = res->getInt( "_timeout" ) - 60; // Set the timeout to 1 minute before the connection will timeout
 			}
 		}
-		catch (sql::SQLException &err)
+		catch ( sql::SQLException& err )
 		{
-			Log( MSG_FATALERROR, "MySQL Ping Failed: %s\n", err.what() );
+			Log( MSG_FATALERROR, "MySQL Ping Failed: %s\n", err.what( ) );
 		}
 		//Log( MSG_INFO, "MySql Pong, new Timeout: %d seconds", Timeout);
 	}

@@ -14,108 +14,122 @@
 #include <cstdlib>
 #include <ctype.h>
 
-#if defined(__unix)
-	#define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))
-	#define _strdup(Args) strdup(Args)
-	#define sprintf_s(buffer, buffer_size, stringbuffer, ...) (sprintf(buffer, stringbuffer, __VA_ARGS__))
-	#define vsprintf_s(buffer, buffer_size, stringbuffer, ...) (vsprintf(buffer, stringbuffer, __VA_ARGS__))
+#if defined( __unix )
+#define fopen_s( pFile, filename, mode ) ( ( *( pFile ) ) = fopen( ( filename ), ( mode ) ) )
+#define _strdup( Args ) strdup( Args )
+#define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( sprintf( buffer, stringbuffer, __VA_ARGS__ ) )
+#define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
 #endif
 
 // Find the entry
-bool ConfigGetEntry( char *pcFile, char *pcNameMust, char* &pcResult )
+bool ConfigGetEntry( char* pcFile, char* pcNameMust, char*& pcResult )
 {
-	char pcBuffer[ 512 ];
-	char *pcName, *pcPar, *pcPoint;
+	char     pcBuffer[ 512 ];
+	char *   pcName, *pcPar, *pcPoint;
 	unsigned len;
-		
-	pcResult=0;
+
+	pcResult = 0;
 
 	// Open file
-	FILE *fh;
-	fopen_s(&fh, pcFile, "r" );
-	if ( fh==NULL ) return false;
-	
+	FILE* fh;
+	fopen_s( &fh, pcFile, "r" );
+	if ( fh == NULL )
+		return false;
+
 	do
 	{
 		fgets( pcBuffer, 510, fh );
 		len = (unsigned)strlen( pcBuffer );
-		if ( pcBuffer[ len-1 ] == '\n' ) --len;
+		if ( pcBuffer[ len - 1 ] == '\n' )
+			--len;
 		pcBuffer[ len ] = 0;
-		
+
 		pcName = pcBuffer;
-		while ( *pcName==' ' || *pcName=='\t' ) ++pcName;
-		if ( *pcName==0 || *pcName=='#' ) continue;
+		while ( *pcName == ' ' || *pcName == '\t' )
+			++pcName;
+		if ( *pcName == 0 || *pcName == '#' )
+			continue;
 		pcPoint = pcName;
-		while ( *pcPoint!=' ' && *pcPoint!='\t' && *pcPoint!='#' && *pcPoint!='=' && *pcPoint!=0 ) ++pcPoint;
-		if ( *pcPoint==0 || *pcPoint=='#' ) continue;
+		while ( *pcPoint != ' ' && *pcPoint != '\t' && *pcPoint != '#' && *pcPoint != '=' && *pcPoint != 0 )
+			++pcPoint;
+		if ( *pcPoint == 0 || *pcPoint == '#' )
+			continue;
 		pcPar = pcPoint;
-		while ( *pcPar==' ' || *pcPar=='\t' || *pcPar=='=' ) ++pcPar;
-		*pcPoint=0;
-		
-		#ifdef _WIN32
+		while ( *pcPar == ' ' || *pcPar == '\t' || *pcPar == '=' )
+			++pcPar;
+		*pcPoint = 0;
+
+#ifdef _WIN32
 		if ( !_strcmpi( pcName, pcNameMust ) )
 		{
 			pcResult = _strdup( pcPar );
 			pcPoint  = pcResult + strlen( pcPar );
-			if ( *pcPoint==0 ) return true;
+			if ( *pcPoint == 0 )
+				return true;
 			--pcPoint;
-			while( *pcPoint==' ' || *pcPoint=='\t' ) *pcPoint--=0;
+			while ( *pcPoint == ' ' || *pcPoint == '\t' )
+				*pcPoint-- = 0;
 			return true;
 		}
-		
-		#else
-		if ( strcasecmp( pcName, pcNameMust )==0 )
+
+#else
+		if ( strcasecmp( pcName, pcNameMust ) == 0 )
 		{
 			pcResult = strdup( pcPar );
 			pcPoint  = pcResult + strlen( pcPar );
-			if ( *pcPoint==0 ) return true;
+			if ( *pcPoint == 0 )
+				return true;
 			--pcPoint;
-			while( *pcPoint==' ' || *pcPoint=='\t' ) *pcPoint--=0;
+			while ( *pcPoint == ' ' || *pcPoint == '\t' )
+				*pcPoint-- = 0;
 			return true;
-		}		
-		#endif
-		
+		}
+#endif
+
 	} while ( !feof( fh ) );
-	
+
 	// Close file
 	fclose( fh );
-	
+
 	return true;
 }
 
 // -----------------------------------------------------------------------------------------
 // Returns a text
 // -----------------------------------------------------------------------------------------
-char *ConfigGetString( char *pcFile, char *pcName, char *pcDefault )
+char* ConfigGetString( char* pcFile, char* pcName, char* pcDefault )
 {
 	char *pcRet, *pcRetReal, *pcRetOld;
-	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) ) 
+	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) )
 		return _strdup( pcDefault );
-	if (pcRet == 0) return _strdup(pcDefault);
+	if ( pcRet == 0 )
+		return _strdup( pcDefault );
 	pcRetOld = pcRet;
-	if ( *pcRet=='"' )
+	if ( *pcRet == '"' )
 	{
 		++pcRet;
-		pcRet[ strlen(pcRet) - 1 ] = 0;
+		pcRet[ strlen( pcRet ) - 1 ] = 0;
 	}
-	
-	pcRetReal = _strdup(pcRet);
+
+	pcRetReal = _strdup( pcRet );
 	free( pcRetOld );
-	
+
 	return pcRetReal;
 }
 
 // Returns a number
-unsigned ConfigGetInt( char *pcFile, char *pcName, unsigned uDefault )
+unsigned ConfigGetInt( char* pcFile, char* pcName, unsigned uDefault )
 {
-	char *pcRet;
+	char*    pcRet;
 	unsigned uRet;
-	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) ) return uDefault;
-	if (pcRet==0) return uDefault;
+	if ( !ConfigGetEntry( pcFile, pcName, pcRet ) )
+		return uDefault;
+	if ( pcRet == 0 )
+		return uDefault;
 
 	uRet = atoi( pcRet );
 	free( pcRet );
-	
+
 	return uRet;
 }
 
