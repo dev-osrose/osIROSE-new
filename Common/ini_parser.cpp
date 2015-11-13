@@ -28,7 +28,7 @@
 #include <Windows.h>
 #else
 
-#include <io.h>
+#include <sys/io.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
