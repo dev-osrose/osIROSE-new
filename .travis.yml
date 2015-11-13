@@ -8,8 +8,8 @@ addons:
   apt_packages:
     - libboost-all-dev
     - cmake
-    - gcc-5
-    - g++-5
+    - gcc-5, apt-source-whitelist
+    - g++-5, apt-source-whitelist
     - libmysqlcppconn-dev
   
 #install:
