@@ -13,11 +13,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(warnings "/EHsc")
 	set(errors "")
 	set(defines "")
-	
-	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/LoginServer.vcxproj.user" "<?xml version=\"1.0\" encoding=\"utf-8\"?> 
-<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"> 
-	<Import Project=\"${CMAKE_HOME_DIRECTORY}/AZGStudioProjectSettings.props\" /> 
-</Project>" )
 endif()
 
 if (NOT CONFIGURED_ONCE)
@@ -33,6 +28,7 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_HOME_DIRECTORY}/Common)
 
 add_executable(LoginServer main.cpp loginserver.cpp extrafunction.cpp loginclient.cpp loginpackets.cpp signal.cpp)
 target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient)
