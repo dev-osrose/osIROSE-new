@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project("osIROSE")
 
@@ -24,8 +24,8 @@ endif()
 
 add_subdirectory(Common)
 add_subdirectory("Login Server")
-add_subdirectory("Char Server")
-add_subdirectory("World Server")
+#add_subdirectory("Char Server")
+#add_subdirectory("World Server")
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
