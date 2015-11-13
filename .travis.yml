@@ -14,7 +14,7 @@ before_install:
   - git submodule update --init --recursive
   
 install:
-  - sudo apt-get install -qq libmysqlcppconn-dev
+  - sudo apt-get install -qq libmysqlcppconn6
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "g++-${GCC_VERSION}"; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
 
