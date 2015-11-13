@@ -1049,7 +1049,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 				return 0;
 			}
 			result   = line.substr( indexValue, indexAfterValueEnd - indexValue );
-			foundKey = true;
+			//foundKey = true;
 			break;
 		}
 	} //END WHILE
