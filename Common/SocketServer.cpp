@@ -387,7 +387,7 @@ void CServerSocket::FillFDS( fd_set* fds )
 		if ( client->isActive )
 		{
 			FD_SET( (unsigned)client->sock, fds );
-			if ( client->sock > maxfd )
+			if ( (uint32_t)client->sock > maxfd )
 				maxfd = client->sock;
 		}
 		else

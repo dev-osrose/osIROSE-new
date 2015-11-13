@@ -18,18 +18,36 @@
 	https://sourceforge.net/p/ultralightini/
 */
 #include <string>
+#include <string.h>
 //#include <io.h>
 #include <iostream>
 #include <fstream>
+#include <fcntl.h>
 #include "ini_parser.h"
 #ifdef _WIN32
 #include <Windows.h>
+#else
+
+#include <io.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdio.h>
+
+#define _wopen( pString, flag, mode ) open( pString, flag, mode )
+#define _chsize( file, str ) ftruncate( file, str)
+#define _close( file ) close( file )
+#define _O_RDWR O_RDWR
+#define _S_IREAD S_IREAD
+#define _S_IWRITE S_IWRITE
+
 #endif
 
 static const wchar_t*     g_NewLineW  = L"\r\n";
 static const char*        g_NewLineA  = "\r\n";
 static const unsigned int g_NewLineLn = 2;
-
+#ifdef __UNICODE
 unsigned int ReadWriteIniKeyValueStringW( const wchar_t* const lpSection, const wchar_t* const lpKey, const wchar_t* const lpDefaultValue, const wchar_t* const szPathAndFile, bool isWriteMode, wchar_t* lpReturnString, unsigned int* uReturnStringLength, bool stripValueLeadingWhitespaces, bool stripValueTrailingWhitespaces )
 {
 	std::basic_fstream< wchar_t >::pos_type posNewLineBeginning, posEnd;
@@ -388,7 +406,7 @@ lbl_end:
 		return wcslen( lpReturnString );
 	return 0;
 }
-
+#else
 //this function is just copy-paste of ReadWriteIniKeyValueStringW with different types
 unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const char* const lpKey, const char* const lpDefaultValue, const char* const szPathAndFile, bool isWriteMode, char** lpReturnString, unsigned int* uReturnStringLength, bool stripValueLeadingWhitespaces, bool stripValueTrailingWhitespaces )
 {
@@ -403,7 +421,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 	if ( lpSection != 0 )
 		section = lpSection;
 
-	int                index;
+	uint32_t                index;
 	static const char* whitespace   = " \t";
 	bool               foundSection = false;
 	bool               foundKey     = false;
@@ -433,10 +451,12 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				continue;
 			if ( line[ index ] != L'[' )
 				continue; //the first non whitespace char must be opening brace
-			int indexSectionBegin, indexAfterSectionEnd;
+
+			uint32_t indexSectionBegin, indexAfterSectionEnd;
 			indexSectionBegin = line.find_first_not_of( whitespace, index + 1 ); //find first non whitespace char after the opening brace
 			if ( indexSectionBegin == std::wstring::npos )
 				continue;
+
 			if ( lpSection != 0 )
 			{
 				index = line.find( lpSection, index ); //check if at that position is the searched section name
@@ -448,10 +468,12 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			indexAfterSectionEnd = line.find( L']', indexSectionBegin + 1 ); //find first whitespace or closing brace char after the section name
 			if ( indexAfterSectionEnd == std::wstring::npos )
 				continue;
-			int indexComment = line.find( L';', indexSectionBegin ); //check if there is comment in the section name
+
+			uint32_t indexComment = line.find( L';', indexSectionBegin ); //check if there is comment in the section name
 			if ( indexComment != std::wstring::npos )
 				if ( indexComment <= indexAfterSectionEnd )
 					continue;                                                      //if the comment is between the sectionname and the ']' (for example: [section ; ])
+
 			index = line.find_last_not_of( whitespace, indexAfterSectionEnd - 1 ); //strip all the trailing white spaces
 			if ( index != std::wstring::npos )
 				indexAfterSectionEnd = index + 1;
@@ -473,6 +495,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			index = line.find_first_not_of( whitespace );
 			if ( index == std::wstring::npos )
 				continue;
+
 			if ( line[ index ] == L'[' ) //we have reached the next section without finding the key
 			{
 				//we have reached the next section without having found the key
@@ -499,7 +522,8 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				}
 				goto lbl_end;
 			}
-			int indexKey = index;
+
+			uint32_t indexKey = index;
 
 			if ( lpKey != 0 )
 			{
@@ -509,19 +533,22 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				if ( indexKey != index )
 					continue; //the key must be the first non whitespace char in the line
 			}
-			int indexEqual;
+
+			uint32_t indexEqual;
 			indexEqual = line.find( L'=', index + 1 ); //find first '=' char after the key name
 			if ( indexEqual == std::wstring::npos )
 				continue;
-			int indexComment = line.find( L';' ); //check if there is comment prior the equal character
+
+			uint32_t indexComment = line.find( L';' ); //check if there is comment prior the equal character
 			if ( indexComment != std::wstring::npos )
 				if ( indexComment <= indexEqual )
 					continue; //if the comment is between the sectionname and the ']' (for example: [section ; ])
 
-			int indexAfterKeyEnd = indexEqual;
+			uint32_t indexAfterKeyEnd = indexEqual;
 			index                = line.find_last_not_of( whitespace, indexAfterKeyEnd - 1 ); //strip all the trailing white spaces
 			if ( index != std::wstring::npos )
 				indexAfterKeyEnd = index + 1;
+
 			index                = indexAfterKeyEnd - indexKey; //index contains the size of the key
 			if ( lpKey == 0 )
 			{
@@ -529,11 +556,12 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				result.append( 1, 0 );
 				continue;
 			}
+
 			if ( index != key.size( ) ) //we need this check to make sure that between the key name and the '=' there are no more other words
 				continue;
 
 			//now we have to get the value
-			int indexValue, indexAfterValueEnd;
+			uint32_t indexValue, indexAfterValueEnd;
 			indexValue = indexEqual + 1;
 			if ( stripValueLeadingWhitespaces )
 			{
@@ -1079,8 +1107,8 @@ lbl_end:
 
 	return std::stoi( result );
 }
-
-/** /
+#endif
+/*
 bool testIniParserW()
 {
 	bool testfailed = false;
@@ -1272,4 +1300,4 @@ bool testIniParserA()
 		testfailed = true;
 	return testfailed;
 }
-/**/
+*/

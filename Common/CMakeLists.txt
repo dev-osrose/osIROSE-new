@@ -30,7 +30,7 @@ include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/3rdParty/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
-add_library(Common STATIC config.cpp globals.cpp log.cpp rosecrypt.cpp SocketBase.cpp SocketClient.cpp SocketServer.cpp ./database/database.cpp)
+add_library(Common STATIC config.cpp globals.cpp log.cpp rosecrypt.cpp SocketBase.cpp SocketClient.cpp SocketServer.cpp ini_parser.cpp ./database/database.cpp)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
