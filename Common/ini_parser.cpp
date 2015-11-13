@@ -482,7 +482,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			}
 			else
 			{
-				if ( index == section.size( ) ) //we need this check to make sure that between the section name and the ']' there are no more other words
+				if ( (decltype(std::wstring::npos))index == section.size( ) ) //we need this check to make sure that between the section name and the ']' there are no more other words
 					foundSection = true;
 			}
 		}
@@ -547,7 +547,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				result.append( 1, 0 );
 				continue;
 			}
-			if ( index != key.size( ) ) //we need this check to make sure that between the key name and the '=' there are no more other words
+			if ( (decltype(std::wstring::npos))index != key.size( ) ) //we need this check to make sure that between the key name and the '=' there are no more other words
 				continue;
 
 			//now we have to get the value
@@ -794,7 +794,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 	int                index;
 	static const char* whitespace   = " \t";
 	bool               foundSection = false;
-	bool               foundKey     = false;
+	//bool               foundKey     = false;
 
 	if ( clFileOp.is_open( ) == false )
 	{
@@ -853,7 +853,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			}
 			else
 			{
-				if ( index == section.size( ) ) //we need this check to make sure that between the section name and the ']' there are no more other words
+				if ( (decltype(std::wstring::npos))index == section.size( ) ) //we need this check to make sure that between the section name and the ']' there are no more other words
 					foundSection = true;
 			}
 		}
@@ -920,7 +920,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 				result.append( 1, 0 );
 				continue;
 			}
-			if ( index != key.size( ) ) //we need this check to make sure that between the key name and the '=' there are no more other words
+			if ( (decltype(std::wstring::npos))index != key.size( ) ) //we need this check to make sure that between the key name and the '=' there are no more other words
 				continue;
 
 			//now we have to get the value
