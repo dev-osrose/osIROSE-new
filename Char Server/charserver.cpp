@@ -120,7 +120,7 @@ void CCharServer::OnClientDisconnect( CClientSocket* thisclient )
 		for ( UINT i = 0; i < thisclientwc->FriendList.size( ); i++ )
 		{
 			CFriendList* Friend = thisclientwc->FriendList.at( i );
-			
+
 			CCharClient* otherclient = GetClientByID( Friend->id );
 			if ( otherclient != NULL )
 			{
@@ -154,29 +154,15 @@ void CCharServer::DeleteClientSocket( CClientSocket* thisclient )
 // Load Server configuration
 void CCharServer::LoadConfigurations( char* file )
 {
-	// Database
-	Config.SQLServer.pcServer   = ConfigGetString( file, "mysql_host", "localhost" );
-	Config.SQLServer.pcDatabase = ConfigGetString( file, "mysql_database", "roseon_beta" );
-	Config.SQLServer.pcUserName = ConfigGetString( file, "mysql_user", "root" );
-	Config.SQLServer.pcPassword = ConfigGetString( file, "mysql_pass", "" );
-	Config.SQLServer.pcPort     = ConfigGetInt( file, "mysql_port", 3306 );
-	// Server
-	Config.ServerID   = ConfigGetInt( file, "serverid", 1 );
-	Config.ServerType = 1; // Char always = 1
-	Config.CharIP     = ConfigGetString( file, "serverip", "127.0.0.1" );
-	Config.CharPort   = ConfigGetInt( file, "serverport", 29100 );
-	Config.ParentID   = ConfigGetInt( file, "parentid", 0 );
-	Config.ServerName = ConfigGetString( file, "servername", "Server" );
-	Config.CharsPort  = ConfigGetInt( file, "CharsPort", 29110 );
-	// Char
-	Config.usethreads =
-	    ConfigGetInt( file, "usethreads", 0 ) == 0 ? false : true;
-	Config.DeleteTime         = ConfigGetInt( file, "deletetime", 36000 );
-	Config.MinimumAccessLevel = ConfigGetInt( file, "accesslevel", 100 );
-	// Password
-	Config.LoginPass = ConfigGetInt( file, "loginpass", 123456 );
-	Config.CharPass  = ConfigGetInt( file, "charpass", 123456 );
-	Config.WorldPass = ConfigGetInt( file, "worldpass", 123456 );
+	try
+	{
+		Config.LoadConfig( file );
+		//Config.ServerType = 1; // Char always = 1
+	}
+	catch ( ... )
+	{
+		Log( MSG_FATALERROR, "Error parsing configuration file" );
+	}
 }
 
 // Incoming packet

@@ -91,7 +91,7 @@
 #include "ePacketType.h"
 #include "log.h"
 #include "rosecrypt.hpp"
-#include "config.h"
+#include "ini_parser.h"
 #include "database/database.h"
 // Just some defs for easier use
 
@@ -174,6 +174,8 @@ struct CROSEServerConfigSQL
 // Server configuration
 struct CROSEServerConfig
 {
+	void LoadConfig( char* _file, bool _createConfig = false );
+
 	// GLOBAL
 	CROSEServerConfigSQL SQLServer;                // SQL Information
 	bool                 usethreads;               // Use Threads (in sockets)
@@ -181,31 +183,33 @@ struct CROSEServerConfig
 	unsigned             MaxConnections;           // Max connections
 	unsigned             UserPerThread;            // User per thread
 	bool                 AllowMultipleConnections; // Allow multiple connection from same ip?
-	bool                 StayInServerLoop;         // Server actived?
+	bool                 StayInServerLoop;         // Server active?
 	uint32_t             ServerID;                 //id from this server
 	uint32_t             ParentID;                 //id from the server to connect
-	char*                ServerName;               //Server name
-	uint32_t             ServerType;               //0 login - 1 server(char) - 2 channel(world)
+	uint32_t             ServerMode;               //0 login - 1 server(char) - 2 channel(world)
 
 	// LOGINSERVER
-	unsigned int MinimumAccessLevel; // Minimum access level
-	char*        LoginIP;            // LoginIP [external]
-	unsigned int LoginPort;          // Login port
+	char*        LoginName; //Server name
+	char*        LoginIP;   // LoginIP [external]
+	unsigned int LoginPort; // Login port
 	unsigned int LoginPass;
+	unsigned int MinimumAccessLevel; // Minimum access level
 	bool         CreateLoginAccount; // Create account in login if not exist?
 	bool         Testserver;         // channel for test ?
 
 	// CHARSEVER
 	unsigned long int DeleteTime; // Delete time
+	char*             CharName;   //Server name
 	char*             CharIP;     // CharIP
-	unsigned int      CharPort;   // Char port
-	unsigned int      CharPass;
-	unsigned int      CharsPort;
+	unsigned int      CharPort;   // Server to Client port
+	unsigned int      CharPass;   // ISC password
+	unsigned int      CharsPort;  // ISC Server port
 
 	// WORLDSERVER
+	char*        WorldName; //Server name
 	char*        WorldIP;
-	unsigned int WorldPort;
-	unsigned int WorldsPort;
+	unsigned int WorldPort;  // Server to client
+	unsigned int WorldsPort; // Server to server
 	unsigned int WorldPass;
 	uint32_t     EXP_RATE;
 	uint32_t     DROP_RATE;

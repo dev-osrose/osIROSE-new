@@ -84,27 +84,8 @@ void CLoginServer::LoadConfigurations( char* file )
 {
 	try
 	{
-		//Database
-		Config.SQLServer.pcServer   = ConfigGetString( file, "mysql_host", "localhost" );
-		Config.SQLServer.pcDatabase = ConfigGetString( file, "mysql_database", "irose2" );
-		Config.SQLServer.pcUserName = ConfigGetString( file, "mysql_user", "root" );
-		Config.SQLServer.pcPassword = ConfigGetString( file, "mysql_pass", "root" );
-		Config.SQLServer.pcPort     = ConfigGetInt( file, "mysql_port", 3306 );
-		//Server
-		Config.ServerID   = ConfigGetInt( file, "serverid", 0 );
-		Config.ServerType = 0; // Login is always 0
-		Config.LoginIP    = ConfigGetString( file, "serverip", "127.0.0.1" );
-		Config.LoginPort  = ConfigGetInt( file, "serverport", 29000 );
-		Config.ServerName = ConfigGetString( file, "servername", "Loginserver" );
-		//Passwords
-		Config.LoginPass = ConfigGetInt( file, "loginpass", 123456 );
-		Config.CharPass  = ConfigGetInt( file, "charpass", 123456 );
-		Config.WorldPass = ConfigGetInt( file, "worldpass", 123456 );
-		//Login
-		Config.MinimumAccessLevel = ConfigGetInt( file, "accesslevel", 100 );
-		Config.usethreads         = ConfigGetInt( file, "usethreads", 0 ) == 0 ? false : true;
-		Config.CreateLoginAccount = ConfigGetInt( file, "CreateLoginAccount", 0 ) == 0 ? false : true;
-		Config.Testserver         = ConfigGetInt( file, "Testserver", 1 ) == 0 ? false : true;
+		Config.LoadConfig( file );
+		//Config.ServerType = 0; // Login is always 0
 	}
 	catch ( ... )
 	{

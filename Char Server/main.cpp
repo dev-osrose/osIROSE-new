@@ -18,7 +18,9 @@
 
 	depeloped with Main erose/hrose source server + some change from the original eich source
 	*/
+#include <fstream>
 #include "charserver.h"
+#undef close
 
 unsigned char LOG_THISSERVER = 0;
 class CCharServer* GServer;
@@ -28,10 +30,27 @@ int main(int argc, char *argv[])
 {
 	LOG_THISSERVER = LOG_CHARACTER_SERVER;
 	InitWinSocket();
-	string fileconf = "charserver.conf";
+	string fileconf = "./server.conf";
 	if (argc > 1)
 	{
 		fileconf = argv[1];
+
+		if (argc > 2)
+		{
+			CROSEServerConfig temp;
+			temp.LoadConfig( (char*)fileconf.c_str(), true );
+		}
+	}
+
+	std::basic_fstream< char > clFileOp( fileconf, std::ios::in );
+	if (clFileOp.is_open() == false)
+	{
+		clFileOp.clear();
+		clFileOp.open( fileconf, std::ios::out ); // Create file
+		clFileOp.close();
+
+		CROSEServerConfig temp;
+		temp.LoadConfig( (char*)fileconf.c_str(), true );
 	}
 	CCharServer *server = new (nothrow)CCharServer(fileconf);
 

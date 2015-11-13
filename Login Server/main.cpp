@@ -18,20 +18,39 @@
 
  depeloped with Main erose/hrose source server + some change from the original eich source
  */
+#include <fstream>
 #include "loginserver.h"
+#undef close
 
 unsigned char       LOG_THISSERVER = 0;
 class CLoginServer* GServer;
 
-// Main Funtion
+// Main Function
 int main( int argc, char* argv[] )
 {
 	LOG_THISSERVER = LOG_LOGIN_SERVER;
 	InitWinSocket( );
-	string fileconf = "loginserver.conf";
+	string fileconf = "./server.ini";
 	if ( argc > 1 )
 	{
 		fileconf = argv[ 1 ];
+
+		if ( argc > 2 )
+		{
+			CROSEServerConfig temp;
+			temp.LoadConfig( (char*)fileconf.c_str( ), true );
+		}
+	}
+
+	std::basic_fstream< char > clFileOp( fileconf, std::ios::in );
+	if ( clFileOp.is_open( ) == false )
+	{
+		clFileOp.clear( );
+		clFileOp.open( fileconf, std::ios::out ); // Create file
+		clFileOp.close( );
+
+		CROSEServerConfig temp;
+		temp.LoadConfig( (char*)fileconf.c_str( ), true );
 	}
 
 	CLoginServer* server = new ( nothrow ) CLoginServer( fileconf );
@@ -40,7 +59,7 @@ int main( int argc, char* argv[] )
 		return -1;
 
 	server->port = server->Config.LoginPort;
-	server->DB = new CDatabase( server->Config.SQLServer.pcServer,
+	server->DB   = new CDatabase( server->Config.SQLServer.pcServer,
 	                            server->Config.SQLServer.pcUserName,
 	                            server->Config.SQLServer.pcPassword,
 	                            server->Config.SQLServer.pcDatabase,
@@ -64,9 +83,9 @@ int main( int argc, char* argv[] )
 	}
 	server->LoadEncryption( );
 	server->StartServer( );
-	
+
 	// Close server
-	server->DB->Disconnect();
+	server->DB->Disconnect( );
 	delete server;
 	CloseWinSocket( );
 	return EXIT_SUCCESS;

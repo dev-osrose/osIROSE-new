@@ -19,8 +19,10 @@
     depeloped with Main erose/hrose source server + some change from the original eich source        
 */
 #define REVISION 32
+#include <fstream>
 #include "worldserver.h"
 #pragma comment(lib,"ws2_32.lib")
+#undef close
 
 CWorldServer* GServer;
 
@@ -33,11 +35,28 @@ int main(int argc, char *argv[])
     srand( rand()*time(NULL) );         
 	LOG_THISSERVER = LOG_WORLD_SERVER;
     InitWinSocket( );
-    string fileconf = "worldserver.conf";   
-    if(argc>1)
-    {
-        fileconf = argv[1];
-    }              
+    string fileconf = "./server.conf";   
+	if (argc > 1)
+	{
+		fileconf = argv[1];
+
+		if (argc > 2)
+		{
+			CROSEServerConfig temp;
+			temp.LoadConfig( (char*)fileconf.c_str(), true );
+		}
+	}
+
+	std::basic_fstream< char > clFileOp( fileconf, std::ios::in );
+	if (clFileOp.is_open() == false)
+	{
+		clFileOp.clear();
+		clFileOp.open( fileconf, std::ios::out ); // Create file
+		clFileOp.close();
+
+		CROSEServerConfig temp;
+		temp.LoadConfig( (char*)fileconf.c_str(), true );
+	}
 	CWorldServer *server = new (nothrow) CWorldServer( fileconf );
     if(server==NULL)
         return -1;
