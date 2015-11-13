@@ -6,7 +6,7 @@ compiler:
   
 addons:
   apt_packages:
-    - boost-latest
+    - libboost-all-dev
     - cmake
     - gcc-5
     - g++-5
