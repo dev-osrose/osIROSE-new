@@ -10,8 +10,11 @@ addons:
     
 before_install:
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
+  - sudo add-apt-repository -y mirrors.kernel.org/ubuntu
   - sudo apt-get update -qq
   - git submodule update --init --recursive
+  - wget http://pngquant.org/pngquant_1.7.1-1_i386.deb
+  - sudo dpkg -i pngquant_1.7.1-1_i386.deb
   
 install:
   - sudo apt-get install -qq libmysqlcppconn-dev
