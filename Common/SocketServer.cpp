@@ -562,7 +562,7 @@ void CServerSocket::LoadEncryption( )
 	//port = ConfigGetInt("server.conf", "loginport", 29000);
 }
 
-// This function is called just before proccessing clients
+// This function is called just before processing clients
 void CServerSocket::OnServerStep( )
 {
 }

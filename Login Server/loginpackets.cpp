@@ -205,7 +205,7 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 		if ( result == NULL )
 			return false;
 
-		CPacket pak( ePacketType::PAKCS_CHANNEL_LIST_REQ );
+		CPacket pak( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
 		pak.Add< uint32_t >( servernum );
 		pak.Add< uint8_t >( (uint8_t)result->rowsCount( ) );
 		while ( result->next( ) )
@@ -216,10 +216,10 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 			uint8_t  status         = ( ( 100 * connected ) /
 			                   ( maxconnections == 0 ? 1 : maxconnections ) ) &
 			                 0xff;
-
-			pak.Add< uint16_t >( servernum );
-			pak.Add< uint8_t >( servernum );
-			pak.Add< uint16_t >( servernum );
+			
+			pak.Add< uint16_t >( id );
+			pak.Add< uint8_t >( 0 );
+			pak.Add< uint16_t >( status );
 			pak.AddString( result->getString( 2 ).c_str( ), true );
 		}
 
