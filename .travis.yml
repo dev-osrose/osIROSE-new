@@ -10,6 +10,7 @@ compiler:
 before_install:
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
   - sudo add-apt-repository -y "deb http://mirrors.kernel.org/ubuntu/ trusty main"
+  - sudo add-apt-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
   - sudo apt-get update -qq
   - git submodule update --init --recursive
   
