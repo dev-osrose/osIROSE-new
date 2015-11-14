@@ -17,7 +17,7 @@ install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "g++-${GCC_VERSION}"; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
   - sudo apt-get install -qq cmake # install the latest version of cmake
-  - ./install_dependencies.sh
+  - sh install_dependencies.sh
 
 before_script:
   - cd build
