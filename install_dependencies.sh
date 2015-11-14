@@ -21,6 +21,7 @@ wget http://cdn.mysql.com//Downloads/MySQL-5.7/mysql-5.7.9.tar.gz -O /tmp/mysql-
 tar -xf /tmp/mysql-5.7.9.tar.gz
 wget http://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.6.tar.gz -O /tmp/mysql-connector.tar.gz
 tar -xf /tmp/mysql-connector.tar.gz
+
 cp -r boost_1_59_0/boost ../3rdParty/include/
 
 echo "Building mysql-5.7.9"
