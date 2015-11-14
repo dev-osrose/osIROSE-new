@@ -28,14 +28,16 @@ cd mysql-5.7.9
 mkdir build
 cd build
 cmake -DWITH_BOOST=../../boost_1_59_0 ..
-make && make install
+make > build.log
+make install > install.log
 
 echo "Building mysql-connector-c++-1.1.6"
 cd ../../mysql-connector-c++-1.1.6
 mkdir build
 cd build
 cmake ..
-make && make install
+make > build.log
+make install > install.log
 cd ../..
 
 echo "Finished building dependencies"
