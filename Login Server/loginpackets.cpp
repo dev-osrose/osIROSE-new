@@ -55,7 +55,7 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 		    ( P->Header.Size - 6 - 32 ) > 16 ? 16 : P->Header.Size - 6 - 32 );
 		thisclient->password.assign( (const char*)&P->Buffer, 0, 32 );
 
-		CPacket pak( ePacketType::LSV_LOGIN_REQ );
+		CPacket pak( ePacketType::PAKCS_LOGIN_REQ );
 
 		sql::PreparedStatement* prep = DB->QPrepare( "CALL UserLogin('?')" );
 		prep->setString( 1, thisclient->username );
