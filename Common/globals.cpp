@@ -6,16 +6,24 @@ CPacket::CPacket( unsigned short mycommand, unsigned short mysize, unsigned shor
 	Header.Size    = mysize;
 	Header.Unused  = myunused;
 }
+
+CPacket::CPacket( ePacketType mycommand, unsigned short mysize, unsigned short myunused )
+{
+	Header.Command = (uint16_t)mycommand;
+	Header.Size    = mysize;
+	Header.Unused  = myunused;
+}
 CPacket::~CPacket( )
 {
 }
-///*
+
 void CPacket::StartPacket( unsigned short mycommand, unsigned short mysize, unsigned short myunused )
 {
 	Header.Command = mycommand;
 	Header.Size    = mysize;
 	Header.Unused  = myunused;
 }
+/*
 void CPacket::AddByte( unsigned char value )
 {
 	Buffer[ Header.Size - 6 ] = value;
@@ -40,11 +48,6 @@ void CPacket::AddFloat( float value )
 {
 	*( (float*)&Buffer[ Header.Size - 6 ] ) = value;
 	Header.Size += 4;
-}
-void CPacket::AddString( char* value )
-{
-	for ( unsigned char c = 0; c < (unsigned)strlen( value ); c++ )
-		AddByte( value[ c ] );
 }
 void CPacket::SetByte( unsigned short pos, unsigned char value )
 {
@@ -86,6 +89,7 @@ float CPacket::GetFloat( unsigned short pos )
 {
 	return *( (float*)&Buffer[ pos ] );
 }
+//*/
 
 char* CPacket::GetString( unsigned short pos )
 {

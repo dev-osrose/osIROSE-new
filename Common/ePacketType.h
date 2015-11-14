@@ -20,7 +20,7 @@ typedef char*					strings;*/
 // LC = Login -> server
 // CC = Char -> Client
 // WC = World -> client
-enum ePacketType
+enum class ePacketType
 {
 	PAKSTART    = 0x700,
 	PAKCS_ALIVE = PAKSTART,
@@ -31,7 +31,7 @@ enum ePacketType
 	PAKCS_CHANNEL_LIST_REQ,
 	PAKLC_CHANNEL_LIST_REPLY = PAKCS_CHANNEL_LIST_REQ,
 
-	PAKCS_LOGOUT_REQ = 0x707,
+	PAKCS_LOGOUT_REQ   = 0x707,
 	PAKWC_LOGOUT_REPLY = PAKCS_LOGOUT_REQ,
 	PAKCS_LOGIN_REQ,
 	PAKLC_LOGIN_REPLY = PAKCS_LOGIN_REQ,
@@ -68,10 +68,10 @@ enum ePacketType
 	PAKCS_CANCEL_LOGOUT,
 	PAKWC_QUEST_UPDATE,
 
-	PAKCS_QUEST_DATA_REQ = 0x730,
+	PAKCS_QUEST_DATA_REQ   = 0x730,
 	PAKWC_QUEST_DATA_REPLY = PAKCS_QUEST_DATA_REQ,
 
-	PAKCS_CHANGE_MAP_REQ = 0x753,
+	PAKCS_CHANGE_MAP_REQ   = 0x753,
 	PAKWC_CHANGE_MAP_REPLY = PAKCS_CHANGE_MAP_REQ,
 
 	EPACKETMAX
@@ -120,26 +120,26 @@ struct CPacket
 	};
 
 	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 );
+	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
 	~CPacket( );
 
-	void               StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-	void               AddByte( unsigned char value );
-	void               AddWord( unsigned short value );
-	void               AddDWord( unsigned value );
-	void               AddQWord( unsigned long long value );
-	void               AddFloat( float value );
-	void               AddString( char* value );
-	void               SetByte( unsigned short pos, unsigned char value );
-	void               SetWord( unsigned short pos, unsigned short value );
-	void               SetDWord( unsigned short pos, unsigned value );
-	void               SetQWord( unsigned short pos, unsigned long long value );
-	void               SetFloat( unsigned short pos, float value );
-	unsigned char      GetByte( unsigned short pos );
-	unsigned short     GetWord( unsigned short pos );
-	unsigned           GetDWord( unsigned short pos );
-	unsigned long long GetQWord( unsigned short pos );
-	float              GetFloat( unsigned short pos );
-	char*              GetString( unsigned short pos );
+	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
+	char* GetString( unsigned short pos );
+	//void               AddByte( unsigned char value );
+	//void               AddWord( unsigned short value );
+	//void               AddDWord( unsigned value );
+	//void               AddQWord( unsigned long long value );
+	//void               AddFloat( float value );
+	//void               SetByte( unsigned short pos, unsigned char value );
+	//void               SetWord( unsigned short pos, unsigned short value );
+	//void               SetDWord( unsigned short pos, unsigned value );
+	//void               SetQWord( unsigned short pos, unsigned long long value );
+	//void               SetFloat( unsigned short pos, float value );
+	//unsigned char      GetByte( unsigned short pos );
+	//unsigned short     GetWord( unsigned short pos );
+	//unsigned           GetDWord( unsigned short pos );
+	//unsigned long long GetQWord( unsigned short pos );
+	//float              GetFloat( unsigned short pos );
 
 	// Functions added by Drakia
 	template < class T >
