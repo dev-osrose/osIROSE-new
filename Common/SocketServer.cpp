@@ -48,7 +48,11 @@ bool CServerSocket::StartServer( )
 	sock = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( sock == INVALID_SOCKET )
 	{
-		Log( MSG_FATALERROR, "Could not create a socket" );
+#ifdef _WIN32
+		Log( MSG_FATALERROR, "Could not create a socket: #%i", WSAGetLastError( ) );
+#else
+		Log( MSG_FATALERROR, "Could not create a socket: %s", strerror( errno ) );
+#endif
 		return false;
 	}
 
@@ -66,14 +70,22 @@ bool CServerSocket::StartServer( )
 	memset( &( ain.sin_zero ), '\0', 8 );
 	if ( bind( sock, (const sockaddr*)&ain, sizeof( struct sockaddr ) ) )
 	{
-		Log( MSG_FATALERROR, "Could not bind socket" );
+#ifdef _WIN32
+		Log( MSG_FATALERROR, "Could not bind socket: #%i", WSAGetLastError( ) );
+#else
+		Log( MSG_FATALERROR, "Could not bind socket: %s", strerror( errno ) );
+#endif
 		closesocket( sock );
 		sock = INVALID_SOCKET;
 		return false;
 	}
 	if ( listen( sock, SOMAXCONN ) == -1 )
 	{
-		Log( MSG_FATALERROR, "Could not listen on socket" );
+#ifdef _WIN32
+		Log( MSG_FATALERROR, "Could not listen on socket: #%i", WSAGetLastError( ) );
+#else
+		Log( MSG_FATALERROR, "Could not listen on socket: %s", strerror( errno ) );
+#endif
 		closesocket( sock );
 		sock = INVALID_SOCKET;
 		return false;
@@ -101,19 +113,27 @@ bool CServerSocket::StartServer( )
 		memset( &( sain.sin_zero ), '\0', 8 );
 		if ( bind( sckISC, (const sockaddr*)&sain, sizeof( struct sockaddr ) ) )
 		{
-			Log( MSG_FATALERROR, "Could not bind socket" );
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not bind socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not bind socket: %s", strerror( errno ) );
+#endif
 			closesocket( sckISC );
 			sckISC = INVALID_SOCKET;
 			return false;
 		}
 		if ( listen( sckISC, SOMAXCONN ) == -1 )
 		{
-			Log( MSG_FATALERROR, "Could not listen on socket" );
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not listen on socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not listen on socket: %s", strerror( errno ) );
+#endif
 			closesocket( sckISC );
 			sckISC = INVALID_SOCKET;
 			return false;
 		}
-		Log( MSG_INFO, "opened ISC port %i", 29110 );
+		Log( MSG_INFO, "opened ISC port: %i", Config.CharsPort );
 	}
 
 	if ( LOG_THISSERVER == LOG_WORLD_SERVER )
@@ -157,19 +177,27 @@ bool CServerSocket::StartServer( )
 		memset( &( sain.sin_zero ), '\0', 8 );
 		if ( bind( sckISCII, (const sockaddr*)&sain, sizeof( struct sockaddr ) ) )
 		{
-			Log( MSG_FATALERROR, "Could not bind socket" );
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not bind socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not bind socket: %s", strerror( errno ) );
+#endif
 			closesocket( sckISCII );
 			sckISCII = INVALID_SOCKET;
 			return false;
 		}
 		if ( listen( sckISCII, SOMAXCONN ) == -1 )
 		{
-			Log( MSG_FATALERROR, "Could not listen on socket" );
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not listen on socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not listen on socket: %s", strerror( errno ) );
+#endif
 			closesocket( sckISCII );
 			sckISCII = INVALID_SOCKET;
 			return false;
 		}
-		Log( MSG_INFO, "opened ISC poort %i", Config.WorldsPort ); //29210 );
+		Log( MSG_INFO, "opened ISC port %i", Config.WorldsPort );
 	}
 	if ( LOG_THISSERVER == LOG_LOGIN_SERVER )
 	{
@@ -190,6 +218,7 @@ bool CServerSocket::StartServer( )
 		isActive = false;
 		return false;
 	}
+
 	Log( MSG_INFO, "Server started on port %i and is listening.", port );
 	//ISCThread( );
 	ServerLoop( );
@@ -306,7 +335,7 @@ void CServerSocket::ServerLoop( )
 				Log( MSG_ERROR, "Select command failed. Error #%i",
 				     WSAGetLastError( ) );
 #else
-				Log( MSG_ERROR, "Select command failed. Error #%i", errno );
+				Log( MSG_ERROR, "Select command failed. Error #%i", strerror( errno ) );
 #endif
 				isActive = false;
 			}
@@ -331,7 +360,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 					Log( MSG_ERROR, "Error accepting socket: %i", WSAGetLastError( ) );
 #else
-					Log( MSG_ERROR, "Error accepting socket: %i", errno );
+					Log( MSG_ERROR, "Error accepting socket: %i", strerror( errno ) );
 #endif
 				}
 			} //End if ( FD_ISSET( sckISC, &fds ) )
@@ -346,7 +375,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 			Log( MSG_ERROR, "Select command failed. Error #%i", WSAGetLastError( ) );
 #else
-			Log( MSG_ERROR, "Select command failed. Error #%i", errno );
+			Log( MSG_ERROR, "Select command failed. Error #%i", strerror( errno ) );
 #endif
 			isActive = false;
 		}
@@ -368,7 +397,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 				Log( MSG_ERROR, "Error accepting socket: %i", WSAGetLastError( ) );
 #else
-				Log( MSG_ERROR, "Error accepting socket: %i", errno );
+				Log( MSG_ERROR, "Error accepting socket: %i", strerror( errno ) );
 #endif
 			}
 		}
