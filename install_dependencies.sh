@@ -27,7 +27,7 @@ echo "Building mysql-5.7.9"
 cd mysql-5.7.9
 mkdir build
 cd build
-cmake -DWITH_BOOST=../../boost_1_59_0 ..
+cmake -DCMAKE_RULE_MESSAGES=OFF -DWITH_BOOST=../../boost_1_59_0 ..
 
 echo "Compiling mysql-5.7.9, this may take a while..."
 make -s
@@ -38,7 +38,7 @@ echo "Building mysql-connector-c++-1.1.6"
 cd ../../mysql-connector-c++-1.1.6
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_RULE_MESSAGES=OFF ..
 
 echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
 make -s
