@@ -22,6 +22,7 @@ tar -xf /tmp/boost-1.59.tar.gz
 wget http://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.6.tar.gz -O /tmp/mysql-connector.tar.gz
 tar -xf /tmp/mysql-connector.tar.gz
 
+# Copy boost into the 3rdParty folder
 export BOOST_ROOT=$PWD/boost_1_59_0
 cp -r boost_1_59_0/boost ../3rdParty/include/
 
@@ -43,7 +44,7 @@ cd build
 cmake -DCMAKE_RULE_MESSAGES=OFF ..
 
 echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
-make -s -j 2
+make -j 2
 
 #ls -R ..
 

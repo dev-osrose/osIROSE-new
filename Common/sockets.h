@@ -26,8 +26,9 @@
 #include <windows.h>
 #define close closesocket
 #ifdef FD_SETSIZE
-#undef FD_SETSIZE
+	#undef FD_SETSIZE
 #endif
+
 #define FD_SETSIZE 1024
 #else
 #include <unistd.h>

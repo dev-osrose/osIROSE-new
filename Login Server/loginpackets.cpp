@@ -134,15 +134,15 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				else
 				{
 					// BANNED
-					ADDBYTE( pak, 5 );
-					ADDDWORD( pak, 0 );
+					pak.Add<uint8_t>( 5 );
+					pak.Add<uint32_t>( 0 );
 				}
 			}
 			else
 			{
 				// BAD PASSWORD
-				ADDBYTE( pak, 3 );
-				ADDDWORD( pak, 0 );
+				pak.Add<uint8_t>( 3 );
+				pak.Add<uint32_t>( 0 );
 			}
 		}
 		else
@@ -166,8 +166,8 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				     thisclient->username.c_str( ) );
 			}
 			// BAD USERNAME
-			ADDBYTE( pak, 2 );
-			ADDDWORD( pak, 0 );
+			pak.Add<uint8_t>( 2 );
+			pak.Add<uint32_t>( 0 );
 		}
 		/*
 		 1 - general error   | 4 - your account is already logged
@@ -205,9 +205,9 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 		if ( result == NULL )
 			return false;
 
-		BEGINPACKET( pak, 0x704 );
-		ADDDWORD( pak, servernum );
-		ADDBYTE( pak, (uint8_t)result->rowsCount( ) ); // old function
+		CPacket pak( ePacketType::PAKCS_CHANNEL_LIST_REQ );
+		pak.Add<uint32_t>( servernum );
+		pak.Add<uint8_t>( (uint8_t)result->rowsCount( ) );
 		while ( result->next( ) )
 		{
 			uint32_t connected      = result->getInt( 3 );
@@ -217,11 +217,10 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 			                   ( maxconnections == 0 ? 1 : maxconnections ) ) &
 			                 0xff;
 
-			ADDWORD( pak, id );
-			ADDBYTE( pak, 0 );
-			ADDWORD( pak, status );
-			ADDSTRING( pak, result->getString( 2 ).c_str( ) ); // Name
-			ADDBYTE( pak, 0 );
+			pak.Add<uint16_t>( servernum );
+			pak.Add<uint8_t>( servernum );
+			pak.Add<uint16_t>( servernum );
+			pak.AddString( result->getString( 2 ).c_str( ), true );
 		}
 
 		thisclient->SendPacket( &pak );
@@ -245,7 +244,7 @@ bool CLoginServer::pakGetIP( CLoginClient* thisclient, CPacket* P )
 		uint32_t servernum = GETDWORD( ( *P ), 0 );
 		uint8_t channelnum = GETBYTE( ( *P ), 4 );
 
-		BEGINPACKET( pak, 0x70a );
+		CPacket pak( ePacketType::PAKCS_SRV_SELECT_REQ );
 
 		sql::PreparedStatement* prep = DB->QPrepare(
 		    "UPDATE accounts SET lastsvr=?,lastip='?' WHERE id=?" );
