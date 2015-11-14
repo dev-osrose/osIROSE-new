@@ -30,7 +30,7 @@ cd build
 cmake -DCMAKE_RULE_MESSAGES=OFF -DWITH_BOOST=../../boost_1_59_0 ..
 
 echo "Compiling mysql-5.7.9, this may take a while..."
-make -s
+make -s -j 4
 echo "Installing mysql-5.7.9, this may take a while..."
 make install > install.log
 
@@ -41,7 +41,7 @@ cd build
 cmake -DCMAKE_RULE_MESSAGES=OFF ..
 
 echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
-make -s
+make -s -j 4
 
 echo "Installing mysql-connector-c++-1.1.6, this may take a while..."
 make install > install.log
