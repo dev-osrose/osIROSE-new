@@ -463,6 +463,8 @@ void CServerSocket::AddUser( SOCKET sock, sockaddr_in* ClientInfo, bool server )
 	CClientSocket* thisclient = this->CreateClientSocket( );
 	if ( thisclient == NULL )
 	{
+		closesocket( sock );
+		ConnectedClients--;
 		return;
 	}
 
@@ -536,10 +538,9 @@ void CServerSocket::DisconnectClient( CClientSocket* thisclient )
 }
 
 // This function creates an appropriate client socket
-CClientSocket*
-    CServerSocket::CreateClientSocket( )
+CClientSocket* CServerSocket::CreateClientSocket( )
 {
-	CClientSocket* thisclient;
+	CClientSocket* thisclient = nullptr;
 	thisclient = new ( nothrow ) CClientSocket( );
 	return thisclient;
 }

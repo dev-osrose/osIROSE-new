@@ -67,8 +67,10 @@ bool CCharServer::OnServerReady( )
 	// Load all our clans
 	result = DB->QStore(
 	    "SELECT id,logo,back,name,cp,grade,slogan,news FROM list_clan" );
+	
 	if ( result == NULL )
 		return false;
+
 	while ( row = mysql_fetch_row( result ) )
 	{
 		CClans* thisclan = new CClans;
@@ -83,6 +85,7 @@ bool CCharServer::OnServerReady( )
 		strcpy( thisclan->news, row[ 7 ] );
 		ClanList.push_back( thisclan );
 	}
+
 	// Load Clans
 	for ( UINT i = 0; i < ClanList.size( ); i++ )
 	{
