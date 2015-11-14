@@ -210,6 +210,10 @@ void GenerateLoginServerCryptTables( CCryptTable*& CryptTables )
 
 	// Allocate memory for structure
 	CryptTables = (CCryptTable*)malloc( sizeof( CCryptTable ) );
+
+	if (CryptTables == nullptr)
+		return;
+
 	CryptTables->Tables = (unsigned**)calloc( 16, sizeof( unsigned ) );
 
 	// Set default startvalues
@@ -361,7 +365,7 @@ bool DecryptBufferData( CCryptTable* CryptTables, unsigned char* Buffer )
 	*( (unsigned*)&TempBuffer ) = *( (unsigned*)Buffer );
 	( (unsigned char*)&TempBuffer )[ 4 ] = Buffer[ 4 ];
 
-	// Calculate CheckSum for bufferheader
+	// Calculate CheckSum for buffer header
 	for ( CheckSum = 0, c = 0; c < 5; ++c )
 		CheckSum = CheckSumTable[ (unsigned char)Buffer[ c ] ^ CheckSum ];
 
@@ -412,7 +416,7 @@ void EncryptBuffer( CCryptTable* CryptTables, unsigned char* Buffer )
 	TempBuffer.AddBufferLen = *( (unsigned short*)( Buffer ) );
 	TempBuffer.Command = *( (unsigned short*)( Buffer + 2 ) );
 
-	// Build new bufferheader
+	// Build new buffer header
 
 	Buffer[ 4 ] = ( ( (unsigned)TempBuffer.AddBufferLen ) & 0x00000007 ) ^
 	              ( ( (unsigned)TempBuffer.Command >> 0x03 ) & 0x000000C0 );
@@ -428,14 +432,14 @@ void EncryptBuffer( CCryptTable* CryptTables, unsigned char* Buffer )
 
 	*( (unsigned*)Buffer ) = EncryptValue;
 
-	// Encrypt bufferheader
+	// Encrypt buffer header
 	for ( CheckSum = 0, c = 0; c < 5; ++c )
 	{
 		CheckSum = CheckSumTable[ ( (unsigned char*)&TempBuffer )[ c ] ^ CheckSum ];
 		Buffer[ c ] ^= CryptTables->Tables[ c ][ TempBuffer.AddTableValue ];
 	}
 
-	// Encrypt bufferdata if exists
+	// Encrypt buffer data if exists
 	if ( TempBuffer.AddBufferLen > 0x06 )
 	{
 		for ( c = 6; c < TempBuffer.AddBufferLen; ++c )
@@ -447,7 +451,7 @@ void EncryptBuffer( CCryptTable* CryptTables, unsigned char* Buffer )
 	}
 	Buffer[ 5 ] = CheckSum;
 
-	// Complete bufferheader
+	// Complete buffer header
 	EncryptValue = *( (unsigned*)Buffer ) & 0xFF9C7FC7;
 	EncryptValue |= ( ( (unsigned)TempBuffer.AddTableValue << 0x03 ) & 0x00000038 );
 	EncryptValue |= ( ( (unsigned)TempBuffer.AddTableValue << 0x09 ) & 0x00038000 );

@@ -513,7 +513,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 					clFileOp.write( lpDefaultValue, strlen( lpDefaultValue ) );
 					clFileOp.write( g_NewLineA, g_NewLineLn );
 					clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
-					delete rest_of_the_file;
+					delete[] rest_of_the_file;
 				}
 				goto lbl_end;
 			}
@@ -620,7 +620,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 					clFileOp.write( "\r", 1 );
 				clFileOp.write( "\n", 1 ); //this is needed because the line object strips the \n
 				clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
-				delete rest_of_the_file;
+				delete[] rest_of_the_file;
 
 				//here the rest of the file must be truncated
 				posNewLineBeginning = clFileOp.tellp( ); //this is the current pos
@@ -669,7 +669,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 						char* whitespaces = new char[ rest_of_the_fileLn ];
 						memset( whitespaces, ' ', rest_of_the_fileLn );
 						clFileOp.write( whitespaces, rest_of_the_fileLn );
-						delete whitespaces;
+						delete[] whitespaces;
 						goto lbl_end;
 					}
 				}
@@ -886,7 +886,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 					clFileOp.write( pWVal.c_str( ), pWVal.size( ) );
 					clFileOp.write( g_NewLineA, g_NewLineLn );
 					clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
-					delete rest_of_the_file;
+					delete[] rest_of_the_file;
 				}
 				goto lbl_end;
 			}
@@ -993,7 +993,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 					clFileOp.write( "\r", 1 );
 				clFileOp.write( "\n", 1 ); //this is needed because the line object strips the \n
 				clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
-				delete rest_of_the_file;
+				delete[] rest_of_the_file;
 
 				//here the rest of the file must be truncated
 				posNewLineBeginning = clFileOp.tellp( ); //this is the current pos
@@ -1042,7 +1042,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 						char* whitespaces = new char[ rest_of_the_fileLn ];
 						memset( whitespaces, ' ', rest_of_the_fileLn );
 						clFileOp.write( whitespaces, rest_of_the_fileLn );
-						delete whitespaces;
+						delete[] whitespaces;
 						goto lbl_end;
 					}
 				}
