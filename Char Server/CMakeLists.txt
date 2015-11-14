@@ -11,13 +11,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(std "")
 	set(warnings "/EHsc")
 	set(errors "")
-	set(defines "")
-	
-	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/CharServer.vcxproj.user" "<?xml version=\"1.0\" encoding=\"utf-8\"?> 
-<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"> 
-	<Import Project=\"${CMAKE_HOME_DIRECTORY}/AZGStudioProjectSettings.props\" /> 
-</Project>" )
-	
+	set(defines "")	
 endif()
 
 if (NOT CONFIGURED_ONCE)
