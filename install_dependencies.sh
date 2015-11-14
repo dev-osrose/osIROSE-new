@@ -45,7 +45,7 @@ cmake -DCMAKE_RULE_MESSAGES=OFF ..
 echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
 make -s -j 2
 
-ls -R ..
+#ls -R ..
 
 echo "Installing mysql-connector-c++-1.1.6, this may take a while..."
 sudo make install
