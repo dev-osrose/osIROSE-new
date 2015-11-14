@@ -21,7 +21,7 @@
 #ifndef __ROSE_SERVER__
 #define __ROSE_SERVER__
 
-#include "../common/sockets.h"
+#include "../Common/sockets.h"
 #include "datatype.h"
 
 // Player class
