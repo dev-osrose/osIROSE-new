@@ -26,7 +26,7 @@ before_script:
   - cmake ..
   
 
-script: make
+script: make -j 2
 
 env:
   global:

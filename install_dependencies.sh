@@ -37,13 +37,13 @@ cp -r boost_1_59_0/boost ../3rdParty/include/
 #make install
 
 echo "Building mysql-connector-c++-1.1.6"
-cd ../../mysql-connector-c++-1.1.6
+cd mysql-connector-c++-1.1.6
 mkdir build
 cd build
 cmake -DCMAKE_RULE_MESSAGES=OFF ..
 
 echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
-make -s -j 8
+make -s -j 2
 
 echo "Installing mysql-connector-c++-1.1.6, this may take a while..."
 make install
