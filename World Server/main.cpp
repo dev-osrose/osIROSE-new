@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     srand( rand()*time(NULL) );         
 	LOG_THISSERVER = LOG_WORLD_SERVER;
     InitWinSocket( );
-    string fileconf = "./server.conf";   
+    string fileconf = "./server.ini";   
 	if (argc > 1)
 	{
 		fileconf = argv[1];

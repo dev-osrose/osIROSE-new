@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 {
 	LOG_THISSERVER = LOG_CHARACTER_SERVER;
 	InitWinSocket();
-	string fileconf = "./server.conf";
+	string fileconf = "./server.ini";
 	if (argc > 1)
 	{
 		fileconf = argv[1];
