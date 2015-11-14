@@ -42,7 +42,7 @@ bool CLoginServer::pakEncryptionRequest( CLoginClient* thisclient, CPacket* P )
 	}
 }
 
-// Packet when user login (chck user and pass)
+// Packet when user login (check user and pass)
 bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 {
 	try
@@ -134,15 +134,15 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				else
 				{
 					// BANNED
-					pak.Add<uint8_t>( 5 );
-					pak.Add<uint32_t>( 0 );
+					pak.Add< uint8_t >( 5 );
+					pak.Add< uint32_t >( 0 );
 				}
 			}
 			else
 			{
 				// BAD PASSWORD
-				pak.Add<uint8_t>( 3 );
-				pak.Add<uint32_t>( 0 );
+				pak.Add< uint8_t >( 3 );
+				pak.Add< uint32_t >( 0 );
 			}
 		}
 		else
@@ -166,12 +166,12 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				     thisclient->username.c_str( ) );
 			}
 			// BAD USERNAME
-			pak.Add<uint8_t>( 2 );
-			pak.Add<uint32_t>( 0 );
+			pak.Add< uint8_t >( 2 );
+			pak.Add< uint32_t >( 0 );
 		}
 		/*
 		 1 - general error   | 4 - your account is already logged
-		 6 - topup account   | 7 - cannot connect to server please try again
+		 6 - top up account   | 7 - cannot connect to server please try again
 		 8 - server exceeded | 9 - account have not been verified
 		 10 - login failed   | 11 - ip capacity is full
 		 */
@@ -206,8 +206,8 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 			return false;
 
 		CPacket pak( ePacketType::PAKCS_CHANNEL_LIST_REQ );
-		pak.Add<uint32_t>( servernum );
-		pak.Add<uint8_t>( (uint8_t)result->rowsCount( ) );
+		pak.Add< uint32_t >( servernum );
+		pak.Add< uint8_t >( (uint8_t)result->rowsCount( ) );
 		while ( result->next( ) )
 		{
 			uint32_t connected      = result->getInt( 3 );
@@ -217,9 +217,9 @@ bool CLoginServer::pakGetServers( CLoginClient* thisclient, CPacket* P )
 			                   ( maxconnections == 0 ? 1 : maxconnections ) ) &
 			                 0xff;
 
-			pak.Add<uint16_t>( servernum );
-			pak.Add<uint8_t>( servernum );
-			pak.Add<uint16_t>( servernum );
+			pak.Add< uint16_t >( servernum );
+			pak.Add< uint8_t >( servernum );
+			pak.Add< uint16_t >( servernum );
 			pak.AddString( result->getString( 2 ).c_str( ), true );
 		}
 

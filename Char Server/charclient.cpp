@@ -23,24 +23,23 @@
 // Constructor
 CCharClient::CCharClient( )
 {
-    userid = 0;
-    platinum = false;
-    memset( &username, '\0', 17 );
-    memset( &password, '\0', 33 );
-    memset( &charname, '\0', 17 );
-    accesslevel = 0;
-    channel = 0;
-    clanid = 0;
-    clan_rank = 0;
-    level = 0;
-    job = 0;
-    charid = 0;
-    isLoggedIn = false;
-    logout = false;
+	userid   = 0;
+	platinum = false;
+	memset( &username, '\0', 17 );
+	memset( &password, '\0', 33 );
+	memset( &charname, '\0', 17 );
+	accesslevel = 0;
+	channel     = 0;
+	clanid      = 0;
+	clan_rank   = 0;
+	level       = 0;
+	job         = 0;
+	charid      = 0;
+	isLoggedIn  = false;
+	logout      = false;
 }
 
 // Deconstructor
 CCharClient::~CCharClient( )
 {
-    
 }

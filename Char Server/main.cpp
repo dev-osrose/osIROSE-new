@@ -22,74 +22,74 @@
 #include "charserver.h"
 #undef close
 
-unsigned char LOG_THISSERVER = 0;
+unsigned char      LOG_THISSERVER = 0;
 class CCharServer* GServer;
 
 // Main function
-int main(int argc, char *argv[])
+int main( int argc, char* argv[] )
 {
 	LOG_THISSERVER = LOG_CHARACTER_SERVER;
-	InitWinSocket();
+	InitWinSocket( );
 	string fileconf = "./server.ini";
-	if (argc > 1)
+	if ( argc > 1 )
 	{
-		fileconf = argv[1];
+		fileconf = argv[ 1 ];
 
-		if (argc > 2)
+		if ( argc > 2 )
 		{
 			CROSEServerConfig temp;
-			temp.LoadConfig( (char*)fileconf.c_str(), true );
+			temp.LoadConfig( (char*)fileconf.c_str( ), true );
 		}
 	}
 
 	std::basic_fstream< char > clFileOp( fileconf, std::ios::in );
-	if (clFileOp.is_open() == false)
+	if ( clFileOp.is_open( ) == false )
 	{
-		clFileOp.clear();
+		clFileOp.clear( );
 		clFileOp.open( fileconf, std::ios::out ); // Create file
-		clFileOp.close();
+		clFileOp.close( );
 
 		CROSEServerConfig temp;
-		temp.LoadConfig( (char*)fileconf.c_str(), true );
+		temp.LoadConfig( (char*)fileconf.c_str( ), true );
 	}
-	CCharServer *server = new (nothrow)CCharServer(fileconf);
+	CCharServer* server = new ( nothrow ) CCharServer( fileconf );
 
-	if (server == nullptr)
+	if ( server == nullptr )
 		return -1;
 
-	server->DB = new CDatabase(server->Config.SQLServer.pcServer,
-		server->Config.SQLServer.pcUserName,
-		server->Config.SQLServer.pcPassword,
-		server->Config.SQLServer.pcDatabase,
-		server->Config.SQLServer.pcPort);
+	server->DB = new CDatabase( server->Config.SQLServer.pcServer,
+	                            server->Config.SQLServer.pcUserName,
+	                            server->Config.SQLServer.pcPassword,
+	                            server->Config.SQLServer.pcDatabase,
+	                            server->Config.SQLServer.pcPort );
 
 	server->port = server->Config.CharPort;
 
-	if (server->Config.usethreads)
-		Log(MSG_INFO, "Using Threads");
+	if ( server->Config.usethreads )
+		Log( MSG_INFO, "Using Threads" );
 
-	if (server->DB->Connect() == 0)
+	if ( server->DB->Connect( ) == 0 )
 	{
-		Log(MSG_INFO, "Connected to MySQL server");
+		Log( MSG_INFO, "Connected to MySQL server" );
 	}
 	else
 	{
 		delete server;
 #ifdef _WIN32
-		system("pause");
+		system( "pause" );
 #endif
 		return -1;
 	}
 
-	server->LoadEncryption();
+	server->LoadEncryption( );
 
 	// Start server
-	server->StartServer();
+	server->StartServer( );
 
 	// Close server
-	server->DB->Disconnect();
+	server->DB->Disconnect( );
 	delete server;
-	CloseWinSocket();
+	CloseWinSocket( );
 	return EXIT_SUCCESS;
 }
 

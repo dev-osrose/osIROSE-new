@@ -166,27 +166,27 @@ bool CCharServer::pakGetCharacters( CCharClient* thisclient, CPacket* P )
 		ADDWORD( pak, chars[ k ].level );       // LEVEL
 		ADDWORD( pak, chars[ k ].classid );     // CLASSID
 		ADDDWORD( pak, chars[ k ].DeleteTime ); // DELETE TIME
-		ADDBYTE( pak, 0x00 ); // thisclient->platinum?0x01:0x00 );
-		                      // // IS PLATINUM?  00-NO;01-YES;02-YES BUT
-		                      // USER IS NOT
-		ADDDWORD( pak, chars[ k ].face );      // FACE
-		ADDDWORD( pak, chars[ k ].hairStyle ); // HAIR
-		ADDWORD( pak, items[ 2 ].itemnum );    // CAP
-		ADDWORD( pak, items[ 2 ].refine );     // CAP REFINE
-		ADDWORD( pak, items[ 3 ].itemnum );    // BODY
-		ADDWORD( pak, items[ 3 ].refine );     // BODY REFINE
-		ADDWORD( pak, items[ 5 ].itemnum );    // GLOVES
-		ADDWORD( pak, items[ 5 ].refine );     // GLOVES REFINE
-		ADDWORD( pak, items[ 6 ].itemnum );    // BOOTS
-		ADDWORD( pak, items[ 6 ].refine );     // BOOTS REFINE
-		ADDWORD( pak, items[ 1 ].itemnum );    // FACE
-		ADDWORD( pak, items[ 1 ].refine );     // FACE REFINE
-		ADDWORD( pak, items[ 4 ].itemnum );    // BACK
-		ADDWORD( pak, items[ 4 ].refine );     // BACK REFINE
-		ADDWORD( pak, items[ 7 ].itemnum );    // WEAPON
-		ADDWORD( pak, items[ 7 ].refine );     // WEAPON REFINE
-		ADDWORD( pak, items[ 8 ].itemnum );    // SUBWEAPON
-		ADDWORD( pak, items[ 8 ].refine );     // SUBWEAPON REFINE
+		ADDBYTE( pak, 0x00 );                   // thisclient->platinum?0x01:0x00 );
+		                                        // // IS PLATINUM?  00-NO;01-YES;02-YES BUT
+		                                        // USER IS NOT
+		ADDDWORD( pak, chars[ k ].face );       // FACE
+		ADDDWORD( pak, chars[ k ].hairStyle );  // HAIR
+		ADDWORD( pak, items[ 2 ].itemnum );     // CAP
+		ADDWORD( pak, items[ 2 ].refine );      // CAP REFINE
+		ADDWORD( pak, items[ 3 ].itemnum );     // BODY
+		ADDWORD( pak, items[ 3 ].refine );      // BODY REFINE
+		ADDWORD( pak, items[ 5 ].itemnum );     // GLOVES
+		ADDWORD( pak, items[ 5 ].refine );      // GLOVES REFINE
+		ADDWORD( pak, items[ 6 ].itemnum );     // BOOTS
+		ADDWORD( pak, items[ 6 ].refine );      // BOOTS REFINE
+		ADDWORD( pak, items[ 1 ].itemnum );     // FACE
+		ADDWORD( pak, items[ 1 ].refine );      // FACE REFINE
+		ADDWORD( pak, items[ 4 ].itemnum );     // BACK
+		ADDWORD( pak, items[ 4 ].refine );      // BACK REFINE
+		ADDWORD( pak, items[ 7 ].itemnum );     // WEAPON
+		ADDWORD( pak, items[ 7 ].refine );      // WEAPON REFINE
+		ADDWORD( pak, items[ 8 ].itemnum );     // SUBWEAPON
+		ADDWORD( pak, items[ 8 ].refine );      // SUBWEAPON REFINE
 	}
 	thisclient->SendPacket( &pak );
 	return true;
@@ -377,8 +377,8 @@ bool CCharServer::pakWSReady( CCharClient* thisclient, CPacket* P )
 		return true;
 	}
 	thisclient->userid = GETDWORD( ( *P ), 4 ); // our channelid
-	thisclient->accesslevel = 0xffff; // this will identify thisclient as
-	                                  // channel
+	thisclient->accesslevel = 0xffff;           // this will identify thisclient as
+	                                            // channel
 
 	// add channel
 	CChanels* newchannel = new ( nothrow ) CChanels;

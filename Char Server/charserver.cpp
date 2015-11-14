@@ -17,7 +17,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
    USA.
 
-    depeloped with Main erose/hrose source server + some change from the
+    developed with Main erose/hrose source server + some change from the
    original eich source
 */
 #include "charserver.h"
@@ -29,19 +29,19 @@ CCharServer::CCharServer( string fn )
 	GServer = this;
 }
 
-// Deconstructor
+// Destructor
 CCharServer::~CCharServer( )
 {
 }
 
-// Return a new clientsocket structure
+// Return a new client socket structure
 CCharClient* CCharServer::CreateClientSocket( )
 {
 	CCharClient* thisclient = new ( nothrow ) CCharClient( );
 	return thisclient;
 }
 
-// loadserver encryption
+// load server encryption
 void CCharServer::LoadEncryption( )
 {
 	GenerateCryptTables( CryptTable, 0x87654321 );
@@ -83,7 +83,6 @@ bool CCharServer::OnServerReady( )
 		strcpy( thisclan->news, row[ 7 ] );
 		ClanList.push_back( thisclan );
 	}
-	DB->QFree( );
 	// Load Clans
 	for ( UINT i = 0; i < ClanList.size( ); i++ )
 	{
@@ -102,7 +101,6 @@ bool CCharServer::OnServerReady( )
 			newmember->clan_rank = atoi( row[ 2 ] );
 			Clan->ClanMembers.push_back( newmember );
 		}
-		DB->QFree( );
 	}
 	Log( MSG_INFO, "Clans Information Loaded" );
 	return true;
@@ -127,7 +125,7 @@ void CCharServer::OnClientDisconnect( CClientSocket* thisclient )
 				ChangeMessengerStatus( thisclientwc, otherclient, 0x08 );
 			}
 		}
-		// set logout messga to clan
+		// set logout message to clan
 		CClans* thisclan = GetClanByID( thisclientwc->clanid );
 		if ( thisclan == NULL )
 			return;
@@ -141,7 +139,7 @@ void CCharServer::OnClientDisconnect( CClientSocket* thisclient )
 	}
 }
 
-// Deletes an old clientsocket structure
+// Deletes an old client socket structure
 void CCharServer::DeleteClientSocket( CClientSocket* thisclient )
 {
 	if ( thisclient->isserver )
