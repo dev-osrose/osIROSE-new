@@ -54,7 +54,7 @@ bool CCharServer::OnServerReady( )
 	if ( !DB->QExecute( "INSERT INTO channels "
 	                    "(id,name,host,port,connected,maxconnections,owner) "
 	                    "VALUES (%i,'%s','%s',%i,0,%i,%i)",
-	                    Config.ServerID, Config.ServerName, Config.CharIP,
+	                    Config.ServerID, Config.CharName, Config.CharIP,
 	                    Config.CharPort, Config.MaxConnections,
 	                    Config.ParentID ) )
 	{

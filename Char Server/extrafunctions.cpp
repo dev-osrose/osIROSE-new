@@ -21,12 +21,12 @@
 #include "charserver.h"
 
 // Search client by userid
-CCharClient* CCharServer::GetClientByUserID(UINT userid)
+CCharClient* CCharServer::GetClientByUserID( UINT userid )
 {
-	for (UINT i = 0; i < ClientList.size(); i++)
+	for ( UINT i = 0; i < ClientList.size( ); i++ )
 	{
-		CCharClient* client = (CCharClient*)ClientList.at(i);
-		if (client->userid == userid)
+		CCharClient* client = (CCharClient*)ClientList.at( i );
+		if ( client->userid == userid )
 		{
 			return client;
 		}
@@ -35,12 +35,12 @@ CCharClient* CCharServer::GetClientByUserID(UINT userid)
 }
 
 // Search the client by char id
-CCharClient* CCharServer::GetClientByID(UINT charid)
+CCharClient* CCharServer::GetClientByID( UINT charid )
 {
-	for (UINT i = 0; i < ClientList.size(); i++)
+	for ( UINT i = 0; i < ClientList.size( ); i++ )
 	{
-		CCharClient* client = (CCharClient*)ClientList.at(i);
-		if (client->charid == charid)
+		CCharClient* client = (CCharClient*)ClientList.at( i );
+		if ( client->charid == charid )
 		{
 			return client;
 		}
@@ -49,20 +49,20 @@ CCharClient* CCharServer::GetClientByID(UINT charid)
 }
 
 // Search the client by char name
-CCharClient* CCharServer::GetClientByName(char *name)
+CCharClient* CCharServer::GetClientByName( char* name )
 {
 	try
 	{
-		for (UINT i = 0; i < ClientList.size(); i++)
+		for ( UINT i = 0; i < ClientList.size( ); i++ )
 		{
-			CCharClient* client = (CCharClient*)ClientList.at(i);
-			if (strcmp(client->charname, name) == 0)
+			CCharClient* client = (CCharClient*)ClientList.at( i );
+			if ( strcmp( client->charname, name ) == 0 )
 			{
 				return client;
 			}
 		}
 	}
-	catch (...)
+	catch ( ... )
 	{
 		return NULL;
 	}
@@ -70,12 +70,12 @@ CCharClient* CCharServer::GetClientByName(char *name)
 }
 
 // Search the client by char name
-CCharClient* CCharServer::GetClientByUserName(char *username)
+CCharClient* CCharServer::GetClientByUserName( char* username )
 {
-	for (UINT i = 0; i < ClientList.size(); i++)
+	for ( UINT i = 0; i < ClientList.size( ); i++ )
 	{
-		CCharClient* client = (CCharClient*)ClientList.at(i);
-		if (strcmp(client->username, username) == 0)
+		CCharClient* client = (CCharClient*)ClientList.at( i );
+		if ( strcmp( client->username, username ) == 0 )
 		{
 			return client;
 		}
@@ -84,101 +84,101 @@ CCharClient* CCharServer::GetClientByUserName(char *username)
 }
 
 // Search the clan by clan id
-CClans* CCharServer::GetClanByID(int id)
+CClans* CCharServer::GetClanByID( int id )
 {
-	for (UINT i = 0; i < ClanList.size(); i++)
+	for ( UINT i = 0; i < ClanList.size( ); i++ )
 	{
-		CClans* thisclan = ClanList.at(i);
-		if (thisclan->id == id)
+		CClans* thisclan = ClanList.at( i );
+		if ( thisclan->id == id )
 			return thisclan;
 	}
 	return NULL;
 }
 
 //     Send packet to all the clan members
-bool CCharServer::SendToClanMembers(int clanid, CPacket* pak)
+bool CCharServer::SendToClanMembers( int clanid, CPacket* pak )
 {
-	CClans* thisclan = GetClanByID(clanid);
-	if (thisclan == 0)
+	CClans* thisclan = GetClanByID( clanid );
+	if ( thisclan == 0 )
 		return false;
-	for (UINT i = 0; i < thisclan->ClanMembers.size(); i++)
+	for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
 	{
-		CClanMembers* thismember = thisclan->ClanMembers.at(i);
-		CCharClient* otherclient = (CCharClient*)GetClientByID(thismember->id);
-		if (otherclient != 0)
+		CClanMembers* thismember  = thisclan->ClanMembers.at( i );
+		CCharClient*  otherclient = (CCharClient*)GetClientByID( thismember->id );
+		if ( otherclient != 0 )
 		{
-			otherclient->SendPacketCpy(pak);
+			otherclient->SendPacketCpy( pak );
 		}
 	}
 	return true;
 }
 
 //     Update clan window all members 07
-bool CCharServer::UpdateClanWindow(int clanid)
+bool CCharServer::UpdateClanWindow( int clanid )
 {
-	CClans* thisclan = GetClanByID(clanid);
-	if (thisclan == 0)
+	CClans* thisclan = GetClanByID( clanid );
+	if ( thisclan == 0 )
 		return false;
-	for (UINT i = 0; i < thisclan->ClanMembers.size(); i++)
+	for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
 	{
-		CClanMembers* thismember = thisclan->ClanMembers.at(i);
-		CCharClient* otherclient = (CCharClient*)GetClientByID(thismember->id);
-		if (otherclient != 0)
+		CClanMembers* thismember  = thisclan->ClanMembers.at( i );
+		CCharClient*  otherclient = (CCharClient*)GetClientByID( thismember->id );
+		if ( otherclient != 0 )
 		{
-			BEGINPACKET(pak, 0x7e0);
-			ADDBYTE(pak, 0x33);
-			ADDWORD(pak, clanid);
-			ADDWORD(pak, 0x0000);
-			ADDWORD(pak, thisclan->back);//clan background
-			ADDWORD(pak, thisclan->logo);//clanlogo            
-			ADDBYTE(pak, thisclan->grade);//clan grade
-			ADDBYTE(pak, otherclient->clan_rank);
-			ADDDWORD(pak, thisclan->cp);
-			ADDDWORD(pak, 0x00000064);
-			ADDDWORD(pak, 0x00000000);
-			ADDDWORD(pak, 0x00000000);
-			ADDWORD(pak, 0x0003);//?????????
-			ADDWORD(pak, 0x0000);
-			ADDWORD(pak, 0x0000);
-			for (int i = 0; i < 119; i++)
-				ADDBYTE(pak, 0x00);
-			ADDSTRING(pak, thisclan->name);//clan name
-			ADDBYTE(pak, 0x00);
-			ADDSTRING(pak, thisclan->slogan);//Clan slogan
-			ADDBYTE(pak, 0x00);
-			ADDSTRING(pak, thisclan->news);//Clan news
-			ADDBYTE(pak, 0x00);
-			otherclient->SendPacket(&pak);
+			BEGINPACKET( pak, 0x7e0 );
+			ADDBYTE( pak, 0x33 );
+			ADDWORD( pak, clanid );
+			ADDWORD( pak, 0x0000 );
+			ADDWORD( pak, thisclan->back );  //clan background
+			ADDWORD( pak, thisclan->logo );  //clanlogo
+			ADDBYTE( pak, thisclan->grade ); //clan grade
+			ADDBYTE( pak, otherclient->clan_rank );
+			ADDDWORD( pak, thisclan->cp );
+			ADDDWORD( pak, 0x00000064 );
+			ADDDWORD( pak, 0x00000000 );
+			ADDDWORD( pak, 0x00000000 );
+			ADDWORD( pak, 0x0003 ); //?????????
+			ADDWORD( pak, 0x0000 );
+			ADDWORD( pak, 0x0000 );
+			for ( int i = 0; i < 119; i++ )
+				ADDBYTE( pak, 0x00 );
+			ADDSTRING( pak, thisclan->name ); //clan name
+			ADDBYTE( pak, 0x00 );
+			ADDSTRING( pak, thisclan->slogan ); //Clan slogan
+			ADDBYTE( pak, 0x00 );
+			ADDSTRING( pak, thisclan->news ); //Clan news
+			ADDBYTE( pak, 0x00 );
+			otherclient->SendPacket( &pak );
 		}
 	}
 	return true;
 }
 
 // Get channel by id
-CChanels* CCharServer::GetChannelByID(unsigned int id)
+CChanels* CCharServer::GetChannelByID( unsigned int id )
 {
-	for (unsigned int i = 0; i < ChannelList.size(); i++)
+	for ( unsigned int i = 0; i < ChannelList.size( ); i++ )
 	{
-		CChanels* thischannel = ChannelList.at(i);
-		if (thischannel->id == id)
+		CChanels* thischannel = ChannelList.at( i );
+		if ( thischannel->id == id )
 			return thischannel;
 	}
 	return NULL;
 }
 
 // Returns the current time/date
-unsigned long int CCharServer::GetServerTime()
+unsigned long int CCharServer::GetServerTime( )
 {
 	// Get time/date and write it to the beginning of the row
-	time_t rawtime;							// For time
-	struct tm* timeinfo;					//    "
-	time(&rawtime);
-	localtime_s(timeinfo, &rawtime);
+	time_t     rawtime;            // For time
+	struct tm* timeinfo = nullptr; //    "
+	time( &rawtime );
+	localtime_s( timeinfo, &rawtime );
 	unsigned long int uCurTime = 0;
-	uCurTime += (timeinfo->tm_sec * 1);
-	uCurTime += (timeinfo->tm_min * 60);
-	uCurTime += (timeinfo->tm_hour * 3600);
-	uCurTime += (timeinfo->tm_yday * 86400);
-	uCurTime += ((timeinfo->tm_year - 2000) * 86400 * 366);
+	uCurTime += ( timeinfo->tm_sec * 1 );
+	uCurTime += ( timeinfo->tm_min * 60 );
+	uCurTime += ( timeinfo->tm_hour * 3600 );
+	uCurTime += ( timeinfo->tm_yday * 86400 );
+	uCurTime += ( ( timeinfo->tm_year - 2000 ) * 86400 * 366 );
 	return uCurTime;
 }

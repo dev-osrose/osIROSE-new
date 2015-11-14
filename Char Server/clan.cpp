@@ -31,16 +31,16 @@ bool CCharServer::SendClanInfo( CCharClient* thisclient )
 		if ( thisclan != NULL )
 		{
 			BEGINPACKET( pak, 0x7e0 );
-			ADDBYTE( pak, 0x33 ); // 0x33 you have invited to clan
+			ADDBYTE( pak, 0x33 );         // 0x33 you have invited to clan
 			ADDWORD( pak, thisclan->id ); // clan id
 			ADDBYTE( pak, 0x00 );         //
 			ADDBYTE( pak, 0x00 );
-			ADDWORD( pak, thisclan->back ); // Clan Background
-			ADDWORD( pak, thisclan->logo ); // Clan logo
-			ADDBYTE( pak, thisclan->grade ); // Clan grade
+			ADDWORD( pak, thisclan->back );        // Clan Background
+			ADDWORD( pak, thisclan->logo );        // Clan logo
+			ADDBYTE( pak, thisclan->grade );       // Clan grade
 			ADDBYTE( pak, thisclient->clan_rank ); // Clan rank (0 = red rokie /
 			                                       // 6 = master)
-			ADDDWORD( pak, thisclan->cp ); // Clan Points
+			ADDDWORD( pak, thisclan->cp );         // Clan Points
 			ADDDWORD( pak, 0x00000064 );
 			ADDDWORD( pak, 0x00000000 ); // Clan found
 			ADDDWORD( pak, 0x00000000 );
@@ -61,7 +61,7 @@ bool CCharServer::SendClanInfo( CCharClient* thisclient )
 			for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
 			{
 				CClanMembers* ClanMember = thisclan->ClanMembers.at( i );
-				;
+
 				CCharClient* otherclient = GetClientByID( ClanMember->id );
 				if ( otherclient != NULL )
 					ChangeClanStatus(
@@ -103,10 +103,11 @@ bool CCharServer::pakClanChat( CCharClient* thisclient, CPacket* P )
 	if ( P->Buffer[ 0 ] == '/' )
 	{
 		char* command = strtok( (char*)&( *P ).Buffer[ 1 ], " " );
+
 		if ( command == NULL )
 			return true;
-		if ( strcmp( command, "pak" ) ==
-		     0 ) // read cpacket.txt and send it (for test packets)
+
+		if ( strcmp( command, "pak" ) == 0 ) // read cpacket.txt and send it (for test packets)
 		{
 			int comando = 0;
 			if ( ( tmp = strtok( NULL, " " ) ) == NULL )
@@ -127,12 +128,14 @@ bool CCharServer::pakClanChat( CCharClient* thisclient, CPacket* P )
 			return true;
 		}
 	}
+
 	char* text = new ( nothrow ) char[ P->Header.Size ];
 	if ( text == NULL )
 	{
 		Log( MSG_ERROR, "Error allocing memory" );
 		return false;
 	}
+
 	memcpy( text, &P->Buffer, P->Header.Size );
 	CClans* thisclan = (CClans*)GetClanByID( thisclient->clanid );
 	if ( thisclan != NULL )
@@ -153,8 +156,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
 		return false;
-	MYSQL_RES* result;
-	MYSQL_ROW  row;
+
 	BYTE action = GETBYTE( ( *P ), 0 );
 	switch ( action )
 	{
@@ -168,9 +170,12 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
+
 		memcpy( nick, &P->Buffer[ 1 ], P->Header.Size );
+
 		if ( strcmp( nick, thisclient->charname ) == 0 )
 			return true;
+
 		CCharClient* otherclient = (CCharClient*)GetClientByName( nick );
 		if ( otherclient != NULL )
 		{
@@ -191,6 +196,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
+
 		memcpy( nick, &P->Buffer[ 1 ], P->Header.Size );
 		CClans* thisclan = GetClanByID( thisclient->clanid );
 		if ( thisclan == nullptr )
@@ -198,6 +204,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			delete[] nick;
 			return true;
 		}
+
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x81 ); // xxx have kicket to yyyy
 		ADDSTRING( pak, nick );
@@ -222,7 +229,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			otherclient->clanid    = 0;
 			otherclient->clan_rank = 1;
 			RESETPACKET( pak, 0x7e1 ); // Update world clan information
-			ADDBYTE( pak, 0xfb ); // action (kick)
+			ADDBYTE( pak, 0xfb );      // action (kick)
 			ADDSTRING( pak, nick );
 			ADDBYTE( pak, 0x00 );
 			CChanels* thischannel = GetChannelByID( otherclient->channel );
@@ -239,6 +246,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			}
 			pakClanMembers( otherclient );
 		}
+
 		if ( !DB->QExecute( "UPDATE characters SET clanid=0 AND clan_rank=1 "
 		                    "WHERE char_name='%s'",
 		                    nick ) )
@@ -258,6 +266,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
+
 		memcpy( nick, &P->Buffer[ 1 ], P->Header.Size - 7 );
 		int clan_rank = 0;
 		int level     = 0;
@@ -268,6 +277,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			delete[] nick;
 			return true;
 		}
+
 		CCharClient* otherclient = GetClientByName( nick );
 		if ( otherclient != NULL )
 		{
@@ -281,6 +291,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 				delete[] nick;
 				return true;
 			}
+
 			CClans* thisclan = GetClanByID( otherclient->clanid );
 			for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
 			{
@@ -293,6 +304,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 					}
 				}
 			}
+
 			job     = otherclient->job;
 			level   = otherclient->level;
 			channel = otherclient->channel;
@@ -305,30 +317,35 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		}
 		else
 		{
-			online = false;
-			result = DB->QStore( "SELECT clan_rank,classid,level FROM "
-			                     "characters WHERE char_name='%s'",
-			                     nick );
-			if ( result == NULL )
+			online                                   = false;
+			std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT clan_rank,classid,level FROM "
+			                                                       "characters WHERE char_name='%s'",
+			                                                       nick );
+
+			result->beforeFirst( );
+			if ( result->next( ) )
 			{
 				delete[] nick;
 				return false;
 			}
-			if ( mysql_num_rows( result ) != 1 )
+
+			if ( result->rowsCount( ) != 1 )
 			{
 				Log( MSG_WARNING, "Invalid charname: %s", nick );
 				delete[] nick;
 				return false;
 			}
-			row       = mysql_fetch_row( result );
-			clan_rank = atoi( row[ 0 ] );
-			job       = atoi( row[ 1 ] );
-			level     = atoi( row[ 2 ] );
+
+			clan_rank = result->getInt( "clan_rank" );
+			job       = result->getInt( "classid" );
+			level     = result->getInt( "level" );
 		}
+
 		if ( clan_rank < 5 )
 		{
 			clan_rank++;
 		}
+
 		if ( !DB->QExecute(
 		         "UPDATE characters SET clan_rank=%i WHERE char_name='%s'",
 		         clan_rank, nick ) )
@@ -336,6 +353,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			delete[] nick;
 			return false;
 		}
+
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x75 );
 		ADDBYTE( pak, clan_rank );
@@ -426,25 +444,25 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		}
 		else
 		{
-			online = false;
-			result = DB->QStore( "SELECT clan_rank,classid,level FROM "
-			                     "characters WHERE char_name='%s'",
-			                     nick );
-			if ( result == NULL )
+			online                                   = false;
+			std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT clan_rank,classid,level FROM "
+			                                                       "characters WHERE char_name='%s'",
+			                                                       nick );
+			result->beforeFirst( );
+			if ( result->next( ) )
 			{
 				delete[] nick;
 				return false;
 			}
-			if ( mysql_num_rows( result ) != 1 )
+			if ( result->rowsCount( ) != 1 )
 			{
 				Log( MSG_WARNING, "Invalid charname: %s", nick );
 				delete[] nick;
 				return false;
 			}
-			row       = mysql_fetch_row( result );
-			clan_rank = atoi( row[ 0 ] );
-			job       = atoi( row[ 1 ] );
-			level     = atoi( row[ 2 ] );
+			clan_rank = result->getInt( "clan_rank" );
+			job       = result->getInt( "classid" );
+			level     = result->getInt( "level" );
 		}
 		if ( clan_rank > 1 )
 		{
@@ -549,7 +567,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		                    thisclient->charname ) )
 			return false;
 		RESETPACKET( pak, 0x7e1 ); // Update world clan information
-		ADDBYTE( pak, 0xfb ); // action (leave)
+		ADDBYTE( pak, 0xfb );      // action (leave)
 		ADDSTRING( pak, thisclient->charname );
 		ADDBYTE( pak, 0x00 );
 		CChanels* thischannel = GetChannelByID( thisclient->channel );
@@ -607,23 +625,26 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		}
 		else
 		{ //   0     1
-			result = DB->QStore(
+			std::unique_ptr< sql::ResultSet > result = DB->QStore(
 			    "SELECT classid,level FROM characters where char_name='%s'",
 			    nick );
-			if ( result == NULL )
+
+			if ( result->next( ) )
 			{
 				delete[] nick;
 				return false;
 			}
-			if ( mysql_num_rows( result ) != 1 )
+
+			result->beforeFirst( );
+			if ( result->rowsCount( ) != 1 )
 			{
 				Log( MSG_WARNING, "Invalid charname: %s", nick );
 				delete[] nick;
 				return false;
 			}
-			row   = mysql_fetch_row( result );
-			job   = atoi( row[ 0 ] );
-			level = atoi( row[ 1 ] );
+			result->next( );
+			job   = result->getInt( "classid" );
+			level = result->getInt( "level" );
 		}
 		if ( !DB->QExecute(
 		         "UPDATE characters SET clan_rank=%i WHERE char_name='%s'",
@@ -639,7 +660,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDWORD( pak, 0x0000 );
 		ADDWORD( pak, 0x0000 );
 		ADDWORD( pak, level ); // level?
-		ADDWORD( pak, job ); // job?
+		ADDWORD( pak, job );   // job?
 		ADDSTRING( pak, nick );
 		ADDBYTE( pak, 0x00 );
 		SendToClanMembers( thisclient->clanid, &pak );
@@ -689,7 +710,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDWORD( pak, 0x0000 );
 		ADDWORD( pak, 0x0000 );
 		ADDWORD( pak, level ); // level?
-		ADDWORD( pak, job ); // job?
+		ADDWORD( pak, job );   // job?
 		ADDSTRING( pak, thisclient->charname );
 		ADDBYTE( pak, 0x00 );
 		SendToClanMembers( thisclient->clanid, &pak );
@@ -749,7 +770,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			}
 		}
 		RESETPACKET( pak, 0x7e1 ); // Update world clan information
-		ADDBYTE( pak, 0xfd ); // action (disorg)
+		ADDBYTE( pak, 0xfd );      // action (disorg)
 		ADDWORD( pak, clanid );
 		ADDWORD( pak, thisclient->charid );
 		CChanels* thischannel = GetChannelByID( thisclient->channel );
@@ -894,7 +915,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		}
 	}
 	break;
-	case 0x5C: // message from worldserver to load the new clan information
+	case 0x5C: // message from world server to load the new clan information
 	{
 		UINT clanid = GETWORD( ( *P ), 1 );
 		UINT clientrank = GETWORD( ( *P ), 3 );
@@ -907,9 +928,9 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x71 );
 		ADDWORD( pak, clanid );
-		ADDWORD( pak, 0x0000 ); //
-		ADDWORD( pak, thisclan->back ); // clan background
-		ADDWORD( pak, thisclan->logo ); // clanlogo
+		ADDWORD( pak, 0x0000 );          //
+		ADDWORD( pak, thisclan->back );  // clan background
+		ADDWORD( pak, thisclan->logo );  // clan logo
 		ADDBYTE( pak, thisclan->grade ); // clan grade
 		ADDBYTE( pak, 0xCC );
 		ADDDWORD( pak, thisclan->cp );
@@ -925,7 +946,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		UpdateClanWindow( clanid );
 	}
 	break;
-	case 0xfa: // message from worldserver to load the new clan information
+	case 0xfa: // message from world server to load the new clan information
 	{
 		int id = GETWORD( ( *P ), 1 );       // clanid
 		int charid = GETWORD( ( *P ), 3 );   // charid
@@ -935,29 +956,32 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			return true;
 		// Load all our clan information
 		//     0    1  2    3    4   5   6       7
-		result = DB->QStore( "SELECT id,logo,back,name,cp,grade,slogan,news "
-		                     "FROM list_clan where id=%i",
-		                     id );
+		std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT id,logo,back,name,cp,grade,slogan,news "
+		                                                       "FROM list_clan where id=%i",
+		                                                       id );
 		if ( result == NULL )
 			return false;
-		if ( mysql_num_rows( result ) != 1 )
+
+		if ( result->rowsCount( ) != 1 )
 		{
 			Log( MSG_WARNING, "Invalid clan: %i", id );
 			return false;
 		}
-		row = mysql_fetch_row( result );
+
 		// clan info
 		CClans* newclan = new CClans;
 		assert( newclan );
-		newclan->id   = atoi( row[ 0 ] );
-		newclan->logo = atoi( row[ 1 ] );
-		newclan->back = atoi( row[ 2 ] );
-		strncpy( newclan->name, row[ 3 ], 16 );
-		newclan->cp    = atoi( row[ 4 ] );
-		newclan->grade = atoi( row[ 5 ] );
-		strncpy( newclan->slogan, row[ 6 ], 29 );
-		strcpy( newclan->news, row[ 7 ] );
+
+		newclan->id    = result->getInt( "id" );
+		newclan->logo  = result->getInt( "logo" );
+		newclan->back  = result->getInt( "back" );
+		newclan->cp    = result->getInt( "cp" );
+		newclan->grade = result->getInt( "grade" );
+		strncpy( newclan->name, result->getString( "name" ).c_str( ), 16 );
+		strncpy( newclan->slogan, result->getString( "slogan" ).c_str( ), 29 );
+		strcpy( newclan->news, result->getString( "news" ).c_str( ) );
 		ClanList.push_back( newclan );
+
 		// member info
 		CClanMembers* newmember = new CClanMembers;
 		newmember->id           = otherclient->charid;
@@ -971,10 +995,10 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x30 );
 		ADDWORD( pak, clientid );
-		ADDWORD( pak, 0x0100 ); //
-		ADDWORD( pak, newclan->back ); // clan background
-		ADDWORD( pak, newclan->logo ); // clanlogo
-		ADDBYTE( pak, newclan->grade ); // clan grade
+		ADDWORD( pak, 0x0100 );                 //
+		ADDWORD( pak, newclan->back );          // clan background
+		ADDWORD( pak, newclan->logo );          // clanlogo
+		ADDBYTE( pak, newclan->grade );         // clan grade
 		ADDBYTE( pak, otherclient->clan_rank ); // clan rank
 		ADDDWORD( pak, newclan->cp );
 		ADDDWORD( pak, 0x00000000 ); // Unk
@@ -1009,7 +1033,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		}
 	}
 	default:
-		Log( MSG_INFO, "Clan action unknow %i ", action );
+		Log( MSG_INFO, "Clan action unknown %i ", action );
 		break;
 	}
 	return true;
@@ -1043,7 +1067,7 @@ bool CCharServer::pakClanMembers( CCharClient* thisclient )
 			else
 			{
 				ADDBYTE( pak, thismember->clan_rank ); // clan rank
-				ADDBYTE( pak, 0xff ); // channel (0xff = offline)
+				ADDBYTE( pak, 0xff );                  // channel (0xff = offline)
 				ADDWORD( pak, 0x0000 );
 				ADDWORD( pak, 0x0000 );
 				ADDWORD( pak, 0x0000 ); // Level
@@ -1078,7 +1102,7 @@ bool CCharServer::ClanLogout( CCharClient* thisclient )
 	return true;
 }
 
-// upload clanmark
+// upload clan mark
 bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 {
 	CClans* thisclan = GetClanByID( thisclient->clanid );
@@ -1126,14 +1150,15 @@ bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 bool CCharServer::pakDownloadCM( CCharClient* thisclient, CPacket* P )
 {
 	unsigned int clanid = GETDWORD( ( *P ), 0 );
-	MYSQL_RES* result =
-	    DB->QStore( "SELECT logo FROM list_clan WHERE id=%i", clanid );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT logo FROM list_clan WHERE id=%i", clanid );
+
 	if ( result == NULL )
 		return true;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount( ) != 1 )
 		return true;
-	MYSQL_ROW    row  = mysql_fetch_row( result );
-	unsigned int cmid = atoi( row[ 0 ] );
+
+	unsigned int cmid = result->getInt( "logo" );
 	char         filename[ 30 ];
 	sprintf( filename, "clanmark/%u.cm", cmid );
 	FILE* fh = fopen( filename, "rb" );
@@ -1156,16 +1181,15 @@ bool CCharServer::pakDownloadCM( CCharClient* thisclient, CPacket* P )
 	fclose( fh );
 	return true;
 }
-bool CCharServer::pakClanIconTime( CCharClient* thisclient,
-                                   CPacket* P ) // FORMAT UNKNOWN
+bool CCharServer::pakClanIconTime( CCharClient* thisclient, CPacket* P ) // FORMAT UNKNOWN
 {
 	BEGINPACKET( pak, 0x7e8 );
 	ADDWORD( pak, 0x07d8 ); // clanmark change year
-	ADDBYTE( pak, 0x01 ); // month
-	ADDBYTE( pak, 0x0e ); // day
-	ADDBYTE( pak, 0x12 ); // hour
-	ADDBYTE( pak, 0x37 ); // minutes
-	ADDBYTE( pak, 0x00 ); // ?? seconds?
+	ADDBYTE( pak, 0x01 );   // month
+	ADDBYTE( pak, 0x0e );   // day
+	ADDBYTE( pak, 0x12 );   // hour
+	ADDBYTE( pak, 0x37 );   // minutes
+	ADDBYTE( pak, 0x00 );   // ?? seconds?
 	thisclient->SendPacket( &pak );
 	return true;
 }
