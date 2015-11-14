@@ -28,7 +28,10 @@ cd mysql-5.7.9
 mkdir build
 cd build
 cmake -DWITH_BOOST=../../boost_1_59_0 ..
+
+echo "Compiling mysql-5.7.9, this may take a while..."
 make > build.log
+echo "Installing mysql-5.7.9, this may take a while..."
 make install > install.log
 
 echo "Building mysql-connector-c++-1.1.6"
@@ -36,7 +39,11 @@ cd ../../mysql-connector-c++-1.1.6
 mkdir build
 cd build
 cmake ..
+
+echo "Compiling mysql-connector-c++-1.1.6, this may take a while..."
 make > build.log
+
+echo "Installing mysql-connector-c++-1.1.6, this may take a while..."
 make install > install.log
 cd ../..
 
