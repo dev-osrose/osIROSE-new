@@ -8,32 +8,32 @@
 // List of clan members
 struct CClanMembers
 {
-	UINT id;
-	char name[ 50 ];
-	int  clan_rank;
+	uint32_t id;
+	char     name[ 50 ];
+	int      clan_rank;
 };
 
 // An item (for figuring out what a user is wearing)
 struct CItem
 {
-	UINT owner;
-	UINT itemnum;
-	UINT itemtype;
-	UINT refine;
-	UINT durability;
-	UINT lifespan;
+	uint32_t owner;
+	uint32_t itemnum;
+	uint32_t itemtype;
+	uint32_t refine;
+	uint32_t durability;
+	uint32_t lifespan;
 };
 
 // A single client character
 struct CCharacter
 {
 	char              char_name[ 17 ];
-	UINT              level;
-	UINT              face;
-	UINT              hairStyle;
+	uint32_t          level;
+	uint32_t          face;
+	uint32_t          hairStyle;
 	int               sex;
-	UINT              classid;
-	UINT              id;
+	uint32_t          classid;
+	uint32_t          id;
 	unsigned long int DeleteTime;
 };
 
@@ -61,9 +61,9 @@ struct CClans
 // Channel list
 struct CChanels
 {
-	UINT   id;
-	char*  ip;
-	UINT   port;
-	SOCKET sock;
+	uint32_t id;
+	char*    ip;
+	uint32_t port;
+	SOCKET   sock;
 };
 #endif

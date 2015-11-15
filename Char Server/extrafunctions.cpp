@@ -21,9 +21,9 @@
 #include "charserver.h"
 
 // Search client by userid
-CCharClient* CCharServer::GetClientByUserID( UINT userid )
+CCharClient* CCharServer::GetClientByUserID( uint32_t userid )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for (uint32_t i = 0; i < ClientList.size( ); i++)
 	{
 		CCharClient* client = (CCharClient*)ClientList.at( i );
 		if ( client->userid == userid )
@@ -35,9 +35,9 @@ CCharClient* CCharServer::GetClientByUserID( UINT userid )
 }
 
 // Search the client by char id
-CCharClient* CCharServer::GetClientByID( UINT charid )
+CCharClient* CCharServer::GetClientByID( uint32_t charid )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for (uint32_t i = 0; i < ClientList.size( ); i++)
 	{
 		CCharClient* client = (CCharClient*)ClientList.at( i );
 		if ( client->charid == charid )
@@ -53,7 +53,7 @@ CCharClient* CCharServer::GetClientByName( char* name )
 {
 	try
 	{
-		for ( UINT i = 0; i < ClientList.size( ); i++ )
+		for (uint32_t i = 0; i < ClientList.size( ); i++)
 		{
 			CCharClient* client = (CCharClient*)ClientList.at( i );
 			if ( strcmp( client->charname, name ) == 0 )
@@ -72,7 +72,7 @@ CCharClient* CCharServer::GetClientByName( char* name )
 // Search the client by char name
 CCharClient* CCharServer::GetClientByUserName( char* username )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for (uint32_t i = 0; i < ClientList.size( ); i++)
 	{
 		CCharClient* client = (CCharClient*)ClientList.at( i );
 		if ( strcmp( client->username, username ) == 0 )
@@ -86,7 +86,7 @@ CCharClient* CCharServer::GetClientByUserName( char* username )
 // Search the clan by clan id
 CClans* CCharServer::GetClanByID( int id )
 {
-	for ( UINT i = 0; i < ClanList.size( ); i++ )
+	for (uint32_t i = 0; i < ClanList.size( ); i++)
 	{
 		CClans* thisclan = ClanList.at( i );
 		if ( thisclan->id == id )
@@ -101,7 +101,7 @@ bool CCharServer::SendToClanMembers( int clanid, CPacket* pak )
 	CClans* thisclan = GetClanByID( clanid );
 	if ( thisclan == 0 )
 		return false;
-	for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+	for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 	{
 		CClanMembers* thismember  = thisclan->ClanMembers.at( i );
 		CCharClient*  otherclient = (CCharClient*)GetClientByID( thismember->id );
@@ -117,9 +117,11 @@ bool CCharServer::SendToClanMembers( int clanid, CPacket* pak )
 bool CCharServer::UpdateClanWindow( int clanid )
 {
 	CClans* thisclan = GetClanByID( clanid );
+	
 	if ( thisclan == 0 )
 		return false;
-	for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+
+	for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 	{
 		CClanMembers* thismember  = thisclan->ClanMembers.at( i );
 		CCharClient*  otherclient = (CCharClient*)GetClientByID( thismember->id );

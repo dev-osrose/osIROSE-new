@@ -62,9 +62,9 @@ class CCharServer : public CServerSocket
 	bool         Ping( );
 
 	// Extra functions
-	CChanels*         GetChannelByID( UINT id );
-	CCharClient*      GetClientByUserID( UINT id );
-	CCharClient*      GetClientByID( UINT id );
+	CChanels*         GetChannelByID( uint32_t id );
+	CCharClient*      GetClientByUserID( uint32_t id );
+	CCharClient*      GetClientByID( uint32_t id );
 	CCharClient*      GetClientByName( char* name );
 	CCharClient*      GetClientByUserName( char* username );
 	CClans*           GetClanByID( int id );
