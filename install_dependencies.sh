@@ -26,17 +26,6 @@ tar -xf /tmp/mysql-connector.tar.gz
 export BOOST_ROOT=$PWD/boost_1_59_0
 cp -r boost_1_59_0/boost ../3rdParty/include/
 
-#echo "Building mysql-5.7.9"
-#cd mysql-5.7.9
-#mkdir build
-#cd build
-#cmake -DCMAKE_RULE_MESSAGES=OFF -DWITH_BOOST=../../boost_1_59_0 ..
-#
-#echo "Compiling mysql-5.7.9, this may take a while..."
-#make -s -j 8
-#echo "Installing mysql-5.7.9, this may take a while..."
-#make install
-
 echo "Building mysql-connector-c++-1.1.6"
 cd mysql-connector-c++-1.1.6
 mkdir build

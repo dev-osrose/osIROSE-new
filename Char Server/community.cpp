@@ -35,7 +35,7 @@ bool CCharServer::ChangeMessengerStatus( CCharClient* thisclient, CCharClient* o
 // Messenger actions (add/remove/invite)
 bool CCharServer::pakMessengerManager( CCharClient* thisclient, CPacket* P )
 {
-	BYTE action = GETBYTE( ( *P ), 0 );
+	uint8_t action = GETBYTE( ( *P ), 0 );
 	switch ( action )
 	{
 	case 0x01: //wanna be my friend?
@@ -163,7 +163,7 @@ bool CCharServer::pakMessengerManager( CCharClient* thisclient, CPacket* P )
 	break;
 	case 0x05: //freakin later
 	{
-		WORD id = GETWORD( ( *P ), 1 );
+		uint16_t id = GETWORD( ( *P ), 1 );
 		if ( !DB->QExecute( "DELETE FROM list_friend WHERE id=%i and idfriend=%i",
 		                    thisclient->charid, id ) )
 			return false;
@@ -176,12 +176,12 @@ bool CCharServer::pakMessengerManager( CCharClient* thisclient, CPacket* P )
 	break;
 	case 0xfa: //messenger logout
 	{
-		WORD id = GETWORD( ( *P ), 1 );
+		uint16_t id = GETWORD( ( *P ), 1 );
 		CCharClient* ctherclient = (CCharClient*)GetClientByID( id );
 		if ( ctherclient == NULL )
 			return true;
 		ctherclient->logout = true;
-		for ( UINT i = 0; i < ctherclient->FriendList.size( ); i++ )
+		for ( uint32_t i = 0; i < ctherclient->FriendList.size( ); i++ )
 		{
 			CFriendList* thisfriend  = ctherclient->FriendList.at( i );
 			CCharClient* otherclient = (CCharClient*)GetClientByID( thisfriend->id );
@@ -204,7 +204,7 @@ bool CCharServer::pakMessengerManager( CCharClient* thisclient, CPacket* P )
 // Messenger Chat
 bool CCharServer::pakMessengerChat( CCharClient* thisclient, CPacket* P )
 {
-	WORD id = GETWORD( ( *P ), 0 );
+	uint16_t id = GETWORD( ( *P ), 0 );
 	CCharClient* otherclient = (CCharClient*)GetClientByID( id );
 	if ( otherclient != NULL )
 	{

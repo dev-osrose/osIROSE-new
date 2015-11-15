@@ -52,6 +52,7 @@
 #define fopen_s( pFile, filename, mode ) ( ( *( pFile ) ) = fopen( ( filename ), ( mode ) ) )
 #define _strdup( Args ) strdup( Args )
 #define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( sprintf( buffer, stringbuffer, __VA_ARGS__ ) )
+#define strcpy_s( buffer, buffer_size, stringbuffer, ... ) ( strcpy( buffer, stringbuffer, __VA_ARGS__ ) )
 #define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
 #endif
 
