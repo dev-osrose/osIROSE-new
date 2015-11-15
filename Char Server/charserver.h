@@ -6,7 +6,7 @@
 #define __ROSE_SERVERS__
 
 #include <time.h>
-#include "../common/sockets.h"
+#include "../Common/sockets.h"
 #include "datatypes.h"
 #define ClearItem( i )    \
 	{                     \
