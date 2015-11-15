@@ -38,7 +38,9 @@ void StartSignal( )
 	signal( SIGFPE, HandleSignal );
 	signal( SIGSEGV, HandleSignal );
 	signal( SIGTERM, HandleSignal );
+#ifdef _WIN32
 	signal( SIGBREAK, HandleSignal );
+#endif
 	signal( SIGABRT, HandleSignal );
 }
 
@@ -49,7 +51,9 @@ void StopSignal( )
 	signal( SIGFPE, 0 );
 	signal( SIGSEGV, 0 );
 	signal( SIGTERM, 0 );
+#ifdef _WIN32
 	signal( SIGBREAK, 0 );
+#endif
 	signal( SIGABRT, 0 );
 }
 
