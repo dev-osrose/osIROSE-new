@@ -26,7 +26,7 @@
 #include <windows.h>
 #define close closesocket
 #ifdef FD_SETSIZE
-	#undef FD_SETSIZE
+#undef FD_SETSIZE
 #endif
 
 #define FD_SETSIZE 1024
@@ -52,9 +52,9 @@
 #define fopen_s( pFile, filename, mode ) ( ( *( pFile ) ) = fopen( ( filename ), ( mode ) ) )
 #define _strdup( Args ) strdup( Args )
 #define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( sprintf( buffer, stringbuffer, __VA_ARGS__ ) )
-#define strcpy_s( buffer, buffer_size, stringbuffer, ... ) ( strcpy( buffer, stringbuffer, __VA_ARGS__ ) )
+#define strcpy_s( buffer, buffer_size, stringbuffer ) ( strcpy( buffer, stringbuffer ) )
 #define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
-#define localtime_s( result, timep ) ( localtime_r ( timep, result ) )
+#define localtime_s( result, timep ) ( localtime_r( timep, result ) )
 #endif
 
 #endif
@@ -154,7 +154,7 @@ using std::string;
 			ADDBYTE( p, ( v )[ q ] );                       \
 	}
 #define GETBYTE( p, o ) ( p.Buffer[ o ] )
-#define GETWORD( p, o ) *( (WORD*)&p.Buffer[ o ] )
+#define GETWORD( p, o ) *( (uint16_t*)&p.Buffer[ o ] )
 #define GETDWORD( p, o ) *( (uint32_t*)&p.Buffer[ o ] )
 #define GETQWORD( p, o ) *( (uint64_t*)&p.Buffer[ o ] )
 #define GETFLOAT( p, o ) *( (float*)&p.Buffer[ o ] )
