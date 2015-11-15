@@ -53,6 +53,7 @@
 #define _strdup( Args ) strdup( Args )
 #define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( sprintf( buffer, stringbuffer, __VA_ARGS__ ) )
 #define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
+#define localtime_s( result, timep ) ( localtime_r ( timep, result ) )
 #endif
 
 #endif
