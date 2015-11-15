@@ -53,7 +53,7 @@ bool CCharServer::pakDoIdentify( CCharClient* thisclient, CPacket* P )
 		strncpy( thisclient->username, result->getString( 1 ).c_str( ), 16 );
 		thisclient->channel     = result->getInt( 2 );
 		thisclient->accesslevel = result->getInt( 3 );
-		thisclient->platinum    = result->getInt( 4 );
+		thisclient->platinum    = result->getInt( 4 ) != 0;
 	}
 
 	Log( MSG_INFO, "User '%s'(#%i) logged in", thisclient->username,
@@ -65,7 +65,7 @@ bool CCharServer::pakDoIdentify( CCharClient* thisclient, CPacket* P )
 	ADDDWORD( pak, 0x00000000 );
 	thisclient->SendPacket( &pak );
 
-	bool online = result->getInt( 5 );
+	bool online = result->getInt( 5 ) != 0;
 	if ( online )
 		return false;
 
@@ -89,11 +89,12 @@ bool CCharServer::pakGetCharacters( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
 		return false;
+
 	// Properly delete items, quests, friends when deleting a character
 	// Hooray for joins.
 	sql::PreparedStatement* prep = DB->QPrepare(
 	    "DELETE FROM characters, items, list_friend, list_quest USING characters LEFT JOIN items ON items.owner = characters.id LEFT JOIN list_friend \
-												 												 												 															ON (list_friend.id = characters.id OR list_friend.idfriend = characters.id) LEFT JOIN list_quest ON list_quest.owner = characters.id WHERE (characters.deletetime > 0 AND characters.deletetime <= %i)" );
+		ON (list_friend.id = characters.id OR list_friend.idfriend = characters.id) LEFT JOIN list_quest ON list_quest.owner = characters.id WHERE (characters.deletetime > 0 AND characters.deletetime <= %i)" );
 	prep->setInt( 1, GetServerTime( ) );
 	bool bRes = prep->execute( );
 	DB->QPrepareFree( );
@@ -101,6 +102,7 @@ bool CCharServer::pakGetCharacters( CCharClient* thisclient, CPacket* P )
 	CItem        items[ 10 ];
 	unsigned int charnum = 0;
 	CCharacter   chars[ 5 ];
+	memset( chars, 0, sizeof( CCharacter ) * 5 );
 	//        0       1      2    3      4      5     6      7
 
 	prep = DB->QPrepare( "SELECT "
@@ -197,30 +199,33 @@ bool CCharServer::pakRequestWorld( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
 		return false;
-	MYSQL_ROW  row;
-	MYSQL_RES* result;
+
 	memcpy( thisclient->charname, &P->Buffer[ 3 ], P->Header.Size - 6 - 4 );
 	thisclient->charname[ P->Header.Size - 6 - 4 ] = 0;
 	Log( MSG_INFO, "User %s(%i) selected char '%s'", thisclient->username,
 	     thisclient->userid, thisclient->charname );
+
 	if ( !DB->QExecute( "UPDATE accounts SET lastchar='%s' WHERE id=%i",
 	                    thisclient->charname, thisclient->userid ) )
 		return false;
-	result = DB->QStore( "SELECT host,port FROM channels WHERE id=%i",
-	                     thisclient->channel );
+
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT host,port FROM channels WHERE id=%i",
+	                                                       thisclient->channel );
 	if ( result == NULL )
 		return false;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount( ) != 1 )
 	{
 		Log( MSG_WARNING, "Invalid Server: %i", thisclient->channel );
 		return false;
 	}
-	row = mysql_fetch_row( result );
+	result->beforeFirst( );
+	result->next( );
 	BEGINPACKET( pak, 0x711 );
-	ADDWORD( pak, atoi( row[ 1 ] ) ); // PORT
+	ADDWORD( pak, result->getInt( "port" ) ); // PORT
 	ADDDWORD( pak, thisclient->userid );
 	ADDDWORD( pak, 0x87654321 );
-	ADDSTRING( pak, row[ 0 ] ); // IP
+	ADDSTRING( pak, result->getString( "host" ).c_str( ) ); // IP
 	ADDBYTE( pak, 0 );
 	thisclient->SendPacket( &pak );
 
@@ -230,37 +235,42 @@ bool CCharServer::pakRequestWorld( CCharClient* thisclient, CPacket* P )
 	                     thisclient->charname );
 	if ( result == NULL )
 		return false;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount( ) != 1 )
 	{
 		Log( MSG_WARNING, "Number of user with charname '%s' is %i",
-		     thisclient->charname, mysql_num_rows( result ) );
+		     thisclient->charname, result->rowsCount( ) );
 		return false;
 	}
-	row                   = mysql_fetch_row( result );
-	thisclient->clanid    = atoi( row[ 0 ] );
-	thisclient->clan_rank = atoi( row[ 1 ] );
-	thisclient->charid    = atoi( row[ 2 ] );
-	thisclient->level     = atoi( row[ 3 ] );
-	thisclient->job       = atoi( row[ 4 ] );
+
+	thisclient->clanid    = result->getInt( "clanid" );
+	thisclient->clan_rank = result->getInt( "clan_rank" );
+	thisclient->charid    = result->getInt( "id" );
+	thisclient->level     = result->getInt( "level" );
+	thisclient->job       = result->getInt( "classid" );
 	// MESSENGER INFORMATION
 	//              //          0        1
-	result =
-	    DB->QStore( "SELECT idfriend,namefriend FROM list_friend WHERE id=%i",
-	                thisclient->charid );
+	result = DB->QStore( "SELECT idfriend,namefriend FROM list_friend WHERE id=%i",
+	                     thisclient->charid );
+
 	if ( result == NULL )
 		return false;
-	BYTE nfriends = mysql_num_rows( result ) & 0xff;
+
+	BYTE nfriends = result->rowsCount( ) & 0xff;
 
 	RESETPACKET( pak, 0x7e1 ); // Friend list command
 	ADDBYTE( pak, 0x06 );      // Sending Friend List
 	ADDBYTE( pak, nfriends );  // # friends
-	while ( row = mysql_fetch_row( result ) )
+
+	result->beforeFirst( );
+	while ( result->next( ) )
 	{
 		CFriendList* newfriend = new CFriendList;
 		assert( newfriend );
-		newfriend->id = atoi( row[ 0 ] );    // friendid
-		strcpy( newfriend->name, row[ 1 ] ); // friend name
+		newfriend->id = result->getInt( "idfriend" );                          // friendid
+		strcpy( newfriend->name, result->getString( "namefriend" ).c_str( ) ); // friend name
 		thisclient->FriendList.push_back( newfriend );
+
 		ADDWORD( pak, newfriend->id ); // friend id
 		ADDWORD( pak, 0x0000 );
 		CCharClient* otherclient = (CCharClient*)GetClientByID( newfriend->id );
@@ -295,15 +305,14 @@ bool CCharServer::pakCreateChar( CCharClient* thisclient, CPacket* P )
 	unsigned sex = GETBYTE( ( *P ), 0 ) % 2;
 	unsigned hairstyle = GETBYTE( ( *P ), 2 );
 	unsigned face = GETBYTE( ( *P ), 3 );
-	string     newname = (char*)&P->Buffer[ 7 ];
-	MYSQL_RES* result;
-	result = DB->QStore( "SELECT id FROM characters WHERE account_name='%s'",
-	                     thisclient->username );
+	string                            newname = (char*)&P->Buffer[ 7 ];
+	std::unique_ptr< sql::ResultSet > result  = DB->QStore( "SELECT id FROM characters WHERE account_name='%s'",
+	                                                       thisclient->username );
 
 	if ( result == NULL )
 		return false;
 
-	if ( mysql_num_rows( result ) == 5 )
+	if ( result->rowsCount( ) == 5 )
 	{
 		STARTPACKET( pak, 0x0713, 8 );
 		SETWORD( pak, 0x00, 4 )
@@ -317,7 +326,7 @@ bool CCharServer::pakCreateChar( CCharClient* thisclient, CPacket* P )
 	if ( result == NULL )
 		return false;
 
-	if ( mysql_num_rows( result ) > 0 )
+	if ( result->rowsCount( ) > 0 )
 	{
 		STARTPACKET( pak, 0x0713, 8 );
 		SETWORD( pak, 0x00, 2 );
@@ -331,11 +340,9 @@ bool CCharServer::pakCreateChar( CCharClient* thisclient, CPacket* P )
 	                    sex ) )
 		return false;
 
-	unsigned int mid = (unsigned)mysql_insert_id( DB->Mysql );
+	uint64_t mid = DB->GetLastUpdate( );
 
-	MYSQL_ROW row;
-	if ( !DB->QExecute(
-	         "INSERT INTO items VALUES(%i,30,3,0,40,100,3,1,0,0,0,0)", mid ) )
+	if ( !DB->QExecute( "INSERT INTO items VALUES(%i,30,3,0,40,100,3,1,0,0,0,0)", mid ) )
 		return false;
 
 	if ( !DB->QExecute( "INSERT INTO items VALUES(%i,1,8,0,40,100,7,1,0,0,0,0)",

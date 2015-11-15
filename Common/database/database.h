@@ -22,6 +22,7 @@ class CDatabase
 	bool                              QExecute( char* format, ... );
 	std::unique_ptr< sql::ResultSet > QUse( char* format, ... );
 	std::unique_ptr< sql::ResultSet > QStore( char* format, ... );
+	uint64_t                          GetLastUpdate( );
 
 	// Prepare statements
 	sql::PreparedStatement* QPrepare( char* format );

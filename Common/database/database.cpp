@@ -185,3 +185,11 @@ bool CDatabase::Ping( )
 	}
 	return true;
 }
+
+uint64_t CDatabase::GetLastUpdate( )
+{
+	if ( stmt == nullptr )
+		return 0;
+
+	return stmt->getUpdateCount( );
+}

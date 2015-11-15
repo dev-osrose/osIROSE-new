@@ -62,27 +62,26 @@ bool CCharServer::OnServerReady( )
 		                  "not connect to CharServer" );
 	}
 
-	MYSQL_RES* result;
-	MYSQL_ROW  row;
 	// Load all our clans
-	result = DB->QStore(
+	std::unique_ptr< sql::ResultSet > result = DB->QStore(
 	    "SELECT id,logo,back,name,cp,grade,slogan,news FROM list_clan" );
-	
+
 	if ( result == NULL )
 		return false;
 
-	while ( row = mysql_fetch_row( result ) )
+	result->beforeFirst( );
+	while ( result->next() )
 	{
 		CClans* thisclan = new CClans;
 		assert( thisclan ); // maybe remove
-		thisclan->id   = atoi( row[ 0 ] );
-		thisclan->logo = atoi( row[ 1 ] );
-		thisclan->back = atoi( row[ 2 ] );
-		strcpy( thisclan->name, row[ 3 ] );
-		thisclan->cp    = atoi( row[ 4 ] );
-		thisclan->grade = atoi( row[ 5 ] );
-		strcpy( thisclan->slogan, row[ 6 ] );
-		strcpy( thisclan->news, row[ 7 ] );
+		thisclan->id    = result->getInt( "id" );
+		thisclan->logo  = result->getInt( "logo" );
+		thisclan->back  = result->getInt( "back" );
+		thisclan->cp    = result->getInt( "cp" );
+		thisclan->grade = result->getInt( "grade" );
+		strcpy( thisclan->name, result->getString( "name" ).c_str( ) );
+		strcpy( thisclan->slogan, result->getString( "slogan" ).c_str( ) );
+		strcpy( thisclan->news, result->getString( "news" ).c_str( ) );
 		ClanList.push_back( thisclan );
 	}
 
@@ -95,13 +94,15 @@ bool CCharServer::OnServerReady( )
 		                     Clan->id );
 		if ( result == NULL )
 			return false;
-		while ( row = mysql_fetch_row( result ) )
+
+		result->beforeFirst( );
+		while ( result->next() )
 		{
 			CClanMembers* newmember = new CClanMembers;
 			assert( newmember );
-			newmember->id = atoi( row[ 0 ] );
-			strcpy( newmember->name, row[ 1 ] );
-			newmember->clan_rank = atoi( row[ 2 ] );
+			newmember->id        = result->getInt( "id" );
+			newmember->clan_rank = result->getInt( "clan_rank" );
+			strcpy( newmember->name, result->getString( "char_name" ).c_str( ) );
 			Clan->ClanMembers.push_back( newmember );
 		}
 	}

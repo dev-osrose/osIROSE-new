@@ -1133,6 +1133,7 @@ bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 		return true;
 	}
 	rewind( fh );
+
 	for ( unsigned int i = 0; i < P->Header.Size - 6; i++ )
 		fwrite( &P->Buffer[ i ], 1, 1, fh );
 	fclose( fh );
