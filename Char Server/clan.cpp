@@ -423,7 +423,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 				return true;
 			}
 			CClans* thisclan = GetClanByID( otherclient->clanid );
-			for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+			for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 			{
 				CClanMembers* thismember = thisclan->ClanMembers.at( i );
 				if ( thismember != 0 )
@@ -929,11 +929,12 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 	case 0x5C: // message from world server to load the new clan information
 	{
 		uint32_t clanid = GETWORD( ( *P ), 1 );
-		uint32_t clientrank = GETWORD( ( *P ), 3 );
+		//uint32_t clientrank = GETWORD( ( *P ), 3 );
 
 		CClans* thisclan = (CClans*)GetClanByID( clanid );
 		if ( thisclan == NULL )
 			return true;
+
 		thisclan->cp = GETDWORD( ( *P ), 5 );
 
 		BEGINPACKET( pak, 0x7e0 );
@@ -1031,7 +1032,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 	case 0xfb:
 	{
 		uint32_t clanid = GETWORD( ( *P ), 1 );
-		uint32_t grade = GETWORD( ( *P ), 3 );
+		//uint32_t grade = GETWORD( ( *P ), 3 );
 		CClans* thisclan = (CClans*)GetClanByID( clanid );
 		if ( thisclan != NULL )
 		{
@@ -1202,6 +1203,8 @@ bool CCharServer::pakDownloadCM( CCharClient* thisclient, CPacket* P )
 }
 bool CCharServer::pakClanIconTime( CCharClient* thisclient, CPacket* P ) // FORMAT UNKNOWN
 {
+	(void)P;
+
 	BEGINPACKET( pak, 0x7e8 );
 	ADDWORD( pak, 0x07d8 ); // clanmark change year
 	ADDBYTE( pak, 0x01 );   // month
