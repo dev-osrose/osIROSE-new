@@ -20,7 +20,7 @@
     depeloped with Main erose/hrose source server + some change from the
    original eich source
     */
-#include "CharServer.h"
+#include "charserver.h"
 
 // Send Clan information
 bool CCharServer::SendClanInfo( CCharClient* thisclient )

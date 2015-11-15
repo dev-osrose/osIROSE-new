@@ -4,7 +4,7 @@
 */
 #ifndef __ROSE_DATATYPES__
 #define __ROSE_DATATYPES__
-#include "../common/sockets.h"
+#include "../Common/sockets.h"
 // List of clan members
 struct CClanMembers
 {
