@@ -58,7 +58,7 @@ bool CCharServer::SendClanInfo( CCharClient* thisclient )
 			thisclient->SendPacket( &pak );
 
 			// Put the player online in clan
-			for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+			for ( uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++ )
 			{
 				CClanMembers* ClanMember = thisclan->ClanMembers.at( i );
 
@@ -99,6 +99,7 @@ bool CCharServer::pakClanChat( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
 		return false;
+
 	char* tmp;
 	if ( P->Buffer[ 0 ] == '/' )
 	{
@@ -157,7 +158,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 	if ( !thisclient->isLoggedIn )
 		return false;
 
-	BYTE action = GETBYTE( ( *P ), 0 );
+	uint8_t action = GETBYTE( (*P), 0 );
 	switch ( action )
 	{
 	case 0x01:
@@ -212,7 +213,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDSTRING( pak, thisclient->charname );
 		ADDBYTE( pak, 0x00 );
 		SendToClanMembers( thisclient->clanid, &pak );
-		for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+		for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 		{
 			CClanMembers* ClanMember = thisclan->ClanMembers.at( i );
 			if ( strcmp( ClanMember->name, nick ) == 0 )
@@ -293,7 +294,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			}
 
 			CClans* thisclan = GetClanByID( otherclient->clanid );
-			for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+			for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 			{
 				CClanMembers* thismember = thisclan->ClanMembers.at( i );
 				if ( thismember != 0 )
@@ -407,6 +408,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			delete[] nick;
 			return true;
 		}
+
 		CCharClient* otherclient = GetClientByName( nick );
 		if ( otherclient != NULL )
 		{
@@ -468,6 +470,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		{
 			clan_rank--;
 		}
+		
 		if ( !DB->QExecute(
 		         "UPDATE characters SET clan_rank=%i WHERE char_name='%s'",
 		         clan_rank, nick ) )
@@ -475,6 +478,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			delete[] nick;
 			return false;
 		}
+
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x75 );
 		ADDBYTE( pak, clan_rank );
@@ -549,7 +553,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDBYTE( pak, 0x00 );
 		SendToClanMembers( thisclient->clanid, &pak );
 
-		for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+		for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 		{
 			CClanMembers* ClanMember = thisclan->ClanMembers.at( i );
 			if ( strcmp( ClanMember->name, thisclient->charname ) == 0 )
@@ -671,6 +675,8 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDSTRING( pak, nick );
 		ADDBYTE( pak, 0x00 );
 		CChanels* thischannel = GetChannelByID( channel );
+
+
 		if ( thischannel != NULL )
 		{
 			send( thischannel->sock, (char*)&pak, pak.Header.Size, 0 );
@@ -739,6 +745,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 	{
 		if ( thisclient->clan_rank < 6 )
 			return true;
+
 		unsigned int clanid   = thisclient->clanid;
 		CClans*      thisclan = GetClanByID( thisclient->clanid );
 		if ( thisclan == NULL )
@@ -750,16 +757,16 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		                    "WHERE clanid=%i",
 		                    thisclient->clanid ) )
 			return false;
-		if ( !DB->QExecute( "DELETE FROM list_clan WHERE id=%i",
-		                    thisclient->clanid ) )
+		if ( !DB->QExecute( "DELETE FROM list_clan WHERE id=%i", thisclient->clanid ) )
 			return false;
+
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x51 );
 		ADDBYTE( pak, 0x00 );
 		SendToClanMembers( thisclient->clanid, &pak );
 		thisclan->ClanMembers.clear( );
 		// delete from clan list
-		for ( UINT i = 0; i < ClanList.size( ); i++ )
+		for (uint32_t i = 0; i < ClanList.size( ); i++)
 		{
 			CClans* clan = ClanList.at( i );
 			if ( thisclan == clan )
@@ -769,6 +776,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 				break;
 			}
 		}
+
 		RESETPACKET( pak, 0x7e1 ); // Update world clan information
 		ADDBYTE( pak, 0xfd );      // action (disorg)
 		ADDWORD( pak, clanid );
@@ -798,6 +806,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
+
 		memcpy( nick, &P->Buffer[ 1 ], P->Header.Size - 7 );
 		CCharClient* otherclient = (CCharClient*)GetClientByName( nick );
 		if ( otherclient != NULL )
@@ -871,6 +880,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			                "%i",
 			     thisclient->channel );
 		}
+
 		CChanels* otherchannel = GetChannelByID( otherclient->channel );
 		if ( otherchannel != NULL && thischannel != otherchannel )
 		{
@@ -887,6 +897,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
+
 		memcpy( nick, &P->Buffer[ 1 ], P->Header.Size - 7 );
 		CCharClient* otherclient = (CCharClient*)GetClientByName( nick );
 		if ( otherclient != NULL )
@@ -917,8 +928,8 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 	break;
 	case 0x5C: // message from world server to load the new clan information
 	{
-		UINT clanid = GETWORD( ( *P ), 1 );
-		UINT clientrank = GETWORD( ( *P ), 3 );
+		uint32_t clanid = GETWORD( ( *P ), 1 );
+		uint32_t clientrank = GETWORD( ( *P ), 3 );
 
 		CClans* thisclan = (CClans*)GetClanByID( clanid );
 		if ( thisclan == NULL )
@@ -940,6 +951,7 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 		ADDWORD( pak, 0xCCCC );
 		ADDWORD( pak, 0xCCCC );
 		ADDWORD( pak, 0xCCCC );
+
 		for ( int i = 0; i < 119; i++ )
 			ADDBYTE( pak, 0x00 );
 		SendToClanMembers( clanid, &pak );
@@ -1015,11 +1027,11 @@ bool CCharServer::pakClanManager( CCharClient* thisclient, CPacket* P )
 
 		otherclient->SendPacket( &pak );
 	}
-	break;
+		break;
 	case 0xfb:
 	{
-		UINT clanid = GETWORD( ( *P ), 1 );
-		UINT grade = GETWORD( ( *P ), 3 );
+		uint32_t clanid = GETWORD( ( *P ), 1 );
+		uint32_t grade = GETWORD( ( *P ), 3 );
 		CClans* thisclan = (CClans*)GetClanByID( clanid );
 		if ( thisclan != NULL )
 		{
@@ -1047,11 +1059,13 @@ bool CCharServer::pakClanMembers( CCharClient* thisclient )
 	{
 		BEGINPACKET( pak, 0x7e0 );
 		ADDBYTE( pak, 0x72 ); // Send clan members
-		for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+		for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 		{
 			CClanMembers* thismember = thisclan->ClanMembers.at( i );
+			
 			if ( thismember == NULL )
 				continue;
+
 			CCharClient* otherclient =
 			    (CCharClient*)GetClientByID( thismember->id );
 			if ( otherclient != NULL )
@@ -1087,7 +1101,7 @@ bool CCharServer::ClanLogout( CCharClient* thisclient )
 	CClans* thisclan = (CClans*)GetClanByID( thisclient->clanid );
 	if ( thisclan != NULL )
 	{
-		for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+		for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 		{
 			CClanMembers* thismember = thisclan->ClanMembers.at( i );
 			CCharClient*  otherclient =
@@ -1106,14 +1120,17 @@ bool CCharServer::ClanLogout( CCharClient* thisclient )
 bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 {
 	CClans* thisclan = GetClanByID( thisclient->clanid );
+	
 	if ( thisclan == NULL )
 		return true;
+
 	FILE* fh = fopen( "clanmark/clanmark.cnt", "r+b" );
 	if ( fh == NULL )
 	{
 		Log( MSG_WARNING, "Error opening clanmark counter file" );
 		return true;
 	}
+
 	rewind( fh );
 	unsigned int cmid  = 0; // this will be our clanmark id
 	unsigned int tcmid = 0; // this will be to update the id
@@ -1134,7 +1151,7 @@ bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 	}
 	rewind( fh );
 
-	for ( unsigned int i = 0; i < P->Header.Size - 6; i++ )
+	for ( uint16_t i = 0; i < P->Header.Size - 6; i++ )
 		fwrite( &P->Buffer[ i ], 1, 1, fh );
 	fclose( fh );
 	DB->QExecute( "UPDATE list_clan SET logo=%i,back=0 WHERE id=%i",
@@ -1143,7 +1160,7 @@ bool CCharServer::pakUploadCM( CCharClient* thisclient, CPacket* P )
 	ADDBYTE( pak, 0xff );
 	ADDWORD( pak, thisclient->clanid );
 	ADDDWORD( pak, cmid );
-	for ( int i = 0; i < ChannelList.size( ); i++ )
+	for ( uint32_t i = 0; i < ChannelList.size( ); i++ )
 		send( ChannelList.at( i )->sock, (char*)&pak, pak.Header.Size, 0 );
 	return true;
 }
@@ -1168,7 +1185,8 @@ bool CCharServer::pakDownloadCM( CCharClient* thisclient, CPacket* P )
 		Log( MSG_WARNING, "Invalid clanmark ID %i", cmid );
 		return true;
 	}
-	CClans* thisclan = GetClanByID( thisclient->clanid );
+
+	//CClans* thisclan = GetClanByID( thisclient->clanid );
 	BEGINPACKET( pak, 0x7e7 );
 	ADDDWORD( pak, clanid );
 	while ( !feof( fh ) )
