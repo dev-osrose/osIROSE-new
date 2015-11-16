@@ -1,6 +1,6 @@
 // Props to ExJam for this code :D
-#define AIACT(act) int F_AI_ACT_ ## act (class CWorldServer* server, class CCharacter* entity, byte* raw)
-typedef int (*fpAiAct)(class CWorldServer*, class CCharacter*, byte*);
+#define AIACT(act) int F_AI_ACT_ ## act (class CWorldServer* server, class CCharacter* entity, uint8_t* raw)
+typedef int (*fpAiAct)(class CWorldServer*, class CCharacter*, uint8_t*);
 #define GETAIACTDATA(act) STR_AI_ACT_ ## act * data = (STR_AI_ACT_ ## act *)raw;
 
 
@@ -26,36 +26,36 @@ struct STR_AI_ACT_000 {
 
 struct STR_AI_ACT_001 {
 	//Do Action (0x04 bytes)
-	byte cAction;	//Pos: 0x00
+	uint8_t cAction;	//Pos: 0x00
 };
 
 struct STR_AI_ACT_002 {
 	//Say LTB String (0x04 bytes)
-	dword iStrID;	//Pos: 0x00
+	uint32_t iStrID;	//Pos: 0x00
 };
 
 struct STR_AI_ACT_003 {
 	//Move (1) (0x08 bytes)
-	dword iDistance;	//Pos: 0x00
-	byte cSpeed;	//Pos: 0x04
+	uint32_t iDistance;	//Pos: 0x00
+	uint8_t cSpeed;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_004 {
 	//Move (2) (0x08 bytes)
-	dword iDistance;	//Pos: 0x00
-	byte cSpeed;	//Pos: 0x04
+	uint32_t iDistance;	//Pos: 0x00
+	uint8_t cSpeed;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_005 {
 	//Move (3) (0x04 bytes)
-	byte cSpeed;	//Pos: 0x00
+	uint8_t cSpeed;	//Pos: 0x00
 };
 
 struct STR_AI_ACT_006 {
 	//Move (?) (0x08 bytes)
-	dword iDistance;	//Pos: 0x00
-	byte cAbType;	//Pos: 0x04
-	byte cMoreLess;	//Pos: 0x05
+	uint32_t iDistance;	//Pos: 0x00
+	uint8_t cAbType;	//Pos: 0x04
+	uint8_t cMoreLess;	//Pos: 0x05
 };
 
 struct STR_AI_ACT_007 {
@@ -64,18 +64,18 @@ struct STR_AI_ACT_007 {
 
 struct STR_AI_ACT_008 {
 	//Move (4) (0x08 bytes)
-	dword iDistance;	//Pos: 0x00
-	byte cSpeed;	//Pos: 0x04
+	uint32_t iDistance;	//Pos: 0x00
+	uint8_t cSpeed;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_009 {
 	//Spawn Monster (1) (0x04 bytes)
-	word wMonster;	//Pos: 0x00
+	uint16_t wMonster;	//Pos: 0x00
 };
 
 struct STR_AI_ACT_010 {
 	//Spawn Monster (2) (0x04 bytes)
-	word wMonster;	//Pos: 0x00
+	uint16_t wMonster;	//Pos: 0x00
 };
 
 struct STR_AI_ACT_011 {
@@ -108,8 +108,8 @@ struct STR_AI_ACT_016 {
 
 struct STR_AI_ACT_017 {
 	//Drop Item (0x10 bytes)
-	word items[6];
-	byte btToOwner;	//Pos: 0x0c
+	uint16_t items[6];
+	uint8_t btToOwner;	//Pos: 0x0c
 };
 
 struct STR_AI_ACT_018 {
@@ -120,116 +120,116 @@ struct STR_AI_ACT_018 {
 };
 
 struct STR_AI_ACT_019 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_020 {
 	//Spawn Monster (5) (0x08 bytes)
-	word cMonster;	//Pos: 0x00
-	byte btPos;	//Pos: 0x02
+	uint16_t cMonster;	//Pos: 0x00
+	uint8_t btPos;	//Pos: 0x02
 	int iDistance;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_021 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_022 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_023 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_024 {
-	//Do Skill (0x08 bytes)
-	byte btTarget;	//Pos: 0x00
-	word nSkill;	//Pos: 0x02
-	word nMotion;	//Pos: 0x04
+	//Do Skill (0x08 uint8_ts)
+	uint8_t btTarget;	//Pos: 0x00
+	uint16_t nSkill;	//Pos: 0x02
+	uint16_t nMotion;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_025 {
 	//Set Variable (1) (0x0c bytes)
-	union{byte btVarIDX;	//Pos: 0x00
+	union{uint8_t btVarIDX;	//Pos: 0x00
 	char cVarIdx[4];};
-	dword iValue;	//Pos: 0x04
-	byte btOp;	//Pos: 0x08
+	uint32_t iValue;	//Pos: 0x04
+	uint8_t btOp;	//Pos: 0x08
 };
 
 struct STR_AI_ACT_026 {
-	//Set Variable (2) (0x00 bytes)
-	union{word nVarNo;	//Pos: 0x00
+	//Set Variable (2) (0x00 uint8_ts)
+	union{uint16_t nVarNo;	//Pos: 0x00
 	char cVarNo[4];};
-	dword iValue;	//Pos: 0x04
-	byte btOp;	//Pos: 0x08
+	uint32_t iValue;	//Pos: 0x04
+	uint8_t btOp;	//Pos: 0x08
 };
 
 struct STR_AI_ACT_027 {
-	//Set Variable (3) (0x00 bytes)
-	union{word nVarNo;	//Pos: 0x00
+	//Set Variable (3) (0x00 uint8_ts)
+	union{uint16_t nVarNo;	//Pos: 0x00
 	char cVarNo[4];};
-	dword iValue;	//Pos: 0x04
-	byte btOp;	//Pos: 0x08
+	uint32_t iValue;	//Pos: 0x04
+	uint8_t btOp;	//Pos: 0x08
 };
 
 struct STR_AI_ACT_028 {
-	//Shout/Ann LTB String (0x08 bytes)
+	//Shout/Ann LTB String (0x08 uint8_ts)
 	union {
-		byte btMsgType;
+		uint8_t btMsgType;
 		int iMsgType;
 	};
-	dword iStrID;	//Pos: 0x04
+	uint32_t iStrID;	//Pos: 0x04
 };
 
 struct STR_AI_ACT_029 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_030 {
-	//Do Trigger (0x0d bytes)
-	word lenszTrigger;	//Pos: 0x00
+	//Do Trigger (0x0d uint8_ts)
+	uint16_t lenszTrigger;	//Pos: 0x00
 	char* szTrigger;	//Pos: 0x02
 };
 
 struct STR_AI_ACT_031 {
-	//Unknown (0x00 bytes)
+	//Unknown (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_032 {
-	//Zone (1) (0x04 bytes)
-	word nZoneNo;	//Pos: 0x00
-	byte btOnOff;	//Pos: 0x02
+	//Zone (1) (0x04 uint8_ts)
+	uint16_t nZoneNo;	//Pos: 0x00
+	uint8_t btOnOff;	//Pos: 0x02
 };
 
 struct STR_AI_ACT_033 {
-	//Zone (2) (0x00 bytes)
+	//Zone (2) (0x00 uint8_ts)
 };
 
 struct STR_AI_ACT_034 {
-	//Item (?) (0x04 bytes)
-	word nItemNum;	//Pos: 0x00
-	word nCount;	//Pos: 0x02
+	//Item (?) (0x04 uint8_ts)
+	uint16_t nItemNum;	//Pos: 0x00
+	uint16_t nCount;	//Pos: 0x02
 };
 
 struct STR_AI_ACT_035 {
-	//Set Variable (4) (0x0c bytes)
-	union{word nVarIDX;	//Pos: 0x00
+	//Set Variable (4) (0x0c uint8_ts)
+	union{uint16_t nVarIDX;	//Pos: 0x00
 	char cVarIdx[4];};
-	dword iValue;	//Pos: 0x04
-	byte btOp;	//Pos: 0x08
+	uint32_t iValue;	//Pos: 0x04
+	uint8_t btOp;	//Pos: 0x08
 };
 
 struct STR_AI_ACT_036 {
-	//Monster (1) (0x04 bytes)
-	word nMonster;	//Pos: 0x00
-	byte btMaster;	//Pos: 0x02
+	//Monster (1) (0x04 uint8_ts)
+	uint16_t nMonster;	//Pos: 0x00
+	uint8_t btMaster;	//Pos: 0x02
 };
 
 struct STR_AI_ACT_037 {
-	//Monster (2) (0x0c bytes)
-	word nMonster;	//Pos: 0x00
-	word nPos;	//Pos: 0x02
-	dword iDistance;	//Pos: 0x04
-	byte btMaster;	//Pos: 0x08
+	//Monster (2) (0x0c uint8_ts)
+	uint16_t nMonster;	//Pos: 0x00
+	uint16_t nPos;	//Pos: 0x02
+	uint32_t iDistance;	//Pos: 0x04
+	uint8_t btMaster;	//Pos: 0x08
 };

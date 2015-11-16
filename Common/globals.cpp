@@ -69,6 +69,8 @@ void CPacket::SetFloat( unsigned short pos, float value )
 {
 	*( (float*)&Buffer[ pos ] ) = value;
 }
+//*/
+
 unsigned char CPacket::GetByte( unsigned short pos )
 {
 	return Buffer[ pos ];
@@ -89,7 +91,6 @@ float CPacket::GetFloat( unsigned short pos )
 {
 	return *( (float*)&Buffer[ pos ] );
 }
-//*/
 
 char* CPacket::GetString( unsigned short pos )
 {

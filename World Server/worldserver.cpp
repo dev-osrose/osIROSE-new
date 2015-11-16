@@ -171,9 +171,6 @@ CWorldServer::CWorldServer( string fn )
 		StatsList[ i ].value[ 0 ] = 0;
 		StatsList[ i ].value[ 1 ] = 0;
 	}
-	MapMutex    = PTHREAD_MUTEX_INITIALIZER; //fast mutex
-	SQLMutex    = PTHREAD_MUTEX_INITIALIZER;
-	PlayerMutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 // Destructor
@@ -325,7 +322,7 @@ void CWorldServer::ServerLoop( )
 		timeout.tv_usec = 1000;
 		NewSocket       = INVALID_SOCKET;
 		FD_ZERO( &fds );
-		pthread_mutex_lock( &PlayerMutex );
+		PlayerMutex.lock( );
 		if ( !Config.usethreads )
 			FillFDS( &fds );
 		FD_SET( sock, &fds );
@@ -336,7 +333,7 @@ void CWorldServer::ServerLoop( )
 			activity = select( maxfd + 1, &fds, NULL, NULL, &timeout );
 			if ( activity == 0 )
 			{
-				pthread_mutex_unlock( &PlayerMutex );
+				PlayerMutex.unlock( );
 #ifdef _WIN32
 				Sleep( 1 );
 #else
@@ -405,7 +402,7 @@ void CWorldServer::ServerLoop( )
 		}
 		if ( !Config.usethreads )
 			HandleClients( &fds );
-		pthread_mutex_unlock( &PlayerMutex );
+		PlayerMutex.unlock( );
 #ifdef _WIN32
 		Sleep( 1 );
 #else
@@ -439,9 +436,9 @@ void CWorldServer::DeleteClientSocket( CClientSocket* thisclient )
 	{
 		CPlayer* player = (CPlayer*)thisclient->player;
 		CMap*    map    = MapList.Index[ player->Position->Map ];
-		pthread_mutex_lock( &MapMutex );
+		MapMutex.lock( );
 		map->RemovePlayer( player );
-		pthread_mutex_unlock( &MapMutex );
+		MapMutex.unlock( );
 		delete player;
 	}
 	else
@@ -458,7 +455,7 @@ void CWorldServer::SendISCServerInfo( )
 	ADDDWORD( pak, Config.WorldPort );
 	ADDSTRING( pak, Config.WorldIP );
 	ADDBYTE( pak, 0 );
-	ADDSTRING( pak, Config.ServerName );
+	ADDSTRING( pak, Config.WorldName );
 	ADDBYTE( pak, 0 );
 	SendISCPacket( &pak );
 }
@@ -507,15 +504,15 @@ bool CWorldServer::OnServerReady( )
 	LoadAipData( );
 	//LoadZones();
 	CleanConnectedList( );
-	Log( MSG_INFO, "Database Loaded                      " );
-	pthread_create( &WorldThread[ WORLD_THREAD ], &at, WorldProcess, NULL );
-	pthread_create( &WorldThread[ VISUALITY_THREAD ], &at, VisibilityProcess, NULL );
-	pthread_create( &MapThread[ 0 ], &at, MapProcess, NULL );
+	Log( MSG_INFO, "Database Loaded" );
+	WorldThread[ WORLD_THREAD ]     = std::thread( WorldProcess );
+	WorldThread[ VISUALITY_THREAD ] = std::thread( VisibilityProcess );
+	MapThread[ 0 ]                  = std::thread( MapProcess );
 	Log( MSG_INFO, "Process Loaded. WorldDelay %i | MapDelay %i | VisualDelay %i", Config.WorldDelay, Config.MapDelay, Config.VisualDelay );
 
 	DB->QExecute( "DELETE FROM channels WHERE id=%u", Config.ServerID );
 	if ( !DB->QExecute( "INSERT INTO channels (id,name,host,port,connected,maxconnections,owner) VALUES (%i,'%s','%s',%u,0,%i,%i)",
-	                    Config.ServerID, Config.ServerName, Config.WorldIP, Config.WorldPort, Config.MaxConnections, Config.ParentID ) )
+	                    Config.ServerID, Config.WorldName, Config.WorldIP, Config.WorldPort, Config.MaxConnections, Config.ParentID ) )
 	{
 		Log( MSG_WARNING, "Error accessing to database, the other server will not connect to WorldServer" );
 	}
@@ -570,15 +567,15 @@ bool CWorldServer::pakGiveItem( CPlayer* thisclient, unsigned char itemtype, uns
 	}
 
 	pakout.StartPacket( 0x71f );
-	pakout.AddByte( 0 );
+	pakout.Add< uint8_t >( 0 );
 	while ( thisitem.count > 0 )
 	{
 		unsigned char thisslot = thisclient->AddItem( thisitem );
 		if ( thisslot == 0xff )
 			break;
-		pakout.AddByte( thisslot );
-		pakout.AddWord( thisclient->items[ thisslot ].GetPakHeader( ) );
-		pakout.AddDWord( thisclient->items[ thisslot ].GetPakData( ) );
+		pakout.Add< uint8_t >( thisslot );
+		pakout.Add< uint16_t >( thisclient->items[ thisslot ].GetPakHeader( ) );
+		pakout.Add< uint32_t >( thisclient->items[ thisslot ].GetPakData( ) );
 		pakout.Buffer[ 0 ]++;
 	}
 	thisclient->client->SendPacket( &pakout );
@@ -593,9 +590,9 @@ bool CWorldServer::pakGiveExp( CPlayer* thisclient, unsigned exp )
 	if ( !thisclient->CheckPlayerLevelUP( ) )
 	{
 		pakout.StartPacket( 0x79b );
-		pakout.AddDWord( thisclient->CharInfo->Exp );
-		pakout.AddWord( thisclient->CharInfo->stamina );
-		pakout.AddWord( 0 );
+		pakout.Add< uint32_t >( thisclient->CharInfo->Exp );
+		pakout.Add< uint16_t >( thisclient->CharInfo->stamina );
+		pakout.Add< uint16_t >( 0 );
 		thisclient->client->SendPacket( &pakout );
 	}
 	return true;
@@ -606,7 +603,7 @@ bool CWorldServer::pakGiveMoney( CPlayer* thisclient, unsigned amount )
 	CPacket pakout;
 	thisclient->CharInfo->Zulies += amount;
 	pakout.StartPacket( 0x71e );
-	pakout.AddQWord( thisclient->CharInfo->Zulies );
+	pakout.Add< uint64_t >( thisclient->CharInfo->Zulies );
 	thisclient->client->SendPacket( &pakout );
 	return true;
 }
@@ -626,10 +623,10 @@ void CWorldServer::DePopulateZone( CPlayer* thisclient, int zonex, int zoney ) /
 			if ( otherclient->Position->current.x == zonex && otherclient->Position->current.y == zoney && otherclient->Position->Map == thisclient->Position->Map )
 			{
 				pakout2.StartPacket( 0x794 );
-				pakout2.AddWord( thisclient->clientid );
+				pakout2.Add< uint16_t >( thisclient->clientid );
 				otherclient->client->SendPacket( &pakout2 );
 
-				pakout.AddWord( otherclient->clientid );
+				pakout.Add< uint16_t >( otherclient->clientid );
 			}
 		}
 
@@ -640,25 +637,25 @@ void CWorldServer::DePopulateZone( CPlayer* thisclient, int zonex, int zoney ) /
 			{
 				CMonster* thismonster = thismap->MonsterList.at( j );
 				if ( thismonster->Position->current.x == zonex && thismonster->Position->current.y == zoney && thismonster->Position->Map == thisclient->Position->Map )
-					pakout.AddWord( thismonster->clientid );
+					pakout.Add< uint16_t >( thismonster->clientid );
 
 				for ( unsigned j = 0; j < thismap->NPCList.size( ); j++ )
 				{
 					CNPC* thisnpc = thismap->NPCList[ j ];
 					if ( thisnpc->pos.x == zonex && thisnpc->pos.y == zoney && thisnpc->posMap == thisclient->Position->Map )
-						pakout.AddWord( thisnpc->clientid );
+						pakout.Add< uint16_t >( thisnpc->clientid );
 				}
 
 				for ( unsigned j = 0; j < thismap->DropsList.size( ); j++ )
 				{
 					CDrop* thisdrop = thismap->DropsList[ j ];
 					if ( thisdrop->pos.x == zonex && thisdrop->pos.y == zoney && thisdrop->posMap == thisclient->Position->Map )
-						pakout.AddWord( thisdrop->clientid );
+						pakout.Add< uint16_t >( thisdrop->clientid );
 				}
 			}
 		}
 
-		if ( pakout.Size > 6 )
+		if ( pakout.Header.Size > 6 )
 			thisclient->client->SendPacket( &pakout );
 	}
 }
@@ -710,78 +707,79 @@ void CWorldServer::LoadConfigurations( char* file )
 // Load commands from commands.ini [by Paul_T]
 void CWorldServer::LoadCommandLevels( void )
 {
-	Config.Command_Ani                 = ConfigGetInt( "commands.ini", "ani", 299 );
-	Config.Command_Ann                 = ConfigGetInt( "commands.ini", "ann", 299 );
-	Config.Command_Ban                 = ConfigGetInt( "commands.ini", "ban", 299 );
-	Config.Command_Cha                 = ConfigGetInt( "commands.ini", "cha", 299 );
-	Config.Command_ChangeFairyWait     = ConfigGetInt( "commands.ini", "changefairywait", 299 );
-	Config.Command_ChangeFairyStay     = ConfigGetInt( "commands.ini", "changefairystay", 299 );
-	Config.Command_ChangeFairyTestMode = ConfigGetInt( "commands.ini", "changefairytestmode", 299 );
-	Config.Command_Class               = ConfigGetInt( "commands.ini", "class", 299 );
-	Config.Command_Convert             = ConfigGetInt( "commands.ini", "convert", 299 );
-	Config.Command_Cfmode              = ConfigGetInt( "commands.ini", "cfmode", 299 );
-	Config.Command_DelSpawn            = ConfigGetInt( "commands.ini", "delspawn", 299 );
-	Config.Command_DQuest              = ConfigGetInt( "commands.ini", "dquest", 299 );
-	Config.Command_Drop                = ConfigGetInt( "commands.ini", "drop", 299 );
-	Config.Command_DSpawn              = ConfigGetInt( "commands.ini", "dspawn", 299 );
-	Config.Command_ESpawn              = ConfigGetInt( "commands.ini", "espawn", 299 );
-	Config.Command_Exp                 = ConfigGetInt( "commands.ini", "exp", 299 );
-	Config.Command_Face                = ConfigGetInt( "commands.ini", "face", 299 );
-	Config.Command_Give2               = ConfigGetInt( "commands.ini", "give2", 299 );
-	Config.Command_GiveFairy           = ConfigGetInt( "commands.ini", "givefairy", 299 );
-	Config.Command_GiveZuly            = ConfigGetInt( "commands.ini", "givezuly", 299 );
-	Config.Command_Go                  = ConfigGetInt( "commands.ini", "go", 299 );
-	Config.Command_Goto                = ConfigGetInt( "commands.ini", "goto", 299 );
-	Config.Command_GoToMap             = ConfigGetInt( "commands.ini", "gotomap", 299 );
-	Config.Command_Hair                = ConfigGetInt( "commands.ini", "hair", 299 );
-	Config.Command_Heal                = ConfigGetInt( "commands.ini", "heal", 299 );
-	Config.Command_Here                = ConfigGetInt( "commands.ini", "here", 299 );
-	Config.Command_Hide                = ConfigGetInt( "commands.ini", "hide", 299 );
-	Config.Command_Info                = ConfigGetInt( "commands.ini", "info", 299 );
-	Config.Command_IQuest              = ConfigGetInt( "commands.ini", "iquest", 299 );
-	Config.Command_Item                = ConfigGetInt( "commands.ini", "item", 299 );
-	Config.Command_Job                 = ConfigGetInt( "commands.ini", "job", 299 );
-	Config.Command_Kick                = ConfigGetInt( "commands.ini", "kick", 299 );
-	Config.Command_KillInRange         = ConfigGetInt( "commands.ini", "killinrange", 299 );
-	Config.Command_Level               = ConfigGetInt( "commands.ini", "level", 299 );
-	Config.Command_LevelUp             = ConfigGetInt( "commands.ini", "levelup", 299 );
-	Config.Command_ManageFairy         = ConfigGetInt( "commands.ini", "managefairy", 299 );
-	Config.Command_Mdmg                = ConfigGetInt( "commands.ini", "mdmg", 299 );
-	Config.Command_Mon                 = ConfigGetInt( "commands.ini", "mon", 299 );
-	Config.Command_Monster             = ConfigGetInt( "commands.ini", "monster", 299 );
-	Config.Command_Move                = ConfigGetInt( "commands.ini", "move", 299 );
-	Config.Command_Moveto              = ConfigGetInt( "commands.ini", "moveto", 299 );
-	Config.Command_Mute                = ConfigGetInt( "commands.ini", "mute", 299 );
-	Config.Command_Npc                 = ConfigGetInt( "commands.ini", "npc", 299 );
-	Config.Command_Pak                 = ConfigGetInt( "commands.ini", "pak", 299 );
-	Config.Command_Pak2                = ConfigGetInt( "commands.ini", "pak2", 299 );
-	Config.Command_Pakm                = ConfigGetInt( "commands.ini", "pakm", 299 );
-	Config.Command_Partylvl            = ConfigGetInt( "commands.ini", "partylvl", 299 );
-	Config.Command_PlayerInfo          = ConfigGetInt( "commands.ini", "playerinfo", 299 );
-	Config.Command_Pdmg                = ConfigGetInt( "commands.ini", "pdmg", 299 );
-	Config.Command_Pvp                 = ConfigGetInt( "commands.ini", "pvp", 299 );
-	Config.Command_Rate                = ConfigGetInt( "commands.ini", "rate", 299 );
-	Config.Command_Reload              = ConfigGetInt( "commands.ini", "reload", 299 );
-	Config.Command_ReloadQuest         = ConfigGetInt( "commands.ini", "reloadquest", 299 );
-	Config.Command_Rules               = ConfigGetInt( "commands.ini", "rules", 99 );
-	Config.Command_Save                = ConfigGetInt( "commands.ini", "save", 299 );
-	Config.Command_ServerInfo          = ConfigGetInt( "commands.ini", "serverinfo", 299 );
-	Config.Command_Set                 = ConfigGetInt( "commands.ini", "set", 299 );
-	Config.Command_Settime             = ConfigGetInt( "commands.ini", "settime", 299 );
-	Config.Command_ShopType            = ConfigGetInt( "commands.ini", "shoptype", 299 );
-	Config.Command_Shutdown            = ConfigGetInt( "commands.ini", "shutdown", 299 );
-	Config.Command_SSpawn              = ConfigGetInt( "commands.ini", "sspawn", 299 );
-	Config.Command_Stat                = ConfigGetInt( "commands.ini", "stat", 299 );
-	Config.Command_Summon              = ConfigGetInt( "commands.ini", "summon", 299 );
-	Config.Command_TargetInfo          = ConfigGetInt( "commands.ini", "targetinfo", 299 );
-	Config.Command_Tele                = ConfigGetInt( "commands.ini", "tele", 299 );
-	Config.Command_TeleToMe            = ConfigGetInt( "commands.ini", "teletome", 299 );
-	Config.Command_Transx              = ConfigGetInt( "commands.ini", "transx", 299 );
-	Config.Command_Who                 = ConfigGetInt( "commands.ini", "who", 299 );
-	Config.Command_Who2                = ConfigGetInt( "commands.ini", "who2", 299 );
-	Config.Command_Broadcast           = ConfigGetInt( "commands.ini", "broadcast", 299 );
-	Config.Command_GlobalTime          = ConfigGetInt( "commands.ini", "globaldelay", 30 );
-	Config.Command_GlobalPrefix        = ConfigGetString( "commands.ini", "globalprefix", "[Broadcast]" );
+	std::string config = "commands.ini";
+	Config.Command_Ani = ReadWriteIniKeyValueInt( "COMMANDS", "ani", 299, config.c_str( ) );
+	Config.Command_Ann = ReadWriteIniKeyValueInt( "COMMANDS", "ann", 299, config.c_str( ) );
+	Config.Command_Ban = ReadWriteIniKeyValueInt( "COMMANDS", "ban", 299, config.c_str( ) );
+	Config.Command_Cha = ReadWriteIniKeyValueInt( "COMMANDS", "cha", 299, config.c_str( ) );
+	Config.Command_ChangeFairyWait = ReadWriteIniKeyValueInt( "COMMANDS", "changefairywait", 299, config.c_str( ) );
+	Config.Command_ChangeFairyStay = ReadWriteIniKeyValueInt( "COMMANDS", "changefairystay", 299, config.c_str( ) );
+	Config.Command_ChangeFairyTestMode = ReadWriteIniKeyValueInt( "COMMANDS", "changefairytestmode", 299, config.c_str( ) );
+	Config.Command_Class = ReadWriteIniKeyValueInt( "COMMANDS", "class", 299, config.c_str( ) );
+	Config.Command_Convert = ReadWriteIniKeyValueInt( "COMMANDS", "convert", 299, config.c_str( ) );
+	Config.Command_Cfmode = ReadWriteIniKeyValueInt( "COMMANDS", "cfmode", 299, config.c_str( ) );
+	Config.Command_DelSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "delspawn", 299, config.c_str( ) );
+	Config.Command_DQuest = ReadWriteIniKeyValueInt( "COMMANDS", "dquest", 299, config.c_str( ) );
+	Config.Command_Drop = ReadWriteIniKeyValueInt( "COMMANDS", "drop", 299, config.c_str( ) );
+	Config.Command_DSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "dspawn", 299, config.c_str( ) );
+	Config.Command_ESpawn = ReadWriteIniKeyValueInt( "COMMANDS", "espawn", 299, config.c_str( ) );
+	Config.Command_Exp = ReadWriteIniKeyValueInt( "COMMANDS", "exp", 299, config.c_str( ) );
+	Config.Command_Face = ReadWriteIniKeyValueInt( "COMMANDS", "face", 299, config.c_str( ) );
+	Config.Command_Give2 = ReadWriteIniKeyValueInt( "COMMANDS", "give2", 299, config.c_str( ) );
+	Config.Command_GiveFairy = ReadWriteIniKeyValueInt( "COMMANDS", "givefairy", 299, config.c_str( ) );
+	Config.Command_GiveZuly = ReadWriteIniKeyValueInt( "COMMANDS", "givezuly", 299, config.c_str( ) );
+	Config.Command_Go = ReadWriteIniKeyValueInt( "COMMANDS", "go", 299, config.c_str( ) );
+	Config.Command_Goto = ReadWriteIniKeyValueInt( "COMMANDS", "goto", 299, config.c_str( ) );
+	Config.Command_GoToMap = ReadWriteIniKeyValueInt( "COMMANDS", "gotomap", 299, config.c_str( ) );
+	Config.Command_Hair = ReadWriteIniKeyValueInt( "COMMANDS", "hair", 299, config.c_str( ) );
+	Config.Command_Heal = ReadWriteIniKeyValueInt( "COMMANDS", "heal", 299, config.c_str( ) );
+	Config.Command_Here = ReadWriteIniKeyValueInt( "COMMANDS", "here", 299, config.c_str( ) );
+	Config.Command_Hide = ReadWriteIniKeyValueInt( "COMMANDS", "hide", 299, config.c_str( ) );
+	Config.Command_Info = ReadWriteIniKeyValueInt( "COMMANDS", "info", 299, config.c_str( ) );
+	Config.Command_IQuest = ReadWriteIniKeyValueInt( "COMMANDS", "iquest", 299, config.c_str( ) );
+	Config.Command_Item = ReadWriteIniKeyValueInt( "COMMANDS", "item", 299, config.c_str( ) );
+	Config.Command_Job = ReadWriteIniKeyValueInt( "COMMANDS", "job", 299, config.c_str( ) );
+	Config.Command_Kick = ReadWriteIniKeyValueInt( "COMMANDS", "kick", 299, config.c_str( ) );
+	Config.Command_KillInRange = ReadWriteIniKeyValueInt( "COMMANDS", "killinrange", 299, config.c_str( ) );
+	Config.Command_Level = ReadWriteIniKeyValueInt( "COMMANDS", "level", 299, config.c_str( ) );
+	Config.Command_LevelUp = ReadWriteIniKeyValueInt( "COMMANDS", "levelup", 299, config.c_str( ) );
+	Config.Command_ManageFairy = ReadWriteIniKeyValueInt( "COMMANDS", "managefairy", 299, config.c_str( ) );
+	Config.Command_Mdmg = ReadWriteIniKeyValueInt( "COMMANDS", "mdmg", 299, config.c_str( ) );
+	Config.Command_Mon = ReadWriteIniKeyValueInt( "COMMANDS", "mon", 299, config.c_str( ) );
+	Config.Command_Monster = ReadWriteIniKeyValueInt( "COMMANDS", "monster", 299, config.c_str( ) );
+	Config.Command_Move = ReadWriteIniKeyValueInt( "COMMANDS", "move", 299, config.c_str( ) );
+	Config.Command_Moveto = ReadWriteIniKeyValueInt( "COMMANDS", "moveto", 299, config.c_str( ) );
+	Config.Command_Mute = ReadWriteIniKeyValueInt( "COMMANDS", "mute", 299, config.c_str( ) );
+	Config.Command_Npc = ReadWriteIniKeyValueInt( "COMMANDS", "npc", 299, config.c_str( ) );
+	Config.Command_Pak = ReadWriteIniKeyValueInt( "COMMANDS", "pak", 299, config.c_str( ) );
+	Config.Command_Pak2 = ReadWriteIniKeyValueInt( "COMMANDS", "pak2", 299, config.c_str( ) );
+	Config.Command_Pakm = ReadWriteIniKeyValueInt( "COMMANDS", "pakm", 299, config.c_str( ) );
+	Config.Command_Partylvl = ReadWriteIniKeyValueInt( "COMMANDS", "partylvl", 299, config.c_str( ) );
+	Config.Command_PlayerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "playerinfo", 299, config.c_str( ) );
+	Config.Command_Pdmg = ReadWriteIniKeyValueInt( "COMMANDS", "pdmg", 299, config.c_str( ) );
+	Config.Command_Pvp = ReadWriteIniKeyValueInt( "COMMANDS", "pvp", 299, config.c_str( ) );
+	Config.Command_Rate = ReadWriteIniKeyValueInt( "COMMANDS", "rate", 299, config.c_str( ) );
+	Config.Command_Reload = ReadWriteIniKeyValueInt( "COMMANDS", "reload", 299, config.c_str( ) );
+	Config.Command_ReloadQuest = ReadWriteIniKeyValueInt( "COMMANDS", "reloadquest", 299, config.c_str( ) );
+	Config.Command_Rules = ReadWriteIniKeyValueInt( "COMMANDS", "rules", 99, config.c_str( ) );
+	Config.Command_Save = ReadWriteIniKeyValueInt( "COMMANDS", "save", 299, config.c_str( ) );
+	Config.Command_ServerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "serverinfo", 299, config.c_str( ) );
+	Config.Command_Set = ReadWriteIniKeyValueInt( "COMMANDS", "set", 299, config.c_str( ) );
+	Config.Command_Settime = ReadWriteIniKeyValueInt( "COMMANDS", "settime", 299, config.c_str( ) );
+	Config.Command_ShopType = ReadWriteIniKeyValueInt( "COMMANDS", "shoptype", 299, config.c_str( ) );
+	Config.Command_Shutdown = ReadWriteIniKeyValueInt( "COMMANDS", "shutdown", 299, config.c_str( ) );
+	Config.Command_SSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "sspawn", 299, config.c_str( ) );
+	Config.Command_Stat = ReadWriteIniKeyValueInt( "COMMANDS", "stat", 299, config.c_str( ) );
+	Config.Command_Summon = ReadWriteIniKeyValueInt( "COMMANDS", "summon", 299, config.c_str( ) );
+	Config.Command_TargetInfo = ReadWriteIniKeyValueInt( "COMMANDS", "targetinfo", 299, config.c_str( ) );
+	Config.Command_Tele = ReadWriteIniKeyValueInt( "COMMANDS", "tele", 299, config.c_str( ) );
+	Config.Command_TeleToMe = ReadWriteIniKeyValueInt( "COMMANDS", "teletome", 299, config.c_str( ) );
+	Config.Command_Transx = ReadWriteIniKeyValueInt( "COMMANDS", "transx", 299, config.c_str( ) );
+	Config.Command_Who = ReadWriteIniKeyValueInt( "COMMANDS", "who", 299, config.c_str( ) );
+	Config.Command_Who2 = ReadWriteIniKeyValueInt( "COMMANDS", "who2", 299, config.c_str( ) );
+	Config.Command_Broadcast = ReadWriteIniKeyValueInt( "COMMANDS", "broadcast", 299, config.c_str( ) );
+	Config.Command_GlobalTime = ReadWriteIniKeyValueInt( "COMMANDS", "globaldelay", 30, config.c_str( ) );
+	ReadWriteIniKeyValueStringA( "COMMANDS", "globalprefix", "[Broadcast]", config.c_str( ), false, &Config.Command_GlobalPrefix );
 }
 
 bool CWorldServer::Ping( )
@@ -791,7 +789,7 @@ bool CWorldServer::Ping( )
 
 void CWorldServer::ReceivedISCPacket( CPacket* pak )
 {
-	switch ( pak->Command )
+	switch ( pak->Header.Command )
 	{
 	case 0x100:
 		break;
@@ -833,14 +831,14 @@ void CWorldServer::ReceivedISCPacket( CPacket* pak )
 	case 0x581:
 		break;
 	default:
-		Log( MSG_DEBUG, "UNKNOWN ISC PACKET - 0x%x %04x %04x", pak->Command, pak->Size, pak->Unused );
+		Log( MSG_DEBUG, "UNKNOWN ISC PACKET - 0x%x %04x %04x", pak->Header.Command, pak->Header.Size, pak->Header.Unused );
 	}
 }
 
 // Incoming packet
 bool CWorldServer::OnReceivePacket( CClientSocket* thisclient, CPacket* P )
 { //Log( MSG_INFO, "(SID:%i) Received packet. Command:%04x Size:%04x", thisclient->sock, P->Command, P->Size );
-	switch ( P->Command )
+	switch ( P->Header.Command )
 	{
 	case 0x0500: return pakCSReady( (CPlayer*)thisclient->player, P );
 	case 0x0502: return pakCharDSClient( (CPlayer*)thisclient->player, P );
@@ -906,7 +904,7 @@ bool CWorldServer::OnReceivePacket( CClientSocket* thisclient, CPacket* P )
 	case 0x07eb: return pakPrintscreen( (CPlayer*)thisclient->player, P );
 	case 0x0808: return pakGameGuard( (CPlayer*)thisclient->player, P );
 	default:
-		Log( MSG_WARNING, "(SID:%i) Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Command, P->Size );
+		Log( MSG_WARNING, "(SID:%i) Received unknown packet. Command:%04x Size:%04x", thisclient->sock, P->Header.Command, P->Header.Size );
 		break;
 	}
 	return true;

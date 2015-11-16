@@ -4,15 +4,15 @@ public:
 	struct SAipDatum {
 		int size;
 		int opcode;
-		byte* data;
+		uint8_t* data;
 	};
 
-	dword AipID;
+	uint32_t AipID;
 
-	dword ConditionCount;
+	uint32_t ConditionCount;
 	SAipDatum** Conditions;
 
-	dword ActionCount;
+	uint32_t ActionCount;
 	SAipDatum** Actions;
 private:
 };

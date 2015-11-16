@@ -21,7 +21,7 @@
 #define REVISION 32
 #include <fstream>
 #include "worldserver.h"
-#pragma comment(lib,"ws2_32.lib")
+#pragma comment( lib, "ws2_32.lib" )
 #undef close
 
 CWorldServer* GServer;
@@ -29,71 +29,71 @@ CWorldServer* GServer;
 unsigned char LOG_THISSERVER;
 
 // Main server function
-int main(int argc, char *argv[]) 
+int main( int argc, char* argv[] )
 {
-    srand( (unsigned)time(NULL) );
-    srand( rand()*time(NULL) );         
+	srand( (unsigned)time( NULL ) );
+	srand( rand( ) * time( NULL ) );
 	LOG_THISSERVER = LOG_WORLD_SERVER;
-    InitWinSocket( );
-    string fileconf = "./server.ini";   
-	if (argc > 1)
+	InitWinSocket( );
+	string fileconf = "./server.ini";
+	if ( argc > 1 )
 	{
-		fileconf = argv[1];
+		fileconf = argv[ 1 ];
 
-		if (argc > 2)
+		if ( argc > 2 )
 		{
 			CROSEServerConfig temp;
-			temp.LoadConfig( (char*)fileconf.c_str(), true );
+			temp.LoadConfig( (char*)fileconf.c_str( ), true );
 		}
 	}
 
 	std::basic_fstream< char > clFileOp( fileconf, std::ios::in );
-	if (clFileOp.is_open() == false)
+	if ( clFileOp.is_open( ) == false )
 	{
-		clFileOp.clear();
+		clFileOp.clear( );
 		clFileOp.open( fileconf, std::ios::out ); // Create file
-		clFileOp.close();
+		clFileOp.close( );
 
 		CROSEServerConfig temp;
-		temp.LoadConfig( (char*)fileconf.c_str(), true );
+		temp.LoadConfig( (char*)fileconf.c_str( ), true );
 	}
-	CWorldServer *server = new (nothrow) CWorldServer( fileconf );
-    if(server==NULL)
-        return -1;
-    pthread_attr_init(&server->at);
-    pthread_attr_setdetachstate(&server->at, PTHREAD_CREATE_JOINABLE);   
-    // Connect mysql
-    MYSQL mysql;
+
+	CWorldServer* server = new ( nothrow ) CWorldServer( fileconf );
+	if ( server == NULL )
+		return -1;
+
+	// Connect mysql
 	server->DB = new CDatabase( server->Config.SQLServer.pcServer,
-	                    server->Config.SQLServer.pcUserName,
-	                    server->Config.SQLServer.pcPassword,
-	                    server->Config.SQLServer.pcDatabase,
-	                    server->Config.SQLServer.pcPort, &mysql );
-    server->port = server->Config.CharPort;     
-	if(server->Config.usethreads)
-	   Log( MSG_INFO, "Using Threads" );	
+	                            server->Config.SQLServer.pcUserName,
+	                            server->Config.SQLServer.pcPassword,
+	                            server->Config.SQLServer.pcDatabase,
+	                            server->Config.SQLServer.pcPort );
+
+	if ( server->Config.usethreads )
+		Log( MSG_INFO, "Using Threads" );
+
 	// Start server
 	server->port = server->Config.WorldPort;
-	
-	if(server->DB->Connect( )==0) Log( MSG_INFO, "Connected to MySQL server" ); 
+
+	if ( server->DB->Connect( ) == 0 )
+		Log( MSG_INFO, "Connected to MySQL server" );
 	else
 	{
-        delete server;
-        #ifdef _WIN32
-		system("pause");
-		#endif
+		delete server;
+#ifdef _WIN32
+		system( "pause" );
+#endif
 		return -1;
 	}
-	
-	server->LoadEncryption();
-	
-	server->StartServer();
+
+	server->LoadEncryption( );
+
+	server->StartServer( );
 	// Close server
-    pthread_attr_destroy(&server->at);	
-    server->DB->Disconnect( );
-	CloseWinSocket( );	
-	Log(MSG_INFO, "Cleaning memory, please wait..." );
-	delete server;         	
+	server->DB->Disconnect( );
+	CloseWinSocket( );
+	Log( MSG_INFO, "Cleaning memory, please wait..." );
+	delete server;
 	return EXIT_SUCCESS;
 }
 

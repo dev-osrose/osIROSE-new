@@ -90,13 +90,15 @@ bool CCharServer::pakGetCharacters( CCharClient* thisclient, CPacket* P )
 	if ( !thisclient->isLoggedIn )
 		return false;
 
+	(void)P;
+
 	// Properly delete items, quests, friends when deleting a character
 	// Hooray for joins.
 	sql::PreparedStatement* prep = DB->QPrepare(
 	    "DELETE FROM characters, items, list_friend, list_quest USING characters LEFT JOIN items ON items.owner = characters.id LEFT JOIN list_friend \
 		ON (list_friend.id = characters.id OR list_friend.idfriend = characters.id) LEFT JOIN list_quest ON list_quest.owner = characters.id WHERE (characters.deletetime > 0 AND characters.deletetime <= %i)" );
 	prep->setInt( 1, GetServerTime( ) );
-	bool bRes = prep->execute( );
+	prep->execute( );
 	DB->QPrepareFree( );
 
 	CItem        items[ 10 ];
@@ -256,7 +258,7 @@ bool CCharServer::pakRequestWorld( CCharClient* thisclient, CPacket* P )
 	if ( result == NULL )
 		return false;
 
-	BYTE nfriends = result->rowsCount( ) & 0xff;
+	uint8_t nfriends = result->rowsCount( ) & 0xff;
 
 	RESETPACKET( pak, 0x7e1 ); // Friend list command
 	ADDBYTE( pak, 0x06 );      // Sending Friend List
@@ -398,7 +400,7 @@ bool CCharServer::pakWSReady( CCharClient* thisclient, CPacket* P )
 	Log( MSG_INFO, "Channel #%i connected from ip %s", newchannel->id,
 	     newchannel->ip );
 
-	// Connect to worldserver
+	// Connect to world server
 	newchannel->sock = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( newchannel->sock == INVALID_SOCKET )
 	{
@@ -454,6 +456,7 @@ bool CCharServer::pakLoginConnected( CCharClient* thisclient, CPacket* P )
 // Return to char select
 bool CCharServer::pakWSCharSelect( CCharClient* thisclient, CPacket* P )
 {
+	(void)thisclient;
 	// if(!thisclient->isLoggedIn) return false;
 	Log( MSG_INFO, "World server requested char select" );
 
@@ -503,7 +506,7 @@ bool CCharServer::pakChatrooms( CCharClient* thisclient, CPacket* P )
 	return true;
 }
 
-// delete/resurect character
+// delete/resurrect character
 bool CCharServer::pakDeleteChar( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
@@ -513,7 +516,7 @@ bool CCharServer::pakDeleteChar( CCharClient* thisclient, CPacket* P )
 	unsigned long int DeleteTime = 0;
 	switch ( action )
 	{
-	case 0x00: // Resurect
+	case 0x00: // Resurrect
 	{
 		DeleteTime = 0;
 		if ( !DB->QExecute( " UPDATE characters SET deletetime=0 WHERE "
@@ -551,9 +554,11 @@ bool CCharServer::pakUpdateLevel( CCharClient* thisclient, CPacket* P )
 {
 	if ( !thisclient->isLoggedIn )
 		return false;
-	WORD charid = GETWORD( ( *P ), 0 );
-	WORD level = GETWORD( ( *P ), 2 );
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	(void)P;
+
+	uint16_t charid = GETWORD( (*P), 0 );
+	uint16_t level = GETWORD( (*P), 2 );
+	for (uint32_t i = 0; i < ClientList.size( ); i++)
 	{
 		CCharClient* player = (CCharClient*)ClientList.at( i );
 		if ( player->charid == charid )
@@ -571,7 +576,7 @@ bool CCharServer::pakLoginDSClient( CCharClient* thisclient, CPacket* P )
 	if ( !thisclient->isLoggedIn )
 		return false;
 
-	BYTE action = GETBYTE( ( *P ), 0 );
+	uint8_t action = GETBYTE( (*P), 0 );
 	switch ( action )
 	{
 	case 1:

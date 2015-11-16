@@ -135,11 +135,11 @@ struct CPacket
 	//void               SetDWord( unsigned short pos, unsigned value );
 	//void               SetQWord( unsigned short pos, unsigned long long value );
 	//void               SetFloat( unsigned short pos, float value );
-	//unsigned char      GetByte( unsigned short pos );
-	//unsigned short     GetWord( unsigned short pos );
-	//unsigned           GetDWord( unsigned short pos );
-	//unsigned long long GetQWord( unsigned short pos );
-	//float              GetFloat( unsigned short pos );
+	unsigned char      GetByte( unsigned short pos );
+	unsigned short     GetWord( unsigned short pos );
+	unsigned           GetDWord( unsigned short pos );
+	unsigned long long GetQWord( unsigned short pos );
+	float              GetFloat( unsigned short pos );
 
 	// Functions added by Drakia
 	template < class T >
