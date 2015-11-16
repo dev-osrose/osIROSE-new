@@ -29,20 +29,20 @@ class CParty
         CParty( );
         ~CParty( );        
         
-        CPlayer* GetMember( UINT id );
-        CPlayer* GetMemberByCharID( UINT charid );
+        CPlayer* GetMember( uint32_t id );
+        CPlayer* GetMemberByCharID( uint32_t charid );
         void SendToMembers( CPacket* pak, CPlayer* exclient=NULL );
         void SendToVisible( CPacket* pak, CPlayer* thisclient );        
         bool AddPlayer( CPlayer* player );
         bool RemovePlayer( CPlayer* player );
         
-        UINT PartyLevel;
-        UINT Exp;
-        UINT Option;
-        UINT LastItem;
-        UINT LastETC;
-        UINT LastZulies;
-        UINT Capacity;
+        uint32_t PartyLevel;
+        uint32_t Exp;
+        uint32_t Option;
+        uint32_t LastItem;
+        uint32_t LastETC;
+        uint32_t LastZulies;
+        uint32_t Capacity;
         vector<CPlayer*> Members;
         CPartyExp* PartyExp;
 };

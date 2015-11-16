@@ -23,7 +23,7 @@
 
 void CCharacter::DoAttack( )
 {
-	CMap* map = GServer->MapList.Index[ Position->Map ];
+	//CMap* map = GServer->MapList.Index[ Position->Map ];
 	switch ( Battle->atktype )
 	{
 	case NORMAL_ATTACK: //normal attack
@@ -149,6 +149,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
 	bool     critical = false;
 	int      hitvalue = GetHitRate( Enemy );
 
+	(void)critical;
 	/*
     if (hitvalue < 20)
       if (int((float(Stats->Level - Enemy->Stats->Level) * 0.6f) + float((rand() % 100) + 1)) >= 94)
@@ -378,7 +379,7 @@ bool CCharacter::AoeSkill( CSkills* skill, CCharacter* Enemy )
 	}
 	Battle->castTime = 0;
 	CMap* map        = GServer->MapList.Index[ Position->Map ];
-	for ( UINT i = 0; i < map->MonsterList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->MonsterList.size( ); i++ )
 	{
 		CMonster* monster = map->MonsterList.at( i );
 		if ( monster->clientid == clientid )
@@ -398,7 +399,7 @@ bool CCharacter::AoeSkill( CSkills* skill, CCharacter* Enemy )
 	}
 	if ( map->allowpvp != 0 || ( IsMonster( ) && !IsSummon( ) ) )
 	{
-		for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+		for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 		{
 			CPlayer* player = map->PlayerList.at( i );
 			if ( player->clientid == clientid )
@@ -460,7 +461,7 @@ bool CCharacter::AoeBuff( CSkills* skill )
 	}
 	if ( CharType == 1 )
 	{
-		for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+		for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 		{
 			CPlayer* player = map->PlayerList.at( i );
 			switch ( skill->target )
@@ -502,7 +503,7 @@ bool CCharacter::AoeBuff( CSkills* skill )
 	}
 	else if ( CharType == 2 )
 	{
-		for ( UINT i = 0; i < map->MonsterList.size( ); i++ )
+		for ( uint32_t i = 0; i < map->MonsterList.size( ); i++ )
 		{
 			CMonster* monster = map->MonsterList.at( i );
 			switch ( skill->target )
@@ -717,6 +718,7 @@ void CCharacter::UseBuffSkill( CCharacter* Target, CSkills* skill )
 // Use a skill
 bool CCharacter::UseSkill( CSkills* skill, CCharacter* Target )
 {
+	(void)Target;
 	if ( skill->atkpower > 0 )
 	{
 		Log( MSG_INFO, "Need to do %i%s %s in range %i to target %i",

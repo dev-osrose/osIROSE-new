@@ -845,7 +845,7 @@ struct CNPC
 struct SWarp
 {
 	SWarp( )
-	    : TargetPoint( 0 ), TargetMap( 0 ), SourceMap( 0 )
+	    : SourceMap( 0 ), TargetMap( 0 ), TargetPoint( 0 )
 	{
 		pos.x = 0;
 		pos.y = 0;

@@ -33,7 +33,7 @@
 		i->skillid     = 0; \
 		i->atktype     = 0; \
 	}
-typedef unsigned char BYTE;
+
 #include "datatypes.h"
 
 #define TPLAYER 1
@@ -95,59 +95,59 @@ struct BATTLE
 struct STATUS
 {
 	//Stats up
-	BYTE Dash_up;
-	BYTE Haste_up;
-	BYTE Attack_up;
-	BYTE Defense_up;
-	BYTE Magic_Defense_up;
-	BYTE Accury_up;
-	BYTE Critical_up;
-	BYTE Dodge_up;
-	BYTE HP_up;
-	BYTE MP_up;
-	BYTE MaxHP_up;
-	BYTE MaxMP_up;
-	BYTE HPMP_up;
+	uint8_t Dash_up;
+	uint8_t Haste_up;
+	uint8_t Attack_up;
+	uint8_t Defense_up;
+	uint8_t Magic_Defense_up;
+	uint8_t Accury_up;
+	uint8_t Critical_up;
+	uint8_t Dodge_up;
+	uint8_t HP_up;
+	uint8_t MP_up;
+	uint8_t MaxHP_up;
+	uint8_t MaxMP_up;
+	uint8_t HPMP_up;
 
 	//Stats down
-	BYTE Dash_down;
-	BYTE Haste_down;
-	BYTE Attack_down;
-	BYTE Defense_down;
-	BYTE Magic_Defense_down;
-	BYTE Accury_down;
-	BYTE Critical_down;
-	BYTE Dodge_down;
-	BYTE HP_down;
-	BYTE MP_down;
-	BYTE MaxHP_down;
-	BYTE MaxMP_down;
-	BYTE HPMP_down;
+	uint8_t Dash_down;
+	uint8_t Haste_down;
+	uint8_t Attack_down;
+	uint8_t Defense_down;
+	uint8_t Magic_Defense_down;
+	uint8_t Accury_down;
+	uint8_t Critical_down;
+	uint8_t Dodge_down;
+	uint8_t HP_down;
+	uint8_t MP_down;
+	uint8_t MaxHP_down;
+	uint8_t MaxMP_down;
+	uint8_t HPMP_down;
 
 	//Status Effects
-	BYTE Poisoned;
-	BYTE Muted;
-	BYTE Sleep;
-	BYTE Faint;
-	BYTE Stuned;
-	BYTE Camo;
-	BYTE Invis;
-	BYTE Shield;
-	BYTE Curse;
-	BYTE Recover;
-	BYTE Dispell;
-	BYTE Detect;
-	BYTE Invinc;
-	BYTE Flame;
-	BYTE ExtraDamage_up;
-	BYTE ExtraDamage_down;
+	uint8_t Poisoned;
+	uint8_t Muted;
+	uint8_t Sleep;
+	uint8_t Faint;
+	uint8_t Stuned;
+	uint8_t Camo;
+	uint8_t Invis;
+	uint8_t Shield;
+	uint8_t Curse;
+	uint8_t Recover;
+	uint8_t Dispell;
+	uint8_t Detect;
+	uint8_t Invinc;
+	uint8_t Flame;
+	uint8_t ExtraDamage_up;
+	uint8_t ExtraDamage_down;
 	bool CanAttack;
 	bool CanRun;
 	bool CanMove;
 	bool CanCastSkill;
 
 	// Stance
-	BYTE Stance;
+	uint8_t Stance;
 };
 
 struct MAGICSTATUS
@@ -180,10 +180,10 @@ struct ATTRIBUTES
 struct USEDITEM
 {
 	clock_t lastRegTime; // Last Regeneration
-	UINT    usevalue;    // Max Heal Value
-	UINT    usetype;     // Consumible Type (MP/HP/STAMINA/...)
-	UINT    userate;     // consumible rate
-	UINT    used;        // Consumible Used
+	uint32_t    usevalue;    // Max Heal Value
+	uint32_t    usetype;     // Consumible Type (MP/HP/STAMINA/...)
+	uint32_t    userate;     // consumible rate
+	uint32_t    used;        // Consumible Used
 };
 
 // Player information
@@ -191,11 +191,11 @@ struct INFO
 {
 	char         charname[ 17 ];
 	unsigned int charid;
-	BYTE         Sex;
-	UINT         Face;
-	UINT         Hair;
-	UINT         Exp;
-	UINT         Job;
+	uint8_t         Sex;
+	uint32_t         Face;
+	uint32_t         Hair;
+	uint32_t         Exp;
+	uint32_t         Job;
 	long int     Zulies;
 	long int     Storage_Zulies;
 	long int     LastGlobal;
@@ -220,7 +220,7 @@ struct RIDE
 {
 	bool Drive;
 	bool Ride;
-	UINT charid;
+	uint32_t charid;
 };
 
 struct TRADE
@@ -243,9 +243,9 @@ struct SHOP
 	char     name[ 64 ];
 	CBuying  BuyingList[ 30 ];
 	CSelling SellingList[ 30 ];
-	UINT     Buying;
-	UINT     Selling;
-	UINT     ShopType;
+	uint32_t     Buying;
+	uint32_t     Selling;
+	uint32_t     ShopType;
 };
 
 struct SKILLS
@@ -267,7 +267,7 @@ struct CLAN
 };
 struct UNION_s
 {
-	UINT unionvar[ 11 ];
+	uint32_t unionvar[ 11 ];
 };
 
 //***************Monster only******************************************/

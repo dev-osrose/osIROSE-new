@@ -165,7 +165,7 @@ struct STR_COND_017
 {
 	STR_NPCVAR NpcVar1;
 	STR_NPCVAR NpcVar2;
-	byte       btOp;
+	uint8_t       btOp;
 };
 
 struct STR_COND_018
@@ -179,11 +179,11 @@ struct STR_COND_018
 
 struct STR_COND_019
 {
-	byte btWeekDay;
-	byte btHour1;
-	byte btMin1;
-	byte btHour2;
-	byte btMin2;
+	uint8_t btWeekDay;
+	uint8_t btHour1;
+	uint8_t btMin1;
+	uint8_t btHour2;
+	uint8_t btMin2;
 };
 
 struct STR_COND_020

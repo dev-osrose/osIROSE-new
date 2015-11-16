@@ -108,7 +108,7 @@ class CRoseFile
 		CFILE_CHAR* result = new CFILE_CHAR[ 30 ];
 		CFILE_UCHAR len    = 0;
 		for ( CFILE_CHAR i = 0; i < 30; i++ )
-			result[ i ] = 0x00;
+			result[ (uint8_t)i ] = 0x00;
 		if ( ( mode & FM_READWRITE ) == FM_READWRITE )
 		{
 			if ( ( mode & FM_CREATEIFDOESNTEXIST ) == FM_CREATEIFDOESNTEXIST )
@@ -737,18 +737,6 @@ class CRoseFile
 				Read( mem, (CFILE_SIZE)(FileSize( )) );
 				SetAbsPos( curpos );
 				return mem;
-				/*
-				if( Read( mem, (CFILE_SIZE)(FileSize( )) ) != FileSize( ) )
-				{
-					delete[] mem;
-					return NULL;
-				}
-				else
-				{
-					SetAbsPos( curpos );
-					return mem;
-				}
-				*
 			}
 		}*/
 

@@ -92,8 +92,8 @@ class CPlayer : public CCharacter
 	bool         CleanPlayerVector( );
 	bool         loaddata( );
 	void         savedata( );
-	UINT         GetNewStorageItemSlot( CItem thisitem );
-	UINT         GetNewItemSlot( CItem thisitem );
+	uint32_t         GetNewStorageItemSlot( CItem thisitem );
+	uint32_t         GetNewItemSlot( CItem thisitem );
 	bool         ClearObject( unsigned int otherclientid );
 	void         RestartPlayerVal( );
 	bool         Regeneration( );

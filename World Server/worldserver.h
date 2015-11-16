@@ -179,7 +179,7 @@ class CWorldServer : public CServerSocket
 	void DoFairyFree( int fairy );
 
 	// Repair Price (extrafunctions.cpp)
-	LONG Repairprice( uint32_t price, uint32_t durability, uint32_t lifespan );
+	uint32_t Repairprice( uint32_t price, uint32_t durability, uint32_t lifespan );
 	//------------------ MATH (extrafunctions.cpp)
 	fPoint RandInCircle( fPoint center, float radius );
 	fPoint RandInPoly( fPoint p[], int pcount );

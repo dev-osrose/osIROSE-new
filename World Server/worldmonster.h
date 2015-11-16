@@ -27,7 +27,7 @@
 class CMonster : public CCharacter
 {
     public:
-        CMonster( fPoint Position, UINT MonsterType, UINT MonsterMap, UINT Owner=0, UINT spawnid=0 );
+        CMonster( fPoint Position, uint32_t MonsterType, uint32_t MonsterMap, uint32_t Owner=0, uint32_t spawnid=0 );
         ~CMonster( );
 
         // times
@@ -51,7 +51,7 @@ class CMonster : public CCharacter
         void DoAi(int ainumber,char type);
         bool Guardiantree(CMonster* monster, CMap* map);
         bool Scarab(CMonster* monster, CMap* map);
-        bool SummonUpdate(CMonster* monster, CMap* map, UINT j);
+        bool SummonUpdate(CMonster* monster, CMap* map, uint32_t j);
         bool SetStats( );
         bool UnspawnMonster( );
       	bool IsGhost( );
@@ -64,7 +64,7 @@ class CMonster : public CCharacter
       	CPlayer* GetOwner( );
       	void SpawnMonster( CPlayer* player, CMonster* thismon );
       	bool PlayerInRange( );
-      	CPlayer* GetNearPlayer( UINT mdist = 20 );
+      	CPlayer* GetNearPlayer( uint32_t mdist = 20 );
         void AddDamage( CCharacter* enemy, long int hitpower);
         CDrop* GetDrop( );
 

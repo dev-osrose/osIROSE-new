@@ -33,16 +33,16 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 list( APPEND fileHandlers
-		./aip/AiActions.cpp
-		./aip/AiConditions.cpp
-		./aip/Aip.cpp
-		./quest/QuestActions.cpp
-		./quest/QuestConditions.cpp
-		./quest/Quests.cpp )
+		./aip/aiactions.cpp
+		./aip/aiconditions.cpp
+		./aip/aip.cpp
+		./quest/questactions.cpp
+		./quest/questconditions.cpp
+		./quest/quests.cpp )
 
 list( APPEND mainSource 
 	battle.cpp
-	Buff.cpp
+	buff.cpp
 	character.cpp
 	charevent.cpp
 	charfunctions.cpp
@@ -52,27 +52,27 @@ list( APPEND mainSource
 	gmcmds.cpp
 	itemdata.cpp
 	main.cpp
-	MainProcess.cpp
+	mainprocess.cpp
 	mapfunctions.cpp
-	Monster.cpp
-	MonsterEvents.cpp
+	monster.cpp
+	monsterevents.cpp
 	monsterfunctions.cpp
-	MonsterStats.cpp
-	Party.cpp
+	monsterstats.cpp
+	party.cpp
 	partyfunctions.cpp
 	player.cpp
 	playerdata.cpp
 	playerfunctions.cpp
 	playerquest.cpp
 	playerstats.cpp
-	ServerFunctions.cpp
+	serverfunctions.cpp
 	startup.cpp
 	stbhandler.cpp
 	strhashing.cpp
 	worldmap.cpp
-	WorldMonster.cpp
+	worldmonster.cpp
 	worldpackets.cpp
-	Worldprocess.cpp
+	worldprocess.cpp
 	worldserver.cpp )
 	
 find_package( Threads REQUIRED )
