@@ -70,7 +70,7 @@ bool CCharServer::OnServerReady( )
 		return false;
 
 	result->beforeFirst( );
-	while ( result->next() )
+	while ( result->next( ) )
 	{
 		CClans* thisclan = new CClans;
 		assert( thisclan ); // maybe remove
@@ -86,7 +86,7 @@ bool CCharServer::OnServerReady( )
 	}
 
 	// Load Clans
-	for ( UINT i = 0; i < ClanList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClanList.size( ); i++ )
 	{
 		CClans* Clan = ClanList.at( i );
 		result       = DB->QStore( "SELECT id,char_name,clan_rank FROM characters "
@@ -96,7 +96,7 @@ bool CCharServer::OnServerReady( )
 			return false;
 
 		result->beforeFirst( );
-		while ( result->next() )
+		while ( result->next( ) )
 		{
 			CClanMembers* newmember = new CClanMembers;
 			assert( newmember );
@@ -119,7 +119,7 @@ void CCharServer::OnClientDisconnect( CClientSocket* thisclient )
 	if ( !thisclientwc->logout )
 	{
 		// Send logout message to friends
-		for ( UINT i = 0; i < thisclientwc->FriendList.size( ); i++ )
+		for (uint32_t i = 0; i < thisclientwc->FriendList.size( ); i++)
 		{
 			CFriendList* Friend = thisclientwc->FriendList.at( i );
 
@@ -129,11 +129,13 @@ void CCharServer::OnClientDisconnect( CClientSocket* thisclient )
 				ChangeMessengerStatus( thisclientwc, otherclient, 0x08 );
 			}
 		}
+
 		// set logout message to clan
 		CClans* thisclan = GetClanByID( thisclientwc->clanid );
 		if ( thisclan == NULL )
 			return;
-		for ( UINT i = 0; i < thisclan->ClanMembers.size( ); i++ )
+
+		for (uint32_t i = 0; i < thisclan->ClanMembers.size( ); i++)
 		{
 			CClanMembers* ClanMember  = thisclan->ClanMembers.at( i );
 			CCharClient*  otherclient = GetClientByID( ClanMember->id );
