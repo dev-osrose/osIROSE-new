@@ -333,7 +333,7 @@ class CWorldServer : public CServerSocket
 
 	void LoadZones( );
 
-	// QSD Fuctions
+	// QSD functions
 	void       ReadQSD( std::string path, uint32_t index );
 	void       LoadQuestData( );
 	inline int round( double x )
@@ -363,7 +363,7 @@ class CWorldServer : public CServerSocket
 	vector< CSkills* > SkillList;  // Skills List
 	vector< CMDrops* > MDropList;  // Drops List
 
-	vector< CMDrops* > SkillbookList; // Skillbook drop list
+	vector< CMDrops* > SkillbookList; // Skill book drop list
 
 	vector< CNPCData* >                NPCData;   // NPC/Mobs List
 	vector< CParty* >                  PartyList; // Party List
@@ -405,7 +405,6 @@ class CWorldServer : public CServerSocket
 
 	std::thread WorldThread[ 3 ];
 	std::thread MapThread[ 200 ];
-	//pthread_attr_t  at;
 	std::mutex MapMutex, SQLMutex, PlayerMutex;
 
 	CDatabase* DB;

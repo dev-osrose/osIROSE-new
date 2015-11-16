@@ -226,7 +226,7 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 }
 
 // Build Drop the PY way
-CDrop* CWorldServer::GetPYDrop( CMonster* thismon, UINT droptype )
+CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 { //if droptype = 1 then it is a normal drop. if it is 2 then it is a potential side drop.
 	//Log( MSG_INFO, "PYDrops function selected" );
 	//Log( MSG_INFO, "monster is %i", thismon->montype );
@@ -525,7 +525,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, UINT droptype )
 	return newdrop;
 }
 
-UINT CWorldServer::GetColorExp( UINT playerlevel, UINT moblevel, UINT exp )
+uint32_t CWorldServer::GetColorExp( uint32_t playerlevel, uint32_t moblevel, uint32_t exp )
 {
 	/*
 purple = +16 - 150%
@@ -538,19 +538,19 @@ whie = -15 - 20%
 */
 	int dif = moblevel - playerlevel;
 	if ( dif > 15 ) //purple
-		exp = (UINT)floor( exp * 1.5 );
+		exp = (uint32_t)floor( exp * 1.5 );
 	else if ( dif > 10 )
-		exp = (UINT)floor( exp * 1.2 );
+		exp = (uint32_t)floor( exp * 1.2 );
 	else if ( dif > 4 )
-		exp = (UINT)floor( exp * 1.1 );
+		exp = (uint32_t)floor( exp * 1.1 );
 	else if ( dif > -4 )
-		exp = (UINT)floor( (double)( exp * 1 ) );
+		exp = (uint32_t)floor( (double)( exp * 1 ) );
 	else if ( dif > -9 )
-		exp = (UINT)floor( exp * 0.8 );
+		exp = (uint32_t)floor( exp * 0.8 );
 	else if ( dif > -15 )
-		exp = (UINT)floor( exp * 0.5 );
+		exp = (uint32_t)floor( exp * 0.5 );
 	else
-		exp = (UINT)floor( exp * 0.2 );
+		exp = (uint32_t)floor( exp * 0.2 );
 	return exp;
 }
 
@@ -572,7 +572,7 @@ bool CWorldServer::TeleportTo( CPlayer* thisclient, int map, fPoint position )
 }
 
 // Learn Skill
-bool CWorldServer::LearnSkill( CPlayer* thisclient, UINT skill, bool cost )
+bool CWorldServer::LearnSkill( CPlayer* thisclient, uint32_t skill, bool cost )
 {
 	/*
 0 - ya aprendido
@@ -670,9 +670,9 @@ void CWorldServer::RefreshFairy( )
 		{
 			if ( FairyList.at( i )->LastTime <= ( clock( ) - ( FairyList.at( i )->WaitTime * 60 * CLOCKS_PER_SEC ) ) && !FairyList.at( i )->assigned ) // if fairy hour is now
 			{
-				if ( ClientList.size( ) >= 5 ) //stop solo players fromgetting fairied and screwing up their stats during testing.
+				if ( ClientList.size( ) >= 5 ) //stop solo players from getting fairied and screwing up their stats during testing.
 				{
-					int value = rand( ) % (int)( ClientList.size( ) - 1 ) + 1; //choose random value in clientlist
+					int value = rand( ) % (int)( ClientList.size( ) - 1 ) + 1; //choose random value in client list
 					CPlayer* targetclient = (CPlayer*)ClientList.at( value )->player;
 					FairyList.at( i )->ListIndex = value;
 					FairyList.at( i )->LastTime = clock( );
@@ -689,14 +689,14 @@ void CWorldServer::RefreshFairy( )
 				DoFairyFree( i );
 				oldclient->Fairy          = false;
 				oldclient->FairyListIndex = 0;
-				DoFairyStuff( oldclient, 0 ); // unspawn fairy
+				DoFairyStuff( oldclient, 0 ); // despawn fairy
 				oldclient->SetStats( );
 			}
 		}
 	}
-	// this close fairies after their time if GM de activate  fairy mode when some fairies are assigned.
+	// this despawns fairies after their time if GM deactivate fairy mode when some fairies are assigned.
 	if ( Config.FairyMode == 0 && ClientList.size( ) > 1 )
-	{ // if serevr mode off and someone online
+	{ // if server mode off and someone online
 		for ( int i = 0; i < Config.FairyMax; i++ )
 		{
 			if ( ( FairyList.at( i )->LastTime + ( Config.FairyStay * 60 * CLOCKS_PER_SEC ) ) <= clock( ) && FairyList.at( i )->assigned )

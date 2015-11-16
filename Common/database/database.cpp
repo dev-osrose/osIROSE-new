@@ -37,7 +37,7 @@ int CDatabase::Connect( )
 
 		std::unique_ptr< sql::ResultSet > res( this->QStore( "SELECT @@wait_timeout AS _timeout" ) );
 
-		if ( res->rowsCount( ) )
+		if (res->next( ))
 		{
 			Timeout = res->getInt( "_timeout" ) - 60; // Set the timeout to 1 minute before the connection will timeout
 		}
@@ -84,15 +84,13 @@ bool CDatabase::QExecute( char* Format, ... )
 	try
 	{
 		stmt.reset( con->createStatement( ) );
-		if ( stmt->execute( query ) != true )
-		{
-			Log( MSG_FATALERROR, "Could not execute query" );
-			return false;
-		}
+		stmt->execute( query );
 	}
 	catch ( sql::SQLException& err )
 	{
 		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
+		SQLMutex.unlock();
+		return false;
 	}
 
 	SQLMutex.unlock( );
@@ -115,16 +113,13 @@ std::unique_ptr< sql::ResultSet > CDatabase::QStore( char* Format, ... )
 	{
 		stmt.reset( con->createStatement( ) );
 		res.reset( stmt->executeQuery( query ) );
-		if ( res->next( ) == false )
-		{
-			Log( MSG_FATALERROR, "Could not execute query" );
-			SQLMutex.unlock( );
-			return nullptr;
-		}
+		res->beforeFirst( );
 	}
 	catch ( sql::SQLException& err )
 	{
 		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
+		SQLMutex.unlock();
+		return nullptr;
 	}
 	SQLMutex.unlock( );
 	return res;

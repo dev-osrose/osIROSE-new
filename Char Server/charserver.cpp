@@ -50,15 +50,13 @@ void CCharServer::LoadEncryption( )
 // When Server is ready
 bool CCharServer::OnServerReady( )
 {
-	DB->QExecute( "DELETE FROM channels WHERE id=%u", Config.ServerID );
-	if ( !DB->QExecute( "INSERT INTO channels "
-	                    "(id,name,host,port,connected,maxconnections,owner) "
-	                    "VALUES (%i,'%s','%s',%i,0,%i,%i)",
+	DB->QExecute( "DELETE FROM channels WHERE id=%i", Config.ServerID );
+
+	if ( !DB->QExecute( "INSERT INTO channels (id, name, host, port, owner, connected, maxconnections) VALUES (%i, '%s', '%s', %i, %i, 0, %i)",
 	                    Config.ServerID, Config.CharName, Config.CharIP,
-	                    Config.CharPort, Config.MaxConnections,
-	                    Config.ParentID ) )
+						Config.CharPort, Config.ParentID, Config.MaxConnections ))
 	{
-		Log( MSG_WARNING, "Error accessing to database, the other server will "
+		Log( MSG_WARNING, "Error accessing to database, the other servers will "
 		                  "not connect to CharServer" );
 	}
 
