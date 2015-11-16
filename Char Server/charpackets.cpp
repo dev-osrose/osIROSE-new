@@ -501,6 +501,7 @@ bool CCharServer::pak7e5( CCharClient* thisclient, CPacket* P )
 // Create a chatroom?
 bool CCharServer::pakChatrooms( CCharClient* thisclient, CPacket* P )
 {
+	(void)P;
 	if ( !thisclient->isLoggedIn )
 		return false;
 	return true;
