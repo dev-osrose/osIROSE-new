@@ -122,7 +122,7 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 			break;
 		case 1: //mob only
 			thisdrops = thismon->MonsterDrop->mapdrop;
-			if ( thismon->thisnpc->level - thismon->MonsterDrop->firstlevel < -14 )
+			if ( (int32_t)(thismon->thisnpc->level - thismon->MonsterDrop->firstlevel) < -14 )
 			{
 				delete newdrop;
 				return NULL;
@@ -169,8 +169,8 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 		}
 		randv      = 0;
 		randv      = RandNumber( 1, thisdrops->probmax );
-		DWORD prob = 1;
-		for ( UINT i = 0; i < thisdrops->Drops.size( ); i++ )
+		int32_t prob = 1;
+		for ( uint32_t i = 0; i < thisdrops->Drops.size( ); i++ )
 		{
 			CDropInfo* dropinfo = thisdrops->Drops.at( i );
 			prob += dropinfo->prob;
@@ -282,6 +282,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		return NULL; // no drop here. not this time anyway.
 
 	CItemType prob[ MDropList.size( ) ];
+(void)prob;
 	bool      isdrop  = false;
 	int       n       = 0;
 	int       test    = 0;
@@ -290,6 +291,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	int       itemtype[ MDropList.size( ) ];
 	int       probability[ MDropList.size( ) ];
 	int       alternate[ MDropList.size( ) ][ 8 ];
+(void)probability;
 
 	if ( thismon->IsGhost( ) )
 	{
@@ -303,7 +305,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		}
 		else
 		{
-			for ( int i = 0; i < SkillbookList.size( ); i++ )
+			for ( uint32_t i = 0; i < SkillbookList.size( ); i++ )
 			{
 				newdrop->type     = 2;
 				CMDrops* thisdrop = GServer->SkillbookList.at( i );
@@ -321,7 +323,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	else // Stuff to do if the mob isn't a ghost
 	{
 		int dropmode = 0;
-		int randv    = RandNumber( 1, 100 );
+		uint32_t randv    = RandNumber( 1, 100 );
 		// Each monster has its own rates for zuly and item drops defined in the database
 		if ( randv > thismon->thisnpc->item + thismon->thisnpc->money )
 			return NULL;                        // did not qualify to drop anything this time
@@ -347,14 +349,15 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		}
 
 		int randomdrop = GServer->RandNumber( 1, 100 );
-		for ( int i = 0; i < MDropList.size( ); i++ )
+(void)randomdrop;
+		for ( uint32_t i = 0; i < MDropList.size( ); i++ )
 		{
 			isdrop            = false;
 			CMDrops* thisdrop = GServer->MDropList.at( i );
 			if ( thisdrop->mob == thismon->montype && dropmode == 2 ) // monster drop
 			{
 				test = GServer->RandNumber( 1, 1000 );
-				if ( test < thisdrop->prob )
+				if ( test < (int32_t)thisdrop->prob )
 				{
 					isdrop = true;
 				}
@@ -364,7 +367,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 				test = GServer->RandNumber( 1, 1000 );
 				if ( thismon->thisnpc->level == 1 )
 					test = GServer->RandNumber( 1, 10000 ); // make it less likely to get map drops from event mobs
-				if ( test < thisdrop->prob )
+				if ( test < (int32_t)thisdrop->prob )
 				{
 					isdrop = true;
 				}
@@ -373,7 +376,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 			{
 				//Log(MSG_INFO, "Level drop selected. type %i number %i", thisdrop->itemtype, thisdrop->itemnum );
 				test = GServer->RandNumber( 1, 1000 );
-				if ( test < thisdrop->prob )
+				if ( test < (int32_t)thisdrop->prob )
 				{
 					isdrop = true;
 				}
@@ -383,7 +386,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 			{
 				if ( droptype != 1 ) //side drops only. Skip if the item is not a match for side type
 				{
-					if ( itemtype[ n ] != droptype )
+					if ( itemtype[ n ] != (int32_t)droptype )
 						continue;
 				}
 				//droptype 1 is a regular drop
@@ -400,6 +403,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		}
 	}
 	int newn = n;
+(void)newn;
 	if ( n == 0 )
 		return NULL;
 	int maxitems = n;
@@ -648,6 +652,8 @@ void CWorldServer::DoFairyStuff( CPlayer* targetclient, int action )
 	ADDBYTE( pak, action );
 	ADDWORD( pak, targetclient->clientid);
 	SendToVisible( &pak, targetclient );*/
+(void)targetclient;
+(void)action;
 }
 
 void CWorldServer::DoFairyFree( int fairy )

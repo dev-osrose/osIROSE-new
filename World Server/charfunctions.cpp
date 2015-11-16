@@ -60,7 +60,7 @@ CDrop* CCharacter::GetDrop( )
 }
 
 // start action [attack]
-void CCharacter::StartAction( CCharacter* Target, BYTE action, UINT skillid)
+void CCharacter::StartAction( CCharacter* Target, uint8_t action, uint32_t skillid)
 {
     BEGINPACKET( pak, 0 );
     switch(action)
@@ -167,6 +167,7 @@ bool CCharacter::IsOnBattle( )
         break;
         default: return false;
     }
+return false;
 }
 
 bool CCharacter::CanAttack( )
@@ -224,7 +225,8 @@ bool CCharacter::IsMoving( )
 // VIRTUAL [add player damage]
 void CCharacter::AddDamage( CCharacter* enemy, long int hitpower)
 {
-
+(void)enemy;
+(void)hitpower;
 }
 
 // return character target
@@ -256,7 +258,7 @@ unsigned int CCharacter::GetInt( )
 void CCharacter::RefreshBuff( )
 {
     bool bflag = false;
-    for( UINT i=0;i<30;i++)
+    for( uint32_t i=0;i<30;i++)
     {
         if(MagicStatus[i].Buff==0) continue;
         clock_t etime = clock() - MagicStatus[i].BuffTime;
@@ -374,7 +376,7 @@ void CCharacter::RefreshBuff( )
              Stats->HP -= MagicStatus[i].Value;
              MagicStatus[i].BuffTime+= 1*CLOCKS_PER_SEC;
              MagicStatus[i].Duration-=1;
-             printf("did %i poison dmg to the player, still %i seconds and %i HP remain \n", MagicStatus[i].Value, MagicStatus[i].Duration, Stats->HP);
+             //printf("did %i poison dmg to the player, still %i seconds and %i HP remain \n", MagicStatus[i].Value, MagicStatus[i].Duration, Stats->HP);
 
              //A bunch of messy code to send dmg packet
              BEGINPACKET( pak, 0x7b6 );

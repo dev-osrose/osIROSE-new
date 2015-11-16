@@ -438,17 +438,17 @@ int CPlayer::GetNewSkillSlot(char skilltype)
 	switch (skilltype)
 	{
 	case 0:
-		for(char s=0;s<30;s++)
+		for(int8_t s=0;s<30;s++)
 		{
 			if(bskills[s]==0)return s;
 		}
 	case 1:
-		for(char t=0;t<30;t++)
+		for(int8_t t=0;t<30;t++)
 		{
 			if(askill[t]==0)return t;
 		}
 	case 2:
-		for(char u=0;u<30;u++)
+		for(int8_t u=0;u<30;u++)
 		{
 			if(pskill[u]==0)return u;
 		}

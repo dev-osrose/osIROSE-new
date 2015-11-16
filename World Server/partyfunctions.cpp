@@ -39,9 +39,9 @@ CParty::~CParty( )
     delete PartyExp;   
 }
 
-CPlayer* CParty::GetMember( UINT id )
+CPlayer* CParty::GetMember( uint32_t id )
 {
-    for(UINT i=0;i<Members.size( );i++)
+    for(uint32_t i=0;i<Members.size( );i++)
     {   
         CPlayer* member = Members.at(i);
         if(member->clientid==id)
@@ -50,9 +50,9 @@ CPlayer* CParty::GetMember( UINT id )
     return NULL;
 }
 
-CPlayer* CParty::GetMemberByCharID( UINT id )
+CPlayer* CParty::GetMemberByCharID( uint32_t id )
 {
-    for(UINT i=0;i<Members.size( );i++)
+    for(uint32_t i=0;i<Members.size( );i++)
     {   
         CPlayer* member = Members.at(i);
         if(member->CharInfo->charid==id)
@@ -63,7 +63,7 @@ CPlayer* CParty::GetMemberByCharID( UINT id )
 
 void CParty::SendToMembers( CPacket* pak, CPlayer* explayer )
 {
-    for(UINT i=0;i<Members.size( );i++)
+    for(uint32_t i=0;i<Members.size( );i++)
     {   
         CPlayer* member = Members.at(i);
         if(member==explayer)
@@ -74,7 +74,7 @@ void CParty::SendToMembers( CPacket* pak, CPlayer* explayer )
 
 void CParty::SendToVisible( CPacket* pak, CPlayer* thisclient )
 {
-    for(UINT i=0;i<Members.size( );i++)
+    for(uint32_t i=0;i<Members.size( );i++)
     {
         CPlayer* member = Members.at(i);
         if(member==thisclient)
@@ -93,7 +93,7 @@ bool CParty::AddPlayer( CPlayer* player )
 
 bool CParty::RemovePlayer( CPlayer* player )
 {
-    for(UINT i=0;i<Members.size( );i++)
+    for(uint32_t i=0;i<Members.size( );i++)
     {
         if(Members.at(i)==player)
         {

@@ -40,7 +40,7 @@ bool CMonster::OnDie( )
     {
      if((map->IsNight( ) || map->ghost==2) && !IsGhost( ) && !IsGhostSeed( ) && !IsSummon( ))
        {
-        UINT gs = GServer->RandNumber( 0, 100 );
+        uint32_t gs = GServer->RandNumber( 0, 100 );
         if(gs<30) // 30% / 70%
             {   // spawn a ghost seed [for now will be 701 [level 1 ghost seed] ]
                 map->AddMonster( 701, Position->current, 0, NULL, NULL, Position->respawn, true );
@@ -81,7 +81,7 @@ bool CMonster::OnEnemyOnSight( CCharacter* Enemy )
 	{
 		if ( thisnpc->aggresive > 1 )
 		{
-			UINT aggro = GServer->RandNumber( 2, 15 );
+			uint32_t aggro = GServer->RandNumber( 2, 15 );
 			if ( thisnpc->aggresive >= aggro && !IsGhostSeed( ) )
 			{
 				StartAction( (CCharacter*)Enemy, NORMAL_ATTACK, 0 );
@@ -97,6 +97,7 @@ bool CMonster::OnEnemyOnSight( CCharacter* Enemy )
 // called when enemy die
 bool CMonster::OnEnemyDie( CCharacter* Enemy )
 {
+(void)Enemy; //TODO: Do something with this
 	Position->destiny = Position->source;
 	ClearBattle( Battle );
 	MoveTo( Position->source );
@@ -245,6 +246,7 @@ bool CMonster::Scarab( CMonster* monster, CMap* map )
 {
 	fPoint    position;
 	CMonster* othermon;
+(void)othermon;
 	CMonster* newmonster;
 	if ( monster->hitcount > 5 )
 		monster->hitcount = 0;
@@ -278,7 +280,7 @@ bool CMonster::Scarab( CMonster* monster, CMap* map )
 	}
 	return true;
 }
-bool CMonster::SummonUpdate( CMonster* monster, CMap* map, UINT j )
+bool CMonster::SummonUpdate( CMonster* monster, CMap* map, uint32_t j )
 {
 	BEGINPACKET( pak, 0x799 );
 	clock_t  etime       = clock( ) - lastDegenTime;
@@ -300,7 +302,7 @@ bool CMonster::SummonUpdate( CMonster* monster, CMap* map, UINT j )
 		else if ( montype > 800 && montype < 811 )
 		{
 			float distance = 0x9 + ( ( 800 - montype ) / 2 );
-			for ( UINT i = 0; i < GServer->MapList.Index[ Position->Map ]->PlayerList.size( ); i++ )
+			for ( uint32_t i = 0; i < GServer->MapList.Index[ Position->Map ]->PlayerList.size( ); i++ )
 			{
 				CPlayer* thisclient = GServer->MapList.Index[ Position->Map ]->PlayerList.at( i );
 				float    tempdist   = GServer->distance( Position->current, thisclient->Position->current );
@@ -344,7 +346,7 @@ void CMonster::DoAi( int ainumber, char type ) //ainumber is monster->AI type is
 {
 	CAip* script = NULL;
 	//   if(ainumber==58)Log(MSG_DEBUG, "beetle does %i", type);
-	int aiindex = ( ainumber * 0x10000 ) + ( type * 0x100 );
+	uint32_t aiindex = ( ainumber * 0x10000 ) + ( type * 0x100 );
 	for ( unsigned j = 0; j < GServer->AipList.size( ); j++ )
 	{
 		if ( GServer->AipList.at( j )->AipID == aiindex )

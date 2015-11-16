@@ -75,85 +75,88 @@ void DecodeBinary( char* encoded, unsigned char* data )
 // Load this characters userdata from the database
 bool CPlayer::loaddata( )
 {
-	MYSQL_ROW  row;
-	MYSQL_RES* result = GServer->DB->QStore( "SELECT `level`,`face`,`hairStyle`,`sex`,`classid`,`zuly`,`str`,`dex`,`_int`, `con`,`cha`,`sen`,`curHp`,`curMp`,`id`,`statp`,`skillp`,`exp`,`stamina`,`quickbar`,`basic_skills`,`askill`,`askilllvl`,`pskill`,`pskilllvl`,`respawnid`,`clanid`,`clan_rank`,`townid` FROM `characters` WHERE `char_name`='%s'", CharInfo->charname );
+	std::unique_ptr< sql::ResultSet > result = GServer->DB->QStore( "SELECT `level`,`face`,`hairStyle`,`sex`,`classid`,`zuly`,`str`,`dex`,`_int`, `con`,`cha`,`sen`,`curHp`,`curMp`,`id`,`statp`,`skillp`,`exp`,`stamina`,`quickbar`,`basic_skills`,`askill`,`askilllvl`,`pskill`,`pskilllvl`,`respawnid`,`clanid`,`clan_rank`,`townid` FROM `characters` WHERE `char_name`='%s'", CharInfo->charname );
 	if ( result == NULL )
 		return false;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount() != 1 )
 	{
-		Log( MSG_WARNING, "Number of user with charname '%s' is %i", CharInfo->charname, mysql_num_rows( result ) );
+		Log( MSG_WARNING, "Number of user with charname '%s' is %i", CharInfo->charname, result->rowsCount() );
 		return false;
 	}
-	row                   = mysql_fetch_row( result );
-	Stats->Level          = atoi( row[ 0 ] );
-	CharInfo->Face        = atoi( row[ 1 ] );
-	CharInfo->Hair        = atoi( row[ 2 ] );
-	CharInfo->Sex         = atoi( row[ 3 ] );
-	CharInfo->Job         = atoi( row[ 4 ] );
-	CharInfo->Zulies      = atol( row[ 5 ] );
-	Attr->Str             = atoi( row[ 6 ] );
-	Attr->Dex             = atoi( row[ 7 ] );
-	Attr->Int             = atoi( row[ 8 ] );
-	Attr->Con             = atoi( row[ 9 ] );
-	Attr->Cha             = atoi( row[ 10 ] );
-	Attr->Sen             = atoi( row[ 11 ] );
-	Stats->HP             = atoi( row[ 12 ] );
-	Stats->MP             = atoi( row[ 13 ] );
-	CharInfo->charid      = atoi( row[ 14 ] );
-	CharInfo->StatPoints  = atoi( row[ 15 ] );
-	CharInfo->SkillPoints = atoi( row[ 16 ] );
-	CharInfo->Exp         = atoi( row[ 17 ] );
-	CharInfo->stamina     = atoi( row[ 18 ] );
-	Position->respawn     = atoi( row[ 25 ] );
-	Clan->clanid          = atoi( row[ 26 ] );
-	Clan->clanrank        = atoi( row[ 27 ] );
-	Position->saved       = atoi( row[ 28 ] );
+	result->next();
+
+	Stats->Level          = result->getInt("level");
+	CharInfo->Face        = result->getInt("face");
+	CharInfo->Hair        = result->getInt("hairStyle");
+	CharInfo->Sex         = result->getInt("sex");
+	CharInfo->Job         = result->getInt("classid");
+	CharInfo->Zulies      = result->getInt("zuly");
+	Attr->Str             = result->getInt("str");
+	Attr->Dex             = result->getInt("dex");
+	Attr->Int             = result->getInt("_int");
+	Attr->Con             = result->getInt("con");
+	Attr->Cha             = result->getInt("cha");
+	Attr->Sen             = result->getInt("sen");
+	Stats->HP             = result->getInt("curHp");
+	Stats->MP             = result->getInt("curMp");
+	CharInfo->charid      = result->getInt("id");
+	CharInfo->StatPoints  = result->getInt("statp");
+	CharInfo->SkillPoints = result->getInt("skillp");
+	CharInfo->Exp         = result->getInt("exp");
+	CharInfo->stamina     = result->getInt("stamina"); //18
+	Position->respawn     = result->getInt("respanid");// 25
+	Clan->clanid          = result->getInt("clanid");
+	Clan->clanrank        = result->getInt("clan_rank");
+	Position->saved       = result->getInt("townid");
 	Stats->xprate         = GetXPRate( );
 	p_skills              = 0;
-	for ( char i = 0; i < 32; i++ )
+
+//TODO: FIX ALL OF THE (char*)std::string.c_str() calls
+	for ( uint8_t i = 0; i < 32; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 19 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("quickbar").c_str() : NULL ), "," ); // this is a bad thing to do, but I'm going to do it anyway until I can fix it later
 		if ( tmp != NULL )
 			quickbar[ i ] = atoi( tmp );
 		else
 			quickbar[ i ] = 0;
 	}
 
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 20 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("basic_skills").c_str() : NULL ), "," );
 		if ( tmp != NULL )
 			bskills[ i ] = atoi( tmp );
 		else
 			bskills[ i ] = 0;
 	}
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 21 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("askill").c_str() : NULL ), "," );
 		if ( tmp != NULL )
 			askill[ i ] = atoi( tmp );
 		else
 			askill[ i ] = 0;
 	}
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 22 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("askilllvl").c_str() : NULL ), "," );
 		if ( tmp != NULL )
 			askilllvl[ i ] = atoi( tmp );
 		else
 			askilllvl[ i ] = 0;
 	}
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 23 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("pskill").c_str() : NULL ), "," );
 		if ( tmp != NULL )
 			pskill[ i ] = atoi( tmp );
 		else
 			pskill[ i ] = 0;
 	}
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? row[ 24 ] : NULL ), "," );
+		char* tmp = strtok( ( i == 0 ? (char*)result->getString("pskilllvl").c_str() : NULL ), "," );
 		if ( tmp != NULL )
 			pskilllvl[ i ] = atoi( tmp );
 		else
@@ -163,36 +166,40 @@ bool CPlayer::loaddata( )
 	result = GServer->DB->QStore( "SELECT unionid,union1points,union2points,union3points,union4points,union5points,union6points,union7points,union8points,union9points,union10points FROM characters WHERE char_name='%s'", CharInfo->charname );
 	if ( result == NULL )
 		return false;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount() != 1 )
 	{
-		Log( MSG_WARNING, "Number of user with charname '%s' is %i", CharInfo->charname, mysql_num_rows( result ) );
+		Log( MSG_WARNING, "Number of user with charname '%s' is %i", CharInfo->charname, result->rowsCount() );
 		return false;
 	}
-	row = mysql_fetch_row( result );
-	for ( char points = 0; points < 11; points++ )
-		Union_s->unionvar[ points ] = atoi( row[ points ] );
+
+	result->next();
+	for ( uint8_t points = 0; points < 11; points++ )
+		Union_s->unionvar[ points ] = result->getInt( points );
 
 	result = GServer->DB->QStore( "SELECT itemnum,itemtype,refine,durability,lifespan,slotnum,count,stats,socketed,appraised,gem FROM items WHERE owner=%i", CharInfo->charid );
+
 	if ( result == NULL )
 		return false;
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next() )
 	{
-		if ( !GServer->IsValidItem( atoi( row[ 1 ] ), atoi( row[ 0 ] ) ) || atoi( row[ 6 ] ) == 0 )
+		if ( !GServer->IsValidItem( result->getInt("itemtype"), result->getInt("itemnum") ) || result->getInt("count") == 0 )
 		{
-			Log( MSG_WARNING, "char %s have a invalid or empty item in inventory: %i-%i [%i], this item will be deleted", CharInfo->charname, atoi( row[ 1 ] ), atoi( row[ 0 ] ), atoi( row[ 6 ] ) );
+			Log( MSG_WARNING, "char %s have a invalid or empty item in inventory: %i-%i [%i], this item will be deleted", CharInfo->charname, result->getInt("itemtype"), result->getInt("itemnum"), result->getInt("count") );
 			continue;
 		}
-		UINT itemnum                = atoi( row[ 5 ] );
-		items[ itemnum ].itemnum    = atoi( row[ 0 ] );
-		items[ itemnum ].itemtype   = atoi( row[ 1 ] );
-		items[ itemnum ].refine     = atoi( row[ 2 ] );
-		items[ itemnum ].durability = atoi( row[ 3 ] );
-		items[ itemnum ].lifespan   = atoi( row[ 4 ] );
-		items[ itemnum ].count      = atoi( row[ 6 ] );
-		items[ itemnum ].stats      = atoi( row[ 7 ] );
-		items[ itemnum ].socketed = ( atoi( row[ 8 ] ) == 1 ) ? true : false;
-		items[ itemnum ].appraised = ( atoi( row[ 9 ] ) == 1 ) ? true : false;
-		items[ itemnum ].gem = atoi( row[ 10 ] ) > 3999 ? 0 : atoi( row[ 10 ] );
+		uint32_t itemnum                = result->getInt("slotnum");
+		items[ itemnum ].itemnum    = result->getInt("itemnum");
+		items[ itemnum ].itemtype   = result->getInt("itemtype");
+		items[ itemnum ].refine     = result->getInt("refine");
+		items[ itemnum ].durability = result->getInt("durability");
+		items[ itemnum ].lifespan   = result->getInt("lifespan");
+		items[ itemnum ].count      = result->getInt("count");
+		items[ itemnum ].stats      = result->getInt("stats");
+		items[ itemnum ].socketed = ( result->getInt("socketed") == 1 ) ? true : false;
+		items[ itemnum ].appraised = ( result->getInt("appraised") == 1 ) ? true : false;
+		items[ itemnum ].gem = result->getInt("gem") > 3999 ? 0 : result->getInt("gem");
 		//extra code to fix bugged gem items
 		if ( items[ itemnum ].gem > 0 )
 		{
@@ -202,25 +209,25 @@ bool CPlayer::loaddata( )
 	result = GServer->DB->QStore( "SELECT itemnum,itemtype,refine,durability,lifespan,slotnum,count,stats,socketed,appraised,gem FROM storage WHERE owner=%i", Session->userid );
 	if ( result == NULL )
 		return false;
-	nstorageitems = mysql_num_rows( result );
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next() )
 	{
-		if ( !GServer->IsValidItem( atoi( row[ 1 ] ), atoi( row[ 0 ] ) ) || atoi( row[ 6 ] ) == 0 )
+		if ( !GServer->IsValidItem( result->getInt("itemtype"), result->getInt("itemnum") ) || result->getInt("count") == 0 )
 		{
-			Log( MSG_WARNING, "char %s have a invalid or empty item in storage: %i%i [%i], this item will be deleted", CharInfo->charname, atoi( row[ 1 ] ), atoi( row[ 0 ] ), atoi( row[ 6 ] ) );
+			Log( MSG_WARNING, "char %s have a invalid or empty item in storage: %i%i [%i], this item will be deleted", CharInfo->charname, result->getInt("itemtype"), result->getInt("itemnum"), result->getInt("count") );
 			continue;
 		}
-		UINT itemnum                       = atoi( row[ 5 ] );
-		storageitems[ itemnum ].itemnum    = atoi( row[ 0 ] );
-		storageitems[ itemnum ].itemtype   = atoi( row[ 1 ] );
-		storageitems[ itemnum ].refine     = atoi( row[ 2 ] );
-		storageitems[ itemnum ].durability = atoi( row[ 3 ] );
-		storageitems[ itemnum ].lifespan   = atoi( row[ 4 ] );
-		storageitems[ itemnum ].count      = atoi( row[ 6 ] );
-		storageitems[ itemnum ].stats      = atoi( row[ 7 ] );
-		storageitems[ itemnum ].socketed = ( atoi( row[ 8 ] ) == 1 ) ? true : false;
-		storageitems[ itemnum ].appraised = ( atoi( row[ 9 ] ) == 1 ) ? true : false;
-		storageitems[ itemnum ].gem = atoi( row[ 10 ] );
+		uint32_t itemnum                       = result->getInt("slotnum");
+		storageitems[ itemnum ].itemnum    = result->getInt("itemnum");
+		storageitems[ itemnum ].itemtype   = result->getInt("itemtype");
+		storageitems[ itemnum ].refine     = result->getInt("refine");
+		storageitems[ itemnum ].durability = result->getInt("durability");
+		storageitems[ itemnum ].lifespan   = result->getInt("lifespan");
+		storageitems[ itemnum ].count      = result->getInt("count");
+		storageitems[ itemnum ].stats      = result->getInt("stats");
+		storageitems[ itemnum ].socketed = ( result->getInt("socketed") == 1 ) ? true : false;
+		storageitems[ itemnum ].appraised = ( result->getInt("appraised") == 1 ) ? true : false;
+		storageitems[ itemnum ].gem = result->getInt("gem");
 		//extra code to fix bugged gem items
 		if ( storageitems[ itemnum ].gem > 0 )
 		{
@@ -233,19 +240,18 @@ bool CPlayer::loaddata( )
 		result = GServer->DB->QStore( "SELECT `logo`,`back`,`name`,`cp`,`grade` FROM `list_clan` where `id`=%i", Clan->clanid );
 		if ( result == NULL )
 			return false;
-		if ( mysql_num_rows( result ) != 1 )
+		if ( result->rowsCount() != 1 )
 		{
-			Log( MSG_WARNING, "There are %i clan(s) with id %i", mysql_num_rows( result ), Clan->clanid );
+			Log( MSG_WARNING, "There are %i clan(s) with id %i", result->rowsCount(), Clan->clanid );
 			Clan->clanid = 0;
 		}
 		else
 		{
-			row        = mysql_fetch_row( result );
-			Clan->logo = atoi( row[ 0 ] );
-			Clan->back = atoi( row[ 1 ] );
-			strcpy( Clan->clanname, row[ 2 ] );
-			Clan->CP    = atoi( row[ 3 ] );
-			Clan->grade = atoi( row[ 4 ] );
+			Clan->logo = result->getInt("logo");
+			Clan->back = result->getInt("back");
+			strcpy( Clan->clanname, result->getString("name").c_str() );
+			Clan->CP    = result->getInt("cp");
+			Clan->grade = result->getInt("grade");
 		}
 	}
 	memset( &quest, 0, sizeof( SQuestData ) );
@@ -253,10 +259,10 @@ bool CPlayer::loaddata( )
 	result = GServer->DB->QStore( "SELECT quests from list_quest where owner=%i", CharInfo->charid );
 	if ( result != NULL ) //return false;
 	{
-		while ( row = mysql_fetch_row( result ) )
+		while ( result->next() )
 		{
-			if ( row[ 0 ] != NULL )
-				memcpy( &quest, row[ 0 ], sizeof( SQuestData ) );
+			if ( result->getString("quests") != NULL )
+				memcpy( &quest, result->getString("quests").c_str(), sizeof( SQuestData ) );
 		}
 	}
 
@@ -287,6 +293,7 @@ void CPlayer::savedata( )
 		CMap*          map         = GServer->MapList.Index[ Position->Map ];
 		CRespawnPoint* thisrespawn = map->GetNearRespawn( this );
 		CPlayer*       thisclient  = GServer->GetClientByID( clientid );
+(void)thisclient;
 		if ( thisrespawn == NULL )
 			Position->respawn = 4;
 		else
@@ -299,42 +306,42 @@ void CPlayer::savedata( )
 		char activelvl[ 1024 ];
 		char pasive[ 1024 ];
 		char pasivelvl[ 1024 ];
-		for ( UINT i = 0; i < 30; i++ )
+		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &basic[ i ], "%i", bskills[ i ] );
 			else
 				sprintf( &basic[ strlen( basic ) ], ",%i", bskills[ i ] );
 		}
-		for ( UINT i = 0; i < 30; i++ )
+		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &active[ i ], "%i", askill[ i ] );
 			else
 				sprintf( &active[ strlen( active ) ], ",%i", askill[ i ] );
 		}
-		for ( UINT i = 0; i < 30; i++ )
+		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &activelvl[ i ], "%i", askilllvl[ i ] );
 			else
 				sprintf( &activelvl[ strlen( activelvl ) ], ",%i", askilllvl[ i ] );
 		}
-		for ( UINT i = 0; i < 30; i++ )
+		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &pasive[ i ], "%i", pskill[ i ] );
 			else
 				sprintf( &pasive[ strlen( pasive ) ], ",%i", pskill[ i ] );
 		}
-		for ( UINT i = 0; i < 30; i++ )
+		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &pasivelvl[ i ], "%i", pskilllvl[ i ] );
 			else
 				sprintf( &pasivelvl[ strlen( pasivelvl ) ], ",%i", pskilllvl[ i ] );
 		}
-		for ( UINT i = 0; i < 32; i++ )
+		for ( uint32_t i = 0; i < 32; i++ )
 		{
 			if ( i == 0 )
 				sprintf( &quick[ i ], "%i", quickbar[ i ] );
@@ -359,7 +366,7 @@ void CPlayer::savedata( )
 
 		if ( !GServer->DB->QExecute( "DELETE FROM items WHERE owner=%i", CharInfo->charid ) )
 			return;
-		for ( UINT i = 0; i < MAX_INVENTORY; i++ )
+		for ( uint32_t i = 0; i < MAX_INVENTORY; i++ )
 		{
 			if ( items[ i ].count > 0 )
 			{
@@ -371,7 +378,7 @@ void CPlayer::savedata( )
 		}
 		if ( !GServer->DB->QExecute( "DELETE FROM storage WHERE owner=%i", Session->userid ) )
 			return;
-		for ( UINT i = 0; i < 160; i++ )
+		for ( uint32_t i = 0; i < 160; i++ )
 		{
 			if ( storageitems[ i ].count > 0 )
 			{
@@ -390,7 +397,8 @@ void CPlayer::savedata( )
 void CPlayer::savequests( CPlayer* thisclient )
 {
 	char* questBuffer = new char[ sizeof( SQuestData ) * 3 + 1 ];
-	mysql_real_escape_string( GServer->DB->Mysql, questBuffer, (const char*)&quest, sizeof( SQuestData ) );
+//TODO: use prepared statements here
+	//mysql_real_escape_string( GServer->DB->Mysql, questBuffer, (const char*)&quest, sizeof( SQuestData ) );
 	GServer->DB->QExecute( "DELETE FROM list_quest WHERE owner=%i", thisclient->CharInfo->charid );
 	GServer->DB->QExecute( "INSERT INTO list_quest (owner, quests) VALUES(%i,'%s')",
 	                       thisclient->CharInfo->charid, questBuffer );

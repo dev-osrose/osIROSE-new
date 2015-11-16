@@ -125,7 +125,7 @@ unsigned CWorldServer::BuildItemRefine( CItem thisitem )
 // Send a packet too all connected clients
 void CWorldServer::SendToAll( CPacket* pak )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* otherclient = (CPlayer*)ClientList.at( i )->player;
 		if ( otherclient->Session->inGame )
@@ -160,7 +160,7 @@ void CWorldServer::SendToVisible( CPacket* pak, CPlayer* thisclient, CPlayer* xo
 void CWorldServer::SendToVisible( CPacket* pak, CMonster* thismon, CDrop* thisdrop )
 {
 	CMap* map = MapList.Index[ thismon->Position->Map ];
-	for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 	{
 		CPlayer* otherclient = map->PlayerList.at( i );
 		if ( IsVisible( otherclient, thismon ) )
@@ -189,7 +189,7 @@ void CWorldServer::SendToVisible( CPacket* pak, CCharacter* character, CDrop* th
 void CWorldServer::SendToVisible( CPacket* pak, CDrop* thisdrop )
 {
 	CMap* map = MapList.Index[ thisdrop->posMap ];
-	for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 	{
 		CPlayer* otherclient = map->PlayerList.at( i );
 		if ( IsVisible( otherclient, thisdrop ) )
@@ -201,7 +201,7 @@ void CWorldServer::SendToVisible( CPacket* pak, CDrop* thisdrop )
 void CWorldServer::SendToMap( CPacket* pak, int mapid )
 {
 	CMap* map = MapList.Index[ mapid ];
-	for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 	{
 		CPlayer* otherclient = map->PlayerList.at( i );
 		if ( otherclient->Session->inGame )
@@ -277,7 +277,7 @@ void CWorldServer::ClearClientID( unsigned int id )
 }
 
 // Search a drop by ID
-CDrop* CWorldServer::GetDropByID( UINT id, UINT map )
+CDrop* CWorldServer::GetDropByID( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 		return MapList.Index[ map ]->GetDropInMap( id );
@@ -291,11 +291,11 @@ CDrop* CWorldServer::GetDropByID( UINT id, UINT map )
 }
 
 // Search a Monster by ID
-CMonster* CWorldServer::GetMonsterByID( UINT id, UINT map )
+CMonster* CWorldServer::GetMonsterByID( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 		return MapList.Index[ map ]->GetMonsterInMap( id );
-	for ( UINT i = 0; i < MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 	{
 		CMonster* thismon = MapList.Map.at( i )->GetMonsterInMap( id );
 		if ( thismon != NULL )
@@ -307,7 +307,7 @@ CMonster* CWorldServer::GetMonsterByID( UINT id, UINT map )
 // Search a Client by Username
 CPlayer* CWorldServer::GetClientByUserName( char* username )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* thisclient = (CPlayer*)ClientList.at( i )->player;
 		if ( strcmp( thisclient->Session->username, username ) == 0 )
@@ -317,11 +317,11 @@ CPlayer* CWorldServer::GetClientByUserName( char* username )
 }
 
 // Get Client By ID
-CPlayer* CWorldServer::GetClientByID( UINT id, UINT map )
+CPlayer* CWorldServer::GetClientByID( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 		return MapList.Index[ map ]->GetPlayerInMap( id );
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* thisclient = (CPlayer*)ClientList.at( i )->player;
 		if ( thisclient->clientid == id )
@@ -331,11 +331,11 @@ CPlayer* CWorldServer::GetClientByID( UINT id, UINT map )
 }
 
 // Search a Client by CharID
-CPlayer* CWorldServer::GetClientByCID( UINT id, UINT map )
+CPlayer* CWorldServer::GetClientByCID( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 		return MapList.Index[ map ]->GetCharIDInMap( id );
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* thisclient = (CPlayer*)ClientList.at( i )->player;
 		if ( thisclient->CharInfo->charid == id )
@@ -347,7 +347,7 @@ CPlayer* CWorldServer::GetClientByCID( UINT id, UINT map )
 // Seach a client by Charname
 CPlayer* CWorldServer::GetClientByCharName( char* name )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* thisclient = (CPlayer*)ClientList.at( i )->player;
 		if ( strncmp( thisclient->CharInfo->charname, name, 16 ) == 0 )
@@ -357,7 +357,7 @@ CPlayer* CWorldServer::GetClientByCharName( char* name )
 }
 
 // Get Spawn Area by ID
-CSpawnArea* CWorldServer::GetSpawnArea( UINT id, UINT map )
+CSpawnArea* CWorldServer::GetSpawnArea( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 	{
@@ -384,7 +384,7 @@ CSpawnArea* CWorldServer::GetSpawnArea( UINT id, UINT map )
 }
 
 #ifdef USEIFO
-CMobGroup* CWorldServer::GetMobGroup( UINT id, UINT map )
+CMobGroup* CWorldServer::GetMobGroup( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 	{
@@ -416,7 +416,7 @@ bool CWorldServer::DeleteSpawn( CSpawnArea* spawn )
 {
 	if ( spawn == NULL )
 		return false;
-	for ( UINT i = 0; i < MapList.Index[ spawn->map ]->MonsterSpawnList.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Index[ spawn->map ]->MonsterSpawnList.size( ); i++ )
 	{
 		if ( MapList.Index[ spawn->map ]->MonsterSpawnList.at( i ) == spawn )
 		{
@@ -429,7 +429,7 @@ bool CWorldServer::DeleteSpawn( CSpawnArea* spawn )
 }
 
 // Search NPC by ID
-CNPC* CWorldServer::GetNPCByID( UINT id, UINT map )
+CNPC* CWorldServer::GetNPCByID( uint32_t id, uint32_t map )
 {
 	if ( map != 0 )
 		return MapList.Index[ map ]->GetNPCInMap( id );
@@ -505,7 +505,7 @@ fPoint CWorldServer::RandInPoly( fPoint p[], int pcount )
 fPoint CWorldServer::RandInCircle( fPoint center, float radius )
 {
 	fPoint thispoint;
-	float angle = (float)( rand( ) * ( pi * 2 ) / RAND_MAX );
+	float angle = (float)( rand( ) * ( M_PI * 2 ) / RAND_MAX );
 	float distance = (float)sqrt( rand( ) * 1.0 / RAND_MAX ) * radius;
 	thispoint.x = cos( angle ) * distance + center.x;
 	thispoint.y = sin( angle ) * distance + center.y;
@@ -569,10 +569,10 @@ bool CWorldServer::IsPlayerInCircle( CPlayer* thisclient, CPlayer* otherclient, 
 // Search Respawn by ID
 CRespawnPoint* CWorldServer::GetRespawnByID( unsigned id )
 {
-	for ( UINT i = 0; i < MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 	{
 		CMap* thismap = MapList.Map.at( i );
-		for ( UINT j = 0; j < thismap->RespawnList.size( ); j++ )
+		for ( uint32_t j = 0; j < thismap->RespawnList.size( ); j++ )
 		{
 			CRespawnPoint* thisrespawn = thismap->RespawnList.at( j );
 			if ( thisrespawn->id == id )
@@ -585,7 +585,7 @@ CRespawnPoint* CWorldServer::GetRespawnByID( unsigned id )
 // Search Respawn by Map
 CRespawnPoint* CWorldServer::GetRespawnByMap( int map )
 {
-	for ( UINT j = 0; j < MapList.Index[ map ]->RespawnList.size( ); j++ )
+	for ( uint32_t j = 0; j < MapList.Index[ map ]->RespawnList.size( ); j++ )
 	{
 		if ( MapList.Index[ map ]->RespawnList.at( j )->destMap == map )
 			return MapList.Index[ map ]->RespawnList.at( j );
@@ -602,7 +602,7 @@ CSkills* CWorldServer::GetSkillByID( unsigned int id )
 		if ( A == B )
 		{
 			CSkills* thisskill = (CSkills*)SkillList.at( A );
-			if ( id = thisskill->id ) // lol this function aint working correct
+			if ( id == thisskill->id ) // lol this function aint working correct
 			{
 				return thisskill;
 			}
@@ -640,7 +640,7 @@ CStatus* CWorldServer::GetStatusByID( unsigned int id )
 		if ( A == B )
 		{
 			CStatus* thisstatus = (CStatus*)StatusList.at( A );
-			if ( id = thisstatus->id )
+			if ( id == thisstatus->id )
 				return thisstatus;
 			else
 			{
@@ -980,7 +980,7 @@ float CWorldServer::distance( fPoint pos1, fPoint pos2 )
 }
 
 // Search client by userid
-CPlayer* CWorldServer::GetClientByUserID( UINT userid )
+CPlayer* CWorldServer::GetClientByUserID( uint32_t userid )
 {
 	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
@@ -1143,15 +1143,16 @@ uint32_t CWorldServer::GetLevelGhost( uint32_t map, uint32_t level )
 // return fairy range for waiting time random
 uint32_t CWorldServer::GetFairyRange( uint32_t part )
 {
-	UINT Range1[] = {5, 5, 4, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-	UINT Range2[] = {10, 7, 7, 6, 6, 6, 6, 5, 4, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1};
+	uint32_t Range1[] = {5, 5, 4, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	uint32_t Range2[] = {10, 7, 7, 6, 6, 6, 6, 5, 4, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1};
 	if ( part == 0 )
 		return Range1[ GServer->FairyList.size( ) ];
 	if ( part == 1 )
 		return Range2[ GServer->FairyList.size( ) ];
+	return 0; // This may be wrong -Raven
 }
 
-LONG CWorldServer::Repairprice( uint32_t price, uint32_t durability, uint32_t lifespan )
+uint32_t CWorldServer::Repairprice( uint32_t price, uint32_t durability, uint32_t lifespan )
 {
 	/* ---------------------------------------------------------------------------------------------
      Function RepairPrice()

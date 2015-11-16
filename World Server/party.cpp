@@ -30,7 +30,7 @@ bool CWorldServer::pakPartyActions( CPlayer* thisclient, CPacket* P )
         case 0x00://Invita a new party
         case 0x01://invite a existent party
         {
-            UINT clientid = GETWORD((*P),1);
+            uint32_t clientid = GETWORD((*P),1);
             if(thisclient->Party->party!=NULL)
             {
                 if(thisclient->Party->party->Members.size()>=thisclient->Party->party->Capacity)
@@ -87,7 +87,7 @@ bool CWorldServer::pakPartyActions( CPlayer* thisclient, CPacket* P )
                 return true;             
             if(party->Members.size()>1)
             {
-                for(UINT i=0;i<party->Members.size();i++)
+                for(uint32_t i=0;i<party->Members.size();i++)
                 {
                     CPlayer* thismember = party->Members.at(i);
                     if(!pflag)
@@ -102,7 +102,7 @@ bool CWorldServer::pakPartyActions( CPlayer* thisclient, CPacket* P )
             }
             else
             {
-                for(UINT i=0;i<party->Members.size();i++)
+                for(uint32_t i=0;i<party->Members.size();i++)
                 {
                     CPlayer* thismember = party->Members.at(i);
                     BEGINPACKET( pak, 0x7d1 );
@@ -161,7 +161,7 @@ bool CWorldServer::pakPartyActions( CPlayer* thisclient, CPacket* P )
                 return true;             
             if(party->Members.size()>1)
             {
-                for(UINT i=0;i<party->Members.size();i++)
+                for(uint32_t i=0;i<party->Members.size();i++)
                 {
                     CPlayer* othermember = party->Members.at(i);
                     if(!pflag)
@@ -176,7 +176,7 @@ bool CWorldServer::pakPartyActions( CPlayer* thisclient, CPacket* P )
             }
             else
             {
-                for(UINT i=0;i<party->Members.size();i++)
+                for(uint32_t i=0;i<party->Members.size();i++)
                 {
                     CPlayer* othermember = party->Members.at(i);
                     BEGINPACKET( pak, 0x7d1 );
@@ -275,7 +275,7 @@ bool CWorldServer::pakPartyManager( CPlayer* thisclient, CPacket* P )
             RESETPACKET( pak, 0x7d2 );
             ADDBYTE    ( pak, party->Option );
             ADDBYTE    ( pak, party->Members.size() );
-            for(int i=0;i<party->Members.size();i++)
+            for(uint32_t i=0;i<party->Members.size();i++)
             {
                 CPlayer* member= party->Members.at(i);
                 ADDDWORD   ( pak, member->CharInfo->charid );

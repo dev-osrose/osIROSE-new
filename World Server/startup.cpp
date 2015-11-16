@@ -44,6 +44,7 @@ bool CWorldServer::LoadSTBData( )
 	STBStoreData( "3DData\\STB\\LIST_SELL.STB", &STB_SELL );
 	STBStoreData( "3DData\\STB\\LIST_ZONE.STB", &STB_ZONE );
 	STBStoreData( "3DData\\STB\\ITEM_DROP.STB", &STB_DROP );
+return true;
 }
 bool CWorldServer::LoadNPCData( )
 {
@@ -129,7 +130,7 @@ bool CWorldServer::LoadSkillData( )
 			Log( MSG_WARNING, "\nError allocing memory: skills_data" );
 			return false;
 		}
-		char* tmp;
+
 		newskill->id          = i;
 		newskill->level       = STB_SKILL.rows[ i ][ 2 ];       // Skills Level
 		newskill->sp          = STB_SKILL.rows[ i ][ 3 ];       // Cost to get skill
@@ -176,9 +177,9 @@ bool CWorldServer::LoadSkillData( )
 		newskill->value1[ 1 ] = STB_SKILL.rows[ i ][ 25 ]; // Int Value
 		newskill->value2[ 1 ] = STB_SKILL.rows[ i ][ 26 ]; // % Value
 		newskill->buff[ 2 ]   = 0;
-		STB_SKILL.rows[ i ][ 11 ]; //for damage support
+		//STB_SKILL.rows[ i ][ 11 ]; //for damage support
 		newskill->value1[ 2 ] = 0;
-		STB_SKILL.rows[ i ][ 9 ]; //for damage support
+		//STB_SKILL.rows[ i ][ 9 ]; //for damage support
 		newskill->value2[ 2 ] = 0;
 
 		newskill->req[ 0 ]   = STB_SKILL.rows[ i ][ 45 ];           //the requirement type(usually 31 = level)
@@ -236,8 +237,7 @@ bool CWorldServer::LoadTeleGateData( )
 		CTeleGate* thisgate = new ( nothrow ) CTeleGate;
 		if ( thisgate == NULL )
 		{
-			Log( MSG_ERROR, "Error allocing memory       " );
-			DB->QFree( );
+			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
 		thisgate->id      = atoi( row[ 0 ] );
@@ -249,7 +249,6 @@ bool CWorldServer::LoadTeleGateData( )
 		thisgate->destMap = atoi( row[ 6 ] );
 		TeleGateList.push_back( thisgate );
 	}
-	DB->QFree( );
 	return true;
 }
 
@@ -266,7 +265,6 @@ bool CWorldServer::LoadRespawnData( )
 		if ( thisrespawnpoint == NULL )
 		{
 			Log( MSG_ERROR, "Error allocing memory" );
-			DB->QFree( );
 			return false;
 		}
 		thisrespawnpoint->id         = atoi( row[ 0 ] );
@@ -277,7 +275,6 @@ bool CWorldServer::LoadRespawnData( )
 		thisrespawnpoint->masterdest = ( atoi( row[ 5 ] ) == 1 );
 		MapList.Index[ thisrespawnpoint->destMap ]->RespawnList.push_back( thisrespawnpoint );
 	}
-	DB->QFree( );
 	return true;
 }
 
@@ -298,7 +295,6 @@ bool CWorldServer::LoadMobGroups( )
 		if ( thisgroup == NULL )
 		{
 			Log( MSG_ERROR, "Error allocating memory" );
-			DB->QFree( );
 			return false;
 		}
 		thisgroup->id             = atoi( row[ 0 ] );
@@ -345,7 +341,6 @@ bool CWorldServer::LoadMobGroups( )
 			if ( thismob == NULL )
 			{
 				Log( MSG_ERROR, "Error allocating memory" );
-				DB->QFree( );
 				return false;
 			}
 			thismob->amount   = amount;
@@ -378,7 +373,6 @@ bool CWorldServer::LoadMobGroups( )
 		MapList.Index[ thisgroup->map ]->MobGroupList.push_back( thisgroup );
 		mobGroups.push_back( thisgroup );
 	}
-	DB->QFree( );
 	return true;
 }
 #endif
@@ -398,7 +392,6 @@ bool CWorldServer::LoadMonsterSpawn( )
 		if ( thisspawn == NULL )
 		{
 			Log( MSG_ERROR, "Error allocing memory" );
-			DB->QFree( );
 			return false;
 		}
 		thisspawn->id          = atoi( row[ 0 ] );
@@ -418,7 +411,6 @@ bool CWorldServer::LoadMonsterSpawn( )
 		{
 			Log( MSG_ERROR, "Error allocing memory       " );
 			delete thisspawn;
-			DB->QFree( );
 			return false;
 		}
 		thisspawn->lastRespawnTime = clock( );
@@ -453,7 +445,6 @@ bool CWorldServer::LoadMonsterSpawn( )
 			MapList.Index[ thisspawn->map ]->MonsterSpawnList.push_back( thisspawn );
 		}
 	}
-	DB->QFree( );
 	return true;
 }
 
@@ -470,7 +461,6 @@ bool CWorldServer::LoadNPCs( )
 		if ( thisnpc == NULL )
 		{
 			Log( MSG_ERROR, "Error allocing memory" );
-			DB->QFree( );
 			return false;
 		}
 		thisnpc->clientid = GetNewClientID( );
@@ -488,7 +478,6 @@ bool CWorldServer::LoadNPCs( )
 		thisnpc->thisnpc->dialogid = atoi( row[ 5 ] ); // This is global to NPC type
 		MapList.Index[ thisnpc->posMap ]->AddNPC( thisnpc );
 	}
-	DB->QFree( );
 	return true;
 }
 
@@ -520,7 +509,7 @@ bool CWorldServer::LoadDropsData( )
 		newdrop->level_min  = GetUIntValue( "," );
 		newdrop->level_max  = GetUIntValue( "," );
 		newdrop->level_boss = GetUIntValue( "," );
-		UINT value          = 0;
+		uint32_t value          = 0;
 		bool First          = true;
 		// items
 		while ( ( value = GetUIntValue( "|", First ? items : NULL ) ) != 0 )
@@ -547,7 +536,7 @@ bool CWorldServer::LoadDropsData( )
 		newdrop->probmax = 0;
 		value            = 0;
 		// probability
-		for ( UINT j = 0; j < newdrop->Drops.size( ); j++ )
+		for ( uint32_t j = 0; j < newdrop->Drops.size( ); j++ )
 		{
 			value = GetUIntValue( "|", ( j == 0 ? prob : NULL ) );
 			if ( value == 0 )
@@ -570,9 +559,9 @@ bool CWorldServer::LoadDropsData( )
 			newdrop->probmax += newdrop->Drops.at( j )->prob;
 		}
 		// sort time
-		for ( UINT j = 0; j < newdrop->Drops.size( ); j++ )
+		for ( uint32_t j = 0; j < newdrop->Drops.size( ); j++ )
 		{
-			for ( UINT k = j; k < newdrop->Drops.size( ); k++ )
+			for ( uint32_t k = j; k < newdrop->Drops.size( ); k++ )
 			{
 				if ( newdrop->Drops.at( j ) > newdrop->Drops.at( k ) )
 				{
@@ -596,7 +585,6 @@ bool CWorldServer::LoadPYDropsData( )
 	MYSQL_RES* result = DB->QStore( "SELECT `id`,`type`,`min_level`,`max_level`,`prob`,`mob`,`map`,`alt` FROM `item_drops`" );
 	if ( result == NULL )
 	{
-		DB->QFree( );
 		return false;
 	}
 	while ( row = mysql_fetch_row( result ) )
@@ -634,7 +622,6 @@ bool CWorldServer::LoadPYDropsData( )
 		//Log(MSG_INFO, "found a non zero mob value %i",newdrop->mob);
 		MDropList.push_back( newdrop );
 	}
-	DB->QFree( );
 	Log( MSG_INFO, "PYDrops loaded" );
 	return true;
 }
@@ -646,7 +633,6 @@ bool CWorldServer::LoadSkillBookDropsData( )
 	MYSQL_RES* result = DB->QStore( "SELECT `id`,`itemtype`,`min`,`max`,`prob` FROM `list_skillbooks`" );
 	if ( result == NULL )
 	{
-		DB->QFree( );
 		return false;
 	}
 	int c = 0;
@@ -663,7 +649,6 @@ bool CWorldServer::LoadSkillBookDropsData( )
 		newdrop->prob      = atoi( row[ 4 ] );
 		SkillbookList.push_back( newdrop );
 	}
-	DB->QFree( );
 	Log( MSG_INFO, "Skillbook Data loaded" );
 	return true;
 }
@@ -677,15 +662,13 @@ bool CWorldServer::LoadConfig( )
         `pvp_acc`, `skill_damage` FROM `list_config`" );
 	if ( result == NULL )
 	{
-		DB->QFree( );
 		return false;
 	}
-	if ( mysql_num_rows( result ) == 0 )
+	if ( result->rowsCount() == 0 )
 	{
-		DB->QFree( );
 		return false;
 	}
-	while ( row = mysql_fetch_row( result ) )
+	while ( result->next() )
 	{
 		GServer->Config.EXP_RATE     = atoi( row[ 0 ] );
 		GServer->Config.DROP_RATE    = atoi( row[ 1 ] );
@@ -704,7 +687,6 @@ bool CWorldServer::LoadConfig( )
 		//GServer->Config.PvpAcc = atoi(row[13]);
 		//GServer->Config.SkillDmg = atoi(row[14]);
 	}
-	DB->QFree( );
 	Log( MSG_INFO, "Config Data Loaded" );
 	return true;
 }
@@ -714,15 +696,15 @@ bool CWorldServer::LoadMonsters( )
 	Log( MSG_LOAD, "Monsters Spawn       " );
 // Do our monster spawnin
 #ifndef USEIFO
-	for ( UINT i = 0; i < MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 	{
 		CMap* thismap = MapList.Map.at( i );
-		for ( UINT j = 0; j < thismap->MonsterSpawnList.size( ); j++ )
+		for ( uint32_t j = 0; j < thismap->MonsterSpawnList.size( ); j++ )
 		{
 			CSpawnArea* thisspawn = thismap->MonsterSpawnList.at( j );
 			thisspawn->mapdrop    = GetDropData( thisspawn->map );
 			thisspawn->mobdrop    = GetDropData( thisspawn->thisnpc->dropid );
-			for ( UINT k = 0; k < thisspawn->max; k++ )
+			for ( uint32_t k = 0; k < thisspawn->max; k++ )
 			{
 				fPoint position = RandInPoly( thisspawn->points, thisspawn->pcount );
 				thismap->AddMonster( thisspawn->montype, position, 0, thisspawn->mobdrop, thisspawn->mapdrop, thisspawn->id );
@@ -730,20 +712,20 @@ bool CWorldServer::LoadMonsters( )
 		}
 	}
 #else
-	for ( UINT i = 0; i < MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 	{
 		CMap* thismap = MapList.Map.at( i );
-		for ( UINT j = 0; j < thismap->MobGroupList.size( ); j++ )
+		for ( uint32_t j = 0; j < thismap->MobGroupList.size( ); j++ )
 		{
 			CMobGroup* thisgroup = thismap->MobGroupList.at( j );
 			// Load some basic mobs onto map
-			for ( UINT k = 0; k < thisgroup->limit; k++ )
+			for ( uint32_t k = 0; k < thisgroup->limit; k++ )
 			{
 				CMob* thismob = thisgroup->basicMobs.at( thisgroup->curBasic );
 				thisgroup->curBasic++;
 				if ( thisgroup->curBasic >= thisgroup->basicMobs.size( ) )
 					thisgroup->curBasic = 0;
-				for ( UINT l = 0; l < thismob->amount; l++ )
+				for ( uint32_t l = 0; l < thismob->amount; l++ )
 				{
 					fPoint position = RandInCircle( thisgroup->point, thisgroup->range );
 					thismap->AddMonster( thismob->mobId, position, 0, thismob->mobdrop, thismob->mapdrop, thisgroup->id );

@@ -28,14 +28,14 @@ PVOID MapProcess( )
 		GServer->PlayerMutex.lock( );
 		GServer->MapMutex.lock( );
 
-		for ( UINT i = 0; i < GServer->MapList.Map.size( ); i++ )
+		for ( uint32_t i = 0; i < GServer->MapList.Map.size( ); i++ )
 		{
 			CMap* map = GServer->MapList.Map.at( i );
 			if ( map->PlayerList.size( ) < 1 )
 				continue;
 
 			// Player update //------------------------
-			for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+			for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 			{
 				CPlayer* player = map->PlayerList.at( j );
 				if ( !player->Session->inGame )
@@ -54,7 +54,7 @@ PVOID MapProcess( )
 
 			// Monster update //------------------------
 			map->MonsterMutex.lock( );
-			for ( UINT j = 0; j < map->MonsterList.size( ); j++ )
+			for ( uint32_t j = 0; j < map->MonsterList.size( ); j++ )
 			{
 				CMonster* monster = map->MonsterList.at( j );
 
@@ -63,7 +63,7 @@ PVOID MapProcess( )
                 {
                     if (monster->IsGhostSeed( ))
                     {
-						UINT etime = (UINT)GServer->round((clock( ) - monster->SpawnTime));
+						uint32_t etime = (uint32_t)GServer->round((clock( ) - monster->SpawnTime));
                         if(etime<20000) {if(!monster->PlayerInRange( )) continue; if(!monster->UpdateValues( )) continue; monster->UpdatePosition( );}
                         else if(etime>20000 && etime<120000) // convert seed to ghost btw 20 and 120sec after the seed was spawned
                         {
@@ -72,7 +72,7 @@ PVOID MapProcess( )
                                 monster->UpdatePosition( );
                             CPlayer* player = monster->GetNearPlayer( );
                             if(player==NULL) continue;
-                            UINT montype = GServer->GetLevelGhost( player->Position->Map, player->Stats->Level );
+                            uint32_t montype = GServer->GetLevelGhost( player->Position->Map, player->Stats->Level );
                             map->ConverToMonster( monster, montype , true );
                             monster->StartAction( (CCharacter*)player, NORMAL_ATTACK, 0 );
                         }
@@ -88,7 +88,7 @@ PVOID MapProcess( )
                     }
                     if (monster->IsGhost( ))
                     {
-                        UINT etime = (UINT)GServer->round((clock( ) - monster->SpawnTime));
+                        uint32_t etime = (uint32_t)GServer->round((clock( ) - monster->SpawnTime));
                         if (etime>180000 && !monster->IsOnBattle( ) && !monster->IsMoving( )) // delete ghost after 180 sec after the ghost was spawned if not in battle
                         {
                             BEGINPACKET( pak, 0x799 );
@@ -118,7 +118,7 @@ PVOID MapProcess( )
 
 				if ( monster->hitcount == 0xFF ) //this is a delay for new monster spawns this might also fix invisible monsters(if they attack directly on spawning, the client doesn't get the attack packet(its not in it's visible list yet))
 				{
-					if ( 1000 < (UINT)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
+					if ( 1000 < (uint32_t)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
 					{
 						monster->hitcount = 0;
 						monster->DoAi( monster->thisnpc->AI, 0 );
@@ -129,10 +129,10 @@ PVOID MapProcess( )
 				//PY patch for purified Rackies
 				if ( monster->montype > 750 && monster->montype < 754 ) //ghost rackie
 				{
-					UINT etime = (UINT)round( ( clock( ) - monster->SpawnTime ) );
+					uint32_t etime = (uint32_t)round( ( clock( ) - monster->SpawnTime ) );
 					if ( etime > 5000 )
 					{
-						UINT newmon = monster->montype - 654;
+						uint32_t newmon = monster->montype - 654;
 						Log( MSG_INFO, "Monster type %i detected after 5 seconds. Changing to monster type %i", monster->montype, newmon );
 
 						map->ConverToMonster( monster, newmon, true );
@@ -143,11 +143,11 @@ PVOID MapProcess( )
 				}
 				if ( monster->montype > 95 && monster->montype < 100 ) //purified rackie
 				{
-					UINT etime = (UINT)round( ( clock( ) - monster->SpawnTime ) );
+					uint32_t etime = (uint32_t)round( ( clock( ) - monster->SpawnTime ) );
 					if ( etime > 20000 )
 					{
 						//20 seconds should be enough :)
-						UINT montype = monster->montype;
+						//uint32_t montype = monster->montype;
 						map->DeleteMonster( monster, true, j );
 						continue;
 					}
@@ -164,7 +164,7 @@ PVOID MapProcess( )
 					// {
 					//     monster->Guardiantree(monster,map);
 					// }
-					if ( 2000 < (UINT)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
+					if ( 2000 < (uint32_t)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
 					{
 						monster->DoAi( monster->thisnpc->AI, 2 );
 						monster->lastAiUpdate = clock( );
@@ -172,7 +172,7 @@ PVOID MapProcess( )
 				}
 				else if ( /*!monster->IsMoving()&&*/ !monster->IsAttacking( ) && !monster->IsDead( ) )
 				{
-					if ( 2000 < (UINT)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
+					if ( 2000 < (uint32_t)GServer->round( ( clock( ) - monster->lastAiUpdate ) ) )
 					{
 						monster->DoAi( monster->thisnpc->AI, 1 );
 						monster->lastAiUpdate = clock( );
@@ -216,7 +216,7 @@ PVOID VisibilityProcess( )
 	{
 		GServer->PlayerMutex.lock( );
 		GServer->MapMutex.lock( );
-		for ( UINT i = 0; i < GServer->MapList.Map.size( ); i++ )
+		for ( uint32_t i = 0; i < GServer->MapList.Map.size( ); i++ )
 		{
 			CMap* map = GServer->MapList.Map.at( i );
 			map->CleanDrops( );     //moved for test
@@ -225,7 +225,7 @@ PVOID VisibilityProcess( )
 			if ( map->PlayerList.size( ) < 1 )
 				continue;
 
-			for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+			for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 			{
 				CPlayer* player = map->PlayerList.at( j );
 				if ( !player->Session->inGame )
@@ -260,7 +260,7 @@ PVOID WorldProcess( )
 	while ( GServer->ServerOnline )
 	{
 		GServer->MapMutex.lock( );
-		for ( UINT i = 0; i < GServer->MapList.Map.size( ); i++ )
+		for ( uint32_t i = 0; i < GServer->MapList.Map.size( ); i++ )
 		{
 			CMap* map = GServer->MapList.Map.at( i );
 			if ( map->PlayerList.size( ) < 1 )

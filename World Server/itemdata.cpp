@@ -18,7 +18,7 @@ unsigned CItem::GetPakData( )
 {
 	unsigned retval = 0;
 	if ( count == 0 ) Clear( );
-	if ( itemtype >= 10 && itemtype <= 13 || itemtype == 0x1f ) {
+	if ( (itemtype >= 10 && itemtype <= 13) || itemtype == 0x1f ) {
 		retval = count;
 	} else {
 		retval |= (refine>>4) << 28;

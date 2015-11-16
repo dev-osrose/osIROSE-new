@@ -23,6 +23,7 @@
 //virtual [called when a enemy hit this character]
 bool CCharacter::OnBeAttacked( CCharacter* Enemy )
 {
+(void)Enemy;
     return true;
 }
 
@@ -35,12 +36,14 @@ bool CCharacter::OnDie( )
 // virtual [called when enemy die]
 bool CCharacter::OnEnemyDie( CCharacter* Enemy )
 {
+(void)Enemy;
     return true;
 }
 
 // virtual [called when a enmy is on sigh]
 bool CCharacter::OnEnemyOnSight( CCharacter* Enemy )
 {
+(void)Enemy;
     return true;
 }
 

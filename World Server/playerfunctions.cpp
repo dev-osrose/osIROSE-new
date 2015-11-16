@@ -22,7 +22,7 @@
 #include "worldserver.h"
 
 // Returns the amount of exp that is needed for the next level
-UINT CPlayer::GetLevelEXP( )
+uint32_t CPlayer::GetLevelEXP( )
 {
 	/*
 	if (Stats->Level <= 15)       return (unsigned int)( ( Stats->Level + 10 )  * ( Stats->Level + 5 )  * ( Stats->Level + 3 ) * 0.7 );
@@ -124,7 +124,7 @@ bool CPlayer::GetPlayerInfo( )
 	ADDBYTE( pak, 0 );
 	client->SendPacket( &pak );
 
-	sprintf_s( text, 50, "HP: %i/%i , MP: %i/%i", Stats->HP, Stats->MaxHP, Stats->MP, Stats->MaxMP );
+	sprintf_s( text, 50, "HP: %li/%i , MP: %li/%i", Stats->HP, Stats->MaxHP, Stats->MP, Stats->MaxMP );
 	RESETPACKET( pak, 0x0784 );
 	ADDSTRING( pak, "[GM]PlayerInfo" );
 	ADDBYTE( pak, 0 );
@@ -169,7 +169,7 @@ bool CPlayer::GetPlayerInfo( )
 // clearn player lists
 bool CPlayer::CleanPlayerVector( )
 {
-	CMap* map = GServer->MapList.Index[ Position->Map ];
+//	CMap* map = GServer->MapList.Index[ Position->Map ];
 	VisiblePlayers.clear( );
 	VisibleMonsters.clear( );
 	VisibleDrops.clear( );
@@ -188,7 +188,7 @@ bool CPlayer::VisiblityList( )
 	std::vector< CNPC* >        newVisibleNPCs;
 	// Clients
 	CMap* map = GServer->MapList.Index[ Position->Map ];
-	for ( UINT i = 0; i < map->PlayerList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->PlayerList.size( ); i++ )
 	{
 		CPlayer* otherclient = map->PlayerList.at( i );
 		if ( this == otherclient || !otherclient->Session->inGame )
@@ -217,7 +217,7 @@ bool CPlayer::VisiblityList( )
 		}
 	}
 	// Monsters
-	for ( UINT i = 0; i < map->MonsterList.size( ); i++ )
+	for ( uint32_t i = 0; i < map->MonsterList.size( ); i++ )
 	{
 		CMonster* thismon  = map->MonsterList.at( i );
 		float     distance = GServer->distance( this->Position->current, thismon->Position->current );
@@ -303,11 +303,11 @@ bool CPlayer::VisiblityList( )
 }
 
 // Returns a free slot in the inventory (0xffff if is full)
-UINT CPlayer::GetNewItemSlot( CItem thisitem )
+uint32_t CPlayer::GetNewItemSlot( CItem thisitem )
 {
-	UINT tabsize  = 30;
-	UINT itemtab  = 0;
-	UINT freeslot = 0xFFFF;
+	uint32_t tabsize  = 30;
+	uint32_t itemtab  = 0;
+	uint32_t freeslot = 0xFFFF;
 	switch ( thisitem.itemtype )
 	{
 	case 1:
@@ -340,7 +340,7 @@ UINT CPlayer::GetNewItemSlot( CItem thisitem )
 	/*
     for(int i=0;i<30;i++)
     {
-        UINT slot=12;
+        uint32_t slot=12;
         slot += (tabsize*itemtab)+i;
         switch(itemtab)
         {
@@ -364,7 +364,7 @@ UINT CPlayer::GetNewItemSlot( CItem thisitem )
 	{
 		for ( int i = 0; i < 30; i++ )
 		{
-			UINT slot = 12;
+			uint32_t slot = 12;
 			slot += ( tabsize * itemtab ) + i;
 			if ( items[ slot ].itemnum == 0 && items[ slot ].count < 1 )
 				return slot;
@@ -374,7 +374,7 @@ UINT CPlayer::GetNewItemSlot( CItem thisitem )
 	{
 		for ( int i = 0; i < 30; i++ )
 		{
-			UINT slot = 12;
+			uint32_t slot = 12;
 			slot += ( tabsize * itemtab ) + ( 29 - i );
 
 			if ( items[ slot ].itemnum == thisitem.itemnum && items[ slot ].itemtype == thisitem.itemtype && ( items[ slot ].count + thisitem.count ) < 999 )
@@ -395,8 +395,8 @@ UINT CPlayer::GetNewItemSlot( CItem thisitem )
 //count storage items
 unsigned int CPlayer::Getnstorageitems( CPlayer* thisclient )
 {
-	UINT count = 0;
-	for ( UINT i = 0; i < 160; i++ )
+	uint32_t count = 0;
+	for ( uint32_t i = 0; i < 160; i++ )
 	{
 		if ( thisclient->storageitems[ i ].count > 0 )
 			count++;
@@ -405,12 +405,12 @@ unsigned int CPlayer::Getnstorageitems( CPlayer* thisclient )
 }
 
 // Returns a free slot in the storage (0xffff if is full)
-UINT CPlayer::GetNewStorageItemSlot( CItem thisitem )
+uint32_t CPlayer::GetNewStorageItemSlot( CItem thisitem )
 {
 	//first check for a slot that already contains this item if it is stackable
 	if ( thisitem.itemtype == 10 || thisitem.itemtype == 11 || thisitem.itemtype == 12 )
 	{
-		for ( UINT i = 0; i < 160; i++ )
+		for ( uint32_t i = 0; i < 160; i++ )
 		{
 			if ( storageitems[ i ].itemtype == thisitem.itemtype && storageitems[ i ].itemnum == thisitem.itemnum )
 			{
@@ -426,7 +426,7 @@ UINT CPlayer::GetNewStorageItemSlot( CItem thisitem )
 	//so we couldn't find a matching entry to stack onto
 	//or the item is unstackable
 	//Let's look for an empty slot instead then
-	for ( UINT i = 0; i < 160; i++ )
+	for ( uint32_t i = 0; i < 160; i++ )
 	{
 		if ( storageitems[ i ].itemtype == 0 )
 		{
@@ -593,11 +593,11 @@ bool CPlayer::Regeneration( )
 	}
 
 	//LMA REGEN
-	bool is_first_regen = false;
+	/*bool is_first_regen = false;
 	if ( lastRegenTime == 0 )
 	{
 		is_first_regen = true;
-	}
+	}*/
 
 	clock_t etime = clock( ) - lastRegenTime;
 	if ( etime >= 8 * CLOCKS_PER_SEC && Stats->HP > 0 )
@@ -627,7 +627,7 @@ bool CPlayer::PlayerHeal( )
 	{
 		if ( UsedItem->used < UsedItem->usevalue && Stats->HP > 0 )
 		{
-			int value = UsedItem->userate;
+			uint32_t value = UsedItem->userate;
 			if ( ( UsedItem->usevalue - UsedItem->used ) < value )
 			{
 				value = UsedItem->usevalue - UsedItem->used;

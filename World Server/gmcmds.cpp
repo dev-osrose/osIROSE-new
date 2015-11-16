@@ -98,13 +98,13 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		else if ( strcmp( tmp, "hp" ) == 0 )
 		{
 			char buffer2[ 200 ];
-			sprintf( buffer2, "My current HP is %i", thisclient->Stats->HP );
+			sprintf( buffer2, "My current HP is %li", thisclient->Stats->HP );
 			SendPM( thisclient, buffer2 );
 		}
 		else if ( strcmp( tmp, "mp" ) == 0 )
 		{
 			char buffer2[ 200 ];
-			sprintf( buffer2, "My current MP is %i", thisclient->Stats->MP );
+			sprintf( buffer2, "My current MP is %li", thisclient->Stats->MP );
 			SendPM( thisclient, buffer2 );
 		}
 		else if ( strcmp( tmp, "maxhp" ) == 0 )
@@ -185,7 +185,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 	}
 	/*else if(strcmp(command, "bodysize")==0)
     {
-        if ((tmp = strtok(NULL, " ")) == NULL) return true; UINT size=atoi(tmp);
+        if ((tmp = strtok(NULL, " ")) == NULL) return true; uint32_t size=atoi(tmp);
         BEGINPACKET(pak, 0x721);
         ADDWORD(pak, 36);
         ADDWORD(pak, size);
@@ -200,7 +200,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
     }*/
 	/*else if(strcmp(command, "headsize")==0)
     {
-        if ((tmp = strtok(NULL, " ")) == NULL) return true; UINT size=atoi(tmp);
+        if ((tmp = strtok(NULL, " ")) == NULL) return true; uint32_t size=atoi(tmp);
         BEGINPACKET(pak, 0x721);
         ADDWORD(pak, 35);
         ADDWORD(pak, size);
@@ -219,10 +219,10 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT face = atoi( tmp );
+		uint32_t face = atoi( tmp );
 		if ( face > 12 )
 			return true;
-		UINT style;
+		uint32_t style;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			style = 0;
 		else
@@ -249,7 +249,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT hair = atoi( tmp );
+		uint32_t hair = atoi( tmp );
 		if ( hair > 6 )
 			return true;
 		thisclient->CharInfo->Hair = ( hair * 5 );
@@ -301,7 +301,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		int  gmcount     = 0;
 		int  playercount = 0;
 		char line0[ 200 ];
-		while ( count <= ( ClientList.size( ) - 1 ) )
+		while ( count <= (int)( ClientList.size( ) - 1 ) )
 		{
 			CPlayer* whoclient = (CPlayer*)ClientList.at( count )->player;
 			if ( whoclient->isInvisibleMode != true )
@@ -336,49 +336,44 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		int        x   = 0;
 		int        y   = 0;
 		int        map = 0;
-		MYSQL_ROW  row;
-		MYSQL_RES* result = NULL;
-		result            = DB->QStore( "SELECT lvlmin,map,locx,locy,mapname,lvlmax FROM list_golist WHERE isactive=1 AND loc=%i", loc );
-		row               = mysql_fetch_row( result );
-		if ( row == NULL )
+(void)x;
+(void)y;
+(void)map;
+		std::unique_ptr< sql::ResultSet > result            = DB->QStore( "SELECT lvlmin,map,locx,locy,mapname,lvlmax FROM list_golist WHERE isactive=1 AND loc=%i", loc );
+
+		if ( result->rowsCount() == 0 )
 		{
 			SendPM( thisclient, "Please input a number after the go command, below is a list of places and their appropriate number" );
-			DB->QFree( );
 			result = DB->QStore( "SELECT loc,mapname FROM list_golist WHERE isactive=1" );
-			while ( row = mysql_fetch_row( result ) )
-				SendPM( thisclient, "%i = %s", atoi( row[ 0 ] ), row[ 1 ] );
+			while ( result->next() )
+				SendPM( thisclient, "%i = %s", result->getInt("loc"), result->getString("mapname").c_str() );
 			SendPM( thisclient, "Example; /go 1" );
-			DB->QFree( );
 			return true;
 		}
 		else
 		{
-			if ( thisclient->Stats->Level < atoi( row[ 0 ] ) )
+			if ( thisclient->Stats->Level < result->getInt("lvlmin") )
 			{
-				SendPM( thisclient, "You need to be a least Level %i to visit %s!", atoi( row[ 0 ] ), row[ 4 ] );
-				DB->QFree( );
+				SendPM( thisclient, "You need to be a least Level %i to visit %s!", result->getInt("lvlmin"), result->getString("mapname").c_str() );
 				return true;
 			}
-			if ( thisclient->Stats->Level > atoi( row[ 5 ] ) )
+			if ( thisclient->Stats->Level > result->getInt("lvlmax") )
 			{
-				SendPM( thisclient, "You need to be between Level %i and %i to visit %s !", atoi( row[ 0 ] ), atoi( row[ 5 ] ), row[ 4 ] );
-				DB->QFree( );
+				SendPM( thisclient, "You need to be between Level %i and %i to visit %s !", result->getInt("lvlmin"), result->getInt("lvlmax"), result->getString("mapname").c_str() );
 				return true;
 			}
 			if ( thisclient->Stats->HP < ( thisclient->Stats->MaxHP / 2 ) || thisclient->Stats->HP < 1 || thisclient->Session->inGame == false )
 			{
 				SendPM( thisclient, "You need at least 50% HP in order to warp" );
-				DB->QFree( );
 				return true;
 			}
 			fPoint coord;
-			int    map = atoi( row[ 1 ] );
-			coord.x    = atoi( row[ 2 ] );
-			coord.y    = atoi( row[ 3 ] );
+			int    map = result->getInt("map");
+			coord.x    = result->getInt("locx");
+			coord.y    = result->getInt("locy");
 			SendPM( thisclient, "teleport to map: %i", map );
 			MapList.Index[ map ]->TeleportPlayer( thisclient, coord, false );
 			Log( MSG_GMACTION, " %s : /go %i", thisclient->CharInfo->charname, loc );
-			DB->QFree( );
 			return true;
 		}
 	}
@@ -634,7 +629,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		if ( thisspawn == NULL )
 			return true;
 		CMap* map = MapList.Index[ thisspawn->map ];
-		for ( UINT i = 0; i < map->MonsterList.size( ); i++ )
+		for ( uint32_t i = 0; i < map->MonsterList.size( ); i++ )
 		{
 			CMonster* thismon = map->MonsterList.at( i );
 			BEGINPACKET( pak, 0x794 );
@@ -951,11 +946,11 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT skillId = atoi( tmp );
+		int32_t skillId = atoi( tmp );
 		Log( MSG_GMACTION, " %s : /learnskill %i", thisclient->CharInfo->charname, skillId );
 		if ( skillId < 0 )
 			return false;
-		if ( skillId > SkillList.size( ) )
+		if ( skillId > (int)SkillList.size( ) )
 			return false;
 		LearnSkill( thisclient, skillId );
 		return true;
@@ -967,7 +962,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
 		int slot = 7; //defaults to weapon
-		int tipo;
+		//int tipo;
 		int itemrefine;
 		if ( strcmp( tmp, "mask" ) == 0 )
 		{
@@ -1023,16 +1018,16 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 	{
 		if ( Config.Command_Item > thisclient->Session->accesslevel )
 			return true;
-		UINT itemrefine, itemstats, itemls, itemsocket;
+		uint32_t itemrefine, itemstats, itemls, itemsocket;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemid = atoi( tmp );
+		uint32_t itemid = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemtype = atoi( tmp );
+		uint32_t itemtype = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemamount = atoi( tmp );
+		uint32_t itemamount = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			itemrefine = 0;
 		else
@@ -1233,19 +1228,19 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 	{
 		if ( Config.Command_Item > thisclient->Session->accesslevel )
 			return true;
-		UINT itemrefine, itemstats, itemls, itemsocket;
+		uint32_t itemrefine, itemstats, itemls, itemsocket;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
 		char* name = tmp;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemid = atoi( tmp );
+		uint32_t itemid = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemtype = atoi( tmp );
+		uint32_t itemtype = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT itemamount = atoi( tmp );
+		uint32_t itemamount = atoi( tmp );
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			itemrefine = 0;
 		else
@@ -1508,7 +1503,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		SendPM( thisclient, "Quest Flags" );
 		string buffer = "";
-		for ( dword i = 0; i < 0x40; i++ )
+		for ( uint32_t i = 0; i < 0x40; i++ )
 		{
 			char buf2[ 5 ];
 			sprintf( buf2, "%i ", thisclient->quest.flags[ i ] );
@@ -1543,7 +1538,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		SendPM( thisclient, "Quest Variables" );
 
 		string buffer = "Episode: ";
-		for ( dword i = 0; i < 5; i++ )
+		for ( uint32_t i = 0; i < 5; i++ )
 		{
 			char buf2[ 5 ];
 			sprintf( buf2, "%02x ", thisclient->quest.EpisodeVar[ i ] );
@@ -1552,7 +1547,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		SendPM( thisclient, (char*)buffer.c_str( ) );
 
 		buffer = "Job: ";
-		for ( dword i = 0; i < 3; i++ )
+		for ( uint32_t i = 0; i < 3; i++ )
 		{
 			char buf2[ 5 ];
 			sprintf( buf2, "%02x ", thisclient->quest.JobVar[ i ] );
@@ -1561,7 +1556,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		SendPM( thisclient, (char*)buffer.c_str( ) );
 
 		buffer = "Planet: ";
-		for ( dword i = 0; i < 7; i++ )
+		for ( uint32_t i = 0; i < 7; i++ )
 		{
 			char buf2[ 5 ];
 			sprintf( buf2, "%02x ", thisclient->quest.PlanetVar[ i ] );
@@ -1570,7 +1565,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		SendPM( thisclient, (char*)buffer.c_str( ) );
 
 		buffer = "Union: ";
-		for ( dword i = 0; i < 10; i++ )
+		for ( uint32_t i = 0; i < 10; i++ )
 		{
 			char buf2[ 5 ];
 			sprintf( buf2, "%02x ", thisclient->quest.UnionVar[ i ] );
@@ -1578,12 +1573,12 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		}
 		SendPM( thisclient, (char*)buffer.c_str( ) );
 
-		for ( dword j = 0; j < 10; j++ )
+		for ( uint32_t j = 0; j < 10; j++ )
 		{
 			if ( thisclient->quest.quests[ j ].QuestID == 0 )
 				continue;
 			buffer = "Quest: ";
-			for ( dword i = 0; i < 10; i++ )
+			for ( uint32_t i = 0; i < 10; i++ )
 			{
 				char buf2[ 5 ];
 				sprintf( buf2, "%02x ", thisclient->quest.quests[ j ].Variables[ i ] );
@@ -1799,7 +1794,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
 			return true;
-		UINT newmon = atoi( tmp );
+		uint32_t newmon = atoi( tmp );
 		if ( newmon == 0 )
 			return true;
 		CMonster* thismon = GetMonsterByID( thisclient->Battle->target, thisclient->Position->Map );
@@ -1834,7 +1829,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		{
 			long int remaining = ( Config.Command_GlobalTime - ( seconds - thisclient->CharInfo->LastGlobal ) );
 			char buffer2[ 200 ];
-			sprintf( buffer2, "Please wait %i seconds before sending another global message.", remaining );
+			sprintf( buffer2, "Please wait %li seconds before sending another global message.", remaining );
 			SendPM( thisclient, buffer2 );
 		}
 		return true;
@@ -1847,7 +1842,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 		int  count    = 1;
 		int  hiddenam = 0;
 		char line0[ 200 ];
-		while ( count <= ( ClientList.size( ) - 1 ) )
+		while ( count <= (int)( ClientList.size( ) - 1 ) )
 		{
 			CPlayer* whoclient = (CPlayer*)ClientList.at( count )->player;
 			if ( whoclient->Session->accesslevel > 100 )
@@ -1868,7 +1863,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			}
 			count++;
 		}
-		sprintf( line0, "There are currently %i players connected!", ( ( ClientList.size( ) - 1 ) - hiddenam ) );
+		sprintf( line0, "There are currently %li players connected!", ( ( ClientList.size( ) - 1 ) - hiddenam ) );
 		Log( MSG_GMACTION, " %s : /who2", thisclient->CharInfo->charname );
 		SendPM( thisclient, line0 );
 		return true;
@@ -2079,7 +2074,7 @@ bool CWorldServer::pakGMMute( CPlayer* thisclient, char* name, int time )
 }
 
 // GM: Item   - Modified by Hiei (added refine/socket/stats)
-bool CWorldServer::pakGMItem( CPlayer* thisclient, UINT itemid, UINT itemtype, UINT itemamount, UINT itemrefine, UINT itemls, UINT itemstats, UINT itemsocket )
+bool CWorldServer::pakGMItem( CPlayer* thisclient, uint32_t itemid, uint32_t itemtype, uint32_t itemamount, uint32_t itemrefine, uint32_t itemls, uint32_t itemstats, uint32_t itemsocket )
 {
 	CItem item;
 	item.count       = itemamount;
@@ -2122,6 +2117,7 @@ bool CWorldServer::pakGMItem( CPlayer* thisclient, UINT itemid, UINT itemtype, U
 // GM: Kick
 bool CWorldServer::pakGMKick( CPlayer* thisclient, char* name )
 {
+(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2142,6 +2138,7 @@ bool CWorldServer::pakGMKick( CPlayer* thisclient, char* name )
 // GM: Ban
 bool CWorldServer::pakGMBan( CPlayer* thisclient, char* name )
 {
+(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2164,6 +2161,7 @@ bool CWorldServer::pakGMBan( CPlayer* thisclient, char* name )
 // GM: Add/Remove/Drop/Set zuly
 bool CWorldServer::pakGMZuly( CPlayer* thisclient, int mode, int amount, char* charname )
 {
+(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( charname );
 	if ( otherclient == NULL )
 		return true;
@@ -2213,6 +2211,7 @@ bool CWorldServer::pakGMZuly( CPlayer* thisclient, int mode, int amount, char* c
 // Change player Level
 bool CWorldServer::pakGMLevel( CPlayer* thisclient, int level, char* name )
 {
+(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 	{
@@ -2300,7 +2299,7 @@ bool CWorldServer::ReloadMobSpawn( CPlayer* thisclient, int id )
 	thisspawn->pcount      = thisclient->GMRespawnPoints.n;
 	thisspawn->points      = thisclient->GMRespawnPoints.points;
 	CMap* map              = MapList.Index[ thisspawn->map ];
-	for ( int j = 0; j < thisspawn->max; j++ )
+	for ( uint32_t j = 0; j < thisspawn->max; j++ )
 	{
 		fPoint position = RandInPoly( thisspawn->points, thisspawn->pcount );
 		map->AddMonster( thisspawn->montype, position, 0, thisspawn->mobdrop, thisspawn->mapdrop, thisspawn->id, true );
@@ -2521,7 +2520,7 @@ bool CWorldServer::pakGMFairyto( CPlayer* thisclient, char* name, int mode )
 		ADDBYTE( pak, 0 );
 		thisclient->client->SendPacket( &pak );
 		int ListIndex;
-		for ( int i = 0; i < ClientList.size( ); i++ )
+		for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 		{
 			if ( GServer->ClientList.at( i )->player == otherclient )
 			{
@@ -2600,7 +2599,7 @@ bool CWorldServer::pakGMManageFairy( CPlayer* thisclient, int mode )
 bool CWorldServer::pakGMChangeFairyWait( CPlayer* thisclient, int newvalue )
 {
 	GServer->Config.FairyWait = newvalue;
-	for ( int i = 0; i < GServer->FairyList.size( ); i++ )
+	for ( uint32_t i = 0; i < GServer->FairyList.size( ); i++ )
 	{
 		GServer->FairyList.at( i )->WaitTime = newvalue;
 	}
@@ -2638,6 +2637,7 @@ bool CWorldServer::pakGMChangeFairyTestMode( CPlayer* thisclient, int mode )
 // Give Zuly
 bool CWorldServer::pakGMZulygive( CPlayer* thisclient, char* name, int zuly )
 {
+(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2676,8 +2676,9 @@ bool CWorldServer::pakGMNpc( CPlayer* thisclient, int npcid, int dialogid )
 }
 
 // Give Item to Player
-bool CWorldServer::pakGMItemtoplayer( CPlayer* thisclient, char* name, UINT itemid, UINT itemtype, UINT itemamount, UINT itemrefine, UINT itemls, UINT itemstats, UINT itemsocket )
+bool CWorldServer::pakGMItemtoplayer( CPlayer* thisclient, char* name, uint32_t itemid, uint32_t itemtype, uint32_t itemamount, uint32_t itemrefine, uint32_t itemls, uint32_t itemstats, uint32_t itemsocket )
 {
+(void)itemls;
 	CItem item;
 	item.count      = itemamount;
 	item.durability = 40;
@@ -2929,7 +2930,7 @@ bool CWorldServer::GMShowTargetInfo( CPlayer* thisclient )
 	ADDSTRING( pak, buffer );
 	ADDBYTE( pak, 0 );
 	thisclient->client->SendPacket( &pak );
-	sprintf( buffer, "Target Attack Speed: %.0f", monster->Stats->Attack_Speed );
+	sprintf( buffer, "Target Attack Speed: %i", monster->Stats->Attack_Speed );
 	RESETPACKET( pak, 0x784 );
 	ADDSTRING( pak, "[SYS]TargetInfo" );
 	ADDBYTE( pak, 0 );
@@ -2943,7 +2944,7 @@ bool CWorldServer::GMShowTargetInfo( CPlayer* thisclient )
 	ADDSTRING( pak, buffer );
 	ADDBYTE( pak, 0 );
 	thisclient->client->SendPacket( &pak );
-	sprintf( buffer, "Target HP/MAXHP: %i/%i", monster->Stats->HP, monster->Stats->MaxHP );
+	sprintf( buffer, "Target HP/MAXHP: %li/%i", monster->Stats->HP, monster->Stats->MaxHP );
 	RESETPACKET( pak, 0x784 );
 	ADDSTRING( pak, "[SYS]TargetInfo" );
 	ADDBYTE( pak, 0 );
@@ -2994,7 +2995,7 @@ bool CWorldServer::pakGMPartylvl( CPlayer* partyclient, int level )
 // GM: Kill all mobs in a range of x-Fields
 bool CWorldServer::pakGMKillInRange( CPlayer* thisclient, int range )
 {
-	for ( UINT j = 0; j < MapList.Index[ thisclient->Position->Map ]->MonsterList.size( ); j++ )
+	for ( uint32_t j = 0; j < MapList.Index[ thisclient->Position->Map ]->MonsterList.size( ); j++ )
 	{
 		CMonster* thismon = MapList.Index[ thisclient->Position->Map ]->MonsterList.at( j );
 		if ( IsMonInCircle( thisclient, thismon, (float)range ) )
@@ -3095,7 +3096,7 @@ bool CWorldServer::pakGMClass( CPlayer* thisclient, char* classid )
 bool CWorldServer::pakGMTeleAllHere( CPlayer* thisclient )
 {
 	int count = 1;
-	while ( count <= ( ClientList.size( ) - 1 ) )
+	while ( count <= (int)( ClientList.size( ) - 1 ) )
 	{
 		CPlayer* otherclient = (CPlayer*)ClientList.at( count )->player;
 		if ( ( otherclient != NULL ) && ( otherclient != thisclient ) )

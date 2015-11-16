@@ -23,12 +23,12 @@
 // Clan Manager
 bool CWorldServer::pakClanManager( CPlayer* thisclient, CPacket* P )
 {
+	(void)thisclient;
 	int action = GETBYTE( ( *P ), 0 );
 	switch ( action )
 	{
 	case 0xfa: //new member added
 	{
-		MYSQL_ROW row;
 		int charid = GETWORD( ( *P ), 1 );
 		int clanid = GETWORD( ( *P ), 3 );
 		Log( MSG_INFO, "Adding member %d to clan %d", charid, clanid );
@@ -38,19 +38,20 @@ bool CWorldServer::pakClanManager( CPlayer* thisclient, CPacket* P )
 			Log( MSG_ERROR, "Char with id %d doesn't exist", charid );
 			return true;
 		}
-		MYSQL_RES* result = DB->QStore( "SELECT logo,back,name,grade FROM list_clan where id=%i", clanid );
+		std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT logo,back,name,grade FROM list_clan where id=%i", clanid );
 		if ( result == NULL )
 			return true;
-		if ( mysql_num_rows( result ) != 1 )
+
+		if ( result->rowsCount() != 1 )
 		{
 			Log( MSG_WARNING, "Invalid clan %i", clanid );
 			return true;
 		}
-		row                     = mysql_fetch_row( result );
-		otherclient->Clan->logo = atoi( row[ 0 ] );
-		otherclient->Clan->back = atoi( row[ 1 ] );
-		strcpy_s( otherclient->Clan->clanname, 16, row[ 2 ] );
-		otherclient->Clan->grade = atoi( row[ 3 ] );
+		result->next();
+		otherclient->Clan->logo = result->getInt("logo");
+		otherclient->Clan->back = result->getInt("back");
+		strcpy_s( otherclient->Clan->clanname, 16, result->getString("name").c_str() );
+		otherclient->Clan->grade = result->getInt("grade");
 
 		otherclient->Clan->clanid   = clanid;
 		otherclient->Clan->clanrank = 1;
@@ -105,6 +106,7 @@ bool CWorldServer::pakClanManager( CPlayer* thisclient, CPacket* P )
 	case 0xfd: //disorg
 	{
 		unsigned int clanid = GETWORD( ( *P ), 1 );
+(void)clanid;
 		unsigned int charid = GETWORD( ( *P ), 3 );
 		CPlayer* tclient = GetClientByCID( charid );
 
@@ -188,7 +190,7 @@ bool CWorldServer::pakCreateClan( CPlayer* thisclient, CPacket* P )
 	if ( thisclient->CharInfo->Zulies < 1000000 )
 		return true;
 	thisclient->CharInfo->Zulies -= 1000000;
-	MYSQL_ROW row;
+	
 	int background = GETWORD( ( *P ), 1 );
 	int icon = GETWORD( ( *P ), 3 );
 	char* name   = "";
@@ -197,10 +199,10 @@ bool CWorldServer::pakCreateClan( CPlayer* thisclient, CPacket* P )
 	slogan       = (char*)&P->Buffer[ strlen( name ) + 6 ];
 
 	//Check if name already exists
-	MYSQL_RES* result = DB->QStore( "SELECT name FROM list_clan WHERE name='%s'", name );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT name FROM list_clan WHERE name='%s'", name );
 	if ( result == NULL )
 		return true;
-	if ( mysql_num_rows( result ) > 0 )
+	if ( result->rowsCount() > 0 )
 	{
 		BEGINPACKET( pak, 0x07e0 );
 		ADDWORD( pak, 0x42 );

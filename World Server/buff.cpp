@@ -51,6 +51,7 @@ bool CWorldServer::AddDeBuffs( CSkills* thisskill, CCharacter* character, int Ev
 // Add Player Dbuffs
 bool CWorldServer::AddBuffs( CSkills* thisskill, CCharacter* character, int Evalue, bool bflag )
 {
+    (void)bflag;
     if(thisskill->buff[0]!=0)  
     {
         CheckABuffs( thisskill, character, Evalue, 0 );
@@ -85,7 +86,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->ExtraDamage, true );
              if(BuffValue.NewValue!=0)
             {                       
-                UINT j = BuffValue.Position;   
+                uint32_t j = BuffValue.Position;   
                 character->Stats->ExtraDamage = thisskill->atkpower;
                 if(j<15)
                     character->Status->ExtraDamage_up = j;
@@ -107,7 +108,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Attack_Power, true );                      
             if(BuffValue.NewValue!=0)
             {                       
-                UINT j = BuffValue.Position;   
+                uint32_t j = BuffValue.Position;   
                 character->Stats->Attack_Power = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Attack_up = j;
@@ -129,7 +130,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Defense, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Defense = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Defense_up = j;
@@ -151,7 +152,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Accury, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Accury = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Accury_up = j;
@@ -173,7 +174,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Magic_Defense, true );
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Magic_Defense = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Magic_Defense_up = j;
@@ -195,7 +196,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Dodge, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Dodge = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Dodge_up = j;
@@ -217,7 +218,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Move_Speed, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Move_Speed = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Dash_up = j;
@@ -236,10 +237,10 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
             CBValue BuffValue = GetBuffValue( thisskill, character, Evalue, i, 
                                             character->Status->Haste_up, 
                                             character->Status->Haste_down, 
-                                            (UINT)character->Stats->Attack_Speed, true );                      
+                                            (uint32_t)character->Stats->Attack_Speed, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Attack_Speed = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Haste_up = j;
@@ -261,7 +262,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Critical, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Critical = BuffValue.NewValue;
                 if(j<15)
                     character->Status->Critical_up = j;
@@ -293,7 +294,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->MaxHP, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->MaxHP = BuffValue.NewValue;
                 if(j<15)
                     character->Status->HP_up = j;
@@ -323,7 +324,7 @@ bool CWorldServer::CheckABuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->MaxMP, true );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->MaxMP = BuffValue.NewValue;
                 if(j<15)
                     character->Status->MP_up = j;
@@ -359,7 +360,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->ExtraDamage, true );
              if(BuffValue.NewValue!=0)
             {                       
-                UINT j = BuffValue.Position;   
+                uint32_t j = BuffValue.Position;   
                 character->Stats->ExtraDamage = thisskill->atkpower;
                 character->Status->ExtraDamage_up = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -386,7 +387,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Attack_Power, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Attack_Power = BuffValue.NewValue;
                 character->Status->Attack_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -405,7 +406,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Defense, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Defense = BuffValue.NewValue;
                 character->Status->Defense_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -424,7 +425,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Accury, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Accury = BuffValue.NewValue;
                 character->Status->Accury_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -443,7 +444,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Magic_Defense, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Magic_Defense = BuffValue.NewValue;
                 character->Status->Magic_Defense_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -462,7 +463,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Dodge, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Dodge = BuffValue.NewValue;
                 character->Status->Dodge_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -481,7 +482,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Move_Speed, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Move_Speed = BuffValue.NewValue;
                 character->Status->Dash_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -497,10 +498,10 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
             CBValue BuffValue = GetBuffValue( thisskill, character, Evalue, i, 
                                             character->Status->Haste_up, 
                                             character->Status->Haste_down, 
-                                            (UINT)character->Stats->Attack_Speed, false );                      
+                                            (uint32_t)character->Stats->Attack_Speed, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Attack_Speed = BuffValue.NewValue;
                 character->Status->Haste_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -519,7 +520,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->Critical, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->Critical = BuffValue.NewValue;
                 character->Status->Critical_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -538,7 +539,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->MaxHP, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->MaxHP = BuffValue.NewValue;
                 character->Status->HP_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -557,7 +558,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                             character->Stats->MaxMP, false );                      
             if(BuffValue.NewValue!=0)
             {       
-                UINT j = BuffValue.Position;           
+                uint32_t j = BuffValue.Position;           
                 character->Stats->MaxMP = BuffValue.NewValue;
                 character->Status->MP_down = j;
                 character->MagicStatus[j].Buff = thisskill->buff[i];
@@ -575,11 +576,11 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                               0xff,
                                               character->Status->Stuned,
                                               0, false, true);
-            unsigned tmp=RandNumber(1,100);
+            int32_t tmp = RandNumber(1,100);
             if(BuffValue.NewValue!=0 && (tmp < (Evalue+200)/7) )
             {                           
                printf("stunning was a success!\n");                      
-               UINT j = BuffValue.Position;
+               uint32_t j = BuffValue.Position;
                character->Status->Stuned = j;
                character->MagicStatus[j].Buff = thisskill->buff[i];
                character->MagicStatus[j].BuffTime = clock();
@@ -600,7 +601,7 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
             if(BuffValue.NewValue!=0 && (RandNumber(1,100) < thisskill->success) /*(Evalue+200)/700) */)
             {              
                printf("poisoning successful\n");                      
-               UINT j = BuffValue.Position;
+               uint32_t j = BuffValue.Position;
                character->Status->Poisoned = j;
                character->MagicStatus[j].Buff = thisskill->buff[i];
                character->MagicStatus[j].BuffTime = clock();
@@ -617,11 +618,11 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
                                               0xff,
                                               character->Status->Muted,
                                               0, false, true);
-            unsigned tmp=RandNumber(1,100);
+            int32_t tmp=RandNumber(1,100);
             if(BuffValue.NewValue!=0 && (tmp < (Evalue+200)/7) )
             {         
                printf("mute skill is a success\n");                                        
-               UINT j = BuffValue.Position;
+               uint32_t j = BuffValue.Position;
                character->Status->Muted = j;
                character->MagicStatus[j].Buff = thisskill->buff[i];
                character->MagicStatus[j].BuffTime = clock();
@@ -641,16 +642,16 @@ bool CWorldServer::CheckDBuffs( CSkills* thisskill, CCharacter* character, int E
 
 
 // Get the new buffs values (character)
-CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, UINT Evalue, UINT i, UINT up, UINT down, UINT CurrentValue, bool Buff, bool Status )
+CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, uint32_t Evalue, uint32_t i, uint32_t up, uint32_t down, uint32_t CurrentValue, bool Buff, bool Status )
 {
     CBValue NewValue;
     NewValue.Position = 0xff;
     NewValue.NewValue = 0;
     NewValue.Value = 0;
-    UINT Value = 0;
-    UINT NormalValue = 0;                 
-    UINT UpValue = 0;
-    UINT DownValue = 0;
+    uint32_t Value = 0;
+    uint32_t NormalValue = 0;                 
+    uint32_t UpValue = 0;
+    uint32_t DownValue = 0;
     // not currently detecting debuffs properly so let's bring in some new code :)
     //PY buff mod based on thiskill->status[i]
     switch(thisskill->status[i])
@@ -679,7 +680,7 @@ CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, U
     {
         if(Buff)
         {
-            for(UINT z=0;z<15;z++)
+            for(uint32_t z=0;z<15;z++)
             {
                 if(character->MagicStatus[z].Buff==0)
                 {
@@ -708,7 +709,7 @@ CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, U
        {
            if(!Buff)
            {
-              for(UINT z=15;z<30;z++)
+              for(uint32_t z=15;z<30;z++)
               {
                    if(character->MagicStatus[z].Buff==0)
                    {
@@ -728,7 +729,7 @@ CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, U
     }
     else
     {
-        for(UINT z=15;z<30;z++)
+        for(uint32_t z=15;z<30;z++)
         {
                  if(character->MagicStatus[z].Buff==0)
                  {
@@ -773,10 +774,10 @@ CBValue CWorldServer::GetBuffValue( CSkills* thisskill, CCharacter* character, U
 // Build Buffs to Show
 unsigned int CWorldServer::BuildBuffs( CCharacter* character )
 {
-    BYTE buff1 = 0;
-    BYTE buff2 = 0;
-    BYTE buff3 = 0;
-    BYTE buff4 = 0;     
+    uint8_t buff1 = 0;
+    uint8_t buff2 = 0;
+    uint8_t buff3 = 0;
+    uint8_t buff4 = 0;     
     //Build Debuffs and Buffs 
         //Up
     if(character->Status->Attack_up != 0xff)//A_ATTACK:
@@ -833,10 +834,10 @@ unsigned int CWorldServer::BuildBuffs( CCharacter* character )
 // Build Buffs to Show
 unsigned int CWorldServer::BuildUpBuffs( CCharacter* character )
 {
-    BYTE buff1 = 0;
-    BYTE buff2 = 0;
-    BYTE buff3 = 0;
-    BYTE buff4 = 0;     
+    uint8_t buff1 = 0;
+    uint8_t buff2 = 0;
+    uint8_t buff3 = 0;
+    uint8_t buff4 = 0;     
     // Buffs 
         //Up
     if(character->Status->Attack_up != 0xff)//A_ATTACK:
@@ -866,10 +867,10 @@ unsigned int CWorldServer::BuildUpBuffs( CCharacter* character )
 // Build Buffs to Show
 unsigned int CWorldServer::BuildDeBuffs( CCharacter* character )
 {
-    BYTE buff1 = 0;
-    BYTE buff2 = 0;
-    BYTE buff3 = 0;
-    BYTE buff4 = 0;     
+    uint8_t buff1 = 0;
+    uint8_t buff2 = 0;
+    uint8_t buff3 = 0;
+    uint8_t buff4 = 0;     
     //Build Debuffs
         //Down
     if(character->Status->Attack_down != 0xff) // A_ATTACK:

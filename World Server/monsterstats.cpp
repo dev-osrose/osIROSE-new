@@ -51,7 +51,7 @@ unsigned int CMonster::GetDefense( )
 // Get Monster atk speed
 unsigned int CMonster::GetAttackSpeed( )
 {
-    UINT aspeed = (UINT)thisnpc->atkspeed;
+    uint32_t aspeed = (uint32_t)thisnpc->atkspeed;
     if(aspeed == 0)
     {
         aspeed = 1; // prevent a /0 when hunting dragon egg
@@ -89,7 +89,7 @@ unsigned int CMonster::GetMoveSpeed( )
 // return dodge
 unsigned int CMonster::GetDodge( )
 {
-    UINT dodge = 0;
+    uint32_t dodge = 0;
     dodge = thisnpc->dodge;
     if(dodge == 0) dodge = thisnpc->defense; // prevent a /0 for hawk skill
     if(Status->Dodge_up!=0xff)
@@ -102,7 +102,7 @@ unsigned int CMonster::GetDodge( )
 // return accury
 unsigned int CMonster::GetAccury( )
 {
-    UINT hitrate = 0;
+    uint32_t hitrate = 0;
     hitrate = thisnpc->hitrate;
     if(Status->Accury_up!=0xff)
         hitrate += MagicStatus[Status->Accury_up].Value;
@@ -114,7 +114,7 @@ unsigned int CMonster::GetAccury( )
 // return magic defense
 unsigned int CMonster::GetMagicDefense( )
 {
-    UINT mdef = 0;
+    uint32_t mdef = 0;
     mdef = thisnpc->magicdefense;
     if(Status->Magic_Defense_up!=0xff)
         mdef += MagicStatus[Status->Magic_Defense_up].Value;
@@ -133,7 +133,7 @@ unsigned int CMonster::GetMagicAttack( )
 // return max hp
 unsigned int CMonster::GetMaxHP( )
 {
-    UINT MaxHP = 0;
+    uint32_t MaxHP = 0;
     MaxHP = thisnpc->hp;
     if(owner==0)
         MaxHP *= thisnpc->level;

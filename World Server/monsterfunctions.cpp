@@ -24,7 +24,7 @@
 bool CMonster::PlayerInRange()
 {
     CMap* map = GServer->MapList.Index[Position->Map];
-    for(int i=0; i<map->PlayerList.size(); i++)
+    for(uint32_t i=0; i<map->PlayerList.size(); i++)
     {
         CPlayer* thisclient = map->PlayerList.at(i);
         if(GServer->IsVisible(thisclient, this)) return true;
@@ -33,11 +33,11 @@ bool CMonster::PlayerInRange()
 }
 
 // get the near player
-CPlayer* CMonster::GetNearPlayer( UINT mdist )
+CPlayer* CMonster::GetNearPlayer( uint32_t mdist )
 {
     CPlayer* thisplayer = NULL;
     float distance = 0xffff;
-    for(UINT i=0;i<GServer->MapList.Index[Position->Map]->PlayerList.size();i++)
+    for(uint32_t i=0;i<GServer->MapList.Index[Position->Map]->PlayerList.size();i++)
     {
         CPlayer* thisclient = GServer->MapList.Index[Position->Map]->PlayerList.at(i);
         float tempdist = GServer->distance( Position->current, thisclient->Position->current );
@@ -119,7 +119,7 @@ void CMonster::AddDamage( CCharacter* enemy, long int hitpower)
         else
             thisparty = NULL;
     }
-    for(UINT i=0;i<PlayersDamage.size();i++)
+    for(uint32_t i=0;i<PlayersDamage.size();i++)
     {
         MonsterDamage* thisplayer = PlayersDamage.at(i);
         if(thisplayer->charid == player->CharInfo->charid)

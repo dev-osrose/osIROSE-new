@@ -22,7 +22,7 @@
 #include "worldmap.h"
 
 // convert a monster to other
-CMonster* CMap::ConverToMonster( CMonster* monster, UINT newmontype, bool heal )
+CMonster* CMap::ConverToMonster( CMonster* monster, uint32_t newmontype, bool heal )
 {
     CNPCData* thisnpc = GServer->GetNPCDataByID( newmontype );
     if(thisnpc==NULL)// invalid type
@@ -46,14 +46,14 @@ CMonster* CMap::ConverToMonster( CMonster* monster, UINT newmontype, bool heal )
 }
 
 // convert a npc to other [not working]
-CMonster* CMap::ConverToMonster( CNPC* npc, UINT newmontype )
+CMonster* CMap::ConverToMonster( CNPC* npc, uint32_t newmontype )
 {
     CMonster* monster = AddMonster( newmontype, npc->pos, 0, NULL, NULL, 0, true );
     if(monster==NULL) // invalid montype
         return NULL;
     GServer->ClearClientID( monster->clientid );
     monster->clientid = npc->clientid;
-    for(UINT i=0;i<NPCList.size();i++)
+    for(uint32_t i=0;i<NPCList.size();i++)
     {
         if(NPCList.at(i)==npc)
             NPCList.erase( NPCList.begin()+i );
@@ -167,7 +167,7 @@ CRespawnPoint* CMap::GetNearRespawn( CPlayer* player )
 {
     CRespawnPoint* respawn = NULL;
     float distance = 0xffff;
-    for(UINT i=0;i<RespawnList.size();i++)
+    for(uint32_t i=0;i<RespawnList.size();i++)
     {
         float resdist = GServer->distance( player->Position->current, RespawnList.at(i)->dest );
         if( resdist < distance )
@@ -182,7 +182,7 @@ CRespawnPoint* CMap::GetNearRespawn( CPlayer* player )
 // Return "start" respawn
 CRespawnPoint* CMap::GetStartRespawn( )
 {
-    for( UINT i = 0; i < RespawnList.size(); i++ )
+    for( uint32_t i = 0; i < RespawnList.size(); i++ )
     {
         if( RespawnList.at(i)->masterdest )
           return RespawnList.at(i);
@@ -194,7 +194,7 @@ CRespawnPoint* CMap::GetStartRespawn( )
 CRespawnPoint* CMap::GetFirstRespawn( )
 {
     CRespawnPoint* respawn = NULL;
-    for(UINT i=0;i<RespawnList.size();i++)
+    for(uint32_t i=0;i<RespawnList.size();i++)
     {
         return RespawnList.at(i);
     }
@@ -202,9 +202,9 @@ CRespawnPoint* CMap::GetFirstRespawn( )
 }
 
 // Search a client by clientid
-CPlayer* CMap::GetPlayerInMap( UINT id )
+CPlayer* CMap::GetPlayerInMap( uint32_t id )
 {
-    for(UINT i=0;i<PlayerList.size();i++)
+    for(uint32_t i=0;i<PlayerList.size();i++)
     {
         if(PlayerList.at(i)->clientid == id )
             return PlayerList.at(i);
@@ -213,9 +213,9 @@ CPlayer* CMap::GetPlayerInMap( UINT id )
 }
 
 // Search a client by charid
-CPlayer* CMap::GetCharIDInMap( UINT id )
+CPlayer* CMap::GetCharIDInMap( uint32_t id )
 {
-    for(UINT i=0;i<PlayerList.size();i++)
+    for(uint32_t i=0;i<PlayerList.size();i++)
     {
         if(PlayerList.at(i)->CharInfo->charid == id )
             return PlayerList.at(i);
@@ -224,9 +224,9 @@ CPlayer* CMap::GetCharIDInMap( UINT id )
 }
 
 // Search a monster by clientid
-CMonster* CMap::GetMonsterInMap( UINT id )
+CMonster* CMap::GetMonsterInMap( uint32_t id )
 {
-    for(UINT i=0;i<MonsterList.size();i++)
+    for(uint32_t i=0;i<MonsterList.size();i++)
     {
         if(MonsterList.at(i)->clientid == id )
             return MonsterList.at(i);
@@ -234,9 +234,9 @@ CMonster* CMap::GetMonsterInMap( UINT id )
     return NULL;
 }
 
-CDrop* CMap::GetDropInMap( UINT id )
+CDrop* CMap::GetDropInMap( uint32_t id )
 {
-    for(UINT i=0;i<DropsList.size();i++)
+    for(uint32_t i=0;i<DropsList.size();i++)
     {
         if(DropsList.at(i)->clientid == id )
             return DropsList.at(i);
@@ -244,9 +244,9 @@ CDrop* CMap::GetDropInMap( UINT id )
     return NULL;
 }
 
-CNPC* CMap::GetNPCInMap( UINT id )
+CNPC* CMap::GetNPCInMap( uint32_t id )
 {
-    for(UINT i=0;i<NPCList.size();i++)
+    for(uint32_t i=0;i<NPCList.size();i++)
     {
         if(NPCList.at(i)->clientid == id )
             return NPCList.at(i);
@@ -257,14 +257,14 @@ CNPC* CMap::GetNPCInMap( UINT id )
 void CMap::UpdateTime( )
 {
     if(id==0) return;
-    UINT etime = (UINT)GServer->round((clock() - LastUpdate)/1000);
+    uint32_t etime = (uint32_t)GServer->round((clock() - LastUpdate)/1000);
     if(etime<10)return;
-    MapTime += (UINT)floor((double)(etime/10));
+    MapTime += (uint32_t)floor((double)(etime/10));
     if(MapTime==0xffffffff)
         MapTime = 0;
     if(dayperiod==0)
         dayperiod=1;
-    UINT ctime = MapTime%dayperiod;
+    uint32_t ctime = MapTime%dayperiod;
     if(ctime>=morningtime && ctime<daytime)
     {
         CurrentTime = MORNING;
@@ -290,7 +290,7 @@ void CMap::UpdateTime( )
 // Clean Drops
 void CMap::CleanDrops( )
 {
-    for(UINT j=0;j<DropsList.size();j++)
+    for(uint32_t j=0;j<DropsList.size();j++)
     {
         CDrop* thisdrop = DropsList.at(j);
         if( time(NULL) - thisdrop->droptime >= 50 )
@@ -302,7 +302,7 @@ void CMap::CleanDrops( )
 void CMap::RespawnMonster( )
 {
 #ifndef USEIFO
-    for(UINT k=0;k<MonsterSpawnList.size( );k++)
+    for(uint32_t k=0;k<MonsterSpawnList.size( );k++)
     {
         CSpawnArea* thisspawn = MonsterSpawnList.at(k);
 
@@ -316,12 +316,12 @@ void CMap::RespawnMonster( )
         }
     }
 #else
-    for (UINT j = 0; j < MobGroupList.size(); j++) {
+    for (uint32_t j = 0; j < MobGroupList.size(); j++) {
       CMobGroup* thisgroup = MobGroupList.at(j);
       clock_t rtime = clock() - thisgroup->lastRespawnTime;
       if (rtime < thisgroup->respawntime*CLOCKS_PER_SEC || thisgroup->active >= thisgroup->limit)
         continue;
-      for (UINT k = thisgroup->active; k < thisgroup->limit; k++) {
+      for (uint32_t k = thisgroup->active; k < thisgroup->limit; k++) {
         CMob *thismob;
         if (thisgroup->tacMobs.size() > 0 && thisgroup->basicKills >= thisgroup->tacticalpoints) {
           thismob = thisgroup->tacMobs.at(thisgroup->curTac);
@@ -333,7 +333,7 @@ void CMap::RespawnMonster( )
           thisgroup->curBasic++;
           if (thisgroup->curBasic >= thisgroup->basicMobs.size()) thisgroup->curBasic = 0;
         }
-        for (UINT i = 0; i < thismob->amount; i++) {
+        for (uint32_t i = 0; i < thismob->amount; i++) {
         fPoint position = GServer->RandInCircle( thisgroup->point, thisgroup->range );
         AddMonster( thismob->mobId, position, 0, thismob->mobdrop, thismob->mapdrop, thisgroup->id );
         }

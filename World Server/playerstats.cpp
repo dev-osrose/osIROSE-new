@@ -28,16 +28,16 @@ unsigned int CPlayer::GetDodge()
     {
        GServer->SendPM(this, "[Dod] ---------- Begin --");
     }
-    UINT Dodge = 0;
-    Dodge = (UINT)floor((((Stats->Level * 0.3) + ((Attr->Dex + Attr->Edex) * 1.9)) + 10) * 0.4);
-    UINT ClothDodge = 0;
+    uint32_t Dodge = 0;
+    Dodge = (uint32_t)floor((((Stats->Level * 0.3) + ((Attr->Dex + Attr->Edex) * 1.9)) + 10) * 0.4);
+    uint32_t ClothDodge = 0;
 
     if(this->GetStatDebug(10)) //Debug code
     {
         GServer->SendPM(this, "[Dod] %i - Clean", Dodge);
     }
     // Cloth stats
-    for(UINT i=1;i<12;i++)
+    for(uint32_t i=1;i<12;i++)
     {
         if(items[i].count != 0)
         {
@@ -71,13 +71,13 @@ unsigned int CPlayer::GetDodge()
             }
         }
     }
-    Dodge += (UINT)floor(ClothDodge * 0.3);
+    Dodge += (uint32_t)floor(ClothDodge * 0.3);
     if(this->GetStatDebug(10))
     {
         GServer->SendPM(this, "[Dod] %i - All EQ added", Dodge);
     }
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -88,7 +88,7 @@ unsigned int CPlayer::GetDodge()
         {
             continue;
         }
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sDodge)
             {
@@ -123,26 +123,26 @@ unsigned int CPlayer::GetDodge()
 // Return Accury
 unsigned int CPlayer::GetAccury()
 {
-    UINT Accury = 0;
+    uint32_t Accury = 0;
     if(items[7].count == 0)
     {
-        Accury = (UINT)floor((((Attr->Con + Attr->Econ) + 10) * 0.5) + 15);
+        Accury = (uint32_t)floor((((Attr->Con + Attr->Econ) + 10) * 0.5) + 15);
     }
     else
     {
-        Accury = (UINT)floor(((Attr->Con + Attr->Econ + 10) * 0.8) + ((GServer->EquipList[WEAPON].Index[items[7].itemnum]->quality * 0.6) + (items[7].durability * 0.8)));
+        Accury = (uint32_t)floor(((Attr->Con + Attr->Econ + 10) * 0.8) + ((GServer->EquipList[WEAPON].Index[items[7].itemnum]->quality * 0.6) + (items[7].durability * 0.8)));
     }
-    UINT extra_refine[10] = { 0, 4, 7, 10, 14, 20, 26, 33, 40, 50};
+    uint32_t extra_refine[10] = { 0, 4, 7, 10, 14, 20, 26, 33, 40, 50};
     if(items[7].refine > 0)
     {
-        UINT refine = (UINT)floor((double)(items[7].refine / 16));
+        uint32_t refine = (uint32_t)floor((double)(items[7].refine / 16));
         if(refine < 10)
         {
             Accury += extra_refine[refine];
         }
     }
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -173,8 +173,8 @@ unsigned int CPlayer::GetAccury()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -185,7 +185,7 @@ unsigned int CPlayer::GetAccury()
         {
             continue;
         }
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sAccuracy)
             {
@@ -218,10 +218,10 @@ unsigned int CPlayer::GetAccury()
 // Return Critical
 unsigned int CPlayer::GetCritical()
 {
-    UINT Critical = 0;
-    Critical = (UINT)floor(((Attr->Con + Attr->Econ + 20) * 0.2) + Attr->Sen + Attr->Esen);
+    uint32_t Critical = 0;
+    Critical = (uint32_t)floor(((Attr->Con + Attr->Econ + 20) * 0.2) + Attr->Sen + Attr->Esen);
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -252,8 +252,8 @@ unsigned int CPlayer::GetCritical()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -264,7 +264,7 @@ unsigned int CPlayer::GetCritical()
         {
             continue;
         }
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sCritical)
             {
@@ -317,8 +317,8 @@ unsigned int CPlayer::GetMagicAttack()
 // Return Magic Defense
 unsigned int CPlayer::GetMagicDefense()
 {
-    UINT MagicDefense = 0;
-    UINT Extra = 0;
+    uint32_t MagicDefense = 0;
+    uint32_t Extra = 0;
     switch(CharInfo->Job)
     {
         case 121:case 122:
@@ -328,8 +328,8 @@ unsigned int CPlayer::GetMagicDefense()
             Extra += 20;
         break;
     }
-    MagicDefense += (UINT)floor(((Attr->Int + Attr->Eint + 5) * 0.6) + ((Stats->Level + 15) * 0.8));
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    MagicDefense += (uint32_t)floor(((Attr->Int + Attr->Eint + 5) * 0.6) + ((Stats->Level + 15) * 0.8));
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -364,7 +364,7 @@ unsigned int CPlayer::GetMagicDefense()
         }
     }
 
-    for(UINT i=0;i<30;i++)
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -375,7 +375,7 @@ unsigned int CPlayer::GetMagicDefense()
         {
             continue;
         }
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMagicResistance)
             {
@@ -407,11 +407,12 @@ unsigned int CPlayer::GetMagicDefense()
 // Return Attack
 unsigned int CPlayer::GetAttackPower()
 {
-    UINT attack = 0;
-    UINT weapontype = 0;
-    UINT weaponatk = 0;
-    UINT Extra = 0;
-    UINT skilltype = 0;
+    uint32_t attack = 0;
+    uint32_t weapontype = 0;
+    uint32_t weaponatk = 0;
+    uint32_t Extra = 0;
+    uint32_t skilltype = 0;
+    (void)skilltype;
     switch(CharInfo->Job)
     {
         case 121:case 122:
@@ -423,15 +424,15 @@ unsigned int CPlayer::GetAttackPower()
     }
     if(items[7].itemnum != 0 && items[7].count > 0 && items[7].durability > 0)
     {
-        UINT extra_refine[10] = {0, 7, 14, 21, 31, 41, 51, 65, 80 , 100};
+        uint32_t extra_refine[10] = {0, 7, 14, 21, 31, 41, 51, 65, 80 , 100};
         weaponatk = GServer->EquipList[WEAPON].Index[items[7].itemnum]->attackpower;
         weapontype = GServer->EquipList[WEAPON].Index[items[7].itemnum]->type;
         if(items[7].refine > 0)
         {
-            UINT refine = (UINT)floor((double)(items[7].refine / 16));
+            uint32_t refine = (uint32_t)floor((double)(items[7].refine / 16));
             if(refine > 0 && refine < 10)
             {
-                weaponatk += (UINT)floor(extra_refine[refine] * 0.01 * weaponatk);
+                weaponatk += (uint32_t)floor(extra_refine[refine] * 0.01 * weaponatk);
             }
         }
         if(Session->codedebug)
@@ -441,7 +442,7 @@ unsigned int CPlayer::GetAttackPower()
     }
     else
     {
-        attack += (UINT)floor(((Attr->Dex + Attr->Edex) * 0.3) + ((Attr->Str + Attr->Estr) * 0.5) + (Stats->Level * 0.2));
+        attack += (uint32_t)floor(((Attr->Dex + Attr->Edex) * 0.3) + ((Attr->Str + Attr->Estr) * 0.5) + (Stats->Level * 0.2));
         if(Session->codedebug)
         {
             Log(MSG_INFO, "AP unarmed %i", attack);
@@ -451,7 +452,7 @@ unsigned int CPlayer::GetAttackPower()
     {
         case ONE_HAND_SWORD://one hand sword
         {
-            attack += (UINT)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
             if(Session->codedebug)
             {
                 Log(MSG_INFO, "AP from sword only is %i",attack);
@@ -461,25 +462,25 @@ unsigned int CPlayer::GetAttackPower()
         break;
         case ONE_HAND_BUNT_SWORD://one hand blunt sword
         {
-            attack += (UINT)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sOneHandAtkPow;
         }
         break;
         case TWO_HAND_SWORD://two hand sword
         {
-            attack += (UINT)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sTwoHandAtkPow;
         }
         break;
         case SPEAR://spear
         {
-            attack += (UINT)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sTwoHandAtkPow;
         }
         break;
         case TWO_HAND_AXE://two hand axe
         {
-            attack += (UINT)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Str + Attr->Estr)*0.75 + Stats->Level*0.2 + ((Attr->Str + Attr->Estr)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sTwoHandAtkPow;
         }
         break;
@@ -494,8 +495,8 @@ unsigned int CPlayer::GetAttackPower()
             GServer->SendPM(this, "[AP] Dex = %i, Edex = %i", Attr->Dex, Attr->Edex);
             GServer->SendPM(this, "[AP] Sen = %i, Esen = %i", Attr->Sen, Attr->Esen);
             GServer->SendPM(this, "[AP] Weapon = %i, arrows = %i", weaponatk, arrows);
-            //attack += (UINT)floor((((Attr->Str + Attr->Estr) + Stats->Level) * 0.25) + ((Attr->Dex + Attr->Edex) * 0.04 + (Attr->Sen + Attr->Esen) * 0.03 + 29) * weaponatk * 0.05333334 + (Attr->Dex + Attr->Edex) * 0.52 + arrows);
-            attack += (UINT)floor(((Attr->Str + Attr->Estr + Stats->Level) * 0.2) + ((Attr->Dex + Attr->Edex) * 0.7) + ((Attr->Sen + Attr->Esen) * 0.0666666667) + (weaponatk * 1.2727) + arrows);
+            //attack += (uint32_t)floor((((Attr->Str + Attr->Estr) + Stats->Level) * 0.25) + ((Attr->Dex + Attr->Edex) * 0.04 + (Attr->Sen + Attr->Esen) * 0.03 + 29) * weaponatk * 0.05333334 + (Attr->Dex + Attr->Edex) * 0.52 + arrows);
+            attack += (uint32_t)floor(((Attr->Str + Attr->Estr + Stats->Level) * 0.2) + ((Attr->Dex + Attr->Edex) * 0.7) + ((Attr->Sen + Attr->Esen) * 0.0666666667) + (weaponatk * 1.2727) + arrows);
 
             GServer->SendPM(this, "[AP] After arrows: %i", attack);
             skilltype = sBowAtkPow;
@@ -507,7 +508,7 @@ unsigned int CPlayer::GetAttackPower()
             float bullets = 0;
             if(items[133].count>1)
                 bullets = GServer->NaturalList.Index[items[133].itemnum]->quality * 0.8;
-            attack += (UINT)floor((Attr->Con + Attr->Econ)*0.47 + bullets + Stats->Level*0.1 + (Attr->Dex + Attr->Edex)*0.3 + ((Attr->Con + Attr->Econ)*0.04 + (Attr->Sen + Attr->Esen)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor((Attr->Con + Attr->Econ)*0.47 + bullets + Stats->Level*0.1 + (Attr->Dex + Attr->Edex)*0.3 + ((Attr->Con + Attr->Econ)*0.04 + (Attr->Sen + Attr->Esen)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sGunAtkPow;
         }
         break;
@@ -518,31 +519,31 @@ unsigned int CPlayer::GetAttackPower()
             {
                 cannons = GServer->NaturalList.Index[items[134].itemnum]->quality;
             }
-            attack += (UINT)floor(cannons*0.8 + Stats->Level*0.1 + (Attr->Str + Attr->Estr)*0.32 + (Attr->Con + Attr->Econ)*0.45 + ((Attr->Con + Attr->Econ)*0.04 + (Attr->Sen + Attr->Esen)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor(cannons*0.8 + Stats->Level*0.1 + (Attr->Str + Attr->Estr)*0.32 + (Attr->Con + Attr->Econ)*0.45 + ((Attr->Con + Attr->Econ)*0.04 + (Attr->Sen + Attr->Esen)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sGunAtkPow;
         }
         break;
         case STAFF://staff
         {
-            attack += (UINT)floor(Stats->Level*0.2 + ((Attr->Int + Attr->Eint)+(Attr->Str + Attr->Estr))*0.4 + ((Attr->Int + Attr-> Eint)*0.05 + 29) * weaponatk * 0.03333334);
+            attack += (uint32_t)floor(Stats->Level*0.2 + ((Attr->Int + Attr->Eint)+(Attr->Str + Attr->Estr))*0.4 + ((Attr->Int + Attr-> Eint)*0.05 + 29) * weaponatk * 0.03333334);
             skilltype = sMagicAtkPow;
         }
         break;
         case WAND://wand
         {
-            attack += (UINT)floor(Stats->Level*0.2 + (Attr->Int + Attr->Eint)*0.6 + (((Attr->Sen + Attr->Esen)*0.1 +26) * 0.03703704 * weaponatk) );
+            attack += (uint32_t)floor(Stats->Level*0.2 + (Attr->Int + Attr->Eint)*0.6 + (((Attr->Sen + Attr->Esen)*0.1 +26) * 0.03703704 * weaponatk) );
             skilltype = sMagicAtkPow;
         }
         break;
         case KATAR://katar
         {
-            attack += (UINT)floor(Stats->Level*0.2 + (Attr->Str + Attr->Estr)*0.42 + (Attr->Dex + Attr->Edex)*0.55 + ((Attr->Dex + Attr->Edex)*0.05 + 20) * weaponatk * 0.0476190);
+            attack += (uint32_t)floor(Stats->Level*0.2 + (Attr->Str + Attr->Estr)*0.42 + (Attr->Dex + Attr->Edex)*0.55 + ((Attr->Dex + Attr->Edex)*0.05 + 20) * weaponatk * 0.0476190);
             skilltype = sCombatAtkPow;
         }
         break;
         case DOUBLE_SWORD://double sword
         {
-            attack += (UINT)floor(Stats->Level*0.2 + (Attr->Str + Attr->Estr)*0.63 + (Attr->Dex + Attr->Edex)*0.45 + ((Attr->Dex + Attr->Edex)*0.05 + 25) * weaponatk * 0.03846154);
+            attack += (uint32_t)floor(Stats->Level*0.2 + (Attr->Str + Attr->Estr)*0.63 + (Attr->Dex + Attr->Edex)*0.45 + ((Attr->Dex + Attr->Edex)*0.05 + 25) * weaponatk * 0.03846154);
             skilltype = sCombatAtkPow;
         }
         break;
@@ -551,13 +552,13 @@ unsigned int CPlayer::GetAttackPower()
             float arrows = 0;
             if(items[132].count>0)
                 arrows = GServer->NaturalList.Index[items[132].itemnum]->quality*0.5;
-            attack += (UINT)floor((((Attr->Str + Attr->Estr)+Stats->Level)*0.1) + ((Attr->Dex + Attr->Edex)*0.04 + (Attr->Sen +Attr->Esen)*0.03 + 29) * weaponatk * 0.03333334 + (Attr->Dex + Attr->Edex)*0.52 + arrows);
+            attack += (uint32_t)floor((((Attr->Str + Attr->Estr)+Stats->Level)*0.1) + ((Attr->Dex + Attr->Edex)*0.04 + (Attr->Sen +Attr->Esen)*0.03 + 29) * weaponatk * 0.03333334 + (Attr->Dex + Attr->Edex)*0.52 + arrows);
             skilltype = sCrossbowAtkPow;
         }
         break;
     }
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -606,7 +607,7 @@ unsigned int CPlayer::GetAttackPower()
         Log(MSG_INFO, "AP after cloth stats %i", attack);
     }
 
-    for(UINT i=0;i<30;i++)
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -617,7 +618,7 @@ unsigned int CPlayer::GetAttackPower()
         {
             continue;
         }
-        for(UINT j=0;j<2;j++)
+        for(uint32_t j=0;j<2;j++)
         {
             /*if(skill->buff[j] == sAttackPower || (skilltype != 0 && skill->buff[j] == skilltype))
             {
@@ -682,8 +683,8 @@ unsigned int CPlayer::GetAttackPower()
 // Return Defense
 unsigned int CPlayer::GetDefense()
 {
-    UINT defense = 0;
-    UINT Extra = 0;
+    uint32_t defense = 0;
+    uint32_t Extra = 0;
     switch(CharInfo->Job)
     {
         case 121:case 122:
@@ -693,9 +694,9 @@ unsigned int CPlayer::GetDefense()
             Extra += 25;
         break;
     }
-    defense += (UINT)floor(((Attr->Estr + Attr->Str + 5) * 0.35) + ((Stats->Level + 15) * 0.7));
-    UINT extra_refine[10] = {0, 6, 12, 18, 27, 36, 45, 57, 70 , 85};
-    for(UINT i=1;i<9;i++)
+    defense += (uint32_t)floor(((Attr->Estr + Attr->Str + 5) * 0.35) + ((Stats->Level + 15) * 0.7));
+    uint32_t extra_refine[10] = {0, 6, 12, 18, 27, 36, 45, 57, 70 , 85};
+    for(uint32_t i=1;i<9;i++)
     {
         if(i == 7)
         {
@@ -711,15 +712,15 @@ unsigned int CPlayer::GetDefense()
             defense += GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->defense;
             if(items[i].refine > 0)
             {
-                UINT refine = (UINT)floor((double)(items[i].refine / 16));
+                uint32_t refine = (uint32_t)floor((double)(items[i].refine / 16));
                 if(refine<10)
                 {
-                    defense += (UINT)floor(extra_refine[refine] * 0.01 * GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->defense);
+                    defense += (uint32_t)floor(extra_refine[refine] * 0.01 * GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->defense);
                 }
             }
         }
     }
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -765,7 +766,7 @@ unsigned int CPlayer::GetDefense()
     }
 
     // Additional def due to pskills
-    for(UINT i=0;i<30;i++)
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -776,7 +777,7 @@ unsigned int CPlayer::GetDefense()
         {
             continue;
         }
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sDefense || skill->buff[j] == sDefense2)
             {
@@ -838,10 +839,10 @@ unsigned int CPlayer::GetAttackSpeed()
     {
         GServer->SendPM(this, "[AS] ---------- Begin --");
     }
-    UINT aspeed = 0;
+    uint32_t aspeed = 0;
     if(items[7].itemnum != 0 && items[7].count > 0)
     {
-        UINT wpnspd = 0;
+        uint32_t wpnspd = 0;
         wpnspd = GServer->EquipList[WEAPON].Index[items[7].itemnum]->attackspeed;
         //aspeed = 600 / wpnspd;
         switch(wpnspd)
@@ -882,11 +883,11 @@ unsigned int CPlayer::GetAttackSpeed()
         }
     }
 
-    UINT weapontype = 0;
-    UINT skilltype = 0;
+    uint32_t weapontype = 0;
+    //uint32_t skilltype = 0;
     weapontype = GServer->EquipList[WEAPON].Index[items[7].itemnum]->type;
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0)
         {
@@ -915,7 +916,7 @@ unsigned int CPlayer::GetAttackSpeed()
         }
         if(GotWeapon) //No point checking if we have the RIGHT weapon when we don't have any of them
         {
-            for(UINT j = 0; j < 2; j++)
+            for(uint32_t j = 0; j < 2; j++)
             {
                 GotRightWeapon = false;
                 switch(skill->buff[j])
@@ -994,7 +995,7 @@ unsigned int CPlayer::GetAttackSpeed()
         GServer->SendPM(this, "[AS] %i - Added buffs", aspeed);
     }
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1053,7 +1054,7 @@ unsigned int CPlayer::GetMoveSpeed()
     {
         GServer->SendPM(this, "[MS] ---------- Begin --");
     }
-    UINT mspeed = 425;
+    uint32_t mspeed = 425;
     if(!Status->CanRun)
     {
         Status->Stance = WALKING;
@@ -1066,17 +1067,17 @@ unsigned int CPlayer::GetMoveSpeed()
         case 1:
         case RUNNING:
         {
-            mspeed += UINT((Attr->Dex) * 0.8500001);
+            mspeed += uint32_t((Attr->Dex) * 0.8500001);
             if(this->GetStatDebug(6))
             {
                 GServer->SendPM(this, "[MS] %i - Added Dex mod", mspeed);
             }
             if(items[6].count != 0)//Foot
             {
-                UINT rawSpeed = GServer->EquipList[SHOE].Index[items[6].itemnum]->movespeed;
-                UINT realSpeed = rawSpeed - 65;
-                UINT realMod = realSpeed / 5;
-                UINT dexMod = realMod * UINT((Attr->Dex + realMod) / 23.222);
+                uint32_t rawSpeed = GServer->EquipList[SHOE].Index[items[6].itemnum]->movespeed;
+                uint32_t realSpeed = rawSpeed - 65;
+                uint32_t realMod = realSpeed / 5;
+                uint32_t dexMod = realMod * uint32_t((Attr->Dex + realMod) / 23.222);
                 mspeed += ((realSpeed * 5) + realMod + dexMod);
 
                 if(this->GetStatDebug(6))
@@ -1084,7 +1085,7 @@ unsigned int CPlayer::GetMoveSpeed()
                     GServer->SendPM(this, "[MS] %i - Shoes on", mspeed);
                 }
             }
-            for(UINT i=0;i<12;i++)//cloth stats [from tomiz]
+            for(uint32_t i=0;i<12;i++)//cloth stats [from tomiz]
             {
                 if(items[i].count != 0)
                 {
@@ -1122,8 +1123,8 @@ unsigned int CPlayer::GetMoveSpeed()
             {
                 GServer->SendPM(this, "[MS] %i - All EQ added.",mspeed);
             }
-            UINT Extra = 0;
-            for(UINT i=0;i<30;i++)
+            uint32_t Extra = 0;
+            for(uint32_t i=0;i<30;i++)
             {
                 if(pskill[i] == 0)
                 {
@@ -1134,7 +1135,7 @@ unsigned int CPlayer::GetMoveSpeed()
                 {
                     continue;
                 }
-                for(UINT j = 0; j < 2; j++)
+                for(uint32_t j = 0; j < 2; j++)
                 {
                     if(skill->buff[j] == sMoveSpeed || skill->buff[j] ==  sMoveSpeed2)
                     {
@@ -1223,7 +1224,7 @@ unsigned int CPlayer::GetMoveSpeed()
 // Return Max HP
 unsigned int CPlayer::GetMaxHP()
 {
-    UINT Extra = 0;
+    uint32_t Extra = 0;
     if(Stats->Level < 1)
     {
         Stats->Level = 1;
@@ -1275,7 +1276,7 @@ unsigned int CPlayer::GetMaxHP()
         break;
     }
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1303,13 +1304,13 @@ unsigned int CPlayer::GetMaxHP()
     }
 
     // Additional hp due to pskills
-    for(UINT i=0;i<30;i++)
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMaxHP || skill->buff[j] ==  sMaxHP2)
             {
@@ -1335,57 +1336,57 @@ unsigned int CPlayer::GetMaxMP()
 
     if(Stats->Level < 1)
         Stats->Level = 1;
-    UINT maxmp = 0;
-    float Mult = 0;
+    uint32_t maxmp = 0;
+    //float Mult = 0;
     maxmp+=(Attr->Int*4);
     int JobValue = (int)CharInfo->Job;
     switch(JobValue)
     {
     case 0:
-        maxmp +=UINT(3*Stats->Level)+12;
+        maxmp +=uint32_t(3*Stats->Level)+12;
         break;
     case 111:
-        maxmp +=UINT(4*Stats->Level)+12;
+        maxmp +=uint32_t(4*Stats->Level)+12;
         break;
     case 211:
-        maxmp +=UINT(6*Stats->Level);
+        maxmp +=uint32_t(6*Stats->Level);
         break;
     case 311:
-        maxmp +=UINT(4*Stats->Level)+16;
+        maxmp +=uint32_t(4*Stats->Level)+16;
         break;
     case 411:
-        maxmp +=UINT(4*Stats->Level)+12;
+        maxmp +=uint32_t(4*Stats->Level)+12;
         break;
     case 121:
-        maxmp +=UINT(4.5*Stats->Level);
+        maxmp +=uint32_t(4.5*Stats->Level);
         break;
     case 122:
-        maxmp +=UINT(5*Stats->Level)-30;
+        maxmp +=uint32_t(5*Stats->Level)-30;
         break;
     case 221:
-        maxmp +=UINT(7*Stats->Level)-49;
+        maxmp +=uint32_t(7*Stats->Level)-49;
         break;
     case 222:
-        maxmp +=UINT(6.5*Stats->Level)-26;
+        maxmp +=uint32_t(6.5*Stats->Level)-26;
         break;
     case 321:
-        maxmp +=UINT(4*Stats->Level)+16;
+        maxmp +=uint32_t(4*Stats->Level)+16;
         break;
     case 322:
-        maxmp +=UINT(4.5*Stats->Level);
+        maxmp +=uint32_t(4.5*Stats->Level);
         break;
     case 421:
-        maxmp +=UINT(4*Stats->Level)+12;
+        maxmp +=uint32_t(4*Stats->Level)+12;
         break;
     case 422:
-        maxmp +=UINT(4.5*Stats->Level);
+        maxmp +=uint32_t(4.5*Stats->Level);
         break;
     default:
-        maxmp +=UINT(3*Stats->Level)+12;
+        maxmp +=uint32_t(3*Stats->Level)+12;
         break;
     }
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1412,14 +1413,14 @@ unsigned int CPlayer::GetMaxMP()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMaxMP || skill->buff[j] ==  sMaxMP2)
             {
@@ -1444,11 +1445,11 @@ unsigned int CPlayer::GetMaxMP()
 // Get HP Regeneration Amount
 unsigned int CPlayer::GetHPRegenAmount()
 {
-    UINT amount = (UINT)ceil (Stats->MaxHP * 0.02);
+    uint32_t amount = (uint32_t)ceil (Stats->MaxHP * 0.02);
     if(Status->Stance == 1)
         amount *= 4;
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1475,14 +1476,14 @@ unsigned int CPlayer::GetHPRegenAmount()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sHPRate || skill->buff[j] ==  sHPRecovery) // Not sure on sHPRate
             {
@@ -1501,11 +1502,11 @@ unsigned int CPlayer::GetHPRegenAmount()
 // Get MP Regeneration Amount
 unsigned int CPlayer::GetMPRegenAmount()
 {
-    UINT amount = (UINT)ceil (Stats->MaxMP * 0.02);
+    uint32_t amount = (uint32_t)ceil (Stats->MaxMP * 0.02);
     if(Status->Stance == 1)
         amount *= 4;
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1532,14 +1533,14 @@ unsigned int CPlayer::GetMPRegenAmount()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMPRate || skill->buff[j] == sMPRecovery)
             {
@@ -1558,11 +1559,11 @@ unsigned int CPlayer::GetMPRegenAmount()
 // max weight supported
 unsigned int CPlayer::GetMaxWeight()
 {
-    UINT weight = 0;
+    uint32_t weight = 0;
     //weight = ((Attr->Str + Attr->Estr) + (Attr->Str + Attr->Estr)*2) * 2 + Stats->Level+220 + (Stats->Level+220)*4;
     weight = ((Attr->Str + Attr->Estr)*6)+((Stats->Level+220)*5);
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].count != 0)
         {
@@ -1589,14 +1590,14 @@ unsigned int CPlayer::GetMaxWeight()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMaxWeight || skill->buff[j] ==  sMaxWeight2)
             {
@@ -1615,8 +1616,8 @@ unsigned int CPlayer::GetMaxWeight()
 // Current weight
 unsigned int CPlayer::GetCurrentWeight()
 {
-    UINT weight = 0;
-    for(UINT i=0;i<MAX_INVENTORY;i++)
+    uint32_t weight = 0;
+    for(uint32_t i=0;i<MAX_INVENTORY;i++)
     {
         if(items[i].itemtype<10)
         {
@@ -1647,9 +1648,9 @@ unsigned int CPlayer::GetCurrentWeight()
 // MP Reduction
 unsigned int CPlayer::GetMPReduction()
 {
-    UINT mpreduction = 0;
+    uint32_t mpreduction = 0;
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].itemtype>9)
         {
@@ -1676,14 +1677,14 @@ unsigned int CPlayer::GetMPReduction()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sMPSpendDecrease)
             {
@@ -1702,9 +1703,9 @@ unsigned int CPlayer::GetMPReduction()
 // Max summon capacity
 unsigned int CPlayer::GetMaxSummonGauge()
 {
-    UINT gauge = 50;
+    uint32_t gauge = 50;
 
-    for(UINT i=1;i<12;i++)//cloth stats [from tomiz]
+    for(uint32_t i=1;i<12;i++)//cloth stats [from tomiz]
     {
         if(items[i].itemtype>9)
         {
@@ -1731,14 +1732,14 @@ unsigned int CPlayer::GetMaxSummonGauge()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sExpandSummonGauge)
             {
@@ -1763,12 +1764,12 @@ void CPlayer::GetExtraStats()
     Attr->Econ = 0;
     Attr->Esen = 0;
     Attr->Echa = 0;
-    for(UINT i=1;i<12;i++)//cloth stats
+    for(uint32_t i=1;i<12;i++)//cloth stats
     {
         if(items[i].count > 0)
         {
-            UINT Stat1 = GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->stat1[0];
-            UINT Stat2 = GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->stat2[0];
+            uint32_t Stat1 = GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->stat1[0];
+            uint32_t Stat2 = GServer->EquipList[items[i].itemtype].Index[items[i].itemnum]->stat2[0];
             switch(Stat1)
             {
             case A_STR:
@@ -1813,8 +1814,8 @@ void CPlayer::GetExtraStats()
             }
             if(items[i].gem!=0) // jem stats
             {
-                UINT Stat1 = GServer->JemList.Index[items[i].gem]!=NULL?GServer->JemList.Index[items[i].gem]->stat1[0]:0;
-                UINT Stat2 = GServer->JemList.Index[items[i].gem]!=NULL?GServer->JemList.Index[items[i].gem]->stat2[0]:0;
+                uint32_t Stat1 = GServer->JemList.Index[items[i].gem]!=NULL?GServer->JemList.Index[items[i].gem]->stat1[0]:0;
+                uint32_t Stat2 = GServer->JemList.Index[items[i].gem]!=NULL?GServer->JemList.Index[items[i].gem]->stat2[0]:0;
                 switch(Stat1)
                 {
                 case STRENGTH:
@@ -1860,8 +1861,8 @@ void CPlayer::GetExtraStats()
             }
             if(items[i].stats!=0 && items[i].stats<500)
             {
-                UINT Stat1 = GServer->StatsList[items[i].stats].stat[0];
-                UINT Stat2 = GServer->StatsList[items[i].stats].stat[1];
+                uint32_t Stat1 = GServer->StatsList[items[i].stats].stat[0];
+                uint32_t Stat2 = GServer->StatsList[items[i].stats].stat[1];
                 switch(Stat1)
                 {
                 case STRENGTH:
@@ -1920,8 +1921,8 @@ float CPlayer::GetAttackDistance()
 // Return XPRate
 unsigned int CPlayer::GetXPRate()
 {
-    UINT XPRate = 0;
-    for(UINT i=1;i<12;i++)
+    uint32_t XPRate = 0;
+    for(uint32_t i=1;i<12;i++)
     {
         if(items[i].count != 0)
         {
@@ -1944,14 +1945,14 @@ unsigned int CPlayer::GetXPRate()
         }
     }
 
-    UINT Extra = 0;
-    for(UINT i=0;i<30;i++)
+    uint32_t Extra = 0;
+    for(uint32_t i=0;i<30;i++)
     {
         if(pskill[i] == 0) continue;
         CSkills* skill = GServer->GetSkillByID((pskill[i])+(pskilllvl[i]));
         if(skill == NULL)
             continue;
-        for(UINT j = 0; j < 2; j++)
+        for(uint32_t j = 0; j < 2; j++)
         {
             if(skill->buff[j] == sEXPRate)
             {
