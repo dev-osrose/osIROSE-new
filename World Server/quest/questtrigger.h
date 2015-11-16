@@ -100,5 +100,5 @@ int OperateValues( uint8_t btOp, T* value1PTR, T value2 )
 }
 uint32_t GetRewardValue( uint32_t function, uint32_t amount, CPlayer* client, uint16_t nDupCNT );
 
-#include "QuestConditions.h"
-#include "QuestActions.h"
+#include "questconditions.h"
+#include "questactions.h"

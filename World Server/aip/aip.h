@@ -18,5 +18,5 @@ private:
 };
 #define AI_FAILURE 8
 #define AI_SUCCESS 7
-#include "AiConditions.h"
-#include "AiActions.h"
+#include "aiconditions.h"
+#include "aiactions.h"
