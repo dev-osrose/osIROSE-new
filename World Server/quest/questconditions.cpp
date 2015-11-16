@@ -1,5 +1,5 @@
 // Props to ExJam for this code :D Ported to OSpRose by Drakia
-#include "../WorldServer.h"
+#include "../worldserver.h"
 
 //Check Quest
 QUESTCOND( 000 )

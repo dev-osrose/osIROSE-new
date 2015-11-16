@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #ifndef __CARRAY_HPP__
-#include "CRoseArray.hpp"
+#include "crosearray.hpp"
 #endif
 
 /* MS Visual C++ Deprecation control defines */

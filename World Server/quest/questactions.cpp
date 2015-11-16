@@ -1,5 +1,5 @@
 // Props to ExJam for this code :D Ported to OSpRose by Drakia
-#include "../WorldServer.h"
+#include "../worldserver.h"
 
 uint32_t GetRewardValue( uint32_t function, uint32_t amount, CPlayer* client, uint16_t nDupCNT )
 {

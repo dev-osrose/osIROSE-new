@@ -1,5 +1,5 @@
 // Props to ExJam for this code :D
-#include "../WorldServer.h"
+#include "../worldserver.h"
 
 void CWorldServer::ReadQSD( std::string path, uint32_t index )
 {
