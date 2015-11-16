@@ -467,7 +467,7 @@
 #define CRITBIT 0x4000
 #define KILLBIT 0x8000
 
-#include "../common/sockets.h"
+#include "../Common/sockets.h"
 
 // Hold party experience when kill a moster
 struct CPartyExp
