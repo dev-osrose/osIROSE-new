@@ -75,9 +75,9 @@ list( APPEND mainSource
 	Worldprocess.cpp
 	worldserver.cpp )
 	
-
+find_package( Threads REQUIRED )
 add_executable(WorldServer ${mainSource} ${fileHandlers})
-target_link_libraries(WorldServer Common mysqlcppconn-static mysqlclient)
+target_link_libraries(WorldServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-#set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project("Login Server")
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(std "-std=c++11")
@@ -28,10 +31,10 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_HOME_DIRECTORY}/Common)
 
+find_package( Threads REQUIRED )
 add_executable(LoginServer main.cpp loginserver.cpp extrafunction.cpp loginclient.cpp loginpackets.cpp signal.cpp)
-target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient)
+target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

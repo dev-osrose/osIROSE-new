@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project("Char Server")
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(std "-std=c++11")
 	set(warnings "-Wall -Wextra -Werror -Wno-write-strings")
@@ -28,8 +32,9 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_package( Threads REQUIRED )
 add_executable(CharServer main.cpp extrafunctions.cpp signal.cpp community.cpp clan.cpp charserver.cpp charpackets.cpp charclient.cpp)
-target_link_libraries(CharServer Common mysqlcppconn-static mysqlclient)
+target_link_libraries(CharServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

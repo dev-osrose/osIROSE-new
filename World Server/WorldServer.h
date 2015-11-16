@@ -23,7 +23,7 @@
 //#define debugging
 #ifndef __ROSE_SERVERS__
 #define __ROSE_SERVERS__
-#include "../common/sockets.h"
+#include "../Common/sockets.h"
 #include "worldmonster.h"
 #include "quest/CRoseArray.hpp"
 #include "quest/CRoseFile.hpp"
