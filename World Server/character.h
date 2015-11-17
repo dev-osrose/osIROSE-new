@@ -26,7 +26,7 @@ class CCharacter
 {
 	public:
 	CCharacter( );
-	~CCharacter( );
+	virtual ~CCharacter( );
 
 	unsigned int clientid;
 	uint8_t      CharType; // 0 = undefined | 1 = player | 2 = monster | 3 = summon

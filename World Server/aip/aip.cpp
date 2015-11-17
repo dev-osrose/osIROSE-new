@@ -10,8 +10,8 @@ void CWorldServer::ReadAIP( std::string path, uint32_t index )
 		//	Log(MSG_LOAD, "Loading %s                              ", path);
 
 		uint32_t BlockCount        = fh->Get< uint32_t >( );
-		uint32_t unknown1          = fh->Get< uint32_t >( );
-		uint32_t unknown2          = fh->Get< uint32_t >( );
+		/*uint32_t unknown1          = */fh->Get< uint32_t >( );
+		/*uint32_t unknown2          = */fh->Get< uint32_t >( );
 		uint32_t titlestringlength = fh->Get< uint32_t >( );
 		char*    title             = new char[ titlestringlength + 1 ];
 		char*    title2            = new char[ 32 + 1 ];
@@ -69,7 +69,7 @@ void CWorldServer::ReadAIP( std::string path, uint32_t index )
 		}
 	}
 	else
-		Log( MSG_ERROR, "AIP File: '%s'", path );
+		Log( MSG_ERROR, "AIP File: '%s'", path.c_str() );
 
 	fh->Close( );
 	delete fh;

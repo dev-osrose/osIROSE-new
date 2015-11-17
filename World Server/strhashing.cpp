@@ -6,7 +6,7 @@ unsigned long MakeStrHash(const char *str)
 {
 	register unsigned long result = 0xDEADC0DE;
 	register unsigned long tkey =   0x7FED7FED;
-	register char c = 0;
+	register uint8_t c = 0;
 	while (*(str)){
 		c = (*str<'a'||*str>'z')?*str:*str-32;
 		result += tkey;

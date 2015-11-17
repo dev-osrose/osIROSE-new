@@ -4,6 +4,9 @@
 //Check Quest
 QUESTCOND( 000 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 000 );
 	if ( client->questdebug )
 		server->SendPM( client, "Check quest: %i", data->iQuestSN );
@@ -25,19 +28,23 @@ QUESTCOND( 000 )
 //Check Quest Variable
 QUESTCOND( 001 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 001 );
 	int retVal = 1;
 	for ( int i = 0; i < data->iDataCnt; i++ )
 	{
-		uint32_t address = i * sizeof( STR_QUEST_DATA );
-		address += (uint32_t)data;
+		uint64_t address = i * sizeof( STR_QUEST_DATA );
+		address += (uint64_t)data;
 		address += 4;
 		STR_QUEST_DATA* curQst    = (STR_QUEST_DATA*)address;
-		uint16_t        nValue    = curQst->nValue;
+		//uint16_t        nValue    = curQst->nValue;
 		uint16_t        tempValue = client->GetQuestVar( curQst->m_wVarTYPE, curQst->m_wVarNO );
 		retVal                    = OperateValues< uint16_t >( curQst->btOp, &tempValue, curQst->nValue );
 		if ( client->questdebug )
 			server->SendPM( client, "Check Quest Var[%04x][%i] - %i (Op: %i)", curQst->m_wVarTYPE, curQst->m_wVarNO, curQst->nValue, curQst->btOp );
+
 		if ( retVal == 0 )
 			return QUEST_FAILURE;
 	}
@@ -53,11 +60,14 @@ QUESTCOND( 002 )
 //Check Stats
 QUESTCOND( 003 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 003 );
 	for ( int i = 0; i < data->iDataCnt; i++ )
 	{
-		uint32_t address = i * 0x0C;
-		address += (uint32_t)data;
+		uint64_t address = i * 0x0C;
+		address += (uint64_t)data;
 		address += 4;
 		STR_ABIL_DATA* curAbil   = (STR_ABIL_DATA*)address;
 		int            tempValue = client->CharInfo->Job / 100;
@@ -137,11 +147,14 @@ QUESTCOND( 003 )
 //Check Items
 QUESTCOND( 004 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 004 );
 	for ( int i = 0; i < data->iDataCnt; i++ )
 	{
-		uint32_t address = i * 0x10;
-		address += (uint32_t)data;
+		uint64_t address = i * 0x10;
+		address += (uint64_t)data;
 		address += 4;
 		STR_ITEM_DATA* curItem = (STR_ITEM_DATA*)address;
 		if ( client->questdebug )
@@ -184,17 +197,23 @@ QUESTCOND( 004 )
 //Check Party
 QUESTCOND( 005 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Near Point
 QUESTCOND( 006 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 006 );
 	client->UpdatePosition( );
 	if ( data->iZoneSN != 0 )
 	{
-		if ( client->Position->Map != data->iZoneSN )
+		if ( client->Position->Map != (uint32_t)data->iZoneSN )
 			return QUEST_FAILURE;
 	}
 
@@ -207,12 +226,18 @@ QUESTCOND( 006 )
 //World Time
 QUESTCOND( 007 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Quest Time
 QUESTCOND( 008 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 008 );
 	if ( client->questdebug )
 		server->SendPM( client, "QuestTime - ulTime: %i btOp: %i", data->ulTime, data->btOp );
@@ -237,14 +262,18 @@ QUESTCOND( 008 )
 //Check Skill
 QUESTCOND( 009 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 009 );
 	// Line not needed, never used - Drakia
 	//int checkVal = (data->btOp)?QUEST_SUCCESS:QUEST_FAILURE;
 	if ( client->questdebug )
 		server->SendPM( client, "Check Skill: %i", data->iSkillSN1 );
+
 	for ( uint32_t i = 0; i < 30; i++ )
 	{
-		if ( client->bskills[ i ] == data->iSkillSN1 )
+		if ( client->bskills[ i ] == (uint32_t)data->iSkillSN1 )
 			return ( data->btOp ) ? QUEST_SUCCESS : QUEST_FAILURE;
 		if ( client->askill[ i ] == data->iSkillSN1 )
 			return ( data->btOp ) ? QUEST_SUCCESS : QUEST_FAILURE;
@@ -257,12 +286,18 @@ QUESTCOND( 009 )
 //Unknown
 QUESTCOND( 010 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Object Variable
 QUESTCOND( 011 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	/*	if(entity->_EntityType != ENTITY_NPC) return QUEST_FAILURE;
 	GETCONDDATA(011);
 
@@ -283,13 +318,19 @@ QUESTCOND( 011 )
 //Execute Trigger in Zone
 QUESTCOND( 012 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Select NPC
 QUESTCOND( 013 )
 {
-	GETCONDDATA( 013 );
+(void)server;
+(void)client;
+(void)raw;
+	//GETCONDDATA( 013 );
 
 	/*if(entity->_EntityType != ENTITY_NPC) return QUEST_FAILURE;
 
@@ -309,6 +350,9 @@ QUESTCOND( 013 )
 //Check Quest Flag
 QUESTCOND( 014 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 014 );
 	if ( client->questdebug )
 		server->SendPM( client, "Check QFlag[%i] == %i", data->nSN, data->btOp );
@@ -319,79 +363,119 @@ QUESTCOND( 014 )
 //Unknown
 QUESTCOND( 015 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Zone Time
 QUESTCOND( 016 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //NPC & Obj Variables?
 QUESTCOND( 017 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Time on Date
 QUESTCOND( 018 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Time on Day
 QUESTCOND( 019 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Unknown
 QUESTCOND( 020 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Unknown
 QUESTCOND( 021 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Check Server/Channel
 QUESTCOND( 022 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //In Clan
 QUESTCOND( 023 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Position
 QUESTCOND( 024 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Contribution
 QUESTCOND( 025 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Grade
 QUESTCOND( 026 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Points
 QUESTCOND( 027 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	GETCONDDATA( 027 );
+(void)data;
 	if ( client->questdebug )
 		server->SendPM( client, "QUEST - Clan Points" );
 	switch ( data->btOP )
@@ -412,17 +496,26 @@ QUESTCOND( 027 )
 //Clan Funds
 QUESTCOND( 028 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Members
 QUESTCOND( 029 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Skills
 QUESTCOND( 030 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }

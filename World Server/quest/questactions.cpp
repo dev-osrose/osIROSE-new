@@ -170,14 +170,14 @@ QUESTREWD( 002 )
 	GETREWDDATA( 002 );
 	for ( uint32_t i = 0; i < data->iDataCnt; i++ )
 	{
-		uint32_t address = i * sizeof( STR_QUEST_DATA );
-		address += (uint32_t)data;
+		uint64_t address = i * sizeof( STR_QUEST_DATA );
+		address += (uint64_t)data;
 		address += 4;
 		STR_QUEST_DATA* curQst = (STR_QUEST_DATA*)address;
 		if ( client->questdebug )
 			server->SendPM( client, "Set quest var[%#04x][%i] - %i (Op: %i)", curQst->m_wVarTYPE, curQst->m_wVarNO, curQst->nValue, curQst->btOp );
 
-		uint16_t nValue    = curQst->nValue;
+		//uint16_t nValue    = curQst->nValue;
 		uint16_t tempValue = client->GetQuestVar( curQst->m_wVarTYPE, curQst->m_wVarNO );
 		OperateValues< uint16_t >( curQst->btOp, &tempValue, curQst->nValue );
 		client->SetQuestVar( curQst->m_wVarTYPE, curQst->m_wVarNO, tempValue );
@@ -192,8 +192,8 @@ QUESTREWD( 003 )
 	GETREWDDATA( 003 );
 	for ( uint32_t i = 0; i < data->iDataCnt; i++ )
 	{
-		uint32_t address = i * 0x0C;
-		address += (uint32_t)data;
+		uint64_t address = i * 0x0C;
+		address += (uint64_t)data;
 		address += 4;
 		STR_ABIL_DATA* curAbil = (STR_ABIL_DATA*)address;
 		BEGINPACKET( pak, 0x721 );
@@ -470,6 +470,7 @@ QUESTREWD( 009 )
 //Reset Stats
 QUESTREWD( 010 )
 {
+(void)raw;
 	if ( client->questdebug )
 		server->SendPM( client, "Reset Stats" );
 	client->CharInfo->StatPoints = 0;
@@ -493,7 +494,10 @@ QUESTREWD( 010 )
 //Update Object Var
 QUESTREWD( 011 )
 {
-	GETREWDDATA( 011 );
+(void)server;
+(void)client;
+(void)raw;
+	//GETREWDDATA( 011 );
 	/*if(entity->_EntityType != ENTITY_NPC) return QUEST_FAILURE;
 
     if(data->btWho == 0){//Npc
@@ -517,6 +521,9 @@ QUESTREWD( 011 )
 //NPC Speak
 QUESTREWD( 012 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	/*if(entity->_EntityType != ENTITY_NPC) return QUEST_FAILURE;
     GETREWDDATA(012);
 
@@ -551,6 +558,9 @@ QUESTREWD( 012 )
 //Unknown
 QUESTREWD( 013 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
@@ -577,12 +587,18 @@ QUESTREWD( 015 )
 //Unknown
 QUESTREWD( 016 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Reset All Quest Flags
 QUESTREWD( 017 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	if ( client->questdebug )
 		server->SendPM( client, "Reset all quest flags" );
 	memset( &client->quest.flags, 0, 64 );
@@ -592,31 +608,46 @@ QUESTREWD( 017 )
 //Send Announcement
 QUESTREWD( 018 )
 {
-	GETREWDDATA( 018 );
+(void)server;
+(void)client;
+(void)raw;
+	//GETREWDDATA( 018 );
 	return QUEST_SUCCESS;
 }
 
 //Execute Quest Trigger in Other Map
 QUESTREWD( 019 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //PvP Status
 QUESTREWD( 020 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Set Respawn Position
 QUESTREWD( 021 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Unknown
 QUESTREWD( 022 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
@@ -624,14 +655,15 @@ QUESTREWD( 022 )
 QUESTREWD( 023 )
 {
 	GETREWDDATA( 023 );
+(void)data;
 	if ( client->questdebug )
 		server->SendPM( client, "Raise clan grade" );
-	for ( UINT i = 0; i < GServer->MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < GServer->MapList.Map.size( ); i++ )
 	{
 		CMap* map = GServer->MapList.Map.at( i );
 		if ( map->PlayerList.size( ) < 1 )
 			continue;
-		for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 		{
 			CPlayer* player = map->PlayerList.at( j );
 			if ( player->Clan->clanid != client->Clan->clanid )
@@ -667,24 +699,36 @@ QUESTREWD( 023 )
 //Clan Money
 QUESTREWD( 024 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Points
 QUESTREWD( 025 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Skill
 QUESTREWD( 026 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
 //Clan Contribution
 QUESTREWD( 027 )
 {
+(void)server;
+(void)client;
+(void)raw;
 	return QUEST_SUCCESS;
 }
 
@@ -698,12 +742,12 @@ QUESTREWD( 028 )
 	telepos.y = data->iY / 100;
 	if ( client->questdebug )
 		server->SendPM( client, "Clan teleport to [%i][%f][%f]", data->nZoneNo, telepos.x, telepos.y );
-	for ( UINT i = 0; i < GServer->MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < GServer->MapList.Map.size( ); i++ )
 	{
 		CMap* map = GServer->MapList.Map.at( i );
 		if ( map->PlayerList.size( ) < 1 )
 			continue;
-		for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 		{
 			CPlayer* player = map->PlayerList.at( j );
 			if ( player->Clan->clanid != client->Clan->clanid )

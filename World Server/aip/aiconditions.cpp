@@ -36,6 +36,9 @@ int AI_GetAbility( CCharacter* entity, uint8_t btAbType )
 //Hold or Attack
 AICOND( 000 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Always False
 	return AI_FAILURE;
 }
@@ -43,11 +46,14 @@ AICOND( 000 )
 //(Damage > iDamage) == true iDamage cRecvOrGive
 AICOND( 001 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	GETAICONDDATA( 001 );
 	//   Log(MSG_DEBUG, "AIcond(001) %i %i %i",data->iDamage,data->cRecvOrGive,entity->damagecounter);
 	if ( !data->cRecvOrGive )
 	{
-		if ( entity->damagecounter > data->iDamage )
+		if ( (uint32_t)entity->damagecounter > data->iDamage )
 		{
 			entity->damagecounter = 0;
 			return AI_SUCCESS;
@@ -55,7 +61,7 @@ AICOND( 001 )
 	}
 	else
 	{
-		if ( entity->damagecounter < data->iDamage )
+		if ( (uint32_t)entity->damagecounter < data->iDamage )
 		{
 			entity->damagecounter = 0;
 			return AI_SUCCESS;
@@ -67,6 +73,9 @@ AICOND( 001 )
 //Check Near (1)
 AICOND( 002 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	/*
     uint32_t iDistance;	//Pos: 0x00
     uint8_t btIsAllied;	//Pos: 0x04
@@ -87,7 +96,7 @@ AICOND( 002 )
 	if ( data->btIsAllied )
 	{
 		uint32_t entityCount = map->MonsterList.size( );
-		for ( UINT j = 0; j < map->MonsterList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->MonsterList.size( ); j++ )
 		{
 			CMonster* other = map->MonsterList.at( j );
 			if ( eCount >= entityCount )
@@ -124,7 +133,7 @@ AICOND( 002 )
 	{
 		uint32_t entityCount = map->PlayerList.size( );
 		//	 Log(MSG_DEBUG, "entityCount %i", entityCount);
-		for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 		{
 			CPlayer* other = map->PlayerList.at( j );
 			//        Log(MSG_DEBUG, "player %i", other->clientid);
@@ -171,6 +180,9 @@ AICOND( 002 )
 //Check Distance (1)
 AICOND( 003 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//CObjCHAR::Get_MoveDISTANCE > iDistance == true
 	//distance from spawn point?
@@ -188,6 +200,9 @@ AICOND( 003 )
 //Check Distance (2)
 AICOND( 004 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t cMoreLess;	//Pos: 0x04
 	//distance to target (cMoreLess == 0 then >= else <=) iDistance
@@ -223,6 +238,9 @@ AICOND( 004 )
 //Check AB (1)
 AICOND( 005 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	/*
     uint8_t cAbType;	//Pos: 0x00
     uint32_t iDiff;	//Pos: 0x04
@@ -266,6 +284,9 @@ AICOND( 005 )
 //Check HP
 AICOND( 006 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t wHP;	//Pos: 0x00
 	//uint8_t cMoreLess;	//Pos: 0x04
 
@@ -289,6 +310,9 @@ AICOND( 006 )
 //Random Chance
 AICOND( 007 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cPercent;	//Pos: 0x00
 	//Random number 0->100 if random number < cPercent then return true
 	GETAICONDDATA( 007 );
@@ -304,6 +328,9 @@ AICOND( 007 )
 //Check Near (2)
 AICOND( 008 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint16_t nLevelDiff;	//Pos: 0x04
 	//uint16_t nLevelDiff2;	//Pos: 0x06
@@ -320,7 +347,7 @@ AICOND( 008 )
 	if ( data->btIsAllied )
 	{
 		uint32_t entityCount = map->MonsterList.size( );
-		for ( UINT j = 0; j < map->MonsterList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->MonsterList.size( ); j++ )
 		{
 			CMonster* other = map->MonsterList.at( j );
 
@@ -352,7 +379,7 @@ AICOND( 008 )
 	else
 	{
 		uint32_t entityCount = map->PlayerList.size( );
-		for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 		{
 			CPlayer* other = map->PlayerList.at( j );
 
@@ -387,6 +414,9 @@ AICOND( 008 )
 //Unknown
 AICOND( 009 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Do i have a target?
 	//	CWorldEntity* target = entity->thisZone->GetEntity(entity->_TargetID);
 	//	if(target == NULL){entity->_TargetID = 0; return AI_FAILURE;}
@@ -400,6 +430,9 @@ AICOND( 009 )
 //Check AB (2)
 AICOND( 010 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cAbType;	//Pos: 0x00
 	//uint8_t cMoreLess;	//Pos: 0x01
 
@@ -434,6 +467,9 @@ AICOND( 010 )
 //Check AB (3)
 AICOND( 011 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cAbType;	//Pos: 0x00
 	//uint32_t iValue;	//Pos: 0x04
 	//uint8_t cMoreLess;	//Pos: 0x08
@@ -442,10 +478,12 @@ AICOND( 011 )
 	uint32_t tValue = data->iValue;
 	if ( tValue == 0 )
 		tValue         = AI_GetAbility( entity, data->cAbType );
+	
 	CCharacter* target = entity->GetCharTarget( );
 	if ( target == NULL )
 		return AI_FAILURE;
-	int myValue = AI_GetAbility( target, data->cAbType );
+	
+	uint32_t myValue = AI_GetAbility( target, data->cAbType );
 	//	Log(MSG_DEBUG, "check AB (3) %i<>%i moreless %i type %i",myValue,tValue,data->cMoreLess,data->cAbType);
 	if ( data->cMoreLess )
 	{
@@ -463,6 +501,9 @@ AICOND( 011 )
 //Check Time (1)
 AICOND( 012 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cWhen;	//Pos: 0x00
 	//Is it night or day? cWhen: ?0 = night 1 = day?
 	GETAICONDDATA( 012 );
@@ -483,6 +524,9 @@ AICOND( 012 )
 //Check Target (1)
 AICOND( 013 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t btCheckTarget;	//Pos: 0x00 //0 = self 1 = target
 	//uint8_t btStatusType;	//Pos: 0x01 //
 	//uint8_t btHave;	//Pos: 0x02
@@ -493,7 +537,7 @@ AICOND( 013 )
 	//btCheckTarget = 1 AND EAX,1E155570
 	//btCheckTarget = 2 normal
 	CCharacter* target = NULL;
-	UINT        buffs  = 0;
+	uint32_t        buffs  = 0;
 	GETAICONDDATA( 013 );
 	if ( data->btCheckTarget == 1 )
 	{
@@ -543,7 +587,10 @@ AICOND( 013 )
 //Check Variable (1) (ObjVar)
 AICOND( 014 )
 {
-	GETAICONDDATA( 014 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAICONDDATA( 014 );
 	//	if(entity->_EntityType != ENTITY_NPC) return AI_FAILURE;
 	//	CNpc* thisNpc = reinterpret_cast<CNpc*>(entity);
 	//	thisNpc = thisNpc->SelectedNpc;
@@ -557,6 +604,9 @@ AICOND( 014 )
 //Check Variable (2)
 AICOND( 015 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nVarIDX;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x08
 	//uint32_t iValue;	//Pos: 0x04
@@ -568,6 +618,9 @@ AICOND( 015 )
 //Check Variable (3)
 AICOND( 016 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nVarIDX;	//Pos: 0x00
 	//uint32_t iValue;	//Pos: 0x04
 	//uint8_t btOp;	//Pos: 0x08
@@ -579,7 +632,10 @@ AICOND( 016 )
 //Select NPC
 AICOND( 017 )
 {
-	GETAICONDDATA( 017 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAICONDDATA( 017 );
 	//	if(entity->_EntityType != ENTITY_NPC) return AI_FAILURE;
 	//	CNpc* thisNpc = reinterpret_cast<CNpc*>(entity);
 	//	std::map<uint32_t, CNpc*>::iterator triggerITR = server->NpcList.find(data->iNpcNo);
@@ -596,6 +652,9 @@ AICOND( 017 )
 //Check Distance (3)
 AICOND( 018 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x04
 
@@ -628,6 +687,9 @@ AICOND( 018 )
 //Check Time (2)
 AICOND( 019 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t ulTime;	//Pos: 0x00
 	//uint32_t ulEndTime;	//Pos: 0x04
 
@@ -638,6 +700,9 @@ AICOND( 019 )
 //Check AB (4)
 AICOND( 020 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t btAbType;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x08
 	//uint32_t iValue;	//Pos: 0x04
@@ -663,8 +728,11 @@ AICOND( 020 )
 //Unknown
 AICOND( 021 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Do i have a "CALLER" ??Possibly the one who summoned the monster??
-	GETAICONDDATA( 021 );
+	//GETAICONDDATA( 021 );
 	//	Log(MSG_DEBUG, "AICOND(021) Do i have a 'CALLER'");
 
 	if ( !entity->IsMonster( ) )
@@ -683,9 +751,12 @@ AICOND( 021 )
 //Unknown
 AICOND( 022 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Does my "CALLER" have a target?
 	//	Log(MSG_DEBUG, "AICOND(022) Does my `CALLER` have a target?");
-	GETAICONDDATA( 022 );
+	//GETAICONDDATA( 022 );
 
 	if ( !entity->IsMonster( ) )
 		return AI_FAILURE;
@@ -706,6 +777,9 @@ AICOND( 022 )
 //Check Time (3) (Game map time?)
 AICOND( 023 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t ulTime;	//Pos: 0x00
 	//uint32_t ulEndTime;	//Pos: 0x04
 
@@ -716,7 +790,10 @@ AICOND( 023 )
 //Check Date Time (4)
 AICOND( 024 )
 {
-	GETAICONDDATA( 024 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAICONDDATA( 024 );
 
 	//	SYSTEMTIME sTIME;
 	//	GetLocalTime(&sTIME);
@@ -736,7 +813,10 @@ AICOND( 024 )
 //Check Weekday Time (5)
 AICOND( 025 )
 {
-	GETAICONDDATA( 025 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAICONDDATA( 025 );
 
 	//	SYSTEMTIME sTIME;
 	//	GetLocalTime(&sTIME);
@@ -752,7 +832,10 @@ AICOND( 025 )
 //Check Server/Channel
 AICOND( 026 )
 {
-	GETAICONDDATA( 026 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAICONDDATA( 026 );
 	//channel >= min && channel <= max
 	//return AI_SUCCESS;
 	return AI_FAILURE;
@@ -761,6 +844,9 @@ AICOND( 026 )
 //Check Near Character
 AICOND( 027 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t btIsAllied;	//Pos: 0x04
 	//uint16_t nLevelDiff;	//Pos: 0x06
@@ -782,7 +868,7 @@ AICOND( 027 )
 
 	if ( data->btIsAllied )
 	{
-		for ( UINT j = 0; j < map->MonsterList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->MonsterList.size( ); j++ )
 		{
 			CMonster* other = map->MonsterList.at( j );
 			if ( eCount >= entityCount )
@@ -813,7 +899,7 @@ AICOND( 027 )
 	}
 	else
 	{
-		for ( UINT j = 0; j < map->PlayerList.size( ); j++ )
+		for ( uint32_t j = 0; j < map->PlayerList.size( ); j++ )
 		{
 			CPlayer* other = map->PlayerList.at( j );
 			if ( eCount >= entityCount )
@@ -848,6 +934,9 @@ AICOND( 027 )
 //Check Variable (4)
 AICOND( 028 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nVarIDX;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x08
 	//uint32_t iValue;	//Pos: 0x04
@@ -859,6 +948,9 @@ AICOND( 028 )
 //Check Target (2)
 AICOND( 029 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t btTargetType;	//Pos: 0x00
 	//UNKNOWN :@
 	GETAICONDDATA( 029 );
@@ -869,5 +961,8 @@ AICOND( 029 )
 //Unknown
 AICOND( 030 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	return AI_FAILURE;
 }

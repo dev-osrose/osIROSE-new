@@ -31,7 +31,7 @@ bool CWorldServer::GiveExp( CMonster* thismon )
     }
     // Give Experience Drops and Quest Items
     vector<CPartyExp*> PartyExp;    
-    for(UINT i=0;i<thismon->PlayersDamage.size();i++)
+    for(uint32_t i=0;i<thismon->PlayersDamage.size();i++)
     {                     
         MonsterDamage* thisplayer = thismon->PlayersDamage.at(i);              
 		CPlayer* thisclient = GetClientByCID( thisplayer->charid, thismon->Position->Map );        		
@@ -63,7 +63,7 @@ bool CWorldServer::GiveExp( CMonster* thismon )
             {                                        
                 bool pflag = false;
                 
-                for(int i=0;i<PartyExp.size();i++)
+                for(uint32_t i=0;i<PartyExp.size();i++)
                 {
                     CPartyExp* thisparty = PartyExp.at( i );
                     if( thisparty->thisparty == thisclient->Party->party )
@@ -83,11 +83,13 @@ bool CWorldServer::GiveExp( CMonster* thismon )
                     thisparty->num = 1;
                     thisparty->partymember[0] = thisclient->CharInfo->charid;
                     thisparty->maxlevel = thisclient->Stats->Level;
-                    for(int p=0;p<thisclient->VisiblePlayers.size();p++)
+                    for(uint32_t p=0;p<thisclient->VisiblePlayers.size();p++)
                     {
                         CPlayer* otherclient = thisclient->VisiblePlayers.at( p );
-                        if(otherclient->Party->party==NULL) continue;
-                        if( thisclient->Party->party == otherclient->Party->party );
+                        if(otherclient->Party->party==NULL) 
+				continue;
+
+                        if( thisclient->Party->party == otherclient->Party->party )
                         {
                             thisparty->partymember[thisparty->num] = otherclient->CharInfo->charid;
                             thisparty->num++;
@@ -107,10 +109,10 @@ bool CWorldServer::GiveExp( CMonster* thismon )
             thisclient->client->SendPacket( &pak );}                               
         }        
     } 
-    for(int p=0;p<PartyExp.size();p++)
+    for(uint32_t p=0;p<PartyExp.size();p++)
     {
         CPartyExp* thisparty = PartyExp.at( p );
-        for(int i=0;i<thisparty->num;i++)
+        for(uint32_t i=0;i<thisparty->num;i++)
         {
             CPlayer* partyclient = GetClientByCID( thisparty->partymember[i], thismon->Position->Map );
             if( partyclient==NULL )
@@ -139,11 +141,11 @@ bool CWorldServer::GiveExp( CMonster* thismon )
             if( expoption==0 )           
             {
                 
-                partyclient->CharInfo->Exp +=  GetColorExp( partyclient->Stats->Level, thismon->Stats->Level, (UINT)round(thisparty->exp / thisparty->num) );                
+                partyclient->CharInfo->Exp +=  GetColorExp( partyclient->Stats->Level, thismon->Stats->Level, (uint32_t)round(thisparty->exp / thisparty->num) );                
             }
             else
             {
-                partyclient->CharInfo->Exp +=  GetColorExp( partyclient->Stats->Level, thismon->Stats->Level, (UINT)round(partyclient->Stats->Level * thisparty->exp / thisparty->maxlevel) );                                                               
+                partyclient->CharInfo->Exp +=  GetColorExp( partyclient->Stats->Level, thismon->Stats->Level, (uint32_t)round(partyclient->Stats->Level * thisparty->exp / thisparty->maxlevel) );                                                               
             }
             if(!partyclient->CheckPlayerLevelUP( )){           		
     		BEGINPACKET( pak, 0x79b );

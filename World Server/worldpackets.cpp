@@ -99,15 +99,15 @@ void CWorldServer::pakPlayer( CPlayer* thisclient )
 	ADDWORD( pak, thisclient->CharInfo->stamina ); // Stamina
 	for ( short i = 0x080; i < 0x1c0; i++ )
 		ADDBYTE( pak, 0x00 );
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 		ADDWORD( pak, thisclient->bskills[ i ] ); //Basic skills
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 		ADDWORD( pak, thisclient->askill[ i ] + thisclient->askilllvl[ i ] ); //Active skills
-	for ( char i = 0; i < 30; i++ )
+	for ( uint8_t i = 0; i < 30; i++ )
 		ADDWORD( pak, thisclient->pskill[ i ] + thisclient->pskilllvl[ i ] ); //Passive skills
-	for ( char i = 0; i < 30; i++ )                                           //unused ????
+	for ( uint8_t i = 0; i < 30; i++ )                                           //unused ????
 		ADDWORD( pak, 0x00 );
-	for ( char i = 0; i < 32; i++ )
+	for ( uint8_t i = 0; i < 32; i++ )
 		ADDWORD( pak, thisclient->quickbar[ i ] ); // QUICKBAR
 	ADDDWORD( pak, thisclient->CharInfo->charid );
 	ADDSTRING( pak, thisclient->CharInfo->charname );
@@ -372,6 +372,7 @@ bool CWorldServer::pakDoIdentify( CPlayer* thisclient, CPacket* P )
 //  Give the user an ID
 bool CWorldServer::pakDoID( CPlayer* thisclient, CPacket* P )
 {
+	(void)P;
 	// Assign a new id to this person
 	thisclient->clientid = GetNewClientID( );
 	if ( thisclient->clientid <= 0 )
@@ -588,8 +589,8 @@ bool CWorldServer::pakChangeStance( CPlayer* thisclient, CPacket* P )
 	if ( thisclient->Shop->open )
 		return true;
 
-	BYTE stancenum = GETBYTE( ( *P ), 0x00 );
-	BYTE newstancenum = stancenum;
+	uint8_t stancenum = GETBYTE( ( *P ), 0x00 );
+	uint8_t newstancenum = stancenum;
 	switch ( stancenum )
 	{
 	case 0:
@@ -697,11 +698,11 @@ void CWorldServer::pakClearUser( CPlayer* thisclient )
 // Drop items on map
 bool CWorldServer::pakDoDrop( CPlayer* thisclient, CPacket* P )
 {
-	BYTE itemid = GETBYTE( ( *P ), 0x0 );
+	uint8_t itemid = GETBYTE( ( *P ), 0x0 );
 	if ( !CheckInventorySlot( thisclient, itemid ) )
 		return false;
 
-	DWORD amount = GETDWORD( ( *P ), 0x1 );
+	uint32_t amount = GETDWORD( ( *P ), 0x1 );
 	if ( itemid == 0 )
 	{
 		if ( amount < 1 )
@@ -743,8 +744,9 @@ bool CWorldServer::pakDoDrop( CPlayer* thisclient, CPacket* P )
 		// fixed by tomiz [item count drop correctly and disappear from inventory]
 		if ( thisclient->items[ itemid ].itemtype >= 10 && thisclient->items[ itemid ].itemtype <= 13 )
 		{
-			if ( thisclient->items[ itemid ].count < amount )
+			if ( (uint32_t)thisclient->items[ itemid ].count < amount )
 				return true;
+
 			thisclient->items[ itemid ].count -= amount;
 			if ( thisclient->items[ itemid ].count <= 0 )
 				ClearItem( thisclient->items[ itemid ] );
@@ -764,7 +766,7 @@ bool CWorldServer::pakPickDrop( CPlayer* thisclient, CPacket* P )
 	if ( thisclient->Shop->open )
 		return true;
 	thisclient->RestartPlayerVal( );
-	WORD dropid = GETWORD( ( *P ), 0x00 );
+	uint16_t dropid = GETWORD( ( *P ), 0x00 );
 
 	CDrop* thisdrop = GetDropByID( dropid, thisclient->Position->Map );
 	if ( thisdrop == NULL )
@@ -972,8 +974,8 @@ bool CWorldServer::pakChangeEquip( CPlayer* thisclient, CPacket* P )
 	if ( thisclient->Shop->open )
 		return true;
 
-	WORD srcslot = GETWORD( ( *P ), 0 );
-	WORD destslot = GETWORD( ( *P ), 2 );
+	uint16_t srcslot = GETWORD( ( *P ), 0 );
+	uint16_t destslot = GETWORD( ( *P ), 2 );
 	if ( !CheckInventorySlot( thisclient, srcslot ) )
 		return false;
 	if ( !CheckInventorySlot( thisclient, destslot ) )
@@ -1084,9 +1086,9 @@ bool CWorldServer::pakChangeCart( CPlayer* thisclient, CPacket* P )
 {
 	if ( thisclient->Shop->open )
 		return true;
-	WORD cartslot = GETWORD( ( *P ), 0 );
-	WORD srcslot = GETWORD( ( *P ), 0 ) + 135;
-	WORD destslot = GETWORD( ( *P ), 2 );
+	uint16_t cartslot = GETWORD( ( *P ), 0 );
+	uint16_t srcslot = GETWORD( ( *P ), 0 ) + 135;
+	uint16_t destslot = GETWORD( ( *P ), 2 );
 	if ( !CheckInventorySlot( thisclient, srcslot ) )
 		return false;
 	if ( !CheckInventorySlot( thisclient, destslot ) )
@@ -1116,7 +1118,7 @@ bool CWorldServer::pakChangeCart( CPlayer* thisclient, CPacket* P )
 // Start attacking a monster or player
 bool CWorldServer::pakStartAttack( CPlayer* thisclient, CPacket* P )
 {
-	WORD clientid = GETWORD( ( *P ), 0x00 );
+	uint16_t clientid = GETWORD( ( *P ), 0x00 );
 	if ( thisclient->Battle->target == clientid )
 		return true;
 
@@ -1197,7 +1199,7 @@ bool CWorldServer::pakDoEmote( CPlayer* thisclient, CPacket* P )
 // This function is for increasing your stats
 bool CWorldServer::pakAddStats( CPlayer* thisclient, CPacket* P )
 {
-	BYTE statid = GETBYTE( ( *P ), 0 );
+	uint8_t statid = GETBYTE( ( *P ), 0 );
 	int statval  = -1;
 	int nstatval = 0;
 	switch ( statid )
@@ -1279,6 +1281,7 @@ bool CWorldServer::pakNormalChat( CPlayer* thisclient, CPacket* P )
 // Exit rose
 bool CWorldServer::pakExit( CPlayer* thisclient, CPacket* P )
 {
+	(void)P;
 	BEGINPACKET( pak, 0x707 );
 	ADDWORD( pak, 0 );
 	thisclient->client->SendPacket( &pak );
@@ -1289,8 +1292,8 @@ bool CWorldServer::pakExit( CPlayer* thisclient, CPacket* P )
 // move skill to function keys
 bool CWorldServer::pakMoveSkill( CPlayer* thisclient, CPacket* P )
 {
-	BYTE slotid = GETBYTE( ( *P ), 0x0 );
-	WORD itemid = GETWORD( ( *P ), 0x1 );
+	uint8_t slotid = GETBYTE( ( *P ), 0x0 );
+	uint16_t itemid = GETWORD( ( *P ), 0x1 );
 	if ( slotid > 47 )
 		return true;
 	thisclient->quickbar[ slotid ] = itemid;
@@ -1304,6 +1307,7 @@ bool CWorldServer::pakMoveSkill( CPlayer* thisclient, CPacket* P )
 // User is checking up on the server
 bool CWorldServer::pakPing( CPlayer* thisclient, CPacket* P )
 {
+	(void)P;
 	BEGINPACKET( pak, 0x0700 );
 	ADDWORD( pak, 0 );
 	thisclient->client->SendPacket( &pak );
@@ -1313,6 +1317,7 @@ bool CWorldServer::pakPing( CPlayer* thisclient, CPacket* P )
 // GameGuard
 bool CWorldServer::pakGameGuard( CPlayer* thisclient, CPacket* P )
 {
+	(void)P;
 	thisclient->lastGG = clock( );
 	return true;
 }
@@ -1321,7 +1326,7 @@ bool CWorldServer::pakGameGuard( CPlayer* thisclient, CPacket* P )
 bool CWorldServer::pakUserDied( CPlayer* thisclient, CPacket* P )
 {
 	thisclient->Session->inGame = false;
-	BYTE respawn = GETBYTE( ( *P ), 0 );
+	uint8_t respawn = GETBYTE( ( *P ), 0 );
 	Log( MSG_INFO, "RespawnZones choise: %i", respawn );
 	//1 - Current / 2 - save point/dungeon entrance
 	CMap*          map         = MapList.Index[ thisclient->Position->Map ];
@@ -1367,6 +1372,7 @@ bool CWorldServer::pakUserDied( CPlayer* thisclient, CPacket* P )
 // User Save Town
 bool CWorldServer::pakSaveTown( CPlayer* thisclient, CPacket* P )
 {
+(void)P;
 	thisclient->Position->saved = thisclient->Position->Map;
 	GServer->DB->QExecute( "UPDATE characters SET townid=%i WHERE id=%i", thisclient->Position->saved, thisclient->CharInfo->charid );
 	return true;
@@ -1412,6 +1418,7 @@ bool CWorldServer::pakWhisper( CPlayer* thisclient, CPacket* P )
 // Return to Char Select
 bool CWorldServer::pakCharSelect( CPlayer* thisclient, CPacket* P )
 {
+	(void)P;
 	if ( !thisclient->Session->inGame )
 		return true;
 	BEGINPACKET( pak, 0x707 );
@@ -1845,7 +1852,7 @@ bool CWorldServer::pakStartSkill( CPlayer* thisclient, CPacket* P )
 	if ( thisclient->Shop->open || thisclient->Status->Stance == DRIVING || thisclient->Status->Muted != 0xff )
 		return true;
 
-	fPoint       thispoint;
+	//fPoint       thispoint;
 	unsigned int skillid;
 	uint32_t targetid = GETWORD( ( *P ), 0 );
 	uint8_t skillnum = GETBYTE( ( *P ), 2 ); //skill inventory number
@@ -2074,10 +2081,12 @@ bool CWorldServer::pakTradeAdd( CPlayer* thisclient, CPacket* P )
 	{
 		if ( islot > 0x0a )
 			return false;
+
 		if ( count != 0 )
 		{
-			if ( count > thisclient->items[ slotid ].count )
+			if ( count > (uint32_t)thisclient->items[ slotid ].count )
 				return false;
+
 			thisclient->Trade->trade_count[ islot ]  = count;
 			thisclient->Trade->trade_itemid[ islot ] = slotid;
 			CItem tmpitem                            = thisclient->items[ slotid ];
@@ -2105,7 +2114,7 @@ bool CWorldServer::pakSkillSelf( CPlayer* thisclient, CPacket* P )
 	     thisclient->Status->Muted != 0xff || !thisclient->Status->CanCastSkill )
 		return true;
 	unsigned int skillid;
-	BYTE num = GETBYTE( ( *P ), 0 );
+	uint8_t num = GETBYTE( ( *P ), 0 );
 	if ( num >= MAX_SKILL )
 	{
 		Log( MSG_HACK, "Invalid Skill id %i for %s ", num, thisclient->CharInfo->charname );
@@ -2201,8 +2210,8 @@ bool CWorldServer::pakUseItem( CPlayer* thisclient, CPacket* P )
 			delete thisuse;
 			return true;
 		}
-		int skilltarget = thisskill->target;
-		int skillrange  = thisskill->aoeradius;
+		//int skilltarget = thisskill->target;
+		//int skillrange  = thisskill->aoeradius;
 		if ( thisskill->aoe == 0 )
 		{
 			thisclient->StartAction( NULL, BUFF_SELF, thisuse->usetype );
@@ -2275,11 +2284,13 @@ bool CWorldServer::pakUseItem( CPlayer* thisclient, CPacket* P )
 	case 6: // Snowball
 	{
 		uint16_t clientid = GETWORD( ( *P ), 2 );
-		fPoint      thispoint;
+		//fPoint      thispoint;
 		CMap*       map       = MapList.Index[ thisclient->Position->Map ];
 		CCharacter* character = map->GetCharInMap( clientid );
+
 		if ( character == NULL )
 			return true;
+
 		thisclient->StartAction( character, SKILL_BUFF, thisuse->usevalue );
 		flag = true;
 	}
@@ -2293,8 +2304,8 @@ bool CWorldServer::pakUseItem( CPlayer* thisclient, CPacket* P )
 			delete thisuse;
 			return true;
 		}
-		int skilltarget = thisskill->target;
-		int skillrange  = thisskill->aoeradius;
+		//int skilltarget = thisskill->target;
+		//int skillrange  = thisskill->aoeradius;
 		if ( thisskill->aoe == 0 )
 		{
 			thisclient->StartAction( NULL, BUFF_SELF, thisuse->usetype );
@@ -2362,7 +2373,7 @@ bool CWorldServer::pakLevelUpSkill( CPlayer* thisclient, CPacket* P )
 		return true;
 
 	// Check SP requirement
-	if ( thisclient->CharInfo->SkillPoints < nextskill->sp )
+	if ( (uint32_t)thisclient->CharInfo->SkillPoints < nextskill->sp )
 	{
 		BEGINPACKET( pak, 0x7b1 );
 		ADDBYTE( pak, 0x02 );
@@ -2381,12 +2392,12 @@ bool CWorldServer::pakLevelUpSkill( CPlayer* thisclient, CPacket* P )
 
 	// Check both stat requirements.
 	bool fail = false;
-	for ( char i = 0; i < 2; i++ )
+	for ( uint8_t i = 0; i < 2; i++ )
 	{
 		switch ( nextskill->req[ i ] )
 		{
 		case sLevel:
-			if ( nextskill->reqam[ i ] > thisclient->Stats->Level )
+			if ( nextskill->reqam[ i ] > (uint32_t)thisclient->Stats->Level )
 				fail = true;
 			break;
 		case sStrength:
@@ -2427,7 +2438,7 @@ bool CWorldServer::pakLevelUpSkill( CPlayer* thisclient, CPacket* P )
 	// Check class requirement
 	bool passClass = false;
 	int  nocheck   = 4;
-	for ( char i = 0; i < 4; i++ )
+	for ( uint8_t i = 0; i < 4; i++ )
 	{
 		if ( nextskill->c_class[ i ] > 0 )
 		{
@@ -2499,12 +2510,12 @@ bool CWorldServer::pakLevelUpSkill( CPlayer* thisclient, CPacket* P )
 	}
 
 	// Check required skills/skill levels
-	for ( char j = 0; j < 3; j++ )
+	for ( uint8_t j = 0; j < 3; j++ )
 	{
 		if ( nextskill->rskill[ j ] > 0 )
 		{
 			rs++;
-			for ( char i = 0; i < 30; i++ )
+			for ( uint8_t i = 0; i < 30; i++ )
 			{
 				// Subtract 1 because our characters levels are actually off by 1
 				// Check passive skill
@@ -2555,7 +2566,7 @@ bool CWorldServer::pakEquipABC( CPlayer* thisclient, CPacket* P )
 {
 	if ( thisclient->Shop->open )
 		return true;
-	BYTE itemslot = GETBYTE( ( *P ), 0 );
+	uint8_t itemslot = GETBYTE( ( *P ), 0 );
 	int slot = ( ( itemslot - 32 ) / 4 ) + 72;
 	int dest = 0;
 	int type = ( itemslot - 32 ) % 4;
@@ -2653,9 +2664,9 @@ bool CWorldServer::pakCraft( CPlayer* thisclient, CPacket* P )
 			}
 		}
 		int m = 0;
-		for ( char used = 4; used != 12; used += 2 )
+		for ( uint8_t used = 4; used != 12; used += 2 )
 		{
-			WORD material = GETWORD( ( *P ), used ); //gets inventory location
+			uint16_t material = GETWORD( ( *P ), used ); //gets inventory location
 			if ( !CheckInventorySlot( thisclient, material ) )
 				return false;
 			if ( material != 0 )
@@ -2756,7 +2767,7 @@ bool CWorldServer::pakSkillAOE( CPlayer* thisclient, CPacket* P )
 	     thisclient->Status->Muted != 0xff || !thisclient->Status->CanCastSkill )
 		return true;
 
-	BYTE num = GETBYTE( ( *P ), 0 );
+	uint8_t num = GETBYTE( ( *P ), 0 );
 	thisclient->Position->skilltargetpos.x = P->GetFloat( 1 ) / 100;
 	thisclient->Position->skilltargetpos.y = P->GetFloat( 5 ) / 100;
 	//arnold
@@ -2851,11 +2862,11 @@ bool CWorldServer::pakChangeStorage( CPlayer* thisclient, CPacket* P )
 
 	/* Packet for this function
        ===========================
-       [BYTE] Action
-       [BYTE] Item Slot
-       [WORD] Item Head
-       [DWORD] Item Body
-       [BYTE] Unk (0x00)
+       [uint8_t] Action
+       [uint8_t] Item Slot
+       [uint16_t] Item Head
+       [uint32_t] Item Body
+       [uint8_t] Unk (0x00)
     */
 
 	uint32_t bprice     = 0; // Item Price      (from STB)
@@ -2931,7 +2942,8 @@ bool CWorldServer::pakChangeStorage( CPlayer* thisclient, CPacket* P )
 			if ( newitem.itemtype >= 10 && newitem.itemtype <= 12 )
 			{
 				//is it a stackable type, so must do some math with item counts etc.
-				uint32_t bfee = GetStorageFee( bprice, bpricerate, clientitem.count );
+				//uint32_t bfee = 
+						GetStorageFee( bprice, bpricerate, clientitem.count );
 
 				//add the new items to the storage slot
 				if ( thisclient->storageitems[ newslot ].count > 0 )
@@ -2994,7 +3006,7 @@ bool CWorldServer::pakChangeStorage( CPlayer* thisclient, CPacket* P )
 		if ( newitem.itemtype > 9 && newitem.itemtype < 14 )
 		{
 			// This is a useitem.
-			WORD count = clientitem.count;
+			uint16_t count = clientitem.count;
 			if ( count > thisclient->storageitems[ storageslot ].count )
 				count     = thisclient->storageitems[ storageslot ].count;
 			newitem.count = count;
@@ -3042,8 +3054,9 @@ bool CWorldServer::pakStoreZuly( CPlayer* thisclient, CPacket* P )
 	{
 	case 0x10: //deposit'
 	{
-		if ( zuly > thisclient->CharInfo->Zulies )
+		if ( zuly > (uint64_t)thisclient->CharInfo->Zulies )
 			return true;
+
 		thisclient->CharInfo->Zulies -= zuly;
 		thisclient->CharInfo->Storage_Zulies += zuly;
 		BEGINPACKET( pak, 0x7da );
@@ -3055,7 +3068,7 @@ bool CWorldServer::pakStoreZuly( CPlayer* thisclient, CPacket* P )
 	break;
 	case 0x11: //withdraw
 	{
-		if ( zuly > thisclient->CharInfo->Storage_Zulies )
+		if ( zuly > (uint64_t)thisclient->CharInfo->Storage_Zulies )
 			return true;
 		thisclient->CharInfo->Zulies += zuly;
 		thisclient->CharInfo->Storage_Zulies -= zuly;
@@ -3184,8 +3197,8 @@ bool CWorldServer::pakBuyShop( CPlayer* thisclient, CPacket* P )
 		CPlayer* otherclient = GetClientByID( otherclientid, thisclient->Position->Map );
 		if ( otherclient == NULL )
 			return true;
-		BYTE slot = GETBYTE( ( *P ), 3 );
-		unsigned int count   = 0;
+		uint8_t slot = GETBYTE( ( *P ), 3 );
+		int count   = 0;
 		unsigned int invslot = otherclient->Shop->SellingList[ slot ].slot;
 		CItem        newitem = otherclient->items[ invslot ];
 		if ( otherclient->items[ invslot ].itemtype > 9 &&
@@ -3193,8 +3206,10 @@ bool CWorldServer::pakBuyShop( CPlayer* thisclient, CPacket* P )
 			count = GETWORD( ( *P ), 6 );
 		else
 			count = 1;
-		if ( count > otherclient->Shop->SellingList[ slot ].count )
+
+		if ( count > (int32_t)otherclient->Shop->SellingList[ slot ].count )
 			return true;
+
 		newitem.count = count;
 		if ( thisclient->CharInfo->Zulies < ( otherclient->Shop->SellingList[ slot ].price * count ) )
 			return true;
@@ -3216,7 +3231,7 @@ bool CWorldServer::pakBuyShop( CPlayer* thisclient, CPacket* P )
 			}
 			else
 			{
-				if ( otherclient->Shop->SellingList[ slot ].count <= count )
+				if ( (int32_t)otherclient->Shop->SellingList[ slot ].count <= count )
 				{
 					otherclient->Shop->SellingList[ slot ].slot  = 0;
 					otherclient->Shop->SellingList[ slot ].count = 0;
@@ -3298,7 +3313,7 @@ bool CWorldServer::pakSellShop( CPlayer* thisclient, CPacket* P )
 		CPlayer* otherclient = GetClientByID( otherclientid, thisclient->Position->Map );
 		if ( otherclient == NULL )
 			return true;
-		unsigned int count = 0;
+		int count = 0;
 		uint8_t invslot = GETBYTE( ( *P ), 3 );
 		uint8_t slot = GETBYTE( ( *P ), 4 );
 		if ( !CheckInventorySlot( thisclient, slot ) )
@@ -3324,7 +3339,7 @@ bool CWorldServer::pakSellShop( CPlayer* thisclient, CPacket* P )
 			if ( thisclient->items[ invslot ].count <= count )
 			{
 				ClearItem( thisclient->items[ invslot ] );
-				if ( count >= otherclient->Shop->BuyingList[ slot ].count )
+				if ( count >= (int32_t)otherclient->Shop->BuyingList[ slot ].count )
 				{
 					ClearItem( otherclient->Shop->BuyingList[ slot ].item );
 					otherclient->Shop->BuyingList[ slot ].slot  = 0;
@@ -3338,7 +3353,7 @@ bool CWorldServer::pakSellShop( CPlayer* thisclient, CPacket* P )
 			}
 			else
 			{
-				if ( otherclient->Shop->BuyingList[ slot ].count <= count )
+				if ( (int32_t)otherclient->Shop->BuyingList[ slot ].count <= count )
 				{
 					ClearItem( otherclient->Shop->BuyingList[ slot ].item );
 					otherclient->Shop->BuyingList[ slot ].slot  = 0;
@@ -3404,6 +3419,7 @@ bool CWorldServer::pakSellShop( CPlayer* thisclient, CPacket* P )
 // Close Shop
 bool CWorldServer::pakCloseShop( CPlayer* thisclient, CPacket* P )
 {
+(void)P;
 	BEGINPACKET( pak, 0x7c3 );
 	ADDWORD( pak, thisclient->clientid );
 	ADDBYTE( pak, 0x00 );
@@ -3480,7 +3496,7 @@ bool CWorldServer::pakModifiedItem( CPlayer* thisclient, CPacket* P )
 	case 0x02: //itemdivide by user
 	case 0x03: //itemdivide by npc
 	{
-		BYTE slot = GETBYTE( ( *P ), 3 );
+		uint8_t slot = GETBYTE( ( *P ), 3 );
 		if ( !CheckInventorySlot( thisclient, slot ) )
 			return false;
 		BEGINPACKET( pak, 0x7bc )
@@ -3491,7 +3507,7 @@ bool CWorldServer::pakModifiedItem( CPlayer* thisclient, CPacket* P )
 		uint32_t material_lookup_number = STB_ITEM[ ( thisclient->items[ slot ].itemtype ) - 1 ].rows[ thisclient->items[ slot ].itemnum ][ 14 ];
 		for ( unsigned int i = 0; i < STB_ITEM[ 11 ].rowcount; i++ )
 		{
-			if ( STB_ITEM[ 11 ].rows[ i ][ 4 ] == ProductList.Index[ material_lookup_number ]->item[ 0 ] )
+			if ( (uint32_t)STB_ITEM[ 11 ].rows[ i ][ 4 ] == ProductList.Index[ material_lookup_number ]->item[ 0 ] )
 			{
 				splititem.itemtype = 12;
 				splititem.itemnum  = i;
@@ -3520,7 +3536,7 @@ bool CWorldServer::pakModifiedItem( CPlayer* thisclient, CPacket* P )
 				break;
 			}
 		}
-		for ( char teller = 1; teller < 4; teller++ )
+		for ( uint8_t teller = 1; teller < 4; teller++ )
 		{
 			if ( ProductList.Index[ material_lookup_number ]->amount[ teller ] > 0 )
 			{
@@ -3700,7 +3716,7 @@ bool CWorldServer::pakModifiedItem( CPlayer* thisclient, CPacket* P )
 
 		bool success = true;
 		srand( time( NULL ) );
-		unsigned int prefine      = rand( ) % 100;
+		int          prefine      = rand( ) % 100;
 		int          refinechance = upgrade[ nextlevel ];
 		int          itemtype     = thisclient->items[ item ].itemtype;
 		int          itemnum      = thisclient->items[ item ].itemnum;
@@ -3821,7 +3837,7 @@ bool CWorldServer::pakRepairItem( CPlayer* thisclient, CPacket* P )
 // FJMK May 2013: fixed the function, it now needs zulie.
 // Cost are calculated in function Repairprice, located in Extrafunctions.cpp
 {
-	BYTE action = GETBYTE( ( *P ), 0 );
+	uint8_t action = GETBYTE( ( *P ), 0 );
 	switch ( action )
 	{
 	case 16:  // The weapon dude in zant (found by FransK)
@@ -4024,6 +4040,7 @@ bool CWorldServer::pakCharDSClient( CPlayer* thisclient, CPacket* P )
 // Pack Printscreen
 bool CWorldServer::pakPrintscreen( CPlayer* thisclient, CPacket* P )
 {
+(void)P;
 	BEGINPACKET( pak, 0x7eb );
 	ADDWORD( pak, thisclient->Session->userid );
 	ADDWORD( pak, 0x0302 );
@@ -4067,5 +4084,7 @@ bool CWorldServer::pakCSCharSelect( CPlayer* thisclient, CPacket* P )
 
 bool CWorldServer::pakItemMall( CPlayer* thisclient, CPacket* P )
 {
+(void)thisclient;
+(void)P;
 	return true;
 }

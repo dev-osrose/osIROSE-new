@@ -7,7 +7,7 @@ void CWorldServer::ReadQSD( std::string path, uint32_t index )
 	if ( fh->IsOpen( ) )
 	{ // goto done;
 
-		Log( MSG_LOAD, "Loading %s", path );
+		Log( MSG_LOAD, "Loading %s", path.c_str() );
 
 		fh->Seek( 4, SEEK_CUR );
 		uint32_t BlockCount = fh->Get< uint32_t >( );
@@ -71,7 +71,7 @@ void CWorldServer::ReadQSD( std::string path, uint32_t index )
 		}
 	}
 	else
-		Log( MSG_ERROR, "QSD File: '%s'", path );
+		Log( MSG_ERROR, "QSD File: '%s'", path.c_str() );
 
 	fh->Close( );
 	delete fh;

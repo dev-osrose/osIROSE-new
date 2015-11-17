@@ -21,7 +21,7 @@
 #include "worldmonster.h"
 
 // Monster Contructor
-CMonster::CMonster( fPoint MonsterPosition, UINT MonsterType, UINT MonsterMap, UINT Owner, UINT spawnid )
+CMonster::CMonster( fPoint MonsterPosition, uint32_t MonsterType, uint32_t MonsterMap, uint32_t Owner, uint32_t spawnid )
 {
     montype = MonsterType;
     SpawnTime = clock( );
@@ -63,7 +63,7 @@ CMonster::~CMonster( )
 {
     if(MonsterDrop!=NULL)
         delete MonsterDrop;       
-    for(UINT i=0;i<PlayersDamage.size();i++)         
+    for(uint32_t i=0;i<PlayersDamage.size();i++)         
         delete PlayersDamage.at(i);
     PlayersDamage.clear();
 }

@@ -28,7 +28,7 @@ class CMonster : public CCharacter
 {
     public:
         CMonster( fPoint Position, uint32_t MonsterType, uint32_t MonsterMap, uint32_t Owner=0, uint32_t spawnid=0 );
-        ~CMonster( );
+	virtual ~CMonster( );
 
         // times
         clock_t SpawnTime;

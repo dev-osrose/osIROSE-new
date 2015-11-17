@@ -48,28 +48,28 @@ CMap::CMap( )
 
 CMap::~CMap( )
 {
-	for ( UINT i = 0; i < RespawnList.size( ); i++ )
+	for ( uint32_t i = 0; i < RespawnList.size( ); i++ )
 		delete RespawnList.at( i );
 #ifdef USEIFO
-	for ( UINT i = 0; i < MobGroupList.size( ); i++ )
+	for ( uint32_t i = 0; i < MobGroupList.size( ); i++ )
 	{
 		CMobGroup* thisgroup = MobGroupList.at( i );
-		for ( UINT j = 0; j < thisgroup->basicMobs.size( ); j++ )
+		for ( uint32_t j = 0; j < thisgroup->basicMobs.size( ); j++ )
 			delete thisgroup->basicMobs.at( j );
-		for ( UINT j = 0; j < thisgroup->tacMobs.size( ); j++ )
+		for ( uint32_t j = 0; j < thisgroup->tacMobs.size( ); j++ )
 			delete thisgroup->tacMobs.at( j );
 		delete thisgroup;
 	}
 #endif
-	for ( UINT i = 0; i < MonsterSpawnList.size( ); i++ )
+	for ( uint32_t i = 0; i < MonsterSpawnList.size( ); i++ )
 		delete MonsterSpawnList.at( i );
-	for ( UINT i = 0; i < MonsterList.size( ); i++ )
+	for ( uint32_t i = 0; i < MonsterList.size( ); i++ )
 		delete MonsterList.at( i );
-	for ( UINT i = 0; i < DropsList.size( ); i++ )
+	for ( uint32_t i = 0; i < DropsList.size( ); i++ )
 		delete DropsList.at( i );
-	for ( UINT i = 0; i < NPCList.size( ); i++ )
+	for ( uint32_t i = 0; i < NPCList.size( ); i++ )
 		delete NPCList.at( i );
-	for ( UINT i = 0; i < TeleGateList.size( ); i++ )
+	for ( uint32_t i = 0; i < TeleGateList.size( ); i++ )
 		delete TeleGateList.at( i );
 }
 
@@ -88,7 +88,7 @@ bool CMap::RemovePlayer( CPlayer* player, bool clearobject )
 		ADDWORD( pak, player->clientid );
 		GServer->SendToVisible( &pak, player, false );
 	}
-	for ( UINT i = 0; i < PlayerList.size( ); i++ )
+	for ( uint32_t i = 0; i < PlayerList.size( ); i++ )
 	{
 		if ( PlayerList.at( i ) == player )
 		{
@@ -100,7 +100,7 @@ bool CMap::RemovePlayer( CPlayer* player, bool clearobject )
 }
 
 // add a new monster to this map
-CMonster* CMap::AddMonster( UINT montype, fPoint position, UINT owner, CMDrops* MonsterDrop, CMDrops* MapDrop, UINT spawnid, bool GetDropData )
+CMonster* CMap::AddMonster( uint32_t montype, fPoint position, uint32_t owner, CMDrops* MonsterDrop, CMDrops* MapDrop, uint32_t spawnid, bool GetDropData )
 {
 	// check if is a valid monster
 	CNPCData* thisnpc = GServer->GetNPCDataByID( montype );
@@ -156,7 +156,7 @@ CMonster* CMap::AddMonster( UINT montype, fPoint position, UINT owner, CMDrops* 
 }
 
 // Delete a monster
-bool CMap::DeleteMonster( CMonster* monster, bool clearobject, UINT i )
+bool CMap::DeleteMonster( CMonster* monster, bool clearobject, uint32_t i )
 {
 	if ( monster == NULL )
 		return false;
@@ -198,7 +198,7 @@ bool CMap::DeleteMonster( CMonster* monster, bool clearobject, UINT i )
 		delete monster;
 		return true;
 	}
-	for ( UINT i = 0; i < MonsterList.size( ); i++ )
+	for ( uint32_t i = 0; i < MonsterList.size( ); i++ )
 	{
 		CMonster* othermon = MonsterList.at( i );
 		if ( othermon == monster )
@@ -225,7 +225,7 @@ bool CMap::DeleteDrop( CDrop* drop )
 	ADDWORD( pak, drop->clientid );
 	GServer->SendToVisible( &pak, drop );
 	GServer->ClearClientID( drop->clientid );
-	for ( UINT j = 0; j < DropsList.size( ); j++ )
+	for ( uint32_t j = 0; j < DropsList.size( ); j++ )
 	{
 		if ( drop == DropsList.at( j ) )
 		{
@@ -250,7 +250,7 @@ bool CMap::DeleteNPC( CNPC* npc )
 	ADDWORD( pak, npc->clientid );
 	GServer->SendToMap( &pak, npc->posMap );
 	GServer->ClearClientID( npc->clientid );
-	for ( UINT j = 0; j < NPCList.size( ); j++ )
+	for ( uint32_t j = 0; j < NPCList.size( ); j++ )
 	{
 		if ( npc == NPCList.at( j ) )
 		{

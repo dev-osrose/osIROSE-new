@@ -6,6 +6,9 @@
 //Unknown
 AIACT( 000 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//SetCMD_Stop (Stop all actions i guess?)
 	//	entity->StopAll();
 	return AI_SUCCESS;
@@ -14,6 +17,9 @@ AIACT( 000 )
 //Do Action
 AIACT( 001 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cAction;	//Pos: 0x00
 	//CObjMOB::Set_EMOTION (pak 781)
 	GETAIACTDATA( 001 );
@@ -28,6 +34,9 @@ AIACT( 001 )
 //Say LTB String
 AIACT( 002 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Client side say text
 	//Log(MSG_DEBUG, "Say LTB String");
 	return AI_SUCCESS;
@@ -36,6 +45,9 @@ AIACT( 002 )
 //Move (1)
 AIACT( 003 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t cSpeed;	//Pos: 0x04
 	//move randomly within iDistance (individual x and y so its within a square)
@@ -77,6 +89,9 @@ AIACT( 003 )
 //Move (2)
 AIACT( 004 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t cSpeed;	//Pos: 0x04
 	//move randomly within iDistance of spawn position (square)	Position->source
@@ -118,6 +133,9 @@ AIACT( 004 )
 //Move (3)
 AIACT( 005 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t cSpeed;	//Pos: 0x00
 	//move randomly within 200 of "m_pFindCHAR" (square)
 	GETAIACTDATA( 005 );
@@ -166,11 +184,14 @@ AIACT( 005 )
 //Move (?)
 AIACT( 006 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t cAbType;	//Pos: 0x04
 	//uint8_t cMoreLess;	//Pos: 0x05
 	//Run and Attack aiobj within iDistance that has the lowest or greatest cAbType
-	GETAIACTDATA( 006 );
+	//GETAIACTDATA( 006 );
 
 	//	uint32_t eCount = 0;
 	//	int highestAB = -9999999;
@@ -228,6 +249,9 @@ AIACT( 006 )
 //Unknown
 AIACT( 007 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//CObjCHAR::Special_ATTACK
 	Log( MSG_DEBUG, "AIACT(007)" );
 	return AI_SUCCESS;
@@ -236,6 +260,9 @@ AIACT( 007 )
 //Move (4)
 AIACT( 008 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint8_t cSpeed;	//Pos: 0x04
 	//Some weird shit going on here
@@ -247,6 +274,9 @@ AIACT( 008 )
 //Spawn Monster (1)
 AIACT( 009 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t wMonster;	//Pos: 0x00
 	//Transform into wMonster
 	GETAIACTDATA( 010 );
@@ -260,6 +290,9 @@ AIACT( 009 )
 //Spawn Monster (2)
 AIACT( 010 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t wMonster;	//Pos: 0x00
 	//Spawn wMonster at current X,Y
 	GETAIACTDATA( 010 );
@@ -276,6 +309,9 @@ AIACT( 010 )
 //Spawn Monster (3)
 AIACT( 011 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//uint32_t iNumOfMonster;	//Pos: 0x04
 	//force iNumOfMonster of same team within iDistance to attack my target
@@ -293,7 +329,7 @@ AIACT( 011 )
 
 	CMap*    map         = GServer->MapList.Index[ entity->Position->Map ];
 	uint32_t entityCount = map->MonsterList.size( );
-	for ( UINT j = 0; j < map->MonsterList.size( ); j++ )
+	for ( uint32_t j = 0; j < map->MonsterList.size( ); j++ )
 	{
 		CMonster* other = map->MonsterList.at( j );
 		if ( eCount >= entityCount )
@@ -340,6 +376,9 @@ AIACT( 011 )
 //Unknown
 AIACT( 012 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	Log( MSG_DEBUG, "AIACT(012)" );
 	//Run and attack "m_pNearCHAR" Nearest Character
 	//	entity->Attack(entity->nearChar);
@@ -358,6 +397,9 @@ AIACT( 012 )
 //Unknown
 AIACT( 013 ) //Log(MSG_DEBUG, "AIACT(013)");
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Run and attack "m_pFindCHAR" Character found from aiobj loop things
 	//	entity->Attack(entity->findChar);
 	if ( entity->findChar == NULL )
@@ -375,11 +417,14 @@ AIACT( 013 ) //Log(MSG_DEBUG, "AIACT(013)");
 //Unknown
 AIACT( 014 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;	//Pos: 0x00
 	//find aiobj within iDistance and force them to attack my target
 	//	CWorldEntity* target = entity->thisZone->GetEntity(entity->_TargetID);
 	//	if(target == NULL) return AI_FAILURE;
-	GETAIACTDATA( 014 );
+	//GETAIACTDATA( 014 );
 
 	//	uint32_t eCount = 0;
 	//	int searchDistance = data->iDistance * 100;
@@ -414,6 +459,9 @@ AIACT( 014 )
 //Retaliate ?
 AIACT( 015 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Run and attack "m_pDestCHAR" Blah?
 	//	Log(MSG_DEBUG, "AIACT(015)");
 	return AI_FAILURE;
@@ -422,6 +470,9 @@ AIACT( 015 )
 //Unknown
 AIACT( 016 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint32_t iDistance;
 	//Run Away!
 	//Log(MSG_DEBUG, "AIACT(016)");
@@ -461,6 +512,9 @@ AIACT( 016 )
 //Drop Item
 AIACT( 017 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t item0;	//Pos: 0x00
 	//uint16_t item1;	//Pos: 0x02
 	//uint16_t item2;	//Pos: 0x04
@@ -515,13 +569,16 @@ AIACT( 017 )
 //Spawn Monster (4)
 AIACT( 018 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t cMonster;	//Pos: 0x00
 	//uint16_t wHowMany;	//Pos: 0x02
 	//uint32_t iDistance;	//Pos: 0x04
 	//make wHowMany monsters of type cMonster within iDistance attack my target
 	//	CWorldEntity* target = entity->thisZone->GetEntity(entity->_TargetID);
 	//	if(target == NULL) return AI_FAILURE;
-	GETAIACTDATA( 018 );
+	//GETAIACTDATA( 018 );
 
 	//	int chrCount = 0;
 	//	uint32_t eCount = 0;
@@ -561,6 +618,9 @@ AIACT( 018 )
 //Unknown
 AIACT( 019 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Run and attack "m_pNearCHAR" //Identical to 012
 	return F_AI_ACT_012( server, entity, raw );
 }
@@ -568,6 +628,9 @@ AIACT( 019 )
 //Spawn Monster (5)
 AIACT( 020 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t cMonster;	//Pos: 0x00
 	//uint8_t btPos;	//Pos: 0x02
 	//uint32_t iDistance;	//Pos: 0x04
@@ -612,6 +675,9 @@ AIACT( 020 )
 //Unknown
 AIACT( 021 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Does absolutely nothing
 	return AI_SUCCESS;
 }
@@ -619,6 +685,9 @@ AIACT( 021 )
 //Unknown
 AIACT( 022 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Does absolutely nothing
 	return AI_SUCCESS;
 }
@@ -626,6 +695,9 @@ AIACT( 022 )
 //Unknown //ghostseeds and ghosts and player summons
 AIACT( 023 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Commit suicide
 	entity->Stats->HP = 0;
 	BEGINPACKET( pak, 0x799 );
@@ -639,6 +711,9 @@ AIACT( 023 )
 //Do Skill
 AIACT( 024 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint8_t btTarget;	//Pos: 0x00
 	//uint16_t nSkill;	//Pos: 0x02
 	//uint16_t nMotion;	//Pos: 0x04 //8 = SKILL_ATTACK 6 = magic
@@ -721,8 +796,11 @@ AIACT( 024 )
 //Set Variable (1)
 AIACT( 025 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//	if(entity->_EntityType != ENTITY_NPC) return AI_FAILURE;
-	GETAIACTDATA( 025 );
+	//GETAIACTDATA( 025 );
 
 	//	CNpc* thisNpc = reinterpret_cast<CNpc*>(entity);
 	//	thisNpc = thisNpc->SelectedNpc;
@@ -739,6 +817,9 @@ AIACT( 025 )
 //Set Variable (2)
 AIACT( 026 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Set WorldVAR
 	//uint16_t nVarNo;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x08
@@ -749,6 +830,9 @@ AIACT( 026 )
 //Set Variable (3)
 AIACT( 027 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Set EconomyVAR
 	//uint16_t nVarNo;	//Pos: 0x00
 	//uint8_t btOp;	//Pos: 0x08
@@ -759,7 +843,10 @@ AIACT( 027 )
 //Shout/Ann LTB String
 AIACT( 028 )
 {
-	GETAIACTDATA( 028 );
+(void)server;
+(void)entity;
+(void)raw;
+	//GETAIACTDATA( 028 );
 
 	//	uint32_t npcId = 0;
 	//	if(entity->_EntityType == ENTITY_NPC){
@@ -803,8 +890,12 @@ AIACT( 028 )
 //Unknown
 AIACT( 029 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Move within 20% of the distance of my "CALLER"
 	GETAIACTDATA( 029 );
+(void)data;
 	//	if(entity->_EntityType != ENTITY_MONSTER) return AI_FAILURE;
 	//	CMonster* thisMonster = reinterpret_cast<CMonster*>(entity);
 	//	CWorldEntity* caller = thisMonster->thisZone->GetEntity(thisMonster->_CallerID);
@@ -813,11 +904,13 @@ AIACT( 029 )
 	//	thisMonster->UpdatePosition();
 	if ( !entity->IsMonster( ) )
 		return AI_FAILURE;
+
 	CMonster*   thisMonster = reinterpret_cast< CMonster* >( entity );
 	CMap*       map         = GServer->MapList.Index[ thisMonster->Position->Map ];
 	CCharacter* caller      = map->GetCharInMap( thisMonster->owner );
 	if ( caller == NULL )
 		return AI_FAILURE;
+
 	caller->UpdatePosition( );
 	thisMonster->UpdatePosition( );
 
@@ -841,6 +934,9 @@ AIACT( 029 )
 //Do Trigger
 AIACT( 030 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t lenszTrigger;	//Pos: 0x00
 	//char* szTrigger;	//Pos: 0x02
 	GETAIACTDATA( 030 );
@@ -854,6 +950,9 @@ AIACT( 030 )
 //Unknown
 AIACT( 031 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Log(MSG_DEBUG, "AIACT(031)");
 	//Attack my "CALLER"(s target) if he is not an ally (must be caller's target...)
 	//	if(entity->_EntityType != ENTITY_MONSTER) return AI_FAILURE;
@@ -886,6 +985,9 @@ AIACT( 031 )
 //Zone (1)
 AIACT( 032 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nZoneNo;	//Pos: 0x00
 	//uint8_t btOnOff;	//Pos: 0x02
 	//Set PK Flag (btOnOff) in nZoneNo
@@ -895,6 +997,9 @@ AIACT( 032 )
 //Zone (2)
 AIACT( 033 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nZoneNo //if 0, current map
 	//uint16_t nNewValue
 	//if nNewValue == 2 -> toggle
@@ -905,6 +1010,9 @@ AIACT( 033 )
 //Item (?)
 AIACT( 034 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nItemNum;	//Pos: 0x00
 	//uint16_t nCount;	//Pos: 0x02
 	//Give item to "CALLER"
@@ -915,6 +1023,9 @@ AIACT( 034 )
 //Set Variable (4)
 AIACT( 035 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//Set AiVAR
 	return AI_SUCCESS;
 }
@@ -922,10 +1033,13 @@ AIACT( 035 )
 //Monster (1)
 AIACT( 036 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nMonster;	//Pos: 0x00
 	//uint8_t btMaster;	//Pos: 0x02
 	//Spawn nMonster at my position (has btMaster)?
-	GETAIACTDATA( 036 );
+	//GETAIACTDATA( 036 );
 	//	CWorldEntity* master = NULL;
 	//	if(data->btMaster) master = entity;
 
@@ -937,6 +1051,9 @@ AIACT( 036 )
 //Monster (2)
 AIACT( 037 )
 {
+(void)server;
+(void)entity;
+(void)raw;
 	//uint16_t nMonster;	//Pos: 0x00
 	//uint16_t nPos;	//Pos: 0x02
 	//uint32_t iDistance;	//Pos: 0x04

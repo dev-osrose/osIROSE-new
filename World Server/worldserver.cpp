@@ -65,7 +65,7 @@ CWorldServer::CWorldServer( string fn )
 	for ( int i = 0; i < 10; i++ )
 	{
 		EquipList[ i ].nullequip = nullequip;
-		for ( UINT j = 0; j < 5000; j++ )
+		for ( uint32_t j = 0; j < 5000; j++ )
 			EquipList[ i ].Index[ j ] = nullequip;
 	}
 	CNaturalData* nullnatural = new CNaturalData;
@@ -96,10 +96,10 @@ CWorldServer::CWorldServer( string fn )
 	PatList.nullpat         = nullpat;
 	CCSellData* nullsell    = new CCSellData;
 	nullsell->id            = 0;
-	for ( UINT i = 0; i < 50; i++ )
+	for ( uint32_t i = 0; i < 50; i++ )
 		nullsell->item[ i ] = 0;
 	SellList.nullsell       = nullsell;
-	for ( UINT i = 0; i < 1000; i++ )
+	for ( uint32_t i = 0; i < 1000; i++ )
 	{
 		NaturalList.Index[ i ] = nullnatural;
 		PatList.Index[ i ]     = nullpat;
@@ -117,7 +117,7 @@ CWorldServer::CWorldServer( string fn )
 	nullzone->MapTime     = 0;
 	nullzone->LastUpdate  = 0;
 	nullzone->CurrentTime = 0;
-	for ( UINT i = 0; i < 300; i++ )
+	for ( uint32_t i = 0; i < 300; i++ )
 		MapList.Index[ i ] = nullzone;
 	MapList.nullzone       = nullzone;
 	CUseData* nulluse      = new CUseData;
@@ -137,13 +137,13 @@ CWorldServer::CWorldServer( string fn )
 	UseList.nulluse           = nulluse;
 	CProductData* nullproduct = new CProductData;
 	nullproduct->id           = 0;
-	for ( UINT i = 0; i < 50; i++ )
-	{
+	/*for ( uint32_t i = 0; i < 50; i++ )
+	{ //TODO: Figure out wtf this was here for
 		nullproduct->item[ i ];
 		nullproduct->amount[ i ];
-	}
+	}*/
 	ProductList.nullproduct = nullproduct;
-	for ( UINT i = 0; i < 2000; i++ )
+	for ( uint32_t i = 0; i < 2000; i++ )
 	{
 		UseList.Index[ i ]     = nulluse;
 		ProductList.Index[ i ] = nullproduct;
@@ -162,9 +162,9 @@ CWorldServer::CWorldServer( string fn )
 		nulljem->stat2[ i ] = 0;
 	}
 	JemList.nulljem = nulljem;
-	for ( UINT i = 0; i < 4000; i++ )
+	for ( uint32_t i = 0; i < 4000; i++ )
 		JemList.Index[ i ] = nulljem;
-	for ( UINT i = 0; i < 500; i++ )
+	for ( uint32_t i = 0; i < 500; i++ )
 	{
 		StatsList[ i ].stat[ 0 ]  = 0;
 		StatsList[ i ].stat[ 1 ]  = 0;
@@ -177,36 +177,36 @@ CWorldServer::CWorldServer( string fn )
 CWorldServer::~CWorldServer( )
 {
 	// free memory
-	for ( UINT i = 0; i < FairyList.size( ); i++ )
+	for ( uint32_t i = 0; i < FairyList.size( ); i++ )
 		delete FairyList.at( i );
-	for ( UINT i = 0; i < PartyList.size( ); i++ )
+	for ( uint32_t i = 0; i < PartyList.size( ); i++ )
 		delete PartyList.at( i );
-	for ( UINT i = 0; i < TeleGateList.size( ); i++ )
+	for ( uint32_t i = 0; i < TeleGateList.size( ); i++ )
 		delete TeleGateList.at( i );
-	for ( UINT i = 0; i < SkillList.size( ); i++ )
+	for ( uint32_t i = 0; i < SkillList.size( ); i++ )
 		delete SkillList.at( i );
-	for ( UINT i = 0; i < MDropList.size( ); i++ )
+	for ( uint32_t i = 0; i < MDropList.size( ); i++ )
 		delete MDropList.at( i );
-	for ( UINT i = 0; i < NPCData.size( ); i++ )
+	for ( uint32_t i = 0; i < NPCData.size( ); i++ )
 		delete NPCData.at( i );
-	for ( UINT i = 0; i < JemList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < JemList.Data.size( ); i++ )
 		delete JemList.Data.at( i );
-	for ( UINT i = 0; i < NaturalList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < NaturalList.Data.size( ); i++ )
 		delete NaturalList.Data.at( i );
-	for ( UINT i = 0; i < PatList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < PatList.Data.size( ); i++ )
 		delete PatList.Data.at( i );
-	for ( UINT i = 0; i < ProductList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < ProductList.Data.size( ); i++ )
 		delete ProductList.Data.at( i );
-	for ( UINT i = 0; i < SellList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < SellList.Data.size( ); i++ )
 		delete SellList.Data.at( i );
-	for ( UINT i = 0; i < UseList.Data.size( ); i++ )
+	for ( uint32_t i = 0; i < UseList.Data.size( ); i++ )
 		delete UseList.Data.at( i );
-	for ( UINT i = 0; i < MapList.Map.size( ); i++ )
+	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 		delete MapList.Map.at( i );
-	for ( UINT i = 0; i < 10; i++ )
-		for ( UINT j = 0; j < EquipList[ i ].Data.size( ); j++ )
+	for ( uint32_t i = 0; i < 10; i++ )
+		for ( uint32_t j = 0; j < EquipList[ i ].Data.size( ); j++ )
 			delete EquipList[ i ].Data.at( j );
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		delete (CPlayer*)ClientList.at( i )->player;
 		delete ClientList.at( i );
@@ -270,7 +270,7 @@ void CWorldServer::OnClientDisconnect( CClientSocket* thisclient )
 		party->RemovePlayer( player );
 		if ( party->Members.size( ) > 1 )
 		{
-			for ( UINT i = 0; i < party->Members.size( ); i++ )
+			for ( uint32_t i = 0; i < party->Members.size( ); i++ )
 			{
 				CPlayer* othermember = party->Members.at( i );
 				if ( !pflag )
@@ -285,7 +285,7 @@ void CWorldServer::OnClientDisconnect( CClientSocket* thisclient )
 		}
 		else
 		{
-			for ( UINT i = 0; i < party->Members.size( ); i++ )
+			for ( uint32_t i = 0; i < party->Members.size( ); i++ )
 			{
 				CPlayer* othermember = party->Members.at( i );
 				BEGINPACKET( pak, 0x7d1 );
@@ -633,7 +633,7 @@ void CWorldServer::DePopulateZone( CPlayer* thisclient, int zonex, int zoney ) /
 		for ( unsigned i = 0; i < MapList.Map.size( ); i++ )
 		{
 			CMap* thismap = MapList.Map.at( i );
-			for ( UINT j = 0; j < thismap->MonsterSpawnList.size( ); j++ )
+			for ( uint32_t j = 0; j < thismap->MonsterSpawnList.size( ); j++ )
 			{
 				CMonster* thismonster = thismap->MonsterList.at( j );
 				if ( thismonster->Position->current.x == zonex && thismonster->Position->current.y == zoney && thismonster->Position->Map == thisclient->Position->Map )
@@ -673,7 +673,7 @@ bool CWorldServer::pakTeleport( CPlayer* thisclient, unsigned short map, float x
 // disconect all the clients
 void CWorldServer::DisconnectAll( )
 {
-	for ( UINT i = 0; i < ClientList.size( ); i++ )
+	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CPlayer* otherclient = (CPlayer*)ClientList.at( i )->player;
 		if ( otherclient->Session->isLoggedIn )

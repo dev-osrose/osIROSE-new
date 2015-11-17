@@ -416,7 +416,7 @@ bool CWorldServer::LoadMonsterSpawn( )
 			return false;
 		}
 		thisspawn->lastRespawnTime = clock( );
-		for ( int i = 0; i < thisspawn->pcount; i++ )
+		for ( uint32_t i = 0; i < thisspawn->pcount; i++ )
 		{
 			if ( ( tmp = strtok( NULL, ",|" ) ) == NULL )
 			{
@@ -636,7 +636,7 @@ bool CWorldServer::LoadSkillBookDropsData( )
 	{
 		return false;
 	}
-	int c = 0;
+
 	while ( result->next() )
 	{
 		CMDrops* newdrop = new ( nothrow ) CMDrops;
