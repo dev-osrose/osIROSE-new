@@ -114,6 +114,7 @@ bool CPlayer::loaddata( )
 
 //TODO: FIX ALL OF THE (char*)std::string.c_str() calls
 	char *next_token;
+	(void)next_token;
 	for (uint8_t i = 0; i < 32; i++)
 	{
 		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("quickbar").c_str() : NULL ), ",", &next_token ); // this is a bad thing to do, but I'm going to do it anyway until I can fix it later

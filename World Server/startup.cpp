@@ -318,6 +318,7 @@ bool CWorldServer::LoadMobGroups( )
 
 		// Fill in basic/tac mobs
 		char* next_token;
+		(void)next_token;
 		tmp = strtok_s( mobList, ",|", &next_token );
 		while ( tmp != NULL )
 		{
@@ -411,6 +412,7 @@ bool CWorldServer::LoadMonsterSpawn( )
 		points = (char*)result->getString( "points" ).c_str( );
 
 		char* next_token;
+		(void)next_token;
 		thisspawn->pcount = atoi( strtok_s( points, ",|", &next_token ) );
 		thisspawn->points = new ( nothrow ) fPoint[ thisspawn->pcount ];
 		if ( thisspawn->points == NULL )
@@ -605,6 +607,7 @@ bool CWorldServer::LoadPYDropsData( )
 		newdrop->mob       = result->getInt( "mob" );
 		newdrop->map       = result->getInt( "map" );
 		char* tmp, *next_token;
+		(void)next_token;
 		if ((tmp = strtok_s( (char*)result->getString( "alt" ).c_str( ), "|", &next_token )) == NULL)
 		{
 			newdrop->alt[ 0 ] = 0;
