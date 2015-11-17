@@ -21,7 +21,7 @@
 #include "worldserver.h"
 bool CWorldServer::LoadSTBData( )
 {
-	Log( MSG_LOAD, "STB Data             " );
+	Log( MSG_LOAD, "STB Data" );
 	STBStoreData( "3DData\\STB\\LIST_NPC.STB", &STB_NPC );
 	STBStoreData( "3DData\\STB\\LIST_SKILL.STB", &STB_SKILL );
 	STBStoreData( "3DData\\STB\\LIST_STATUS.STB", &STB_STATUS );
@@ -44,8 +44,9 @@ bool CWorldServer::LoadSTBData( )
 	STBStoreData( "3DData\\STB\\LIST_SELL.STB", &STB_SELL );
 	STBStoreData( "3DData\\STB\\LIST_ZONE.STB", &STB_ZONE );
 	STBStoreData( "3DData\\STB\\ITEM_DROP.STB", &STB_DROP );
-return true;
+	return true;
 }
+
 bool CWorldServer::LoadNPCData( )
 {
 	Log( MSG_LOAD, "NPC Data           " );
@@ -94,7 +95,7 @@ bool CWorldServer::LoadNPCData( )
 
 bool CWorldServer::LoadStatusData( )
 {
-	Log( MSG_LOAD, "Status Data             " );
+	Log( MSG_LOAD, "Status Data" );
 	for ( unsigned int i = 0; i < STB_STATUS.rowcount; i++ )
 	{
 		CStatus* newstatus = new ( nothrow ) CStatus;
@@ -226,13 +227,12 @@ bool CWorldServer::LoadSkillData( )
 bool CWorldServer::LoadTeleGateData( )
 {
 	Log( MSG_LOAD, "Telegates data       " );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `id`, `srcx`, `srcy`, `srcmap`, `destx`, `desty`, `destmap` FROM `list_telegates`" );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`, `srcx`, `srcy`, `srcmap`, `destx`, `desty`, `destmap` FROM `list_telegates`" );
 	if ( result == NULL )
 	{
 		return false;
 	}
-	while ( row = mysql_fetch_row( result ) )
+	while ( result->next( ) )
 	{
 		CTeleGate* thisgate = new ( nothrow ) CTeleGate;
 		if ( thisgate == NULL )
@@ -240,13 +240,13 @@ bool CWorldServer::LoadTeleGateData( )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
-		thisgate->id      = atoi( row[ 0 ] );
-		thisgate->src.x   = (float)atof( row[ 1 ] );
-		thisgate->src.y   = (float)atof( row[ 2 ] );
-		thisgate->srcMap  = atoi( row[ 3 ] );
-		thisgate->dest.x  = (float)atof( row[ 4 ] );
-		thisgate->dest.y  = (float)atof( row[ 5 ] );
-		thisgate->destMap = atoi( row[ 6 ] );
+		thisgate->id      = result->getInt( "id" );
+		thisgate->src.x   = (float)result->getDouble( "srcx" );
+		thisgate->src.y   = (float)result->getDouble( "srcy" );
+		thisgate->srcMap  = result->getInt( "srcmap" );
+		thisgate->dest.x  = (float)result->getDouble( "destx" );
+		thisgate->dest.y  = (float)result->getDouble( "desty" );
+		thisgate->destMap = result->getInt( "destmap" );
 		TeleGateList.push_back( thisgate );
 	}
 	return true;
@@ -254,12 +254,12 @@ bool CWorldServer::LoadTeleGateData( )
 
 bool CWorldServer::LoadRespawnData( )
 {
-	Log( MSG_LOAD, "RespawnZones data        " );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `id`,`x`,`y`,`map`,`radius`,`type` FROM `list_respawnzones`" );
+	Log( MSG_LOAD, "RespawnZones data" );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`,`x`,`y`,`map`,`radius`,`type` FROM `list_respawnzones`" );
 	if ( result == NULL )
 		return false;
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next( ) )
 	{
 		CRespawnPoint* thisrespawnpoint = new ( nothrow ) CRespawnPoint;
 		if ( thisrespawnpoint == NULL )
@@ -267,12 +267,12 @@ bool CWorldServer::LoadRespawnData( )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
-		thisrespawnpoint->id         = atoi( row[ 0 ] );
-		thisrespawnpoint->dest.x     = (float)atof( row[ 1 ] );
-		thisrespawnpoint->dest.y     = (float)atof( row[ 2 ] );
-		thisrespawnpoint->destMap    = atoi( row[ 3 ] );
-		thisrespawnpoint->radius     = atoi( row[ 4 ] );
-		thisrespawnpoint->masterdest = ( atoi( row[ 5 ] ) == 1 );
+		thisrespawnpoint->id         = result->getInt( "id" );
+		thisrespawnpoint->dest.x     = (float)result->getDouble( "x" );
+		thisrespawnpoint->dest.y     = (float)result->getDouble( "y" );
+		thisrespawnpoint->destMap    = result->getInt( "map" );
+		thisrespawnpoint->radius     = result->getInt( "radius" );
+		thisrespawnpoint->masterdest = ( result->getInt( "type" ) == 1 );
 		MapList.Index[ thisrespawnpoint->destMap ]->RespawnList.push_back( thisrespawnpoint );
 	}
 	return true;
@@ -282,14 +282,14 @@ bool CWorldServer::LoadRespawnData( )
 bool CWorldServer::LoadMobGroups( )
 {
 	Log( MSG_LOAD, "MobGroups data    " );
-	vector< CMobGroup* > mobGroups;
-	MYSQL_ROW            row;
-	bool                 flag   = true;
-	char*                tmp    = NULL;
-	MYSQL_RES*           result = DB->QStore( "SELECT `id`, `map`, `x`, `y`, `range`, `respawntime`, `limit`, `tacticalpoints`, `moblist` FROM `list_mobgroups`" );
+	vector< CMobGroup* >              mobGroups;
+	bool                              flag   = true;
+	char*                             tmp    = NULL;
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`, `map`, `x`, `y`, `range`, `respawntime`, `limit`, `tacticalpoints`, `moblist` FROM `list_mobgroups`" );
 	if ( result == NULL )
 		return false;
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next( ) )
 	{
 		CMobGroup* thisgroup = new ( nothrow ) CMobGroup;
 		if ( thisgroup == NULL )
@@ -297,15 +297,15 @@ bool CWorldServer::LoadMobGroups( )
 			Log( MSG_ERROR, "Error allocating memory" );
 			return false;
 		}
-		thisgroup->id             = atoi( row[ 0 ] );
-		thisgroup->map            = atoi( row[ 1 ] );
-		thisgroup->point.x        = atof( row[ 2 ] );
-		thisgroup->point.y        = atof( row[ 3 ] );
-		thisgroup->range          = atoi( row[ 4 ] );
-		thisgroup->respawntime    = atoi( row[ 5 ] );
-		thisgroup->limit          = atoi( row[ 6 ] );
-		thisgroup->tacticalpoints = atoi( row[ 7 ] );
-		char* mobList             = row[ 8 ];
+		thisgroup->id             = result->getInt( "id" );
+		thisgroup->map            = result->getInt( "map" );
+		thisgroup->point.x        = result->getInt( "x" );
+		thisgroup->point.y        = result->getInt( "y" );
+		thisgroup->range          = result->getInt( "range" );
+		thisgroup->respawntime    = result->getInt( "respawntime" );
+		thisgroup->limit          = result->getInt( "limit" );
+		thisgroup->tacticalpoints = result->getInt( "tacticalpoints" );
+		char* mobList             = (char*)result->getString( "moblist" ).c_str( );
 
 		thisgroup->lastRespawnTime = clock( );
 		thisgroup->active          = 0;
@@ -336,6 +336,7 @@ bool CWorldServer::LoadMobGroups( )
 				flag = false;
 				break;
 			}
+
 			int   tactical = atoi( tmp );
 			CMob* thismob  = new ( nothrow ) CMob;
 			if ( thismob == NULL )
@@ -351,7 +352,7 @@ bool CWorldServer::LoadMobGroups( )
 			thismob->mobdrop  = GetDropData( thismob->thisnpc->dropid );
 			if ( thismob->thisnpc == NULL )
 			{
-				Log( MSG_WARNING, "Invalid mobId - Mob %i will not be added", atoi( row[ 0 ] ) );
+				Log( MSG_WARNING, "Invalid mobId - Mob %i will not be added", thisgroup->id );
 				delete thismob;
 				continue;
 			}
@@ -379,12 +380,13 @@ bool CWorldServer::LoadMobGroups( )
 
 bool CWorldServer::LoadMonsterSpawn( )
 {
-	Log( MSG_LOAD, "SpawnZones data      " );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `id`,`map`,`montype`,`min,max`,`respawntime`,`points` FROM `list_spawnareas`" );
+	Log( MSG_LOAD, "SpawnZones data" );
+
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`,`map`,`montype`,`min`,`max`,`respawntime`,`points` FROM `list_spawnareas`" );
 	if ( result == NULL )
 		return false;
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next( ) )
 	{
 		bool        flag = true;
 		char*       tmp;
@@ -394,17 +396,17 @@ bool CWorldServer::LoadMonsterSpawn( )
 			Log( MSG_ERROR, "Error allocing memory" );
 			return false;
 		}
-		thisspawn->id          = atoi( row[ 0 ] );
-		thisspawn->map         = atoi( row[ 1 ] );
-		thisspawn->montype     = atoi( row[ 2 ] );
-		thisspawn->min         = 0; //atoi(row[3]);
-		thisspawn->max         = atoi( row[ 4 ] );
-		thisspawn->respawntime = atoi( row[ 5 ] );
+		thisspawn->id          = result->getInt( "id" );
+		thisspawn->map         = result->getInt( "map" );
+		thisspawn->montype     = result->getInt( "montype" );
+		thisspawn->min         = result->getInt( "min" );
+		thisspawn->max         = result->getInt( "max" );
+		thisspawn->respawntime = result->getInt( "respawntime" );
 		if ( thisspawn->respawntime == 0 )
 			thisspawn->respawntime = 5;
 		thisspawn->amon            = 0;
 		char* points;
-		points            = row[ 6 ];
+		points            = (char*)result->getString( "points" ).c_str( );
 		thisspawn->pcount = atoi( strtok( points, ",|" ) );
 		thisspawn->points = new ( nothrow ) fPoint[ thisspawn->pcount ];
 		if ( thisspawn->points == NULL )
@@ -450,12 +452,12 @@ bool CWorldServer::LoadMonsterSpawn( )
 
 bool CWorldServer::LoadNPCs( )
 {
-	Log( MSG_LOAD, "NPC spawn        " );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `type`,`map`,`dir`,`x`,`y`,`dialogid` FROM `list_npcs`" );
+	Log( MSG_LOAD, "NPC spawn" );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `type`,`map`,`dir`,`x`,`y`,`dialogid` FROM `list_npcs`" );
 	if ( result == NULL )
 		return false;
-	while ( row = mysql_fetch_row( result ) )
+
+	while ( result->next() )
 	{
 		CNPC* thisnpc = new ( nothrow ) CNPC;
 		if ( thisnpc == NULL )
@@ -464,18 +466,18 @@ bool CWorldServer::LoadNPCs( )
 			return false;
 		}
 		thisnpc->clientid = GetNewClientID( );
-		thisnpc->npctype  = atoi( row[ 0 ] );
-		thisnpc->posMap   = atoi( row[ 1 ] );
-		thisnpc->dir      = (float)atof( row[ 2 ] );
-		thisnpc->pos.x    = (float)atof( row[ 3 ] );
-		thisnpc->pos.y    = (float)atof( row[ 4 ] );
+		thisnpc->npctype  = result->getInt("type");
+		thisnpc->posMap = result->getInt( "map" );
+		thisnpc->dir = (float)result->getDouble("dir");
+		thisnpc->pos.x = (float)result->getDouble( "x" );
+		thisnpc->pos.y = (float)result->getDouble( "y" );
 		thisnpc->thisnpc  = GetNPCDataByID( thisnpc->npctype );
 		if ( thisnpc->thisnpc == NULL )
 		{
 			delete thisnpc;
 			continue;
 		}
-		thisnpc->thisnpc->dialogid = atoi( row[ 5 ] ); // This is global to NPC type
+		thisnpc->thisnpc->dialogid = result->getInt( "dialogid" ); // This is global to NPC type
 		MapList.Index[ thisnpc->posMap ]->AddNPC( thisnpc );
 	}
 	return true;
@@ -483,7 +485,7 @@ bool CWorldServer::LoadNPCs( )
 
 bool CWorldServer::LoadDropsData( )
 {
-	Log( MSG_LOAD, "Drops Data       " );
+	Log( MSG_LOAD, "Drops Data" );
 	FILE* fh = NULL;
 	fh       = fopen( "data/drops_data.csv", "r" );
 	if ( fh == NULL )
@@ -509,8 +511,8 @@ bool CWorldServer::LoadDropsData( )
 		newdrop->level_min  = GetUIntValue( "," );
 		newdrop->level_max  = GetUIntValue( "," );
 		newdrop->level_boss = GetUIntValue( "," );
-		uint32_t value          = 0;
-		bool First          = true;
+		uint32_t value      = 0;
+		bool     First      = true;
 		// items
 		while ( ( value = GetUIntValue( "|", First ? items : NULL ) ) != 0 )
 		{
@@ -581,25 +583,25 @@ bool CWorldServer::LoadPYDropsData( )
 {
 	Log( MSG_INFO, "Loading PYDrops Data" );
 	MDropList.clear( );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `id`,`type`,`min_level`,`max_level`,`prob`,`mob`,`map`,`alt` FROM `item_drops`" );
+
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`,`type`,`min_level`,`max_level`,`prob`,`mob`,`map`,`alt` FROM `item_drops`" );
 	if ( result == NULL )
 	{
 		return false;
 	}
-	while ( row = mysql_fetch_row( result ) )
+	while ( result->next() )
 	{
 		CMDrops* newdrop = new ( nothrow ) CMDrops;
 		assert( newdrop );
-		newdrop->itemnum   = atoi( row[ 0 ] );
-		newdrop->itemtype  = atoi( row[ 1 ] );
-		newdrop->level_min = atoi( row[ 2 ] );
-		newdrop->level_max = atoi( row[ 3 ] );
-		newdrop->prob      = atoi( row[ 4 ] );
-		newdrop->mob       = atoi( row[ 5 ] );
-		newdrop->map       = atoi( row[ 6 ] );
+		newdrop->itemnum   = result->getInt("id");
+		newdrop->itemtype  = result->getInt("type");
+		newdrop->level_min = result->getInt("min_level");
+		newdrop->level_max = result->getInt("max_level");
+		newdrop->prob      = result->getInt("prob");
+		newdrop->mob       = result->getInt("mob");
+		newdrop->map       = result->getInt("map");
 		char* tmp;
-		if ( ( tmp = strtok( row[ 7 ], "|" ) ) == NULL )
+		if ( ( tmp = strtok( (char*)result->getString("alt").c_str(), "|" ) ) == NULL )
 		{
 			newdrop->alt[ 0 ] = 0;
 		}
@@ -629,63 +631,59 @@ bool CWorldServer::LoadPYDropsData( )
 bool CWorldServer::LoadSkillBookDropsData( )
 {
 	Log( MSG_INFO, "Loading Skillbook data" );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `id`,`itemtype`,`min`,`max`,`prob` FROM `list_skillbooks`" );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `id`,`itemtype`,`min`,`max`,`prob` FROM `list_skillbooks`" );
 	if ( result == NULL )
 	{
 		return false;
 	}
 	int c = 0;
-	while ( row = mysql_fetch_row( result ) )
+	while ( result->next() )
 	{
-
-		c++;
 		CMDrops* newdrop = new ( nothrow ) CMDrops;
 		assert( newdrop );
-		newdrop->itemnum   = atoi( row[ 0 ] );
-		newdrop->itemtype  = atoi( row[ 1 ] );
-		newdrop->level_min = atoi( row[ 2 ] );
-		newdrop->level_max = atoi( row[ 3 ] );
-		newdrop->prob      = atoi( row[ 4 ] );
+		newdrop->itemnum   = result->getInt("id");
+		newdrop->itemtype  = result->getInt("itemtype");
+		newdrop->level_min = result->getInt("min");
+		newdrop->level_max = result->getInt("max");
+		newdrop->prob      = result->getInt("prob");
 		SkillbookList.push_back( newdrop );
 	}
-	Log( MSG_INFO, "Skillbook Data loaded" );
+	Log( MSG_INFO, "Skill book Data loaded" );
 	return true;
 }
 
 bool CWorldServer::LoadConfig( )
 {
 	Log( MSG_INFO, "Loading database config" );
-	MYSQL_ROW  row;
-	MYSQL_RES* result = DB->QStore( "SELECT `exp_rate`, `drop_rate`, `zuly_rate`, `blue_chance`, `stat_chance`, `slot_chance`, \
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT `exp_rate`, `drop_rate`, `zuly_rate`, `blue_chance`, `stat_chance`, `slot_chance`, \
         `refine_chance`, `rare_refine`, `kill_on_fail`, `player_damage`, `monster_damage`, `player_acc`, `monster_acc`, \
         `pvp_acc`, `skill_damage` FROM `list_config`" );
 	if ( result == NULL )
 	{
 		return false;
 	}
-	if ( result->rowsCount() == 0 )
+	if ( result->rowsCount( ) == 0 )
 	{
 		return false;
 	}
-	while ( result->next() )
+	while ( result->next( ) )
 	{
-		GServer->Config.EXP_RATE     = atoi( row[ 0 ] );
-		GServer->Config.DROP_RATE    = atoi( row[ 1 ] );
-		GServer->Config.ZULY_RATE    = atoi( row[ 2 ] );
-		GServer->Config.BlueChance   = atoi( row[ 3 ] );
-		GServer->Config.StatChance   = atoi( row[ 4 ] );
-		GServer->Config.SlotChance   = atoi( row[ 5 ] );
-		GServer->Config.RefineChance = atoi( row[ 6 ] );
-		GServer->Config.Rare_Refine  = atoi( row[ 7 ] );
-		GServer->Config.KillOnFail   = atoi( row[ 8 ] );
-		GServer->Config.PlayerDmg    = atoi( row[ 9 ] );
-		GServer->Config.MonsterDmg   = atoi( row[ 10 ] );
+		GServer->Config.EXP_RATE     = result->getInt("exp_rate");
+		GServer->Config.DROP_RATE    = result->getInt("drop_rate");
+		GServer->Config.ZULY_RATE    = result->getInt("zuly_rate");
+		GServer->Config.BlueChance   = result->getInt("blue_chance");
+		GServer->Config.StatChance   = result->getInt("stat_chance");
+		GServer->Config.SlotChance   = result->getInt("slot_chance");
+		GServer->Config.RefineChance = result->getInt("refine_chance");
+		GServer->Config.Rare_Refine  = result->getInt("rare_refine");
+		GServer->Config.KillOnFail   = result->getInt("kill_on_fail");
+		GServer->Config.PlayerDmg    = result->getInt("player_damage");
+		GServer->Config.MonsterDmg   = result->getInt("monster_damage");
 		// Not implemented in server yet - Drakia
-		//GServer->Config.PlayerAcc = atoi(row[11]);
-		//GServer->Config.MonsterAcc = atoi(row[12]);
-		//GServer->Config.PvpAcc = atoi(row[13]);
-		//GServer->Config.SkillDmg = atoi(row[14]);
+		//GServer->Config.PlayerAcc = result->getInt("player_acc");
+		//GServer->Config.MonsterAcc = result->getInt("monster_acc");
+		//GServer->Config.PvpAcc = result->getInt("pvp_acc");
+		//GServer->Config.SkillDmg = result->getInt("skill_damage");
 	}
 	Log( MSG_INFO, "Config Data Loaded" );
 	return true;
@@ -694,7 +692,7 @@ bool CWorldServer::LoadConfig( )
 bool CWorldServer::LoadMonsters( )
 {
 	Log( MSG_LOAD, "Monsters Spawn       " );
-// Do our monster spawnin
+// Do our monster spawning
 #ifndef USEIFO
 	for ( uint32_t i = 0; i < MapList.Map.size( ); i++ )
 	{

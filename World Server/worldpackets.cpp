@@ -325,22 +325,22 @@ bool CWorldServer::pakQuestTrigger( CPlayer* thisclient, CPacket* pak )
 //  Get this user set up with the encryption and stuff
 bool CWorldServer::pakDoIdentify( CPlayer* thisclient, CPacket* P )
 {
-	MYSQL_ROW row;
 	thisclient->Session->userid = GETDWORD( ( *P ), 0 );
 	memcpy( thisclient->Session->password, &P->Buffer[ 4 ], 32 );
-	MYSQL_RES* result = DB->QStore( "SELECT username,lastchar,accesslevel,zulystorage FROM accounts WHERE id=%i AND password='%s'", thisclient->Session->userid, thisclient->Session->password );
+	std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT username,lastchar,accesslevel,zulystorage FROM accounts WHERE id=%i AND password='%s'", thisclient->Session->userid, thisclient->Session->password );
 	if ( result == NULL )
 		return false;
-	if ( mysql_num_rows( result ) != 1 )
+
+	if ( result->rowsCount() != 1 )
 	{
 		Log( MSG_HACK, "Someone tried to connect to world server with an invalid account" );
 		return false;
 	}
-	row = mysql_fetch_row( result );
-	strncpy_s( thisclient->Session->username, 16, row[0], 16 );
-	strncpy_s( thisclient->CharInfo->charname, 16, row[ 1 ], 16 );
-	thisclient->Session->accesslevel     = atoi( row[ 2 ] );
-	thisclient->CharInfo->Storage_Zulies = atoi( row[ 3 ] );
+	
+	strncpy_s( thisclient->Session->username, 16, result->getString("username").c_str(), 16 );
+	strncpy_s( thisclient->CharInfo->charname, 16, result->getString( "lastchar" ).c_str( ), 16 );
+	thisclient->Session->accesslevel     = result->getInt("accesslevel");
+	thisclient->CharInfo->Storage_Zulies = result->getInt("zulystorage");
 
 	if ( !thisclient->loaddata( ) )
 		return false;
@@ -1389,7 +1389,7 @@ bool CWorldServer::pakWhisper( CPlayer* thisclient, CPacket* P )
 {
 	char msgto[ 17 ];
 	memset( &msgto, '\0', 17 );
-	strncpy( msgto, (char*)&( *P ).Buffer[ 0 ], 16 );
+	strncpy_s( msgto, 16, (char*)&( *P ).Buffer[ 0 ], 16 );
 	CPlayer* otherclient = GetClientByCharName( msgto );
 	if ( otherclient != NULL )
 	{

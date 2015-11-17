@@ -26,7 +26,7 @@ bool CWorldServer::SendPM( CPlayer* thisclient, char* Format, ... )
 	char    buf[ 512 ];
 	va_list ap;
 	va_start( ap, Format );
-	vsprintf( buf, Format, ap );
+	vsprintf_s( buf, 512, Format, ap );
 	BEGINPACKET( pak, 0x0784 );
 	ADDSTRING( pak, "Server" );
 	ADDBYTE( pak, 0 );
@@ -418,7 +418,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	//the average value near to 50
 	for ( int i = 0; i < 4; i++ )
 	{
-		float r1 = rand( ) % 20;
+		float r1 = (float)(rand( ) % 20);
 		dmod += r1;
 	}
 	newdrop->item.durability = 10 + (int)dmod;

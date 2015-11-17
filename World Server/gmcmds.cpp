@@ -331,35 +331,35 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		}
 		if ( ( tmp = strtok( NULL, " " ) ) == NULL )
-			tmp        = 0;
-		int        loc = atoi( tmp );
-		int        x   = 0;
-		int        y   = 0;
-		int        map = 0;
-(void)x;
-(void)y;
-(void)map;
-		std::unique_ptr< sql::ResultSet > result            = DB->QStore( "SELECT lvlmin,map,locx,locy,mapname,lvlmax FROM list_golist WHERE isactive=1 AND loc=%i", loc );
+			tmp = 0;
+		int loc = atoi( tmp );
+		int x   = 0;
+		int y   = 0;
+		int map = 0;
+		(void)x;
+		(void)y;
+		(void)map;
+		std::unique_ptr< sql::ResultSet > result = DB->QStore( "SELECT lvlmin,map,locx,locy,mapname,lvlmax FROM list_golist WHERE isactive=1 AND loc=%i", loc );
 
-		if ( result->rowsCount() == 0 )
+		if ( result->rowsCount( ) == 0 )
 		{
 			SendPM( thisclient, "Please input a number after the go command, below is a list of places and their appropriate number" );
 			result = DB->QStore( "SELECT loc,mapname FROM list_golist WHERE isactive=1" );
-			while ( result->next() )
-				SendPM( thisclient, "%i = %s", result->getInt("loc"), result->getString("mapname").c_str() );
+			while ( result->next( ) )
+				SendPM( thisclient, "%i = %s", result->getInt( "loc" ), result->getString( "mapname" ).c_str( ) );
 			SendPM( thisclient, "Example; /go 1" );
 			return true;
 		}
 		else
 		{
-			if ( thisclient->Stats->Level < result->getInt("lvlmin") )
+			if ( thisclient->Stats->Level < result->getInt( "lvlmin" ) )
 			{
-				SendPM( thisclient, "You need to be a least Level %i to visit %s!", result->getInt("lvlmin"), result->getString("mapname").c_str() );
+				SendPM( thisclient, "You need to be a least Level %i to visit %s!", result->getInt( "lvlmin" ), result->getString( "mapname" ).c_str( ) );
 				return true;
 			}
-			if ( thisclient->Stats->Level > result->getInt("lvlmax") )
+			if ( thisclient->Stats->Level > result->getInt( "lvlmax" ) )
 			{
-				SendPM( thisclient, "You need to be between Level %i and %i to visit %s !", result->getInt("lvlmin"), result->getInt("lvlmax"), result->getString("mapname").c_str() );
+				SendPM( thisclient, "You need to be between Level %i and %i to visit %s !", result->getInt( "lvlmin" ), result->getInt( "lvlmax" ), result->getString( "mapname" ).c_str( ) );
 				return true;
 			}
 			if ( thisclient->Stats->HP < ( thisclient->Stats->MaxHP / 2 ) || thisclient->Stats->HP < 1 || thisclient->Session->inGame == false )
@@ -368,9 +368,9 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 				return true;
 			}
 			fPoint coord;
-			int    map = result->getInt("map");
-			coord.x    = result->getInt("locx");
-			coord.y    = result->getInt("locy");
+			int    map = result->getInt( "map" );
+			coord.x    = result->getInt( "locx" );
+			coord.y    = result->getInt( "locy" );
 			SendPM( thisclient, "teleport to map: %i", map );
 			MapList.Index[ map ]->TeleportPlayer( thisclient, coord, false );
 			Log( MSG_GMACTION, " %s : /go %i", thisclient->CharInfo->charname, loc );
@@ -1817,7 +1817,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 			return true;
 		time_t seconds;
 		seconds = time( NULL );
-		if ( ( thisclient->CharInfo->LastGlobal + Config.Command_GlobalTime ) <= seconds or thisclient->Session->accesslevel > 100 )
+		if ( ( thisclient->CharInfo->LastGlobal + Config.Command_GlobalTime ) <= seconds || thisclient->Session->accesslevel > 100 )
 		{
 			thisclient->CharInfo->LastGlobal = time( NULL );
 			char outputmsg[ 200 ];
@@ -2117,7 +2117,7 @@ bool CWorldServer::pakGMItem( CPlayer* thisclient, uint32_t itemid, uint32_t ite
 // GM: Kick
 bool CWorldServer::pakGMKick( CPlayer* thisclient, char* name )
 {
-(void)thisclient;
+	(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2138,7 +2138,7 @@ bool CWorldServer::pakGMKick( CPlayer* thisclient, char* name )
 // GM: Ban
 bool CWorldServer::pakGMBan( CPlayer* thisclient, char* name )
 {
-(void)thisclient;
+	(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2161,7 +2161,7 @@ bool CWorldServer::pakGMBan( CPlayer* thisclient, char* name )
 // GM: Add/Remove/Drop/Set zuly
 bool CWorldServer::pakGMZuly( CPlayer* thisclient, int mode, int amount, char* charname )
 {
-(void)thisclient;
+	(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( charname );
 	if ( otherclient == NULL )
 		return true;
@@ -2211,7 +2211,7 @@ bool CWorldServer::pakGMZuly( CPlayer* thisclient, int mode, int amount, char* c
 // Change player Level
 bool CWorldServer::pakGMLevel( CPlayer* thisclient, int level, char* name )
 {
-(void)thisclient;
+	(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 	{
@@ -2637,7 +2637,7 @@ bool CWorldServer::pakGMChangeFairyTestMode( CPlayer* thisclient, int mode )
 // Give Zuly
 bool CWorldServer::pakGMZulygive( CPlayer* thisclient, char* name, int zuly )
 {
-(void)thisclient;
+	(void)thisclient;
 	CPlayer* otherclient = GetClientByCharName( name );
 	if ( otherclient == NULL )
 		return true;
@@ -2678,7 +2678,7 @@ bool CWorldServer::pakGMNpc( CPlayer* thisclient, int npcid, int dialogid )
 // Give Item to Player
 bool CWorldServer::pakGMItemtoplayer( CPlayer* thisclient, char* name, uint32_t itemid, uint32_t itemtype, uint32_t itemamount, uint32_t itemrefine, uint32_t itemls, uint32_t itemstats, uint32_t itemsocket )
 {
-(void)itemls;
+	(void)itemls;
 	CItem item;
 	item.count      = itemamount;
 	item.durability = 40;
