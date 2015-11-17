@@ -36,7 +36,7 @@ endif()
 add_subdirectory(Common)
 add_subdirectory("Login Server")
 add_subdirectory("Char Server")
-#add_subdirectory("World Server")
+add_subdirectory("World Server")
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

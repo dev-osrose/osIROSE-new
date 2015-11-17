@@ -703,7 +703,6 @@ void CWorldServer::LoadConfigurations( char* file )
 		Log( MSG_INFO, "Auto saving every %i minutes", Config.SAVETIME / 60 );
 
 	std::string config = "commands.ini";
-	bool writeFile = false;
 	std::basic_fstream< char > clFileOp( config, std::ios::in );
 	if (clFileOp.is_open() == false)
 	{

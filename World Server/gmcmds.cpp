@@ -26,6 +26,7 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 
 	char* tmp;
 	char *next_token;
+	(void)next_token;
 	char* command = strtok_s( (char*)&(*P).Buffer[1], " ", &next_token );
 	if ( command == NULL )
 		return true;
@@ -1333,7 +1334,8 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 	{
 		if ( Config.Command_DQuest > thisclient->Session->accesslevel )
 			return true;
-		char buffer2[ 200 ];
+
+		/*char buffer2[ 200 ];
 		if ( thisclient->questdebug )
 		{
 			thisclient->questdebug = false;
@@ -1346,26 +1348,23 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 
 			sprintf_s( buffer2, 200, "Quest Debug Mode enabled" );
 			SendPM( thisclient, buffer2 );
-		}
+		}*/
 		return true;
 	}
 	else if ( strcmp( command, "debugmode" ) == 0 )
 	{
 		if ( thisclient->Session->accesslevel <= 100 )
 			return true;
-		char buffer2[ 200 ];
+		
 		if ( thisclient->Session->codedebug )
 		{
 			thisclient->Session->codedebug = false;
-
-			sprintf_s( buffer2, 200, "Debug Mode disabled" );
-			SendPM( thisclient, buffer2 );
+			SendPM( thisclient, "Debug Mode disabled" );
 		}
 		else
 		{
 			thisclient->Session->codedebug = true;
-			sprintf_s( buffer2, 200, "Debug Mode enabled" );
-			SendPM( thisclient, buffer2 );
+			SendPM( thisclient, "Debug Mode enabled" );
 		}
 		return true;
 	}
@@ -1655,11 +1654,9 @@ bool CWorldServer::pakGMCommand( CPlayer* thisclient, CPacket* P )
 	}
 	else if ( strcmp( command, "FLY_MODE" ) == 0 ) /// just trying some stuff this isn't working(yet?)
 	{
-		char update[ 20 ];
-		sprintf_s( update, 20, "/FLY_MODE ON" );
 		BEGINPACKET( pak, 0x751 );
 		ADDWORD( pak, thisclient->clientid );
-		ADDSTRING( pak, update );
+		ADDSTRING( pak, "/FLY_MODE ON" );
 		ADDBYTE( pak, 1 );
 		thisclient->client->SendPacket( &pak );
 		//         delete []update;
