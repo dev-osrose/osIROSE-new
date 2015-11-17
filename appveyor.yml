@@ -1,0 +1,38 @@
+version: 1.0.{build}
+matrix:
+  fast_finish: true
+os:
+- Visual Studio 2013
+- Windows Server 2012 R2
+- MinGW
+configuration:
+- Debug
+- Release
+platform:
+- Win32
+clone_depth: 50
+clone_folder: C:\projects\osIROSE
+services: mysql56
+install:
+- ps: Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip
+- ps: Start-FileDownload http://superb-dca2.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.zip -FileName C:\projects\boost_1_59_0.zip
+- cmd: 7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y
+- cmd: 7z e C:\projects\boost_1_59_0.zip -oC:\projects\osIROSE\3rdParty\include\boost boost_1_59_0/boost/* -y > nul
+cache: C:\projects\osIROSE\3rdParty
+build:
+  parallel: true
+  verbosity: minimal
+artifacts:
+- path: bin
+  name: build-bin
+- path: lib
+  name: build-lib
+notifications:
+- provider: Slack
+  incoming_webhook: https://hooks.slack.com/services/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
+  auth_token:
+    secure: QRzsk64PSFoDEGoTiL44n9yIlkyCrY/cG2HW5hVDIlVNdkW/m47qgyjTeBR4ri5+PmYwVxelkdOipzJBeTVRSsciTo2aGnk4QHXyRyR4Nra6SAxaDuKFUC3Sbc8jXnmq
+  channel: osirose-commits
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: false
