@@ -90,7 +90,7 @@
 // MySQL
 #ifdef _WIN32
 #pragma warning (push)
-#pragma warning (disable : 4350)
+#pragma warning disable
 #endif
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
