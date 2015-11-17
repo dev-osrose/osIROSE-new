@@ -14,7 +14,7 @@ services: mysql56
 install:
 - ps: Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip
 - ps: Start-FileDownload http://superb-dca2.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.zip -FileName C:\projects\boost_1_59_0.zip
-- cmd: 7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y
+- cmd: 7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul
 - cmd: 7z x C:\projects\boost_1_59_0.zip -oC:\projects\ boost_1_59_0/boost/* -y -r -aou > nul
 - ps: Move-Item -path C:\projects\boost_1_59_0\boost -destination C:\projects\osIROSE\3rdParty\include\boost
 cache: C:\projects\osIROSE\3rdParty
