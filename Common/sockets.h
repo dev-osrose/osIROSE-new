@@ -54,9 +54,11 @@
 #define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( sprintf( buffer, stringbuffer, __VA_ARGS__ ) )
 #define strcpy_s( buffer, buffer_size, stringbuffer ) ( strcpy( buffer, stringbuffer ) )
 #define strncpy_s( buffer, buffer_size, stringbuffer, count ) ( strncpy( buffer, stringbuffer, count ) )
+#define strtok_s( strToken, strDelimit, context ) ( strtok( strToken, strDelimit ) )
 #define memcpy_s( buffer, buffer_size, stringbuffer, count ) ( memcpy( buffer, stringbuffer, count ) )
 #define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
 #define localtime_s( result, timep ) ( localtime_r( timep, result ) )
+#define fscanf_s( _File, stringbuffer, ...) ( fscanf( _File, stringbuffer, __VA_ARGS__) )
 #endif
 
 #endif
@@ -160,7 +162,11 @@ using std::string;
 #define GETDWORD( p, o ) *( (uint32_t*)&p.Buffer[ o ] )
 #define GETQWORD( p, o ) *( (uint64_t*)&p.Buffer[ o ] )
 #define GETFLOAT( p, o ) *( (float*)&p.Buffer[ o ] )
-//#define pi 3.14159265358979323846
+#if defined( _WIN32 )
+#define pi 3.1415926535897932384626433832795
+#else
+#define pi M_PI
+#endif
 #define r2d pi / 180
 #define ZONE_SIZE 6400
 #define ENTITY_NPC 3

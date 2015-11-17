@@ -43,7 +43,7 @@ bool CWorldServer::SendGlobalMSG( CPlayer* thisclient, char* Format, ... )
 	char    buf[ 512 ];
 	va_list ap;
 	va_start( ap, Format );
-	vsprintf( buf, Format, ap );
+	vsprintf_s( buf, 512, Format, ap );
 	BEGINPACKET( pak, 0x0784 );
 	ADDSTRING( pak, thisclient->CharInfo->charname );
 	ADDBYTE( pak, 0 );
@@ -60,8 +60,10 @@ bool CWorldServer::DoSkillScript( CCharacter* character, CSkills* thisskill )
 	{
 		if ( thisskill == 0 )
 			return false;
+
 		if ( thisskill->script == 0 )
 			return false;
+
 		if ( thisskill->svalue1 == 0 )
 			return false;
 		fPoint position = RandInCircle( character->Position->current, 5 );
@@ -122,7 +124,7 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 			break;
 		case 1: //mob only
 			thisdrops = thismon->MonsterDrop->mapdrop;
-			if ( (int32_t)(thismon->thisnpc->level - thismon->MonsterDrop->firstlevel) < -14 )
+			if ( ( int32_t )( thismon->thisnpc->level - thismon->MonsterDrop->firstlevel ) < -14 )
 			{
 				delete newdrop;
 				return NULL;
@@ -167,8 +169,8 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 				}
 			}
 		}
-		randv      = 0;
-		randv      = RandNumber( 1, thisdrops->probmax );
+		randv        = 0;
+		randv        = RandNumber( 1, thisdrops->probmax );
 		int32_t prob = 1;
 		for ( uint32_t i = 0; i < thisdrops->Drops.size( ); i++ )
 		{
@@ -276,22 +278,29 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	float dropchance = ( droprate + ( droprate * 0.01 * leveldif ) );
 	if ( dropchance < 10 )
 		dropchance = 10; //always a small chance of a drop even when the mob is more than 20 levels beneath your own
+
 	if ( thismon->thisnpc->level == 1 )
 		dropchance = 80;
+
 	if ( GServer->RandNumber( 0, 100 ) > dropchance )
 		return NULL; // no drop here. not this time anyway.
+	uint32_t itemCount = MDropList.size( );
+	//CItemType* prob = new CItemType[itemCount];
+	bool     isdrop      = false;
+	int      n           = 0;
+	int      test        = 0;
+	long int probmax     = 0;
+	int*     itemnumber  = new int[ itemCount ];
+	int*     itemtype    = new int[ itemCount ];
+	int*     probability = new int[ itemCount ];
+	int**    alternate   = new int*[ itemCount ];
+	for ( uint32_t idx = 0; idx < itemCount; idx++ )
+	{
+		alternate[ idx ] = new int[ 8 ];
+	}
 
-	CItemType prob[ MDropList.size( ) ];
-(void)prob;
-	bool      isdrop  = false;
-	int       n       = 0;
-	int       test    = 0;
-	long int  probmax = 0;
-	int       itemnumber[ MDropList.size( ) ];
-	int       itemtype[ MDropList.size( ) ];
-	int       probability[ MDropList.size( ) ];
-	int       alternate[ MDropList.size( ) ][ 8 ];
-(void)probability;
+	//(void)prob;
+	(void)probability;
 
 	if ( thismon->IsGhost( ) )
 	{
@@ -301,6 +310,13 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		{
 			newdrop->type   = 1; //Drop Zuly.
 			newdrop->amount = thismon->thisnpc->level * 10 * Config.ZULY_RATE + RandNumber( 1, 10 );
+			{
+				delete[] itemnumber;
+				delete[] itemtype;
+				delete[] probability;
+				for ( uint32_t idx = 0; idx < itemCount; idx++ )
+					delete[] alternate[ idx ];
+			}
 			return newdrop;
 		}
 		else
@@ -322,15 +338,31 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	}
 	else // Stuff to do if the mob isn't a ghost
 	{
-		int dropmode = 0;
+		int      dropmode = 0;
 		uint32_t randv    = RandNumber( 1, 100 );
 		// Each monster has its own rates for zuly and item drops defined in the database
 		if ( randv > thismon->thisnpc->item + thismon->thisnpc->money )
-			return NULL;                        // did not qualify to drop anything this time
+		{
+			{
+				delete[] itemnumber;
+				delete[] itemtype;
+				delete[] probability;
+				for ( uint32_t idx = 0; idx < itemCount; idx++ )
+					delete[] alternate[ idx ];
+			}
+			return NULL; // did not qualify to drop anything this time
+		}
 		if ( randv <= thismon->thisnpc->money ) // zuly drop instead of item drop
 		{
 			newdrop->type   = 1;
 			newdrop->amount = thismon->thisnpc->level * 5 * Config.ZULY_RATE + RandNumber( 1, 10 );
+			{
+				delete[] itemnumber;
+				delete[] itemtype;
+				delete[] probability;
+				for ( uint32_t idx = 0; idx < itemCount; idx++ )
+					delete[] alternate[ idx ];
+			}
 			return newdrop;
 		}
 		// this means it is an item drop
@@ -349,7 +381,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		}
 
 		int randomdrop = GServer->RandNumber( 1, 100 );
-(void)randomdrop;
+		(void)randomdrop;
 		for ( uint32_t i = 0; i < MDropList.size( ); i++ )
 		{
 			isdrop            = false;
@@ -403,9 +435,18 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 		}
 	}
 	int newn = n;
-(void)newn;
+	(void)newn;
 	if ( n == 0 )
+	{
+		{
+			delete[] itemnumber;
+			delete[] itemtype;
+			delete[] probability;
+			for ( uint32_t idx = 0; idx < itemCount; idx++ )
+				delete[] alternate[ idx ];
+		}
 		return NULL;
+	}
 	int maxitems = n;
 	// randomize the item from the list
 	n                      = GServer->RandNumber( 0, maxitems );
@@ -418,7 +459,7 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, uint32_t droptype )
 	//the average value near to 50
 	for ( int i = 0; i < 4; i++ )
 	{
-		float r1 = (float)(rand( ) % 20);
+		float r1 = (float)( rand( ) % 20 );
 		dmod += r1;
 	}
 	newdrop->item.durability = 10 + (int)dmod;
@@ -652,8 +693,8 @@ void CWorldServer::DoFairyStuff( CPlayer* targetclient, int action )
 	ADDBYTE( pak, action );
 	ADDWORD( pak, targetclient->clientid);
 	SendToVisible( &pak, targetclient );*/
-(void)targetclient;
-(void)action;
+	(void)targetclient;
+	(void)action;
 }
 
 void CWorldServer::DoFairyFree( int fairy )

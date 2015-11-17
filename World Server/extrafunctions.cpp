@@ -56,6 +56,7 @@ unsigned CWorldServer::BuildItemData( CItem thisitem )
 CItem CWorldServer::GetItemByHeadAndData( unsigned head, unsigned data )
 {
 	CItem thisitem;
+	thisitem.Clear();
 
 	//Get info from ItemHead
 	thisitem.itemnum = ( head >> 5 ) & 0x7ffffff;
@@ -505,7 +506,7 @@ fPoint CWorldServer::RandInPoly( fPoint p[], int pcount )
 fPoint CWorldServer::RandInCircle( fPoint center, float radius )
 {
 	fPoint thispoint;
-	float angle = (float)( rand( ) * ( M_PI * 2 ) / RAND_MAX );
+	float angle = (float)( rand( ) * ( pi * 2 ) / RAND_MAX );
 	float distance = (float)sqrt( rand( ) * 1.0 / RAND_MAX ) * radius;
 	thispoint.x = cos( angle ) * distance + center.x;
 	thispoint.y = sin( angle ) * distance + center.y;
@@ -1073,19 +1074,22 @@ bool CWorldServer::IsValidItem( uint32_t type, uint32_t id )
 
 int CWorldServer::GetIntValue( const char* s, void* var )
 {
-	char* tmp = strtok( (char*)var, (const char*)s );
+	char* next_token;
+	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return atoi( tmp == NULL ? 0 : tmp );
 }
 
 uint32_t CWorldServer::GetUIntValue( const char* s, void* var )
 {
-	char* tmp = strtok( (char*)var, (const char*)s );
+	char* next_token;
+	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return atoi( tmp == NULL ? 0 : tmp );
 }
 
 char* CWorldServer::GetStrValue( const char* s, void* var )
 {
-	char* tmp = strtok( (char*)var, (const char*)s );
+	char* next_token;
+	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return tmp;
 }
 

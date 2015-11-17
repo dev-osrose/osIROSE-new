@@ -139,7 +139,7 @@ bool CWorldServer::pakClanManager( CPlayer* thisclient, CPacket* P )
 			otherclient->Clan->back     = 0;
 			otherclient->Clan->logo     = 0;
 			otherclient->Clan->grade    = 0;
-			strcpy( otherclient->Clan->clanname, "" );
+			strcpy_s( otherclient->Clan->clanname, 16, "" );
 			BEGINPACKET( pak, 0x7e0 );
 			ADDBYTE( pak, 0x35 );
 			ADDWORD( pak, otherclient->clientid );

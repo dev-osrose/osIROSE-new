@@ -113,9 +113,10 @@ bool CPlayer::loaddata( )
 	p_skills              = 0;
 
 //TODO: FIX ALL OF THE (char*)std::string.c_str() calls
-	for ( uint8_t i = 0; i < 32; i++ )
+	char *next_token;
+	for (uint8_t i = 0; i < 32; i++)
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("quickbar").c_str() : NULL ), "," ); // this is a bad thing to do, but I'm going to do it anyway until I can fix it later
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("quickbar").c_str() : NULL ), ",", &next_token ); // this is a bad thing to do, but I'm going to do it anyway until I can fix it later
 		if ( tmp != NULL )
 			quickbar[ i ] = atoi( tmp );
 		else
@@ -124,7 +125,7 @@ bool CPlayer::loaddata( )
 
 	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("basic_skills").c_str() : NULL ), "," );
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("basic_skills").c_str() : NULL ), ",", &next_token );
 		if ( tmp != NULL )
 			bskills[ i ] = atoi( tmp );
 		else
@@ -132,7 +133,7 @@ bool CPlayer::loaddata( )
 	}
 	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("askill").c_str() : NULL ), "," );
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("askill").c_str() : NULL ), ",", &next_token );
 		if ( tmp != NULL )
 			askill[ i ] = atoi( tmp );
 		else
@@ -140,7 +141,7 @@ bool CPlayer::loaddata( )
 	}
 	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("askilllvl").c_str() : NULL ), "," );
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("askilllvl").c_str() : NULL ), ",", &next_token );
 		if ( tmp != NULL )
 			askilllvl[ i ] = atoi( tmp );
 		else
@@ -148,7 +149,7 @@ bool CPlayer::loaddata( )
 	}
 	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("pskill").c_str() : NULL ), "," );
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("pskill").c_str() : NULL ), ",", &next_token );
 		if ( tmp != NULL )
 			pskill[ i ] = atoi( tmp );
 		else
@@ -156,7 +157,7 @@ bool CPlayer::loaddata( )
 	}
 	for ( uint8_t i = 0; i < 30; i++ )
 	{
-		char* tmp = strtok( ( i == 0 ? (char*)result->getString("pskilllvl").c_str() : NULL ), "," );
+		char* tmp = strtok_s( ( i == 0 ? (char*)result->getString("pskilllvl").c_str() : NULL ), ",", &next_token );
 		if ( tmp != NULL )
 			pskilllvl[ i ] = atoi( tmp );
 		else
@@ -249,7 +250,7 @@ bool CPlayer::loaddata( )
 		{
 			Clan->logo = result->getInt("logo");
 			Clan->back = result->getInt("back");
-			strcpy( Clan->clanname, result->getString("name").c_str() );
+			strcpy_s( Clan->clanname, 16, result->getString("name").c_str() );
 			Clan->CP    = result->getInt("cp");
 			Clan->grade = result->getInt("grade");
 		}
@@ -309,44 +310,44 @@ void CPlayer::savedata( )
 		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &basic[ i ], "%i", bskills[ i ] );
+				sprintf_s( &basic[ i ], 1024, "%i", bskills[ i ] );
 			else
-				sprintf( &basic[ strlen( basic ) ], ",%i", bskills[ i ] );
+				sprintf_s( &basic[strlen( basic )], 1024, ",%i", bskills[i] );
 		}
 		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &active[ i ], "%i", askill[ i ] );
+				sprintf_s( &active[i], 1024, "%i", askill[i] );
 			else
-				sprintf( &active[ strlen( active ) ], ",%i", askill[ i ] );
+				sprintf_s( &active[strlen( active )], 1024, ",%i", askill[i] );
 		}
 		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &activelvl[ i ], "%i", askilllvl[ i ] );
+				sprintf_s( &activelvl[i], 1024, "%i", askilllvl[i] );
 			else
-				sprintf( &activelvl[ strlen( activelvl ) ], ",%i", askilllvl[ i ] );
+				sprintf_s( &activelvl[strlen( activelvl )], 1024, ",%i", askilllvl[i] );
 		}
 		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &pasive[ i ], "%i", pskill[ i ] );
+				sprintf_s( &pasive[i], 1024, "%i", pskill[i] );
 			else
-				sprintf( &pasive[ strlen( pasive ) ], ",%i", pskill[ i ] );
+				sprintf_s( &pasive[strlen( pasive )], 1024, ",%i", pskill[i] );
 		}
 		for ( uint32_t i = 0; i < 30; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &pasivelvl[ i ], "%i", pskilllvl[ i ] );
+				sprintf_s( &pasivelvl[i], 1024, "%i", pskilllvl[i] );
 			else
-				sprintf( &pasivelvl[ strlen( pasivelvl ) ], ",%i", pskilllvl[ i ] );
+				sprintf_s( &pasivelvl[strlen( pasivelvl )], 1024, ",%i", pskilllvl[i] );
 		}
 		for ( uint32_t i = 0; i < 32; i++ )
 		{
 			if ( i == 0 )
-				sprintf( &quick[ i ], "%i", quickbar[ i ] );
+				sprintf_s( &quick[i], 1024, "%i", quickbar[i] );
 			else
-				sprintf( &quick[ strlen( quick ) ], ",%i", quickbar[ i ] );
+				sprintf_s( &quick[strlen( quick )], 1024, ",%i", quickbar[i] );
 		}
 		long int hp = Stats->HP;
 

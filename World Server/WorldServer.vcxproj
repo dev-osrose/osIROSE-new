@@ -73,6 +73,11 @@
     <ClCompile Include="Worldprocess.cpp" />
     <ClCompile Include="worldserver.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{79FCB230-3EE3-4AD4-A06B-76074D67E212}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

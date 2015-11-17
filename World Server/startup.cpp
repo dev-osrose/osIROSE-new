@@ -317,11 +317,12 @@ bool CWorldServer::LoadMobGroups( )
 		thisgroup->tacMobs.clear( );
 
 		// Fill in basic/tac mobs
-		tmp = strtok( mobList, ",|" );
+		char* next_token;
+		tmp = strtok_s( mobList, ",|", &next_token );
 		while ( tmp != NULL )
 		{
 			int mobId = atoi( tmp );
-			tmp       = strtok( NULL, ",|" );
+			tmp       = strtok_s( NULL, ",|", &next_token );
 			if ( tmp == NULL )
 			{
 				Log( MSG_ERROR, "MobGroup %i is invalid", thisgroup->id );
@@ -329,7 +330,7 @@ bool CWorldServer::LoadMobGroups( )
 				break;
 			}
 			int amount = atoi( tmp );
-			tmp        = strtok( NULL, ",|" );
+			tmp        = strtok_s( NULL, ",|", &next_token );
 			if ( tmp == NULL )
 			{
 				Log( MSG_ERROR, "MobGroup %i is invalid", thisgroup->id );
@@ -344,6 +345,7 @@ bool CWorldServer::LoadMobGroups( )
 				Log( MSG_ERROR, "Error allocating memory" );
 				return false;
 			}
+
 			thismob->amount   = amount;
 			thismob->tactical = tactical;
 			thismob->mobId    = mobId;
@@ -364,7 +366,7 @@ bool CWorldServer::LoadMobGroups( )
 			{
 				thisgroup->basicMobs.push_back( thismob );
 			}
-			tmp = strtok( NULL, ",|" );
+			tmp = strtok_s( NULL, ",|", &next_token );
 		}
 		if ( !flag )
 		{
@@ -406,8 +408,10 @@ bool CWorldServer::LoadMonsterSpawn( )
 			thisspawn->respawntime = 5;
 		thisspawn->amon            = 0;
 		char* points;
-		points            = (char*)result->getString( "points" ).c_str( );
-		thisspawn->pcount = atoi( strtok( points, ",|" ) );
+		points = (char*)result->getString( "points" ).c_str( );
+
+		char* next_token;
+		thisspawn->pcount = atoi( strtok_s( points, ",|", &next_token ) );
 		thisspawn->points = new ( nothrow ) fPoint[ thisspawn->pcount ];
 		if ( thisspawn->points == NULL )
 		{
@@ -418,14 +422,14 @@ bool CWorldServer::LoadMonsterSpawn( )
 		thisspawn->lastRespawnTime = clock( );
 		for ( uint32_t i = 0; i < thisspawn->pcount; i++ )
 		{
-			if ( ( tmp = strtok( NULL, ",|" ) ) == NULL )
+			if ( ( tmp = strtok_s( NULL, ",|", &next_token ) ) == NULL )
 			{
 				Log( MSG_ERROR, "Spawn area %i have invalid points", thisspawn->id );
 				flag = false;
 				break;
 			}
 			float x = (float)atof( tmp );
-			if ( ( tmp = strtok( NULL, ",|" ) ) == NULL )
+			if ( ( tmp = strtok_s( NULL, ",|", &next_token ) ) == NULL )
 			{
 				Log( MSG_ERROR, "Spawn area %i have invalid points", thisspawn->id );
 				flag = false;
@@ -457,7 +461,7 @@ bool CWorldServer::LoadNPCs( )
 	if ( result == NULL )
 		return false;
 
-	while ( result->next() )
+	while ( result->next( ) )
 	{
 		CNPC* thisnpc = new ( nothrow ) CNPC;
 		if ( thisnpc == NULL )
@@ -466,11 +470,11 @@ bool CWorldServer::LoadNPCs( )
 			return false;
 		}
 		thisnpc->clientid = GetNewClientID( );
-		thisnpc->npctype  = result->getInt("type");
-		thisnpc->posMap = result->getInt( "map" );
-		thisnpc->dir = (float)result->getDouble("dir");
-		thisnpc->pos.x = (float)result->getDouble( "x" );
-		thisnpc->pos.y = (float)result->getDouble( "y" );
+		thisnpc->npctype  = result->getInt( "type" );
+		thisnpc->posMap   = result->getInt( "map" );
+		thisnpc->dir      = (float)result->getDouble( "dir" );
+		thisnpc->pos.x    = (float)result->getDouble( "x" );
+		thisnpc->pos.y    = (float)result->getDouble( "y" );
 		thisnpc->thisnpc  = GetNPCDataByID( thisnpc->npctype );
 		if ( thisnpc->thisnpc == NULL )
 		{
@@ -487,7 +491,7 @@ bool CWorldServer::LoadDropsData( )
 {
 	Log( MSG_LOAD, "Drops Data" );
 	FILE* fh = NULL;
-	fh       = fopen( "data/drops_data.csv", "r" );
+	fopen_s( &fh, "data/drops_data.csv", "r" );
 	if ( fh == NULL )
 	{
 		Log( MSG_ERROR, "\nError loading file data/drops_data.csv" );
@@ -589,19 +593,19 @@ bool CWorldServer::LoadPYDropsData( )
 	{
 		return false;
 	}
-	while ( result->next() )
+	while ( result->next( ) )
 	{
 		CMDrops* newdrop = new ( nothrow ) CMDrops;
 		assert( newdrop );
-		newdrop->itemnum   = result->getInt("id");
-		newdrop->itemtype  = result->getInt("type");
-		newdrop->level_min = result->getInt("min_level");
-		newdrop->level_max = result->getInt("max_level");
-		newdrop->prob      = result->getInt("prob");
-		newdrop->mob       = result->getInt("mob");
-		newdrop->map       = result->getInt("map");
-		char* tmp;
-		if ( ( tmp = strtok( (char*)result->getString("alt").c_str(), "|" ) ) == NULL )
+		newdrop->itemnum   = result->getInt( "id" );
+		newdrop->itemtype  = result->getInt( "type" );
+		newdrop->level_min = result->getInt( "min_level" );
+		newdrop->level_max = result->getInt( "max_level" );
+		newdrop->prob      = result->getInt( "prob" );
+		newdrop->mob       = result->getInt( "mob" );
+		newdrop->map       = result->getInt( "map" );
+		char* tmp, *next_token;
+		if ((tmp = strtok_s( (char*)result->getString( "alt" ).c_str( ), "|", &next_token )) == NULL)
 		{
 			newdrop->alt[ 0 ] = 0;
 		}
@@ -611,7 +615,7 @@ bool CWorldServer::LoadPYDropsData( )
 		}
 		for ( unsigned int i = 1; i < 8; i++ )
 		{
-			if ( ( tmp = strtok( NULL, "|" ) ) == NULL )
+			if ((tmp = strtok_s( NULL, "|", &next_token )) == NULL)
 			{
 				newdrop->alt[ i ] = 0;
 			}
@@ -637,15 +641,15 @@ bool CWorldServer::LoadSkillBookDropsData( )
 		return false;
 	}
 
-	while ( result->next() )
+	while ( result->next( ) )
 	{
 		CMDrops* newdrop = new ( nothrow ) CMDrops;
 		assert( newdrop );
-		newdrop->itemnum   = result->getInt("id");
-		newdrop->itemtype  = result->getInt("itemtype");
-		newdrop->level_min = result->getInt("min");
-		newdrop->level_max = result->getInt("max");
-		newdrop->prob      = result->getInt("prob");
+		newdrop->itemnum   = result->getInt( "id" );
+		newdrop->itemtype  = result->getInt( "itemtype" );
+		newdrop->level_min = result->getInt( "min" );
+		newdrop->level_max = result->getInt( "max" );
+		newdrop->prob      = result->getInt( "prob" );
 		SkillbookList.push_back( newdrop );
 	}
 	Log( MSG_INFO, "Skill book Data loaded" );
@@ -668,17 +672,17 @@ bool CWorldServer::LoadConfig( )
 	}
 	while ( result->next( ) )
 	{
-		GServer->Config.EXP_RATE     = result->getInt("exp_rate");
-		GServer->Config.DROP_RATE    = result->getInt("drop_rate");
-		GServer->Config.ZULY_RATE    = result->getInt("zuly_rate");
-		GServer->Config.BlueChance   = result->getInt("blue_chance");
-		GServer->Config.StatChance   = result->getInt("stat_chance");
-		GServer->Config.SlotChance   = result->getInt("slot_chance");
-		GServer->Config.RefineChance = result->getInt("refine_chance");
-		GServer->Config.Rare_Refine  = result->getInt("rare_refine");
-		GServer->Config.KillOnFail   = result->getInt("kill_on_fail");
-		GServer->Config.PlayerDmg    = result->getInt("player_damage");
-		GServer->Config.MonsterDmg   = result->getInt("monster_damage");
+		GServer->Config.EXP_RATE     = result->getInt( "exp_rate" );
+		GServer->Config.DROP_RATE    = result->getInt( "drop_rate" );
+		GServer->Config.ZULY_RATE    = result->getInt( "zuly_rate" );
+		GServer->Config.BlueChance   = result->getInt( "blue_chance" );
+		GServer->Config.StatChance   = result->getInt( "stat_chance" );
+		GServer->Config.SlotChance   = result->getInt( "slot_chance" );
+		GServer->Config.RefineChance = result->getInt( "refine_chance" );
+		GServer->Config.Rare_Refine  = result->getInt( "rare_refine" );
+		GServer->Config.KillOnFail   = result->getInt( "kill_on_fail" );
+		GServer->Config.PlayerDmg    = result->getInt( "player_damage" );
+		GServer->Config.MonsterDmg   = result->getInt( "monster_damage" );
 		// Not implemented in server yet - Drakia
 		//GServer->Config.PlayerAcc = result->getInt("player_acc");
 		//GServer->Config.MonsterAcc = result->getInt("monster_acc");
@@ -739,7 +743,7 @@ bool CWorldServer::LoadUpgrade( ) //for succes rate
 {
 	Log( MSG_LOAD, "Refine Data      " );
 	FILE* fh = NULL;
-	fh       = fopen( "data/refine_data.csv", "r" );
+	fopen_s( &fh, "data/refine_data.csv", "r" );
 	if ( fh == NULL )
 	{
 		Log( MSG_ERROR, "\nError loading file data/refine_data.csv" );

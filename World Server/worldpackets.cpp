@@ -3099,7 +3099,7 @@ bool CWorldServer::pakOpenShop( CPlayer* thisclient, CPacket* P )
 	if ( nselling > 30 || nbuying > 30 )
 		return true;
 	int nchar = ( ( nselling + nbuying ) * 11 ) + 2;
-	strncpy( thisclient->Shop->name, (char*)&( *P ).Buffer[ nchar ], P->Header.Size - nchar );
+	strncpy_s( thisclient->Shop->name, 64, (char*)&( *P ).Buffer[ nchar ], P->Header.Size - nchar );
 	thisclient->Shop->Selling = nselling;
 	thisclient->Shop->Buying  = nbuying;
 	for ( int i = 0; i < nselling; i++ )
