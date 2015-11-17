@@ -17,7 +17,7 @@ enable_testing()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(std "-std=c++11")
-	set(warnings "-Wall -Wextra -Werror -Wno-write-strings")
+	set(warnings "-Wall -Wextra -Werror -Wno-write-strings -Wno-unknown-pragmas")
 	set(errors "")
 	set(defines "")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
