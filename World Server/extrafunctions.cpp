@@ -1075,6 +1075,7 @@ bool CWorldServer::IsValidItem( uint32_t type, uint32_t id )
 int CWorldServer::GetIntValue( const char* s, void* var )
 {
 	char* next_token;
+	(void)next_token;
 	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return atoi( tmp == NULL ? 0 : tmp );
 }
@@ -1082,6 +1083,7 @@ int CWorldServer::GetIntValue( const char* s, void* var )
 uint32_t CWorldServer::GetUIntValue( const char* s, void* var )
 {
 	char* next_token;
+	(void)next_token;
 	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return atoi( tmp == NULL ? 0 : tmp );
 }
@@ -1089,6 +1091,7 @@ uint32_t CWorldServer::GetUIntValue( const char* s, void* var )
 char* CWorldServer::GetStrValue( const char* s, void* var )
 {
 	char* next_token;
+	(void)next_token;
 	char* tmp = strtok_s( (char*)var, (const char*)s, &next_token );
 	return tmp;
 }
