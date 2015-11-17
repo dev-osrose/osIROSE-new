@@ -7,8 +7,7 @@ configuration:
 - Debug
 - Release
 platform:
-- x86
-- x64
+- Win32
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
 services: mysql56
