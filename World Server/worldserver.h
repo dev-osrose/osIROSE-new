@@ -79,7 +79,7 @@ class CWorldServer : public CServerSocket
 	void SpawnMonsters( );
 	bool Ping( );
 	void LoadConfigurations( char* );
-	void LoadCommandLevels( void );
+	void LoadCommandLevels( std::string config, bool writeFile = false );
 	void ServerLoop( );
 	void LoadEncryption( );
 	bool pakGiveItem( CPlayer* thisclient, unsigned char itemtype, unsigned short itemid, unsigned short count );

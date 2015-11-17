@@ -19,6 +19,7 @@
     developed with Main erose/hrose source server + some change from the original eich source
 */
 #include "worldserver.h"
+#include <fstream>
 
 // Constructor
 CWorldServer::CWorldServer( string fn )
@@ -701,85 +702,96 @@ void CWorldServer::LoadConfigurations( char* file )
 	if ( Config.AUTOSAVE == 1 )
 		Log( MSG_INFO, "Auto saving every %i minutes", Config.SAVETIME / 60 );
 
-	LoadCommandLevels( );
+	std::string config = "commands.ini";
+	bool writeFile = false;
+	std::basic_fstream< char > clFileOp( config, std::ios::in );
+	if (clFileOp.is_open() == false)
+	{
+		clFileOp.clear();
+		clFileOp.open( config, std::ios::out ); // Create file
+		clFileOp.close();
+	
+		LoadCommandLevels( config, true );
+	}
+
+	LoadCommandLevels( config );
 }
 
 // Load commands from commands.ini [by Paul_T]
-void CWorldServer::LoadCommandLevels( void )
+void CWorldServer::LoadCommandLevels( std::string config, bool writeFile )
 {
-	std::string config = "commands.ini";
-	Config.Command_Ani = ReadWriteIniKeyValueInt( "COMMANDS", "ani", 299, config.c_str( ) );
-	Config.Command_Ann = ReadWriteIniKeyValueInt( "COMMANDS", "ann", 299, config.c_str( ) );
-	Config.Command_Ban = ReadWriteIniKeyValueInt( "COMMANDS", "ban", 299, config.c_str( ) );
-	Config.Command_Cha = ReadWriteIniKeyValueInt( "COMMANDS", "cha", 299, config.c_str( ) );
-	Config.Command_ChangeFairyWait = ReadWriteIniKeyValueInt( "COMMANDS", "changefairywait", 299, config.c_str( ) );
-	Config.Command_ChangeFairyStay = ReadWriteIniKeyValueInt( "COMMANDS", "changefairystay", 299, config.c_str( ) );
-	Config.Command_ChangeFairyTestMode = ReadWriteIniKeyValueInt( "COMMANDS", "changefairytestmode", 299, config.c_str( ) );
-	Config.Command_Class = ReadWriteIniKeyValueInt( "COMMANDS", "class", 299, config.c_str( ) );
-	Config.Command_Convert = ReadWriteIniKeyValueInt( "COMMANDS", "convert", 299, config.c_str( ) );
-	Config.Command_Cfmode = ReadWriteIniKeyValueInt( "COMMANDS", "cfmode", 299, config.c_str( ) );
-	Config.Command_DelSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "delspawn", 299, config.c_str( ) );
-	Config.Command_DQuest = ReadWriteIniKeyValueInt( "COMMANDS", "dquest", 299, config.c_str( ) );
-	Config.Command_Drop = ReadWriteIniKeyValueInt( "COMMANDS", "drop", 299, config.c_str( ) );
-	Config.Command_DSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "dspawn", 299, config.c_str( ) );
-	Config.Command_ESpawn = ReadWriteIniKeyValueInt( "COMMANDS", "espawn", 299, config.c_str( ) );
-	Config.Command_Exp = ReadWriteIniKeyValueInt( "COMMANDS", "exp", 299, config.c_str( ) );
-	Config.Command_Face = ReadWriteIniKeyValueInt( "COMMANDS", "face", 299, config.c_str( ) );
-	Config.Command_Give2 = ReadWriteIniKeyValueInt( "COMMANDS", "give2", 299, config.c_str( ) );
-	Config.Command_GiveFairy = ReadWriteIniKeyValueInt( "COMMANDS", "givefairy", 299, config.c_str( ) );
-	Config.Command_GiveZuly = ReadWriteIniKeyValueInt( "COMMANDS", "givezuly", 299, config.c_str( ) );
-	Config.Command_Go = ReadWriteIniKeyValueInt( "COMMANDS", "go", 299, config.c_str( ) );
-	Config.Command_Goto = ReadWriteIniKeyValueInt( "COMMANDS", "goto", 299, config.c_str( ) );
-	Config.Command_GoToMap = ReadWriteIniKeyValueInt( "COMMANDS", "gotomap", 299, config.c_str( ) );
-	Config.Command_Hair = ReadWriteIniKeyValueInt( "COMMANDS", "hair", 299, config.c_str( ) );
-	Config.Command_Heal = ReadWriteIniKeyValueInt( "COMMANDS", "heal", 299, config.c_str( ) );
-	Config.Command_Here = ReadWriteIniKeyValueInt( "COMMANDS", "here", 299, config.c_str( ) );
-	Config.Command_Hide = ReadWriteIniKeyValueInt( "COMMANDS", "hide", 299, config.c_str( ) );
-	Config.Command_Info = ReadWriteIniKeyValueInt( "COMMANDS", "info", 299, config.c_str( ) );
-	Config.Command_IQuest = ReadWriteIniKeyValueInt( "COMMANDS", "iquest", 299, config.c_str( ) );
-	Config.Command_Item = ReadWriteIniKeyValueInt( "COMMANDS", "item", 299, config.c_str( ) );
-	Config.Command_Job = ReadWriteIniKeyValueInt( "COMMANDS", "job", 299, config.c_str( ) );
-	Config.Command_Kick = ReadWriteIniKeyValueInt( "COMMANDS", "kick", 299, config.c_str( ) );
-	Config.Command_KillInRange = ReadWriteIniKeyValueInt( "COMMANDS", "killinrange", 299, config.c_str( ) );
-	Config.Command_Level = ReadWriteIniKeyValueInt( "COMMANDS", "level", 299, config.c_str( ) );
-	Config.Command_LevelUp = ReadWriteIniKeyValueInt( "COMMANDS", "levelup", 299, config.c_str( ) );
-	Config.Command_ManageFairy = ReadWriteIniKeyValueInt( "COMMANDS", "managefairy", 299, config.c_str( ) );
-	Config.Command_Mdmg = ReadWriteIniKeyValueInt( "COMMANDS", "mdmg", 299, config.c_str( ) );
-	Config.Command_Mon = ReadWriteIniKeyValueInt( "COMMANDS", "mon", 299, config.c_str( ) );
-	Config.Command_Monster = ReadWriteIniKeyValueInt( "COMMANDS", "monster", 299, config.c_str( ) );
-	Config.Command_Move = ReadWriteIniKeyValueInt( "COMMANDS", "move", 299, config.c_str( ) );
-	Config.Command_Moveto = ReadWriteIniKeyValueInt( "COMMANDS", "moveto", 299, config.c_str( ) );
-	Config.Command_Mute = ReadWriteIniKeyValueInt( "COMMANDS", "mute", 299, config.c_str( ) );
-	Config.Command_Npc = ReadWriteIniKeyValueInt( "COMMANDS", "npc", 299, config.c_str( ) );
-	Config.Command_Pak = ReadWriteIniKeyValueInt( "COMMANDS", "pak", 299, config.c_str( ) );
-	Config.Command_Pak2 = ReadWriteIniKeyValueInt( "COMMANDS", "pak2", 299, config.c_str( ) );
-	Config.Command_Pakm = ReadWriteIniKeyValueInt( "COMMANDS", "pakm", 299, config.c_str( ) );
-	Config.Command_Partylvl = ReadWriteIniKeyValueInt( "COMMANDS", "partylvl", 299, config.c_str( ) );
-	Config.Command_PlayerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "playerinfo", 299, config.c_str( ) );
-	Config.Command_Pdmg = ReadWriteIniKeyValueInt( "COMMANDS", "pdmg", 299, config.c_str( ) );
-	Config.Command_Pvp = ReadWriteIniKeyValueInt( "COMMANDS", "pvp", 299, config.c_str( ) );
-	Config.Command_Rate = ReadWriteIniKeyValueInt( "COMMANDS", "rate", 299, config.c_str( ) );
-	Config.Command_Reload = ReadWriteIniKeyValueInt( "COMMANDS", "reload", 299, config.c_str( ) );
-	Config.Command_ReloadQuest = ReadWriteIniKeyValueInt( "COMMANDS", "reloadquest", 299, config.c_str( ) );
-	Config.Command_Rules = ReadWriteIniKeyValueInt( "COMMANDS", "rules", 99, config.c_str( ) );
-	Config.Command_Save = ReadWriteIniKeyValueInt( "COMMANDS", "save", 299, config.c_str( ) );
-	Config.Command_ServerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "serverinfo", 299, config.c_str( ) );
-	Config.Command_Set = ReadWriteIniKeyValueInt( "COMMANDS", "set", 299, config.c_str( ) );
-	Config.Command_Settime = ReadWriteIniKeyValueInt( "COMMANDS", "settime", 299, config.c_str( ) );
-	Config.Command_ShopType = ReadWriteIniKeyValueInt( "COMMANDS", "shoptype", 299, config.c_str( ) );
-	Config.Command_Shutdown = ReadWriteIniKeyValueInt( "COMMANDS", "shutdown", 299, config.c_str( ) );
-	Config.Command_SSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "sspawn", 299, config.c_str( ) );
-	Config.Command_Stat = ReadWriteIniKeyValueInt( "COMMANDS", "stat", 299, config.c_str( ) );
-	Config.Command_Summon = ReadWriteIniKeyValueInt( "COMMANDS", "summon", 299, config.c_str( ) );
-	Config.Command_TargetInfo = ReadWriteIniKeyValueInt( "COMMANDS", "targetinfo", 299, config.c_str( ) );
-	Config.Command_Tele = ReadWriteIniKeyValueInt( "COMMANDS", "tele", 299, config.c_str( ) );
-	Config.Command_TeleToMe = ReadWriteIniKeyValueInt( "COMMANDS", "teletome", 299, config.c_str( ) );
-	Config.Command_Transx = ReadWriteIniKeyValueInt( "COMMANDS", "transx", 299, config.c_str( ) );
-	Config.Command_Who = ReadWriteIniKeyValueInt( "COMMANDS", "who", 299, config.c_str( ) );
-	Config.Command_Who2 = ReadWriteIniKeyValueInt( "COMMANDS", "who2", 299, config.c_str( ) );
-	Config.Command_Broadcast = ReadWriteIniKeyValueInt( "COMMANDS", "broadcast", 299, config.c_str( ) );
-	Config.Command_GlobalTime = ReadWriteIniKeyValueInt( "COMMANDS", "globaldelay", 30, config.c_str( ) );
-	ReadWriteIniKeyValueStringA( "COMMANDS", "globalprefix", "[Broadcast]", config.c_str( ), false, &Config.Command_GlobalPrefix );
+	Config.Command_Ani = ReadWriteIniKeyValueInt( "COMMANDS", "ani", 299, config.c_str( ), writeFile );
+	Config.Command_Ann = ReadWriteIniKeyValueInt( "COMMANDS", "ann", 299, config.c_str( ), writeFile );
+	Config.Command_Ban = ReadWriteIniKeyValueInt( "COMMANDS", "ban", 299, config.c_str( ), writeFile );
+	Config.Command_Cha = ReadWriteIniKeyValueInt( "COMMANDS", "cha", 299, config.c_str( ), writeFile );
+	Config.Command_ChangeFairyWait = ReadWriteIniKeyValueInt( "COMMANDS", "changefairywait", 299, config.c_str( ), writeFile );
+	Config.Command_ChangeFairyStay = ReadWriteIniKeyValueInt( "COMMANDS", "changefairystay", 299, config.c_str( ), writeFile );
+	Config.Command_ChangeFairyTestMode = ReadWriteIniKeyValueInt( "COMMANDS", "changefairytestmode", 299, config.c_str( ), writeFile );
+	Config.Command_Class = ReadWriteIniKeyValueInt( "COMMANDS", "class", 299, config.c_str( ), writeFile );
+	Config.Command_Convert = ReadWriteIniKeyValueInt( "COMMANDS", "convert", 299, config.c_str( ), writeFile );
+	Config.Command_Cfmode = ReadWriteIniKeyValueInt( "COMMANDS", "cfmode", 299, config.c_str( ), writeFile );
+	Config.Command_DelSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "delspawn", 299, config.c_str( ), writeFile );
+	Config.Command_DQuest = ReadWriteIniKeyValueInt( "COMMANDS", "dquest", 299, config.c_str( ), writeFile );
+	Config.Command_Drop = ReadWriteIniKeyValueInt( "COMMANDS", "drop", 299, config.c_str( ), writeFile );
+	Config.Command_DSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "dspawn", 299, config.c_str( ), writeFile );
+	Config.Command_ESpawn = ReadWriteIniKeyValueInt( "COMMANDS", "espawn", 299, config.c_str( ), writeFile );
+	Config.Command_Exp = ReadWriteIniKeyValueInt( "COMMANDS", "exp", 299, config.c_str( ), writeFile );
+	Config.Command_Face = ReadWriteIniKeyValueInt( "COMMANDS", "face", 299, config.c_str( ), writeFile );
+	Config.Command_Give2 = ReadWriteIniKeyValueInt( "COMMANDS", "give2", 299, config.c_str( ), writeFile );
+	Config.Command_GiveFairy = ReadWriteIniKeyValueInt( "COMMANDS", "givefairy", 299, config.c_str( ), writeFile );
+	Config.Command_GiveZuly = ReadWriteIniKeyValueInt( "COMMANDS", "givezuly", 299, config.c_str( ), writeFile );
+	Config.Command_Go = ReadWriteIniKeyValueInt( "COMMANDS", "go", 299, config.c_str( ), writeFile );
+	Config.Command_Goto = ReadWriteIniKeyValueInt( "COMMANDS", "goto", 299, config.c_str( ), writeFile );
+	Config.Command_GoToMap = ReadWriteIniKeyValueInt( "COMMANDS", "gotomap", 299, config.c_str( ), writeFile );
+	Config.Command_Hair = ReadWriteIniKeyValueInt( "COMMANDS", "hair", 299, config.c_str( ), writeFile );
+	Config.Command_Heal = ReadWriteIniKeyValueInt( "COMMANDS", "heal", 299, config.c_str( ), writeFile );
+	Config.Command_Here = ReadWriteIniKeyValueInt( "COMMANDS", "here", 299, config.c_str( ), writeFile );
+	Config.Command_Hide = ReadWriteIniKeyValueInt( "COMMANDS", "hide", 299, config.c_str( ), writeFile );
+	Config.Command_Info = ReadWriteIniKeyValueInt( "COMMANDS", "info", 299, config.c_str( ), writeFile );
+	Config.Command_IQuest = ReadWriteIniKeyValueInt( "COMMANDS", "iquest", 299, config.c_str( ), writeFile );
+	Config.Command_Item = ReadWriteIniKeyValueInt( "COMMANDS", "item", 299, config.c_str( ), writeFile );
+	Config.Command_Job = ReadWriteIniKeyValueInt( "COMMANDS", "job", 299, config.c_str( ), writeFile );
+	Config.Command_Kick = ReadWriteIniKeyValueInt( "COMMANDS", "kick", 299, config.c_str( ), writeFile );
+	Config.Command_KillInRange = ReadWriteIniKeyValueInt( "COMMANDS", "killinrange", 299, config.c_str( ), writeFile );
+	Config.Command_Level = ReadWriteIniKeyValueInt( "COMMANDS", "level", 299, config.c_str( ), writeFile );
+	Config.Command_LevelUp = ReadWriteIniKeyValueInt( "COMMANDS", "levelup", 299, config.c_str( ), writeFile );
+	Config.Command_ManageFairy = ReadWriteIniKeyValueInt( "COMMANDS", "managefairy", 299, config.c_str( ), writeFile );
+	Config.Command_Mdmg = ReadWriteIniKeyValueInt( "COMMANDS", "mdmg", 299, config.c_str( ), writeFile );
+	Config.Command_Mon = ReadWriteIniKeyValueInt( "COMMANDS", "mon", 299, config.c_str( ), writeFile );
+	Config.Command_Monster = ReadWriteIniKeyValueInt( "COMMANDS", "monster", 299, config.c_str( ), writeFile );
+	Config.Command_Move = ReadWriteIniKeyValueInt( "COMMANDS", "move", 299, config.c_str( ), writeFile );
+	Config.Command_Moveto = ReadWriteIniKeyValueInt( "COMMANDS", "moveto", 299, config.c_str( ), writeFile );
+	Config.Command_Mute = ReadWriteIniKeyValueInt( "COMMANDS", "mute", 299, config.c_str( ), writeFile );
+	Config.Command_Npc = ReadWriteIniKeyValueInt( "COMMANDS", "npc", 299, config.c_str( ), writeFile );
+	Config.Command_Pak = ReadWriteIniKeyValueInt( "COMMANDS", "pak", 299, config.c_str( ), writeFile );
+	Config.Command_Pak2 = ReadWriteIniKeyValueInt( "COMMANDS", "pak2", 299, config.c_str( ), writeFile );
+	Config.Command_Pakm = ReadWriteIniKeyValueInt( "COMMANDS", "pakm", 299, config.c_str( ), writeFile );
+	Config.Command_Partylvl = ReadWriteIniKeyValueInt( "COMMANDS", "partylvl", 299, config.c_str( ), writeFile );
+	Config.Command_PlayerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "playerinfo", 299, config.c_str( ), writeFile );
+	Config.Command_Pdmg = ReadWriteIniKeyValueInt( "COMMANDS", "pdmg", 299, config.c_str( ), writeFile );
+	Config.Command_Pvp = ReadWriteIniKeyValueInt( "COMMANDS", "pvp", 299, config.c_str( ), writeFile );
+	Config.Command_Rate = ReadWriteIniKeyValueInt( "COMMANDS", "rate", 299, config.c_str( ), writeFile );
+	Config.Command_Reload = ReadWriteIniKeyValueInt( "COMMANDS", "reload", 299, config.c_str( ), writeFile );
+	Config.Command_ReloadQuest = ReadWriteIniKeyValueInt( "COMMANDS", "reloadquest", 299, config.c_str( ), writeFile );
+	Config.Command_Rules = ReadWriteIniKeyValueInt( "COMMANDS", "rules", 99, config.c_str( ), writeFile );
+	Config.Command_Save = ReadWriteIniKeyValueInt( "COMMANDS", "save", 299, config.c_str( ), writeFile );
+	Config.Command_ServerInfo = ReadWriteIniKeyValueInt( "COMMANDS", "serverinfo", 299, config.c_str( ), writeFile );
+	Config.Command_Set = ReadWriteIniKeyValueInt( "COMMANDS", "set", 299, config.c_str( ), writeFile );
+	Config.Command_Settime = ReadWriteIniKeyValueInt( "COMMANDS", "settime", 299, config.c_str( ), writeFile );
+	Config.Command_ShopType = ReadWriteIniKeyValueInt( "COMMANDS", "shoptype", 299, config.c_str( ), writeFile );
+	Config.Command_Shutdown = ReadWriteIniKeyValueInt( "COMMANDS", "shutdown", 299, config.c_str( ), writeFile );
+	Config.Command_SSpawn = ReadWriteIniKeyValueInt( "COMMANDS", "sspawn", 299, config.c_str( ), writeFile );
+	Config.Command_Stat = ReadWriteIniKeyValueInt( "COMMANDS", "stat", 299, config.c_str( ), writeFile );
+	Config.Command_Summon = ReadWriteIniKeyValueInt( "COMMANDS", "summon", 299, config.c_str( ), writeFile );
+	Config.Command_TargetInfo = ReadWriteIniKeyValueInt( "COMMANDS", "targetinfo", 299, config.c_str( ), writeFile );
+	Config.Command_Tele = ReadWriteIniKeyValueInt( "COMMANDS", "tele", 299, config.c_str( ), writeFile );
+	Config.Command_TeleToMe = ReadWriteIniKeyValueInt( "COMMANDS", "teletome", 299, config.c_str( ), writeFile );
+	Config.Command_Transx = ReadWriteIniKeyValueInt( "COMMANDS", "transx", 299, config.c_str( ), writeFile );
+	Config.Command_Who = ReadWriteIniKeyValueInt( "COMMANDS", "who", 299, config.c_str( ), writeFile );
+	Config.Command_Who2 = ReadWriteIniKeyValueInt( "COMMANDS", "who2", 299, config.c_str( ), writeFile );
+	Config.Command_Broadcast = ReadWriteIniKeyValueInt( "COMMANDS", "broadcast", 299, config.c_str( ), writeFile );
+	Config.Command_GlobalTime = ReadWriteIniKeyValueInt( "COMMANDS", "globaldelay", 30, config.c_str( ), writeFile );
+	ReadWriteIniKeyValueStringA( "COMMANDS", "globalprefix", "[Broadcast]", config.c_str( ), writeFile, &Config.Command_GlobalPrefix );
 }
 
 bool CWorldServer::Ping( )
