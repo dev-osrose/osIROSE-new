@@ -5,6 +5,20 @@
 *.suo
 *.user
 *.sln.docstates
+*.sw*
+
+# CMake files
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
+
+# dependencies
+3rdParty
+dep
+
+# configuration file
+server.ini
 
 # Build results
 
