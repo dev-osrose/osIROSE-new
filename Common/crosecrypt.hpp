@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 // Pulled from Brett19's cRose Server
 // https://github.com/brett19/cROSE
 
@@ -79,7 +80,7 @@ struct CR001
 	int m_BcSeed;
 	int m_AcSeed;
 	int m_MySeed;
-};
+}__attribute__((__packed__));
 
 struct HeadCryptedServer
 {
@@ -98,7 +99,8 @@ struct HeadCryptedServer
 	unsigned char AddBufferLen1 : 3;	//S1
 	unsigned char AddTableValue2 : 3;	//R2
 	unsigned char Command4 : 2;			//T4
-};
+}__attribute__((__packed__));
+
 struct HeadCryptedClient
 {
 	unsigned int Command2 : 3;			//T2
@@ -116,33 +118,35 @@ struct HeadCryptedClient
 	unsigned char Command3 : 3;			//T3
 	unsigned char AddTableValue1 : 3;	//R1
 	unsigned char AddBufferLen4 : 2;	//S4
-};
+}__attribute__((__packed__));
+
 struct HeadDecrypted
 {
-	unsigned __int64 AddBufferLen1 : 3;
-	unsigned __int64 AddBufferLen2 : 3;
-	unsigned __int64 AddBufferLen3 : 3;
-	unsigned __int64 AddBufferLen4 : 2;
-	unsigned __int64 Command1 : 3;
-	unsigned __int64 Command2 : 3;
-	unsigned __int64 Command3 : 3;
-	unsigned __int64 Command4 : 2;
-	unsigned __int64 AddTableValue1 : 3;
-	unsigned __int64 AddTableValue2 : 3;
-	unsigned __int64 AddTableValue3 : 3;
-	unsigned __int64 AddTableValue4 : 2;
-	unsigned __int64 EncryptAddValue1 : 2;
-	unsigned __int64 EncryptAddValue2 : 2;
-	unsigned __int64 EncryptValue1 : 3;
-};
+	uint64_t AddBufferLen1 : 3;
+	uint64_t AddBufferLen2 : 3;
+	uint64_t AddBufferLen3 : 3;
+	uint64_t AddBufferLen4 : 2;
+	uint64_t Command1 : 3;
+	uint64_t Command2 : 3;
+	uint64_t Command3 : 3;
+	uint64_t Command4 : 2;
+	uint64_t AddTableValue1 : 3;
+	uint64_t AddTableValue2 : 3;
+	uint64_t AddTableValue3 : 3;
+	uint64_t AddTableValue4 : 2;
+	uint64_t EncryptAddValue1 : 2;
+	uint64_t EncryptAddValue2 : 2;
+	uint64_t EncryptValue1 : 3;
+}__attribute__((__packed__));
+
 struct Head
 {
-	unsigned __int64 AddBufferLen : 11;
-	unsigned __int64 Command	: 11;
-	unsigned __int64 AddTableValue : 11;
-	unsigned __int64 EncryptAddValue : 4;
-	unsigned __int64 EncryptValue : 3;
-};
+	uint64_t AddBufferLen : 11;
+	uint64_t Command	: 11;
+	uint64_t AddTableValue : 11;
+	uint64_t EncryptAddValue : 4;
+	uint64_t EncryptValue : 3;
+}__attribute__((__packed__));
 
 template<typename T, typename U>
 inline void FlipHeadMain( T a, U b )
@@ -159,6 +163,7 @@ inline void FlipHeadMain( T a, U b )
 	a->EncryptAddValue1 = b->EncryptAddValue1;
 	a->EncryptAddValue2 = b->EncryptAddValue2;
 };
+
 template<typename T, typename U>
 inline void FlipHeadFinal( T a, U b )
 {
@@ -188,7 +193,8 @@ struct CPC
 
 	void ESSP( unsigned char* buffer )
 	{
-		Head head = { 0 };
+		Head head;
+		memset(&head, 0, sizeof(head));
 		head.AddTableValue = 0x100; // rand() % 0x1FF + 1
 		head.EncryptAddValue = 0x04; // rand() % 0xF + 1
 		head.EncryptValue = head.AddTableValue + head.EncryptAddValue;
@@ -214,7 +220,8 @@ struct CPC
 
 	unsigned short DRCH( unsigned char* buffer )
 	{
-		Head head = { 0 };
+		Head head;
+		memset(&head, 0, sizeof(head));
 		FlipHeadFinal( (HeadDecrypted*)&head, (HeadCryptedClient*)buffer );
 
 		for( int i = 0; i < 5; i++ )
@@ -229,7 +236,8 @@ struct CPC
 
 	bool DRCB( unsigned char* buffer )
 	{
-		Head head = { 0 };
+		Head head;
+		memset(&head, 0, sizeof(head));
 		memcpy( &head, buffer, 6 );
 		unsigned short buflen = (unsigned short)( head.AddBufferLen - head.EncryptValue );
 
