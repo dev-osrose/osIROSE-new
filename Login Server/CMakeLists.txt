@@ -7,19 +7,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(std "-std=c++11")
-	set(warnings "-Wall -Wextra -Werror -Wno-write-strings -Wno-unknown-pragmas")
+	set(std "")
+	set(warnings "")
 	set(errors "")
 	set(defines "")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(std "")
-	set(warnings "/EHsc")
+	set(warnings "")
 	set(errors "")
 	set(defines "")
 endif()
 
 if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${std} ${defines} ${warnings} ${errors}"
+    set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
@@ -32,8 +32,16 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+list( APPEND LOGIN_LIST_SRC
+  main.cpp 
+loginserver.cpp 
+extrafunction.cpp 
+loginclient.cpp 
+loginpackets.cpp 
+signal.cpp )
+
 find_package( Threads REQUIRED )
-add_executable(LoginServer main.cpp loginserver.cpp extrafunction.cpp loginclient.cpp loginpackets.cpp signal.cpp)
+add_executable(LoginServer ${LOGIN_LIST_SRC})
 target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
