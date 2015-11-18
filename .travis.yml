@@ -33,8 +33,9 @@ before_install:
 
 #get the latest version of gcc
 - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "g++-${GCC_VERSION}"; fi
-- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "gcc-${GCC_VERSION}"; fi
 - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+- if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq "clang-3.6"; fi
+#- if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.6" CC="clang-3.6"; fi
 - export BS_FLAGS="--cxx=$CXX"
 
 # Install libc++
@@ -48,7 +49,7 @@ before_install:
 - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
 
 # Otherwise attempt to install g++ 4.8 libstdc++ instead for use in clang
-- if [ -z "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo apt-get install -qq g++-4.8; fi
+- if [ -z "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo apt-get install -qq g++-4.9; fi
 
 install:
 - cd "$MAIN_PATH"
