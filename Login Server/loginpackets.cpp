@@ -21,6 +21,7 @@
  */
 
 #include "loginserver.h"
+#include <ctime>
 
 #ifdef _WIN32
 #pragma comment(lib, "Winmm.lib")
@@ -34,7 +35,7 @@ bool CLoginServer::pakEncryptionRequest( CLoginClient* thisclient, CPacket* P )
 	{
 		STARTPACKET( pak, 0x7FF, 0x23 );
 		SETBYTE( pak, 0x00, 0x02 );
-		SETDWORD( pak, 0x01, timeGetTime( ) );
+		SETDWORD( pak, 0x01, static_cast<dword>(std::time(nullptr)) );
 		thisclient->SendPacket( &pak );
 		return true;
 	}
