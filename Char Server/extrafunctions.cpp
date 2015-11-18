@@ -142,7 +142,7 @@ bool CCharServer::UpdateClanWindow( int clanid )
 			ADDWORD( pak, 0x0003 ); //?????????
 			ADDWORD( pak, 0x0000 );
 			ADDWORD( pak, 0x0000 );
-			for ( int i = 0; i < 119; i++ )
+			for ( int j = 0; j < 119; j++ )
 				ADDBYTE( pak, 0x00 );
 			ADDSTRING( pak, thisclan->name ); //clan name
 			ADDBYTE( pak, 0x00 );

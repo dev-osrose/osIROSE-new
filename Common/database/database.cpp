@@ -107,6 +107,9 @@ std::unique_ptr< sql::ResultSet > CDatabase::QStore( char* Format, ... )
 
 	Log( MSG_QUERY, query );
 
+	if (pstmt != nullptr)
+		pstmt->getMoreResults( );
+
 	std::unique_ptr< sql::ResultSet > res;
 	SQLMutex.lock( );
 	try
@@ -137,12 +140,13 @@ sql::PreparedStatement* CDatabase::QPrepare( char* format )
 		Log( MSG_FATALERROR, "Could not execute query: %s\n", err.what( ) );
 		SQLPrepareMutex.unlock( );
 	}
-	return pstmt.get( ); // Not that safe, but as long as we don't hold on to the PTR we should be good :D
+	SQLPrepareMutex.unlock();
+	return pstmt.get(); // Not that safe, but as long as we don't hold on to the PTR we should be good :D
 }
 
 void CDatabase::QPrepareFree( )
 {
-	SQLPrepareMutex.unlock( );
+	//SQLPrepareMutex.unlock( );
 }
 
 std::unique_ptr< sql::ResultSet > CDatabase::QUse( char* Format, ... )

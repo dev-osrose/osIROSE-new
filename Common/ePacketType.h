@@ -104,6 +104,13 @@ struct pakChannel_List : public sPacketHeader
 	// channelInfo sServers[]; // There is a better way to do this, just can't think of one ATM. -Raven
 };
 
+struct pakLoginReply : public sPacketHeader
+{
+	uint8_t Result;
+	uint16_t Right;
+	uint16_t Unknown;
+};
+
 struct CPacket
 {
 	//unsigned short	Size;            // Packet size
@@ -113,9 +120,14 @@ struct CPacket
 
 	union
 	{
-		sPacketHeader Header;
-		uint8_t       Buffer[ 0x7FF ];
+		struct
+		{
+			sPacketHeader Header;
+			uint8_t       Buffer[0x400 - 6];
+		};
+		uint8_t       Data[0x400];
 
+		pakLoginReply pLoginReply;
 		pakChannel_List pChannelList;
 	};
 
@@ -145,7 +157,7 @@ struct CPacket
 	template < class T >
 	void Add( T value )
 	{
-		*( (T*)&Buffer[ Header.Size ] ) = value;
+		*( (T*)&Data[ Header.Size ] ) = value;
 		Header.Size += sizeof( T );
 	}
 	void AddString( const char* value, bool NullTerminate )

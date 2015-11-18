@@ -64,7 +64,8 @@ bool CClientSocket::ReceiveData( )
 	{
 // We received the headerblock
 #ifndef USE124
-		PacketSize = DecryptBufferHeader( &CryptStatus, CryptTable, Buffer );
+		PacketSize = g_Crypt.DRCH( (unsigned char*)&Buffer );
+		//PacketSize = DecryptBufferHeader( &CryptStatus, CryptTable, Buffer );
 #else
 		CPacket* header = (CPacket*)&Buffer;
 		PacketSize      = header->Header.Size;
@@ -84,7 +85,8 @@ bool CClientSocket::ReceiveData( )
 
 #ifndef USE124
 	// We received the whole packet - Now we try to decrypt it
-	if ( !DecryptBufferData( CryptTable, Buffer ) )
+	//if ( !DecryptBufferData( CryptTable, Buffer ) )
+	if (!g_Crypt.DRCB( (unsigned char*)&Buffer ))
 	{
 		Log( MSG_ERROR, "(SID:%i) Client sent illegal block.", sock );
 		return false;
@@ -126,12 +128,26 @@ void CClientSocket::SendPacket( CPacket* P )
 	//             PACKET AND NOT USE THE ORIGINAL, IT WILL FUCK UP
 	//             THE SENDTOALL FUNCTIONS
 
-	unsigned char* Buffer = (unsigned char*)P;
+	unsigned char* buf = (unsigned char*)P->Data;
 	unsigned       Size   = P->Header.Size;
+
+	FILE* fh = nullptr;
+	fopen_s( &fh, "log/sentpackets.log", "a+" );
+	if (fh != NULL)
+	{
+		fprintf( fh, "(SID:%08u) OUT  %04x: ", sock, P->Header.Command );
+		for (int i = 0; i < P->Header.Size - 6; ++i)
+			fprintf( fh, "%02x ", (unsigned char)P->Buffer[i] );
+		fprintf( fh, "\n" );
+		fclose( fh );
+	}
+
+
 #ifndef USE124
-	EncryptBuffer( CryptTable, Buffer );
+	//EncryptBuffer( CryptTable, Buffer );
+	g_Crypt.ESSP( (unsigned char*)buf );
 #endif
-	send( sock, (char*)Buffer, Size, 0 );
+	send( sock, (char*)buf, Size, 0 );
 }
 
 //-------------------------------------------------------------------------

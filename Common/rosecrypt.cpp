@@ -3,6 +3,19 @@
 #include "rosecrypt.hpp"
 #include <cstdlib>
 
+#if defined( __unix )
+#define fopen_s( pFile, filename, mode ) ( ( *( pFile ) ) = fopen( ( filename ), ( mode ) ) )
+#define _strdup( Args ) strdup( Args )
+#define sprintf_s( buffer, buffer_size, stringbuffer, ... ) ( snprintf( buffer, buffer_size, stringbuffer, __VA_ARGS__ ) )
+#define strcpy_s( buffer, buffer_size, stringbuffer ) ( strcpy( buffer, stringbuffer ) )
+#define strncpy_s( buffer, buffer_size, stringbuffer, count ) ( strncpy( buffer, stringbuffer, count ) )
+#define strtok_s( strToken, strDelimit, context ) ( strtok( strToken, strDelimit ) )
+#define memcpy_s( buffer, buffer_size, stringbuffer, count ) ( memcpy( buffer, stringbuffer, count ) )
+#define vsprintf_s( buffer, buffer_size, stringbuffer, ... ) ( vsprintf( buffer, stringbuffer, __VA_ARGS__ ) )
+#define localtime_s( result, timep ) ( localtime_r( timep, result ) )
+#define fscanf_s( _File, stringbuffer, ...) ( fscanf( _File, stringbuffer, __VA_ARGS__) )
+#endif
+
 #define LOGINSERVER_CRYPTTABLE_START_VALUE 0x0042D266
 
 //-------------------------------------------------------------------------
@@ -480,7 +493,7 @@ int buildChecksum( char* csum, char* path )
 
 	if ( path == 0 )
 		path = "TRose.exe";
-	fh       = fopen( path, "rb" );
+	fopen_s( &fh, path, "rb" );
 	if ( fh == NULL )
 		return -1;
 

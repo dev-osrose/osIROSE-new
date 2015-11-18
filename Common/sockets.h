@@ -105,6 +105,7 @@
 #include "ePacketType.h"
 #include "log.h"
 #include "rosecrypt.hpp"
+#include "crosecrypt.hpp"
 #include "ini_parser.h"
 #include "database/database.h"
 // Just some defs for easier use
