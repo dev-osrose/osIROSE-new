@@ -5,6 +5,14 @@
 
 //* Official CrcTable
 ///*
+
+#ifdef __GNUC__
+	#define PACK(...) __VA_ARGS__ __attribute__((__packed__))
+#else
+	#define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pop)
+#endif
+
+
 const unsigned char CrcTable[ ] =
   "\x00\x5E\xBC\xE2\x61\x3F\xDD\x83\xC2\x9C\x7E\x20\xA3\xFD\x1F\x41"
   "\x9D\xC3\x21\x7F\xFC\xA2\x40\x1E\x5F\x01\xE3\xBD\x3E\x60\x82\xDC"
@@ -24,6 +32,7 @@ const unsigned char CrcTable[ ] =
   "\x74\x2A\xC8\x96\x15\x4B\xA9\xF7\xB6\xE8\x0A\x54\xD7\x89\x6B\x35";
 //*/
 
+PACK(
 struct CR001
 {
 	void Init( unsigned int seed )
@@ -80,8 +89,9 @@ struct CR001
 	int m_BcSeed;
 	int m_AcSeed;
 	int m_MySeed;
-}__attribute__((__packed__));
+});
 
+PACK(
 struct HeadCryptedServer
 {
 	unsigned int AddBufferLen2 : 3;		//S2
@@ -99,8 +109,9 @@ struct HeadCryptedServer
 	unsigned char AddBufferLen1 : 3;	//S1
 	unsigned char AddTableValue2 : 3;	//R2
 	unsigned char Command4 : 2;			//T4
-}__attribute__((__packed__));
+});
 
+PACK(
 struct HeadCryptedClient
 {
 	unsigned int Command2 : 3;			//T2
@@ -118,8 +129,9 @@ struct HeadCryptedClient
 	unsigned char Command3 : 3;			//T3
 	unsigned char AddTableValue1 : 3;	//R1
 	unsigned char AddBufferLen4 : 2;	//S4
-}__attribute__((__packed__));
+});
 
+PACK(
 struct HeadDecrypted
 {
 	uint64_t AddBufferLen1 : 3;
@@ -137,8 +149,9 @@ struct HeadDecrypted
 	uint64_t EncryptAddValue1 : 2;
 	uint64_t EncryptAddValue2 : 2;
 	uint64_t EncryptValue1 : 3;
-}__attribute__((__packed__));
+});
 
+PACK(
 struct Head
 {
 	uint64_t AddBufferLen : 11;
@@ -146,7 +159,7 @@ struct Head
 	uint64_t AddTableValue : 11;
 	uint64_t EncryptAddValue : 4;
 	uint64_t EncryptValue : 3;
-}__attribute__((__packed__));
+});
 
 template<typename T, typename U>
 inline void FlipHeadMain( T a, U b )
