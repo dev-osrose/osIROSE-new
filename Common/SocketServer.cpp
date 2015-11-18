@@ -32,6 +32,7 @@ CServerSocket::CServerSocket( )
 	else
 		std::cout << "Generated checksum" << std::endl;
 #endif
+	g_Crypt.Default();
 	ConnectedClients = 0;
 }
 

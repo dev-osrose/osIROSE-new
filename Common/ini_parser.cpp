@@ -675,7 +675,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				}
 				return 0;
 			}
-			std::string result = line.substr( indexValue, indexAfterValueEnd - indexValue );
+			result = line.substr( indexValue, indexAfterValueEnd - indexValue );
 			if ( lpReturnString != 0 )
 			{
 				if ( ( uReturnStringLength == 0 ) || ( result.length( ) < *uReturnStringLength ) )
@@ -882,7 +882,7 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 					clFileOp.write( lpKey, strlen( lpKey ) );
 					clFileOp.write( "=", 1 );
 
-					std::string pWVal = std::to_string( lpDefaultValue );
+					pWVal = std::to_string( lpDefaultValue );
 					clFileOp.write( pWVal.c_str( ), pWVal.size( ) );
 					clFileOp.write( g_NewLineA, g_NewLineLn );
 					clFileOp.write( rest_of_the_file, rest_of_the_fileLn );

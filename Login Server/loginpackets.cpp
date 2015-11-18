@@ -22,16 +22,19 @@
 
 #include "loginserver.h"
 
+#ifdef _WIN32
+#pragma comment(lib, "Winmm.lib")
+#endif
+
 // Send Server encryption
 bool CLoginServer::pakEncryptionRequest( CLoginClient* thisclient, CPacket* P )
 {
 	(void)P;
 	try
 	{
-		thisclient->CryptStatus.CurAddValue = rand( ) | ( rand( ) << 16 );
-		STARTPACKET( pak, 0x7FF, 11 );
+		STARTPACKET( pak, 0x7FF, 0x23 );
 		SETBYTE( pak, 0x00, 0x02 );
-		SETDWORD( pak, 0x01, thisclient->CryptStatus.CurAddValue );
+		SETDWORD( pak, 0x01, timeGetTime( ) );
 		thisclient->SendPacket( &pak );
 		return true;
 	}
@@ -55,13 +58,13 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 		    ( P->Header.Size - 6 - 32 ) > 16 ? 16 : P->Header.Size - 6 - 32 );
 		thisclient->password.assign( (const char*)&P->Buffer, 0, 32 );
 
-		CPacket pak( ePacketType::PAKCS_LOGIN_REQ );
+		CPacket pak( ePacketType::PAKCS_LOGIN_REQ, sizeof( pakLoginReply ) );
 
-		sql::PreparedStatement* prep = DB->QPrepare( "CALL UserLogin('?')" );
+		sql::PreparedStatement* prep = DB->QPrepare( "SELECT id, password, accesslevel, `online` FROM accounts WHERE username = ?" );
 		prep->setString( 1, thisclient->username );
 
 		std::unique_ptr< sql::ResultSet > result( prep->executeQuery( ) );
-		DB->QPrepareFree( );
+		result->beforeFirst();
 
 		if ( result == NULL )
 			return false;
@@ -81,35 +84,40 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 					Log( MSG_WARNING, "Account %s try re-login",
 					     thisclient->username.c_str( ) );
 
-					pak.Add< uint8_t >( 5 );
-					pak.Add< uint32_t >( 0 );
+					pak.pLoginReply.Result = 4;
+					pak.pLoginReply.Right = 0;
+					pak.pLoginReply.Unknown = 0;
 					thisclient->SendPacket( &pak );
 
 					sql::PreparedStatement* prep =
 					    DB->QPrepare( "update accounts set login_count=1 WHERE "
-					                  "username='?'" );
+					                  "username=?" );
 					prep->setString( 1, thisclient->username );
 					prep->execute( );
 					DB->QPrepareFree( );
 
 					return true;
 				}
+				
 				thisclient->accesslevel = result->getInt( 3 );
 				if ( thisclient->accesslevel < Config.MinimumAccessLevel )
 				{ // The server are under inspection
-					pak.Add< uint8_t >( 0 );
-					pak.Add< uint32_t >( 0 );
+					pak.pLoginReply.Result = 1;
+					pak.pLoginReply.Right = 0;
+					pak.pLoginReply.Unknown = 0;
 					thisclient->SendPacket( &pak );
 					return true;
 				}
+
 				if ( thisclient->accesslevel > 0 )
 				{
 					thisclient->userid     = result->getInt( 1 );
 					thisclient->isLoggedIn = true;
 
 					// OK!
-					pak.Add< uint32_t >( 0x0c000000 );
-					pak.Add< uint8_t >( 0 );
+					pak.pLoginReply.Result = 0;
+					pak.pLoginReply.Right = 0;
+					pak.pLoginReply.Unknown = 0;
 					result = DB->QStore(
 					    "SELECT id,name FROM channels WHERE owner=0" );
 
@@ -119,14 +127,14 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 					result->beforeFirst( );
 					while ( result->next( ) )
 					{
-						if ( Config.Testserver )
-						{
-							pak.Add< uint8_t >( 63 + result->getInt( 1 ) );
-						}
-						else
-						{
-							pak.Add< uint8_t >( 48 + result->getInt( 1 ) );
-						}
+// 						if (Config.Testserver)
+// 						{
+// 							pak.Add< uint8_t >( 63 + result->getInt( 1 ) );
+// 						}
+// 						else
+// 						{
+// 							pak.Add< uint8_t >( 48 + result->getInt( 1 ) );
+//  						}
 						pak.AddString( result->getString( 2 ).c_str( ), true );
 						pak.Add< uint32_t >( result->getInt( 1 ) );
 					}
@@ -134,15 +142,17 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				else
 				{
 					// BANNED
-					pak.Add< uint8_t >( 5 );
-					pak.Add< uint32_t >( 0 );
+					pak.pLoginReply.Result = 5;
+					pak.pLoginReply.Right = 0;
+					pak.pLoginReply.Unknown = 0;
 				}
 			}
 			else
 			{
 				// BAD PASSWORD
-				pak.Add< uint8_t >( 3 );
-				pak.Add< uint32_t >( 0 );
+				pak.pLoginReply.Result = 3;
+				pak.pLoginReply.Right = 0;
+				pak.pLoginReply.Unknown = 0;
 			}
 		}
 		else
@@ -166,8 +176,9 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 				     thisclient->username.c_str( ) );
 			}
 			// BAD USERNAME
-			pak.Add< uint8_t >( 2 );
-			pak.Add< uint32_t >( 0 );
+			pak.pLoginReply.Result = 2;
+			pak.pLoginReply.Right = 0;
+			pak.pLoginReply.Unknown = 0;
 		}
 		/*
 		 1 - general error   | 4 - your account is already logged

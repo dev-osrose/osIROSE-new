@@ -640,16 +640,16 @@ void CWorldServer::DePopulateZone( CPlayer* thisclient, int zonex, int zoney ) /
 				if ( thismonster->Position->current.x == zonex && thismonster->Position->current.y == zoney && thismonster->Position->Map == thisclient->Position->Map )
 					pakout.Add< uint16_t >( thismonster->clientid );
 
-				for ( unsigned j = 0; j < thismap->NPCList.size( ); j++ )
+				for ( unsigned k = 0; k < thismap->NPCList.size( ); k++ )
 				{
-					CNPC* thisnpc = thismap->NPCList[ j ];
+					CNPC* thisnpc = thismap->NPCList[ k ];
 					if ( thisnpc->pos.x == zonex && thisnpc->pos.y == zoney && thisnpc->posMap == thisclient->Position->Map )
 						pakout.Add< uint16_t >( thisnpc->clientid );
 				}
 
-				for ( unsigned j = 0; j < thismap->DropsList.size( ); j++ )
+				for ( unsigned k = 0; k < thismap->DropsList.size( ); k++ )
 				{
-					CDrop* thisdrop = thismap->DropsList[ j ];
+					CDrop* thisdrop = thismap->DropsList[ k ];
 					if ( thisdrop->pos.x == zonex && thisdrop->pos.y == zoney && thisdrop->posMap == thisclient->Position->Map )
 						pakout.Add< uint16_t >( thisdrop->clientid );
 				}

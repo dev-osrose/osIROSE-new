@@ -7,7 +7,7 @@
     <IntDir>$(SolutionDir)obj\$(PlatformName)-$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <_PropertySheetDisplayName>AZGStudioShared</_PropertySheetDisplayName>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>Never</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

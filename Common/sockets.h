@@ -88,17 +88,24 @@
 //-----
 
 // MySQL
+#ifdef _WIN32
+#pragma warning (push, 0)
+#endif
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
+#ifdef _WIN32
+#pragma warning (pop)
+#endif
 //-----
 
 #include "ePacketType.h"
 #include "log.h"
 #include "rosecrypt.hpp"
+#include "crosecrypt.hpp"
 #include "ini_parser.h"
 #include "database/database.h"
 // Just some defs for easier use
