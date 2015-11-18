@@ -7,12 +7,11 @@
 
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
-/*
-typedef unsigned __int8			byte;
-typedef unsigned __int16		word;
-typedef unsigned __int32		dword;
-typedef unsigned __int64		qword;
-typedef char*					strings;*/
+
+typedef uint8_t			byte;
+typedef uint16_t		word;
+typedef uint32_t		dword;
+typedef uint64_t		qword;
 
 // CS = Client -> server
 // SC = server -> server

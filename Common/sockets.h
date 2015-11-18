@@ -117,14 +117,15 @@ using std::vector;
 using std::map;
 using std::nothrow;
 using std::string;
+
 #define STARTPACKET( p, c, s ) \
 	CPacket p;                 \
 	p.Header.Command = c;      \
 	p.Header.Size    = s;
 #define SETBYTE( p, o, v ) p.Buffer[ o ] = v;
-#define SETWORD( p, o, v ) *( (unsigned short*)&p.Buffer[ o ] ) = v;
-#define SETDWORD( p, o, v ) *( (unsigned*)&p.Buffer[ o ] ) = v;
-#define SETQWORD( p, o, v ) *( (long long*)&p.Buffer[ o ] ) = v;
+#define SETWORD( p, o, v ) *( (word*)&p.Buffer[ o ] ) = v;
+#define SETDWORD( p, o, v ) *( (dword*)&p.Buffer[ o ] ) = v;
+#define SETQWORD( p, o, v ) *( (qword*)&p.Buffer[ o ] ) = v;
 #define SETFLOAT( p, o, v ) *( (float*)&p.Buffer[ o ] ) = v;
 
 #define BEGINPACKET( p, c ) \
@@ -141,17 +142,17 @@ using std::string;
 	}
 #define ADDWORD( p, v )                                     \
 	{                                                       \
-		*( (uint16_t*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
+		*( (word*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
 		p.Header.Size += 2;                                 \
 	}
 #define ADDDWORD( p, v )                                    \
 	{                                                       \
-		*( (unsigned*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
+		*( (dword*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
 		p.Header.Size += 4;                                 \
 	}
 #define ADDQWORD( p, v )                                    \
 	{                                                       \
-		*( (uint64_t*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
+		*( (qword*)&p.Buffer[ p.Header.Size - 6 ] ) = v; \
 		p.Header.Size += 8;                                 \
 	}
 #define ADDFLOAT( p, v )                                 \
@@ -165,9 +166,9 @@ using std::string;
 			ADDBYTE( p, ( v )[ q ] );                       \
 	}
 #define GETBYTE( p, o ) ( p.Buffer[ o ] )
-#define GETWORD( p, o ) *( (uint16_t*)&p.Buffer[ o ] )
-#define GETDWORD( p, o ) *( (uint32_t*)&p.Buffer[ o ] )
-#define GETQWORD( p, o ) *( (uint64_t*)&p.Buffer[ o ] )
+#define GETWORD( p, o ) *( (word*)&p.Buffer[ o ] )
+#define GETDWORD( p, o ) *( (dword*)&p.Buffer[ o ] )
+#define GETQWORD( p, o ) *( (qword*)&p.Buffer[ o ] )
 #define GETFLOAT( p, o ) *( (float*)&p.Buffer[ o ] )
 #if defined( _WIN32 )
 #define pi 3.1415926535897932384626433832795
