@@ -205,9 +205,49 @@ bool CServerSocket::StartServer( )
 		sckISC = socket( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISC == INVALID_SOCKET )
 		{
-			//Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
+#ifdef _WIN32
+			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %i)", WSAGetLastError () );
+#else
+			Log ( MSG_ERROR, "Could not create valid ISC socket (WSK2 ERROR: %s)", strerror(errno) );
+#endif
 			return false;
 		}
+		int optval = 1;
+		if ( setsockopt( sckISC, SOL_SOCKET, SO_KEEPALIVE, (const char*)&optval,
+		                 sizeof( optval ) ) == -1 )
+		{
+			Log( MSG_ERROR, "setsockopt:SO_KEEPALIVE" );
+		}
+		setsockopt( sckISC, IPPROTO_TCP, TCP_NODELAY, (const char*)&optval,
+		            sizeof( optval ) );
+		sain.sin_family      = AF_INET;
+		sain.sin_addr.s_addr = INADDR_ANY;
+		sain.sin_port        = htons( Config.CharsPort ); //29110 );
+		memset( &( sain.sin_zero ), '\0', 8 );
+		if ( bind( sckISC, (const sockaddr*)&sain, sizeof( struct sockaddr ) ) )
+		{
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not bind socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not bind socket: %s", strerror( errno ) );
+#endif
+			closesocket( sckISC );
+			sckISC = INVALID_SOCKET;
+			return false;
+		}
+		if ( listen( sckISC, SOMAXCONN ) == -1 )
+		{
+#ifdef _WIN32
+			Log( MSG_FATALERROR, "Could not listen on socket: #%i", WSAGetLastError( ) );
+#else
+			Log( MSG_FATALERROR, "Could not listen on socket: %s", strerror( errno ) );
+#endif
+			closesocket( sckISC );
+			sckISC = INVALID_SOCKET;
+			return false;
+		}
+		Log( MSG_INFO, "opened ISC port: %i", Config.CharsPort );
+
 	}
 	isActive = true;
 
@@ -320,7 +360,7 @@ void CServerSocket::ServerLoop( )
 			if ( !Config.usethreads )
 				FillFDS( &fds );
 
-			FD_SET( sckISC, &fds );
+			/* FD_SET( sckISC, &fds ); */
 			activity = select( maxfd + 1, &fds, NULL, NULL, &timeout );
 
 			if ( activity == 0 )
@@ -336,7 +376,7 @@ void CServerSocket::ServerLoop( )
 				Log( MSG_ERROR, "Select command failed. Error #%i",
 				     WSAGetLastError( ) );
 #else
-				Log( MSG_ERROR, "Select command failed. Error #%i", strerror( errno ) );
+				Log( MSG_ERROR, "Select command failed. Error %s", strerror( errno ) );
 #endif
 				isActive = false;
 			}
@@ -361,7 +401,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 					Log( MSG_ERROR, "Error accepting socket: %i", WSAGetLastError( ) );
 #else
-					Log( MSG_ERROR, "Error accepting socket: %i", strerror( errno ) );
+					Log( MSG_ERROR, "Error accepting socket: %s", strerror( errno ) );
 #endif
 				}
 			} //End if ( FD_ISSET( sckISC, &fds ) )
@@ -376,7 +416,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 			Log( MSG_ERROR, "Select command failed. Error #%i", WSAGetLastError( ) );
 #else
-			Log( MSG_ERROR, "Select command failed. Error #%i", strerror( errno ) );
+			Log( MSG_ERROR, "Select command failed. Error %s", strerror( errno ) );
 #endif
 			isActive = false;
 		}
@@ -398,7 +438,7 @@ void CServerSocket::ServerLoop( )
 #ifdef _WIN32
 				Log( MSG_ERROR, "Error accepting socket: %i", WSAGetLastError( ) );
 #else
-				Log( MSG_ERROR, "Error accepting socket: %i", strerror( errno ) );
+				Log( MSG_ERROR, "Error accepting socket: %s", strerror( errno ) );
 #endif
 			}
 		}
