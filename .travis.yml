@@ -3,15 +3,19 @@ matrix:
   include:
     - compiler: gcc
       env: GCC_VERSION="4.9" BUILD_TYPE=Debug
+    - compiler: gcc
       env: GCC_VERSION="4.9" BUILD_TYPE=Release
     - compiler: gcc
       env: GCC_VERSION="5" BUILD_TYPE=Debug
+    - compiler: gcc
       env: GCC_VERSION="5" BUILD_TYPE=Release
     - compiler: clang
       env: LIBCXX=1 BUILD_TYPE=Debug
+    - compiler: clang
       env: LIBCXX=1 BUILD_TYPE=Release
     - compiler: clang
       env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug
+    - compiler: clang
       env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release
   allow_failures:
     - env: LIBCXX=1 BUILD_TYPE=Debug
