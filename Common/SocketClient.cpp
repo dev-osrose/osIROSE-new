@@ -109,10 +109,7 @@ bool CClientSocket::ReceiveData( )
 
 	// Handle actions for this packet
 	if ( !GS->OnReceivePacket( this, pak ) )
-	{
-		//Log(MSG_ERROR, "onrecieve packet returned false");
 		return false;
-	}
 
 	// Reset values for the next packet
 	PacketSize   = 6;

@@ -202,7 +202,8 @@ bool CServerSocket::StartServer( )
 	}
 	if ( LOG_THISSERVER == LOG_LOGIN_SERVER )
 	{
-		sckISC = socket( AF_INET, SOCK_STREAM, 0 );
+		sckISC = INVALID_SOCKET;
+		/*sckISC = socket( AF_INET, SOCK_STREAM, 0 );
 		if ( sckISC == INVALID_SOCKET )
 		{
 #ifdef _WIN32
@@ -246,7 +247,7 @@ bool CServerSocket::StartServer( )
 			sckISC = INVALID_SOCKET;
 			return false;
 		}
-		Log( MSG_INFO, "opened ISC port: %i", Config.CharsPort );
+		Log( MSG_INFO, "opened ISC port: %i", Config.CharsPort );*/
 
 	}
 	isActive = true;
@@ -353,14 +354,14 @@ void CServerSocket::ServerLoop( )
 		activity = select( maxfd + 1, &fds, NULL, NULL, &timeout );
 
 		// This checks for ISC connections.
-		if ( activity == 0 )
+		if ( activity == 0 && sckISC != INVALID_SOCKET)
 		{
 			// continue;
 			FD_ZERO( &fds );
 			if ( !Config.usethreads )
 				FillFDS( &fds );
 
-			/* FD_SET( sckISC, &fds ); */
+			FD_SET( sckISC, &fds );
 			activity = select( maxfd + 1, &fds, NULL, NULL, &timeout );
 
 			if ( activity == 0 )
@@ -473,25 +474,16 @@ void CServerSocket::HandleClients( fd_set* fds )
 	for ( uint32_t i = 0; i < ClientList.size( ); i++ )
 	{
 		CClientSocket* client = ClientList.at( i );
-
-		if ( !client->isActive )
-			continue;
-
 		if ( FD_ISSET( client->sock, fds ) )
 		{
 			if ( client->isserver == true )
 			{
 				//Log( MSG_INFO,"ISC PACKET");
-				if ( !client->ISCThread( ) )
-				{
-					client->isActive = false;
-					DisconnectClient( client );
-				}
+				client->ISCThread( );
 			}
 			else if ( !client->ReceiveData( ) )
 			{
 				client->isActive = false;
-				DisconnectClient( client );
 			}
 		}
 	}
@@ -530,7 +522,6 @@ void CServerSocket::AddUser( SOCKET sock, sockaddr_in* ClientInfo, bool server )
 		}
 		return;
 	}
-	thisclient->ClientIP = "";
 	thisclient->ClientIP = inet_ntoa( ClientInfo->sin_addr );
 
 	memset( &thisclient->ClientSubNet, '\0', 12 );

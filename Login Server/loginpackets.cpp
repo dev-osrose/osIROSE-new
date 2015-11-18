@@ -67,8 +67,10 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 		std::unique_ptr< sql::ResultSet > result( prep->executeQuery( ) );
 		result->beforeFirst();
 
-		if ( result == NULL )
+		if ( result == NULL ) {
+			Log(MSG_ERROR, "SELECT query failed");
 			return false;
+		}
 
 		if ( result->next( ) )
 		{
@@ -122,8 +124,12 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 					result = DB->QStore(
 					    "SELECT id,name FROM channels WHERE owner=0" );
 
-					if ( result->rowsCount( ) == 0 )
+					if ( result->rowsCount( ) == 0 ) {
+						Log(MSG_ERROR, "No Channel found");
+						pak.pLoginReply.Result = 1;
+						thisclient->SendPacket(&pak);
 						return false;
+					}
 
 					result->beforeFirst( );
 					while ( result->next( ) )
@@ -169,6 +175,7 @@ bool CLoginServer::pakUserLogin( CLoginClient* thisclient, CPacket* P )
 
 				if ( !prep->execute( ) )
 				{
+					Log(MSG_ERROR, "Error while writing to the DB");
 					DB->QPrepareFree( );
 					return true;
 				}
