@@ -15,6 +15,9 @@ project("osIROSE")
 
 enable_testing()
 
+message(STATUS "CXX=" $ENV{CXX})
+message(STATUS "CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(std "-std=c++11")
 	set(warnings "-Wall -Wextra -Werror -Wno-write-strings -Wno-unknown-pragmas")
