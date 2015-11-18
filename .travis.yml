@@ -14,8 +14,10 @@ matrix:
       env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug
       env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release
   allow_failures:
-    - env: LIBCXX=1
-    - env: UNSUPPORTED_FOR_NOW=1
+    - env: LIBCXX=1 BUILD_TYPE=Debug
+    - env: LIBCXX=1 BUILD_TYPE=Release
+    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug
+    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release
 
 before_install:
 - export MAIN_PATH=$(pwd)
