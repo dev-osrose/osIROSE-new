@@ -55,9 +55,9 @@ set(CONFIGURED_ONCE TRUE CACHE INTERNAL
 
 
 add_subdirectory(Common)
-add_subdirectory("LoginServer")
-add_subdirectory("CharServer")
-add_subdirectory("WorldServer")
+#add_subdirectory("LoginServer")
+#add_subdirectory("CharServer")
+#add_subdirectory("WorldServer")
 
 if (COVERALLS)
 	add_subdirectory("UnitTest")

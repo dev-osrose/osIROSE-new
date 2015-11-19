@@ -29,16 +29,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 list( APPEND COMMON_LIST_SRC
-  config.cpp 
-  crosecrypt.cpp 
-  globals.cpp 
-  log.cpp 
-  rosecrypt.cpp 
-  SocketBase.cpp 
-  SocketClient.cpp 
-  SocketServer.cpp 
-  ini_parser.cpp 
-  ./database/database.cpp )
+  crosecrypt.cpp )
+
+list( APPEND OTHER_SRC
+  ini_parser.cpp )
   
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${COMMON_LIST_SRC})
@@ -48,7 +42,7 @@ foreach (COMMON_SRC ${COMMON_LIST_SRC})
 	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
 endforeach()
   
-set(COV_SRC_LIST "${COMMON_SRCS_TMP}" CACHE INTERNAL "")
+set(COV_SRC_LIST "${COMMON_SRCS_TMP} ${OTHER_SRC}" CACHE INTERNAL "")
 
 add_library(Common STATIC ${COMMON_LIST_SRC})
 
