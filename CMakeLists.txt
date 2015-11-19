@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-#function(message)
-#  list(GET ARGV 0 MessageType)
-#  if(MessageType STREQUAL FATAL_ERROR OR
-#     MessageType STREQUAL SEND_ERROR OR
-#     MessageType STREQUAL WARNING OR
-#     MessageType STREQUAL AUTHOR_WARNING)
-#    list(REMOVE_AT ARGV 0)
-#    _message(${MessageType} "${ARGV}")
-#  endif()
-#endfunction()
+function(message)
+  list(GET ARGV 0 MessageType)
+  if(MessageType STREQUAL FATAL_ERROR OR
+     MessageType STREQUAL SEND_ERROR OR
+     MessageType STREQUAL WARNING OR
+     MessageType STREQUAL AUTHOR_WARNING)
+    list(REMOVE_AT ARGV 0)
+    _message(${MessageType} "${ARGV}")
+  endif()
+endfunction()
 
 project("osIROSE")
 
@@ -62,10 +62,6 @@ add_subdirectory("UnitTest")
 
 
 message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
-message(STATUS "COMMON_LIST_SRC=" ${COMMON_LIST_SRC})
-message(STATUS "LOGIN_LIST_SRC=" ${LOGIN_LIST_SRC})
-message(STATUS "CHAR_LIST_SRC=" ${CHAR_LIST_SRC})
-message(STATUS "WORLD_LIST_SRC=" ${WORLD_LIST_SRC})
 
 # Setup the coveralls target and tell it to gather
 # coverage data for all the lib sources.
