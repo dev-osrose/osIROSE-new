@@ -19,6 +19,7 @@ install:
 - cmd: git submodule update --init --recursive
 cache: C:\projects\osIROSE\3rdParty
 build:
+  project: osIROSE.sln
   parallel: true
   verbosity: minimal
 artifacts:
