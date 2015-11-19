@@ -26,15 +26,15 @@ endif()
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
 			${CMAKE_HOME_DIRECTORY}/3rdParty/include
-			$ENV{GTEST_DIR}/include)
+			${GTEST_DIR}/include)
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 # Our Stuff 
-include_directories($ENV{GTEST_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${GTEST_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Build Gtest
-add_library(gtest STATIC $ENV{GTEST_DIR}/src/gtest-all.cc)
-add_library(gtest_main STATIC $ENV{GTEST_DIR}/src/gtest_main.cc)
+add_library(gtest STATIC ${GTEST_DIR}/src/gtest-all.cc)
+add_library(gtest_main STATIC ${GTEST_DIR}/src/gtest_main.cc)
 target_link_libraries(gtest_main gtest -pthread)
 
 list( APPEND UNIT_LIST_SRC
