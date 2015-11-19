@@ -9,7 +9,7 @@
 #ifdef __GNUC__
 	#define PACK(...) __VA_ARGS__ __attribute__((__packed__))
 #else
-	#define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pop)
+	#define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pack(pop))
 #endif
 
 

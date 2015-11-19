@@ -21,8 +21,11 @@
 #define REVISION 32
 #include <fstream>
 #include "worldserver.h"
+
+#ifdef _WIN32
 #pragma comment( lib, "ws2_32.lib" )
 #undef close
+#endif
 
 CWorldServer* GServer;
 
