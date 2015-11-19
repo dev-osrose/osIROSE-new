@@ -59,7 +59,7 @@ before_script:
 - export GTEST_DIR="$MAIN_PATH/tools/googletest/googletest"
 - mkdir build
 - cd build
-- cmake ..
+- cmake -DCOVERALLS=ON -DCMAKE_BUILD_TYPE=Debug ..
 
 script: 
 - make -j 2
