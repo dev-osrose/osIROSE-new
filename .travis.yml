@@ -11,9 +11,9 @@ matrix:
     - compiler: gcc
       env: GCC_VERSION="5" BUILD_TYPE=Release  UNITTEST=OFF
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Debug  UNITTEST=ON
+      env: LIBCXX=1 BUILD_TYPE=Debug UNITTEST=ON
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Release  UNITTEST=OFF
+      env: LIBCXX=1 BUILD_TYPE=Release UNITTEST=OFF
     - compiler: clang
       env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug UNITTEST=ON
     - compiler: clang
