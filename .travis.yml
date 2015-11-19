@@ -65,7 +65,7 @@ before_script:
 
 script: 
 - make -j 2
-- make coveralls
+- if [ -n "$UNITTEST" == "ON" ]; then make coveralls; fi
 
 notifications:
   slack:
