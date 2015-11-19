@@ -39,6 +39,16 @@ list( APPEND COMMON_LIST_SRC
   SocketServer.cpp 
   ini_parser.cpp 
   ./database/database.cpp )
+  
+set(COMMON_SRCS_TMP "")
+foreach (COMMON_SRC ${COMMON_LIST_SRC})
+	if (NOT "${COMMON_SRC}" MATCHES "^/")
+		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
+	endif()
+	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
+endforeach()
+  
+set(COV_SRC_LIST "${COMMON_SRCS_TMP}" CACHE INTERNAL "")
 
 add_library(Common STATIC ${COMMON_LIST_SRC})
 

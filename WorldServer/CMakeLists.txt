@@ -75,6 +75,23 @@ list( APPEND mainSource
 	worldprocess.cpp
 	worldserver.cpp )
 	
+set(COMMON_SRCS_TMP "")
+foreach (COMMON_SRC ${mainSource})
+	if (NOT "${COMMON_SRC}" MATCHES "^/")
+		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
+	endif()
+	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
+endforeach()
+
+foreach (COMMON_SRC ${fileHandlers})
+	if (NOT "${COMMON_SRC}" MATCHES "^/")
+		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
+	endif()
+	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
+endforeach()
+	
+set(COV_SRC_LIST "${COV_SRC_LIST};${COMMON_SRCS_TMP}" CACHE INTERNAL "")
+	
 find_package( Threads REQUIRED )
 add_executable(WorldServer ${mainSource} ${fileHandlers})
 target_link_libraries(WorldServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
