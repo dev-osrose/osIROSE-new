@@ -20,6 +20,9 @@ dep
 # configuration file
 server.ini
 
+# log files
+log
+
 # Build results
 
 [Dd]ebug/
