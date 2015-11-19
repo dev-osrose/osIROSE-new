@@ -22,35 +22,34 @@
 #include "config.h"
 
 // Constructor
-CClientSocket::CClientSocket () :
-		player ( NULL ), GS ( NULL )
+CClientSocket::CClientSocket( )
+    : GS( nullptr ), player( nullptr )
 {
-	PacketSize = 6;		// Starting size
-	PacketOffset = 0;		// No bytes read, yet.
+	PacketSize   = 6; // Starting size
+	PacketOffset = 0; // No bytes read, yet.
 }
 
 // Destructor
-CClientSocket::~CClientSocket ()
+CClientSocket::~CClientSocket( )
 {
-
 }
 
 // Receive this client's socket
-bool CClientSocket::ReceiveData ()
+bool CClientSocket::ReceiveData( )
 {
-	int ReceivedBytes;
+	int   ReceivedBytes;
 	short BytesToRead;
 
 	// Calculate bytes to read to get the full packet
 	BytesToRead = PacketSize - PacketOffset;
 	// This should never happen, but it is integrated:
-	if ( BytesToRead > 0x400 - PacketOffset )
+	if ( BytesToRead > 0x7FF - PacketOffset )
 		return false;
 	if ( BytesToRead == 0 )
 		return false;
 
 	// Receive data from client
-	ReceivedBytes = recv ( sock, (char*) &Buffer[PacketOffset], BytesToRead, 0 );
+	ReceivedBytes = recv( sock, (char*)&Buffer[ PacketOffset ], BytesToRead, 0 );
 	if ( ReceivedBytes <= 0 )
 		return false;
 
@@ -63,18 +62,19 @@ bool CClientSocket::ReceiveData ()
 
 	if ( PacketSize == 6 )
 	{
-		// We received the headerblock
+// We received the headerblock
 #ifndef USE124
-		PacketSize = DecryptBufferHeader ( &CryptStatus, CryptTable, Buffer );
+		PacketSize = g_Crypt.DRCH( (unsigned char*)&Buffer );
+		//PacketSize = DecryptBufferHeader( &CryptStatus, CryptTable, Buffer );
 #else
 		CPacket* header = (CPacket*)&Buffer;
-		PacketSize = header->Size;
+		PacketSize      = header->Header.Size;
 #endif
 
 		// Did we receive an incorrect buffer?
 		if ( PacketSize < 6 )
 		{
-			Log ( MSG_ERROR, "(SID:%i) Client sent incorrect blockheader.", sock );
+			Log( MSG_ERROR, "(SID:%i) Client sent incorrect blockheader.", sock );
 			return false;
 		}
 
@@ -85,102 +85,111 @@ bool CClientSocket::ReceiveData ()
 
 #ifndef USE124
 	// We received the whole packet - Now we try to decrypt it
-	if ( !DecryptBufferData ( CryptTable, Buffer ) )
+	//if ( !DecryptBufferData( CryptTable, Buffer ) )
+	if (!g_Crypt.DRCB( (unsigned char*)&Buffer ))
 	{
-		Log ( MSG_ERROR, "(SID:%i) Client sent illegal block.", sock );
+		Log( MSG_ERROR, "(SID:%i) Client sent illegal block.", sock );
 		return false;
 	}
 #else
-	cryptPacket( (char*)Buffer, this->ct);
+	cryptPacket( (char*)Buffer, this->ct );
 #endif
-	CPacket* pak = (CPacket*) &Buffer;
+	CPacket* pak = (CPacket*)&Buffer;
 
-	FILE *fh = fopen ( "log/receivedpackets.log", "a+" );
+	FILE* fh = nullptr;
+	fopen_s( &fh, "log/receivedpackets.log", "a+" );
 	if ( fh != NULL )
 	{
-		fprintf ( fh, "(SID:%08u) IN  %04x: ", sock, pak->Command );
-		for ( int i = 0; i < pak->Size - 6; ++i )
-			fprintf ( fh, "%02x ", (unsigned char) pak->Buffer[i] );
-		fprintf ( fh, "\n" );
-		fclose ( fh );
+		fprintf( fh, "(SID:%08u) IN  %04x: ", sock, pak->Header.Command );
+		for ( int i = 0; i < pak->Header.Size - 6; ++i )
+			fprintf( fh, "%02x ", (unsigned char)pak->Buffer[ i ] );
+		fprintf( fh, "\n" );
+		fclose( fh );
 	}
 
 	// Handle actions for this packet
-	if ( !GS->OnReceivePacket ( this, pak ) )
-	{
-		//Log(MSG_ERROR, "onrecieve packet returned false");
+	if ( !GS->OnReceivePacket( this, pak ) )
 		return false;
-	}
 
 	// Reset values for the next packet
-	PacketSize = 6;
+	PacketSize   = 6;
 	PacketOffset = 0;
 
 	return true;
 }
 
 // Send a packet to this client
-void CClientSocket::SendPacket ( CPacket *P )
+void CClientSocket::SendPacket( CPacket* P )
 {
 	// :WARNING: IF WE ADD A CRYPT FUNCTION HERE WE MUST COPY THE
 	//             PACKET AND NOT USE THE ORIGINAL, IT WILL FUCK UP
 	//             THE SENDTOALL FUNCTIONS
 
-	unsigned char* Buffer = (unsigned char*) P;
-	unsigned Size = P->Size;
-#ifndef USE124
-	EncryptBuffer ( CryptTable, Buffer );
-#endif
-	send ( sock, (char*) Buffer, Size, 0 );
+	unsigned char* buf = (unsigned char*)P->Data;
+	unsigned       Size   = P->Header.Size;
 
+	FILE* fh = nullptr;
+	fopen_s( &fh, "log/sentpackets.log", "a+" );
+	if (fh != NULL)
+	{
+		fprintf( fh, "(SID:%08u) OUT  %04x: ", sock, P->Header.Command );
+		for (int i = 0; i < P->Header.Size - 6; ++i)
+			fprintf( fh, "%02x ", (unsigned char)P->Buffer[i] );
+		fprintf( fh, "\n" );
+		fclose( fh );
+	}
+
+
+#ifndef USE124
+	//EncryptBuffer( CryptTable, Buffer );
+	g_Crypt.ESSP( (unsigned char*)buf );
+#endif
+	send( sock, (char*)buf, Size, 0 );
 }
 
 //-------------------------------------------------------------------------
 // Send a packet to a client without encrypting the source packet
 //-------------------------------------------------------------------------
-void CClientSocket::SendPacketCpy ( CPacket *P )
+void CClientSocket::SendPacketCpy( CPacket* P )
 {
 	CPacket NewPacket;
 
-	memcpy ( &NewPacket, P, sizeof(CPacket) );
-	SendPacket ( &NewPacket );
+	memcpy( &NewPacket, P, sizeof( CPacket ) );
+	SendPacket( &NewPacket );
 }
 
 // Handle client socket (threads)
-PVOID ClientMainThread ( PVOID ClientSocket )
+PVOID CClientSocket::ClientMainThread( )
 {
-	CClientSocket* thisplayer = (CClientSocket*) ClientSocket;
 	fd_set fds;
-	while ( thisplayer->isActive )
+	while ( this->isActive )
 	{
 		FD_ZERO( &fds );
-		FD_SET( thisplayer->sock, &fds );
-		int Select = select ( (thisplayer->sock + 1), &fds, nullptr, nullptr, nullptr );
+		FD_SET( this->sock, &fds );
+		int Select = select( ( this->sock + 1 ), &fds, nullptr, nullptr, nullptr );
 
 		if ( Select == SOCKET_ERROR )
 		{
-			Log ( MSG_ERROR, NULL, "Error in Select" );
-			thisplayer->isActive = false;
+			Log( MSG_ERROR, NULL, "Error in Select" );
+			this->isActive = false;
 		}
 		else
 		{
-			if ( FD_ISSET( thisplayer->sock, &fds ) )
+			if ( FD_ISSET( this->sock, &fds ) )
 			{
-				if ( thisplayer->isserver == true )
+				if ( this->isserver == true )
 				{
 					//Log( MSG_INFO,"ISC PACKET");
-					thisplayer->ISCThread ();
+					this->ISCThread( );
 				}
-				else if ( !thisplayer->ReceiveData () )
+				else if ( !this->ReceiveData( ) )
 				{
-					thisplayer->isActive = false;
+					this->isActive = false;
 				}
 			}
 		}
-
 	}
-	thisplayer->GS->DisconnectClient ( thisplayer );
-	pthread_exit ( NULL );
+	this->GS->DisconnectClient( this );
 	return 0;
 }
 

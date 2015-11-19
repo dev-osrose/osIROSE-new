@@ -1,2 +1,0 @@
-npc_data.csv
-skills_data.csv

@@ -1,0 +1,6 @@
+[submodule "tools/coveralls-cmake"]
+	path = tools/coveralls-cmake
+	url = https://github.com/JoakimSoderberg/coveralls-cmake.git
+[submodule "tools/googletest"]
+	path = tools/googletest
+	url = https://github.com/google/googletest

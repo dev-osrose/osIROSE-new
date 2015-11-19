@@ -1,0 +1,77 @@
+
+language: cpp
+matrix:
+  include:
+    - compiler: gcc
+      env: GCC_VERSION="4.9" BUILD_TYPE=Debug UNITTEST=ON
+    - compiler: gcc
+      env: GCC_VERSION="4.9" BUILD_TYPE=Release UNITTEST=OFF
+    - compiler: gcc
+      env: GCC_VERSION="5" BUILD_TYPE=Debug  UNITTEST=ON
+    - compiler: gcc
+      env: GCC_VERSION="5" BUILD_TYPE=Release  UNITTEST=OFF
+    - compiler: clang
+      env: LIBCXX=1 BUILD_TYPE=Debug UNITTEST=ON
+    - compiler: clang
+      env: LIBCXX=1 BUILD_TYPE=Release UNITTEST=OFF
+    - compiler: clang
+      env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug UNITTEST=ON
+    - compiler: clang
+      env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release UNITTEST=OFF
+  allow_failures:
+    - env: LIBCXX=1 BUILD_TYPE=Debug UNITTEST=ON
+    - env: LIBCXX=1 BUILD_TYPE=Release UNITTEST=OFF
+    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug UNITTEST=ON
+    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release UNITTEST=OFF
+
+before_install:
+- export MAIN_PATH=$(pwd)
+- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+- sudo add-apt-repository -y "deb http://mirrors.kernel.org/ubuntu/ trusty main"
+- sudo add-apt-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
+- sudo apt-get update -qq
+- git submodule update --init --recursive
+
+#get the latest version of gcc
+- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "g++-${GCC_VERSION}"; fi
+- if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+- if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq "clang-3.4"; fi
+#- if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.4" CC="clang-3.4"; fi
+- export BS_FLAGS="--cxx=$CXX"
+
+# Install libc++
+- if [ -n "$LIBCXX" ]; then export BS_FLAGS="$BS_FLAGS --use-libcxx"; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd libcxx/lib && bash buildit; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++/v1; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
+- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+
+# Otherwise attempt to install g++ 4.8 libstdc++ instead for use in clang
+- if [ -z "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo apt-get install -qq g++-4.9; fi
+
+install:
+- cd "$MAIN_PATH"
+- sh install_dependencies.sh
+
+before_script:
+- export GTEST_DIR="$MAIN_PATH/tools/googletest/googletest"
+- export COVERALLS_SERVICE_NAME=travis-ci
+- mkdir build
+- cd build
+- if [ "$UNITTEST" = "ON" ]; then cmake -DCOVERALLS="$UNITTEST" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..; fi
+- if [ "$UNITTEST" = "OFF" ]; then cmake ..; fi
+
+script: 
+- make -j 2
+- if [ "$UNITTEST" = "ON" ]; then make coveralls; fi
+
+notifications:
+  slack:
+    secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
+
+env:
+  global:
+    secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="

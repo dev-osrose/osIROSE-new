@@ -15,10 +15,9 @@
 // -----------------------------------------------------------------------------------------
 // Config load functions
 // -----------------------------------------------------------------------------------------
-char *ConfigGetString( char *pcFile, char *pcName, char *pcDefault );
-unsigned ConfigGetInt( char *pcFile, char *pcName, unsigned uDefault );
+char*    ConfigGetString( char* pcFile, char* pcName, char* pcDefault );
+unsigned ConfigGetInt( char* pcFile, char* pcName, unsigned uDefault );
 
 // -----------------------------------------------------------------------------------------
 
 #endif
-

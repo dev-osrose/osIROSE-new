@@ -21,9 +21,10 @@
 #include "sockets.h"
 
 // Constructor
-CBaseSocket::CBaseSocket( ) : sckISC(NULL), sckISCII(NULL), CryptTable(NULL), isserver(false)
+CBaseSocket::CBaseSocket( )
+    : sckISC( INVALID_SOCKET ), sckISCII( INVALID_SOCKET ), isserver( false ), CryptTable( nullptr )
 {
-	sock = INVALID_SOCKET;
+	sock     = INVALID_SOCKET;
 	isActive = false;
 }
 
@@ -36,19 +37,20 @@ CBaseSocket::~CBaseSocket( )
 void CBaseSocket::CloseSocket( void )
 {
 	// Leave function, if socket isn't active
-	if ( !isActive ) return;	
+	if ( !isActive )
+		return;
 	// Close socket
 	close( sock );
-	sock	= INVALID_SOCKET;
-	isActive	= false;
+	sock     = INVALID_SOCKET;
+	isActive = false;
 }
 
 // Init winsocket, if we are using Windows
-bool InitWinSocket ( void )
+bool InitWinSocket( void )
 {
 #ifdef _WIN32
 	WSADATA wsa;
-	return (WSAStartup(MAKEWORD(2,0),&wsa)==0);
+	return ( WSAStartup( MAKEWORD( 2, 0 ), &wsa ) == 0 );
 #else
 	return true;
 #endif
@@ -61,6 +63,3 @@ void CloseWinSocket( void )
 	WSACleanup( );
 #endif
 }
-
-
-

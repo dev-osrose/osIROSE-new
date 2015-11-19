@@ -3,14 +3,12 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="cdt.managedbuild.config.gnu.cygwin.lib.debug.912789294">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cygwin.lib.debug.912789294" moduleId="org.eclipse.cdt.core.settings" name="Win32Debug">
-				<macros>
-					<stringMacro name="_WIN32" type="VALUE_TEXT" value="1"/>
-				</macros>
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common/Debug"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="Common" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common/Win32Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="Common_d" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -22,28 +20,33 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="Windows Debug build" id="cdt.managedbuild.config.gnu.cygwin.lib.debug.912789294" name="Win32Debug" parent="cdt.managedbuild.config.gnu.cygwin.lib.debug">
+				<configuration artifactExtension="a" artifactName="${ProjName}_d" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="Windows Debug build" errorParsers="org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.config.gnu.cygwin.lib.debug.912789294" name="Win32Debug" parent="cdt.managedbuild.config.gnu.cygwin.lib.debug" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
 					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.lib.debug.912789294." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.lib.debug.1121847404" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.lib.debug">
-							<targetPlatform id="cdt.managedbuild.target.gnu.platform.cygwin.lib.debug.1264937338" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.cygwin.lib.debug"/>
-							<builder buildPath="${workspace_loc:/Common}/Debug" id="cdt.managedbuild.target.gnu.builder.cygwin.lib.debug.1669535380" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.lib.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.debug.1815800711" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.debug">
+						<toolChain errorParsers="" id="cdt.managedbuild.toolchain.gnu.cygwin.lib.debug.1121847404" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.lib.debug">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.Cygwin_PE" id="cdt.managedbuild.target.gnu.platform.cygwin.lib.debug.1264937338" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.cygwin.lib.debug"/>
+							<builder buildPath="${workspace_loc:/Common}/Debug" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="cdt.managedbuild.target.gnu.builder.cygwin.lib.debug.1669535380" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.lib.debug"/>
+							<tool command="as" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser" id="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.debug.1815800711" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.252353351" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.debug.194571050" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.debug.735885372" name="Cygwin C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.debug">
-								<option id="gnu.cpp.compiler.cygwin.lib.debug.option.optimization.level.850713707" name="Optimization Level" superClass="gnu.cpp.compiler.cygwin.lib.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.cygwin.lib.debug.option.debugging.level.902177082" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1985617776" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="_WIN32"/>
+							<tool command="ar" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="" id="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.debug.194571050" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.debug"/>
+							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.debug.735885372" name="Cygwin C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.debug">
+								<option id="gnu.cpp.compiler.cygwin.lib.debug.option.optimization.level.850713707" name="Optimization Level" superClass="gnu.cpp.compiler.cygwin.lib.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.cygwin.lib.debug.option.debugging.level.902177082" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1985617776" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols"/>
+								<option id="gnu.cpp.compiler.option.dialect.std.292309853" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.dialect.flags.2017683652" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.include.paths.831151352" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\MySQL\Connector.C++ 1.1\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\boost_1_59_0&quot;"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.dialect.std.292309853" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.dialect.flags.2017683652" superClass="gnu.cpp.compiler.option.dialect.flags" value="-std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.preprocess.2095472241" name="Preprocess only (-E)" superClass="gnu.cpp.compiler.option.preprocessor.preprocess" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.include.files.1411338436" name="Include files (-include)" superClass="gnu.cpp.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.2090040018" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.debug.1821851460" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cygwin.lib.debug.option.optimization.level.712495740" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.cygwin.lib.debug.option.debugging.level.1283630388" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.debug.1821851460" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cygwin.lib.debug.option.optimization.level.712495740" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.c.compiler.cygwin.lib.debug.option.debugging.level.1283630388" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.dialect.std.904740504" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.669618002" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.1671381773" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base"/>
@@ -56,9 +59,6 @@
 		</cconfiguration>
 		<cconfiguration id="cdt.managedbuild.config.gnu.cygwin.lib.release.830231297">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cygwin.lib.release.830231297" moduleId="org.eclipse.cdt.core.settings" name="Win32Release">
-				<macros>
-					<stringMacro name="_WIN32" type="VALUE_TEXT" value="1"/>
-				</macros>
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common"/>
@@ -85,16 +85,20 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.release.1097743192" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.release.1506213430" name="Cygwin C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.release">
-								<option id="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level.743917992" name="Optimization Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level.1134495734" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1050716742" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="_WIN32"/>
+								<option id="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level.743917992" name="Optimization Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level.1134495734" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1050716742" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols"/>
+								<option id="gnu.cpp.compiler.option.include.paths.1130485098" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\MySQL\Connector.C++ 1.1\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\boost_1_59_0&quot;"/>
 								</option>
+								<option id="gnu.cpp.compiler.option.dialect.std.489597763" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.dialect.flags.1778308195" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.1826383989" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release.1951211584" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.cygwin.lib.release.option.optimization.level.1595344791" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.release.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.cygwin.lib.release.option.debugging.level.301081014" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.cygwin.lib.release.option.optimization.level.1595344791" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.release.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.c.compiler.cygwin.lib.release.option.debugging.level.301081014" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.2126390621" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.1455257032" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base"/>
@@ -126,13 +130,14 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Win32Release"/>
+		<configuration configurationName="Win32Debug">
+			<resource resourceType="PROJECT" workspacePath="/Common"/>
+		</configuration>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/Common"/>
 		</configuration>
 		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/Common"/>
-		</configuration>
-		<configuration configurationName="Win32Debug">
 			<resource resourceType="PROJECT" workspacePath="/Common"/>
 		</configuration>
 	</storageModule>
