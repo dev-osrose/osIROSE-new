@@ -57,9 +57,10 @@ install:
 
 before_script:
 - export GTEST_DIR="$MAIN_PATH/tools/googletest/googletest"
+- export COVERALLS_SERVICE_NAME=travis-ci
 - mkdir build
 - cd build
-- cmake -DCOVERALLS=ON -DCMAKE_BUILD_TYPE=Debug ..
+- cmake -DCOVERALLS=ON -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..
 
 script: 
 - make -j 2
