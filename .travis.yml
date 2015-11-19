@@ -61,7 +61,9 @@ before_script:
 - cd build
 - cmake ..
 
-script: make -j 2
+script: 
+- make -j 2
+- make coveralls
 
 notifications:
   slack:
