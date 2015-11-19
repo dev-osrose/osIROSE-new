@@ -58,8 +58,10 @@ add_subdirectory(Common)
 add_subdirectory("LoginServer")
 add_subdirectory("CharServer")
 add_subdirectory("WorldServer")
-add_subdirectory("UnitTest")
 
+if (COVERALLS)
+	add_subdirectory("UnitTest")
+endif()
 
 message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
 
