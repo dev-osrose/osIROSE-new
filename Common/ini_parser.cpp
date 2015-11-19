@@ -44,10 +44,19 @@
 #endif
 
 
-static const char*        g_NewLineA  = "\r\n";
-static const unsigned int g_NewLineLn = 2;
+#ifdef _WIN32
+	static const char*        g_NewLineA  = "\r\n";
+	static const unsigned int g_NewLineLn = 2;
+#else
+	static const char*			g_NewLineA = "\n";
+	static const unsigned int	g_NewLineLn = 1;
+#endif
 #ifdef __UNICODE
-static const wchar_t*     g_NewLineW  = L"\r\n";
+#ifdef _WIN32
+	static const wchar_t*     g_NewLineW  = L"\r\n";
+#else
+	static const wchar_t*		g_NewLineW = L"\n";
+#endif
 unsigned int ReadWriteIniKeyValueStringW( const wchar_t* const lpSection, const wchar_t* const lpKey, const wchar_t* const lpDefaultValue, const wchar_t* const szPathAndFile, bool isWriteMode, wchar_t* lpReturnString, unsigned int* uReturnStringLength, bool stripValueLeadingWhitespaces, bool stripValueTrailingWhitespaces )
 {
 	std::basic_fstream< wchar_t >::pos_type posNewLineBeginning, posEnd;
@@ -255,8 +264,10 @@ unsigned int ReadWriteIniKeyValueStringW( const wchar_t* const lpSection, const 
 				clFileOp.write( lpDefaultValue, wcslen( lpDefaultValue ) );
 				clFileOp.write( &( line.c_str( )[ indexAfterValueEnd ] ), line.size( ) - indexAfterValueEnd );
 				int t = line.size( ) - indexAfterValueEnd;
+#ifdef _WIN32
 				if ( t < 1 )
 					clFileOp.write( L"\r", 1 );
+#endif
 				clFileOp.write( L"\n", 1 ); //this is needed because the line object strips the \n
 				clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
 				delete rest_of_the_file;
@@ -341,7 +352,11 @@ unsigned int ReadWriteIniKeyValueStringW( const wchar_t* const lpSection, const 
 			//starting with posNewLineBeginning
 			//write [section]
 			//write key=value
+#ifdef _WIN32
 			clFileOp.write( L"\r\n[", 3 );
+#else
+			clFileOp.write(L"\n[", 2);
+#endif
 			clFileOp.write( lpSection, wcslen( lpSection ) );
 			clFileOp.write( L"]", 1 );
 		}
@@ -616,8 +631,12 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 				clFileOp.write( lpDefaultValue, strlen( lpDefaultValue ) );
 				clFileOp.write( &( line.c_str( )[ indexAfterValueEnd ] ), line.size( ) - indexAfterValueEnd );
 				int t = line.size( ) - indexAfterValueEnd;
+#ifdef _WIN32
 				if ( t < 1 )
 					clFileOp.write( "\r", 1 );
+#else
+				(void)t;
+#endif
 				clFileOp.write( "\n", 1 ); //this is needed because the line object strips the \n
 				clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
 				delete[] rest_of_the_file;
@@ -707,7 +726,11 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 			//starting with posNewLineBeginning
 			//write [section]
 			//write key=value
+#ifdef _WIN32
 			clFileOp.write( "\r\n[", 3 );
+#else
+			clFileOp.write("\n[", 2);
+#endif
 			clFileOp.write( lpSection, strlen( lpSection ) );
 			clFileOp.write( "]", 1 );
 		}
@@ -989,8 +1012,12 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 				clFileOp.write( pWVal.c_str( ), pWVal.size( ) );
 				clFileOp.write( &( line.c_str( )[ indexAfterValueEnd ] ), line.size( ) - indexAfterValueEnd );
 				int t = line.size( ) - indexAfterValueEnd;
+#ifdef _WIN32
 				if ( t < 1 )
 					clFileOp.write( "\r", 1 );
+#else
+				(void)t;
+#endif
 				clFileOp.write( "\n", 1 ); //this is needed because the line object strips the \n
 				clFileOp.write( rest_of_the_file, rest_of_the_fileLn );
 				delete[] rest_of_the_file;
@@ -1066,7 +1093,11 @@ int ReadWriteIniKeyValueInt( const char* const lpSection, const char* const lpKe
 			//starting with posNewLineBeginning
 			//write [section]
 			//write key=value
+#ifdef _WIN32
 			clFileOp.write( "\r\n[", 3 );
+#else
+			clFileOp.write("\n[", 2);
+#endif
 			clFileOp.write( lpSection, strlen( lpSection ) );
 			clFileOp.write( "]", 1 );
 		}
