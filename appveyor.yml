@@ -14,8 +14,19 @@ clone_depth: 50
 clone_folder: C:\projects\osIROSE
 services: mysql56
 install:
-- ps: Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip
-- cmd: 7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul
+- ps: >-
+    If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false )
+    {
+      Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip
+    }
+    
+- cmd: >- 
+  IF EXIST C:\projects\osIROSE\3rdParty GOTO DEPEXISTS
+
+  7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul
+
+  :DEPEXISTS
+- cmd: git submodule update --init --recursive
 cache: C:\projects\osIROSE\3rdParty
 build:
   parallel: true
