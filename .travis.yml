@@ -61,7 +61,8 @@ before_script:
 - export COVERALLS_SERVICE_NAME=travis-ci
 - mkdir build
 - cd build
-- cmake -DCOVERALLS="$UNITTEST" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..
+- if [ "$UNITTEST" = "ON" ]; then cmake -DCOVERALLS="$UNITTEST" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..; fi
+- if [ "$UNITTEST" = "OFF" ]; then cmake ..; fi
 
 script: 
 - make -j 2
