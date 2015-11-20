@@ -1,19 +1,18 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-function(message)
-  list(GET ARGV 0 MessageType)
-  if(MessageType STREQUAL FATAL_ERROR OR
-     MessageType STREQUAL SEND_ERROR OR
-     MessageType STREQUAL WARNING OR
-     MessageType STREQUAL AUTHOR_WARNING)
-    list(REMOVE_AT ARGV 0)
-    _message(${MessageType} "${ARGV}")
-  endif()
-endfunction()
+#function(message)
+#  list(GET ARGV 0 MessageType)
+#  if(MessageType STREQUAL FATAL_ERROR OR
+#     MessageType STREQUAL SEND_ERROR OR
+#     MessageType STREQUAL WARNING OR
+#     MessageType STREQUAL AUTHOR_WARNING)
+#    list(REMOVE_AT ARGV 0)
+#    _message(${MessageType} "${ARGV}")
+#  endif()
+#endfunction()
 
 project("osIROSE")
 
-set(PROJECT_ROOT ${PROJECT_SOURCE_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -58,6 +57,31 @@ add_subdirectory(Common)
 
 if (COVERALLS)
 	add_subdirectory("UnitTest")
+	
+	message(STATUS "PROJECT_ROOT=" ${PROJECT_ROOT})
+	message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
+
+	set(PROJECT_ROOT ${PROJECT_SOURCE_DIR} CACHE INTERNAL "")
+	set(COV_PATH ${PROJECT_BINARY_DIR} CACHE INTERNAL "")
+	set(COVERALLS_OUTPUT_FILE "${PROJECT_BINARY_DIR}/coveralls.json" CACHE INTERNAL "")
+	set(COVERALLS_FILE "${COVERALLS_OUTPUT_FILE}" CACHE INTERNAL "")
+
+	# Setup the coveralls target and tell it to gather
+	# coverage data for all the lib sources.
+    include(Coveralls)
+    coveralls_turn_on_coverage()
+    coveralls_setup(
+        "${COV_SRC_LIST}"
+        ${COVERALLS_UPLOAD}
+        "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
+
+	# tests
+	enable_testing()
+	add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTRoseEncryption)
+	#add_test(Test_XML_IO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTXmlIO)
+	#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
+	#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
+	
 endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL

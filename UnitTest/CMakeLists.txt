@@ -31,25 +31,3 @@ target_link_libraries(TESTRoseEncryption ${CMAKE_THREAD_LIBS_INIT} gtest_main)
 
 #add_executable(TESTXmlIO ${UNIT_LIST_SRC} ./src/test_xml.cpp)
 #target_link_libraries(TESTXmlIO ${CMAKE_THREAD_LIBS_INIT} gtest_main)
-
-
-message(STATUS "PROJECT_ROOT=" ${PROJECT_ROOT})
-message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
-
-# Setup the coveralls target and tell it to gather
-# coverage data for all the lib sources.
-if (COVERALLS)
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-    coveralls_setup(
-        "${COV_SRC_LIST}"
-        ${COVERALLS_UPLOAD}
-        "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
-endif()
-
-# tests
-enable_testing()
-add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTRoseEncryption)
-#add_test(Test_XML_IO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTXmlIO)
-#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
-#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)

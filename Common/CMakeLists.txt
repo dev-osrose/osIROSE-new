@@ -12,10 +12,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 list( APPEND COMMON_LIST_SRC
-  ./src/crosecrypt.cpp )
+  src/crosecrypt.cpp )
 
 list( APPEND OTHER_SRC
-  ./src/ini_parser.cpp )
+  src/ini_parser.cpp )
   
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${COMMON_LIST_SRC})
