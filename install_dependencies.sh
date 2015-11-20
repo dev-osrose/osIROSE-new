@@ -4,6 +4,8 @@ clear
 
 echo "Downloading, building and installing dependencies."
 
+git submodule recursive --init --update
+
 mkdir 3rdParty
 mkdir 3rdParty/include
 mkdir 3rdParty/lib
