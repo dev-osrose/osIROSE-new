@@ -5,7 +5,14 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	sudo apt-get install -qq --force-yes cdbs cmake libboost-dev lcov libmysqlclient-dev
+
+	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
+	tar -xf lcov-1.12
+	cd lcov-1.12
+	make install
+
+	cd ..
+	sudo apt-get install -qq cdbs cmake libboost-dev libmysqlclient-dev
 	gem install coveralls-lcov
     
 	mkdir 3rdParty
