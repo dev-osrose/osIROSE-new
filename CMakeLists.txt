@@ -24,5 +24,22 @@ OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
 OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
+IF(ENABLE_TESTING)
+	#Build GoogleTest
+	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
+	
+	#Build GoogleMock
+	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
+	SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
+	SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+	SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+	
+	#Build Protobuf
+	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
+	#SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/include)
+	#SET(PROTOBUF_BINARY_DIR ${protobuf_SOURCE_DIR})
+ENDIF()
+
 ADD_SUBDIRECTORY(src)
 
