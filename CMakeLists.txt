@@ -45,9 +45,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(defines "")
 endif()
 
-set(CONFIGURED_ONCE TRUE CACHE INTERNAL
-    "A flag showing that CMake has configured at least once.")
-
+if (NOT CONFIGURED_ONCE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
+        CACHE STRING "Flags used by the compiler during all build types." FORCE)
+endif()
 
 add_subdirectory(Common)
 #add_subdirectory("LoginServer")
@@ -71,7 +72,5 @@ if (COVERALLS)
         "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
 endif()
 
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
+set(CONFIGURED_ONCE TRUE CACHE INTERNAL
+    "A flag showing that CMake has configured at least once.")
