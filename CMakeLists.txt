@@ -55,21 +55,8 @@ add_subdirectory(Common)
 #add_subdirectory("CharServer")
 #add_subdirectory("WorldServer")
 
-message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
-
 if (COVERALLS)
 	add_subdirectory("UnitTest")
-endif()
-
-# Setup the coveralls target and tell it to gather
-# coverage data for all the lib sources.
-if (COVERALLS)
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-    coveralls_setup(
-        "${COV_SRC_LIST}"
-        ${COVERALLS_UPLOAD}
-        "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
 endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
