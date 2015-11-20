@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	sudo apt-get install -qq cdbs cmake libboost-dev lcov libmysqlclient-dev mysql-community-source
+	sudo apt-get install -qq --force-yes cdbs cmake libboost-dev lcov libmysqlclient-dev mysql-community-source
 	gem install coveralls-lcov
     
 	mkdir 3rdParty
