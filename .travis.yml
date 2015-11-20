@@ -19,8 +19,6 @@ matrix:
     - env: LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- sudo apt-get install -qq "g++-${GCC_VERSION}";
-- sudo apt-get install -qq "gcc-${GCC_VERSION}";
 - export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}";
 - ./ci/before_install.sh
 
