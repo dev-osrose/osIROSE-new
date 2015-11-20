@@ -6,20 +6,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(std "")
-	set(warnings "")
-	set(errors "")
-	set(defines "")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	set(std "")
-	set(warnings "")
-	set(errors "")
-	set(defines "")
-endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
-
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
 			${CMAKE_HOME_DIRECTORY}/3rdParty/include)
@@ -29,20 +15,13 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-list( APPEND fileHandlers )
+#list( APPEND fileHandlers )
 
 list( APPEND mainSource
-	src/main.cpp )
+	./src/main.cpp )
 	
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${mainSource})
-	if (NOT "${COMMON_SRC}" MATCHES "^/")
-		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
-	endif()
-	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
-endforeach()
-
-foreach (COMMON_SRC ${fileHandlers})
 	if (NOT "${COMMON_SRC}" MATCHES "^/")
 		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
 	endif()
@@ -54,8 +33,3 @@ set(COV_SRC_LIST "${COV_SRC_LIST};${COMMON_SRCS_TMP}" CACHE INTERNAL "")
 find_package( Threads REQUIRED )
 add_executable(WorldServer ${mainSource} ${fileHandlers})
 target_link_libraries(WorldServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
-
-set( WORLD_LIST_SRC "${mainSource} ${fileHandlers}" )
-
-set(CONFIGURED_ONCE TRUE CACHE INTERNAL
-    "A flag showing that CMake has configured at least once.")

@@ -6,20 +6,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(std "")
-	set(warnings "")
-	set(errors "")
-	set(defines "")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	set(std "")
-	set(warnings "")
-	set(errors "")
-	set(defines "")
-endif()
-
-set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
-
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
 			${CMAKE_HOME_DIRECTORY}/3rdParty/include)
@@ -30,7 +16,7 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 list( APPEND LOGIN_LIST_SRC
-  src/main.cpp )
+  ./src/main.cpp )
 
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${LOGIN_LIST_SRC})
@@ -45,6 +31,3 @@ set(COV_SRC_LIST "${COV_SRC_LIST};${COMMON_SRCS_TMP}" CACHE INTERNAL "")
 find_package( Threads REQUIRED )
 add_executable(LoginServer ${LOGIN_LIST_SRC})
 target_link_libraries(LoginServer Common mysqlcppconn-static mysqlclient ${CMAKE_THREAD_LIBS_INIT})
-
-set(CONFIGURED_ONCE TRUE CACHE INTERNAL
-    "A flag showing that CMake has configured at least once.")

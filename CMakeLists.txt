@@ -56,6 +56,10 @@ add_subdirectory(Common)
 
 message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
 
+if (COVERALLS)
+	add_subdirectory("UnitTest")
+endif()
+
 # Setup the coveralls target and tell it to gather
 # coverage data for all the lib sources.
 if (COVERALLS)
@@ -65,10 +69,6 @@ if (COVERALLS)
         "${COV_SRC_LIST}"
         ${COVERALLS_UPLOAD}
         "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
-endif()
-
-if (COVERALLS)
-	add_subdirectory("UnitTest")
 endif()
 
 if (NOT CONFIGURED_ONCE)
