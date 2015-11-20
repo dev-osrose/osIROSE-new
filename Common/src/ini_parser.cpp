@@ -35,6 +35,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#define strcpy_s( buffer, buffer_size, stringbuffer ) ( strcpy( buffer, stringbuffer ) )
 #define _wopen( pString, flag, mode ) open( pString, flag, mode )
 #define _chsize( file, str ) ftruncate( file, str)
 #define _close( file ) close( file )
