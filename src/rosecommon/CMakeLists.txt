@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-project("Core")
+project("RoseCommon")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -14,4 +14,4 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 list( APPEND COMMON_LIST_SRC
   src/crosecrypt.cpp )
 
-add_library(Core STATIC ${COMMON_LIST_SRC})
+add_library(RoseCommon STATIC ${COMMON_LIST_SRC})
