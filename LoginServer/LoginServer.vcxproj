@@ -171,18 +171,6 @@
       <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="datatype.h" />
-    <ClInclude Include="loginserver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="extrafunction.cpp" />
-    <ClCompile Include="loginclient.cpp" />
-    <ClCompile Include="loginpackets.cpp" />
-    <ClCompile Include="loginserver.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="signal.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

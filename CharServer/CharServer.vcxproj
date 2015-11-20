@@ -19,20 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="charserver.h" />
-    <ClInclude Include="datatypes.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="charclient.cpp" />
-    <ClCompile Include="charpackets.cpp" />
-    <ClCompile Include="charserver.cpp" />
-    <ClCompile Include="clan.cpp" />
-    <ClCompile Include="community.cpp" />
-    <ClCompile Include="extrafunctions.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="signal.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
     </ProjectReference>

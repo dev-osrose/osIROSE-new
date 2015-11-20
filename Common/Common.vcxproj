@@ -174,29 +174,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h" />
     <ClInclude Include="CRoseCrypt.hpp" />
-    <ClInclude Include="database\database.h" />
     <ClInclude Include="ePacketType.h" />
     <ClInclude Include="ini_parser.h" />
-    <ClInclude Include="log.h" />
-    <ClInclude Include="rosecrypt.hpp" />
-    <ClInclude Include="sockets.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="config.cpp" />
     <ClCompile Include="CRoseCrypt.cpp" />
-    <ClCompile Include="database\database.cpp" />
-    <ClCompile Include="globals.cpp" />
     <ClCompile Include="ini_parser.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="rosecrypt.cpp" />
-    <ClCompile Include="SocketBase.cpp" />
-    <ClCompile Include="SocketClient.cpp" />
-    <ClCompile Include="SocketServer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
