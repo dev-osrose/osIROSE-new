@@ -18,7 +18,7 @@ install:
 - cmd: IF NOT EXIST "C:\projects\osIROSE\3rdParty" "7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul"
 - cmd: git submodule update --init --recursive
 cache: C:\projects\osIROSE\3rdParty
-build: off
+build:
   project: osIROSE.sln
   parallel: true
   verbosity: minimal
