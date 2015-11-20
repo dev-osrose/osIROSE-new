@@ -33,9 +33,7 @@ target_link_libraries(TESTRoseEncryption ${CMAKE_THREAD_LIBS_INIT} gtest_main)
 #target_link_libraries(TESTXmlIO ${CMAKE_THREAD_LIBS_INIT} gtest_main)
 
 
-
-
-
+message(STATUS "PROJECT_ROOT=" ${PROJECT_ROOT})
 message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
 
 # Setup the coveralls target and tell it to gather
