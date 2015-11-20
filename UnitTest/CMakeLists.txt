@@ -9,11 +9,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
 			${CMAKE_HOME_DIRECTORY}/3rdParty/include
-			${GTEST_DIR}/include)
+			${GTEST_DIR}/include 
+			${GTEST_DIR} )
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 # Our Stuff 
-include_directories(${GTEST_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_HOME_DIRECTORY}/Common/include )
 
 # Build Gtest
 add_library(gtest STATIC ${GTEST_DIR}/src/gtest-all.cc)
