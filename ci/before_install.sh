@@ -17,6 +17,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	if [ "$CXX" = "g++" ]; then 
 		sudo apt-get install -qq "g++-${GCC_VERSION}";
 		sudo apt-get install -qq "gcc-${GCC_VERSION}";
+		sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 90
+		sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-${GCC_VERSION} 90
 		export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}";
 		gcc --version
 	elif [ "$CXX" = "clang++" ]; then 
