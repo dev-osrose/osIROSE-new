@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="" version="4">
+  <OBJECT>
+    <ID name="" mc="Standard.MetaclassReference" uid="e884c108-f73e-11e1-8cf3-002564c97630"/>
+    <PID name="Analyst" mc="Standard.Profile" uid="1be2e3fc-27ca-11e1-8d9c-002564c97630"/>
+    <ATTRIBUTES>
+      <ATT name="ReferencedClassName"><![CDATA[ExternDocument]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="DefinedTagType">
+        <OBJECT>
+          <ID name="editor_column" mc="Standard.TagType" uid="f1ac1b77-f73e-11e1-8cf3-002564c97630"/>
+          <ATTRIBUTES>
+            <ATT name="ParamNumber"><![CDATA[1]]></ATT>
+            <ATT name="IsQualified">false</ATT>
+            <ATT name="BelongToPrototype">false</ATT>
+            <ATT name="IsHidden">true</ATT>
+            <ATT name="LabelKey"><![CDATA[%tagtype.editor_column.label]]></ATT>
+            <ATT name="Name"><![CDATA[editor_column]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

@@ -1,0 +1,9 @@
+#
+#Wed Jun 01 15:56:20 CEST 2011
+ASSOC_SHOWLABEL=false
+ASSOC_SHOWROLES=false
+basestyle=default
+stylename=use case
+ASSOC_SHOWCARD=false
+ASSOC_SHOWNAVIGABILITY = false
+ASSOC_CONNECTIONROUTER = DIRECT

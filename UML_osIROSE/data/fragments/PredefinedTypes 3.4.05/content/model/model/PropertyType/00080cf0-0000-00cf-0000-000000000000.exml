@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="MultiText" version="4">
+  <OBJECT>
+    <ID name="MultiText" mc="Standard.PropertyType" uid="00080cf0-0000-00cf-0000-000000000000"/>
+    <PID name="Analyst Properties" mc="Standard.PropertyContainer" uid="ebe0fc1e-a2a8-4070-809f-4bf73eb50c43"/>
+    <ATTRIBUTES>
+      <ATT name="BaseType">Text</ATT>
+      <ATT name="Name"><![CDATA[MultiText]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES></DEPENDENCIES>
+  </OBJECT>
+</EXT>

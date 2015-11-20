@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="osIROSE" version="4">
+  <OBJECT>
+    <ID name="osIROSE" mc="Standard.AnalystProject" uid="6a6d2b6d-b573-46bc-84f2-d4691bc14820"/>
+    <ATTRIBUTES>
+      <ATT name="Name"><![CDATA[osIROSE]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="PropertyRoot">
+        <COMPID name="osIROSE" mc="Standard.PropertyContainer" uid="e0d74786-60cc-47a9-9103-b2a4f2cab227"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

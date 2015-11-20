@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Analyst Properties" version="4">
+  <OBJECT>
+    <ID name="Analyst Properties" mc="Standard.PropertyContainer" uid="ebe0fc1e-a2a8-4070-809f-4bf73eb50c43"/>
+    <PID name="Analyst Properties" mc="Standard.AnalystProject" uid="159f64bb-cdb4-42df-94eb-2fb42b4b0a05"/>
+    <ATTRIBUTES>
+      <ATT name="Name"><![CDATA[Analyst Properties]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="DefinedTable">
+        <COMPID name="BusinessRule Properties" mc="Standard.PropertyTableDefinition" uid="00bc470c-0000-0019-0000-000000000000"/>
+        <COMPID name="Design" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001f-0000-000000000000"/>
+        <COMPID name="Dictionary Properties" mc="Standard.PropertyTableDefinition" uid="01ec152c-0000-144f-0000-000000000000"/>
+        <COMPID name="Functionality" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001a-0000-000000000000"/>
+        <COMPID name="Goal Properties" mc="Standard.PropertyTableDefinition" uid="00bc470c-0000-0018-0000-000000000000"/>
+        <COMPID name="Implementation" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-0020-0000-000000000000"/>
+        <COMPID name="Performance" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001d-0000-000000000000"/>
+        <COMPID name="Reliability" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001c-0000-000000000000"/>
+        <COMPID name="Risk Properties" mc="Standard.PropertyTableDefinition" uid="eb3dbc2d-8e8a-40e4-9f8c-3cfd64a04944"/>
+        <COMPID name="Supportability" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001e-0000-000000000000"/>
+        <COMPID name="Usability" mc="Standard.PropertyTableDefinition" uid="00080cf0-0000-001b-0000-000000000000"/>
+        <COMPID name="No Properties" mc="Standard.PropertyTableDefinition" uid="7649b5c8-8733-4a02-959c-a269422402b8"/>
+      </COMP>
+      <COMP relation="DefinedType">
+        <COMPID name="Benefit" mc="Standard.EnumeratedPropertyType" uid="00080cf0-0000-00bc-0000-000000000000"/>
+        <COMPID name="Risk" mc="Standard.EnumeratedPropertyType" uid="00080cf0-0000-0031-0000-000000000000"/>
+        <COMPID name="Satisfaction" mc="Standard.EnumeratedPropertyType" uid="00bc470c-0000-0035-0000-000000000000"/>
+        <COMPID name="Scope" mc="Standard.EnumeratedPropertyType" uid="00bc470c-0000-001b-0000-000000000000"/>
+        <COMPID name="Stability" mc="Standard.EnumeratedPropertyType" uid="00080cf0-0000-0032-0000-000000000000"/>
+        <COMPID name="Boolean" mc="Standard.PropertyType" uid="01a40888-0000-002b-0000-000000000000"/>
+        <COMPID name="Date" mc="Standard.PropertyType" uid="136b356c-3951-473b-aa4a-001c0241b996"/>
+        <COMPID name="Element" mc="Standard.PropertyType" uid="b58969db-144e-4a1f-b946-cd6deacca9bd"/>
+        <COMPID name="Float" mc="Standard.PropertyType" uid="bc36b99e-8470-4aee-ba2a-5012c0a17525"/>
+        <COMPID name="Integer" mc="Standard.PropertyType" uid="01a40888-0000-002d-0000-000000000000"/>
+        <COMPID name="MultiText" mc="Standard.PropertyType" uid="00080cf0-0000-00cf-0000-000000000000"/>
+        <COMPID name="RichText" mc="Standard.PropertyType" uid="c37f01cf-273e-11e1-b78e-00137282c51b"/>
+        <COMPID name="Text" mc="Standard.PropertyType" uid="01a40888-0000-002a-0000-000000000000"/>
+        <COMPID name="Time" mc="Standard.PropertyType" uid="753fc9f9-c136-449c-949c-4fa467511d99"/>
+        <COMPID name="Unsigned" mc="Standard.PropertyType" uid="827950f7-671f-4db7-9374-23df864712ef"/>
+        <COMPID name="Acceptance" mc="Standard.EnumeratedPropertyType" uid="01ec152c-0000-3152-0000-000000000000"/>
+        <COMPID name="Kind" mc="Standard.EnumeratedPropertyType" uid="00bc470c-0000-002a-0000-000000000000"/>
+        <COMPID name="Level" mc="Standard.EnumeratedPropertyType" uid="fd1e7e3d-1c25-4e43-a8d0-23ad542da716"/>
+        <COMPID name="Risk Evolution" mc="Standard.EnumeratedPropertyType" uid="f98047ab-24f3-4b41-adbb-3cb70791184a"/>
+      </COMP>
+      <LINK relation="Extension">
+        <FOREIGNID name="ModelComponentElementAlias" mc="Standard.Stereotype" uid="3254be34-c7d8-4018-8a68-5de65c30b773"/>
+      </LINK>
+      <COMP relation="Tag">
+        <OBJECT>
+          <ID name="" mc="Standard.TaggedValue" uid="ab3b89c3-ab95-454c-a0cb-d7e78a2a24d2"/>
+          <ATTRIBUTES>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="Actual">
+              <OBJECT>
+                <ID name="" mc="Standard.TagParameter" uid="cc2821a8-ef53-4f0e-80d8-3511f4ba7999"/>
+                <ATTRIBUTES>
+                  <ATT name="Value"><![CDATA[a47918cf-d74f-421a-b4c5-d0a1f77c288e]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+            <LINK relation="Definition">
+              <FOREIGNID name="uuid" mc="Standard.TagType" uid="7ebbd53f-a5f3-433b-872c-4024615af229"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
