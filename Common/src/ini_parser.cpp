@@ -702,7 +702,7 @@ unsigned int ReadWriteIniKeyValueStringA( const char* const lpSection, const cha
 					*lpReturnString = new char[ result.size( ) ];
 
 					if ( *lpReturnString != nullptr )
-						strcpy( *lpReturnString, result.c_str( ) );
+						strcpy_s( *lpReturnString, result.size(), result.c_str( ) );
 				}
 			}
 			if ( uReturnStringLength != 0 )
@@ -779,7 +779,7 @@ lbl_end:
 				{
 					*lpReturnString = new char[ result.size( ) ];
 					if ( *lpReturnString != nullptr )
-						strcpy( *lpReturnString, lpDefaultValue );
+						strcpy_s( *lpReturnString, defaultValueLenght, lpDefaultValue );
 				}
 			}
 			if ( uReturnStringLength != 0 )

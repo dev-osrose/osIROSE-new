@@ -30,17 +30,10 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 
 # Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 list( APPEND CHAR_LIST_SRC
-main.cpp 
-extrafunctions.cpp 
-signal.cpp 
-community.cpp 
-clan.cpp 
-charserver.cpp 
-charpackets.cpp 
-charclient.cpp )
+  src/main.cpp )
 
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${CHAR_LIST_SRC})

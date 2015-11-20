@@ -171,19 +171,17 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CRoseCrypt.hpp" />
-    <ClInclude Include="ePacketType.h" />
-    <ClInclude Include="ini_parser.h" />
+    <ClCompile Include="src\crosecrypt.cpp" />
+    <ClCompile Include="src\ini_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CRoseCrypt.cpp" />
-    <ClCompile Include="ini_parser.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
+    <ClInclude Include="include\crosecrypt.hpp" />
+    <ClInclude Include="include\ePacketType.h" />
+    <ClInclude Include="include\ini_parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,10 +18,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(defines "")
 endif()
 
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
+set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
 
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
@@ -30,15 +27,10 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 
 # Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 list( APPEND LOGIN_LIST_SRC
-  main.cpp 
-loginserver.cpp 
-extrafunction.cpp 
-loginclient.cpp 
-loginpackets.cpp 
-signal.cpp )
+  src/main.cpp )
 
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${LOGIN_LIST_SRC})

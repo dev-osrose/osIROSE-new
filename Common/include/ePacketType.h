@@ -103,6 +103,11 @@ struct pakChannel_List : public sPacketHeader
 	// channelInfo sServers[]; // There is a better way to do this, just can't think of one ATM. -Raven
 };
 
+struct pakChannelList_Req : public sPacketHeader
+{
+	uint32_t lServerID;
+};
+
 struct pakLoginReply : public sPacketHeader
 {
 	uint8_t Result;
@@ -124,15 +129,30 @@ struct CPacket
 			sPacketHeader Header;
 			uint8_t       Buffer[0x400 - 6];
 		};
-		uint8_t       Data[0x400];
+		uint8_t Data[0x400];
 
-		pakLoginReply pLoginReply;
-		pakChannel_List pChannelList;
+		pakLoginReply      pLoginReply;
+		pakChannelList_Req pChannelListReq;
+		pakChannel_List    pChannelList;
 	};
 
-	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 );
-	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-	~CPacket( );
+	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
+	{
+		Header.Command = mycommand;
+		Header.Size = mysize;
+		Header.Unused = myunused;
+	}
+
+	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
+	{
+		Header.Command = (uint16_t)mycommand;
+		Header.Size = mysize;
+		Header.Unused = myunused;
+	}
+
+	~CPacket()
+	{
+	}
 
 	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
 	char* GetString( unsigned short pos );

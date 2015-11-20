@@ -18,21 +18,18 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(defines "")
 endif()
 
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
+set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
 
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
 include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/3rdParty/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 list( APPEND COMMON_LIST_SRC
-  crosecrypt.cpp )
+  src/crosecrypt.cpp )
 
 list( APPEND OTHER_SRC
-  ini_parser.cpp )
+  src/ini_parser.cpp )
   
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${COMMON_LIST_SRC})

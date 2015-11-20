@@ -4,3 +4,6 @@
 [submodule "tools/googletest"]
 	path = tools/googletest
 	url = https://github.com/google/googletest
+[submodule "tools/protobuf"]
+	path = tools/protobuf
+	url = git@github.com:google/protobuf.git

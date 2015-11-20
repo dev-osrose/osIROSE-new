@@ -18,10 +18,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(defines "")
 endif()
 
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
 
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
@@ -30,50 +27,12 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 
 # Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-list( APPEND fileHandlers
-		./aip/aiactions.cpp
-		./aip/aiconditions.cpp
-		./aip/aip.cpp
-		./quest/questactions.cpp
-		./quest/questconditions.cpp
-		./quest/quests.cpp )
+list( APPEND fileHandlers )
 
-list( APPEND mainSource 
-	battle.cpp
-	buff.cpp
-	character.cpp
-	charevent.cpp
-	charfunctions.cpp
-	charstats.cpp
-	clan.cpp
-	extrafunctions.cpp
-	gmcmds.cpp
-	itemdata.cpp
-	main.cpp
-	mainprocess.cpp
-	mapfunctions.cpp
-	monster.cpp
-	monsterevents.cpp
-	monsterfunctions.cpp
-	monsterstats.cpp
-	party.cpp
-	partyfunctions.cpp
-	player.cpp
-	playerdata.cpp
-	playerfunctions.cpp
-	playerquest.cpp
-	playerstats.cpp
-	serverfunctions.cpp
-	startup.cpp
-	stbhandler.cpp
-	strhashing.cpp
-	worldmap.cpp
-	worldmonster.cpp
-	worldpackets.cpp
-	worldprocess.cpp
-	worldserver.cpp )
+list( APPEND mainSource
+	src/main.cpp )
 	
 set(COMMON_SRCS_TMP "")
 foreach (COMMON_SRC ${mainSource})
