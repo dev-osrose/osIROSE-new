@@ -16,17 +16,7 @@ link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 list( APPEND LOGIN_LIST_SRC
-  ./src/main.cpp )
-
-set(COMMON_SRCS_TMP "")
-foreach (COMMON_SRC ${LOGIN_LIST_SRC})
-	if (NOT "${COMMON_SRC}" MATCHES "^/")
-		set(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_SRC})
-	endif()
-	list(APPEND COMMON_SRCS_TMP ${COMMON_SRC})
-endforeach()
-
-set(COV_SRC_LIST "${COV_SRC_LIST};${COMMON_SRCS_TMP}" CACHE INTERNAL "")
+  src/main.cpp )
 
 find_package( Threads REQUIRED )
 add_executable(LoginServer ${LOGIN_LIST_SRC})

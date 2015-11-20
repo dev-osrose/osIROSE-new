@@ -1,88 +1,28 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+PROJECT("osIROSE")
 
-#function(message)
-#  list(GET ARGV 0 MessageType)
-#  if(MessageType STREQUAL FATAL_ERROR OR
-#     MessageType STREQUAL SEND_ERROR OR
-#     MessageType STREQUAL WARNING OR
-#     MessageType STREQUAL AUTHOR_WARNING)
-#    list(REMOVE_AT ARGV 0)
-#    _message(${MessageType} "${ARGV}")
-#  endif()
-#endfunction()
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-project("osIROSE")
+SET(VERSION_MAJOR 1)
+SET(VERSION_MINOR 0)
+SET(VERSION_PATCH 0)
+SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(COV_SRC_LIST "" CACHE INTERNAL "")
-set(CMAKE_CXX_STANDARD 11)
+# Evaluate ABI version number.
+MATH(EXPR PROJECT_ABI_VERSION_SUFFIX "${VERSION_MAJOR} * 10000 + ${VERSION_MINOR} * 100 + ${VERSION_PATCH} * 1")
 
+SET(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
-# Add project cmake modules to path.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/tools/coveralls-cmake/cmake)
-set(GTEST_DIR ${PROJECT_SOURCE_DIR}/tools/googletest/googletest)
+SET(GTEST_DIR ${PROJECT_SOURCE_DIR}/tools/googletest/googletest)
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+SET(COV_SRC_LIST "" CACHE INTERNAL "")
+SET(CMAKE_CXX_STANDARD 11)
 
-# We probably don't want this to run on every build.
-option(COVERALLS "Turn on coveralls support" OFF)
-option(COVERALLS_UPLOAD "Upload the generated coveralls json" ON)
+OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
+OPTION(ENABLE_TESTING "Enable testing" OFF)
+OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
+ADD_SUBDIRECTORY(src)
 
-message(STATUS "CXX=" $ENV{CXX})
-message(STATUS "CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
-message(STATUS "GTEST_DIR=" $ENV{GTEST_DIR})
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(std "-std=c++11")
-	set(warnings "-Wall -Wextra -Werror -Wno-write-strings -Wno-unknown-pragmas")
-	set(errors "")
-	set(defines "")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	set(std "")
-	set(warnings "/EHsc")
-	set(errors "")
-	set(defines "")
-endif()
-
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
-
-add_subdirectory(Common)
-#add_subdirectory("LoginServer")
-#add_subdirectory("CharServer")
-#add_subdirectory("WorldServer")
-
-if (COVERALLS)
-	add_subdirectory("UnitTest")
-	
-	message(STATUS "PROJECT_ROOT=" ${PROJECT_ROOT})
-	message(STATUS "COV_SRC_LIST=" ${COV_SRC_LIST})
-
-	set(PROJECT_ROOT ${PROJECT_SOURCE_DIR} CACHE INTERNAL "")
-	set(COV_PATH ${PROJECT_BINARY_DIR} CACHE INTERNAL "")
-	set(COVERALLS_OUTPUT_FILE "${PROJECT_BINARY_DIR}/coveralls.json" CACHE INTERNAL "")
-	set(COVERALLS_FILE "${COVERALLS_OUTPUT_FILE}" CACHE INTERNAL "")
-
-	# Setup the coveralls target and tell it to gather
-	# coverage data for all the lib sources.
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-    coveralls_setup(
-        "${COV_SRC_LIST}"
-        ${COVERALLS_UPLOAD}
-        "${CMAKE_HOME_DIRECTORY}/tools/coveralls-cmake/cmake")
-
-	# tests
-	enable_testing()
-	add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTRoseEncryption)
-	#add_test(Test_XML_IO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTXmlIO)
-	#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
-	#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
-	
-endif()
-
-set(CONFIGURED_ONCE TRUE CACHE INTERNAL
-    "A flag showing that CMake has configured at least once.")
