@@ -1,33 +1,75 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-project("Unit Tests")
+# Prepare testing infrastructure.
+INCLUDE(SetupGoogleTest)
+INCLUDE(SetupProtobuf)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+SETUP_GOOGLE_TEST()
+SETUP_PROTOBUF()
 
-# 3rd Party Libaries
-include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
-			${CMAKE_HOME_DIRECTORY}/3rdParty/include
-			${GTEST_DIR}/include 
-			${GTEST_DIR} )
-link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
+INCLUDE_DIRECTORIES(
+    SYSTEM ${GTEST_INCLUDE_DIR}
+    SYSTEM ${GMOCK_INCLUDE_DIR}
+    SYSTEM ${PROTOBUF_INCLUDE_DIR}
+)
 
-# Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_HOME_DIRECTORY}/Common/include )
+LINK_DIRECTORIES(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR})
 
-# Build Gtest
-add_library(gtest STATIC ${GTEST_DIR}/src/gtest-all.cc)
-add_library(gtest_main STATIC ${GTEST_DIR}/src/gtest_main.cc)
-target_link_libraries(gtest_main gtest -pthread)
+# Configure some handy variables.
+SET(PROJECT osirose-tests)
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra")
 
-list( APPEND UNIT_LIST_SRC
-		main.cpp )
+ADD_DEFINITIONS(-DSERVER_TESTING)
 
-find_package( Threads REQUIRED )
-add_executable(TESTRoseEncryption ${UNIT_LIST_SRC} ./src/test_crosecrypt.cpp)
-target_link_libraries(TESTRoseEncryption ${CMAKE_THREAD_LIBS_INIT} gtest_main)
+file(GLOB_RECURSE CORE_HEADERS . ${CMAKE_SOURCE_DIR}/src/core/*.[h])
+file(GLOB_RECURSE ROSE_HEADERS . ${CMAKE_SOURCE_DIR}/src/core/*.[h])
+file(GLOB_RECURSE LOGIN_HEADERS . ${CMAKE_SOURCE_DIR}/src/login/*.[h])
+file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
+file(GLOB_RECURSE MAP_HEADERS . ${CMAKE_SOURCE_DIR}/src/map/*.[h])
+file(GLOB_RECURSE PROJECT_TESTING_HEADERS . *.[h])
 
-#add_executable(TESTXmlIO ${UNIT_LIST_SRC} ./src/test_xml.cpp)
-#target_link_libraries(TESTXmlIO ${CMAKE_THREAD_LIBS_INIT} gtest_main)
+SET(HEADERS
+    ${CORE_HEADERS}
+    ${PROJECT_TESTING_HEADERS}
+)
+
+SET(SOURCE_MAIN main)
+
+SET(SOURCES_BASE
+	src/test_crosecrypt
+)
+
+SET(SOURCES
+    ${SOURCE_MAIN}
+    ${SOURCES_BASE}
+)
+
+PROJECT(${PROJECT})
+
+INCLUDE_DIRECTORIES(
+    ${CMAKE_SOURCE_DIR}/src/core/include
+    ${CMAKE_SOURCE_DIR}/src/rosecommon/include
+    ${CMAKE_SOURCE_DIR}/src/login/include
+    ${CMAKE_SOURCE_DIR}/src/char/include
+    ${CMAKE_SOURCE_DIR}/src/map/include
+    ${CMAKE_SOURCE_DIR}/tools/
+)
+
+FIND_PACKAGE( Threads REQUIRED )
+
+ADD_EXECUTABLE(${PROJECT} ${HEADERS} ${SOURCES})
+
+ADD_DEPENDENCIES(${PROJECT} googletest)
+
+IF(ENABLE_TESTING_COVERAGE)
+    INCLUDE(CodeCoverage)
+    SETUP_TARGET_FOR_COVERAGE(coverage ${PROJECT} coverage)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+ENDIF() # ENABLE_TESTING_COVERAGE
+
+TARGET_LINK_LIBRARIES(${PROJECT}
+    ${CMAKE_THREAD_LIBS_INIT}
+    gtest
+    ${COVERAGE_LIBRARIES}
+)
