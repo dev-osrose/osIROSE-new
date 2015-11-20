@@ -18,10 +18,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(defines "")
 endif()
 
-if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif()
+set(CMAKE_CXX_FLAGS "$(CMAKE_CXX_FLAGS} ${std} ${defines} ${warnings} ${errors}")
 
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
@@ -41,8 +38,18 @@ list( APPEND UNIT_LIST_SRC
 		main.cpp )
 
 find_package( Threads REQUIRED )
-add_executable(UnitTests ${UNIT_LIST_SRC})
-target_link_libraries(UnitTests ${CMAKE_THREAD_LIBS_INIT} gtest_main)
+add_executable(TESTRoseEncryption ${UNIT_LIST_SRC} ./src/test_crosecrypt.cpp)
+target_link_libraries(TESTRoseEncryption ${CMAKE_THREAD_LIBS_INIT} gtest_main)
+
+#add_executable(TESTXmlIO ${UNIT_LIST_SRC} ./src/test_xml.cpp)
+#target_link_libraries(TESTXmlIO ${CMAKE_THREAD_LIBS_INIT} gtest_main)
+
+# tests
+enable_testing()
+add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTRoseEncryption)
+#add_test(Test_XML_IO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TESTXmlIO)
+#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
+#add_test(RoseEncryptionTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TEST<NAME>)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
