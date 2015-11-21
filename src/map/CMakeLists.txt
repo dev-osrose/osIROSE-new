@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-project("World Server")
+project("WorldServer")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra")
 
 # 3rd Party Libaries
 include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT} 
