@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{0C9B4B8E-237B-483D-AF0F-471D8C0DF889}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "src\core\Core.vcxproj", "{0C9B4B8E-237B-483D-AF0F-471D8C0DF889}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "LoginServer\LoginServer.vcxproj", "{D5154405-9CD4-46D4-8862-B31C7FE64CDF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "src\login\LoginServer.vcxproj", "{D5154405-9CD4-46D4-8862-B31C7FE64CDF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharServer", "CharServer\CharServer.vcxproj", "{90DCB1E2-89A3-4367-A9CA-120BDD88FEF8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharServer", "src\char\CharServer.vcxproj", "{90DCB1E2-89A3-4367-A9CA-120BDD88FEF8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldServer", "WorldServer\WorldServer.vcxproj", "{79FCB230-3EE3-4AD4-A06B-76074D67E212}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapServer", "src\map\WorldServer.vcxproj", "{79FCB230-3EE3-4AD4-A06B-76074D67E212}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "UnitTest\UnitTest.vcxproj", "{F13957E9-5170-472C-97EE-E7AD27ED239B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "src\tests\UnitTest.vcxproj", "{F13957E9-5170-472C-97EE-E7AD27ED239B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

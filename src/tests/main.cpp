@@ -1,12 +1,5 @@
 //Unit test driver
-#ifdef _WIN32
-#pragma warning (push, 1)
-#pragma warning(disable: 6326 28182 4616)
-#endif
 #include "gtest/gtest.h"
-#ifdef _WIN32
-#pragma warning (pop)
-#endif
 
 using ::testing::InitGoogleTest;
 using ::testing::Test;

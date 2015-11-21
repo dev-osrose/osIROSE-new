@@ -18,6 +18,15 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdParty
 	mkdir 3rdParty/include
 	mkdir 3rdParty/lib
+	
+	cd tools/protobuf
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+	make check
+	sudo make install
+	
+	cd ../../
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
