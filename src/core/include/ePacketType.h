@@ -19,7 +19,7 @@ typedef uint64_t		qword;
 // LC = Login -> server
 // CC = Char -> Client
 // WC = World -> client
-enum class ePacketType
+enum ePacketType
 {
 	PAKSTART    = 0x700,
 	PAKCS_ALIVE = PAKSTART,
