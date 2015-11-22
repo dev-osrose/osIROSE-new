@@ -5,21 +5,19 @@
 #include "ePacketType.h"
 #include "crosecrypt.hpp"
 
-CPC g_Crypt;
+PacketCodec *g_Crypt = nullptr;
 
 TEST( RoseCrypt, Default )
 {
-	EXPECT_NO_FATAL_FAILURE( g_Crypt.Default( ) );
+	EXPECT_NO_FATAL_FAILURE( g_Crypt = new PacketCodec() );
 }
 
 TEST( RoseCrypt, EncryptData )
 {
-	g_Crypt.Default();
-
 	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req) );
 	pak.pChannelListReq.lServerID = 0x77;
 
-	EXPECT_NO_FATAL_FAILURE( g_Crypt.ESSP( pak.Data ) );
+	EXPECT_NO_FATAL_FAILURE( g_Crypt->encodeServerPacket( pak.Data ) );
 
 	EXPECT_NE( sizeof(pakChannelList_Req), pak.pChannelListReq.Size );
 	EXPECT_NE( (uint16_t)ePacketType::PAKCS_CHAR_LIST_REQ, pak.pChannelListReq.Command );
