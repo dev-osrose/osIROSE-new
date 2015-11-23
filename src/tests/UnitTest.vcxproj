@@ -155,6 +155,9 @@
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\tools\googletest\googletest\msvc\gtest.vcxproj">
+      <Project>{c8f6c172-56f2-4e76-b5fa-c3b423b31be7}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\core\Core.vcxproj">
       <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
     </ProjectReference>

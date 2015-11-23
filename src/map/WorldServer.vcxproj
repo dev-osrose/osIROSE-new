@@ -33,6 +33,7 @@
     <ProjectGuid>{79FCB230-3EE3-4AD4-A06B-76074D67E212}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WorldServer</RootNamespace>
+    <ProjectName>MapServer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
