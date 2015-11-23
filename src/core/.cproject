@@ -36,8 +36,7 @@
 								<option id="gnu.cpp.compiler.option.dialect.std.292309853" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.dialect.flags.2017683652" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++11" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.831151352" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\Program Files\MySQL\Connector.C++ 1.1\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\boost_1_59_0&quot;"/>
+									<listOptionValue builtIn="false" value="../../tools/asio/asio/include"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.preprocess.2095472241" name="Preprocess only (-E)" superClass="gnu.cpp.compiler.option.preprocessor.preprocess" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.include.files.1411338436" name="Include files (-include)" superClass="gnu.cpp.compiler.option.include.files" useByScannerDiscovery="false"/>
@@ -47,6 +46,9 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cygwin.lib.debug.option.optimization.level.712495740" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.cygwin.lib.debug.option.debugging.level.1283630388" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.dialect.std.904740504" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.1748095708" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../../tools/asio/asio/include"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.669618002" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.1671381773" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base"/>
@@ -89,8 +91,7 @@
 								<option id="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level.1134495734" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1050716742" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1130485098" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\Program Files\MySQL\Connector.C++ 1.1\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\boost_1_59_0&quot;"/>
+									<listOptionValue builtIn="false" value="../../tools/asio/asio/include"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.489597763" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.dialect.flags.1778308195" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++11" valueType="string"/>
@@ -99,6 +100,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release.1951211584" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release">
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.cygwin.lib.release.option.optimization.level.1595344791" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.release.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.cygwin.lib.release.option.debugging.level.301081014" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.916258609" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../../tools/asio/asio/include"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.2126390621" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.1455257032" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base"/>
