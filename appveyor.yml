@@ -25,9 +25,9 @@ build: off
 #  verbosity: minimal
 artifacts:
 - path: bin
-  name: {build}-bin
+  name: build-bin
 - path: lib
-  name: {build}-lib
+  name: build-lib
 notifications:
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
