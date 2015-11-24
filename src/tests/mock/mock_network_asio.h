@@ -4,7 +4,7 @@
 class CNetwork_Asio_Mock : public CNetwork_Asio
 {
 public:
-	MOCK_METHOD0( OnConnect, bool());
+//	MOCK_METHOD0( OnConnect, bool());
 	MOCK_METHOD0( OnConnected, bool() );
 	MOCK_METHOD0( OnListen, bool() );
 	MOCK_METHOD0( OnListening, bool() );

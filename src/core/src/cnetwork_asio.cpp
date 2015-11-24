@@ -68,11 +68,13 @@ bool CNetwork_Asio::Connect( )
 
 bool CNetwork_Asio::Listen( )
 {
+	OnListen( );
 	tcp::endpoint endpoint( tcp::v4( ), m_wPort );
 	m_Listener.open( tcp::v4( ) );
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
 	AcceptConnection( );
+	OnListening( );
 	return true;
 }
 
