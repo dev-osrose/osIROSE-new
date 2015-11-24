@@ -22,6 +22,7 @@ OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
 IF(ENABLE_TESTING)
+	SET(CMAKE_RULE_MESSAGES OFF)
 	#Build GoogleTest
 	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
 	
@@ -36,6 +37,7 @@ IF(ENABLE_TESTING)
 	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
 	#SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/include)
 	#SET(PROTOBUF_BINARY_DIR ${protobuf_SOURCE_DIR})
+	SET(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
 SET(ASIO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/asio/asio/include)

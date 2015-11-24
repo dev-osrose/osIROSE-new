@@ -21,9 +21,9 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	
 	cd tools/protobuf
 	./autogen.sh
-	./configure --prefix=/usr
+	./configure --prefix=/usr > nul
 	make
-	make check
+	#make check
 	sudo make install
 	
 	cd ../../
