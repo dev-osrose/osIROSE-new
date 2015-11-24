@@ -5,7 +5,19 @@
  *      Author: ctorres
  */
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning( disable: 6011 6031 6102 6255 6258 6326 6387  )
+#define _WIN32_WINNT 0x0601
+#endif
+
 #include <asio.hpp>
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
+#include <thread>
 #include "inetwork.h"
 
 #define MAX_PACKET_SIZE 0x7FF
@@ -14,6 +26,7 @@ using asio::ip::tcp;
 
 class CNetwork_Asio : public INetwork
 {
+public:
 	CNetwork_Asio();
 	virtual ~CNetwork_Asio();
 
@@ -28,6 +41,7 @@ class CNetwork_Asio : public INetwork
 protected:
 	virtual bool Send(uint8_t* _buffer, uint16_t _size);
 	virtual bool Recv(uint16_t _size = 6);
+	void AcceptConnection();
 
 	// Callback functions
 	virtual bool OnConnect();
@@ -45,6 +59,7 @@ protected:
 private:
 	asio::io_service m_io_service;
 	tcp::socket m_socket;
+	tcp::acceptor m_Listener;
 
 	std::thread m_IOThread;
 	uint8_t Buffer[MAX_PACKET_SIZE];

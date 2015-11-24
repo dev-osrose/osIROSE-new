@@ -19,6 +19,9 @@
     <ClCompile Include="test_protobuf.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="test_network_asio.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

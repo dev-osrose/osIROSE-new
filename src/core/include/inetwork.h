@@ -6,7 +6,11 @@
 
 class INetwork
 {
-	virtual ~INetwork() : m_iId(0), m_iType(0), m_wPort(0), m_IpAddress("") {}
+public:
+	INetwork() : m_iId( 0 ), m_iType( 0 ), m_wPort( 0 ), m_IpAddress( "" )
+	{
+	}
+	virtual ~INetwork() {}
 
 	virtual bool Init(std::string _ip, uint16_t _port) = 0;
 	virtual bool Shutdown() = 0;

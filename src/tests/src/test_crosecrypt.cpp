@@ -7,12 +7,12 @@
 
 PacketCodec *g_Crypt = nullptr;
 
-TEST( RoseCrypt, Default )
+TEST( RoseCrypt, TestDefault )
 {
 	EXPECT_NO_FATAL_FAILURE( g_Crypt = new PacketCodec() );
 }
 
-TEST( RoseCrypt, EncryptData )
+TEST( RoseCrypt, TestEncryptData )
 {
 	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req) );
 	pak.pChannelListReq.lServerID = 0x77;

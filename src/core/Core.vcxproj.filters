@@ -22,7 +22,7 @@
     <ClCompile Include="src\crosecrypt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ini_parser.cpp">
+    <ClCompile Include="src\cnetwork_asio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ClInclude Include="include\ePacketType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ini_parser.h">
+    <ClInclude Include="include\cnetwork_asio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
