@@ -15,6 +15,7 @@ environment/project/cdt.managedbuild.config.gnu.cygwin.lib.release.830231297/PAT
 environment/project/cdt.managedbuild.config.gnu.cygwin.lib.release.830231297/PATH/value=${BOOSTLIB};${CYGWIN_HOME}\\bin;C\:/Program Files/Java/jre1.8.0_66/bin/server;C\:/Program Files/Java/jre1.8.0_66/bin;C\:/Program Files/Java/jre1.8.0_66/lib/amd64;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;C\:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C\:\\Program Files (x86)\\Windows Kits\\8.1\\Windows Performance Toolkit\\;C\:\\Program Files\\Microsoft SQL Server\\110\\Tools\\Binn\\;C\:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Program Files (x86)\\NMapWin\\bin;C\:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin;C\:\\Program Files (x86)\\Skype\\Phone\\;C\:\\Users\\redfl\\AppData\\Roaming\\IDM
 environment/project/cdt.managedbuild.config.gnu.cygwin.lib.release.830231297/append=true
 environment/project/cdt.managedbuild.config.gnu.cygwin.lib.release.830231297/appendContributed=true
+org.eclipse.cdt.core.code_formatter=org.eclipse.cdt.core.defaultCodeFormatter
 org.eclipse.cdt.core.formatter.alignment_for_arguments_in_method_invocation=18
 org.eclipse.cdt.core.formatter.alignment_for_assignment=16
 org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=80

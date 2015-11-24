@@ -27,7 +27,7 @@ CNetwork_Asio::~CNetwork_Asio( )
 
 bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 {
-	if ( _ip.length( ) < 7 || _ip.length( ) > 15 )
+	if ( _ip.length( ) < 2 ) // We can actually use hostnames instead of IP addresses. Ex. google.com
 		return false;
 
 	m_IpAddress = _ip;
@@ -89,6 +89,7 @@ bool CNetwork_Asio::Disconnect( )
 
 bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
 {
+	OnSend(_buffer, _size);
 	asio::async_write( m_socket,
 	                   asio::buffer( _buffer,
 	                                 _size ),
