@@ -21,6 +21,8 @@ CNetwork_Asio::CNetwork_Asio( )
 CNetwork_Asio::~CNetwork_Asio( )
 {
 	Shutdown( );
+	m_io_service.stop( );
+	m_IOThread.join();
 }
 
 bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
@@ -39,8 +41,11 @@ bool CNetwork_Asio::Shutdown( )
 		Disconnect( );
 
 	if ( m_Listener.is_open( ) )
-		m_io_service.post( [this]( ) { m_Listener.close( ); } );
-
+		m_io_service.post( [this]()
+	{
+		m_Listener.cancel(); 
+		m_Listener.close();
+	} );
 	return true;
 }
 
@@ -78,7 +83,7 @@ bool CNetwork_Asio::Reconnect( )
 
 bool CNetwork_Asio::Disconnect( )
 {
-	m_io_service.post( [this]( ) { m_socket.close( ); } );
+	m_io_service.post( [this]( ) { m_socket.shutdown(asio::socket_base::shutdown_both); } );
 	return true;
 }
 

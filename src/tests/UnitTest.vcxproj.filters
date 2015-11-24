@@ -16,10 +16,10 @@
     <ClCompile Include="src\test_crosecrypt.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="test_protobuf.cpp">
+    <ClCompile Include="src\test_network_asio.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="test_network_asio.cpp">
+    <ClCompile Include="src\test_protobuf.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

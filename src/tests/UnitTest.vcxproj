@@ -154,8 +154,8 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\test_crosecrypt.cpp" />
-    <ClCompile Include="test_network_asio.cpp" />
-    <ClCompile Include="test_protobuf.cpp" />
+    <ClCompile Include="src\test_network_asio.cpp" />
+    <ClCompile Include="src\test_protobuf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
