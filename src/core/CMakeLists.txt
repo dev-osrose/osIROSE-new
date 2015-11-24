@@ -15,7 +15,7 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 project("Core")
 
 #SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -pedantic -Wextra -Werror -Wno-packed-bitfield-compat -DASIO_STANDALONE")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -DASIO_STANDALONE -Wall -pedantic -Wextra -Werror -Wno-packed-bitfield-compat")
 
 #include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
 INCLUDE_DIRECTORIES(
