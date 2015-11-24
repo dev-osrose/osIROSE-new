@@ -85,7 +85,8 @@ bool CNetwork_Asio::Reconnect( )
 
 bool CNetwork_Asio::Disconnect( )
 {
-	m_io_service.post( [this]( ) { m_socket.shutdown(asio::socket_base::shutdown_both); } );
+	OnDisconnect();
+	m_io_service.post( [this]( ) { m_socket.shutdown(asio::socket_base::shutdown_both); OnDisconnected(); } );
 	return true;
 }
 
@@ -116,8 +117,9 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 	                  [this]( std::error_code errorCode, std::size_t length ) {
 		                  if ( !errorCode )
 		                  {
-							  (void)length;
-			                  Recv( (uint16_t)Buffer[ 0 ] );
+					(void)length;
+					Recv( (uint16_t)Buffer[ 0 ] );
+					OnReceived( Buffer, (uint16_t)length );
 		                  }
 		                  else
 		                  {
