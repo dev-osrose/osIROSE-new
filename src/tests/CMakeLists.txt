@@ -19,7 +19,7 @@ LINK_DIRECTORIES(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR})
 # Configure some handy variables.
 SET(PROJECT osirose-tests)
 SET(CMAKE_BUILD_TYPE "Debug")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra -Wno-packed-bitfield-compat")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra -Wno-packed-bitfield-compat -DASIO_STANDALONE")
 
 ADD_DEFINITIONS(-DSERVER_TESTING)
 
