@@ -108,6 +108,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 	                  [this]( std::error_code errorCode, std::size_t length ) {
 		                  if ( !errorCode )
 		                  {
+							  (void)length;
 			                  Recv( (uint16_t)Buffer[ 0 ] );
 		                  }
 		                  else
@@ -125,6 +126,7 @@ void CNetwork_Asio::AcceptConnection( )
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
+				(void)socket;
 			    // Do something here for the new connection.
 			    // Make sure to use std::move(socket)
 			    //std::make_shared<CClientSesson>( std::move(socket) );
@@ -171,12 +173,15 @@ bool CNetwork_Asio::OnReceive( )
 
 bool CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
+	(void)_buffer;
+	(void)_size;
 	return true;
 }
 
 bool CNetwork_Asio::OnSend( uint8_t* _buffer, uint16_t _size )
 {
-	// Crypt packet here
+	(void)_buffer;
+	(void)_size;
 	return true;
 }
 
