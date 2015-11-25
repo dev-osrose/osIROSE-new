@@ -38,7 +38,7 @@ const unsigned char CrcTable[] =
 class RoseRandomNumber
 {
 	public:
-		RoseRandomNumber(unsigned seed);
+		RoseRandomNumber(unsigned int seed);
 
 		enum Type
 		{
@@ -162,14 +162,14 @@ inline void FlipHeadFinal( T a, U b )
 class	PacketCodec
 {
 	public:
-		PacketCodec(unsigned seed = 0x0042D266);
+		PacketCodec(unsigned int seed = 0x0042D266);
 		~PacketCodec();
 
 		void		encodeServerPacket( unsigned char* buffer );
 		uint16_t	decodeClientHeader( unsigned char* buffer );
 		bool		decodeClientBody( unsigned char* buffer );
 
-		void	changeSeed(unsigned seed);
+		void	changeSeed(unsigned int seed);
 
 	private:
 		bool	find_DupTABLE( int val, int table, int range );

@@ -1,6 +1,6 @@
 #include "crosecrypt.hpp"
 
-RoseRandomNumber::RoseRandomNumber(unsigned seed) : m_type(RoseRandomNumber::BC),
+RoseRandomNumber::RoseRandomNumber(unsigned int seed) : m_type(RoseRandomNumber::BC),
 	m_VcSeed(seed),	m_BcSeed(seed),	m_AcSeed(seed), m_MySeed(seed)
 {}
 
@@ -46,7 +46,7 @@ int RoseRandomNumber::get( )
 		return R_VC( );
 }
 
-PacketCodec::PacketCodec(unsigned seed) : m_Cr(0)
+PacketCodec::PacketCodec(unsigned int seed) : m_Cr(0)
 {
 	m_Rt = new int*[ 0x10 ];
 	for( int i = 0; i < 0x10; i++ )
@@ -56,7 +56,7 @@ PacketCodec::PacketCodec(unsigned seed) : m_Cr(0)
 	changeSeed(seed);
 }
 
-void	PacketCodec::changeSeed(unsigned seed)
+void	PacketCodec::changeSeed(unsigned int seed)
 {
 	m_Cr = RoseRandomNumber(seed);
 	for( int i = 0; i < 0x10; i++ )

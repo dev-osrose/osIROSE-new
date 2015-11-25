@@ -7,12 +7,18 @@
 
 //PacketCodec *g_Crypt = nullptr;
 
-TEST( RoseCrypt, TestDefault )
+TEST( TestRoseCrypt, TestDefaultCrypt )
 {
 	EXPECT_NO_FATAL_FAILURE( PacketCodec g_Crypt );
 }
 
-TEST( RoseCrypt, TestEncryptData )
+TEST( TestRoseCrypt, TestSetSeed )
+{
+	PacketCodec g_Crypt;
+	EXPECT_NO_FATAL_FAILURE(g_Crypt.changeSeed(0x289012));
+}
+
+TEST( TestRoseCrypt, TestEncryptData )
 {
 	PacketCodec g_Crypt;
 	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req) );
