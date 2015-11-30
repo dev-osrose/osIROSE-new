@@ -136,12 +136,12 @@ void CNetwork_Asio::AcceptConnection( )
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
-			if ( this->OnAccept(std::move(socket)) )
+			if ( this->OnAccept(std::move(socket)) ) // This should be changed to use a client session instead of a CNetwork_Asio class
 			{
 			    // Do something here for the new connection.
 			    // Make sure to use std::move(socket)
 			    //std::make_shared<CClientSesson>( std::move(socket) );
-				//this->OnAccepted(socket);
+				//this->OnAccepted();
 			}
 			else
 			{
