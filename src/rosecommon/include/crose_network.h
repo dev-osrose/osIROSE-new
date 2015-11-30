@@ -12,15 +12,17 @@ public:
 private:
 	// Callback functions
 	virtual bool OnConnect();
-	virtual bool OnConnected();
+	virtual void OnConnected();
 	virtual bool OnListen();
-	virtual bool OnListening();
+	virtual void OnListening();
 	virtual bool OnDisconnect();
-	virtual bool OnDisconnected();
+	virtual void OnDisconnected();
 	virtual bool OnReceive();
-	virtual bool OnReceived(uint8_t* _buffer, uint16_t _size);
+	virtual void OnReceived(uint8_t* _buffer, uint16_t _size);
 	virtual bool OnSend(uint8_t* _buffer, uint16_t _size);
-	virtual bool OnSent();
+	virtual void OnSent();
+	virtual bool OnAccept(tcp::socket _sock);
+	virtual void OnAccepted(tcp::socket _sock);
 };
 
 #endif

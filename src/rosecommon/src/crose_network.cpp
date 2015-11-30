@@ -14,9 +14,9 @@ bool CRose_Network::OnConnect( )
 	return true;
 }
 
-bool CRose_Network::OnConnected( )
+void CRose_Network::OnConnected( )
 {
-	return true;
+
 }
 
 bool CRose_Network::OnListen( )
@@ -24,9 +24,9 @@ bool CRose_Network::OnListen( )
 	return true;
 }
 
-bool CRose_Network::OnListening( )
+void CRose_Network::OnListening( )
 {
-	return true;
+
 }
 
 bool CRose_Network::OnDisconnect( )
@@ -34,9 +34,9 @@ bool CRose_Network::OnDisconnect( )
 	return true;
 }
 
-bool CRose_Network::OnDisconnected( )
+void CRose_Network::OnDisconnected( )
 {
-	return true;
+
 }
 
 bool CRose_Network::OnReceive( )
@@ -44,11 +44,10 @@ bool CRose_Network::OnReceive( )
 	return true;
 }
 
-bool CRose_Network::OnReceived( uint8_t* _buffer, uint16_t _size )
+void CRose_Network::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	(void)_buffer;
 	(void)_size;
-	return true;
 }
 
 bool CRose_Network::OnSend( uint8_t* _buffer, uint16_t _size )
@@ -58,7 +57,23 @@ bool CRose_Network::OnSend( uint8_t* _buffer, uint16_t _size )
 	return true;
 }
 
-bool CRose_Network::OnSent( )
+void CRose_Network::OnSent( )
 {
-	return true;
+}
+
+bool CRose_Network::OnAccept(tcp::socket _sock)
+{
+        if( _sock.is_open() )
+        {
+                return true;
+        }
+        return false;
+}
+
+void CRose_Network::OnAccepted(tcp::socket _sock)
+{
+        if( _sock.is_open() )
+        {
+                //Do Something?
+        }
 }

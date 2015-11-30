@@ -31,15 +31,15 @@ protected:
 
 	// Callback functions
 	virtual bool OnConnect() = 0;
-	virtual bool OnConnected() = 0;
+	virtual void OnConnected() = 0;
 	virtual bool OnListen() = 0;
-	virtual bool OnListening() = 0;
+	virtual void OnListening() = 0;
 	virtual bool OnDisconnect() = 0;
-	virtual bool OnDisconnected() = 0;
+	virtual void OnDisconnected() = 0;
 	virtual bool OnReceive() = 0;
-	virtual bool OnReceived(uint8_t* _buffer, uint16_t _size) = 0;
+	virtual void OnReceived(uint8_t* _buffer, uint16_t _size) = 0;
 	virtual bool OnSend(uint8_t* _buffer, uint16_t _size) = 0;
-	virtual bool OnSent() = 0;
+	virtual void OnSent() = 0;
 
 //private:
 	uint32_t m_iId;

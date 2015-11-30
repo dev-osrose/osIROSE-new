@@ -136,10 +136,18 @@ void CNetwork_Asio::AcceptConnection( )
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
-				(void)socket;
+			if ( this->OnAccept(std::move(socket)) )
+			{
 			    // Do something here for the new connection.
 			    // Make sure to use std::move(socket)
 			    //std::make_shared<CClientSesson>( std::move(socket) );
+				//this->OnAccepted(socket);
+			}
+			else
+			{
+				//Kill the socket
+				socket.close( );
+			}
 		    }
 
 		    AcceptConnection( );
@@ -151,9 +159,8 @@ bool CNetwork_Asio::OnConnect( )
 	return true;
 }
 
-bool CNetwork_Asio::OnConnected( )
+void CNetwork_Asio::OnConnected( )
 {
-	return true;
 }
 
 bool CNetwork_Asio::OnListen( )
@@ -161,9 +168,8 @@ bool CNetwork_Asio::OnListen( )
 	return true;
 }
 
-bool CNetwork_Asio::OnListening( )
+void CNetwork_Asio::OnListening( )
 {
-	return true;
 }
 
 bool CNetwork_Asio::OnDisconnect( )
@@ -171,9 +177,8 @@ bool CNetwork_Asio::OnDisconnect( )
 	return true;
 }
 
-bool CNetwork_Asio::OnDisconnected( )
+void CNetwork_Asio::OnDisconnected( )
 {
-	return true;
 }
 
 bool CNetwork_Asio::OnReceive( )
@@ -181,11 +186,10 @@ bool CNetwork_Asio::OnReceive( )
 	return true;
 }
 
-bool CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
+void CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	(void)_buffer;
 	(void)_size;
-	return true;
 }
 
 bool CNetwork_Asio::OnSend( uint8_t* _buffer, uint16_t _size )
@@ -195,7 +199,23 @@ bool CNetwork_Asio::OnSend( uint8_t* _buffer, uint16_t _size )
 	return true;
 }
 
-bool CNetwork_Asio::OnSent( )
+void CNetwork_Asio::OnSent( )
 {
-	return true;
+}
+
+bool CNetwork_Asio::OnAccept(tcp::socket _sock)
+{
+	if( _sock.is_open() )
+	{
+		return true;
+	}
+	return false;
+}
+
+void CNetwork_Asio::OnAccepted(tcp::socket _sock)
+{
+	if( _sock.is_open() )
+	{
+		//Do Something?
+	}
 }
