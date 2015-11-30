@@ -1,4 +1,4 @@
-#include "crosecrypt.hpp"
+#include "crosecrypt.h"
 
 RoseRandomNumber::RoseRandomNumber(unsigned int seed) : m_type(RoseRandomNumber::BC),
 	m_VcSeed(seed),	m_BcSeed(seed),	m_AcSeed(seed), m_MySeed(seed)

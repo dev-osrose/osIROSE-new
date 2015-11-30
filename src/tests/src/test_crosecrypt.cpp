@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "ePacketType.h"
-#include "crosecrypt.hpp"
+#include "crosecrypt.h"
 
 //PacketCodec *g_Crypt = nullptr;
 

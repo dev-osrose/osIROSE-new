@@ -4,8 +4,9 @@
 #include <condition_variable>
 #include <stdint.h>
 #include "mock/mock_network_asio.h"
+//#include "crose_network.h"
 
-using ::testing::Expectation;
+//using ::testing::Expectation;
 
 TEST( TestAsioNetworking, TestInit )
 {
@@ -29,7 +30,7 @@ TEST( TestAsioNetworking, TestConnectIp )
 //	std::condition_variable cv;
 //	bool done = false;
 
-	CNetwork_Asio_Mock network;
+	CNetwork_Asio network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 //	EXPECT_CALL( network, OnConnect() )
@@ -83,7 +84,7 @@ TEST( TestAsioNetworking, TestReconnect )
 
 TEST( TestAsioNetworking, TestConnectHostName )
 {
-	::testing::FLAGS_gmock_verbose = "info";
+//	::testing::FLAGS_gmock_verbose = "info";
 //	std::mutex mutex;
 //        std::condition_variable cv;
 //        bool done = false;
@@ -109,7 +110,7 @@ TEST( TestAsioNetworking, TestConnectHostName )
 
 TEST( TestAsioNetworking, TestListen )
 {
-::testing::FLAGS_gmock_verbose = "info";
+//	::testing::FLAGS_gmock_verbose = "info";
 //	std::mutex mutex;
 //        std::condition_variable cv;
 //        bool done = false;

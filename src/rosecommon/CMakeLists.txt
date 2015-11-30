@@ -1,19 +1,28 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
+INCLUDE_DIRECTORIES(
+    SYSTEM ${PROTOBUF_INCLUDE_DIR}
+        SYSTEM ${ASIO_INCLUDE_DIR}
+        SYSTEM ${EXTERNAL_INCLUDE_DIR}
+)
+
+LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
+
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 project("RoseCommon")
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/obj)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DASIO_STANDALONE -Wall -Wextra -Werror -Wno-packed-bitfield-compat")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra")
+INCLUDE_DIRECTORIES(
+	${CMAKE_SOURCE_DIR}/src/core/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
-include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/3rdParty/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
+SET( SOURCES_BASE
+  src/crosecrypt 
+  src/crose_network )
 
-list( APPEND COMMON_LIST_SRC
-  src/crosecrypt.cpp )
-
-add_library(RoseCommon STATIC ${COMMON_LIST_SRC})
+add_library(RoseCommon STATIC ${SOURCES_BASE})

@@ -24,7 +24,6 @@ INCLUDE_DIRECTORIES(
 #link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 SET( SOURCES_BASE
-  src/crosecrypt 
   src/cnetwork_asio )
 
 add_library(Core STATIC ${SOURCES_BASE})
