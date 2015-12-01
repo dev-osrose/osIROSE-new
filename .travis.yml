@@ -16,7 +16,7 @@ addons:
     - gcc-5
     - g++-4.9
     - g++-5
-    - clang-3.8
+    - clang-3.7
     - libmysqlclient-dev
     - libmysql++-dev
 
@@ -43,9 +43,9 @@ matrix:
     - env: LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- ln -sf /usr/bin/gcov-${GCC_VERSION} /usr/bin/gcov
+- export GCOV_PATH=/usr/bin/gcov-5
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
-- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.8" CC="/usr/bin/clang-3.8"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
 - ./ci/before_install.sh
 
 install:
