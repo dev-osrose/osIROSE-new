@@ -12,10 +12,11 @@ addons:
     - cmake
     - lcov
     - libboost-dev
-    - g++-4.9
-    - g++-5
     - gcc-4.9
     - gcc-5
+    - g++-4.9
+    - g++-5
+    - clang-3.8
     - libmysqlclient-dev
     - libmysql++-dev
 
@@ -44,7 +45,7 @@ matrix:
 before_install:
 - export GCOV_VERSION="5"
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
-- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.8" CC="/usr/bin/clang-3.8"; fi
 - ./ci/before_install.sh
 
 install:
