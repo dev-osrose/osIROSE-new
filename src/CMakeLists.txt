@@ -16,7 +16,7 @@ IF(ENABLE_TESTING)
 ENDIF()
 
 INSTALL(
-    TARGET LoginServer CharServer WorldServer
+    TARGETS LoginServer CharServer WorldServer
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static )
