@@ -1,25 +1,56 @@
-sudo: required
+sudo: false
 language: cpp
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
+    - extras-precise
+    - boost-latest
+    packages:
+    - cmake
+    - lcov
+    - libboost-dev
+    - libprotobuf-dev
+    - gcc-4.9
+    - gcc-5
+    - g++-4.9
+    - g++-5
+    - clang-3.7
+    - libstdc++5
+    - libmysqlclient-dev
+    - libmysql++-dev
+
+cache:
+  directories:
+  - $HOME/protobuf
+  
 matrix:
   include:
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Release
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Debug SUITE=tests
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Release
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Release
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
   allow_failures:
-    - env: LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    - env: LIBCXX=1 BUILD_TYPE=Release
+    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-#- export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}";
+- export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}
+- export LCOV_PATH=$HOME/usr/bin/lcov
+- export GENHTML_PATH=$HOME/usr/bin/genhtml
+- export PREFIX=$HOME
+- if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
 - ./ci/before_install.sh
 
 install:

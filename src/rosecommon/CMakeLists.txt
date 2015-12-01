@@ -14,7 +14,13 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 project("RoseCommon")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DASIO_STANDALONE -Wall -Wextra -Werror -Wno-packed-bitfield-compat")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DASIO_STANDALONE -Wall -Wextra -Werror")
+
+IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
+ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
+ENDIF()
 
 INCLUDE_DIRECTORIES(
 	${CMAKE_SOURCE_DIR}/src/core/include

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 INCLUDE_DIRECTORIES(
-    SYSTEM ${PROTOBUF_INCLUDE_DIR}
+	SYSTEM ${PROTOBUF_INCLUDE_DIR}
 	SYSTEM ${ASIO_INCLUDE_DIR}
 	SYSTEM ${EXTERNAL_INCLUDE_DIR}
 )
@@ -10,7 +10,13 @@ LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
 
 project("CharServer")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra -Werror")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+
+IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
+ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
+ENDIF()
 
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -19,5 +25,12 @@ SET( SOURCES_MAIN
   src/main.cpp )
 
 find_package( Threads REQUIRED )
-add_executable(CharServer ${CHAR_LIST_SRC})
+add_executable(CharServer ${SOURCES_MAIN})
 target_link_libraries(CharServer Core ${CMAKE_THREAD_LIBS_INIT})
+
+INSTALL(
+    TARGETS CharServer
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    CONFIGURATIONS Release)

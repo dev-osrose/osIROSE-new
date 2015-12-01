@@ -10,7 +10,13 @@ LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
 
 project("WorldServer")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Wextra -Werror")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+
+IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
+ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
+ENDIF()
 
 # Our Stuff 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -21,3 +27,11 @@ SET( SOURCES_MAIN
 find_package( Threads REQUIRED )
 add_executable(WorldServer ${SOURCES_MAIN})
 target_link_libraries(WorldServer Core ${CMAKE_THREAD_LIBS_INIT})
+
+INSTALL(
+    TARGETS WorldServer
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    CONFIGURATIONS Release)
+    
