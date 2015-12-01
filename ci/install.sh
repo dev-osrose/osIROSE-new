@@ -28,8 +28,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	else
   		echo 'Using cached directory.';
 	fi
-	
-	ls -R $HOME/protobuf
+
 	cd ../../
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
