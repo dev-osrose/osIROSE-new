@@ -12,6 +12,7 @@ addons:
     - cmake
     - lcov
     - libboost-dev
+    - libprotobuf-dev
     - gcc-4.9
     - gcc-5
     - g++-4.9
