@@ -43,7 +43,7 @@ matrix:
     - env: LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- export GCOV_VERSION="5"
+- ln -sf /usr/bin/gcov-${GCC_VERSION} /usr/bin/gcov
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
 - if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.8" CC="/usr/bin/clang-3.8"; fi
 - ./ci/before_install.sh
