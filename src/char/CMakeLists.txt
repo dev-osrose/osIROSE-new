@@ -19,5 +19,5 @@ SET( SOURCES_MAIN
   src/main.cpp )
 
 find_package( Threads REQUIRED )
-add_executable(CharServer ${CHAR_LIST_SRC})
+add_executable(CharServer ${SOURCES_MAIN})
 target_link_libraries(CharServer Core ${CMAKE_THREAD_LIBS_INIT})
