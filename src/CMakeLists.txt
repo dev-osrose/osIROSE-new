@@ -15,8 +15,8 @@ IF(ENABLE_TESTING)
     ADD_SUBDIRECTORY(tests)
 ENDIF()
 
-INSTALL(
-    TARGETS LoginServer CharServer WorldServer
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib/static )
+#INSTALL(
+#    TARGETS LoginServer CharServer WorldServer
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib/static )
