@@ -21,3 +21,11 @@ SET( SOURCES_MAIN
 find_package( Threads REQUIRED )
 add_executable(WorldServer ${SOURCES_MAIN})
 target_link_libraries(WorldServer Core ${CMAKE_THREAD_LIBS_INIT})
+
+INSTALL(
+    TARGETS WorldServer
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    CONFIGURATIONS Release)
+    
