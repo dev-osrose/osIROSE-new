@@ -9,7 +9,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz
 	cd lcov-1.12
-	make --prefix="$HOME" install
+	PREFIX = "$HOME"
+	make install
 
 	cd ..
 	#sudo apt-get install -qq cdbs cmake libboost-dev libmysqlclient-dev
