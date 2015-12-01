@@ -9,7 +9,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz
 	cd lcov-1.12
-	set PREFIX="$HOME"
 	make install
 
 	cd ..
