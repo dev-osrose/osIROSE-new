@@ -44,8 +44,9 @@ bool CNetwork_Asio::Shutdown( )
 	if ( m_Listener.is_open( ) )
 		m_io_service.post( [this]()
 	{
+		std::error_code ignored;
 		m_Listener.cancel(); 
-		m_Listener.close();
+		m_Listener.close(ignored);
 	} );
 	return true;
 }
@@ -87,7 +88,12 @@ bool CNetwork_Asio::Reconnect( )
 bool CNetwork_Asio::Disconnect( )
 {
 	OnDisconnect();
-	m_io_service.post( [this]( ) { m_socket.shutdown(asio::socket_base::shutdown_both); OnDisconnected(); } );
+	m_io_service.post( [this]( ) 
+			{ 
+				std::error_code ignored;
+				m_socket.shutdown(asio::socket_base::shutdown_both, ignored); 
+				OnDisconnected(); 
+			} );
 	return true;
 }
 
@@ -149,7 +155,8 @@ void CNetwork_Asio::AcceptConnection( )
 			else
 			{
 				//Kill the socket
-				socket.close( );
+				std::error_code ignored;
+				socket.close( ignored );
 			}
 		    }
 
