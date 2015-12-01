@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	if [ "$CXX" = "g++" ]; then
+	if [ "$GCC_VERSION" ]; then
 		echo 'Setting up protobuf...';
 		if [ ! -d "$HOME/protobuf/lib" ]; then
 			cd tools/protobuf
