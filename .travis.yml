@@ -27,23 +27,23 @@ cache:
 matrix:
   include:
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Release
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Debug SUITE=tests
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Release
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Release
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
   allow_failures:
-    - env: LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    - env: LIBCXX=1 BUILD_TYPE=Release
+    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- export GCOV_PATH=/usr/bin/gcov-5
+- export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
 - if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
 - ./ci/before_install.sh
