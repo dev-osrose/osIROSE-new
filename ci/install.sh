@@ -13,7 +13,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	make install
 
 	cd ..
-	#sudo apt-get install -qq cdbs cmake libboost-dev libmysqlclient-dev
 	gem install coveralls-lcov
     
 	mkdir 3rdParty
