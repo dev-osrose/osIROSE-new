@@ -104,7 +104,8 @@ bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
 		                   }
 		                   else
 		                   {
-			                   m_socket.close( );
+			                   //m_socket.close( );
+					   Disconnect();
 		                   }
 		               } );
 	return true;
@@ -124,7 +125,8 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 		                  }
 		                  else
 		                  {
-			                  m_socket.close( );
+			                  //m_socket.close( );
+					  Disconnect();
 		                  }
 		              } );
 	OnReceived( Buffer, (uint16_t)Buffer[ 0 ] );
