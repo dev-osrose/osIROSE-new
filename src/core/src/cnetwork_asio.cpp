@@ -14,6 +14,7 @@ CNetwork_Asio::CNetwork_Asio( )
     : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service )
 {
 	m_IOThread = std::thread( [this]( ) {
+		asio::io_service::work _Work(m_io_service);
 		m_io_service.run( );
 	} );
 }
@@ -136,12 +137,12 @@ void CNetwork_Asio::AcceptConnection( )
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
-			if ( this->OnAccept(std::move(socket)) ) // This should be changed to use a client session instead of a CNetwork_Asio class
+			if ( this->OnAccept() ) // This should be changed to use a client session instead of a CNetwork_Asio class
 			{
 			    // Do something here for the new connection.
 			    // Make sure to use std::move(socket)
 			    //std::make_shared<CClientSesson>( std::move(socket) );
-				//this->OnAccepted();
+				this->OnAccepted(std::move(socket));
 			}
 			else
 			{
@@ -203,13 +204,9 @@ void CNetwork_Asio::OnSent( )
 {
 }
 
-bool CNetwork_Asio::OnAccept(tcp::socket _sock)
+bool CNetwork_Asio::OnAccept()
 {
-	if( _sock.is_open() )
-	{
-		return true;
-	}
-	return false;
+	return true;
 }
 
 void CNetwork_Asio::OnAccepted(tcp::socket _sock)

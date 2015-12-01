@@ -61,13 +61,9 @@ void CRose_Network::OnSent( )
 {
 }
 
-bool CRose_Network::OnAccept(tcp::socket _sock)
+bool CRose_Network::OnAccept()
 {
-        if( _sock.is_open() )
-        {
-                return true;
-        }
-        return false;
+	return true;
 }
 
 void CRose_Network::OnAccepted(tcp::socket _sock)

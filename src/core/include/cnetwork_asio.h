@@ -54,11 +54,12 @@ protected:
 	virtual void OnReceived(uint8_t* _buffer, uint16_t _size);
 	virtual bool OnSend(uint8_t* _buffer, uint16_t _size);
 	virtual void OnSent();
-	virtual bool OnAccept(tcp::socket _sock);
+	virtual bool OnAccept();
 	virtual void OnAccepted(tcp::socket _sock);
 
 
 private:
+	//std::unique_ptr<asio::io_service::work> m_Work;
 	asio::io_service m_io_service;
 	tcp::socket m_socket;
 	tcp::acceptor m_Listener;

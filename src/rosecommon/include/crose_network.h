@@ -21,7 +21,7 @@ private:
 	virtual void OnReceived(uint8_t* _buffer, uint16_t _size);
 	virtual bool OnSend(uint8_t* _buffer, uint16_t _size);
 	virtual void OnSent();
-	virtual bool OnAccept(tcp::socket _sock);
+	virtual bool OnAccept();
 	virtual void OnAccepted(tcp::socket _sock);
 };
 
