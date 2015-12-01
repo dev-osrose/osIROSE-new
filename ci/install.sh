@@ -1,21 +1,23 @@
 #!/bin/sh
-set -e
+
 if [ -z "$TRAVIS_OS_NAME" ]; then
     TRAVIS_OS_NAME=linux
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-
-	if [ ! -d "$HOME/protobuf/lib" ]; then
-		cd tools/protobuf
-		./autogen.sh
-		./configure --prefix=$HOME/protobuf
-		make
-		make install
+	if [ "$CXX" = "g++" ]; then
+		echo 'Setting up protobuf...';
+		if [ ! -d "$HOME/protobuf/lib" ]; then
+			cd tools/protobuf
+			./autogen.sh
+			./configure --prefix=$HOME/protobuf > nul
+			make
+			make install
 		
-		cd ../../
-	else
-  		echo 'Using cached protobuf directory.';
+			cd ../../
+		else
+	  		echo 'Using cached protobuf directory.';
+		fi
 	fi
 	
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
