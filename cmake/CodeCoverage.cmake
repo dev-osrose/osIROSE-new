@@ -22,7 +22,7 @@ IF(NOT GENHTML_PATH)
 ENDIF() # NOT GENHTML_PATH
 
 SET(COVERAGE_CXX_FLAGS
-    "--coverage -fprofile-arcs -ftest-coverage"
+    "-g --coverage -fprofile-arcs -ftest-coverage"
     CACHE STRING "Flags used by the C++ compiler during coverage builds."
     FORCE
 )
