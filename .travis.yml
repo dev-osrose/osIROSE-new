@@ -17,6 +17,7 @@ addons:
     - g++-4.9
     - g++-5
     - clang-3.7
+    - libstdc++5
     - libmysqlclient-dev
     - libmysql++-dev
 
