@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 language: cpp
 
 addons:
@@ -38,7 +38,8 @@ matrix:
     - env: LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
+- if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
 - ./ci/before_install.sh
 
 install:
