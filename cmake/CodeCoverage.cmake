@@ -27,7 +27,7 @@ SET(COVERAGE_CXX_FLAGS
     FORCE
 )
 
-SET(COVERAGE_LIBRARIES -fprofile-arcs -ftest-coverage)
+SET(COVERAGE_LIBRARIES -g -fprofile-arcs -ftest-coverage)
 
 MARK_AS_ADVANCED(
     COVERAGE_CXX_FLAGS
@@ -37,7 +37,7 @@ MARK_AS_ADVANCED(
 FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
     ADD_CUSTOM_TARGET(${_targetname}
         # Reset all execution counts to zero.
-        ${LCOV_PATH} --directory . --zerocounters
+        ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --directory . --zerocounters
 
         # Run tests.
         COMMAND ${_testrunner} ${ARGV3}
