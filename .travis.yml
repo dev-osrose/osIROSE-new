@@ -1,5 +1,21 @@
 sudo: required
 language: cpp
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
+    - extras-precise
+    - boost-latest
+    packages:
+    - cmake
+    - lcov
+    - libboost-dev
+    - g++-${GCC_VERSION}
+    - libmysqlclient-dev
+    - libmysql++-dev
+
 matrix:
   include:
     - compiler: gcc
