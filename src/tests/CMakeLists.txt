@@ -37,6 +37,7 @@ SET(SOURCE_MAIN main)
 SET(SOURCES_BASE
 	src/test_crosecrypt
 	src/test_network_asio
+	src/test_config
 )
 
 SET(SOURCES
