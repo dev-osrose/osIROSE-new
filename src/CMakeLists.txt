@@ -14,3 +14,9 @@ ADD_SUBDIRECTORY(rosecommon)
 IF(ENABLE_TESTING)
     ADD_SUBDIRECTORY(tests)
 ENDIF()
+
+INSTALL(
+    TARGET LoginServer CharServer WorldServer
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static )
