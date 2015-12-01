@@ -19,6 +19,10 @@ addons:
     - libmysqlclient-dev
     - libmysql++-dev
 
+cache:
+  directories:
+  - $HOME/protobuf
+  
 matrix:
   include:
     - compiler: gcc
