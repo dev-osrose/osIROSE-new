@@ -12,7 +12,10 @@ addons:
     - cmake
     - lcov
     - libboost-dev
-    - g++-${GCC_VERSION}
+    - g++-4.9
+    - g++-5
+    - gcc-4.9
+    - gcc-5
     - libmysqlclient-dev
     - libmysql++-dev
 
@@ -35,7 +38,7 @@ matrix:
     - env: LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-#- export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}";
+- export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
 - ./ci/before_install.sh
 
 install:
