@@ -34,13 +34,13 @@ matrix:
       env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
       env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
-    - compiler: clang
-      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    - compiler: clang
-      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
-  allow_failures:
-    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
+#    - compiler: clang
+#      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+#    - compiler: clang
+#      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
+#  allow_failures:
+#    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+#    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
 - export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}
