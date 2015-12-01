@@ -31,6 +31,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	fi
 	
 	ls -R $HOME/protobuf
+	ls -R /usr/bin/
 	cd ../../
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
