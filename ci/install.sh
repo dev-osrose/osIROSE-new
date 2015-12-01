@@ -1,15 +1,15 @@
 #!/bin/sh
-
+set -e
 if [ -z "$TRAVIS_OS_NAME" ]; then
     TRAVIS_OS_NAME=linux
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 
-	#wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
-	#tar -xf lcov-1.12.tar.gz
-	#cd lcov-1.12
-	#sudo make install
+	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
+	tar -xf lcov-1.12.tar.gz
+	cd lcov-1.12
+	make install
 
 	cd ..
 	#sudo apt-get install -qq cdbs cmake libboost-dev libmysqlclient-dev
@@ -31,7 +31,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	fi
 	
 	ls -R $HOME/protobuf
-	ls -R /usr/bin/
 	cd ../../
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
