@@ -116,7 +116,7 @@ TEST( TestAsioNetworking, TestListen )
 //        bool done = false;
 
 	CNetwork_Asio network;
-	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) ); // We are going to connect to google's website
+	EXPECT_EQ( true, network.Init( "127.0.0.1", 23124 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen() );
 //	EXPECT_CALL( network, OnListening() )
 //                                        .WillOnce( testing::Invoke([&]()->int {
@@ -138,7 +138,7 @@ TEST( TestAsioNetworking, TestListenAndConnect )
 //	bool done = false;
 
 	CNetwork_Asio netConnect, network;
-	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) ); // We are going to connect to google's website
+	EXPECT_EQ( true, network.Init( "127.0.0.1", 23456 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen() );
 //	EXPECT_CALL( network, OnListening() )
 //					.WillOnce( testing::Invoke([&]()->int {
@@ -151,7 +151,7 @@ TEST( TestAsioNetworking, TestListenAndConnect )
 //	EXPECT_TRUE(cv.wait_for(lock, std::chrono::seconds(1), [&done] { return done; }));
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29000 ) );
+	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 23456 ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 	std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Change this to condition variables
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );

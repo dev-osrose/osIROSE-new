@@ -38,14 +38,13 @@ bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 
 bool CNetwork_Asio::Shutdown( )
 {
-	if ( m_socket.is_open( ) )
+	//if ( m_socket.is_open( ) )
 		Disconnect( );
 
 	if ( m_Listener.is_open( ) )
 		m_io_service.post( [this]()
 	{
 		std::error_code ignored;
-		m_Listener.cancel(); 
 		m_Listener.close(ignored);
 	} );
 	return true;
@@ -72,7 +71,8 @@ bool CNetwork_Asio::Listen( )
 {
 	OnListen( );
 	tcp::endpoint endpoint( tcp::v4( ), m_wPort );
-	m_Listener.open( tcp::v4( ) );
+	m_Listener.open( endpoint.protocol() );
+	m_Listener.set_option(tcp::acceptor::reuse_address(true));
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
 	AcceptConnection( );
