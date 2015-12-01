@@ -21,3 +21,10 @@ SET( SOURCES_MAIN
 find_package( Threads REQUIRED )
 add_executable(CharServer ${SOURCES_MAIN})
 target_link_libraries(CharServer Core ${CMAKE_THREAD_LIBS_INIT})
+
+INSTALL(
+    TARGETS CharServer
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    CONFIGURATIONS Release)
