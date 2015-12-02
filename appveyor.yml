@@ -1,4 +1,4 @@
-version: "{build}"
+version: '{branch}-ci-{build}'
 os:
 - Visual Studio 2013
 - Windows Server 2012 R2
@@ -38,12 +38,12 @@ cache:
 build_script:
 - mkdir build
 - cd build
-- cmake ..
+- cmake -DENABLE_TESTING=ON ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
-- path: bin
+- path: build/bin
   name: build-bin
-- path: lib
+- path: build/lib
   name: build-lib
 notifications:
 - provider: Slack
@@ -55,7 +55,7 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 test:
-  assemblies: '**\*Unit*.exe'
+  assemblies: 'build\bin\osirose-tests.exe'
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
