@@ -55,7 +55,7 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 test:
-  assemblies: 'build\bin\osirose-tests.exe'
+  assemblies: 'build\bin\$(configuration)\osirose-tests.exe'
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
