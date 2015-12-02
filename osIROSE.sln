@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtest", "tools\googletest\g
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{F5C9F39D-E3D5-4338-8E5B-4A809293F2B4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoseCommon", "src\rosecommon\RoseCommon.vcxproj", "{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -71,6 +73,12 @@ Global
 		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Release|Win32.ActiveCfg = Release|Win32
 		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Release|Win32.Build.0 = Release|Win32
 		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Release|x64.ActiveCfg = Release|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Debug|Win32.Build.0 = Debug|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Debug|x64.ActiveCfg = Debug|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Release|Win32.ActiveCfg = Release|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Release|Win32.Build.0 = Release|Win32
+		{A938FC22-CDA7-4476-AB65-C3D91BDBF53A}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -137,6 +137,7 @@
       <AdditionalIncludeDirectories>$(BOOST_ROOT);$(SolutionDir)tools\asio\asio\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -177,11 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cnetwork_asio.cpp" />
-    <ClCompile Include="src\crosecrypt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cnetwork_asio.h" />
-    <ClInclude Include="include\crosecrypt.hpp" />
     <ClInclude Include="include\ePacketType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

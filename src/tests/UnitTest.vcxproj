@@ -86,7 +86,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>$(SolutionDir)tools\googletest\googletest\include;$(SolutionDir)tools\googletest\googletest;$(SolutionDir)tools\googletest\googlemock\include;$(SolutionDir)src\Core\include;$(SolutionDir)tools\asio\asio\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tools\googletest\googletest\include;$(SolutionDir)tools\googletest\googletest;$(SolutionDir)tools\googletest\googlemock\include;$(SolutionDir)src\Core\include;$(SolutionDir)tools\asio\asio\include;$(ProjectDir);$(SolutionDir)src\rosecommon\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>6326;28182;4616</DisableSpecificWarnings>
@@ -94,7 +94,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest.lib;libprotobuf.lib;libprotoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <IgnoreSpecificDefaultLibraries>MSVCRTD</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -120,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)tools\googletest\googletest\include;$(SolutionDir)tools\googletest\googletest;$(SolutionDir)tools\googletest\googlemock\include;$(SolutionDir)src\Core\include;$(SolutionDir)tools\asio\asio\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tools\googletest\googletest\include;$(SolutionDir)tools\googletest\googletest;$(SolutionDir)tools\googletest\googlemock\include;$(SolutionDir)src\Core\include;$(SolutionDir)tools\asio\asio\include;$(ProjectDir);$(SolutionDir)src\rosecommon\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>6326;28182;4616</DisableSpecificWarnings>
       <PreprocessorDefinitions>ASIO_STANDALONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -129,7 +129,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest.lib;libprotobuf.lib;libprotoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -167,6 +167,12 @@
     <ProjectReference Include="..\core\Core.vcxproj">
       <Project>{0c9b4b8e-237b-483d-af0f-471d8c0df889}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\rosecommon\RoseCommon.vcxproj">
+      <Project>{a938fc22-cda7-4476-ab65-c3d91bdbf53a}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mock\mock_network_asio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

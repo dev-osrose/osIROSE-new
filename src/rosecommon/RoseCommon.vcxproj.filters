@@ -15,19 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-    <Text Include="CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\cnetwork_asio.cpp">
+    <ClCompile Include="src\crose_network.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crosecrypt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\ePacketType.h">
+    <ClInclude Include="include\crose_network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\cnetwork_asio.h">
+    <ClInclude Include="include\crosecrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
