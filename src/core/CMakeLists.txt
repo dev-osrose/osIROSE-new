@@ -28,6 +28,8 @@ SET( SOURCES_BASE
   src/cnetwork_asio
   src/config
   src/configfile.pb
+  src/pbjson.cpp
 )
 
 add_library(Core STATIC ${SOURCES_BASE})
+TARGET_LINK_LIBRARIES(Core ${PROTOBUF_BINARY_DIR}/libprotobuf.a)
