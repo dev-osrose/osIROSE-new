@@ -1,10 +1,12 @@
 #include "crosecrypt.h"
 
-RoseRandomNumber::RoseRandomNumber(unsigned int seed) : m_type(RoseRandomNumber::BC),
-	m_VcSeed(seed),	m_BcSeed(seed),	m_AcSeed(seed), m_MySeed(seed)
-{}
+RoseRandomNumber::RoseRandomNumber( unsigned int seed )
+    : m_type( RoseRandomNumber::BC ),
+      m_VcSeed( seed ), m_BcSeed( seed ), m_AcSeed( seed ), m_MySeed( seed )
+{
+}
 
-void	RoseRandomNumber::setType(RoseRandomNumber::Type type)
+void RoseRandomNumber::setType( RoseRandomNumber::Type type )
 {
 	m_type = type;
 }
@@ -27,7 +29,6 @@ int RoseRandomNumber::R_MY( )
 	return m_MySeed / 0x10000;
 }
 
-
 int RoseRandomNumber::R_VC( )
 {
 	m_VcSeed = ( 0x343FD * m_VcSeed + 0x269EC3 ) & 0x7FFFFFFF;
@@ -36,90 +37,93 @@ int RoseRandomNumber::R_VC( )
 
 int RoseRandomNumber::get( )
 {
-	if( m_type == RoseRandomNumber::BC )
+	if ( m_type == RoseRandomNumber::BC )
 		return R_BC( );
-	else if( m_type == RoseRandomNumber::AC )
+	else if ( m_type == RoseRandomNumber::AC )
 		return R_AC( );
-	else if( m_type == RoseRandomNumber::MY )
+	else if ( m_type == RoseRandomNumber::MY )
 		return R_MY( );
 	else
 		return R_VC( );
 }
 
-PacketCodec::PacketCodec(unsigned int seed) : m_Cr(0)
+PacketCodec::PacketCodec( unsigned int seed )
+    : m_Cr( 0 )
 {
 	m_Rt = new int*[ 0x10 ];
-	for( int i = 0; i < 0x10; i++ )
+	for ( int i = 0; i < 0x10; i++ )
 		m_Rt[ i ] = new int[ 0x800 ];
-	m_Ri = new unsigned short[ 0x200 ];
+	m_Ri          = new unsigned short[ 0x200 ];
 
-	changeSeed(seed);
+	changeSeed( seed );
 }
 
-void	PacketCodec::changeSeed(unsigned int seed)
+void PacketCodec::changeSeed( unsigned int seed )
 {
-	m_Cr = RoseRandomNumber(seed);
-	for( int i = 0; i < 0x10; i++ )
+	m_Cr = RoseRandomNumber( seed );
+	for ( int i = 0; i < 0x10; i++ )
+	{
+		m_Cr.setType( static_cast< RoseRandomNumber::Type >( i & 3 ) );
+		for ( int j = 0; j < 0x800; j++ )
 		{
-			m_Cr.setType( static_cast<RoseRandomNumber::Type>(i & 3) );
-			for( int j = 0; j < 0x800; j++ )
+			do
 			{
-				do {
-					m_Rt[i][j] = m_Cr.get( );
-				} while( find_DupTABLE( m_Rt[i][j], 0, j ) );
-			}
+				m_Rt[ i ][ j ] = m_Cr.get( );
+			} while ( find_DupTABLE( m_Rt[ i ][ j ], 0, j ) );
 		}
+	}
 
-		m_Cr.setType(RoseRandomNumber::AC);
-		for( int i = 0; i < 0x200; i++ )
+	m_Cr.setType( RoseRandomNumber::AC );
+	for ( int i = 0; i < 0x200; i++ )
+	{
+		do
 		{
-			do {
-				m_Ri[i] = m_Cr.get() & 0x7FF;
-			} while( find_DupINDEX( m_Ri[i], i ) );
-		}
+			m_Ri[ i ] = m_Cr.get( ) & 0x7FF;
+		} while ( find_DupINDEX( m_Ri[ i ], i ) );
+	}
 }
 
-PacketCodec::~PacketCodec()
+PacketCodec::~PacketCodec( )
 {
-	for( int i = 0; i < 0x10; i++ )
+	for ( int i = 0; i < 0x10; i++ )
 		delete[] m_Rt[ i ];
 	delete[] m_Rt;
 	delete[] m_Ri;
 }
 
-void	PacketCodec::encodeServerPacket( unsigned char* buffer )
+void PacketCodec::encodeServerPacket( unsigned char* buffer )
 {
 	Head head;
-	memset(&head, 0, sizeof(head));
-	head.AddTableValue = 0x100; // rand() % 0x1FF + 1
-	head.EncryptAddValue = 0x04; // rand() % 0xF + 1
-	head.EncryptValue = head.AddTableValue + head.EncryptAddValue;
-	head.AddBufferLen = *((unsigned short*)&buffer[0]);
-	head.Command = *((unsigned short*)&buffer[2]);
+	memset( &head, 0, sizeof( head ) );
+	head.AddTableValue   = 0x100; // rand() % 0x1FF + 1
+	head.EncryptAddValue = 0x04;  // rand() % 0xF + 1
+	head.EncryptValue    = head.AddTableValue + head.EncryptAddValue;
+	head.AddBufferLen = *( (unsigned short*)&buffer[ 0 ] );
+	head.Command = *( (unsigned short*)&buffer[ 2 ] );
 	FlipHeadMain( (HeadCryptedServer*)buffer, (HeadDecrypted*)&head );
 
 	unsigned char Checksum = 0;
-	for( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
-		Checksum = CrcTable[ ((unsigned char*)&head)[i] ^ Checksum ];
+		Checksum = CrcTable[ ( (unsigned char*)&head )[ i ] ^ Checksum ];
 		buffer[ i ] ^= m_Rt[ i ][ head.AddTableValue ];
 	}
-	for( int i = 6; i < head.AddBufferLen; i++ )
+	for ( int i = 6; i < head.AddBufferLen; i++ )
 	{
-		Checksum = CrcTable[ buffer[i] ^ Checksum ];
+		Checksum = CrcTable[ buffer[ i ] ^ Checksum ];
 		buffer[ i ] ^= m_Rt[ ( head.EncryptAddValue + i ) & 0xF ][ ( head.AddTableValue + i ) & 0x7FF ];
 	}
-	buffer[5] = Checksum;
+	buffer[ 5 ] = Checksum;
 
 	FlipHeadFinal( (HeadCryptedServer*)buffer, (HeadDecrypted*)&head );
 }
-uint16_t	PacketCodec::decodeClientHeader( unsigned char* buffer )
+uint16_t PacketCodec::decodeClientHeader( unsigned char* buffer )
 {
 	Head head;
-	memset(&head, 0, sizeof(head));
+	memset( &head, 0, sizeof( head ) );
 	FlipHeadFinal( (HeadDecrypted*)&head, (HeadCryptedClient*)buffer );
 
-	for( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
 		buffer[ i ] ^= m_Rt[ i ][ head.AddTableValue ];
 	}
@@ -129,58 +133,57 @@ uint16_t	PacketCodec::decodeClientHeader( unsigned char* buffer )
 	return head.AddBufferLen;
 }
 
-bool	PacketCodec::decodeClientBody( unsigned char* buffer )
+bool PacketCodec::decodeClientBody( unsigned char* buffer )
 {
 	Head head;
-	memset(&head, 0, sizeof(head));
+	memset( &head, 0, sizeof( head ) );
 	memcpy( &head, buffer, 6 );
 	unsigned short buflen = (unsigned short)( head.AddBufferLen - head.EncryptValue );
 
 	unsigned char Checksum = 0;
-	for( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
-		Checksum = CrcTable[ ((unsigned char*)&head)[i] ^ Checksum ];
+		Checksum = CrcTable[ ( (unsigned char*)&head )[ i ] ^ Checksum ];
 	}
-	for( int i = 6; i < buflen; i++ )
+	for ( int i = 6; i < buflen; i++ )
 	{
 		buffer[ i ] ^= m_Rt[ ( head.EncryptAddValue + i ) & 0xF ][ ( head.AddTableValue + i ) & 0x7FF ];
-		Checksum = CrcTable[ buffer[i] ^ Checksum ];
+		Checksum = CrcTable[ buffer[ i ] ^ Checksum ];
 	}
 
-	if( Checksum != buffer[5] )
+	if ( Checksum != buffer[ 5 ] )
 		return false;
 
-	*((unsigned short*)&buffer[0]) = buflen;
-	*((unsigned short*)&buffer[2]) = head.Command;
+	*( (unsigned short*)&buffer[ 0 ] ) = buflen;
+	*( (unsigned short*)&buffer[ 2 ] ) = head.Command;
 
 	return true;
 }
 
-bool	PacketCodec::find_DupTABLE( int val, int table, int range )
+bool PacketCodec::find_DupTABLE( int val, int table, int range )
 {
-	for( int i = 0; i < table; i++ )
+	for ( int i = 0; i < table; i++ )
 	{
-		for( int j = 0; j < 0x7FF; j++ )
+		for ( int j = 0; j < 0x7FF; j++ )
 		{
-			if( m_Rt[i][j] == val )
+			if ( m_Rt[ i ][ j ] == val )
 				return true;
 		}
 	}
-	for( int i = 0; i < range; i++ )
+	for ( int i = 0; i < range; i++ )
 	{
-		if( m_Rt[table][i] == val )
+		if ( m_Rt[ table ][ i ] == val )
 			return true;
 	}
 	return false;
 }
 
-bool	PacketCodec::find_DupINDEX( int val, int range )
+bool PacketCodec::find_DupINDEX( int val, int range )
 {
-	for( int i = 0; i < range; i++ )
+	for ( int i = 0; i < range; i++ )
 	{
-		if( m_Ri[i] == val )
+		if ( m_Ri[ i ] == val )
 			return true;
 	}
 	return false;
 }
-

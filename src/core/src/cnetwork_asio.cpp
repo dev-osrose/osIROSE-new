@@ -14,7 +14,7 @@ CNetwork_Asio::CNetwork_Asio( )
     : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service )
 {
 	m_IOThread = std::thread( [this]( ) {
-		asio::io_service::work _Work(m_io_service);
+		asio::io_service::work _Work( m_io_service );
 		m_io_service.run( );
 	} );
 }
@@ -23,7 +23,7 @@ CNetwork_Asio::~CNetwork_Asio( )
 {
 	Shutdown( );
 	m_io_service.stop( );
-	m_IOThread.join();
+	m_IOThread.join( );
 }
 
 bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
@@ -39,14 +39,13 @@ bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 bool CNetwork_Asio::Shutdown( )
 {
 	//if ( m_socket.is_open( ) )
-		Disconnect( );
+	Disconnect( );
 
 	if ( m_Listener.is_open( ) )
-		m_io_service.post( [this]()
-	{
-		std::error_code ignored;
-		m_Listener.close(ignored);
-	} );
+		m_io_service.post( [this]( ) {
+			std::error_code ignored;
+			m_Listener.close( ignored );
+		} );
 	return true;
 }
 
@@ -71,8 +70,8 @@ bool CNetwork_Asio::Listen( )
 {
 	OnListen( );
 	tcp::endpoint endpoint( tcp::v4( ), m_wPort );
-	m_Listener.open( endpoint.protocol() );
-	m_Listener.set_option(tcp::acceptor::reuse_address(true));
+	m_Listener.open( endpoint.protocol( ) );
+	m_Listener.set_option( tcp::acceptor::reuse_address( true ) );
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
 	AcceptConnection( );
@@ -87,19 +86,18 @@ bool CNetwork_Asio::Reconnect( )
 
 bool CNetwork_Asio::Disconnect( )
 {
-	OnDisconnect();
-	m_io_service.post( [this]( ) 
-			{ 
-				std::error_code ignored;
-				m_socket.shutdown(asio::socket_base::shutdown_both, ignored); 
-				OnDisconnected(); 
-			} );
+	OnDisconnect( );
+	m_io_service.post( [this]( ) {
+		std::error_code ignored;
+		m_socket.shutdown( asio::socket_base::shutdown_both, ignored );
+		OnDisconnected( );
+	} );
 	return true;
 }
 
 bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
 {
-	OnSend(_buffer, _size);
+	OnSend( _buffer, _size );
 	asio::async_write( m_socket,
 	                   asio::buffer( _buffer,
 	                                 _size ),
@@ -111,7 +109,7 @@ bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
 		                   else
 		                   {
 			                   //m_socket.close( );
-					   Disconnect();
+			                   Disconnect( );
 		                   }
 		               } );
 	return true;
@@ -125,14 +123,14 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 	                  [this]( std::error_code errorCode, std::size_t length ) {
 		                  if ( !errorCode )
 		                  {
-					(void)length;
-					Recv( (uint16_t)Buffer[ 0 ] );
-					OnReceived( Buffer, (uint16_t)length );
+			                  (void)length;
+			                  Recv( (uint16_t)Buffer[ 0 ] );
+			                  OnReceived( Buffer, (uint16_t)length );
 		                  }
 		                  else
 		                  {
 			                  //m_socket.close( );
-					  Disconnect();
+			                  Disconnect( );
 		                  }
 		              } );
 	OnReceived( Buffer, (uint16_t)Buffer[ 0 ] );
@@ -145,19 +143,19 @@ void CNetwork_Asio::AcceptConnection( )
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
-			if ( this->OnAccept() ) // This should be changed to use a client session instead of a CNetwork_Asio class
-			{
-			    // Do something here for the new connection.
-			    // Make sure to use std::move(socket)
-			    //std::make_shared<CClientSesson>( std::move(socket) );
-				this->OnAccepted(std::move(socket));
-			}
-			else
-			{
-				//Kill the socket
-				std::error_code ignored;
-				socket.close( ignored );
-			}
+			    if ( this->OnAccept( ) ) // This should be changed to use a client session instead of a CNetwork_Asio class
+			    {
+				    // Do something here for the new connection.
+				    // Make sure to use std::move(socket)
+				    //std::make_shared<CClientSesson>( std::move(socket) );
+				    this->OnAccepted( std::move( socket ) );
+			    }
+			    else
+			    {
+				    //Kill the socket
+				    std::error_code ignored;
+				    socket.close( ignored );
+			    }
 		    }
 
 		    AcceptConnection( );
@@ -213,14 +211,14 @@ void CNetwork_Asio::OnSent( )
 {
 }
 
-bool CNetwork_Asio::OnAccept()
+bool CNetwork_Asio::OnAccept( )
 {
 	return true;
 }
 
-void CNetwork_Asio::OnAccepted(tcp::socket _sock)
+void CNetwork_Asio::OnAccepted( tcp::socket _sock )
 {
-	if( _sock.is_open() )
+	if ( _sock.is_open( ) )
 	{
 		//Do Something?
 	}

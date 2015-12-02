@@ -1,11 +1,11 @@
 #include <stdint.h>
 #include "crose_network.h"
 
-CRose_Network::CRose_Network()
+CRose_Network::CRose_Network( )
 {
 }
 
-CRose_Network::~CRose_Network()
+CRose_Network::~CRose_Network( )
 {
 }
 
@@ -16,7 +16,6 @@ bool CRose_Network::OnConnect( )
 
 void CRose_Network::OnConnected( )
 {
-
 }
 
 bool CRose_Network::OnListen( )
@@ -26,7 +25,6 @@ bool CRose_Network::OnListen( )
 
 void CRose_Network::OnListening( )
 {
-
 }
 
 bool CRose_Network::OnDisconnect( )
@@ -36,7 +34,6 @@ bool CRose_Network::OnDisconnect( )
 
 void CRose_Network::OnDisconnected( )
 {
-
 }
 
 bool CRose_Network::OnReceive( )
@@ -61,15 +58,15 @@ void CRose_Network::OnSent( )
 {
 }
 
-bool CRose_Network::OnAccept()
+bool CRose_Network::OnAccept( )
 {
 	return true;
 }
 
-void CRose_Network::OnAccepted(tcp::socket _sock)
+void CRose_Network::OnAccepted( tcp::socket _sock )
 {
-        if( _sock.is_open() )
-        {
-                //Do Something?
-        }
+	if ( _sock.is_open( ) )
+	{
+		//Do Something?
+	}
 }
