@@ -26,7 +26,7 @@ install:
     Else
 
     {
-    	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul"
+    	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > C:\projects\3rdparty_install.txt"
     }
 - cmd: git submodule update --init --recursive
 cache: 
