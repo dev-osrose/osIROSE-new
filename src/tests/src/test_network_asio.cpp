@@ -58,7 +58,8 @@ TEST( TestAsioNetworking, TestConnectHostName )
 	EXPECT_CALL( network, OnConnected( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-	EXPECT_CALL( network, OnDisconnect() );
+	EXPECT_CALL( network, OnDisconnect() )
+		.Times( testing::AnyNumber() );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown() );
 }
 
