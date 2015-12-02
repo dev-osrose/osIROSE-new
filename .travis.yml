@@ -50,7 +50,7 @@ before_install:
 - export GENHTML_PATH=$HOME/usr/bin/genhtml
 - export PREFIX=$HOME
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
-- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang-3.7" CC="/usr/bin/clang-3.7"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7"; fi
 - ./ci/before_install.sh
 
 install:
