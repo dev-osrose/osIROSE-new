@@ -45,7 +45,8 @@ matrix:
     - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
-- export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}
+- if [ "$CXX" = "g++" ]; export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
+- if [ "$CXX" = "clang++" ]; export GCOV_PATH=$HOME/ci/llvm-gcov.sh; fi
 - export LCOV_PATH=$HOME/usr/bin/lcov
 - export GENHTML_PATH=$HOME/usr/bin/genhtml
 - export PREFIX=$HOME
