@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: {branch}-ci-{build}
 os:
 - Visual Studio 2013
 - Windows Server 2012 R2
@@ -31,10 +31,15 @@ install:
 - cmd: git submodule update --init --recursive
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt
-build: #off
-  project: osIROSE.sln
-  parallel: true
-  verbosity: minimal
+#build: #off
+#  project: osIROSE.sln
+#  parallel: true
+#  verbosity: minimal
+build_script:
+- cmd: mkdir build
+- cd build
+- cmake ..
+- cmake --build . --config $(configuration) -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: bin
   name: build-bin
