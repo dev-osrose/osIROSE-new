@@ -18,7 +18,8 @@ install:
 - ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
 - cmd: IF NOT EXIST "C:\projects\osIROSE\3rdParty" "7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > nul"
 - cmd: git submodule update --init --recursive
-cache: C:\projects\osIROSE\3rdParty
+cache: 
+- C:\projects\osIROSE\3rdParty -> osIROSE.sln
 build: #off
   project: osIROSE.sln
   parallel: true
