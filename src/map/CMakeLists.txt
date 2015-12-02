@@ -37,6 +37,12 @@ SET( SOURCES_MAIN
 	
 find_package( Threads REQUIRED )
 add_executable(WorldServer ${SOURCES_MAIN})
+
+IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+        SET_TARGET_PROPERTIES(WorldServer PROPERTIES LINK_FLAGS
+                "${LD_FLAGS_STR} /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
+ENDIF()
+
 target_link_libraries(WorldServer Core ${CMAKE_THREAD_LIBS_INIT})
 
 INSTALL(
