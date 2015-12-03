@@ -12,11 +12,13 @@
 TEST( TestAsioNetworking, TestInit )
 {
 	CNetwork_Asio network;
+	//network.SetExtraMessageInfo(true);
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) );
 	EXPECT_EQ( 0, network.GetId() );
 	EXPECT_EQ( 0, network.GetType() );
 	EXPECT_EQ( 29000, network.GetPort( ) );
 	EXPECT_EQ( "127.0.0.1", network.GetIpAddress( ) );
+	//network.SetExtraMessageInfo(false);
 }
 
 TEST( TestAsioNetworking, TestInitHostLessThanTwo )

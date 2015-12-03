@@ -45,7 +45,8 @@ INCLUDE_DIRECTORIES(
 #link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 SET( SOURCES_BASE
-  src/cnetwork_asio )
+  src/cnetwork_asio
+  src/logconsole )
 
 add_library(Core STATIC ${SOURCES_BASE})
 

@@ -21,10 +21,12 @@
 
 #include <thread>
 #include "inetwork.h"
+#include "logconsole.h"
 
 #define MAX_PACKET_SIZE 0x7FF
 
 using asio::ip::tcp;
+class CLogConsole;
 
 class CNetwork_Asio : public INetwork
 {
@@ -41,9 +43,9 @@ public:
 	virtual bool Reconnect( );
 	virtual bool Disconnect( );
 
-//protected:
 	virtual bool Send( uint8_t* _buffer, uint16_t _size );
 	virtual bool Recv( uint16_t _size = 6 );
+	void SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable(_enabled); }
 protected:
 	void         AcceptConnection( );
 	void ProcessSend();
@@ -74,6 +76,7 @@ private:
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
+	CLogConsole m_Log;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
 	bool	m_Active;
 };

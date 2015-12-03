@@ -8,16 +8,19 @@
 #include <cstdlib>
 #include <iostream>
 #include <thread>
+#include "logconsole.h"
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service ), m_Active( true )
+    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service ), m_Log("CNetwork_ASIO"), m_Active( true )
 {
+	m_Log.oicprintf(CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET);
 	m_IOThread = std::thread( [this]( ) {
 		asio::io_service::work _Work( m_io_service );
 		m_io_service.run( );
 	} );
 //	m_IOThread.detach();
+	m_Log.oicprintf(CL_RESET CL_WHITE "Starting NetworkProcess Thread...\n" CL_RESET);
 	m_ProcessThread = std::thread( [this]( ) {
 		Run();
 	} );
@@ -155,6 +158,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 		                  }
 		                  else
 		                  {
+					m_Log.eicprintf(CL_RESET CL_WHITE "Error occurred in read: %s\n" CL_RESET, errorCode.message().c_str());
 			                  //m_socket.close( );
 			                  Disconnect( );
 		                  }
@@ -275,6 +279,7 @@ void CNetwork_Asio::ProcessSend()
                                    }
                                    else
                                    {
+					m_Log.eicprintf(CL_RESET CL_WHITE "Send failed: %s\n" CL_RESET, ec.message().c_str() );
                                            //m_socket.close( );
                                            Disconnect( );
                                    }
