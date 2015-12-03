@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "crose_network.h"
+#include "ePacketType.h"
 
 TEST( TestRoseNetwork, Constructor )
 {
@@ -153,6 +154,11 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29100 ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
+
+	CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
+        pak->pChannelListReq.lServerID = 0x77;
+        netConnect.Send(pak->Buffer, 0);
+
 	std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Change this to condition variables
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );

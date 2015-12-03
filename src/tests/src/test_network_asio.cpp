@@ -4,6 +4,7 @@
 #include <condition_variable>
 #include <stdint.h>
 #include "mock/mock_network_asio.h"
+#include "ePacketType.h"
 //#include "crose_network.h"
 
 //using ::testing::Expectation;
@@ -82,6 +83,11 @@ TEST( TestAsioNetworking, TestListenAndConnect )
 	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 23456 ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
+
+	CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
+	pak->pChannelListReq.lServerID = 0x77;
+	netConnect.Send(pak->Buffer, 0);
+
 	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ); // Change this to condition variables
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );

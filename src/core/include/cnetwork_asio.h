@@ -12,6 +12,8 @@
 #endif
 
 #include <asio.hpp>
+#include <queue>
+#include <mutex>
 
 #ifdef _WIN32
 #pragma warning( pop )
@@ -26,7 +28,7 @@ using asio::ip::tcp;
 
 class CNetwork_Asio : public INetwork
 {
-	public:
+public:
 	CNetwork_Asio( );
 	virtual ~CNetwork_Asio( );
 
@@ -35,13 +37,17 @@ class CNetwork_Asio : public INetwork
 
 	virtual bool Connect( );
 	virtual bool Listen( );
+	virtual bool Run( );
 	virtual bool Reconnect( );
 	virtual bool Disconnect( );
 
-	protected:
+//protected:
 	virtual bool Send( uint8_t* _buffer, uint16_t _size );
 	virtual bool Recv( uint16_t _size = 6 );
+protected:
 	void         AcceptConnection( );
+	void ProcessSend();
+	void ProcessRecv();
 
 	// Callback functions
 	virtual bool OnConnect( );
@@ -57,12 +63,17 @@ class CNetwork_Asio : public INetwork
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
 
-	private:
+private:
 	//std::unique_ptr<asio::io_service::work> m_Work;
 	asio::io_service m_io_service;
 	tcp::socket      m_socket;
 	tcp::acceptor    m_Listener;
+	std::queue<uint8_t*> m_SendQueue;
+        std::queue<uint8_t*> m_RecvQueue;
+	std::mutex m_SendMutex;
 
 	std::thread m_IOThread;
+	std::thread m_ProcessThread;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
+	bool	m_Active;
 };

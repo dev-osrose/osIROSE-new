@@ -11,12 +11,17 @@
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service )
+    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service ), m_Active( true )
 {
 	m_IOThread = std::thread( [this]( ) {
 		asio::io_service::work _Work( m_io_service );
 		m_io_service.run( );
 	} );
+//	m_IOThread.detach();
+	m_ProcessThread = std::thread( [this]( ) {
+		Run();
+	} );
+//	m_ProcessThread.detach();
 }
 
 CNetwork_Asio::~CNetwork_Asio( )
@@ -24,10 +29,28 @@ CNetwork_Asio::~CNetwork_Asio( )
 	Shutdown( );
 	m_io_service.stop( );
 	m_IOThread.join( );
+	m_ProcessThread.join( );
+}
+
+bool CNetwork_Asio::Run()
+{
+//	std::cout << "run start\n";
+//	m_Active = true;
+	//asio::io_service::work _Work( m_io_service );
+	while(m_Active == true)
+	{
+		ProcessSend();
+		ProcessRecv();
+		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+	}
+//	std::cout << "run ending\n";
+	//m_io_service.run( ); // this is to clean up
+	return true;
 }
 
 bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 {
+//	std::cout << "runing init\n";
 	if ( _ip.length( ) < 2 ) // We can actually use hostnames instead of IP addresses. Ex. google.com
 		return false;
 
@@ -39,6 +62,7 @@ bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 bool CNetwork_Asio::Shutdown( )
 {
 	//if ( m_socket.is_open( ) )
+	m_Active = false;
 	Disconnect( );
 
 	if ( m_Listener.is_open( ) )
@@ -98,20 +122,22 @@ bool CNetwork_Asio::Disconnect( )
 bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
 {
 	OnSend( _buffer, _size );
-	asio::async_write( m_socket,
-	                   asio::buffer( _buffer,
-	                                 _size ),
-	                   [this]( std::error_code ec, std::size_t /*length*/ ) {
-		                   if ( !ec )
-		                   {
-			                   OnSent( );
-		                   }
-		                   else
-		                   {
-			                   //m_socket.close( );
-			                   Disconnect( );
-		                   }
-		               } );
+	std::lock_guard<std::mutex> lock(m_SendMutex);
+	m_SendQueue.push(_buffer);
+//	asio::async_write( m_socket,
+//	                   asio::buffer( _buffer,
+//	                                 _size ),
+//	                   [this]( std::error_code ec, std::size_t /*length*/ ) {
+//		                   if ( !ec )
+//		                   {
+//			                   OnSent( );
+//		                   }
+//		                   else
+//		                   {
+//			                   //m_socket.close( );
+//			                   Disconnect( );
+//		                   }
+//		               } );
 	return true;
 }
 
@@ -222,4 +248,40 @@ void CNetwork_Asio::OnAccepted( tcp::socket _sock )
 	{
 		//Do Something?
 	}
+}
+
+void CNetwork_Asio::ProcessSend()
+{
+	// Loop though all of m_SendQueue
+	std::lock_guard<std::mutex> lock(m_SendMutex);
+
+	if( m_SendQueue.empty() )
+		return;
+
+	uint8_t* _buffer = std::move( m_SendQueue.front() );
+	m_SendQueue.pop();
+	uint16_t _size = (uint16_t)_buffer[0];
+
+	// TODO:: push the buffer ptr into another queue so our async_write can delete the buffer after it's used
+	// We are currently leaking memory
+
+	asio::async_write( m_socket,
+                           asio::buffer( _buffer,
+                                         _size ),
+                           [this]( std::error_code ec, std::size_t /*length*/ ) {
+                                   if ( !ec )
+                                   {
+                                           OnSent( );
+                                   }
+                                   else
+                                   {
+                                           //m_socket.close( );
+                                           Disconnect( );
+                                   }
+                               } );
+}
+
+void CNetwork_Asio::ProcessRecv()
+{
+	// Loop though all of m_RecvQueue
 }
