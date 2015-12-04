@@ -748,16 +748,16 @@ void CLogConsole::RenderProgressBar( int width, int per )
 	for ( int i = 0; i < fwidth; ++i )
 		( (char*)b2 )[ i ] = ' ';
 
-	//int complete = width * (float)per / 100;
+	int complete = width * (float)per / 100;
 
 	clprintf( "\033[F\033[J" );
 	clprintf( CL_WHITE "[" CL_BG_GREEN "" CL_BT_GREEN );
 
-	//for(int x=0; x < complete; x++) printf( " " );
-	//for(int x=complete; x < width; x++) clprintf( "" CL_BT_GREEN " " CL_RESET );
-	printf( "%s", b2 );
+	for(int x=0; x < complete; x++) clprintf( " " );
+	for(int x=complete; x < width; x++) clprintf( "\033[0;102m" " " CL_RESET );
+	//wprintf( L"%s", b2 );
 
-	clprintf( CL_RESET "" CL_BT_GREEN "%s" CL_RESET, b );
+	//clprintf( CL_RESET "" CL_BT_GREEN "%s" CL_RESET, b );
 	clprintf( CL_RESET CL_WHITE "]\n" CL_RESET );
 	//clprintf( "\033[G\033[J" );
 #endif

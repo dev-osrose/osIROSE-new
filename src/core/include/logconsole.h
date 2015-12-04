@@ -16,6 +16,7 @@ int clvprintf(const char *fmt, va_list);
 
 //console colour codes (ctrl-c ctrl-v from eAthena)
 #define CL_RESET		"\033[0m"
+//#define CL_HIDDEN		"\033[8m"
 #define CL_CLS			"\033[2J"
 #define CL_CLL			"\033[K"
 
