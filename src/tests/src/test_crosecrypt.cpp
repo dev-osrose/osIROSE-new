@@ -24,7 +24,7 @@ TEST( TestRoseCrypt, TestEncryptData )
 	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
 	pak.pChannelListReq.lServerID = 0x77;
 
-	EXPECT_NO_FATAL_FAILURE( g_Crypt.encodeServerPacket( pak.Data ) );
+	EXPECT_NO_FATAL_FAILURE( g_Crypt.encodeServerPacket( pak.Buffer ) );
 
 	EXPECT_NE( sizeof( pakChannelList_Req ), pak.pChannelListReq.Size );
 	EXPECT_NE( (uint16_t)ePacketType::PAKCS_CHAR_LIST_REQ, pak.pChannelListReq.Command );

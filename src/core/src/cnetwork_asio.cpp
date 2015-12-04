@@ -12,19 +12,19 @@
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service ), m_Log("CNetwork_ASIO"), m_Active( true )
+    : INetwork( ), m_socket( m_io_service ), m_Listener( m_io_service ), m_Log( "CNetwork_ASIO" ), m_Active( true )
 {
-	m_Log.oicprintf(CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET);
+	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
 	m_IOThread = std::thread( [this]( ) {
 		asio::io_service::work _Work( m_io_service );
 		m_io_service.run( );
 	} );
-//	m_IOThread.detach();
-	m_Log.oicprintf(CL_RESET CL_WHITE "Starting NetworkProcess Thread...\n" CL_RESET);
+	//	m_IOThread.detach();
+	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkProcess Thread...\n" CL_RESET );
 	m_ProcessThread = std::thread( [this]( ) {
-		Run();
+		Run( );
 	} );
-//	m_ProcessThread.detach();
+	//	m_ProcessThread.detach();
 }
 
 CNetwork_Asio::~CNetwork_Asio( )
@@ -35,25 +35,25 @@ CNetwork_Asio::~CNetwork_Asio( )
 	m_ProcessThread.join( );
 }
 
-bool CNetwork_Asio::Run()
+bool CNetwork_Asio::Run( )
 {
-//	std::cout << "run start\n";
-//	m_Active = true;
+	//	std::cout << "run start\n";
+	//	m_Active = true;
 	//asio::io_service::work _Work( m_io_service );
-	while(m_Active == true)
+	while ( m_Active == true )
 	{
-		ProcessSend();
-		ProcessRecv();
+		ProcessSend( );
+		ProcessRecv( );
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
-//	std::cout << "run ending\n";
+	//	std::cout << "run ending\n";
 	//m_io_service.run( ); // this is to clean up
 	return true;
 }
 
 bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 {
-//	std::cout << "runing init\n";
+	//	std::cout << "runing init\n";
 	if ( _ip.length( ) < 2 ) // We can actually use hostnames instead of IP addresses. Ex. google.com
 		return false;
 
@@ -122,25 +122,11 @@ bool CNetwork_Asio::Disconnect( )
 	return true;
 }
 
-bool CNetwork_Asio::Send( uint8_t* _buffer, uint16_t _size )
+bool CNetwork_Asio::Send( uint8_t* _buffer )
 {
-	OnSend( _buffer, _size );
-	std::lock_guard<std::mutex> lock(m_SendMutex);
-	m_SendQueue.push(_buffer);
-//	asio::async_write( m_socket,
-//	                   asio::buffer( _buffer,
-//	                                 _size ),
-//	                   [this]( std::error_code ec, std::size_t /*length*/ ) {
-//		                   if ( !ec )
-//		                   {
-//			                   OnSent( );
-//		                   }
-//		                   else
-//		                   {
-//			                   //m_socket.close( );
-//			                   Disconnect( );
-//		                   }
-//		               } );
+	OnSend( _buffer );
+	std::lock_guard< std::mutex > lock( m_SendMutex );
+	m_SendQueue.push( _buffer );
 	return true;
 }
 
@@ -153,13 +139,12 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 		                  if ( !errorCode )
 		                  {
 			                  (void)length;
-			                  Recv( (uint16_t)Buffer[ 0 ] );
+			                  Recv( );
 			                  OnReceived( Buffer, (uint16_t)length );
 		                  }
 		                  else
 		                  {
-					m_Log.eicprintf(CL_RESET CL_WHITE "Error occurred in read: %s\n" CL_RESET, errorCode.message().c_str());
-			                  //m_socket.close( );
+			                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv]: %s\n" CL_RESET, errorCode.message( ).c_str( ) );
 			                  Disconnect( );
 		                  }
 		              } );
@@ -230,10 +215,9 @@ void CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
 	(void)_size;
 }
 
-bool CNetwork_Asio::OnSend( uint8_t* _buffer, uint16_t _size )
+bool CNetwork_Asio::OnSend( uint8_t* _buffer )
 {
 	(void)_buffer;
-	(void)_size;
 	return true;
 }
 
@@ -254,39 +238,52 @@ void CNetwork_Asio::OnAccepted( tcp::socket _sock )
 	}
 }
 
-void CNetwork_Asio::ProcessSend()
+void CNetwork_Asio::ProcessSend( )
 {
 	// Loop though all of m_SendQueue
-	std::lock_guard<std::mutex> lock(m_SendMutex);
+	std::lock_guard< std::mutex > lock( m_SendMutex );
 
-	if( m_SendQueue.empty() )
+	if ( m_SendQueue.empty( ) )
 		return;
 
-	uint8_t* _buffer = std::move( m_SendQueue.front() );
-	m_SendQueue.pop();
-	uint16_t _size = (uint16_t)_buffer[0];
+	uint8_t* _buffer = std::move( m_SendQueue.front( ) );
+	m_SendQueue.pop( );
+	uint16_t _size = (uint16_t)_buffer[ 0 ];
+
+	{
+		std::lock_guard< std::mutex > lock2( m_DiscardMutex );
+		m_DiscardQueue.push( _buffer );
+	}
 
 	// TODO:: push the buffer ptr into another queue so our async_write can delete the buffer after it's used
 	// We are currently leaking memory
 
 	asio::async_write( m_socket,
-                           asio::buffer( _buffer,
-                                         _size ),
-                           [this]( std::error_code ec, std::size_t /*length*/ ) {
-                                   if ( !ec )
-                                   {
-                                           OnSent( );
-                                   }
-                                   else
-                                   {
-					m_Log.eicprintf(CL_RESET CL_WHITE "Send failed: %s\n" CL_RESET, ec.message().c_str() );
-                                           //m_socket.close( );
-                                           Disconnect( );
-                                   }
-                               } );
+	                   asio::buffer( _buffer,
+	                                 _size ),
+	                   [this]( std::error_code ec, std::size_t /*length*/ ) {
+
+		                   {
+			                   std::lock_guard< std::mutex > lock( m_DiscardMutex );
+			                   uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
+			                   m_DiscardQueue.pop( );
+
+			                   delete _buffer;
+		                   }
+
+		                   if ( !ec )
+		                   {
+			                   OnSent( );
+		                   }
+		                   else
+		                   {
+			                   m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::ProcessSend]: %s\n" CL_RESET, ec.message( ).c_str( ) );
+			                   Disconnect( );
+		                   }
+		               } );
 }
 
-void CNetwork_Asio::ProcessRecv()
+void CNetwork_Asio::ProcessRecv( )
 {
 	// Loop though all of m_RecvQueue
 }

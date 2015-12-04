@@ -8,10 +8,10 @@
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
 
-typedef uint8_t			byte;
-typedef uint16_t		word;
-typedef uint32_t		dword;
-typedef uint64_t		qword;
+typedef uint8_t  byte;
+typedef uint16_t word;
+typedef uint32_t dword;
+typedef uint64_t qword;
 
 // CS = Client -> server
 // SC = server -> server
@@ -110,7 +110,7 @@ struct pakChannelList_Req : public sPacketHeader
 
 struct pakLoginReply : public sPacketHeader
 {
-	uint8_t Result;
+	uint8_t  Result;
 	uint16_t Right;
 	uint16_t Unknown;
 };
@@ -127,9 +127,9 @@ struct CPacket
 		struct
 		{
 			sPacketHeader Header;
-			uint8_t       Buffer[0x400 - 6];
+			uint8_t       Data[ 0x400 - 6 ];
 		};
-		uint8_t Data[0x400];
+		uint8_t Buffer[ 0x400 ];
 
 		pakLoginReply      pLoginReply;
 		pakChannelList_Req pChannelListReq;
@@ -139,18 +139,18 @@ struct CPacket
 	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
 		Header.Command = mycommand;
-		Header.Size = mysize;
-		Header.Unused = myunused;
+		Header.Size    = mysize;
+		Header.Unused  = myunused;
 	}
 
 	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
 		Header.Command = (uint16_t)mycommand;
-		Header.Size = mysize;
-		Header.Unused = myunused;
+		Header.Size    = mysize;
+		Header.Unused  = myunused;
 	}
 
-	~CPacket()
+	~CPacket( )
 	{
 	}
 

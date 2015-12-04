@@ -48,10 +48,9 @@ void CRose_Network::OnReceived( uint8_t* _buffer, uint16_t _size )
 	(void)_size;
 }
 
-bool CRose_Network::OnSend( uint8_t* _buffer, uint16_t _size )
+bool CRose_Network::OnSend( uint8_t* _buffer )
 {
 	(void)_buffer;
-	(void)_size;
 	return true;
 }
 

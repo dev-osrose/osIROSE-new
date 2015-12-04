@@ -14,8 +14,8 @@ TEST( TestAsioNetworking, TestInit )
 	CNetwork_Asio network;
 	//network.SetExtraMessageInfo(true);
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) );
-	EXPECT_EQ( 0, network.GetId() );
-	EXPECT_EQ( 0, network.GetType() );
+	EXPECT_EQ( 0, network.GetId( ) );
+	EXPECT_EQ( 0, network.GetType( ) );
 	EXPECT_EQ( 29000, network.GetPort( ) );
 	EXPECT_EQ( "127.0.0.1", network.GetIpAddress( ) );
 	//network.SetExtraMessageInfo(false);
@@ -63,9 +63,9 @@ TEST( TestAsioNetworking, TestConnectHostName )
 	EXPECT_CALL( network, OnConnected( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	std::this_thread::sleep_for( std::chrono::milliseconds( 200 ) );
-//	EXPECT_CALL( network, OnDisconnect() )
-//		.Times( testing::AnyNumber() );
-	EXPECT_NO_FATAL_FAILURE( network.Shutdown() );
+	//	EXPECT_CALL( network, OnDisconnect() )
+	//		.Times( testing::AnyNumber() );
+	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
 
 TEST( TestAsioNetworking, TestListen )
@@ -88,7 +88,7 @@ TEST( TestAsioNetworking, TestListenAndConnect )
 
 	CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
 	pak->pChannelListReq.lServerID = 0x77;
-	netConnect.Send(pak->Buffer, 0);
+	netConnect.Send( pak->Buffer );
 
 	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ); // Change this to condition variables
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );

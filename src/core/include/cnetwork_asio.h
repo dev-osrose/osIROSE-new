@@ -30,7 +30,7 @@ class CLogConsole;
 
 class CNetwork_Asio : public INetwork
 {
-public:
+	public:
 	CNetwork_Asio( );
 	virtual ~CNetwork_Asio( );
 
@@ -43,13 +43,13 @@ public:
 	virtual bool Reconnect( );
 	virtual bool Disconnect( );
 
-	virtual bool Send( uint8_t* _buffer, uint16_t _size );
-	virtual bool Recv( uint16_t _size = 6 );
-	void SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable(_enabled); }
-protected:
-	void         AcceptConnection( );
-	void ProcessSend();
-	void ProcessRecv();
+	virtual bool Send( uint8_t* _buffer );
+	virtual bool Recv( uint16_t _size = MAX_PACKET_SIZE );
+	void         SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable( _enabled ); }
+	protected:
+	void AcceptConnection( );
+	void ProcessSend( );
+	void ProcessRecv( );
 
 	// Callback functions
 	virtual bool OnConnect( );
@@ -60,23 +60,24 @@ protected:
 	virtual void OnDisconnected( );
 	virtual bool OnReceive( );
 	virtual void OnReceived( uint8_t* _buffer, uint16_t _size );
-	virtual bool OnSend( uint8_t* _buffer, uint16_t _size );
+	virtual bool OnSend( uint8_t* _buffer );
 	virtual void OnSent( );
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
 
-private:
+	private:
 	//std::unique_ptr<asio::io_service::work> m_Work;
-	asio::io_service m_io_service;
-	tcp::socket      m_socket;
-	tcp::acceptor    m_Listener;
-	std::queue<uint8_t*> m_SendQueue;
-        std::queue<uint8_t*> m_RecvQueue;
-	std::mutex m_SendMutex;
+	asio::io_service       m_io_service;
+	tcp::socket            m_socket;
+	tcp::acceptor          m_Listener;
+	std::queue< uint8_t* > m_SendQueue;
+	std::queue< uint8_t* > m_DiscardQueue;
+	std::mutex             m_SendMutex;
+	std::mutex             m_DiscardMutex;
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
 	CLogConsole m_Log;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
-	bool	m_Active;
+	bool        m_Active;
 };

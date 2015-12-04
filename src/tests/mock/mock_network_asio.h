@@ -1,4 +1,4 @@
-#include "gmock/gmock.h"  // Brings in Google Mock.
+#include "gmock/gmock.h" // Brings in Google Mock.
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -6,7 +6,7 @@ using ::testing::Invoke;
 #include "cnetwork_asio.h"
 class CNetwork_Asio_Mock : public CNetwork_Asio
 {
-public:
+	public:
 	/*CNetwork_Asio_Mock()
 	{
 		ON_CALL(*this, OnConnected())
@@ -28,18 +28,18 @@ public:
 		ON_CALL(*this, OnSent())
 					.WillByDefault(Invoke(&real_, &CNetwork_Asio::OnSent));
 	}*/
-//protected:
-	MOCK_METHOD0( OnConnect, bool());
-	MOCK_METHOD0( OnConnected, void() );
-	MOCK_METHOD0( OnListen, bool() );
-	MOCK_METHOD0( OnListening, void() );
-	MOCK_METHOD0( OnDisconnect, bool() );
-	MOCK_METHOD0( OnDisconnected, void() );
-	MOCK_METHOD0( OnReceive, bool() );
-	MOCK_METHOD2( OnReceived, void(uint8_t* _buffer, uint16_t _size) );
-	MOCK_METHOD2( OnSend, bool(uint8_t* _buffer, uint16_t _size) );
-	MOCK_METHOD0( OnSent, void() );
+	//protected:
+	MOCK_METHOD0( OnConnect, bool( ) );
+	MOCK_METHOD0( OnConnected, void( ) );
+	MOCK_METHOD0( OnListen, bool( ) );
+	MOCK_METHOD0( OnListening, void( ) );
+	MOCK_METHOD0( OnDisconnect, bool( ) );
+	MOCK_METHOD0( OnDisconnected, void( ) );
+	MOCK_METHOD0( OnReceive, bool( ) );
+	MOCK_METHOD2( OnReceived, void( uint8_t* _buffer, uint16_t _size ) );
+	MOCK_METHOD2( OnSend, bool( uint8_t* _buffer, uint16_t _size ) );
+	MOCK_METHOD0( OnSent, void( ) );
 
-private:
+	private:
 	CNetwork_Asio real_;
 };
