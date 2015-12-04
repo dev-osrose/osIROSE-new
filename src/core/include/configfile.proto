@@ -8,7 +8,7 @@ message	Database {
 	required int32	port = 5 [default = 3306];
 }
 
-message	ServerData {
+message	Server {
 	required int32	id = 1 [default = 0];
 	required string	ip = 2 [default = "127.0.0.1"];
 	required int32	accessLevel = 3 [default = 100];
@@ -20,5 +20,5 @@ message	ServerData {
 
 message	Configuration {
 	required Database database = 1;
-	required ServerData serverdata = 2;
+	required Server serverdata = 2;
 }

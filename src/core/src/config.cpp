@@ -6,7 +6,7 @@
 using namespace std;
 using namespace pbjson;
 
-Config::Config(string filename) : file(filename)
+Config::Config(string filename) : Configuration(), file(filename)
 {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	fstream	in(filename.c_str(), ios::in);

@@ -38,7 +38,7 @@ void protobuf_ShutdownFile_configfile_2eproto();
 
 class Configuration;
 class Database;
-class ServerData;
+class Server;
 
 // ===================================================================
 
@@ -198,14 +198,14 @@ class Database : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class ServerData : public ::google::protobuf::Message {
+class Server : public ::google::protobuf::Message {
  public:
-  ServerData();
-  virtual ~ServerData();
+  Server();
+  virtual ~Server();
 
-  ServerData(const ServerData& from);
+  Server(const Server& from);
 
-  inline ServerData& operator=(const ServerData& from) {
+  inline Server& operator=(const Server& from) {
     CopyFrom(from);
     return *this;
   }
@@ -219,19 +219,19 @@ class ServerData : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ServerData& default_instance();
+  static const Server& default_instance();
 
-  void Swap(ServerData* other);
+  void Swap(Server* other);
 
   // implements Message ----------------------------------------------
 
-  inline ServerData* New() const { return New(NULL); }
+  inline Server* New() const { return New(NULL); }
 
-  ServerData* New(::google::protobuf::Arena* arena) const;
+  Server* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ServerData& from);
-  void MergeFrom(const ServerData& from);
+  void CopyFrom(const Server& from);
+  void MergeFrom(const Server& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -246,7 +246,7 @@ class ServerData : public ::google::protobuf::Message {
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(ServerData* other);
+  void InternalSwap(Server* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -316,7 +316,7 @@ class ServerData : public ::google::protobuf::Message {
   ::google::protobuf::int32 mode() const;
   void set_mode(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:configFile.ServerData)
+  // @@protoc_insertion_point(class_scope:configFile.Server)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -352,7 +352,7 @@ class ServerData : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_configfile_2eproto();
 
   void InitAsDefaultInstance();
-  static ServerData* default_instance_;
+  static Server* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -429,14 +429,14 @@ class Configuration : public ::google::protobuf::Message {
   ::configFile::Database* release_database();
   void set_allocated_database(::configFile::Database* database);
 
-  // required .configFile.ServerData serverdata = 2;
+  // required .configFile.Server serverdata = 2;
   bool has_serverdata() const;
   void clear_serverdata();
   static const int kServerdataFieldNumber = 2;
-  const ::configFile::ServerData& serverdata() const;
-  ::configFile::ServerData* mutable_serverdata();
-  ::configFile::ServerData* release_serverdata();
-  void set_allocated_serverdata(::configFile::ServerData* serverdata);
+  const ::configFile::Server& serverdata() const;
+  ::configFile::Server* mutable_serverdata();
+  ::configFile::Server* release_serverdata();
+  void set_allocated_serverdata(::configFile::Server* serverdata);
 
   // @@protoc_insertion_point(class_scope:configFile.Configuration)
  private:
@@ -452,7 +452,7 @@ class Configuration : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::configFile::Database* database_;
-  ::configFile::ServerData* serverdata_;
+  ::configFile::Server* serverdata_;
   friend void  protobuf_AddDesc_configfile_2eproto();
   friend void protobuf_AssignDesc_configfile_2eproto();
   friend void protobuf_ShutdownFile_configfile_2eproto();
@@ -706,203 +706,203 @@ inline void Database::set_port(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// ServerData
+// Server
 
 // required int32 id = 1 [default = 0];
-inline bool ServerData::has_id() const {
+inline bool Server::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ServerData::set_has_id() {
+inline void Server::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ServerData::clear_has_id() {
+inline void Server::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ServerData::clear_id() {
+inline void Server::clear_id() {
   id_ = 0;
   clear_has_id();
 }
-inline ::google::protobuf::int32 ServerData::id() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.id)
+inline ::google::protobuf::int32 Server::id() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.id)
   return id_;
 }
-inline void ServerData::set_id(::google::protobuf::int32 value) {
+inline void Server::set_id(::google::protobuf::int32 value) {
   set_has_id();
   id_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.id)
+  // @@protoc_insertion_point(field_set:configFile.Server.id)
 }
 
 // required string ip = 2 [default = "127.0.0.1"];
-inline bool ServerData::has_ip() const {
+inline bool Server::has_ip() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ServerData::set_has_ip() {
+inline void Server::set_has_ip() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ServerData::clear_has_ip() {
+inline void Server::clear_has_ip() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ServerData::clear_ip() {
+inline void Server::clear_ip() {
   ip_.ClearToDefaultNoArena(_default_ip_);
   clear_has_ip();
 }
-inline const ::std::string& ServerData::ip() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.ip)
+inline const ::std::string& Server::ip() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.ip)
   return ip_.GetNoArena(_default_ip_);
 }
-inline void ServerData::set_ip(const ::std::string& value) {
+inline void Server::set_ip(const ::std::string& value) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_, value);
-  // @@protoc_insertion_point(field_set:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set:configFile.Server.ip)
 }
-inline void ServerData::set_ip(const char* value) {
+inline void Server::set_ip(const char* value) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_, ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_char:configFile.Server.ip)
 }
-inline void ServerData::set_ip(const char* value, size_t size) {
+inline void Server::set_ip(const char* value, size_t size) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_,
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_pointer:configFile.Server.ip)
 }
-inline ::std::string* ServerData::mutable_ip() {
+inline ::std::string* Server::mutable_ip() {
   set_has_ip();
-  // @@protoc_insertion_point(field_mutable:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_mutable:configFile.Server.ip)
   return ip_.MutableNoArena(_default_ip_);
 }
-inline ::std::string* ServerData::release_ip() {
+inline ::std::string* Server::release_ip() {
   clear_has_ip();
   return ip_.ReleaseNoArena(_default_ip_);
 }
-inline void ServerData::set_allocated_ip(::std::string* ip) {
+inline void Server::set_allocated_ip(::std::string* ip) {
   if (ip != NULL) {
     set_has_ip();
   } else {
     clear_has_ip();
   }
   ip_.SetAllocatedNoArena(_default_ip_, ip);
-  // @@protoc_insertion_point(field_set_allocated:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_allocated:configFile.Server.ip)
 }
 
 // required int32 accessLevel = 3 [default = 100];
-inline bool ServerData::has_accesslevel() const {
+inline bool Server::has_accesslevel() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ServerData::set_has_accesslevel() {
+inline void Server::set_has_accesslevel() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ServerData::clear_has_accesslevel() {
+inline void Server::clear_has_accesslevel() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ServerData::clear_accesslevel() {
+inline void Server::clear_accesslevel() {
   accesslevel_ = 100;
   clear_has_accesslevel();
 }
-inline ::google::protobuf::int32 ServerData::accesslevel() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.accessLevel)
+inline ::google::protobuf::int32 Server::accesslevel() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.accessLevel)
   return accesslevel_;
 }
-inline void ServerData::set_accesslevel(::google::protobuf::int32 value) {
+inline void Server::set_accesslevel(::google::protobuf::int32 value) {
   set_has_accesslevel();
   accesslevel_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.accessLevel)
+  // @@protoc_insertion_point(field_set:configFile.Server.accessLevel)
 }
 
 // required int32 parentId = 4 [default = 0];
-inline bool ServerData::has_parentid() const {
+inline bool Server::has_parentid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void ServerData::set_has_parentid() {
+inline void Server::set_has_parentid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void ServerData::clear_has_parentid() {
+inline void Server::clear_has_parentid() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void ServerData::clear_parentid() {
+inline void Server::clear_parentid() {
   parentid_ = 0;
   clear_has_parentid();
 }
-inline ::google::protobuf::int32 ServerData::parentid() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.parentId)
+inline ::google::protobuf::int32 Server::parentid() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.parentId)
   return parentid_;
 }
-inline void ServerData::set_parentid(::google::protobuf::int32 value) {
+inline void Server::set_parentid(::google::protobuf::int32 value) {
   set_has_parentid();
   parentid_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.parentId)
+  // @@protoc_insertion_point(field_set:configFile.Server.parentId)
 }
 
 // required int32 maxConnections = 5 [default = 100];
-inline bool ServerData::has_maxconnections() const {
+inline bool Server::has_maxconnections() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void ServerData::set_has_maxconnections() {
+inline void Server::set_has_maxconnections() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void ServerData::clear_has_maxconnections() {
+inline void Server::clear_has_maxconnections() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void ServerData::clear_maxconnections() {
+inline void Server::clear_maxconnections() {
   maxconnections_ = 100;
   clear_has_maxconnections();
 }
-inline ::google::protobuf::int32 ServerData::maxconnections() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.maxConnections)
+inline ::google::protobuf::int32 Server::maxconnections() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.maxConnections)
   return maxconnections_;
 }
-inline void ServerData::set_maxconnections(::google::protobuf::int32 value) {
+inline void Server::set_maxconnections(::google::protobuf::int32 value) {
   set_has_maxconnections();
   maxconnections_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.maxConnections)
+  // @@protoc_insertion_point(field_set:configFile.Server.maxConnections)
 }
 
 // required bool useThreads = 6 [default = false];
-inline bool ServerData::has_usethreads() const {
+inline bool Server::has_usethreads() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void ServerData::set_has_usethreads() {
+inline void Server::set_has_usethreads() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void ServerData::clear_has_usethreads() {
+inline void Server::clear_has_usethreads() {
   _has_bits_[0] &= ~0x00000020u;
 }
-inline void ServerData::clear_usethreads() {
+inline void Server::clear_usethreads() {
   usethreads_ = false;
   clear_has_usethreads();
 }
-inline bool ServerData::usethreads() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.useThreads)
+inline bool Server::usethreads() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.useThreads)
   return usethreads_;
 }
-inline void ServerData::set_usethreads(bool value) {
+inline void Server::set_usethreads(bool value) {
   set_has_usethreads();
   usethreads_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.useThreads)
+  // @@protoc_insertion_point(field_set:configFile.Server.useThreads)
 }
 
 // required int32 mode = 7 [default = 0];
-inline bool ServerData::has_mode() const {
+inline bool Server::has_mode() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void ServerData::set_has_mode() {
+inline void Server::set_has_mode() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void ServerData::clear_has_mode() {
+inline void Server::clear_has_mode() {
   _has_bits_[0] &= ~0x00000040u;
 }
-inline void ServerData::clear_mode() {
+inline void Server::clear_mode() {
   mode_ = 0;
   clear_has_mode();
 }
-inline ::google::protobuf::int32 ServerData::mode() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.mode)
+inline ::google::protobuf::int32 Server::mode() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.mode)
   return mode_;
 }
-inline void ServerData::set_mode(::google::protobuf::int32 value) {
+inline void Server::set_mode(::google::protobuf::int32 value) {
   set_has_mode();
   mode_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.mode)
+  // @@protoc_insertion_point(field_set:configFile.Server.mode)
 }
 
 // -------------------------------------------------------------------
@@ -952,7 +952,7 @@ inline void Configuration::set_allocated_database(::configFile::Database* databa
   // @@protoc_insertion_point(field_set_allocated:configFile.Configuration.database)
 }
 
-// required .configFile.ServerData serverdata = 2;
+// required .configFile.Server serverdata = 2;
 inline bool Configuration::has_serverdata() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -963,28 +963,28 @@ inline void Configuration::clear_has_serverdata() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Configuration::clear_serverdata() {
-  if (serverdata_ != NULL) serverdata_->::configFile::ServerData::Clear();
+  if (serverdata_ != NULL) serverdata_->::configFile::Server::Clear();
   clear_has_serverdata();
 }
-inline const ::configFile::ServerData& Configuration::serverdata() const {
+inline const ::configFile::Server& Configuration::serverdata() const {
   // @@protoc_insertion_point(field_get:configFile.Configuration.serverdata)
   return serverdata_ != NULL ? *serverdata_ : *default_instance_->serverdata_;
 }
-inline ::configFile::ServerData* Configuration::mutable_serverdata() {
+inline ::configFile::Server* Configuration::mutable_serverdata() {
   set_has_serverdata();
   if (serverdata_ == NULL) {
-    serverdata_ = new ::configFile::ServerData;
+    serverdata_ = new ::configFile::Server;
   }
   // @@protoc_insertion_point(field_mutable:configFile.Configuration.serverdata)
   return serverdata_;
 }
-inline ::configFile::ServerData* Configuration::release_serverdata() {
+inline ::configFile::Server* Configuration::release_serverdata() {
   clear_has_serverdata();
-  ::configFile::ServerData* temp = serverdata_;
+  ::configFile::Server* temp = serverdata_;
   serverdata_ = NULL;
   return temp;
 }
-inline void Configuration::set_allocated_serverdata(::configFile::ServerData* serverdata) {
+inline void Configuration::set_allocated_serverdata(::configFile::Server* serverdata) {
   delete serverdata_;
   serverdata_ = serverdata;
   if (serverdata) {

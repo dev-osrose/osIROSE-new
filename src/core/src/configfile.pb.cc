@@ -23,9 +23,9 @@ namespace {
 const ::google::protobuf::Descriptor* Database_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Database_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ServerData_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Server_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  ServerData_reflection_ = NULL;
+  Server_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Configuration_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Configuration_reflection_ = NULL;
@@ -58,26 +58,26 @@ void protobuf_AssignDesc_configfile_2eproto() {
       sizeof(Database),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Database, _internal_metadata_),
       -1);
-  ServerData_descriptor_ = file->message_type(1);
-  static const int ServerData_offsets_[7] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, ip_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, accesslevel_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, parentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, maxconnections_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, usethreads_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, mode_),
+  Server_descriptor_ = file->message_type(1);
+  static const int Server_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, ip_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, accesslevel_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, parentid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, maxconnections_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, usethreads_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, mode_),
   };
-  ServerData_reflection_ =
+  Server_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      ServerData_descriptor_,
-      ServerData::default_instance_,
-      ServerData_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, _has_bits_[0]),
+      Server_descriptor_,
+      Server::default_instance_,
+      Server_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, _has_bits_[0]),
       -1,
       -1,
-      sizeof(ServerData),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerData, _internal_metadata_),
+      sizeof(Server),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, _internal_metadata_),
       -1);
   Configuration_descriptor_ = file->message_type(2);
   static const int Configuration_offsets_[2] = {
@@ -110,7 +110,7 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Database_descriptor_, &Database::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      ServerData_descriptor_, &ServerData::default_instance());
+      Server_descriptor_, &Server::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Configuration_descriptor_, &Configuration::default_instance());
 }
@@ -124,9 +124,9 @@ void protobuf_ShutdownFile_configfile_2eproto() {
   delete Database::_default_database_;
   delete Database::_default_user_;
   delete Database::_default_password_;
-  delete ServerData::default_instance_;
-  delete ServerData_reflection_;
-  delete ServerData::_default_ip_;
+  delete Server::default_instance_;
+  delete Server_reflection_;
+  delete Server::_default_ip_;
   delete Configuration::default_instance_;
   delete Configuration_reflection_;
 }
@@ -141,14 +141,14 @@ void protobuf_AddDesc_configfile_2eproto() {
     "\n\020configfile.proto\022\nconfigFile\"~\n\010Databa"
     "se\022\027\n\004host\030\001 \002(\t:\tlocalhost\022\031\n\010database\030"
     "\002 \002(\t:\007osirose\022\022\n\004user\030\003 \002(\t:\004root\022\026\n\010pa"
-    "ssword\030\004 \002(\t:\004root\022\022\n\004port\030\005 \002(\005:\0043306\"\252"
-    "\001\n\nServerData\022\r\n\002id\030\001 \002(\005:\0010\022\025\n\002ip\030\002 \002(\t"
-    ":\t127.0.0.1\022\030\n\013accessLevel\030\003 \002(\005:\003100\022\023\n"
-    "\010parentId\030\004 \002(\005:\0010\022\033\n\016maxConnections\030\005 \002"
-    "(\005:\003100\022\031\n\nuseThreads\030\006 \002(\010:\005false\022\017\n\004mo"
-    "de\030\007 \002(\005:\0010\"c\n\rConfiguration\022&\n\010database"
-    "\030\001 \002(\0132\024.configFile.Database\022*\n\nserverda"
-    "ta\030\002 \002(\0132\026.configFile.ServerData", 432);
+    "ssword\030\004 \002(\t:\004root\022\022\n\004port\030\005 \002(\005:\0043306\"\246"
+    "\001\n\006Server\022\r\n\002id\030\001 \002(\005:\0010\022\025\n\002ip\030\002 \002(\t:\t12"
+    "7.0.0.1\022\030\n\013accessLevel\030\003 \002(\005:\003100\022\023\n\010par"
+    "entId\030\004 \002(\005:\0010\022\033\n\016maxConnections\030\005 \002(\005:\003"
+    "100\022\031\n\nuseThreads\030\006 \002(\010:\005false\022\017\n\004mode\030\007"
+    " \002(\005:\0010\"_\n\rConfiguration\022&\n\010database\030\001 \002"
+    "(\0132\024.configFile.Database\022&\n\nserverdata\030\002"
+    " \002(\0132\022.configFile.Server", 424);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "configfile.proto", &protobuf_RegisterTypes);
   Database::_default_host_ =
@@ -160,12 +160,12 @@ void protobuf_AddDesc_configfile_2eproto() {
   Database::_default_password_ =
       new ::std::string("root", 4);
   Database::default_instance_ = new Database();
-  ServerData::_default_ip_ =
+  Server::_default_ip_ =
       new ::std::string("127.0.0.1", 9);
-  ServerData::default_instance_ = new ServerData();
+  Server::default_instance_ = new Server();
   Configuration::default_instance_ = new Configuration();
   Database::default_instance_->InitAsDefaultInstance();
-  ServerData::default_instance_->InitAsDefaultInstance();
+  Server::default_instance_->InitAsDefaultInstance();
   Configuration::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_configfile_2eproto);
 }
@@ -926,35 +926,35 @@ void Database::clear_port() {
 
 // ===================================================================
 
-::std::string* ServerData::_default_ip_ = NULL;
+::std::string* Server::_default_ip_ = NULL;
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int ServerData::kIdFieldNumber;
-const int ServerData::kIpFieldNumber;
-const int ServerData::kAccessLevelFieldNumber;
-const int ServerData::kParentIdFieldNumber;
-const int ServerData::kMaxConnectionsFieldNumber;
-const int ServerData::kUseThreadsFieldNumber;
-const int ServerData::kModeFieldNumber;
+const int Server::kIdFieldNumber;
+const int Server::kIpFieldNumber;
+const int Server::kAccessLevelFieldNumber;
+const int Server::kParentIdFieldNumber;
+const int Server::kMaxConnectionsFieldNumber;
+const int Server::kUseThreadsFieldNumber;
+const int Server::kModeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-ServerData::ServerData()
+Server::Server()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:configFile.ServerData)
+  // @@protoc_insertion_point(constructor:configFile.Server)
 }
 
-void ServerData::InitAsDefaultInstance() {
+void Server::InitAsDefaultInstance() {
 }
 
-ServerData::ServerData(const ServerData& from)
+Server::Server(const Server& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:configFile.ServerData)
+  // @@protoc_insertion_point(copy_constructor:configFile.Server)
 }
 
-void ServerData::SharedCtor() {
+void Server::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   id_ = 0;
@@ -967,45 +967,45 @@ void ServerData::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-ServerData::~ServerData() {
-  // @@protoc_insertion_point(destructor:configFile.ServerData)
+Server::~Server() {
+  // @@protoc_insertion_point(destructor:configFile.Server)
   SharedDtor();
 }
 
-void ServerData::SharedDtor() {
+void Server::SharedDtor() {
   ip_.DestroyNoArena(_default_ip_);
   if (this != default_instance_) {
   }
 }
 
-void ServerData::SetCachedSize(int size) const {
+void Server::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ServerData::descriptor() {
+const ::google::protobuf::Descriptor* Server::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ServerData_descriptor_;
+  return Server_descriptor_;
 }
 
-const ServerData& ServerData::default_instance() {
+const Server& Server::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_configfile_2eproto();
   return *default_instance_;
 }
 
-ServerData* ServerData::default_instance_ = NULL;
+Server* Server::default_instance_ = NULL;
 
-ServerData* ServerData::New(::google::protobuf::Arena* arena) const {
-  ServerData* n = new ServerData;
+Server* Server::New(::google::protobuf::Arena* arena) const {
+  Server* n = new Server;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void ServerData::Clear() {
+void Server::Clear() {
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<ServerData*>(16)->f)
+  &reinterpret_cast<Server*>(16)->f)
 
 #define ZR_(first, last) do {\
   ::memset(&first, 0,\
@@ -1032,11 +1032,11 @@ void ServerData::Clear() {
   }
 }
 
-bool ServerData::MergePartialFromCodedStream(
+bool Server::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:configFile.ServerData)
+  // @@protoc_insertion_point(parse_start:configFile.Server)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1065,7 +1065,7 @@ bool ServerData::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->ip().data(), this->ip().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "configFile.ServerData.ip");
+            "configFile.Server.ip");
         } else {
           goto handle_unusual;
         }
@@ -1162,17 +1162,17 @@ bool ServerData::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:configFile.ServerData)
+  // @@protoc_insertion_point(parse_success:configFile.Server)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:configFile.ServerData)
+  // @@protoc_insertion_point(parse_failure:configFile.Server)
   return false;
 #undef DO_
 }
 
-void ServerData::SerializeWithCachedSizes(
+void Server::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:configFile.ServerData)
+  // @@protoc_insertion_point(serialize_start:configFile.Server)
   // required int32 id = 1 [default = 0];
   if (has_id()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->id(), output);
@@ -1183,7 +1183,7 @@ void ServerData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->ip().data(), this->ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "configFile.ServerData.ip");
+      "configFile.Server.ip");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->ip(), output);
   }
@@ -1217,12 +1217,12 @@ void ServerData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:configFile.ServerData)
+  // @@protoc_insertion_point(serialize_end:configFile.Server)
 }
 
-::google::protobuf::uint8* ServerData::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Server::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:configFile.ServerData)
+  // @@protoc_insertion_point(serialize_to_array_start:configFile.Server)
   // required int32 id = 1 [default = 0];
   if (has_id()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->id(), target);
@@ -1233,7 +1233,7 @@ void ServerData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->ip().data(), this->ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "configFile.ServerData.ip");
+      "configFile.Server.ip");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->ip(), target);
@@ -1268,11 +1268,11 @@ void ServerData::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:configFile.ServerData)
+  // @@protoc_insertion_point(serialize_to_array_end:configFile.Server)
   return target;
 }
 
-int ServerData::RequiredFieldsByteSizeFallback() const {
+int Server::RequiredFieldsByteSizeFallback() const {
   int total_size = 0;
 
   if (has_id()) {
@@ -1324,7 +1324,7 @@ int ServerData::RequiredFieldsByteSizeFallback() const {
 
   return total_size;
 }
-int ServerData::ByteSize() const {
+int Server::ByteSize() const {
   int total_size = 0;
 
   if (((_has_bits_[0] & 0x0000007f) ^ 0x0000007f) == 0) {  // All required fields are present.
@@ -1375,10 +1375,10 @@ int ServerData::ByteSize() const {
   return total_size;
 }
 
-void ServerData::MergeFrom(const ::google::protobuf::Message& from) {
+void Server::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ServerData* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ServerData>(
+  const Server* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Server>(
           &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1387,7 +1387,7 @@ void ServerData::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void ServerData::MergeFrom(const ServerData& from) {
+void Server::MergeFrom(const Server& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_id()) {
@@ -1418,29 +1418,29 @@ void ServerData::MergeFrom(const ServerData& from) {
   }
 }
 
-void ServerData::CopyFrom(const ::google::protobuf::Message& from) {
+void Server::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ServerData::CopyFrom(const ServerData& from) {
+void Server::CopyFrom(const Server& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ServerData::IsInitialized() const {
+bool Server::IsInitialized() const {
   if ((_has_bits_[0] & 0x0000007f) != 0x0000007f) return false;
 
   return true;
 }
 
-void ServerData::Swap(ServerData* other) {
+void Server::Swap(Server* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void ServerData::InternalSwap(ServerData* other) {
+void Server::InternalSwap(Server* other) {
   std::swap(id_, other->id_);
   ip_.Swap(&other->ip_);
   std::swap(accesslevel_, other->accesslevel_);
@@ -1453,212 +1453,212 @@ void ServerData::InternalSwap(ServerData* other) {
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata ServerData::GetMetadata() const {
+::google::protobuf::Metadata Server::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ServerData_descriptor_;
-  metadata.reflection = ServerData_reflection_;
+  metadata.descriptor = Server_descriptor_;
+  metadata.reflection = Server_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// ServerData
+// Server
 
 // required int32 id = 1 [default = 0];
-bool ServerData::has_id() const {
+bool Server::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-void ServerData::set_has_id() {
+void Server::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-void ServerData::clear_has_id() {
+void Server::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-void ServerData::clear_id() {
+void Server::clear_id() {
   id_ = 0;
   clear_has_id();
 }
- ::google::protobuf::int32 ServerData::id() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.id)
+ ::google::protobuf::int32 Server::id() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.id)
   return id_;
 }
- void ServerData::set_id(::google::protobuf::int32 value) {
+ void Server::set_id(::google::protobuf::int32 value) {
   set_has_id();
   id_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.id)
+  // @@protoc_insertion_point(field_set:configFile.Server.id)
 }
 
 // required string ip = 2 [default = "127.0.0.1"];
-bool ServerData::has_ip() const {
+bool Server::has_ip() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-void ServerData::set_has_ip() {
+void Server::set_has_ip() {
   _has_bits_[0] |= 0x00000002u;
 }
-void ServerData::clear_has_ip() {
+void Server::clear_has_ip() {
   _has_bits_[0] &= ~0x00000002u;
 }
-void ServerData::clear_ip() {
+void Server::clear_ip() {
   ip_.ClearToDefaultNoArena(_default_ip_);
   clear_has_ip();
 }
- const ::std::string& ServerData::ip() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.ip)
+ const ::std::string& Server::ip() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.ip)
   return ip_.GetNoArena(_default_ip_);
 }
- void ServerData::set_ip(const ::std::string& value) {
+ void Server::set_ip(const ::std::string& value) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_, value);
-  // @@protoc_insertion_point(field_set:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set:configFile.Server.ip)
 }
- void ServerData::set_ip(const char* value) {
+ void Server::set_ip(const char* value) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_, ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_char:configFile.Server.ip)
 }
- void ServerData::set_ip(const char* value, size_t size) {
+ void Server::set_ip(const char* value, size_t size) {
   set_has_ip();
   ip_.SetNoArena(_default_ip_,
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_pointer:configFile.Server.ip)
 }
- ::std::string* ServerData::mutable_ip() {
+ ::std::string* Server::mutable_ip() {
   set_has_ip();
-  // @@protoc_insertion_point(field_mutable:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_mutable:configFile.Server.ip)
   return ip_.MutableNoArena(_default_ip_);
 }
- ::std::string* ServerData::release_ip() {
+ ::std::string* Server::release_ip() {
   clear_has_ip();
   return ip_.ReleaseNoArena(_default_ip_);
 }
- void ServerData::set_allocated_ip(::std::string* ip) {
+ void Server::set_allocated_ip(::std::string* ip) {
   if (ip != NULL) {
     set_has_ip();
   } else {
     clear_has_ip();
   }
   ip_.SetAllocatedNoArena(_default_ip_, ip);
-  // @@protoc_insertion_point(field_set_allocated:configFile.ServerData.ip)
+  // @@protoc_insertion_point(field_set_allocated:configFile.Server.ip)
 }
 
 // required int32 accessLevel = 3 [default = 100];
-bool ServerData::has_accesslevel() const {
+bool Server::has_accesslevel() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-void ServerData::set_has_accesslevel() {
+void Server::set_has_accesslevel() {
   _has_bits_[0] |= 0x00000004u;
 }
-void ServerData::clear_has_accesslevel() {
+void Server::clear_has_accesslevel() {
   _has_bits_[0] &= ~0x00000004u;
 }
-void ServerData::clear_accesslevel() {
+void Server::clear_accesslevel() {
   accesslevel_ = 100;
   clear_has_accesslevel();
 }
- ::google::protobuf::int32 ServerData::accesslevel() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.accessLevel)
+ ::google::protobuf::int32 Server::accesslevel() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.accessLevel)
   return accesslevel_;
 }
- void ServerData::set_accesslevel(::google::protobuf::int32 value) {
+ void Server::set_accesslevel(::google::protobuf::int32 value) {
   set_has_accesslevel();
   accesslevel_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.accessLevel)
+  // @@protoc_insertion_point(field_set:configFile.Server.accessLevel)
 }
 
 // required int32 parentId = 4 [default = 0];
-bool ServerData::has_parentid() const {
+bool Server::has_parentid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-void ServerData::set_has_parentid() {
+void Server::set_has_parentid() {
   _has_bits_[0] |= 0x00000008u;
 }
-void ServerData::clear_has_parentid() {
+void Server::clear_has_parentid() {
   _has_bits_[0] &= ~0x00000008u;
 }
-void ServerData::clear_parentid() {
+void Server::clear_parentid() {
   parentid_ = 0;
   clear_has_parentid();
 }
- ::google::protobuf::int32 ServerData::parentid() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.parentId)
+ ::google::protobuf::int32 Server::parentid() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.parentId)
   return parentid_;
 }
- void ServerData::set_parentid(::google::protobuf::int32 value) {
+ void Server::set_parentid(::google::protobuf::int32 value) {
   set_has_parentid();
   parentid_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.parentId)
+  // @@protoc_insertion_point(field_set:configFile.Server.parentId)
 }
 
 // required int32 maxConnections = 5 [default = 100];
-bool ServerData::has_maxconnections() const {
+bool Server::has_maxconnections() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-void ServerData::set_has_maxconnections() {
+void Server::set_has_maxconnections() {
   _has_bits_[0] |= 0x00000010u;
 }
-void ServerData::clear_has_maxconnections() {
+void Server::clear_has_maxconnections() {
   _has_bits_[0] &= ~0x00000010u;
 }
-void ServerData::clear_maxconnections() {
+void Server::clear_maxconnections() {
   maxconnections_ = 100;
   clear_has_maxconnections();
 }
- ::google::protobuf::int32 ServerData::maxconnections() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.maxConnections)
+ ::google::protobuf::int32 Server::maxconnections() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.maxConnections)
   return maxconnections_;
 }
- void ServerData::set_maxconnections(::google::protobuf::int32 value) {
+ void Server::set_maxconnections(::google::protobuf::int32 value) {
   set_has_maxconnections();
   maxconnections_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.maxConnections)
+  // @@protoc_insertion_point(field_set:configFile.Server.maxConnections)
 }
 
 // required bool useThreads = 6 [default = false];
-bool ServerData::has_usethreads() const {
+bool Server::has_usethreads() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-void ServerData::set_has_usethreads() {
+void Server::set_has_usethreads() {
   _has_bits_[0] |= 0x00000020u;
 }
-void ServerData::clear_has_usethreads() {
+void Server::clear_has_usethreads() {
   _has_bits_[0] &= ~0x00000020u;
 }
-void ServerData::clear_usethreads() {
+void Server::clear_usethreads() {
   usethreads_ = false;
   clear_has_usethreads();
 }
- bool ServerData::usethreads() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.useThreads)
+ bool Server::usethreads() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.useThreads)
   return usethreads_;
 }
- void ServerData::set_usethreads(bool value) {
+ void Server::set_usethreads(bool value) {
   set_has_usethreads();
   usethreads_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.useThreads)
+  // @@protoc_insertion_point(field_set:configFile.Server.useThreads)
 }
 
 // required int32 mode = 7 [default = 0];
-bool ServerData::has_mode() const {
+bool Server::has_mode() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-void ServerData::set_has_mode() {
+void Server::set_has_mode() {
   _has_bits_[0] |= 0x00000040u;
 }
-void ServerData::clear_has_mode() {
+void Server::clear_has_mode() {
   _has_bits_[0] &= ~0x00000040u;
 }
-void ServerData::clear_mode() {
+void Server::clear_mode() {
   mode_ = 0;
   clear_has_mode();
 }
- ::google::protobuf::int32 ServerData::mode() const {
-  // @@protoc_insertion_point(field_get:configFile.ServerData.mode)
+ ::google::protobuf::int32 Server::mode() const {
+  // @@protoc_insertion_point(field_get:configFile.Server.mode)
   return mode_;
 }
- void ServerData::set_mode(::google::protobuf::int32 value) {
+ void Server::set_mode(::google::protobuf::int32 value) {
   set_has_mode();
   mode_ = value;
-  // @@protoc_insertion_point(field_set:configFile.ServerData.mode)
+  // @@protoc_insertion_point(field_set:configFile.Server.mode)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1678,7 +1678,7 @@ Configuration::Configuration()
 
 void Configuration::InitAsDefaultInstance() {
   database_ = const_cast< ::configFile::Database*>(&::configFile::Database::default_instance());
-  serverdata_ = const_cast< ::configFile::ServerData*>(&::configFile::ServerData::default_instance());
+  serverdata_ = const_cast< ::configFile::Server*>(&::configFile::Server::default_instance());
 }
 
 Configuration::Configuration(const Configuration& from)
@@ -1739,7 +1739,7 @@ void Configuration::Clear() {
       if (database_ != NULL) database_->::configFile::Database::Clear();
     }
     if (has_serverdata()) {
-      if (serverdata_ != NULL) serverdata_->::configFile::ServerData::Clear();
+      if (serverdata_ != NULL) serverdata_->::configFile::Server::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1770,7 +1770,7 @@ bool Configuration::MergePartialFromCodedStream(
         break;
       }
 
-      // required .configFile.ServerData serverdata = 2;
+      // required .configFile.Server serverdata = 2;
       case 2: {
         if (tag == 18) {
          parse_serverdata:
@@ -1814,7 +1814,7 @@ void Configuration::SerializeWithCachedSizes(
       1, *this->database_, output);
   }
 
-  // required .configFile.ServerData serverdata = 2;
+  // required .configFile.Server serverdata = 2;
   if (has_serverdata()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, *this->serverdata_, output);
@@ -1837,7 +1837,7 @@ void Configuration::SerializeWithCachedSizes(
         1, *this->database_, target);
   }
 
-  // required .configFile.ServerData serverdata = 2;
+  // required .configFile.Server serverdata = 2;
   if (has_serverdata()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1863,7 +1863,7 @@ int Configuration::RequiredFieldsByteSizeFallback() const {
   }
 
   if (has_serverdata()) {
-    // required .configFile.ServerData serverdata = 2;
+    // required .configFile.Server serverdata = 2;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->serverdata_);
@@ -1880,7 +1880,7 @@ int Configuration::ByteSize() const {
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->database_);
 
-    // required .configFile.ServerData serverdata = 2;
+    // required .configFile.Server serverdata = 2;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->serverdata_);
@@ -1918,7 +1918,7 @@ void Configuration::MergeFrom(const Configuration& from) {
       mutable_database()->::configFile::Database::MergeFrom(from.database());
     }
     if (from.has_serverdata()) {
-      mutable_serverdata()->::configFile::ServerData::MergeFrom(from.serverdata());
+      mutable_serverdata()->::configFile::Server::MergeFrom(from.serverdata());
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -2016,7 +2016,7 @@ void Configuration::set_allocated_database(::configFile::Database* database) {
   // @@protoc_insertion_point(field_set_allocated:configFile.Configuration.database)
 }
 
-// required .configFile.ServerData serverdata = 2;
+// required .configFile.Server serverdata = 2;
 bool Configuration::has_serverdata() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -2027,28 +2027,28 @@ void Configuration::clear_has_serverdata() {
   _has_bits_[0] &= ~0x00000002u;
 }
 void Configuration::clear_serverdata() {
-  if (serverdata_ != NULL) serverdata_->::configFile::ServerData::Clear();
+  if (serverdata_ != NULL) serverdata_->::configFile::Server::Clear();
   clear_has_serverdata();
 }
-const ::configFile::ServerData& Configuration::serverdata() const {
+const ::configFile::Server& Configuration::serverdata() const {
   // @@protoc_insertion_point(field_get:configFile.Configuration.serverdata)
   return serverdata_ != NULL ? *serverdata_ : *default_instance_->serverdata_;
 }
-::configFile::ServerData* Configuration::mutable_serverdata() {
+::configFile::Server* Configuration::mutable_serverdata() {
   set_has_serverdata();
   if (serverdata_ == NULL) {
-    serverdata_ = new ::configFile::ServerData;
+    serverdata_ = new ::configFile::Server;
   }
   // @@protoc_insertion_point(field_mutable:configFile.Configuration.serverdata)
   return serverdata_;
 }
-::configFile::ServerData* Configuration::release_serverdata() {
+::configFile::Server* Configuration::release_serverdata() {
   clear_has_serverdata();
-  ::configFile::ServerData* temp = serverdata_;
+  ::configFile::Server* temp = serverdata_;
   serverdata_ = NULL;
   return temp;
 }
-void Configuration::set_allocated_serverdata(::configFile::ServerData* serverdata) {
+void Configuration::set_allocated_serverdata(::configFile::Server* serverdata) {
   delete serverdata_;
   serverdata_ = serverdata;
   if (serverdata) {

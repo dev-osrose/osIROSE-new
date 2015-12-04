@@ -23,7 +23,7 @@ TEST(Config, TestDatabase)
 TEST(Config, TestServer)
 {
 	Config	config("test.ini");
-	const ::configFile::ServerData	&sd = config.serverdata();
+	const ::configFile::Server	&sd = config.serverdata();
 	EXPECT_NE(0, sd.id());
 	EXPECT_NE("127.0.0.1", sd.ip());
 	EXPECT_NE(100, sd.accesslevel());
