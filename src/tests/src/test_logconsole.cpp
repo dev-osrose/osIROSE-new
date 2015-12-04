@@ -40,7 +40,7 @@ TEST( TestConsoleLogging, TestRenderProgressBar )
 	// Currently doesn't work as intended so disabled for now.
 	for ( int i = 0; i <= 100; i++ )
 	{
-		g_Log.RenderProgressBar( 10, i );
+		g_Log.RenderProgressBar( 80, i );
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ); //sim work to be done
 	}
 	g_Log.dcprintf("\n");
