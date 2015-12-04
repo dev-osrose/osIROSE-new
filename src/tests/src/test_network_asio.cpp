@@ -57,12 +57,12 @@ TEST( TestAsioNetworking, TestReconnect )
 
 TEST( TestAsioNetworking, TestConnectHostName )
 {
-	CNetwork_Asio_Mock network;
+	CNetwork_Asio network;
 	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
-	EXPECT_CALL( network, OnConnect( ) );
-	EXPECT_CALL( network, OnConnected( ) );
+	//EXPECT_CALL( network, OnConnect( ) );
+	//EXPECT_CALL( network, OnConnected( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
-	std::this_thread::sleep_for( std::chrono::milliseconds( 200 ) );
+	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	//	EXPECT_CALL( network, OnDisconnect() )
 	//		.Times( testing::AnyNumber() );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );

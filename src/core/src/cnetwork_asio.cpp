@@ -133,20 +133,23 @@ bool CNetwork_Asio::Send( uint8_t* _buffer )
 bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 {
 	OnReceive( );
+//	int32_t count = 
+//		asio::read( m_socket, asio::buffer( Buffer, _size ), asio::transfer_at_least(6) );
 	asio::async_read( m_socket,
 	                  asio::buffer( Buffer, _size ),
 	                  [this]( std::error_code errorCode, std::size_t length ) {
 		                  if ( !errorCode )
 		                  {
-			                  (void)length;
-			                  Recv( );
 			                  OnReceived( Buffer, (uint16_t)length );
 		                  }
 		                  else
 		                  {
-			                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv]: %s\n" CL_RESET, errorCode.message( ).c_str( ) );
-			                  Disconnect( );
+					  //EC 2 = reached end of file (Nothing waiting to be read, this is okay)
+					  if(errorCode.value() != 2) 
+				                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value(), errorCode.message( ).c_str( ) );
+//			                  Disconnect( );
 		                  }
+				  Recv( );
 		              } );
 	OnReceived( Buffer, (uint16_t)Buffer[ 0 ] );
 	return true;
@@ -278,7 +281,7 @@ void CNetwork_Asio::ProcessSend( )
 		                   else
 		                   {
 			                   m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::ProcessSend]: %s\n" CL_RESET, ec.message( ).c_str( ) );
-			                   Disconnect( );
+//			                   Disconnect( );
 		                   }
 		               } );
 }
