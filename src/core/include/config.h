@@ -8,10 +8,14 @@
 class	Config : public configFile::Configuration
 {
 	public:
-		Config(std::string filename);
-		~Config();
+		static Config	&getInstance(std::string filename = "server.ini");
 
 	private:
+		Config(std::string filename);
+		Config(const Config&) = delete;
+		Config	&operator=(const Config&) = delete;
+		~Config();
+
 		std::string	file;
 };
 

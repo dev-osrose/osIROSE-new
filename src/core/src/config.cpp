@@ -6,12 +6,20 @@
 using namespace std;
 using namespace pbjson;
 
+Config	&Config::getInstance(std::string filename)
+{
+	static Config	instance(filename);
+	return instance;
+}
+
 Config::Config(string filename) : Configuration(), file(filename)
 {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
-	fstream	in(filename.c_str(), ios::in);
+	if (filename == "")
+		file = "server.ini";
+	fstream	in(file.c_str(), ios::in);
 	if (!in.is_open()) {
-		cout << filename << " file not found. Creating one" << endl;
+		cout << file << " file not found. Creating one" << endl;
 		fstream	out(file.c_str(), ios::out | ios::trunc);
 		string	json;
 		pb2json(this, json);

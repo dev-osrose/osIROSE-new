@@ -3,32 +3,29 @@
 
 TEST(Config, TestDefault)
 {
-	{
-		EXPECT_NO_FATAL_FAILURE(Config config("test.ini"));
-	}
-	EXPECT_NO_FATAL_FAILURE(Config config("test.ini"));
+	EXPECT_NO_FATAL_FAILURE(Config::getInstance("test.ini"));
 }
 
 TEST(Config, TestDatabase)
 {
-	Config	config("test.ini");
+	Config	&config = Config::getInstance();
 	const ::configFile::Database	&dbb = config.database();
-	EXPECT_NE("localhost", dbb.host());
-	EXPECT_NE("osirose", dbb.database());
-	EXPECT_NE("root", dbb.user());
-	EXPECT_NE("root", dbb.password());
-	EXPECT_NE(3306, dbb.port());
+	EXPECT_EQ("localhost", dbb.host());
+	EXPECT_EQ("osirose", dbb.database());
+	EXPECT_EQ("root", dbb.user());
+	EXPECT_EQ("root", dbb.password());
+	EXPECT_EQ(3306, dbb.port());
 }
 
 TEST(Config, TestServer)
 {
-	Config	config("test.ini");
+	Config	&config = Config::getInstance();
 	const ::configFile::Server	&sd = config.serverdata();
-	EXPECT_NE(0, sd.id());
-	EXPECT_NE("127.0.0.1", sd.ip());
-	EXPECT_NE(100, sd.accesslevel());
-	EXPECT_NE(0, sd.parentid());
-	EXPECT_NE(100, sd.maxconnections());
-	EXPECT_NE(false, sd.usethreads());
-	EXPECT_NE(0, sd.mode());
+	EXPECT_EQ(0, sd.id());
+	EXPECT_EQ("127.0.0.1", sd.ip());
+	EXPECT_EQ(100, sd.accesslevel());
+	EXPECT_EQ(0, sd.parentid());
+	EXPECT_EQ(100, sd.maxconnections());
+	EXPECT_EQ(false, sd.usethreads());
+	EXPECT_EQ(0, sd.mode());
 }
