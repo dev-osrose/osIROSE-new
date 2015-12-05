@@ -10,6 +10,8 @@ class	Config : public configFile::Configuration
 	public:
 		static Config	&getInstance(std::string filename = "server.ini");
 
+		static std::string	prettify(std::string);
+
 	private:
 		Config(std::string filename);
 		Config(const Config&) = delete;

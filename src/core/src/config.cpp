@@ -12,18 +12,50 @@ Config	&Config::getInstance(std::string filename)
 	return instance;
 }
 
+std::string	Config::prettify(std::string data)
+{
+	std::string	res;
+	int	dist = 0;
+	for (auto &it : data) {
+		if (it == '{' || it == '[') {
+			res.push_back(it);
+			res.push_back('\n');
+			++dist;
+			for (int i = 0; i < dist; ++i)
+				res.push_back(' ');
+		} else if (it == '}' || it == ']') {
+			res.push_back('\n');
+			for (int i = 0; i < dist; ++i)
+				res.push_back(' ');
+			res.push_back(it);
+			--dist;
+		} else if (it == ',') {
+			res.push_back(it);
+			res.push_back('\n');
+			for (int i = 0; i < dist; ++i)
+				res.push_back(' ');
+		} else if (it == ':') {
+			res.push_back(' ');
+			res.push_back(it);
+			res.push_back(' ');
+		} else
+			res.push_back(it);
+	}
+	return res;
+}
+
 Config::Config(string filename) : Configuration(), file(filename)
 {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
-	if (filename == "")
-		file = "server.ini";
 	fstream	in(file.c_str(), ios::in);
 	if (!in.is_open()) {
 		cout << file << " file not found. Creating one" << endl;
 		fstream	out(file.c_str(), ios::out | ios::trunc);
+		if (!out.is_open())
+			throw std::exception();
 		string	json;
 		pb2json(this, json);
-		out << json;
+		out << prettify(json);
 	} else {
 		string	json, err;
 		getline(in, json, static_cast<char>(in.eof()));
