@@ -1,0 +1,24 @@
+package configFile;
+
+message	Database {
+	required string	host = 1 [default = "localhost"];
+	required string database = 2 [default = "osirose"];
+	required string user = 3 [default = "root"];
+	required string password = 4 [default = "root"];
+	required int32	port = 5 [default = 3306];
+}
+
+message	Server {
+	required int32	id = 1 [default = 0];
+	required string	ip = 2 [default = "127.0.0.1"];
+	required int32	accessLevel = 3 [default = 100];
+	required int32	parentId = 4 [default = 0];
+	required int32	maxConnections = 5 [default = 100];
+	required bool	useThreads = 6 [default = false];
+	required int32	mode = 7 [default = 0];
+}
+
+message	Configuration {
+	required Database database = 1;
+	required Server serverdata = 2;
+}

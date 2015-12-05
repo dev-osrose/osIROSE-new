@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(
 	SYSTEM ${EXTERNAL_INCLUDE_DIR}
 )
 
-LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
+LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR} ${PROTOBUF_BINARY_DIR})
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -45,9 +45,14 @@ INCLUDE_DIRECTORIES(
 #link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 SET( SOURCES_BASE
+  src/logconsole
+  src/crosecrypt 
   src/cnetwork_asio
-  src/logconsole )
+  src/config
+  src/configfile.pb
+  src/pbjson.cpp
+  src/logconsole
+)
 
 add_library(Core STATIC ${SOURCES_BASE})
-
-
+TARGET_LINK_LIBRARIES(Core ${PROTOBUF_BINARY_DIR}/libprotobuf.a)

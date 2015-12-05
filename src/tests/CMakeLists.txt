@@ -62,6 +62,7 @@ SET(SOURCES_BASE
 	src/test_network_asio
 	src/test_crose_network
 	src/test_logconsole
+	src/test_config
 )
 
 SET(SOURCES
