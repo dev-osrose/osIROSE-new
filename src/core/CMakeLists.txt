@@ -46,7 +46,6 @@ INCLUDE_DIRECTORIES(
 
 SET( SOURCES_BASE
   src/logconsole
-  src/crosecrypt 
   src/cnetwork_asio
   src/config
   src/configfile.pb
