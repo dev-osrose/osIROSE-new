@@ -55,7 +55,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 
         # Capture coverage data.
         COMMAND ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --compat-libtool --directory . --capture --output-file ${_outputname}.info
-        COMMAND ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --remove ${_outputname}.info 'tests/*' '/usr/*' 'tools/*' '3rdParty/*' 'protobuf/*' --output-file ${_outputname}.info.cleaned 
+        COMMAND ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --remove ${_outputname}.info 'tests/*' '/usr/*' 'tools/*' '3rdParty/*' 'protobuf/*' '*.pb.*' 'rapidjson/*' 'pbjson.hpp' 'bin2ascii.h' --output-file ${_outputname}.info.cleaned 
 
         # Generating the report.
         COMMAND ${GENHTML_PATH} -o ${_outputname} ${_outputname}.info.cleaned
