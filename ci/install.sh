@@ -7,7 +7,7 @@ fi
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	if [ "$GCC_VERSION" ]; then
 		echo 'Setting up protobuf...';
-		if [ ! -d "$HOME/protobuf/lib" ]; then
+		if [ ! -d "./protobuf/lib" ]; then
 			cd tools/protobuf
 			./autogen.sh
 			./configure --prefix=../../protobuf > nul

@@ -24,7 +24,7 @@ addons:
 
 cache:
   directories:
-  - $HOME/protobuf
+  - ./protobuf
   
 matrix:
   include:
