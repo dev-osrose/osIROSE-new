@@ -27,7 +27,7 @@ To build and install the servers, execute the following:
 
 To run the servers execute the following:
 
-    $ LoginServer
-    $ CharServer
-    $ WorldServer
+    $ LoginServer&
+    $ CharServer&
+    $ WorldServer&
 
