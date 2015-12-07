@@ -10,7 +10,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		if [ ! -d "$HOME/protobuf/lib" ]; then
 			cd tools/protobuf
 			./autogen.sh
-			./configure --prefix=$HOME/protobuf > nul
+			./configure --prefix=../../protobuf > nul
 			make
 			make install
 		

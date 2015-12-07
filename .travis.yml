@@ -12,7 +12,7 @@ addons:
     - cmake
     - lcov
     - libboost-dev
-    - libprotobuf-dev
+#    - libprotobuf-dev
     - gcc-4.9
     - gcc-5
     - g++-4.9
@@ -46,7 +46,7 @@ matrix:
 
 before_install:
 - if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
-- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=./ci/llvm-gcov.sh; fi
+- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=../ci/llvm-gcov.sh; fi
 - export LCOV_PATH=$HOME/usr/bin/lcov
 - export GENHTML_PATH=$HOME/usr/bin/genhtml
 - export PREFIX=$HOME
