@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	if [ "$GCC_VERSION" ]; then
+	#if [ "$GCC_VERSION" ]; then
 		echo 'Setting up protobuf...';
 		if [ ! -d "./protobuf/lib" ]; then
 			cd tools/protobuf
@@ -18,7 +18,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		else
 	  		echo 'Using cached protobuf directory.';
 		fi
-	fi
+	#fi
 	
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz

@@ -47,7 +47,7 @@ matrix:
 before_install:
 - export PROOT=$TRAVIS_BUILD_DIR
 - if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
-- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=../ci/llvm-gcov.sh; fi
+- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh; fi
 - export LCOV_PATH=$HOME/usr/bin/lcov
 - export GENHTML_PATH=$HOME/usr/bin/genhtml
 - export PREFIX=$HOME
