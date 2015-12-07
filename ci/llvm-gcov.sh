@@ -1,2 +1,2 @@
 #!/bin/bash
-exec llvm-cov-3.7 gcov "$@"
+exec /usr/bin/llvm-cov-3.7 gcov "$@"

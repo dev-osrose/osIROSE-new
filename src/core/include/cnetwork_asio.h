@@ -5,6 +5,9 @@
  *      Author: ctorres
  */
 
+#ifndef _CNETWORK_ASIO_H_
+#define _CNETWORK_ASIO_H_
+
 #ifdef _WIN32
 #pragma warning( push )
 #pragma warning( disable : 6011 6031 6102 6255 6258 6326 6387 )
@@ -81,3 +84,5 @@ class CNetwork_Asio : public INetwork
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
 	bool        m_Active;
 };
+
+#endif
