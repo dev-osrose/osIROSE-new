@@ -29,6 +29,7 @@ install:
     	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > C:\projects\3rdparty_install.txt"
     }
 - cmd: git submodule update --init --recursive
+- cmd: "./ci/msvc_install.bat"
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt
 #build: #off
