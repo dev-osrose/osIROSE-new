@@ -12,7 +12,9 @@ addons:
     - cmake
     - lcov
     - libboost-dev
-#    - libprotobuf-dev
+    - llvm-3.7
+    - llvm-3.7-dev
+    - llvm-runtime
     - gcc-4.9
     - gcc-5
     - g++-4.9
@@ -42,7 +44,6 @@ matrix:
       env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
   allow_failures:
     - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    #- env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
 
 before_install:
 - export PROOT=$TRAVIS_BUILD_DIR
