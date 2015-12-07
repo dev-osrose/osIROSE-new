@@ -51,6 +51,7 @@ SET( SOURCES_BASE
   src/configfile.pb
   src/pbjson.cpp
   src/logconsole
+  src/cmysql_database
 )
 
 add_library(Core STATIC ${SOURCES_BASE})
