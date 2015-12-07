@@ -5,7 +5,7 @@ class IDatabase
 {
 public:
 	IDatabase() {};
-	virtual ~IDatabase() = 0;
+	virtual ~IDatabase() {};
 
 	virtual bool Connect() = 0;
 	virtual void Disconnect() = 0;

@@ -50,6 +50,9 @@ file(GLOB_RECURSE PROJECT_TESTING_HEADERS . *.[h])
 SET(HEADERS
     ${CORE_HEADERS}
     ${ROSE_HEADERS}
+    ${LOGIN_HEADERS}
+    ${CHAR_HEADERS}
+    ${MAP_HEADERS}
     ${PROJECT_TESTING_HEADERS}
 )
 
@@ -63,6 +66,7 @@ SET(SOURCES_BASE
 	src/test_crose_network
 	src/test_logconsole
 	src/test_config
+	src/test_mysql_database
 )
 
 SET(SOURCES
