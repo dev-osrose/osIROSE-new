@@ -26,31 +26,29 @@ IF(ENABLE_TESTING)
 	#Build GoogleTest
 	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
 	
-	#Build GoogleMock
-	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
-	SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
-	SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-	SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
-	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
-	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 		#Build Protobuf
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
 		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/include)
 		SET(PROTOBUF_BINARY_DIR ${protobuf_SOURCE_DIR})
+	ELSE()
+		#Build GoogleMock
+		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
+		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
+		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+		
+		#Set Protobuf Paths
+		SET(PROTOC_PATH ${CMAKE_SOURCE_DIR}/protobuf/bin)
+		SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
+		SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
 	ENDIF()
 ENDIF()
 
 SET(ASIO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/asio/asio/include)
 SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdParty/include)
 SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdParty/lib)
-
-#SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared" FORCE)
-#SET(protobuf_BUILD_TESTS OFF CACHE BOOL "Build tests" FORCE)
-#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
-SET(PROTOC_PATH ${CMAKE_SOURCE_DIR}/protobuf/bin)
-SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
-SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
 
 ADD_SUBDIRECTORY(src)
 
