@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "logconsole.h"
 #include "croseserver.h"
+#include "croseclient.h"
 
 CRose_Network::CRose_Network( )
 {
@@ -68,5 +69,7 @@ void CRose_Network::OnAccepted( tcp::socket _sock )
 	if ( _sock.is_open( ) )
 	{
 		//Do Something?
+		//CRoseClient* nClient = new CRoseClient( std::move (_sock) );
+		//TODO:: Add the new client to the client list!
 	}
 }

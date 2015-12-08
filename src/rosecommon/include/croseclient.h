@@ -8,6 +8,7 @@ class CRoseClient : public CNetwork_Asio
 {
 public:
 	CRoseClient();
+	CRoseClient( tcp::socket _sock );
 	virtual ~CRoseClient();
 private:
 	 // Callback functions

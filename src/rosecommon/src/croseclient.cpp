@@ -4,6 +4,11 @@ CRoseClient::CRoseClient( ) : CNetwork_Asio(), m_Crypt()
 {
 }
 
+CRoseClient::CRoseClient( tcp::socket _sock ) : CNetwork_Asio(), m_Crypt()
+{
+	SetSocket( std::move(_sock) );
+}
+
 CRoseClient::~CRoseClient( )
 {
 }

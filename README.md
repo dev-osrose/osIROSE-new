@@ -37,5 +37,5 @@ To run the servers execute the following:
 
     $ LoginServer&
     $ CharServer&
-    $ WorldServer&
+    $ MapServer&
 
