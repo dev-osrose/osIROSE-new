@@ -57,13 +57,13 @@ before_install:
 - ./ci/before_install.sh
 
 install:
-- ./ci/install.sh
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ./ci/install.sh; fi
 
 before_script:
-- mkdir build && cd build
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build && cd build; fi
 
 script: 
-- ../ci/script.sh
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ../ci/script.sh; fi
 
 notifications:
   slack:
