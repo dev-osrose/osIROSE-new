@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "logconsole.h"
-#include "crose_network.h"
+#include "croseserver.h"
 
 CRose_Network::CRose_Network( )
 {

@@ -41,7 +41,8 @@ INCLUDE_DIRECTORIES(
 
 SET( SOURCES_BASE
   src/crosecrypt 
-  src/crose_network )
+  src/croseserver
+  src/croseclient )
 
 add_library(RoseCommon STATIC ${SOURCES_BASE})
 

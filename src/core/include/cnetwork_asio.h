@@ -33,7 +33,7 @@ class CLogConsole;
 
 class CNetwork_Asio : public INetwork
 {
-	public:
+public:
 	CNetwork_Asio( );
 	virtual ~CNetwork_Asio( );
 
@@ -49,7 +49,7 @@ class CNetwork_Asio : public INetwork
 	virtual bool Send( uint8_t* _buffer );
 	virtual bool Recv( uint16_t _size = MAX_PACKET_SIZE );
 	void         SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable( _enabled ); }
-	protected:
+protected:
 	void AcceptConnection( );
 	void ProcessSend( );
 	void ProcessRecv( );
@@ -68,7 +68,9 @@ class CNetwork_Asio : public INetwork
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
 
-	private:
+	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
+
+private:
 	//std::unique_ptr<asio::io_service::work> m_Work;
 	asio::io_service       m_io_service;
 	tcp::socket            m_socket;

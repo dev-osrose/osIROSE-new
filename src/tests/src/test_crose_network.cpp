@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <stdint.h>
-#include "crose_network.h"
+#include "croseserver.h"
 #include "ePacketType.h"
 
 TEST( TestRoseNetwork, Constructor )
