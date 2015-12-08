@@ -22,15 +22,19 @@ OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
 IF(ENABLE_TESTING)
-	SET(CMAKE_RULE_MESSAGES OFF)
-	#Build GoogleTest
-	#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
-	
+	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+		#Build GoogleTest
+		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
+		
 		#Build Protobuf
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
-		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/include)
-		SET(PROTOBUF_BINARY_DIR ${protobuf_SOURCE_DIR})
+		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
+		SET(PROTOBUF_BINARY_DIR ${protobuf_BINARY_DIR})
+		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
+		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 	ELSE()
 		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
@@ -44,6 +48,7 @@ IF(ENABLE_TESTING)
 		SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
 		SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
 	ENDIF()
+	SET(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
 SET(ASIO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/asio/asio/include)
