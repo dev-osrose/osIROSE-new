@@ -1,9 +1,17 @@
 osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
-Linux [![Build Status](https://travis-ci.org/RavenX8/osIROSE-new.svg)](https://travis-ci.org/RavenX8/osIROSE-new)
-Windows [![Build status](https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3?svg=true)](https://ci.appveyor.com/project/RavenX8/osirose-new)
-Unit Tests [![Coverage Status](https://coveralls.io/repos/RavenX8/osIROSE-new/badge.svg?branch=trunk&service=github)](https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk)
+## Build status
+| [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] |
+| :---------------: | :-----------------: | :-------------------: |
+| ![lin-badge]      | ![win-badge]        | ![cov-badge]          |
+
+[lin-badge]: https://travis-ci.org/RavenX8/osIROSE-new.svg?branch=trunk "Travis build status"
+[lin-link]:  https://travis-ci.org/RavenX8/osIROSE-new "Travis build status"
+[win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "AppVeyor build status"
+[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "AppVeyor build status"
+[cov-badge]: https://coveralls.io/repos/RavenX8/osIROSE-new/badge.svg?branch=trunk
+[cov-link]:  https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk
 
 [Official website](http://forum.dev-osrose.com/index.php)
 
