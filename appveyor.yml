@@ -32,7 +32,7 @@ install:
 - cmd: "./ci/msvc_install.bat"
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt
-#- C:\projects\osIROSE\tools\protobuf -> clear_cache.txt
+- C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
 #build: #off
 #  project: osIROSE.sln
 #  parallel: true
