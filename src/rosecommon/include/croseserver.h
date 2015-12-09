@@ -3,13 +3,15 @@
 
 #include "cnetwork_asio.h"
 
-class CRose_Network : public CNetwork_Asio
-{
-	public:
-	CRose_Network( );
-	virtual ~CRose_Network( );
+class CRoseClient;
 
-	private:
+class CRoseServer : public CNetwork_Asio
+{
+public:
+	CRoseServer( );
+	virtual ~CRoseServer( );
+
+private:
 	// Callback functions
 	virtual bool OnConnect( );
 	virtual void OnConnected( );
@@ -23,6 +25,8 @@ class CRose_Network : public CNetwork_Asio
 	virtual void OnSent( );
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
+
+	std::list< CRoseClient* > m_ClientList;
 };
 
 #endif

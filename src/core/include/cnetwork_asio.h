@@ -69,6 +69,7 @@ protected:
 	virtual void OnAccepted( tcp::socket _sock );
 
 	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
+	CLogConsole m_Log;
 
 private:
 	//std::unique_ptr<asio::io_service::work> m_Work;
@@ -82,7 +83,6 @@ private:
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
-	CLogConsole m_Log;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
 	bool        m_Active;
 };

@@ -80,6 +80,7 @@ public:
 
 	void RenderProgressBar(int width,int per);
 
+	void SetIdentity( const char *id );
 	static void SetDisplayOmittable(bool a)
 	{
 		display_omittable=a;

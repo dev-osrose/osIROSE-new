@@ -763,5 +763,13 @@ void CLogConsole::RenderProgressBar( int width, int per )
 #endif
 }
 
-int  CLogConsole::maxlen            = 0;
+void CLogConsole::SetIdentity( const char *id )
+{
+	mylen = strlen( id );
+	if (mylen > maxlen)
+		maxlen = mylen;
+	strcpy( ident, id );
+}
+
+int  CLogConsole::maxlen = 0;
 bool CLogConsole::display_omittable = false;

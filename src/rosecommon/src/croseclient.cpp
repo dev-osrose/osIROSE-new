@@ -1,12 +1,14 @@
 #include "croseclient.h"
 
-CRoseClient::CRoseClient( ) : CNetwork_Asio(), m_Crypt()
+CRoseClient::CRoseClient( ) : CNetwork_Asio( ), m_Crypt( )
 {
+	m_Log.SetIdentity( "CRoseClient" );
 }
 
-CRoseClient::CRoseClient( tcp::socket _sock ) : CNetwork_Asio(), m_Crypt()
+CRoseClient::CRoseClient( tcp::socket _sock ) : CNetwork_Asio( ), m_Crypt( )
 {
 	SetSocket( std::move(_sock) );
+	m_Log.SetIdentity( "CRoseClient" );
 }
 
 CRoseClient::~CRoseClient( )
@@ -76,4 +78,5 @@ bool CRoseClient::OnAccept( )
 void CRoseClient::OnAccepted( tcp::socket _sock )
 {
 	SetSocket( std::move(_sock) );
+	m_Log.eicprintf( "OnAccepted called on CRoseClient! This should not happen!!!!\n" );
 }

@@ -3,73 +3,76 @@
 #include "croseserver.h"
 #include "croseclient.h"
 
-CRose_Network::CRose_Network( )
+CRoseServer::CRoseServer( )
+{
+	m_Log.SetIdentity( "CRoseServer" );
+}
+
+CRoseServer::~CRoseServer( )
 {
 }
 
-CRose_Network::~CRose_Network( )
-{
-}
-
-bool CRose_Network::OnConnect( )
-{
-	return true;
-}
-
-void CRose_Network::OnConnected( )
-{
-}
-
-bool CRose_Network::OnListen( )
+bool CRoseServer::OnConnect( )
 {
 	return true;
 }
 
-void CRose_Network::OnListening( )
+void CRoseServer::OnConnected( )
 {
 }
 
-bool CRose_Network::OnDisconnect( )
-{
-	return true;
-}
-
-void CRose_Network::OnDisconnected( )
-{
-}
-
-bool CRose_Network::OnReceive( )
+bool CRoseServer::OnListen( )
 {
 	return true;
 }
 
-void CRose_Network::OnReceived( uint8_t* _buffer, uint16_t _size )
+void CRoseServer::OnListening( )
+{
+}
+
+bool CRoseServer::OnDisconnect( )
+{
+	return true;
+}
+
+void CRoseServer::OnDisconnected( )
+{
+}
+
+bool CRoseServer::OnReceive( )
+{
+	return true;
+}
+
+void CRoseServer::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	(void)_buffer;
 	(void)_size;
 }
 
-bool CRose_Network::OnSend( uint8_t* _buffer )
+bool CRoseServer::OnSend( uint8_t* _buffer )
 {
-	(void)_buffer;
+	CNetwork_Asio::OnSend( _buffer );
 	return true;
 }
 
-void CRose_Network::OnSent( )
+void CRoseServer::OnSent( )
 {
 }
 
-bool CRose_Network::OnAccept( )
+bool CRoseServer::OnAccept( )
 {
 	return true;
 }
 
-void CRose_Network::OnAccepted( tcp::socket _sock )
+void CRoseServer::OnAccepted( tcp::socket _sock )
 {
 	if ( _sock.is_open( ) )
 	{
 		//Do Something?
-		//CRoseClient* nClient = new CRoseClient( std::move (_sock) );
-		//TODO:: Add the new client to the client list!
+		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
+		CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
+		m_Log.icprintf( CL_RESET CL_WHITE "Client connected from: %s\n" CL_RESET, _address.c_str( ) );
+		m_ClientList.push_back( nClient );
 	}
 }

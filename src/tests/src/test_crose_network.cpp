@@ -6,12 +6,12 @@
 
 TEST( TestRoseNetwork, Constructor )
 {
-	CRose_Network network;
+	CRoseServer network;
 }
 
 TEST( TestRoseNetwork, TestInit )
 {
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) );
 	EXPECT_EQ( 29000, network.GetPort( ) );
 	EXPECT_EQ( "127.0.0.1", network.GetIpAddress( ) );
@@ -19,7 +19,7 @@ TEST( TestRoseNetwork, TestInit )
 
 TEST( TestRoseNetwork, TestInitHostLessThanTwo )
 {
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( false, network.Init( "0", 29000 ) );
 	EXPECT_NE( 29000, network.GetPort( ) );
 	EXPECT_NE( "0", network.GetIpAddress( ) );
@@ -31,7 +31,7 @@ TEST( TestRoseNetwork, TestConnectIp )
 	//	std::condition_variable cv;
 	//	bool done = false;
 
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	//	EXPECT_CALL( network, OnConnect() )
@@ -64,7 +64,7 @@ TEST( TestRoseNetwork, TestConnectIp )
 
 TEST( TestRoseNetwork, TestRecv )
 {
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) );
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Make sure we wait a little for data to come in
@@ -73,7 +73,7 @@ TEST( TestRoseNetwork, TestRecv )
 
 TEST( TestRoseNetwork, TestReconnect )
 {
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Disconnect( ) );
@@ -89,7 +89,7 @@ TEST( TestRoseNetwork, TestConnectHostName )
 	//        std::condition_variable cv;
 	//        bool done = false;
 
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	//	EXPECT_CALL( network, OnConnect() ).Times(1);
@@ -115,7 +115,7 @@ TEST( TestRoseNetwork, TestListen )
 	//        std::condition_variable cv;
 	//        bool done = false;
 
-	CRose_Network network;
+	CRoseServer network;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 	//	EXPECT_CALL( network, OnListening() )
@@ -137,7 +137,7 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	//	std::condition_variable cv;
 	//	bool done = false;
 
-	CRose_Network netConnect, network;
+	CRoseServer netConnect, network;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29100 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 	//	EXPECT_CALL( network, OnListening() )
