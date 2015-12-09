@@ -14,16 +14,12 @@ private:
 	 // Callback functions
         virtual bool OnConnect( );
         virtual void OnConnected( );
-        virtual bool OnListen( );
-        virtual void OnListening( );
         virtual bool OnDisconnect( );
         virtual void OnDisconnected( );
         virtual bool OnReceive( );
         virtual void OnReceived( uint8_t* _buffer, uint16_t _size );
         virtual bool OnSend( uint8_t* _buffer );
         virtual void OnSent( );
-        virtual bool OnAccept( );
-        virtual void OnAccepted( tcp::socket _sock );
 
 	PacketCodec m_Crypt;
 };

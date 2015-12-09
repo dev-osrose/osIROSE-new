@@ -25,15 +25,6 @@ void CRoseClient::OnConnected( )
 {
 }
 
-bool CRoseClient::OnListen( )
-{
-	return true;
-}
-
-void CRoseClient::OnListening( )
-{
-}
-
 bool CRoseClient::OnDisconnect( )
 {
 	return true;
@@ -50,12 +41,14 @@ bool CRoseClient::OnReceive( )
 
 void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
+	m_Log.oicprintf( "Received a packet on CRoseClient: _size = %i\n", _size );
 	//decrypt packet now
 	m_Crypt.decodeClientHeader( _buffer );
-	
-	if( (uint16_t)_buffer[0] >= _size )
+
+	if( (uint16_t)_buffer[0] <= _size )
 	{
 		m_Crypt.decodeClientBody( _buffer );
+		ResetBuffer();
 	}
 
 	//HandlePacket( _buffer );
@@ -68,15 +61,4 @@ bool CRoseClient::OnSend( uint8_t* _buffer )
 }
 void CRoseClient::OnSent( )
 {
-}
-
-bool CRoseClient::OnAccept( )
-{
-	return true;
-}
-
-void CRoseClient::OnAccepted( tcp::socket _sock )
-{
-	SetSocket( std::move(_sock) );
-	m_Log.eicprintf( "OnAccepted called on CRoseClient! This should not happen!!!!\n" );
 }

@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "croseserver.h"
+#include "croseclient.h"
 #include "ePacketType.h"
 
 TEST( TestRoseNetwork, Constructor )
@@ -73,10 +74,10 @@ TEST( TestRoseNetwork, TestRecv )
 
 TEST( TestRoseNetwork, TestReconnect )
 {
-	CRoseServer network;
+	CRoseClient network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
-	EXPECT_NO_FATAL_FAILURE( network.Disconnect( ) );
+	//EXPECT_NO_FATAL_FAILURE( network.Disconnect( ) );
 	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	EXPECT_NO_FATAL_FAILURE( network.Reconnect( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
@@ -137,7 +138,8 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	//	std::condition_variable cv;
 	//	bool done = false;
 
-	CRoseServer netConnect, network;
+	CRoseServer network;
+	CRoseClient netConnect;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29100 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 	//	EXPECT_CALL( network, OnListening() )
@@ -154,6 +156,7 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29100 ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 
+	//std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
 	pak->pChannelListReq.lServerID = 0x77;
 	netConnect.Send( pak->Buffer );

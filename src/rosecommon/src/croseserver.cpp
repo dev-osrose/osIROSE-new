@@ -10,6 +10,13 @@ CRoseServer::CRoseServer( )
 
 CRoseServer::~CRoseServer( )
 {
+	std::lock_guard<std::mutex> lock(m_ClientListMutex);
+	//for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
+	//	delete m_ClientList;
+	for (auto &client : m_ClientList)
+		delete client;
+
+	m_ClientList.clear();
 }
 
 bool CRoseServer::OnConnect( )
@@ -39,26 +46,29 @@ void CRoseServer::OnDisconnected( )
 {
 }
 
-bool CRoseServer::OnReceive( )
+/*bool CRoseServer::OnReceive( )
 {
 	return true;
 }
 
 void CRoseServer::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
-	(void)_buffer;
-	(void)_size;
+	//Decrypt buffer here
+	//Check header to see if we have the full packet.
+	//If header.Size < _size we have more then one packet in the buffer.
+	CNetwork_Asio::OnReceived( _buffer, _size );
 }
 
 bool CRoseServer::OnSend( uint8_t* _buffer )
 {
+	//Encrypt buffer here
 	CNetwork_Asio::OnSend( _buffer );
 	return true;
 }
 
 void CRoseServer::OnSent( )
 {
-}
+}*/
 
 bool CRoseServer::OnAccept( )
 {
@@ -70,9 +80,10 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 	if ( _sock.is_open( ) )
 	{
 		//Do Something?
+		std::lock_guard<std::mutex> lock(m_ClientListMutex);
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
 		CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
-		m_Log.icprintf( CL_RESET CL_WHITE "Client connected from: %s\n" CL_RESET, _address.c_str( ) );
+		m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
 		m_ClientList.push_back( nClient );
 	}
 }

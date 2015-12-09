@@ -69,6 +69,7 @@ protected:
 	virtual void OnAccepted( tcp::socket _sock );
 
 	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
+	void ResetBuffer() { BufCount = 0; }
 	CLogConsole m_Log;
 
 private:
@@ -79,11 +80,13 @@ private:
 	std::queue< uint8_t* > m_SendQueue;
 	std::queue< uint8_t* > m_DiscardQueue;
 	std::mutex             m_SendMutex;
+	std::mutex	       m_RecvMutex;
 	std::mutex             m_DiscardMutex;
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
+	uint16_t    BufCount;
 	bool        m_Active;
 };
 
