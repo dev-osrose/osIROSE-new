@@ -5,12 +5,15 @@
 #include "cnetwork_asio.h"
 
 class CRoseClient;
+class CRoseISC;
 
 class CRoseServer : public CNetwork_Asio
 {
 public:
-	CRoseServer( );
+	CRoseServer( bool _iscServer = false );
 	virtual ~CRoseServer( );
+
+	bool IsISCServer() { return m_ISCServer; }
 
 private:
 	// Callback functions
@@ -27,6 +30,7 @@ private:
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
 
+	bool m_ISCServer;
 	std::list< CRoseClient* > m_ClientList;
 	std::mutex m_ClientListMutex;
 };

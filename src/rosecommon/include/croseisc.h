@@ -1,28 +1,25 @@
-#ifndef _CROSECLIENT_H_
-#define _CROSECLIENT_H_
+#ifndef _CROSEISC_H_
+#define _CROSEISC_H_
 
-#include "crosecrypt.h"
-#include "cnetwork_asio.h"
+#include "croseclient.h"
 
-class CRoseClient : public CNetwork_Asio
+class CRoseISC : public CRoseClient
 {
 public:
-	CRoseClient();
-	CRoseClient( tcp::socket _sock );
-	virtual ~CRoseClient();
+	CRoseISC();
+	CRoseISC( tcp::socket _sock );
+	virtual ~CRoseISC();
 private:
-	 // Callback functions
-        virtual bool OnConnect( );
+	// Override the callback functions we will use only
+//	virtual bool OnConnect( );
         virtual void OnConnected( );
         virtual bool OnDisconnect( );
         virtual void OnDisconnected( );
-        virtual bool OnReceive( );
+//        virtual bool OnReceive( );
         virtual void OnReceived( uint8_t* _buffer, uint16_t _size );
         virtual bool OnSend( uint8_t* _buffer );
         virtual void OnSent( );
 	virtual bool HandlePacket( uint8_t* _buffer );
-
-	PacketCodec m_Crypt;
 };
 
 #endif

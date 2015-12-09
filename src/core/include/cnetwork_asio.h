@@ -67,6 +67,7 @@ protected:
 	virtual void OnSent( );
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
+	virtual bool HandlePacket( uint8_t* _buffer );
 
 	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
 	void ResetBuffer() { BufCount = 0; }

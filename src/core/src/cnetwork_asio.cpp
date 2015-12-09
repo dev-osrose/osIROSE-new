@@ -303,3 +303,9 @@ void CNetwork_Asio::ProcessRecv( )
 	if( m_socket.is_open() )
 		Recv();
 }
+
+bool CNetwork_Asio::HandlePacket( uint8_t* _buffer )
+{
+	(void)_buffer;
+	return true;
+}

@@ -2,8 +2,9 @@
 #include "logconsole.h"
 #include "croseserver.h"
 #include "croseclient.h"
+#include "croseisc.h"
 
-CRoseServer::CRoseServer( )
+CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
 {
 	m_Log.SetIdentity( "CRoseServer" );
 }
@@ -82,7 +83,16 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 		//Do Something?
 		std::lock_guard<std::mutex> lock(m_ClientListMutex);
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
-		CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
+		CRoseClient* nClient = nullptr;
+		if( IsISCServer() == false )
+		{
+			nClient = new CRoseClient( std::move( _sock ) );
+		}
+		else
+		{
+			nClient = new CRoseISC( std::move( _sock ) );
+		}
+
 		m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
 		m_ClientList.push_back( nClient );
 	}

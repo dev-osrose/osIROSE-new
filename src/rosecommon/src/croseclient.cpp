@@ -1,4 +1,5 @@
 #include "croseclient.h"
+#include "ePacketType.h"
 
 CRoseClient::CRoseClient( ) : CNetwork_Asio( ), m_Crypt( )
 {
@@ -48,10 +49,9 @@ void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 	if( (uint16_t)_buffer[0] <= _size )
 	{
 		m_Crypt.decodeClientBody( _buffer );
+		HandlePacket( _buffer );
 		ResetBuffer();
 	}
-
-	//HandlePacket( _buffer );
 }
 
 bool CRoseClient::OnSend( uint8_t* _buffer )
@@ -61,4 +61,18 @@ bool CRoseClient::OnSend( uint8_t* _buffer )
 }
 void CRoseClient::OnSent( )
 {
+}
+
+bool CRoseClient::HandlePacket( uint8_t* _buffer )
+{
+        CPacket* pak = (CPacket*)_buffer;
+        switch( pak->Header.Command )
+        {
+        default:
+                {
+                        m_Log.eicprintf( "Unknown Packet Type: %i\n", pak->Header.Command );
+                        return false;
+                }
+        }
+        return true;
 }
