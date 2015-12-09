@@ -9,7 +9,7 @@ public:
 	CRoseISC();
 	CRoseISC( tcp::socket _sock );
 	virtual ~CRoseISC();
-private:
+protected:
 	// Override the callback functions we will use only
 //	virtual bool OnConnect( );
         virtual void OnConnected( );

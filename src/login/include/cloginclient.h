@@ -8,6 +8,9 @@ class CLoginClient : public CRoseClient
 public:
 	CLoginClient( );
 	CLoginClient( tcp::socket _sock );
+
+protected:
+	bool HandlePacket( uint8_t* _buffer );
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "cloginserver.h"
 #include "cloginclient.h"
 #include "cloginisc.h"
+#include "ePacketType.h"
 
 CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc )
 {
@@ -44,6 +45,14 @@ void CLoginServer::OnAccepted( tcp::socket _sock )
 
 bool CLoginServer::HandlePacket( uint8_t* _buffer )
 {
-	(void)_buffer;
+	CPacket* pak = (CPacket*)_buffer;
+        switch( pak->Header.Command )
+        {
+        default:
+                {
+                        CRoseServer::HandlePacket(_buffer);
+                        return false;
+                }
+        }
 	return true;
 }
