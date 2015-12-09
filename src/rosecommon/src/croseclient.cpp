@@ -56,7 +56,8 @@ void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 
 bool CRoseClient::OnSend( uint8_t* _buffer )
 {
-	m_Crypt.encodeServerPacket( _buffer );
+	(void)_buffer;
+	//m_Crypt.encodeServerPacket( _buffer );
 	return true;
 }
 void CRoseClient::OnSent( )
