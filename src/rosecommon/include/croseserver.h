@@ -15,7 +15,7 @@ public:
 
 	bool IsISCServer() { return m_ISCServer; }
 
-private:
+protected:
 	// Callback functions
 	virtual bool OnConnect( );
 	virtual void OnConnected( );

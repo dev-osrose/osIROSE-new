@@ -48,6 +48,7 @@ public:
 
 	virtual bool Send( uint8_t* _buffer );
 	virtual bool Recv( uint16_t _size = MAX_PACKET_SIZE );
+	bool         IsActive() { return m_Active; }
 	void         SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable( _enabled ); }
 protected:
 	void AcceptConnection( );

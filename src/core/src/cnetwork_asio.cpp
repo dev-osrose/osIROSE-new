@@ -102,6 +102,7 @@ bool CNetwork_Asio::Listen( )
 	m_Listener.set_option( tcp::acceptor::reuse_address( true ) );
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
+	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress().c_str(), GetPort() );
 	AcceptConnection( );
 	OnListening( );
 	return true;
@@ -206,6 +207,7 @@ bool CNetwork_Asio::OnListen( )
 
 void CNetwork_Asio::OnListening( )
 {
+//	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress().c_str(), GetPort() );
 }
 
 bool CNetwork_Asio::OnDisconnect( )

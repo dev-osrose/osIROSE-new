@@ -10,8 +10,8 @@ public:
 	CRoseClient();
 	CRoseClient( tcp::socket _sock );
 	virtual ~CRoseClient();
-private:
-	 // Callback functions
+protected:
+	// Callback functions
         virtual bool OnConnect( );
         virtual void OnConnected( );
         virtual bool OnDisconnect( );
