@@ -38,7 +38,6 @@ cache:
 #  parallel: true
 #  verbosity: minimal
 build_script:
-- mkdir build
 - cd build
 - cmake -DENABLE_TESTING=ON ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
