@@ -12,7 +12,7 @@
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_socket( m_io_service ), m_Listener( m_io_service ),  BufCount(0), m_Active( true )
+    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_socket( m_io_service ), m_Listener( m_io_service ), BufCount( 0 ), m_Active( true )
 {
 	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
 	m_IOThread = std::thread( [this]( ) {
@@ -74,7 +74,19 @@ bool CNetwork_Asio::Shutdown( )
 			m_Listener.close( ignored );
 		} );
 
-	//TODO: We need to clean up the memory in our queues
+	while ( !m_SendQueue.empty( ) )
+	{
+		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
+		m_SendQueue.pop( );
+		delete _buffer;
+	}
+
+	while ( !m_DiscardQueue.empty( ) )
+	{
+		uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
+		m_DiscardQueue.pop( );
+		delete _buffer;
+	}
 	return true;
 }
 
@@ -102,7 +114,7 @@ bool CNetwork_Asio::Listen( )
 	m_Listener.set_option( tcp::acceptor::reuse_address( true ) );
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
-	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress().c_str(), GetPort() );
+	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress( ).c_str( ), GetPort( ) );
 	AcceptConnection( );
 	OnListening( );
 	return true;
@@ -110,8 +122,8 @@ bool CNetwork_Asio::Listen( )
 
 bool CNetwork_Asio::Reconnect( )
 {
-	Disconnect();
-	Connect();
+	Disconnect( );
+	Connect( );
 	return true;
 }
 
@@ -137,31 +149,43 @@ bool CNetwork_Asio::Send( uint8_t* _buffer )
 bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 {
 	OnReceive( );
-//	std::error_code errorCode;
-//	int32_t length = 
-//		asio::read( m_socket, asio::buffer( Buffer, _size ), asio::transfer_at_least(6), errorCode );
-
-	if( m_RecvMutex.try_lock() )
+	//if ( m_RecvMutex.try_lock( ) )
 	{
-		asio::async_read( m_socket,
-	                  asio::buffer( &Buffer[BufCount], _size ),
-			  asio::transfer_at_least(6), // We want at least 6 bytes of data
-	                  [this]( std::error_code errorCode, std::size_t length ) {
-				  BufCount += length;
-		                  if ( !errorCode || BufCount >= 6 )
-		                  {
-					  m_Log.icprintf("length = %i, BufCount = %i\n", length, BufCount);
-			                  OnReceived( Buffer, (uint16_t)BufCount );
-		                  }
-		                  else
-		                  {
-					  //EC 2 = reached end of file (Nothing waiting to be read, this is okay)
-					  if(errorCode.value() != 2) 
-				                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value(), errorCode.message( ).c_str( ) );
-		                  }
-				  m_RecvMutex.unlock();
-				  //Recv( );
-		              } );
+		asio::error_code errorCode;
+		std::size_t length = asio::read( m_socket, asio::buffer( &Buffer[BufCount], _size ), asio::transfer_at_least( 6 ), errorCode );
+
+		BufCount += length;
+		if ( !errorCode || BufCount >= 6 )
+		{
+			m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
+			OnReceived( Buffer, (uint16_t)BufCount );
+		}
+		else
+		{
+			//EC 2 = reached end of file (Nothing waiting to be read, this is okay)
+			if ( errorCode.value( ) != 2 )
+				m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+		}
+
+// 		asio::async_read( m_socket,
+// 		                  asio::buffer( &Buffer[ BufCount ], _size ),
+// 		                  asio::transfer_at_least( 6 ), // We want at least 6 bytes of data
+// 		                  [this]( std::error_code errorCode, std::size_t length ) {
+// 			                  BufCount += length;
+// 			                  if ( !errorCode || BufCount >= 6 )
+// 			                  {
+// 				                  m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
+// 				                  OnReceived( Buffer, (uint16_t)BufCount );
+// 			                  }
+// 			                  else
+// 			                  {
+// 				                  //EC 2 = reached end of file (Nothing waiting to be read, this is okay)
+// 				                  if ( errorCode.value( ) != 2 )
+// 					                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+// 			                  }
+// 			                  //m_RecvMutex.unlock( );
+// 			                  //Recv( );
+// 			              } );
 	}
 	return true;
 }
@@ -174,6 +198,7 @@ void CNetwork_Asio::AcceptConnection( )
 		    {
 			    if ( this->OnAccept( ) ) // This should be changed to use a client session instead of a CNetwork_Asio class
 			    {
+					socket.non_blocking( true );
 				    // Do something here for the new connection.
 				    // Make sure to use std::move(socket)
 				    //std::make_shared<CClientSesson>( std::move(socket) );
@@ -207,7 +232,6 @@ bool CNetwork_Asio::OnListen( )
 
 void CNetwork_Asio::OnListening( )
 {
-//	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress().c_str(), GetPort() );
 }
 
 bool CNetwork_Asio::OnDisconnect( )
@@ -255,55 +279,52 @@ void CNetwork_Asio::OnAccepted( tcp::socket _sock )
 
 void CNetwork_Asio::ProcessSend( )
 {
-	if( m_socket.is_open() )
+	if ( m_socket.is_open( ) )
 	{
-	// Loop though all of m_SendQueue
-	std::lock_guard< std::mutex > lock( m_SendMutex );
+		// Loop though all of m_SendQueue
+		std::lock_guard< std::mutex > lock( m_SendMutex );
 
-	if ( m_SendQueue.empty( ) )
-		return;
+		if ( m_SendQueue.empty( ) )
+			return;
 
-	uint8_t* _buffer = std::move( m_SendQueue.front( ) );
-	m_SendQueue.pop( );
-	uint16_t _size = (uint16_t)_buffer[ 0 ];
+		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
+		m_SendQueue.pop( );
+		uint16_t _size = (uint16_t)_buffer[ 0 ];
 
-	{
-		std::lock_guard< std::mutex > lock2( m_DiscardMutex );
-		m_DiscardQueue.push( _buffer );
-	}
+		{
+			std::lock_guard< std::mutex > lock2( m_DiscardMutex );
+			m_DiscardQueue.push( _buffer );
+		}
 
-	// TODO:: push the buffer ptr into another queue so our async_write can delete the buffer after it's used
-	// We are currently leaking memory
+		asio::async_write( m_socket,
+		                   asio::buffer( _buffer,
+		                                 _size ),
+		                   [this]( std::error_code ec, std::size_t /*length*/ ) {
 
-	asio::async_write( m_socket,
-	                   asio::buffer( _buffer,
-	                                 _size ),
-	                   [this]( std::error_code ec, std::size_t /*length*/ ) {
+			                   if ( !ec )
+			                   {
+				                   std::lock_guard< std::mutex > lock( m_DiscardMutex );
+				                   uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
+				                   m_DiscardQueue.pop( );
 
-				   if ( !ec )
-		                   {
-			                   std::lock_guard< std::mutex > lock( m_DiscardMutex );
-			                   uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
-			                   m_DiscardQueue.pop( );
+				                   delete _buffer;
 
-			                   delete _buffer;
-
-			                   OnSent( );
-		                   }
-		                   else
-		                   {
-			                   m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::ProcessSend]: %s\n" CL_RESET, ec.message( ).c_str( ) );
-//			                   Disconnect( );
-		                   }
-		               } );
+				                   OnSent( );
+			                   }
+			                   else
+			                   {
+				                   m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::ProcessSend]: %s\n" CL_RESET, ec.message( ).c_str( ) );
+				                   //			                   Disconnect( );
+			                   }
+			               } );
 	}
 }
 
 void CNetwork_Asio::ProcessRecv( )
 {
 	// Loop though all of m_RecvQueue
-	if( m_socket.is_open() )
-		Recv();
+	if ( m_socket.is_open( ) )
+		Recv( );
 }
 
 bool CNetwork_Asio::HandlePacket( uint8_t* _buffer )

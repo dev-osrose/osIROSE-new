@@ -11,6 +11,7 @@ public:
 
 protected:
 	bool HandlePacket( uint8_t* _buffer );
+	void OnReceived( uint8_t* _buffer, uint16_t _size );
 };
 
 #endif

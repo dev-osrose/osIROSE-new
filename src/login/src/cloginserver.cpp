@@ -5,20 +5,15 @@
 
 CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc )
 {
-	if(true == _isc)
-                m_Log.SetIdentity("CLoginISCServer");
+	if ( true == _isc )
+		m_Log.SetIdentity( "CLoginISCServer" );
 	else
-		m_Log.SetIdentity("CLoginServer");
+		m_Log.SetIdentity( "CLoginServer" );
 }
 
 CLoginServer::~CLoginServer()
 {
 }
-
-//void CLoginServer::OnListening( )
-//{
-//	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress().c_str(), GetPort() );
-//}
 
 void CLoginServer::OnAccepted( tcp::socket _sock )
 {
@@ -46,13 +41,13 @@ void CLoginServer::OnAccepted( tcp::socket _sock )
 bool CLoginServer::HandlePacket( uint8_t* _buffer )
 {
 	CPacket* pak = (CPacket*)_buffer;
-        switch( pak->Header.Command )
-        {
-        default:
-                {
-                        CRoseServer::HandlePacket(_buffer);
-                        return false;
-                }
-        }
+	switch ( pak->Header.Command )
+	{
+	default:
+	{
+		CRoseServer::HandlePacket( _buffer );
+		return false;
+	}
+	}
 	return true;
 }
