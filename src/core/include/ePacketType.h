@@ -81,7 +81,7 @@ enum struct ePacketType : uint16_t
 //inline bool operator<=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs > rhs);}
 //inline bool operator>=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs < rhs);}
 inline bool operator! (const ePacketType& rhs){return static_cast<int32_t>(rhs) == 0;}
-inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs != static_cast<int32_t>(rhs));}
+inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs != static_cast<uint32_t>(rhs));}
 
 //TODO: Add structures for each type of packet so we don't have to use those nasty Add functions
 
