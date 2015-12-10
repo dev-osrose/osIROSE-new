@@ -16,10 +16,21 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	CPacket* pak = (CPacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
+	case ePacketType::PAKCS_SRV_SELECT_REQ:
+	{
+		break;
+	}
+	case ePacketType::PAKCS_LOGOUT_REQ:
+	{
+		break;
+	}
+	case ePacketType::PAKCS_LOGIN_REQ:
+	{
+		break;
+	}
 	default:
 	{
-		CRoseClient::HandlePacket( _buffer );
-		return false;
+		return CRoseClient::HandlePacket( _buffer );
 	}
 	}
 	return true;

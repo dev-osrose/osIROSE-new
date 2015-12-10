@@ -19,7 +19,7 @@ typedef uint64_t qword;
 // LC = Login -> server
 // CC = Char -> Client
 // WC = World -> client
-enum ePacketType
+enum struct ePacketType : uint16_t
 {
 	PAKSTART    = 0x700,
 	PAKCS_ALIVE = PAKSTART,
@@ -76,13 +76,20 @@ enum ePacketType
 	EPACKETMAX
 };
 
+//inline bool operator< (const ePacketType& lhs, const ePacketType& rhs){ return static_cast<int32_t>(lhs) < static_cast<int32_t>(rhs); }
+//inline bool operator> (const ePacketType& lhs, const ePacketType& rhs){return rhs < lhs;}
+//inline bool operator<=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs > rhs);}
+//inline bool operator>=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs < rhs);}
+inline bool operator! (const ePacketType& rhs){return static_cast<int32_t>(rhs) == 0;}
+inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs != static_cast<int32_t>(rhs));}
+
 //TODO: Add structures for each type of packet so we don't have to use those nasty Add functions
 
 // Packet information
 struct sPacketHeader
 {
 	uint16_t Size;    // Packet size
-	uint16_t Command; // Packet command
+	ePacketType Command; // Packet command
 	uint16_t Unused;  // unused?
 };
 
@@ -138,14 +145,14 @@ struct CPacket
 
 	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
-		Header.Command = mycommand;
+		Header.Command = (ePacketType)mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
 	}
 
 	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
-		Header.Command = (uint16_t)mycommand;
+		Header.Command = mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
 	}

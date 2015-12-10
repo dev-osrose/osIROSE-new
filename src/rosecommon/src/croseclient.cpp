@@ -49,7 +49,7 @@ void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 	//decrypt packet now
 	m_Crypt.decodeClientHeader( buf );
 
-	if( ((CPacket*)buf)->Header.Command < PAKSTART || ((CPacket*)buf)->Header.Command > EPACKETMAX )
+	if( ((CPacket*)buf)->Header.Command < ePacketType::PAKSTART || ((CPacket*)buf)->Header.Command > ePacketType::EPACKETMAX )
 	{
 		m_Log.eicprintf( "Unknown Packet Type: %i\n", ((CPacket*)buf)->Header.Command );
 		return;
@@ -77,8 +77,13 @@ void CRoseClient::OnSent( )
 bool CRoseClient::HandlePacket( uint8_t* _buffer )
 {
         CPacket* pak = (CPacket*)_buffer;
-        switch( pak->Header.Command )
+        switch( (ePacketType)pak->Header.Command )
         {
+	case ePacketType::PAKCS_ALIVE:
+	{
+		m_Log.icprintf( "Got keep alive packet\n" );
+		break;
+	}
         default:
                 {
                         m_Log.eicprintf( "Unknown Packet Type: %i\n", pak->Header.Command );

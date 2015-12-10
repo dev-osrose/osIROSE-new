@@ -41,7 +41,7 @@ TEST( TestConsoleLogging, TestRenderProgressBar )
 	for ( int i = 0; i <= 100; i++ )
 	{
 		g_Log.RenderProgressBar( 60, i );
-		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ); //sim work to be done
+		std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) ); //sim work to be done
 	}
 	g_Log.dcprintf("\n");
 }

@@ -32,6 +32,7 @@ protected:
 
 	bool m_ISCServer;
 	std::list< CRoseClient* > m_ClientList;
+	std::list< CRoseISC* > m_ISCList;
 	std::mutex m_ClientListMutex;
 };
 

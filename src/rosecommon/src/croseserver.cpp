@@ -19,8 +19,14 @@ CRoseServer::~CRoseServer( )
 		client->Shutdown();
 		delete client;
 	}
-
 	m_ClientList.clear();
+
+	for (auto &client : m_ISCList)
+        {
+                client->Shutdown();
+                delete client;
+        }
+        m_ISCList.clear();
 }
 
 bool CRoseServer::OnConnect( )
@@ -86,17 +92,21 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 		//Do Something?
 		std::lock_guard<std::mutex> lock(m_ClientListMutex);
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
-		CRoseClient* nClient = nullptr;
+		//CRoseClient* nClient = nullptr;
 		if( IsISCServer() == false )
 		{
-			nClient = new CRoseClient( std::move( _sock ) );
+			CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
+			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+	                m_ClientList.push_back( nClient );
 		}
 		else
 		{
-			nClient = new CRoseISC( std::move( _sock ) );
+			CRoseISC* nClient = new CRoseISC( std::move( _sock ) );
+			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
+	                m_ISCList.push_back( nClient );
 		}
 
-		m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-		m_ClientList.push_back( nClient );
+		//m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+		//m_ClientList.push_back( nClient );
 	}
 }
