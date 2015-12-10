@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "mock/mock_network_asio.h"
 #include "ePacketType.h"
+#include "logconsole.h"
 //#include "croseserver.h"
 
 //using ::testing::Expectation;
@@ -57,14 +58,20 @@ TEST( TestAsioNetworking, TestReconnect )
 
 TEST( TestAsioNetworking, TestConnectHostName )
 {
+//	CLogConsole::SetDisplayOmittable(true);
+//	CLogConsole log("TestAsioNetworking");
+//	log.icprintf("Construct\n");
 	CNetwork_Asio network;
+//	log.icprintf("Init\n");
 	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
 	//EXPECT_CALL( network, OnConnect( ) );
 	//EXPECT_CALL( network, OnConnected( ) );
+//	log.icprintf("Connecting\n");
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	//	EXPECT_CALL( network, OnDisconnect() )
 	//		.Times( testing::AnyNumber() );
+//	log.icprintf("Shutting down\n");
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
 

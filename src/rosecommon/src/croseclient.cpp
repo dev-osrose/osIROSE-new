@@ -47,6 +47,13 @@ void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 	memcpy( buf, _buffer, _size );
 
 	//decrypt packet now
+	m_Crypt.decodeClientHeader( buf );
+
+	if( ((CPacket*)buf)->Header.Command < PAKSTART || ((CPacket*)buf)->Header.Command > EPACKETMAX )
+	{
+		m_Log.eicprintf( "Unknown Packet Type: %i\n", ((CPacket*)buf)->Header.Command );
+		return;
+	}
 
 	if ( _size - 6 >= m_Crypt.decodeClientHeader( buf ) )
 	{
@@ -54,6 +61,7 @@ void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 		HandlePacket( buf );
 		ResetBuffer();
 	}
+	m_Log.oicprintf( "Received a packet on CRoseClient: _size: %i, Header.Size: %i\n", _size, ((CPacket*)buf)->Header.Size );
 }
 
 bool CRoseClient::OnSend( uint8_t* _buffer )

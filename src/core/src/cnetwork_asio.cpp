@@ -40,12 +40,15 @@ bool CNetwork_Asio::Run( )
 	//	std::cout << "run start\n";
 	//	m_Active = true;
 	//asio::io_service::work _Work( m_io_service );
+	//std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	while ( m_Active == true )
 	{
 		ProcessSend( );
 		ProcessRecv( );
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
+
+	m_Log.oicprintf( CL_RESET CL_WHITE "Network Prcess thread shutting down...\n" CL_RESET );
 	//	std::cout << "run ending\n";
 	//m_io_service.run( ); // this is to clean up
 	return true;
@@ -103,6 +106,7 @@ bool CNetwork_Asio::Connect( )
 			                     OnConnected( );
 		                     }
 		                 } );
+	m_Active = true;
 	return true;
 }
 
@@ -115,6 +119,7 @@ bool CNetwork_Asio::Listen( )
 	m_Listener.bind( endpoint );
 	m_Listener.listen( );
 	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress( ).c_str( ), GetPort( ) );
+	m_Active = true;
 	AcceptConnection( );
 	OnListening( );
 	return true;
@@ -149,43 +154,44 @@ bool CNetwork_Asio::Send( uint8_t* _buffer )
 bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 {
 	OnReceive( );
-	//if ( m_RecvMutex.try_lock( ) )
+	if ( m_RecvMutex.try_lock( ) )
 	{
-		asio::error_code errorCode;
-		std::size_t length = asio::read( m_socket, asio::buffer( &Buffer[BufCount], _size ), asio::transfer_at_least( 6 ), errorCode );
+//		asio::error_code errorCode;
+//		std::size_t length = asio::read( m_socket, asio::buffer( &Buffer[BufCount], _size ), asio::transfer_at_least( 6 ), errorCode );
+//		BufCount += length;
+//
+//		if ( !errorCode || errorCode.value() == 11 )
+//		{
+//			m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
+//			OnReceived( Buffer, (uint16_t)BufCount );
+//		}
+//		else
+//		{
+//			//EC 2 = reached end of file (Nothing waiting to be read, this is okay)
+//			if ( errorCode.value( ) != 2 )
+//				m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+//		}
+//		m_RecvMutex.unlock( );
 
-		BufCount += length;
-		if ( !errorCode || BufCount >= 6 )
-		{
-			m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
-			OnReceived( Buffer, (uint16_t)BufCount );
-		}
-		else
-		{
-			//EC 2 = reached end of file (Nothing waiting to be read, this is okay)
-			if ( errorCode.value( ) != 2 )
-				m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
-		}
-
-// 		asio::async_read( m_socket,
-// 		                  asio::buffer( &Buffer[ BufCount ], _size ),
-// 		                  asio::transfer_at_least( 6 ), // We want at least 6 bytes of data
-// 		                  [this]( std::error_code errorCode, std::size_t length ) {
-// 			                  BufCount += length;
-// 			                  if ( !errorCode || BufCount >= 6 )
-// 			                  {
-// 				                  m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
-// 				                  OnReceived( Buffer, (uint16_t)BufCount );
-// 			                  }
-// 			                  else
-// 			                  {
-// 				                  //EC 2 = reached end of file (Nothing waiting to be read, this is okay)
-// 				                  if ( errorCode.value( ) != 2 )
-// 					                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
-// 			                  }
-// 			                  //m_RecvMutex.unlock( );
-// 			                  //Recv( );
-// 			              } );
+ 		asio::async_read( m_socket,
+ 		                  asio::buffer( &Buffer[ BufCount ], _size ),
+ 		                  asio::transfer_at_least( 6 ), // We want at least 6 bytes of data
+ 		                  [this]( std::error_code errorCode, std::size_t length ) {
+ 			                  BufCount += length;
+ 			                  if ( !errorCode || errorCode.value() == 11 )
+ 			                  {
+ 				                  m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
+ 				                  OnReceived( Buffer, (uint16_t)BufCount );
+ 			                  }
+ 			                  else
+ 			                  {
+ 				                  //EC 2 = reached end of file (Nothing waiting to be read, this is okay)
+ 				                  if ( errorCode.value( ) != 2 )
+ 					                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+ 			                  }
+ 			                  m_RecvMutex.unlock( );
+ 			                  Recv( );
+ 			              } );
 	}
 	return true;
 }
