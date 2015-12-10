@@ -77,6 +77,8 @@ bool CNetwork_Asio::Shutdown( )
 			m_Listener.close( ignored );
 		} );
 
+	std::lock_guard< std::mutex > lock( m_SendMutex );
+	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 	while ( !m_SendQueue.empty( ) )
 	{
 		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
