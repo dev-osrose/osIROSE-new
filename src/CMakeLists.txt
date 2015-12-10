@@ -5,6 +5,11 @@ IF(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
+IF( ENABLE_ASAN )
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
+	SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
+ENDIF()
+
 ADD_SUBDIRECTORY(core)
 ADD_SUBDIRECTORY(rosecommon)
 ADD_SUBDIRECTORY(login)
@@ -15,8 +20,3 @@ IF(ENABLE_TESTING)
     ADD_SUBDIRECTORY(tests)
 ENDIF()
 
-#INSTALL(
-#    TARGETS LoginServer CharServer WorldServer
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#    ARCHIVE DESTINATION lib/static )
