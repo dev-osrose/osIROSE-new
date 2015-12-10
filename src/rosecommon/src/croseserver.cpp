@@ -15,7 +15,10 @@ CRoseServer::~CRoseServer( )
 	//for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
 	//	delete m_ClientList;
 	for (auto &client : m_ClientList)
+	{
+		client->Shutdown();
 		delete client;
+	}
 
 	m_ClientList.clear();
 }

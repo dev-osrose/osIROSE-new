@@ -43,8 +43,8 @@ bool CRoseClient::OnReceive( )
 void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	m_Log.oicprintf( "Received a packet on CRoseClient: _size = %i\n", _size );
-	uint8_t buf[MAX_PACKET_SIZE];
-	memcpy( buf, _buffer, _size );
+	uint8_t* buf = _buffer;//[MAX_PACKET_SIZE];
+	//memcpy( buf, _buffer, _size );
 
 	//decrypt packet now
 	m_Crypt.decodeClientHeader( buf );

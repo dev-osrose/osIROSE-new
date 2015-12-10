@@ -29,8 +29,11 @@ CNetwork_Asio::CNetwork_Asio( )
 
 CNetwork_Asio::~CNetwork_Asio( )
 {
+//	std::lock_guard< std::mutex > lock( m_SendMutex );
+//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
+
 	Shutdown( );
-	m_io_service.stop( );
+//	m_io_service.stop( );
 	m_IOThread.join( );
 	m_ProcessThread.join( );
 }
@@ -67,18 +70,20 @@ bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 
 bool CNetwork_Asio::Shutdown( )
 {
+	std::lock_guard< std::mutex > lock( m_SendMutex );
+	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 	//if ( m_socket.is_open( ) )
 	m_Active = false;
 	Disconnect( );
 
 	if ( m_Listener.is_open( ) )
-		m_io_service.dispatch( [this]( ) {
+		m_io_service.post( [this]( ) {
 			std::error_code ignored;
 			m_Listener.close( ignored );
 		} );
 
-	std::lock_guard< std::mutex > lock( m_SendMutex );
-	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
+//	std::lock_guard< std::mutex > lock( m_SendMutex );
+//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 	while ( !m_SendQueue.empty( ) )
 	{
 		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
@@ -92,6 +97,10 @@ bool CNetwork_Asio::Shutdown( )
 		m_DiscardQueue.pop( );
 		delete _buffer;
 	}
+
+	m_io_service.stop( );
+//        m_IOThread.join( );
+//        m_ProcessThread.join( );
 	return true;
 }
 
