@@ -40,9 +40,8 @@ bool CRoseClient::OnReceive( )
 	return true;
 }
 
-bool CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CRoseClient::OnReceived()
 {
-	m_Log.oicprintf( "Received a packet on CRoseClient: _size = %i\n", _size );
 	//uint8_t buf[MAX_PACKET_SIZE];
 	//memcpy( buf, Buffer, _size );
 
@@ -69,7 +68,7 @@ bool CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 	}
 
 	CPacket* pak = (CPacket*)&Buffer;
-	m_Log.oicprintf( "Received a packet on CRoseClient: _size: %i, Header.Size: %i\n", _size, pak->Header.Size );
+	m_Log.oicprintf( "Received a packet on CRoseClient: Header[%i, %i]\n", pak->Header.Size, pak->Header.Command );
 	HandlePacket( Buffer );
 	ResetBuffer();
 

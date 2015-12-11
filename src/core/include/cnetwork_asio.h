@@ -64,7 +64,7 @@ protected:
 	virtual bool OnDisconnect( );
 	virtual void OnDisconnected( );
 	virtual bool OnReceive( );
-	virtual bool OnReceived( uint8_t* _buffer, uint16_t _size );
+	virtual bool OnReceived( );
 	virtual bool OnSend( uint8_t* _buffer );
 	virtual void OnSent( );
 	virtual bool OnAccept( );

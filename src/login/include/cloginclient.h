@@ -11,7 +11,7 @@ public:
 
 protected:
 	virtual bool HandlePacket( uint8_t* _buffer );
-	virtual bool OnReceived( uint8_t* _buffer, uint16_t _size );
+	virtual bool OnReceived( );
 };
 
 #endif

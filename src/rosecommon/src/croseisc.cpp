@@ -29,12 +29,11 @@ void CRoseISC::OnDisconnected()
 {
 }
 
-bool CRoseISC::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CRoseISC::OnReceived()
 {
-	m_Log.oicprintf( "Received a packet on CRoseISC: _size = %i\n", _size );
-	if( (uint16_t)_buffer[0] <= _size )
+	//if( (uint16_t)_buffer[0] <= _size )
 	{
-		HandlePacket( _buffer );
+		HandlePacket( Buffer );
 		ResetBuffer();
 	}
 	return true;

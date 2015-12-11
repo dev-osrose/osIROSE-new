@@ -201,7 +201,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
  			                  if ( !errorCode || errorCode.value() == 11 )
  			                  {
  				                  //m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
- 				                  OnReceived( Buffer, (uint16_t)PacketOffset );
+ 				                  OnReceived();
  			                  }
  			                  else
  			                  {
@@ -274,10 +274,8 @@ bool CNetwork_Asio::OnReceive( )
 	return true;
 }
 
-bool CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CNetwork_Asio::OnReceived()
 {
-	(void)_buffer;
-	(void)_size;
 	return true;
 }
 

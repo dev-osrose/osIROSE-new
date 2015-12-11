@@ -40,7 +40,7 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	return true;
 }
 
-bool CLoginClient::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CLoginClient::OnReceived()
 {
-	return CRoseClient::OnReceived( _buffer, _size );
+	return CRoseClient::OnReceived();
 }

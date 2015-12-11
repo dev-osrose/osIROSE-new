@@ -38,7 +38,7 @@ class INetwork
 	virtual bool OnDisconnect( ) = 0;
 	virtual void OnDisconnected( ) = 0;
 	virtual bool OnReceive( ) = 0;
-	virtual bool OnReceived( uint8_t* _buffer, uint16_t _size ) = 0;
+	virtual bool OnReceived( ) = 0;
 	virtual bool OnSend( uint8_t* _buffer ) = 0;
 	virtual void OnSent( ) = 0;
 
