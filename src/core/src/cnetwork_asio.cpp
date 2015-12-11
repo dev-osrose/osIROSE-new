@@ -25,9 +25,6 @@ CNetwork_Asio::CNetwork_Asio()
 		Run( );
 	} );
 	//	m_ProcessThread.detach();
-
-	// Start the recv calls
-	Recv();
 }
 
 CNetwork_Asio::~CNetwork_Asio( )
@@ -209,8 +206,10 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
  				                  if ( errorCode.value( ) != 2 )
  					                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
  			                  }
+
 							  m_RecvCondition.notify_all( );
- 			                  Recv( );
+							  if ( m_Active )
+ 								Recv( );
  			              } );
 	}
 	return true;
@@ -249,6 +248,8 @@ bool CNetwork_Asio::OnConnect( )
 
 void CNetwork_Asio::OnConnected( )
 {
+	if ( !m_Listener.is_open( ) )
+		Recv();
 }
 
 bool CNetwork_Asio::OnListen( )
@@ -258,6 +259,8 @@ bool CNetwork_Asio::OnListen( )
 
 void CNetwork_Asio::OnListening( )
 {
+	if (!m_Listener.is_open())
+		Recv();
 }
 
 bool CNetwork_Asio::OnDisconnect( )

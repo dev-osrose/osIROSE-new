@@ -10,6 +10,7 @@ public:
 	CRoseClient();
 	CRoseClient( tcp::socket _sock );
 	virtual ~CRoseClient();
+
 protected:
 	// Callback functions
         virtual bool OnConnect( );

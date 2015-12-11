@@ -8,7 +8,8 @@ CRoseISC::CRoseISC( ) : CRoseClient( )
 
 CRoseISC::CRoseISC( tcp::socket _sock ) : CRoseClient( std::move(_sock) )
 {
-        m_Log.SetIdentity( "CRoseISC" );
+	m_Log.SetIdentity( "CRoseISC" );
+	Recv();
 }
 
 CRoseISC::~CRoseISC()
@@ -18,6 +19,7 @@ CRoseISC::~CRoseISC()
 void CRoseISC::OnConnected( )
 {
 	// Do encryption handshake here	
+	Recv();
 }
 
 bool CRoseISC::OnDisconnect( )

@@ -10,6 +10,7 @@ CRoseClient::CRoseClient( tcp::socket _sock ) : CNetwork_Asio( ), m_Crypt( )
 {
 	SetSocket( std::move(_sock) );
 	m_Log.SetIdentity( "CRoseClient" );
+	Recv();
 }
 
 CRoseClient::~CRoseClient( )
@@ -24,6 +25,7 @@ bool CRoseClient::OnConnect( )
 
 void CRoseClient::OnConnected( )
 {
+	CNetwork_Asio::OnConnected( );
 }
 
 bool CRoseClient::OnDisconnect( )
