@@ -25,6 +25,9 @@ CNetwork_Asio::CNetwork_Asio()
 		Run( );
 	} );
 	//	m_ProcessThread.detach();
+
+	// Start the recv calls
+	Recv();
 }
 
 CNetwork_Asio::~CNetwork_Asio( )
