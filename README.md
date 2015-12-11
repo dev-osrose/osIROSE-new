@@ -39,3 +39,14 @@ To run the servers execute the following:
     $ CharServer&
     $ MapServer&
 
+C++ Installation - Windows
+-----------------------
+
+To compile the servers run the following commands:
+
+    ./ci/msvc_install.bat
+    cd build
+    cmake ..
+    cmake --build .
+    
+This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in.
