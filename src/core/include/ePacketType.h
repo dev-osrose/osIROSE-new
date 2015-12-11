@@ -122,6 +122,12 @@ struct pakLoginReply : public sPacketHeader
 	uint16_t Unknown;
 };
 
+struct pakEncryptionRequest : public sPacketHeader
+{
+	uint8_t  Unknown;
+	uint32_t RandValue;
+};
+
 struct CPacket
 {
 	//unsigned short	Size;            // Packet size
@@ -138,6 +144,7 @@ struct CPacket
 		};
 		uint8_t Buffer[ 0x400 ];
 
+		pakEncryptionRequest pEncryptReq;
 		pakLoginReply      pLoginReply;
 		pakChannelList_Req pChannelListReq;
 		pakChannel_List    pChannelList;

@@ -11,25 +11,47 @@ CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
 
 CRoseServer::~CRoseServer( )
 {
-	std::lock_guard<std::mutex> lock(m_ClientListMutex);
+	std::lock_guard< std::mutex > lock( m_ClientListMutex );
 	//for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
 	//	delete m_ClientList;
-	for (auto &client : m_ClientList)
+	for ( auto& client : m_ClientList )
 	{
-		client->Shutdown();
+		client->Shutdown( );
 		delete client;
 	}
-	m_ClientList.clear();
+	m_ClientList.clear( );
 
-	for (auto &client : m_ISCList)
-        {
-                client->Shutdown();
-                delete client;
-        }
-        m_ISCList.clear();
+	for ( auto& client : m_ISCList )
+	{
+		client->Shutdown( );
+		delete client;
+	}
+	m_ISCList.clear( );
 }
 
-bool CRoseServer::OnConnect( )
+bool CRoseServer::Run()
+{
+	while (m_Active == true)
+	{
+		for (auto& client : m_ClientList)
+		{
+			if ( client->IsActive() == false )
+			{
+				client->Shutdown();
+				delete client;
+				m_ClientList.remove( client );
+			}
+		}
+		ProcessSend();
+		ProcessRecv();
+		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+	}
+
+	m_Log.icprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
+	return true;
+}
+
+bool CRoseServer::OnConnect()
 {
 	return true;
 }
@@ -97,13 +119,13 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 		{
 			CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
 			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-	                m_ClientList.push_back( nClient );
+	        m_ClientList.push_back( nClient );
 		}
 		else
 		{
 			CRoseISC* nClient = new CRoseISC( std::move( _sock ) );
 			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
-	                m_ISCList.push_back( nClient );
+	        m_ISCList.push_back( nClient );
 		}
 
 		//m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );

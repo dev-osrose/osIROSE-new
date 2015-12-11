@@ -13,6 +13,8 @@ public:
 	CRoseServer( bool _iscServer = false );
 	virtual ~CRoseServer( );
 
+	virtual bool Run( );
+
 	bool IsISCServer() { return m_ISCServer; }
 
 protected:

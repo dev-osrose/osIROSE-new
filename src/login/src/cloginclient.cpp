@@ -16,20 +16,18 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	CPacket* pak = (CPacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
-	case ePacketType::PAKCS_SRV_SELECT_REQ:
+	case ePacketType::PAKCS_CHANNEL_LIST_REQ:
 	{
 		break;
 	}
-	case ePacketType::PAKCS_LOGOUT_REQ:
+	case ePacketType::PAKCS_SRV_SELECT_REQ:
 	{
+		// Get Selected Server IP
 		break;
 	}
 	case ePacketType::PAKCS_LOGIN_REQ:
 	{
-		break;
-	}
-	case ePacketType::PAKCS_ACCEPT_REQ:
-	{
+		// Login Request
 		break;
 	}
 	default:
