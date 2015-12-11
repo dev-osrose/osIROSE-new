@@ -25,6 +25,7 @@
 #include <thread>
 #include "inetwork.h"
 #include "logconsole.h"
+#include <condition_variable>
 
 #define MAX_PACKET_SIZE 0x7FF
 
@@ -63,7 +64,7 @@ protected:
 	virtual bool OnDisconnect( );
 	virtual void OnDisconnected( );
 	virtual bool OnReceive( );
-	virtual void OnReceived( uint8_t* _buffer, uint16_t _size );
+	virtual bool OnReceived( uint8_t* _buffer, uint16_t _size );
 	virtual bool OnSend( uint8_t* _buffer );
 	virtual void OnSent( );
 	virtual bool OnAccept( );
@@ -71,24 +72,30 @@ protected:
 	virtual bool HandlePacket( uint8_t* _buffer );
 
 	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
-	void ResetBuffer() { BufCount = 0; }
+	void ResetBuffer() 
+	{ 
+		PacketOffset = 0; 
+		PacketSize = 6;
+	}
 	CLogConsole m_Log;
 
-private:
+protected:
 	//std::unique_ptr<asio::io_service::work> m_Work;
-	asio::io_service       m_io_service;
-	tcp::socket            m_socket;
-	tcp::acceptor          m_Listener;
-	std::queue< uint8_t* > m_SendQueue;
-	std::queue< uint8_t* > m_DiscardQueue;
-	std::mutex             m_SendMutex;
-	std::mutex	       m_RecvMutex;
-	std::mutex             m_DiscardMutex;
+	asio::io_service		m_io_service;
+	tcp::socket				m_socket;
+	tcp::acceptor			m_Listener;
+	std::queue< uint8_t* >	m_SendQueue;
+	std::queue< uint8_t* >	m_DiscardQueue;
+	std::mutex				m_SendMutex;
+	std::mutex				m_RecvMutex;
+	std::mutex				m_DiscardMutex;
+	std::condition_variable m_RecvCondition;
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
 	uint8_t     Buffer[ MAX_PACKET_SIZE ];
-	uint16_t    BufCount;
+	uint16_t    PacketOffset;
+	uint16_t	PacketSize;
 	bool        m_Active;
 };
 

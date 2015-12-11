@@ -10,8 +10,8 @@ public:
 	CLoginClient( tcp::socket _sock );
 
 protected:
-	bool HandlePacket( uint8_t* _buffer );
-	void OnReceived( uint8_t* _buffer, uint16_t _size );
+	virtual bool HandlePacket( uint8_t* _buffer );
+	virtual bool OnReceived( uint8_t* _buffer, uint16_t _size );
 };
 
 #endif

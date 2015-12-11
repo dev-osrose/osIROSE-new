@@ -10,6 +10,7 @@ CRoseClient::CRoseClient( tcp::socket _sock ) : CNetwork_Asio( ), m_Crypt( )
 {
 	SetSocket( std::move(_sock) );
 	m_Log.SetIdentity( "CRoseClient" );
+	Recv( );
 }
 
 CRoseClient::~CRoseClient( )
@@ -40,28 +41,40 @@ bool CRoseClient::OnReceive( )
 	return true;
 }
 
-void CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CRoseClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	m_Log.oicprintf( "Received a packet on CRoseClient: _size = %i\n", _size );
-	uint8_t* buf = _buffer;//[MAX_PACKET_SIZE];
-	//memcpy( buf, _buffer, _size );
+	//uint8_t buf[MAX_PACKET_SIZE];
+	//memcpy( buf, Buffer, _size );
+
+	if (PacketSize == 6)
+	{
+		PacketSize = m_Crypt.decodeClientHeader( (unsigned char*)&Buffer );
+
+		if (PacketSize < 6)
+		{
+			m_Log.eicprintf( "Client sent incorrect blockheader\n" );
+			return false;
+		}
+
+		if (PacketSize > 6)
+			return true;
+	}
 
 	//decrypt packet now
-	m_Crypt.decodeClientHeader( buf );
-
-	if( ((CPacket*)buf)->Header.Command < ePacketType::PAKSTART || ((CPacket*)buf)->Header.Command > ePacketType::EPACKETMAX )
+	if (!m_Crypt.decodeClientBody( (unsigned char*)&Buffer ))
 	{
-		m_Log.eicprintf( "Unknown Packet Type: %i\n", ((CPacket*)buf)->Header.Command );
-		return;
+		// ERROR!!!
+		m_Log.eicprintf( "Client sent illegal block\n"); 
+		return false;
 	}
 
-	if ( _size - 6 >= m_Crypt.decodeClientHeader( buf ) )
-	{
-		m_Crypt.decodeClientBody( buf );
-		HandlePacket( buf );
-		ResetBuffer();
-	}
-	m_Log.oicprintf( "Received a packet on CRoseClient: _size: %i, Header.Size: %i\n", _size, ((CPacket*)buf)->Header.Size );
+	CPacket* pak = (CPacket*)&Buffer;
+	m_Log.oicprintf( "Received a packet on CRoseClient: _size: %i, Header.Size: %i\n", _size, pak->Header.Size );
+	HandlePacket( Buffer );
+	ResetBuffer();
+
+	return true;
 }
 
 bool CRoseClient::OnSend( uint8_t* _buffer )

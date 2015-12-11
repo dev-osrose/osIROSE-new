@@ -11,8 +11,8 @@
 #include "logconsole.h"
 #include "cnetwork_asio.h"
 
-CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_socket( m_io_service ), m_Listener( m_io_service ), BufCount( 0 ), m_Active( true )
+CNetwork_Asio::CNetwork_Asio()
+: INetwork(), m_Log( "CNetwork_ASIO" ), m_socket( m_io_service ), m_Listener( m_io_service ), PacketOffset( 0 ), PacketSize( 6 ),  m_Active( true )
 {
 	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
 	m_IOThread = std::thread( [this]( ) {
@@ -165,8 +165,13 @@ bool CNetwork_Asio::Send( uint8_t* _buffer )
 bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 {
 	OnReceive( );
-	if ( m_RecvMutex.try_lock( ) )
 	{
+		/*std::lock_guard< std::mutex > lock( m_RecvMutex );
+		m_RecvCondition.wait_for( m_RecvMutex, std::chrono::seconds( 1 ), []
+		{
+			return ;
+		} );*/
+		(void)_size;
 //		asio::error_code errorCode;
 //		std::size_t length = asio::read( m_socket, asio::buffer( &Buffer[BufCount], _size ), asio::transfer_at_least( 6 ), errorCode );
 //		BufCount += length;
@@ -184,15 +189,16 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 //		}
 //		m_RecvMutex.unlock( );
 
+		uint8_t BytesToRead = PacketSize - PacketOffset;
  		asio::async_read( m_socket,
- 		                  asio::buffer( &Buffer[ BufCount ], _size ),
- 		                  asio::transfer_at_least( 6 ), // We want at least 6 bytes of data
+						  asio::buffer( &Buffer[PacketOffset], BytesToRead ),
+						  asio::transfer_exactly( BytesToRead ), // We want at least 6 bytes of data
  		                  [this]( std::error_code errorCode, std::size_t length ) {
- 			                  BufCount += length;
+ 			                  PacketOffset += length;
  			                  if ( !errorCode || errorCode.value() == 11 )
  			                  {
- 				                  m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
- 				                  OnReceived( Buffer, (uint16_t)BufCount );
+ 				                  //m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
+ 				                  OnReceived( Buffer, (uint16_t)PacketOffset );
  			                  }
  			                  else
  			                  {
@@ -200,7 +206,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
  				                  if ( errorCode.value( ) != 2 )
  					                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
  			                  }
- 			                  m_RecvMutex.unlock( );
+							  m_RecvCondition.notify_all( );
  			                  Recv( );
  			              } );
 	}
@@ -215,7 +221,7 @@ void CNetwork_Asio::AcceptConnection( )
 		    {
 			    if ( this->OnAccept( ) ) // This should be changed to use a client session instead of a CNetwork_Asio class
 			    {
-					socket.non_blocking( true );
+					//socket.non_blocking( true );
 				    // Do something here for the new connection.
 				    // Make sure to use std::move(socket)
 				    //std::make_shared<CClientSesson>( std::move(socket) );
@@ -265,10 +271,11 @@ bool CNetwork_Asio::OnReceive( )
 	return true;
 }
 
-void CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CNetwork_Asio::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
 	(void)_buffer;
 	(void)_size;
+	return true;
 }
 
 bool CNetwork_Asio::OnSend( uint8_t* _buffer )
@@ -340,8 +347,8 @@ void CNetwork_Asio::ProcessSend( )
 void CNetwork_Asio::ProcessRecv( )
 {
 	// Loop though all of m_RecvQueue
-	if ( m_socket.is_open( ) )
-		Recv( );
+// 	if ( m_socket.is_open( ) )
+// 		Recv( );
 }
 
 bool CNetwork_Asio::HandlePacket( uint8_t* _buffer )

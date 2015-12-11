@@ -28,6 +28,10 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	{
 		break;
 	}
+	case ePacketType::PAKCS_ACCEPT_REQ:
+	{
+		break;
+	}
 	default:
 	{
 		return CRoseClient::HandlePacket( _buffer );
@@ -36,7 +40,7 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	return true;
 }
 
-void CLoginClient::OnReceived( uint8_t* _buffer, uint16_t _size )
+bool CLoginClient::OnReceived( uint8_t* _buffer, uint16_t _size )
 {
-	CRoseClient::OnReceived( _buffer, _size );
+	return CRoseClient::OnReceived( _buffer, _size );
 }
