@@ -48,10 +48,10 @@ bool CLoginClient::UserLogin( CPacket* P )
 	{
 		// Okay to login!!
 		pak->pLoginReply.Result = 0;
-		pak->pLoginReply.Right = 0;
+		pak->pLoginReply.Right = 100;
 		pak->pLoginReply.Unknown = 0;
 
-		pak->AddString( "Testing123", true );
+		pak->AddString( "Test123", true );
 		pak->Add< uint32_t >( 1 );
 
 		Send( pak );
@@ -98,6 +98,8 @@ bool CLoginClient::ChannelList( CPacket* P )
 	channel.ChannelID = 1;
 	channel.pad = 0;
 	channel.Status = 0;
+
+	pak->AddBytes( (uint8_t*)&channel, sizeof(channelInfo) );
 	pak->AddString( "TestChannel", true );
 	Send( pak );
 
