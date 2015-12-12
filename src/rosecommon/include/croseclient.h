@@ -4,12 +4,17 @@
 #include "crosecrypt.h"
 #include "cnetwork_asio.h"
 
+struct CPacket;
+
 class CRoseClient : public CNetwork_Asio
 {
 public:
 	CRoseClient();
 	CRoseClient( tcp::socket _sock );
 	virtual ~CRoseClient();
+
+	virtual bool Send( CPacket* _buffer );
+	virtual bool Send( uint8_t* _buffer );
 
 protected:
 	// Callback functions

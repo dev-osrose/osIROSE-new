@@ -20,6 +20,16 @@ CRoseClient::~CRoseClient( )
 {
 }
 
+bool CRoseClient::Send( CPacket* _buffer )
+{
+	return CNetwork_Asio::Send( (uint8_t*)_buffer );
+}
+
+bool CRoseClient::Send( uint8_t* _buffer )
+{
+	return CNetwork_Asio::Send( _buffer );
+}
+
 // Callback functions
 bool CRoseClient::OnConnect( )
 {
@@ -106,7 +116,7 @@ bool CRoseClient::HandlePacket( uint8_t* _buffer )
 		CPacket* pak = new CPacket( 0x7ff, sizeof(pakEncryptionRequest) );
 		pak->pEncryptReq.Unknown = 0x02;
 		pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time( nullptr ));
-		Send( (uint8_t*)pak );
+		Send( pak );
 		break;
 	}
 	default:

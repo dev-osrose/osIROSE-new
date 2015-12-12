@@ -76,10 +76,6 @@ enum struct ePacketType : uint16_t
 	EPACKETMAX
 };
 
-//inline bool operator< (const ePacketType& lhs, const ePacketType& rhs){ return static_cast<int32_t>(lhs) < static_cast<int32_t>(rhs); }
-//inline bool operator> (const ePacketType& lhs, const ePacketType& rhs){return rhs < lhs;}
-//inline bool operator<=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs > rhs);}
-//inline bool operator>=(const ePacketType& lhs, const ePacketType& rhs){return !(lhs < rhs);}
 inline bool operator! (const ePacketType& rhs){return static_cast<int32_t>(rhs) == 0;}
 inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs != static_cast<uint32_t>(rhs));}
 
@@ -95,11 +91,10 @@ struct sPacketHeader
 
 struct channelInfo
 {
-	uint8_t  ChannelID;
-	uint8_t  pad1;
-	uint8_t  pad2;
+	uint16_t  ChannelID;
+	uint8_t  pad;
 	uint16_t Status;
-	uint32_t Right;
+	//uint32_t Right;
 	//Channel Name as string
 };
 
@@ -169,7 +164,7 @@ struct CPacket
 	}
 
 	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-	char* GetString( unsigned short pos );
+	//char*				 GetString( unsigned short pos );
 	//void               AddByte( unsigned char value );
 	//void               AddWord( unsigned short value );
 	//void               AddDWord( unsigned value );
@@ -212,6 +207,39 @@ struct CPacket
 	{
 		for ( uint32_t i = 0; i < len; i++ )
 			Add< uint8_t >( (uint8_t)value[ i ] );
+	}
+
+	template < class T >
+	T Get( uint16_t pos )
+	{
+		return Data[pos];
+	}
+
+	uint8_t* GetString( uint16_t pos, uint16_t len = 0 )
+	{
+		std::string str = "";
+		//bool NullTerminate = false;
+		if (len == 0)
+		{
+			//NullTerminate = true;
+			len = (Header.Size - 6);
+		}
+		else if (len > (Header.Size - 6 - pos))
+		{
+			len = (Header.Size - 6 - pos);
+		}
+
+		for (uint32_t i = 0; i < len; i++)
+		{
+			if (Get<uint8_t>( pos + i ) == 0)
+				break;
+
+			str += Get<uint8_t>( pos + i );
+		}
+
+		uint8_t* rtnString = new uint8_t[str.length() + 1];
+		memcpy( rtnString, str.c_str( ), str.length( ) + 1 );
+		return rtnString;
 	}
 	//*/
 };
