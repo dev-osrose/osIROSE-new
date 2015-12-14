@@ -64,75 +64,75 @@ class RoseRandomNumber
 		int						m_MySeed;
 };
 
-PACK(
+//PACK(
 struct HeadCryptedServer
 {
-	uint8_t AddBufferLen2 : 3;		//S2
-	uint8_t AddTableValue1 : 3;	//R1
-	uint8_t Command3 : 3;			//T3
-	uint8_t EncryptValue1 : 3;		//R7
-	uint8_t AddBufferLen3 : 3;		//S3
-	uint8_t AddTableValue3 : 3;	//R3
-	uint8_t Command2 : 3;			//T2
-	uint8_t AddTableValue4 : 2;	//R4
-	uint8_t Command1 : 3;			//T1
-	uint8_t EncryptAddValue1 : 2;	//R5
-	uint8_t AddBufferLen4 : 2;		//S4
-	uint8_t EncryptAddValue2 : 2;	//R6
+	uint32_t AddBufferLen2 : 3;		//S2
+	uint32_t AddTableValue1 : 3;	//R1
+	uint32_t Command3 : 3;			//T3
+	uint32_t EncryptValue1 : 3;		//R7
+	uint32_t AddBufferLen3 : 3;		//S3
+	uint32_t AddTableValue3 : 3;	//R3
+	uint32_t Command2 : 3;			//T2
+	uint32_t AddTableValue4 : 2;	//R4
+	uint32_t Command1 : 3;			//T1
+	uint32_t EncryptAddValue1 : 2;	//R5
+	uint32_t AddBufferLen4 : 2;		//S4
+	uint32_t EncryptAddValue2 : 2;	//R6
 	uint8_t AddBufferLen1 : 3;	//S1
 	uint8_t AddTableValue2 : 3;	//R2
 	uint8_t Command4 : 2;			//T4
-});
+};// );
 
-PACK(
+//PACK(
 struct HeadCryptedClient
 {
-	uint8_t Command2 : 3;			//T2
-	uint8_t AddTableValue2 : 3;	//R2
-	uint8_t AddBufferLen1 : 3;		//S1
-	uint8_t AddTableValue3 : 3;	//R3
-	uint8_t Command1 : 3;			//T1
-	uint8_t EncryptValue1 : 3;		//R7
-	uint8_t AddBufferLen2 : 3;		//S2
-	uint8_t EncryptAddValue2 : 2;	//R6
-	uint8_t AddBufferLen3 : 3;		//S3
-	uint8_t AddTableValue4 : 2;	//R4
-	uint8_t Command4 : 2;			//T4
-	uint8_t EncryptAddValue1 : 2;	//R5
+	uint32_t Command2 : 3;			//T2
+	uint32_t AddTableValue2 : 3;	//R2
+	uint32_t AddBufferLen1 : 3;		//S1
+	uint32_t AddTableValue3 : 3;	//R3
+	uint32_t Command1 : 3;			//T1
+	uint32_t EncryptValue1 : 3;		//R7
+	uint32_t AddBufferLen2 : 3;		//S2
+	uint32_t EncryptAddValue2 : 2;	//R6
+	uint32_t AddBufferLen3 : 3;		//S3
+	uint32_t AddTableValue4 : 2;	//R4
+	uint32_t Command4 : 2;			//T4
+	uint32_t EncryptAddValue1 : 2;	//R5
 	uint8_t Command3 : 3;			//T3
 	uint8_t AddTableValue1 : 3;	//R1
 	uint8_t AddBufferLen4 : 2;	//S4
-});
+};// );
 
-PACK(
+//PACK(
 struct HeadDecrypted
 {
-	uint8_t	AddBufferLen1 : 3;
-	uint8_t	AddBufferLen2 : 3;
-	uint8_t	AddBufferLen3 : 3;
-	uint8_t	AddBufferLen4 : 2;
-	uint8_t	Command1 : 3;
-	uint8_t	Command2 : 3;
-	uint8_t	Command3 : 3;
-	uint8_t	Command4 : 2;
-	uint8_t	AddTableValue1 : 3;
-	uint8_t	AddTableValue2 : 3;
-	uint8_t	AddTableValue3 : 3;
-	uint8_t	AddTableValue4 : 2;
-	uint8_t	EncryptAddValue1 : 2;
-	uint8_t	EncryptAddValue2 : 2;
-	uint8_t	EncryptValue1 : 3;
-});
+	uint64_t	AddBufferLen1 : 3;
+	uint64_t	AddBufferLen2 : 3;
+	uint64_t	AddBufferLen3 : 3;
+	uint64_t	AddBufferLen4 : 2;
+	uint64_t	Command1 : 3;
+	uint64_t	Command2 : 3;
+	uint64_t	Command3 : 3;
+	uint64_t	Command4 : 2;
+	uint64_t	AddTableValue1 : 3;
+	uint64_t	AddTableValue2 : 3;
+	uint64_t	AddTableValue3 : 3;
+	uint64_t	AddTableValue4 : 2;
+	uint64_t	EncryptAddValue1 : 2;
+	uint64_t	EncryptAddValue2 : 2;
+	uint64_t	EncryptValue1 : 3;
+};//);
 
-PACK(
+//PACK(
 struct Head
 {
-	uint16_t	AddBufferLen	: 11;
-	uint16_t	Command			: 11;
-	uint16_t	AddTableValue	: 11;
-	uint8_t		EncryptAddValue	: 4;
-	uint8_t		EncryptValue	: 3;
-});
+	uint64_t	AddBufferLen	: 11;
+	uint64_t	Command			: 11;
+	uint64_t	AddTableValue	: 11;
+	uint64_t	EncryptAddValue	: 4;
+	uint64_t	EncryptValue	: 3;
+};//);
 
 template<typename T, typename U>
 inline void FlipHeadMain( T a, U b )
@@ -168,6 +168,10 @@ class	PacketCodec
 		void		encodeServerPacket( unsigned char* buffer );
 		uint16_t	decodeClientHeader( unsigned char* buffer );
 		bool		decodeClientBody( unsigned char* buffer );
+
+		void		encodeClientPacket( unsigned char* buffer );
+		uint16_t	decodeServerHeader( unsigned char* buffer );
+		bool		decodeServerBody( unsigned char* buffer );
 
 		void	changeSeed(unsigned int seed);
 
