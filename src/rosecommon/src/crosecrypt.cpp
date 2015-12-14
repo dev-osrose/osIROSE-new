@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "crosecrypt.h"
 
 RoseRandomNumber::RoseRandomNumber( unsigned int seed )
@@ -95,8 +96,8 @@ void PacketCodec::encodeServerPacket( unsigned char* buffer )
 {
 	Head head;
 	memset( &head, 0, sizeof( head ) );
-	head.AddTableValue   = 0x100; // rand() % 0x1FF + 1
-	head.EncryptAddValue = 0x04;  // rand() % 0xF + 1
+	head.AddTableValue   = 0x100;//rand() % 0x1FF + 1;
+	head.EncryptAddValue = 0x04;//rand() % 0xF + 1;
 	head.EncryptValue    = head.AddTableValue + head.EncryptAddValue;
 	head.AddBufferLen = *( (unsigned short*)&buffer[ 0 ] );
 	head.Command = *( (unsigned short*)&buffer[ 2 ] );
@@ -117,6 +118,50 @@ void PacketCodec::encodeServerPacket( unsigned char* buffer )
 
 	FlipHeadFinal( (HeadCryptedServer*)buffer, (HeadDecrypted*)&head );
 }
+
+void PacketCodec::encodeClientPacket( unsigned char* buffer )
+{
+        Head head;
+        memset( &head, 0, sizeof( head ) );
+	head.AddTableValue   = 0x100; // rand() % 0x1FF + 1
+        head.EncryptAddValue = 0x04;
+	head.EncryptValue    = 0;//head.AddTableValue + head.EncryptAddValue;
+        head.AddBufferLen = *( (unsigned short*)&buffer[ 0 ] );
+        head.Command = *( (unsigned short*)&buffer[ 2 ] );
+        FlipHeadMain( (HeadCryptedClient*)buffer, (HeadDecrypted*)&head );
+
+        unsigned char Checksum = 0;
+        for ( int i = 0; i < 5; i++ )
+        {
+                Checksum = CrcTable[ ( (unsigned char*)&head )[ i ] ^ Checksum ];
+                buffer[ i ] ^= m_Rt[ i ][ head.AddTableValue ];
+        }
+        for ( int i = 6; i < head.AddBufferLen; i++ )
+        {
+                Checksum = CrcTable[ buffer[ i ] ^ Checksum ];
+                buffer[ i ] ^= m_Rt[ ( head.EncryptAddValue + i ) & 0xF ][ ( head.AddTableValue + i ) & 0x7FF ];
+        }
+        buffer[ 5 ] = Checksum;
+
+        FlipHeadFinal( (HeadCryptedClient*)buffer, (HeadDecrypted*)&head );
+}
+
+uint16_t PacketCodec::decodeServerHeader( unsigned char* buffer )
+{
+        Head head;
+        memset( &head, 0, sizeof( head ) );
+        FlipHeadFinal( (HeadDecrypted*)&head, (HeadCryptedServer*)buffer );
+
+        for ( int i = 0; i < 5; i++ )
+        {
+                buffer[ i ] ^= m_Rt[ i ][ head.AddTableValue ];
+        }
+
+        FlipHeadMain( (HeadDecrypted*)&head, (HeadCryptedServer*)buffer );
+        memcpy( buffer, &head, 5 );
+        return head.AddBufferLen;
+}
+
 uint16_t PacketCodec::decodeClientHeader( unsigned char* buffer )
 {
 	Head head;
@@ -131,6 +176,33 @@ uint16_t PacketCodec::decodeClientHeader( unsigned char* buffer )
 	FlipHeadMain( (HeadDecrypted*)&head, (HeadCryptedClient*)buffer );
 	memcpy( buffer, &head, 5 );
 	return head.AddBufferLen;
+}
+
+bool PacketCodec::decodeServerBody( unsigned char* buffer )
+{
+        Head head;
+        memset( &head, 0, sizeof( head ) );
+        memcpy( &head, buffer, 6 );
+        unsigned short buflen = (unsigned short)( head.AddBufferLen );
+
+        unsigned char Checksum = 0;
+        for ( int i = 0; i < 5; i++ )
+        {
+                Checksum = CrcTable[ ( (unsigned char*)&head )[ i ] ^ Checksum ];
+        }
+        for ( int i = 6; i < buflen; i++ )
+        {
+                buffer[ i ] ^= m_Rt[ ( head.EncryptAddValue + i ) & 0xF ][ ( head.AddTableValue + i ) & 0x7FF ];
+                Checksum = CrcTable[ buffer[ i ] ^ Checksum ];
+        }
+
+        if ( Checksum != buffer[ 5 ] )
+                return false;
+
+        *( (unsigned short*)&buffer[ 0 ] ) = buflen;
+        *( (unsigned short*)&buffer[ 2 ] ) = head.Command;
+
+        return true;
 }
 
 bool PacketCodec::decodeClientBody( unsigned char* buffer )
