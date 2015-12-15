@@ -9,9 +9,14 @@
 TEST( TestLoginServer, TestClientPacketPath )
 {
 	CLoginServer network;
+	CLoginISC* iscServ = new CLoginISC();
         CLoginClient_Mock netConnect;
         EXPECT_EQ( true, network.Init( "127.0.0.1", 29110 ) );
         EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
+
+	iscServ->SetId( 0 );
+	iscServ->SetType( 1 );
+	CLoginServer::GetISCList().push_back(iscServ);
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29110 ) );

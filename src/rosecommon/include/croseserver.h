@@ -17,6 +17,10 @@ public:
 
 	bool IsISCServer() { return m_ISCServer; }
 
+	static std::list< CRoseClient* > &GetClientList() { return m_ClientList; }
+	static std::list< CRoseISC* > &GetISCList() { return m_ISCList; }
+	static std::mutex &GetListMutex() { return m_ClientListMutex; }
+
 protected:
 	// Callback functions
 	virtual bool OnConnect( );
@@ -33,9 +37,9 @@ protected:
 	virtual void OnAccepted( tcp::socket _sock );
 
 	bool m_ISCServer;
-	std::list< CRoseClient* > m_ClientList;
-	std::list< CRoseISC* > m_ISCList;
-	std::mutex m_ClientListMutex;
+	static std::list< CRoseClient* > m_ClientList;
+	static std::list< CRoseISC* > m_ISCList;
+	static std::mutex m_ClientListMutex;
 };
 
 #endif

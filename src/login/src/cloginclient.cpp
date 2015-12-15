@@ -1,3 +1,5 @@
+#include "cloginserver.h"
+#include "cloginisc.h"
 #include "cloginclient.h"
 #include "ePacketType.h"
 
@@ -24,10 +26,19 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		uint32_t serverID = 1;
 
 		// loop the server list here
-
 		// TODO:: Make it so we can get the server list from the server class without holding a ptr to the server
-		pak->AddString( serverName.c_str(), true );
-                pak->Add< uint32_t >( serverID + 1 );
+		//TODO:: LOCK THE LIST!!!!!!! We don't want to walk through the list while servers are being added..
+		std::lock_guard< std::mutex > lock( CLoginServer::GetListMutex() );
+		for( auto& server : CLoginServer::GetISCList() )
+		{
+			if( server->GetType() == 1 )
+			{
+				pak->AddString( serverName.c_str(), true );
+		                pak->Add< uint32_t >( serverID++ );
+			}
+		}
+//		pak->AddString( serverName.c_str(), true );
+//                pak->Add< uint32_t >( serverID + 1 );
 	}
 	this->Send( pak );
 }
@@ -46,19 +57,11 @@ bool CLoginClient::UserLogin( CPacket* P )
 // 	{
 // 		// Already logged in
 // 		SendLoginReply( 4 );
-// 
-// 		delete _pass;
-// 		delete _user;
-// 		return true;
 // 	}
-// 
+//
 // 	{
 // 		// Servers are under inspection
 // 		SendLoginReply( 1 );
-// 
-// 		delete _pass;
-// 		delete _user;
-// 		return true;
 // 	}
 
 	{
@@ -70,12 +73,12 @@ bool CLoginClient::UserLogin( CPacket* P )
 // 		// Banned
 // 		SendLoginReply( 5 );
 // 	}
-// 
+//
 // 	{
 // 		// Incorrect Password
 // 		SendLoginReply( 3 );
 // 	}
-// 
+//
 // 	{
 // 		// Server Full
 // 		SendLoginReply( 8 );
@@ -133,7 +136,7 @@ bool CLoginClient::HandlePacket( uint8_t* _buffer )
 	case ePacketType::PAKCS_SRV_SELECT_REQ: return ServerSelect( pak );
 	case ePacketType::PAKCS_LOGIN_REQ: return UserLogin( pak );
 
-	default: 
+	default:
 		return CRoseClient::HandlePacket( _buffer );
 	}
 	return true;

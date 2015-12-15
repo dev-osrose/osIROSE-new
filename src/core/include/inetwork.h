@@ -21,6 +21,9 @@ class INetwork
 	virtual bool Reconnect( ) = 0;
 	virtual bool Disconnect( ) = 0;
 
+	virtual void    SetId( uint32_t _val ) { m_iId = _val; }
+        virtual void    SetType( uint32_t _val ) { m_iType = _val; }
+
 	virtual uint32_t    GetId( ) { return m_iId; }
 	virtual uint32_t    GetType( ) { return m_iType; }
 	virtual uint16_t    GetPort( ) { return m_wPort; }
