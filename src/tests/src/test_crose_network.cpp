@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include "croseserver.h"
-#include "croseclient.h"
+#include "mock/mock_croseclient.h"
 #include "croseisc.h"
 #include "ePacketType.h"
 
@@ -166,7 +166,38 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );
 
+	std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
+}
+
+TEST( TestRoseNetwork, TestListenAndConnect2 )
+{
+        CRoseServer network;
+        CRoseClient_Mock netConnect;
+        EXPECT_EQ( true, network.Init( "127.0.0.1", 29110 ) );
+        EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
+
+        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+        EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29110 ) );
+        EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
+
+        //std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+	CPacket* pak = new CPacket( ePacketType::PAKCS_ACCEPT_REQ );
+        netConnect.Send( pak );
+
+        CPacket* pak2 = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
+        pak2->pChannelListReq.lServerID = 0x77;
+        netConnect.Send( pak2 );
+
+	CPacket* pak3 = new CPacket( ePacketType::PAKCS_ALIVE );
+        netConnect.Send( pak3 );
+
+        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
+        EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
+        EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );
+
+        EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
 
 TEST( TestRoseNetwork, TestISCListenAndConnect )
@@ -196,7 +227,7 @@ TEST( TestRoseNetwork, TestISCListenAndConnect )
         //std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
         pak->pChannelListReq.lServerID = 0x77;
-        netConnect.Send( pak->Buffer );
+        netConnect.Send( pak );
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
         EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
