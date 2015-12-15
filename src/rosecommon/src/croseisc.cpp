@@ -60,7 +60,7 @@ bool CRoseISC::HandlePacket( uint8_t* _buffer )
 	{
 	default:
 		{
-			m_Log.eicprintf( "Unknown Packet Type: %i\n", pak->Header.Command );
+			m_Log.eicprintf( "Unknown Packet Type: 0x%X\n", pak->Header.Command );
 			return false;
 		}
 	}

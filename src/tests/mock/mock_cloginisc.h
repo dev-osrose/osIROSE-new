@@ -10,10 +10,21 @@ using ::testing::Invoke;
 class CLoginISC_Mock : public CLoginISC
 {
         public:
+	CLoginISC_Mock() : CLoginISC()
+	{
+		m_Log.SetIdentity( "CLoginISC_Mock" );
+	}
+
+	CLoginISC_Mock( tcp::socket _sock ) : CLoginISC( std::move(_sock) )
+        {
+		m_Log.SetIdentity( "CLoginISC_Mock" );
+        }
+
         protected:
         virtual bool OnSend( uint8_t* _buffer )
         {
-                m_Crypt.encodeClientPacket( _buffer );
+		(void)_buffer;
+//                m_Crypt.encodeClientPacket( _buffer );
                 return true;
         }
 };

@@ -60,7 +60,7 @@ TEST( TestLoginServer, TestISCPacketPath )
         CPacket* pak = new CPacket( ePacketType::PAKCS_ACCEPT_REQ );
         netConnect.Send( pak );
 
-        CPacket* pak4 = new CPacket( ePacketType::PAKCS_LOGIN_REQ );
+        /*CPacket* pak4 = new CPacket( ePacketType::PAKCS_LOGIN_REQ );
         pak4->AddString( "cc03e747a6afbbcbf8be7668acfebee5", false );
         pak4->AddString( "test", false );
         netConnect.Send( pak4 );
@@ -75,7 +75,7 @@ TEST( TestLoginServer, TestISCPacketPath )
         netConnect.Send( pak5 );
 
         CPacket* pak3 = new CPacket( ePacketType::PAKCS_ALIVE );
-        netConnect.Send( pak3 );
+        netConnect.Send( pak3 );*/
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
         EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
