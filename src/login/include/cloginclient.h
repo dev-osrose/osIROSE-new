@@ -18,6 +18,12 @@ public:
 protected:
 	virtual bool HandlePacket( uint8_t* _buffer );
 	virtual bool OnReceived( );
+
+
+	// Packet Helper Functions
+	void SendLoginReply( uint8_t Result );
+
+	uint16_t m_Right;
 };
 
 #endif

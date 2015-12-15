@@ -13,6 +13,7 @@ typedef uint16_t word;
 typedef uint32_t dword;
 typedef uint64_t qword;
 
+
 // CS = Client -> server
 // SC = server -> server
 // SS = server -> server
@@ -215,31 +216,56 @@ struct CPacket
 		return Data[pos];
 	}
 
-	uint8_t* GetString( uint16_t pos, uint16_t len = 0 )
+//	uint8_t* GetString( uint16_t pos, uint16_t len = 0 )
+//	{
+//		std::string str = "";
+//		//bool NullTerminate = false;
+//		if (len == 0)
+//		{
+//			//NullTerminate = true;
+//			len = (Header.Size - 6);
+//		}
+//		else if (len > (Header.Size - 6 - pos))
+//		{
+//			len = (Header.Size - 6 - pos);
+//		}
+//
+//		for (uint32_t i = 0; i < len; i++)
+//		{
+//			if (Get<uint8_t>( pos + i ) == 0)
+//				break;
+//
+//			str += Get<uint8_t>( pos + i );
+//		}
+//
+//		uint8_t* rtnString = new uint8_t[str.length() + 1];
+//		memcpy( rtnString, str.c_str( ), str.length( ) + 1 );
+//		return rtnString;
+//	}
+
+	void GetString ( uint16_t pos, uint16_t size, char* outbuffer )
 	{
-		std::string str = "";
-		//bool NullTerminate = false;
-		if (len == 0)
-		{
-			//NullTerminate = true;
-			len = (Header.Size - 6);
-		}
-		else if (len > (Header.Size - 6 - pos))
-		{
-			len = (Header.Size - 6 - pos);
-		}
+		//strcpy( outbuffer, (char*)&Data[pos] );
+		strcpy_safe( outbuffer, size, (char*)&Data[pos] );
+	}
+	void GetBytes ( uint16_t pos, uint16_t len, uint8_t* outbuffer )
+	{
+		memcpy( outbuffer, &Data[pos], len );
+	}
 
-		for (uint32_t i = 0; i < len; i++)
-		{
-			if (Get<uint8_t>( pos + i ) == 0)
-				break;
+private:
+	// This is only here until g++ adds strcpy_s
+	template <size_t charCount>
+	void strcpy_safe(char (&output)[charCount], const char* pSrc)
+	{
+	        strncpy(output, pSrc, charCount);
+	        output[charCount - 1] = 0;
+	}
 
-			str += Get<uint8_t>( pos + i );
-		}
-
-		uint8_t* rtnString = new uint8_t[str.length() + 1];
-		memcpy( rtnString, str.c_str( ), str.length( ) + 1 );
-		return rtnString;
+	void strcpy_safe(char* output, size_t charCount, const char* pSrc)
+	{
+        	strncpy(output, pSrc, charCount);
+	        output[charCount - 1] = 0;
 	}
 	//*/
 };

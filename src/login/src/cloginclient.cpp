@@ -1,32 +1,54 @@
 #include "cloginclient.h"
 #include "ePacketType.h"
 
-CLoginClient::CLoginClient() : CRoseClient()
+CLoginClient::CLoginClient() : CRoseClient(), m_Right( 0 )
 {
 	m_Log.SetIdentity( "CLoginClient" );
 }
 
-CLoginClient::CLoginClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) )
+CLoginClient::CLoginClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ), m_Right( 0 )
 {
 	m_Log.SetIdentity( "CLoginClient" );
+}
+
+void CLoginClient::SendLoginReply( uint8_t Result )
+{
+	CPacket* pak = new CPacket( ePacketType::PAKLC_LOGIN_REPLY, sizeof(pakLoginReply) + 1 );
+	pak->pLoginReply.Result = Result;
+	pak->pLoginReply.Right = m_Right;
+	pak->pLoginReply.Type = 0;
+
+	if( Result == 0 )
+	{
+		std::string serverName = "abcdefgh";
+		uint32_t serverID = 1;
+
+		// loop the server list here
+
+		// TODO:: Make it so we can get the server list from the server class without holding a ptr to the server
+		pak->AddString( serverName.c_str(), true );
+                pak->Add< uint32_t >( serverID + 1 );
+	}
+	this->Send( pak );
 }
 
 bool CLoginClient::UserLogin( CPacket* P )
 {
-	uint8_t* _user = P->GetString( 32, 16 );
-	uint8_t* _pass = P->GetString( 0, 32 );
+	uint8_t _user[64];
+	uint8_t _pass[64];
+
+	P->GetBytes( 0, 32, _pass );
+	_pass[32] = 0; // Null term the string
+	P->GetString( 32, 16, (char*)_user );
+	//uint8_t* _user = P->GetString( 32, 16 );
+	//uint8_t* _pass = P->GetString( 0, 32 );
 
 	m_Log.oicprintf( "%s / %s\n", _user, _pass );
 
 	// Query the DB
-	CPacket* pak = new CPacket( ePacketType::PAKLC_LOGIN_REPLY, sizeof(pakLoginReply) );
-	
 // 	{
 // 		// Already logged in
-// 		pak->pLoginReply.Result = 4;
-// 		pak->pLoginReply.Right = 0;
-// 		pak->pLoginReply.Unknown = 0;
-// 		Send( pak );
+// 		SendLoginReply( 4 );
 // 
 // 		delete _pass;
 // 		delete _user;
@@ -35,10 +57,7 @@ bool CLoginClient::UserLogin( CPacket* P )
 // 
 // 	{
 // 		// Servers are under inspection
-// 		pak->pLoginReply.Result = 1;
-// 		pak->pLoginReply.Right = 0;
-// 		pak->pLoginReply.Unknown = 0;
-// 		Send( pak );
+// 		SendLoginReply( 1 );
 // 
 // 		delete _pass;
 // 		delete _user;
@@ -47,42 +66,23 @@ bool CLoginClient::UserLogin( CPacket* P )
 
 	{
 		// Okay to login!!
-		pak->pLoginReply.Result = 0;
-		pak->pLoginReply.Right = 100;
-		pak->pLoginReply.Type = 0;
-
-		pak->Add< uint8_t >( 48 + 1 );
-		pak->AddString( " abdfasdfcd", true );
-		pak->Add< uint32_t >( 1 );
-		Send( pak );
+		SendLoginReply( 0 );
 	}
 
 // 	{
 // 		// Banned
-// 		pak->pLoginReply.Result = 5;
-// 		pak->pLoginReply.Right = 0;
-// 		pak->pLoginReply.Unknown = 0;
-// 		Send( pak );
+// 		SendLoginReply( 5 );
 // 	}
 // 
 // 	{
 // 		// Incorrect Password
-// 		pak->pLoginReply.Result = 3;
-// 		pak->pLoginReply.Right = 0;
-// 		pak->pLoginReply.Unknown = 0;
-// 		Send( pak );
+// 		SendLoginReply( 3 );
 // 	}
 // 
 // 	{
 // 		// Server Full
-// 		pak->pLoginReply.Result = 8;
-// 		pak->pLoginReply.Right = 0;
-// 		pak->pLoginReply.Unknown = 0;
-// 		Send( pak );
-// 	}
-
-	delete _pass;
-	delete _user;
+// 		SendLoginReply( 8 );
+//	}
 	return true;
 }
 
