@@ -49,11 +49,11 @@ bool CLoginClient::UserLogin( CPacket* P )
 		// Okay to login!!
 		pak->pLoginReply.Result = 0;
 		pak->pLoginReply.Right = 100;
-		pak->pLoginReply.Unknown = 0;
+		pak->pLoginReply.Type = 0;
 
-		pak->AddString( "Test123", true );
+		pak->Add< uint8_t >( 48 + 1 );
+		pak->AddString( " abdfasdfcd", true );
 		pak->Add< uint32_t >( 1 );
-
 		Send( pak );
 	}
 

@@ -114,7 +114,7 @@ struct pakLoginReply : public sPacketHeader
 {
 	uint8_t  Result;
 	uint16_t Right;
-	uint16_t Unknown;
+	uint16_t Type;
 };
 
 struct pakEncryptionRequest : public sPacketHeader
