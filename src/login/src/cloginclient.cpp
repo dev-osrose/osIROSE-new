@@ -88,12 +88,15 @@ bool CLoginClient::UserLogin( CPacket* P )
 
 bool CLoginClient::ChannelList( CPacket* P )
 {
-	(void)P;
 	m_Log.icprintf( "Channel List\n" );
 
+	uint32_t ServerID = P->pChannelListReq.lServerID;
+
 	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY, sizeof(pakChannel_List) );
-	pak->pChannelList.lServerID = 0;
+	pak->pChannelList.lServerID = ServerID;
 	pak->pChannelList.bServerCount = 1;
+
+
 	channelInfo channel;
 	channel.ChannelID = 1;
 	channel.pad = 0;
@@ -101,7 +104,7 @@ bool CLoginClient::ChannelList( CPacket* P )
 
 	pak->AddBytes( (uint8_t*)&channel, sizeof(channelInfo) );
 	pak->AddString( "TestChannel", true );
-	Send( pak );
+	this->Send( pak );
 
 	return true;
 }
