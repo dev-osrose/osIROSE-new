@@ -112,7 +112,18 @@ bool CLoginClient::ChannelList( CPacket* P )
 bool CLoginClient::ServerSelect( CPacket* P )
 {
 	(void)P;
+//	uint32_t serverID = P->Get<uint32_t>( 0 );
+//	uint8_t channelID = P->Get<uint8_t>( 4 );
 	m_Log.icprintf( "Server Select\n" );
+
+	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
+	pak->Add<uint8_t>( 0 );
+	pak->Add<uint32_t>( 0 ); // Set this to client id
+	pak->Add<uint32_t>( 0 ); // Set this to the crypt seed for the server we are connecting to
+	pak->AddString( "127.0.0.1", true ); // Set this to the IP address of char server
+	pak->Add<uint16_t>( 29100 ); // Set this to the char server port
+	this->Send( pak );
+
 	return true;
 }
 

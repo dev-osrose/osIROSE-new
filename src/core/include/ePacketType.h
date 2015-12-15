@@ -210,42 +210,15 @@ struct CPacket
 			Add< uint8_t >( (uint8_t)value[ i ] );
 	}
 
+	// Functions added by Raven
 	template < class T >
 	T Get( uint16_t pos )
 	{
 		return Data[pos];
 	}
 
-//	uint8_t* GetString( uint16_t pos, uint16_t len = 0 )
-//	{
-//		std::string str = "";
-//		//bool NullTerminate = false;
-//		if (len == 0)
-//		{
-//			//NullTerminate = true;
-//			len = (Header.Size - 6);
-//		}
-//		else if (len > (Header.Size - 6 - pos))
-//		{
-//			len = (Header.Size - 6 - pos);
-//		}
-//
-//		for (uint32_t i = 0; i < len; i++)
-//		{
-//			if (Get<uint8_t>( pos + i ) == 0)
-//				break;
-//
-//			str += Get<uint8_t>( pos + i );
-//		}
-//
-//		uint8_t* rtnString = new uint8_t[str.length() + 1];
-//		memcpy( rtnString, str.c_str( ), str.length( ) + 1 );
-//		return rtnString;
-//	}
-
 	void GetString ( uint16_t pos, uint16_t size, char* outbuffer )
 	{
-		//strcpy( outbuffer, (char*)&Data[pos] );
 		strcpy_safe( outbuffer, size, (char*)&Data[pos] );
 	}
 	void GetBytes ( uint16_t pos, uint16_t len, uint8_t* outbuffer )
@@ -254,7 +227,7 @@ struct CPacket
 	}
 
 private:
-	// This is only here until g++ adds strcpy_s
+	// This is only here until g++ adds c++11 std::strcpy_s
 	template <size_t charCount>
 	void strcpy_safe(char (&output)[charCount], const char* pSrc)
 	{
