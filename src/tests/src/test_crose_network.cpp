@@ -207,7 +207,7 @@ TEST( TestRoseNetwork, TestISCListenAndConnect )
         //      bool done = false;
 
         CRoseServer network ( true );
-        CRoseISC_Mock netConnect;
+        CRoseISC netConnect;
         EXPECT_EQ( true, network.Init( "127.0.0.1", 29110 ) ); // We are going to connect to google's website
         EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
         //      EXPECT_CALL( network, OnListening() )
