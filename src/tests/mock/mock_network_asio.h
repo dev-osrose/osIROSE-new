@@ -36,8 +36,8 @@ class CNetwork_Asio_Mock : public CNetwork_Asio
 	MOCK_METHOD0( OnDisconnect, bool( ) );
 	MOCK_METHOD0( OnDisconnected, void( ) );
 	MOCK_METHOD0( OnReceive, bool( ) );
-	MOCK_METHOD2( OnReceived, bool( uint8_t* _buffer, uint16_t _size ) );
-	MOCK_METHOD2( OnSend, bool( uint8_t* _buffer, uint16_t _size ) );
+	MOCK_METHOD0( OnReceived, bool( ) );
+	MOCK_METHOD1( OnSend, bool( uint8_t* _buffer ) );
 	MOCK_METHOD0( OnSent, void( ) );
 
 	private:
