@@ -44,7 +44,8 @@ bool CRoseISC::OnReceived()
 bool CRoseISC::OnSend( uint8_t* _buffer )
 {
 	//TODO: Encrypt the buffer here!
-	(void)_buffer;
+	//(void)_buffer;
+	m_Crypt.encodeServerPacket( _buffer );
 	return true;
 }
 

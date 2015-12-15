@@ -47,6 +47,14 @@ file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
 file(GLOB_RECURSE MAP_HEADERS . ${CMAKE_SOURCE_DIR}/src/map/*.[h])
 file(GLOB_RECURSE PROJECT_TESTING_HEADERS . *.[h])
 
+file(GLOB_RECURSE LOGIN_SOURCE . ${CMAKE_SOURCE_DIR}/src/login/[!main]*.[c][p][p])
+file(GLOB_RECURSE CHAR_SOURCE . ${CMAKE_SOURCE_DIR}/src/char/[!main]*.[c][p][p])
+file(GLOB_RECURSE MAP_SOURCE . ${CMAKE_SOURCE_DIR}/src/map/[!main]*.[c][p][p])
+
+SET(SERVER_SOURCE
+   ${LOGIN_SOURCE}
+)
+
 SET(HEADERS
     ${CORE_HEADERS}
     ${ROSE_HEADERS}
@@ -57,6 +65,7 @@ SET(HEADERS
 )
 
 message(STATUS "HEADERS=${HEADERS}")
+message(STATUS "SERVER_SOURCE=${SERVER_SOURCE}")
 
 SET(SOURCE_MAIN main)
 
@@ -67,9 +76,11 @@ SET(SOURCES_BASE
 	src/test_logconsole
 	src/test_config
 	src/test_mysql_database
+	src/test_login
 )
 
 SET(SOURCES
+    ${SERVER_SOURCE}
     ${SOURCE_MAIN}
     ${SOURCES_BASE}
 )

@@ -11,7 +11,7 @@ public:
 
 protected:
 	virtual void OnAccepted( tcp::socket _sock );
-	virtual bool HandlePacket( uint8_t* _buffer );
+//	virtual bool HandlePacket( uint8_t* _buffer );
 };
 
 #endif

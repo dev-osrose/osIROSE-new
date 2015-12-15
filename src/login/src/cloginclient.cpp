@@ -34,9 +34,6 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 
 bool CLoginClient::UserLogin( CPacket* P )
 {
-	uint8_t _user[64];
-	uint8_t _pass[64];
-
 	P->GetBytes( 0, 32, _pass );
 	_pass[32] = 0; // Null term the string
 	P->GetString( 32, 16, (char*)_user );
