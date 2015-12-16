@@ -53,6 +53,8 @@ file(GLOB_RECURSE MAP_SOURCE . ${CMAKE_SOURCE_DIR}/src/map/[!main]*.[c][p][p])
 
 SET(SERVER_SOURCE
    ${LOGIN_SOURCE}
+   ${CHAR_SOURCE}
+   ${MAP_SOURCE}
 )
 
 SET(HEADERS
