@@ -19,7 +19,8 @@ public:
 
 	static std::forward_list< CRoseClient* > &GetClientList() { return m_ClientList; }
 	static std::forward_list< CRoseISC* > &GetISCList() { return m_ISCList; }
-	static std::mutex &GetListMutex() { return m_ClientListMutex; }
+	static std::mutex &GetClientListMutex() { return m_ClientListMutex; }
+	static std::mutex &GetISCListMutex() { return m_ISCListMutex; }
 
 protected:
 	// Callback functions
@@ -40,6 +41,7 @@ protected:
 	static std::forward_list< CRoseClient* > m_ClientList;
 	static std::forward_list< CRoseISC* > m_ISCList;
 	static std::mutex m_ClientListMutex;
+	static std::mutex m_ISCListMutex;
 };
 
 #endif

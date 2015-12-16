@@ -33,7 +33,7 @@ CNetwork_Asio::~CNetwork_Asio( )
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 
 	Shutdown( );
-	//m_io_service.stop( );
+	m_io_service.stop( );
 	m_IOThread.join( );
 	m_ProcessThread.join( );
 }
@@ -98,7 +98,7 @@ bool CNetwork_Asio::Shutdown( )
 //		delete _buffer;
 //	}
 
-	m_io_service.stop( );
+//	m_io_service.stop( );
 	//        m_IOThread.join( );
 	//        m_ProcessThread.join( );
 	return true;

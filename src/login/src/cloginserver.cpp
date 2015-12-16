@@ -21,17 +21,19 @@ void CLoginServer::OnAccepted( tcp::socket _sock )
 	if ( _sock.is_open( ) )
 	{
 		//Do Something?
-		std::lock_guard<std::mutex> lock(m_ClientListMutex);
+//		std::lock_guard<std::mutex> lock(m_ClientListMutex);
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
 //		CRoseClient* nClient = nullptr;
 		if( IsISCServer() == false )
 		{
+			std::lock_guard<std::mutex> lock(m_ClientListMutex);
 			CLoginClient* nClient = new CLoginClient( std::move( _sock ) );
 			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
 	                m_ClientList.push_front( nClient );
 		}
 		else
 		{
+			std::lock_guard<std::mutex> lock(m_ISCListMutex);
 			CLoginISC* nClient = new CLoginISC( std::move( _sock ) );
 			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
                         m_ISCList.push_front( nClient );

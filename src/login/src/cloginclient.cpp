@@ -28,7 +28,7 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		// loop the server list here
 		// TODO:: Make it so we can get the server list from the server class without holding a ptr to the server
 		//TODO:: LOCK THE LIST!!!!!!! We don't want to walk through the list while servers are being added..
-		std::lock_guard< std::mutex > lock( CLoginServer::GetListMutex() );
+		std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
 		for( auto& server : CLoginServer::GetISCList() )
 		{
 			if( server->GetType() == 1 )

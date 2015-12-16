@@ -7,6 +7,7 @@
 std::forward_list< CRoseClient* > CRoseServer::m_ClientList;
 std::forward_list< CRoseISC* > CRoseServer::m_ISCList;
 std::mutex CRoseServer::m_ClientListMutex;
+std::mutex CRoseServer::m_ISCListMutex;
 
 CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
 {
@@ -15,39 +16,46 @@ CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
 
 CRoseServer::~CRoseServer( )
 {
-	std::lock_guard< std::mutex > lock( m_ClientListMutex );
+	//std::lock_guard< std::mutex > lock( m_ClientListMutex );
 	//for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
 	//	delete m_ClientList;
-	for ( auto& client : m_ClientList )
+	if( IsISCServer() == false )
 	{
-		client->Shutdown( );
-		delete client;
+		std::lock_guard< std::mutex > lock( m_ClientListMutex );
+		for ( auto& client : m_ClientList )
+		{
+			client->Shutdown( );
+			delete client;
+		}
+		m_ClientList.clear( );
 	}
-	m_ClientList.clear( );
-
-	for ( auto& client : m_ISCList )
+	else
 	{
-		client->Shutdown( );
-		delete client;
+		std::lock_guard< std::mutex > lock( m_ISCListMutex );
+		for ( auto& client : m_ISCList )
+		{
+			client->Shutdown( );
+			delete client;
+		}
+		m_ISCList.clear( );
 	}
-	m_ISCList.clear( );
 }
 
 bool CRoseServer::Run()
 {
 	while (m_Active == true)
 	{
-		m_ClientListMutex.lock();
-		for (auto& client : m_ClientList)
-		{
-			if ( client->IsActive() == false )
-			{
-				client->Shutdown();
-				delete client;
-				m_ClientList.remove( client );
-			}
-		}
-		m_ClientListMutex.unlock();
+//		m_ClientListMutex.lock();
+//		for (auto& client : m_ClientList)
+//		{
+//			if ( client->IsActive() == false )
+//			{
+//				client->Shutdown();
+//				delete client;
+//				m_ClientList.remove( client );
+//			}
+//		}
+//		m_ClientListMutex.unlock();
 
 		ProcessSend();
 		ProcessRecv();
@@ -119,17 +127,19 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 	if ( _sock.is_open( ) )
 	{
 		//Do Something?
-		std::lock_guard<std::mutex> lock(m_ClientListMutex);
+		//std::lock_guard<std::mutex> lock(m_ClientListMutex);
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
 		//CRoseClient* nClient = nullptr;
 		if( IsISCServer() == false )
 		{
+			std::lock_guard<std::mutex> lock(m_ClientListMutex);
 			CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
 			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
 	        	m_ClientList.push_front( nClient );
 		}
 		else
 		{
+			std::lock_guard<std::mutex> lock(m_ISCListMutex);
 			CRoseISC* nClient = new CRoseISC( std::move( _sock ) );
 			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
 		        m_ISCList.push_front( nClient );
