@@ -35,13 +35,24 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 # Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(
+    ${CMAKE_SOURCE_DIR}/src/core/include
+    ${CMAKE_SOURCE_DIR}/src/rosecommon/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 SET( SOURCES_MAIN
-  src/main.cpp )
+  src/main
+)
+
+SET( SOURCES_BASE
+  src/ccharserver
+  src/ccharclient
+  src/ccharisc
+)
 
 find_package( Threads REQUIRED )
-add_executable(${PROJECT} ${SOURCES_MAIN})
+add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
@@ -51,8 +62,9 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 
-target_link_libraries(${PROJECT} 
-	Core 
+target_link_libraries(${PROJECT}
+	Core
+        RoseCommon
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
