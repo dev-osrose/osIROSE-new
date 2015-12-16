@@ -25,7 +25,7 @@ protected:
 
 	uint16_t m_Right;
 	uint8_t _user[17];
-        uint8_t _pass[33];
+    uint8_t _pass[33];
 };
 
 #endif

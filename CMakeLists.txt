@@ -66,5 +66,10 @@ ELSE()
 	SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
 ENDIF()
 
+SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
+SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
+SET(MYSQL_BINARY_DIR /usr/lib)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmysqlpp -lmysqlclient -lnsl -lz -lm")
+
 ADD_SUBDIRECTORY(src)
 

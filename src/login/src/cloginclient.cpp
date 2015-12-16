@@ -37,8 +37,8 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		                pak->Add< uint32_t >( serverID++ );
 			}
 		}
-//		pak->AddString( serverName.c_str(), true );
-//                pak->Add< uint32_t >( serverID + 1 );
+		pak->AddString( serverName.c_str(), true );
+                pak->Add< uint32_t >( serverID + 1 );
 	}
 	this->Send( pak );
 }
