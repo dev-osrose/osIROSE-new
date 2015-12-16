@@ -37,6 +37,7 @@ bool CRoseServer::Run()
 {
 	while (m_Active == true)
 	{
+		m_ClientListMutex.lock();
 		for (auto& client : m_ClientList)
 		{
 			if ( client->IsActive() == false )
@@ -46,6 +47,8 @@ bool CRoseServer::Run()
 				m_ClientList.remove( client );
 			}
 		}
+		m_ClientListMutex.unlock();
+
 		ProcessSend();
 		ProcessRecv();
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
