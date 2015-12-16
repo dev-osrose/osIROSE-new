@@ -16,7 +16,7 @@ TEST( TestLoginServer, TestClientPacketPath )
 
 	iscServ->SetId( 0 );
 	iscServ->SetType( 1 );
-	CLoginServer::GetISCList().push_back(iscServ);
+	CLoginServer::GetISCList().push_front(iscServ);
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29110 ) );

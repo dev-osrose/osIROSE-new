@@ -4,8 +4,8 @@
 #include "croseclient.h"
 #include "croseisc.h"
 
-std::list< CRoseClient* > CRoseServer::m_ClientList;
-std::list< CRoseISC* > CRoseServer::m_ISCList;
+std::forward_list< CRoseClient* > CRoseServer::m_ClientList;
+std::forward_list< CRoseISC* > CRoseServer::m_ISCList;
 std::mutex CRoseServer::m_ClientListMutex;
 
 CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
@@ -126,13 +126,13 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 		{
 			CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
 			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-	        	m_ClientList.push_back( nClient );
+	        	m_ClientList.push_front( nClient );
 		}
 		else
 		{
 			CRoseISC* nClient = new CRoseISC( std::move( _sock ) );
 			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
-		        m_ISCList.push_back( nClient );
+		        m_ISCList.push_front( nClient );
 		}
 
 		//m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );

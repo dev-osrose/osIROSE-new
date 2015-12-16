@@ -23,17 +23,21 @@ void CCharServer::OnAccepted( tcp::socket _sock )
                 //Do Something?
                 std::lock_guard<std::mutex> lock(m_ClientListMutex);
                 std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
-                CRoseClient* nClient = nullptr;
+//                CRoseClient* nClient = nullptr;
                 if( IsISCServer() == false )
                 {
-                        nClient = new CCharClient( std::move( _sock ) );
+                        CCharClient* nClient = new CCharClient( std::move( _sock ) );
+			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+	                m_ClientList.push_front( nClient );
                 }
                 else
                 {
-                        nClient = new CCharISC( std::move( _sock ) );
+                        CCharISC* nClient = new CCharISC( std::move( _sock ) );
+			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
+                        m_ISCList.push_front( nClient );
                 }
 
-                m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-                m_ClientList.push_back( nClient );
+//                m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+//                m_ClientList.push_front( nClient );
         }
 }
