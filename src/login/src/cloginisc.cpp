@@ -16,6 +16,11 @@ bool CLoginISC::HandlePacket( uint8_t* _buffer )
 	CPacket* pak = (CPacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
+	case ePacketType::ISC_ALIVE: return true;
+        case ePacketType::ISC_SERVER_AUTH: return true;
+        case ePacketType::ISC_SERVER_REGISTER: return true;
+        case ePacketType::ISC_TRANSFER: return true;
+        case ePacketType::ISC_SHUTDOWN: return true;
 	default:
 	{
 		CRoseISC::HandlePacket( _buffer );

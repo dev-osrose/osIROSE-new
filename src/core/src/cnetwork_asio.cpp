@@ -200,9 +200,13 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 			                  }
 			                  else
 			                  {
-				                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
-								  Shutdown();
-								  return;
+						if( errorCode.value( ) == 2 )
+							m_Log.icprintf( CL_RESET CL_WHITE "Client disconnected." );
+						else
+				                	m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+
+						Shutdown();
+						return;
 			                  }
 
 			                  m_RecvCondition.notify_all( );

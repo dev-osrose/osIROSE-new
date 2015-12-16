@@ -51,7 +51,7 @@ bool CRoseServer::Run()
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
 
-	m_Log.icprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
+	m_Log.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
 	return true;
 }
 
