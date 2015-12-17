@@ -2,16 +2,29 @@
 #include <string>
 #include <exception>
 
+#include "config.h"
 #include "cmysql_database.h"
 
 TEST( TestMySQL_Database, TestConstructor )
 {
-	EXPECT_NO_FATAL_FAILURE( CMySQL_Database database("127.0.0.1", "osirose", "root", "root"));
+	const ::configFile::Database	&dbb = Config::getInstance("test.ini").database();
+	std::string host = dbb.host();
+	std::string _database = dbb.database();
+	std::string user = dbb.user();
+	std::string pass = dbb.password();
+
+	EXPECT_NO_FATAL_FAILURE( CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str()));
 }
 
 TEST( TestMySQL_Database, TestQExecute )
 {
-    CMySQL_Database database("127.0.0.1", "osirose", "root", "root");
+        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        std::string host = dbb.host();
+        std::string _database = dbb.database();
+        std::string user = dbb.user();
+        std::string pass = dbb.password();
+
+	CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 	EXPECT_NO_FATAL_FAILURE( database.QExecute("DROP TABLE IF EXISTS test_table;"));
 	EXPECT_NO_FATAL_FAILURE(database.QExecute("CREATE TABLE test_table(id INT);"));
 	EXPECT_NO_FATAL_FAILURE(database.QExecute("DROP TABLE test_table;") );
@@ -20,7 +33,13 @@ TEST( TestMySQL_Database, TestQExecute )
 
 TEST(TestMySQL_Database, TestQStore)
 {
-	CMySQL_Database	database("127.0.0.1", "osirose", "root", "root");
+        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        std::string host = dbb.host();
+        std::string _database = dbb.database();
+        std::string user = dbb.user();
+        std::string pass = dbb.password();
+
+	CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 	database.QExecute("DROP TABLE IF EXISTS test_table;");
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
@@ -41,5 +60,11 @@ TEST(TestMySQL_Database, TestQStore)
 
 TEST(TestMySQL_Database, TestError)
 {
-	CMySQL_Database	database("127.0.0.1", "osirose", "root", "root");
+        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        std::string host = dbb.host();
+        std::string _database = dbb.database();
+        std::string user = dbb.user();
+        std::string pass = dbb.password();
+
+	CMySQL_Database	database(host, _database, user, pass);
 }

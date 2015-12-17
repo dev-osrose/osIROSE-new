@@ -123,7 +123,6 @@ void protobuf_ShutdownFile_configfile_2eproto() {
   delete Database::_default_host_;
   delete Database::_default_database_;
   delete Database::_default_user_;
-  delete Database::_default_password_;
   delete Server::default_instance_;
   delete Server_reflection_;
   delete Server::_default_ip_;
@@ -138,17 +137,17 @@ void protobuf_AddDesc_configfile_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020configfile.proto\022\nconfigFile\"~\n\010Databa"
+    "\n\020configfile.proto\022\nconfigFile\"z\n\010Databa"
     "se\022\027\n\004host\030\001 \002(\t:\tlocalhost\022\031\n\010database\030"
-    "\002 \002(\t:\007osirose\022\022\n\004user\030\003 \002(\t:\004root\022\026\n\010pa"
-    "ssword\030\004 \002(\t:\004root\022\022\n\004port\030\005 \002(\005:\0043306\"\246"
-    "\001\n\006Server\022\r\n\002id\030\001 \002(\005:\0010\022\025\n\002ip\030\002 \002(\t:\t12"
-    "7.0.0.1\022\030\n\013accessLevel\030\003 \002(\005:\003100\022\023\n\010par"
-    "entId\030\004 \002(\005:\0010\022\033\n\016maxConnections\030\005 \002(\005:\003"
-    "100\022\031\n\nuseThreads\030\006 \002(\010:\005false\022\017\n\004mode\030\007"
-    " \002(\005:\0010\"_\n\rConfiguration\022&\n\010database\030\001 \002"
-    "(\0132\024.configFile.Database\022&\n\nserverdata\030\002"
-    " \002(\0132\022.configFile.Server", 424);
+    "\002 \002(\t:\007osirose\022\022\n\004user\030\003 \002(\t:\004root\022\022\n\010pa"
+    "ssword\030\004 \002(\t:\000\022\022\n\004port\030\005 \002(\005:\0043306\"\246\001\n\006S"
+    "erver\022\r\n\002id\030\001 \002(\005:\0010\022\025\n\002ip\030\002 \002(\t:\t127.0."
+    "0.1\022\030\n\013accessLevel\030\003 \002(\005:\003100\022\023\n\010parentI"
+    "d\030\004 \002(\005:\0010\022\033\n\016maxConnections\030\005 \002(\005:\003100\022"
+    "\031\n\nuseThreads\030\006 \002(\010:\005false\022\017\n\004mode\030\007 \002(\005"
+    ":\0010\"_\n\rConfiguration\022&\n\010database\030\001 \002(\0132\024"
+    ".configFile.Database\022&\n\nserverdata\030\002 \002(\013"
+    "2\022.configFile.Server", 420);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "configfile.proto", &protobuf_RegisterTypes);
   Database::_default_host_ =
@@ -156,8 +155,6 @@ void protobuf_AddDesc_configfile_2eproto() {
   Database::_default_database_ =
       new ::std::string("osirose", 7);
   Database::_default_user_ =
-      new ::std::string("root", 4);
-  Database::_default_password_ =
       new ::std::string("root", 4);
   Database::default_instance_ = new Database();
   Server::_default_ip_ =
@@ -192,7 +189,6 @@ static void MergeFromFail(int line) {
 ::std::string* Database::_default_host_ = NULL;
 ::std::string* Database::_default_database_ = NULL;
 ::std::string* Database::_default_user_ = NULL;
-::std::string* Database::_default_password_ = NULL;
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Database::kHostFieldNumber;
 const int Database::kDatabaseFieldNumber;
@@ -224,7 +220,7 @@ void Database::SharedCtor() {
   host_.UnsafeSetDefault(_default_host_);
   database_.UnsafeSetDefault(_default_database_);
   user_.UnsafeSetDefault(_default_user_);
-  password_.UnsafeSetDefault(_default_password_);
+  password_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   port_ = 3306;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -238,7 +234,7 @@ void Database::SharedDtor() {
   host_.DestroyNoArena(_default_host_);
   database_.DestroyNoArena(_default_database_);
   user_.DestroyNoArena(_default_user_);
-  password_.DestroyNoArena(_default_password_);
+  password_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -280,7 +276,7 @@ void Database::Clear() {
       user_.ClearToDefaultNoArena(_default_user_);
     }
     if (has_password()) {
-      password_.ClearToDefaultNoArena(_default_password_);
+      password_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     port_ = 3306;
   }
@@ -350,7 +346,7 @@ bool Database::MergePartialFromCodedStream(
         break;
       }
 
-      // required string password = 4 [default = "root"];
+      // required string password = 4 [default = ""];
       case 4: {
         if (tag == 34) {
          parse_password:
@@ -437,7 +433,7 @@ void Database::SerializeWithCachedSizes(
       3, this->user(), output);
   }
 
-  // required string password = 4 [default = "root"];
+  // required string password = 4 [default = ""];
   if (has_password()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->password().data(), this->password().length(),
@@ -495,7 +491,7 @@ void Database::SerializeWithCachedSizes(
         3, this->user(), target);
   }
 
-  // required string password = 4 [default = "root"];
+  // required string password = 4 [default = ""];
   if (has_password()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->password().data(), this->password().length(),
@@ -544,7 +540,7 @@ int Database::RequiredFieldsByteSizeFallback() const {
   }
 
   if (has_password()) {
-    // required string password = 4 [default = "root"];
+    // required string password = 4 [default = ""];
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->password());
@@ -578,7 +574,7 @@ int Database::ByteSize() const {
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->user());
 
-    // required string password = 4 [default = "root"];
+    // required string password = 4 [default = ""];
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->password());
@@ -631,7 +627,7 @@ void Database::MergeFrom(const Database& from) {
     }
     if (from.has_password()) {
       set_has_password();
-      password_.AssignWithDefault(_default_password_, from.password_);
+      password_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.password_);
     }
     if (from.has_port()) {
       set_port(from.port());
@@ -845,7 +841,7 @@ void Database::clear_user() {
   // @@protoc_insertion_point(field_set_allocated:configFile.Database.user)
 }
 
-// required string password = 4 [default = "root"];
+// required string password = 4 [default = ""];
 bool Database::has_password() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -856,37 +852,37 @@ void Database::clear_has_password() {
   _has_bits_[0] &= ~0x00000008u;
 }
 void Database::clear_password() {
-  password_.ClearToDefaultNoArena(_default_password_);
+  password_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   clear_has_password();
 }
  const ::std::string& Database::password() const {
   // @@protoc_insertion_point(field_get:configFile.Database.password)
-  return password_.GetNoArena(_default_password_);
+  return password_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  void Database::set_password(const ::std::string& value) {
   set_has_password();
-  password_.SetNoArena(_default_password_, value);
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:configFile.Database.password)
 }
  void Database::set_password(const char* value) {
   set_has_password();
-  password_.SetNoArena(_default_password_, ::std::string(value));
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:configFile.Database.password)
 }
  void Database::set_password(const char* value, size_t size) {
   set_has_password();
-  password_.SetNoArena(_default_password_,
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:configFile.Database.password)
 }
  ::std::string* Database::mutable_password() {
   set_has_password();
   // @@protoc_insertion_point(field_mutable:configFile.Database.password)
-  return password_.MutableNoArena(_default_password_);
+  return password_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  ::std::string* Database::release_password() {
   clear_has_password();
-  return password_.ReleaseNoArena(_default_password_);
+  return password_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  void Database::set_allocated_password(::std::string* password) {
   if (password != NULL) {
@@ -894,7 +890,7 @@ void Database::clear_password() {
   } else {
     clear_has_password();
   }
-  password_.SetAllocatedNoArena(_default_password_, password);
+  password_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), password);
   // @@protoc_insertion_point(field_set_allocated:configFile.Database.password)
 }
 

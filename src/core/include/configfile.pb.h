@@ -142,7 +142,7 @@ class Database : public ::google::protobuf::Message {
   ::std::string* release_user();
   void set_allocated_user(::std::string* user);
 
-  // required string password = 4 [default = "root"];
+  // required string password = 4 [default = ""];
   bool has_password() const;
   void clear_password();
   static const int kPasswordFieldNumber = 4;
@@ -186,7 +186,6 @@ class Database : public ::google::protobuf::Message {
   ::google::protobuf::internal::ArenaStringPtr database_;
   static ::std::string* _default_user_;
   ::google::protobuf::internal::ArenaStringPtr user_;
-  static ::std::string* _default_password_;
   ::google::protobuf::internal::ArenaStringPtr password_;
   ::google::protobuf::int32 port_;
   friend void  protobuf_AddDesc_configfile_2eproto();
@@ -627,7 +626,7 @@ inline void Database::set_allocated_user(::std::string* user) {
   // @@protoc_insertion_point(field_set_allocated:configFile.Database.user)
 }
 
-// required string password = 4 [default = "root"];
+// required string password = 4 [default = ""];
 inline bool Database::has_password() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -638,37 +637,37 @@ inline void Database::clear_has_password() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Database::clear_password() {
-  password_.ClearToDefaultNoArena(_default_password_);
+  password_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   clear_has_password();
 }
 inline const ::std::string& Database::password() const {
   // @@protoc_insertion_point(field_get:configFile.Database.password)
-  return password_.GetNoArena(_default_password_);
+  return password_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Database::set_password(const ::std::string& value) {
   set_has_password();
-  password_.SetNoArena(_default_password_, value);
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:configFile.Database.password)
 }
 inline void Database::set_password(const char* value) {
   set_has_password();
-  password_.SetNoArena(_default_password_, ::std::string(value));
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:configFile.Database.password)
 }
 inline void Database::set_password(const char* value, size_t size) {
   set_has_password();
-  password_.SetNoArena(_default_password_,
+  password_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:configFile.Database.password)
 }
 inline ::std::string* Database::mutable_password() {
   set_has_password();
   // @@protoc_insertion_point(field_mutable:configFile.Database.password)
-  return password_.MutableNoArena(_default_password_);
+  return password_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Database::release_password() {
   clear_has_password();
-  return password_.ReleaseNoArena(_default_password_);
+  return password_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Database::set_allocated_password(::std::string* password) {
   if (password != NULL) {
@@ -676,7 +675,7 @@ inline void Database::set_allocated_password(::std::string* password) {
   } else {
     clear_has_password();
   }
-  password_.SetAllocatedNoArena(_default_password_, password);
+  password_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), password);
   // @@protoc_insertion_point(field_set_allocated:configFile.Database.password)
 }
 

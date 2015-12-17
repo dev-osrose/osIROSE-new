@@ -30,6 +30,9 @@ addons:
 cache:
   directories:
   - ./protobuf
+
+services: 
+    - mysql
   
 matrix:
   include:

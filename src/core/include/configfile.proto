@@ -4,7 +4,7 @@ message	Database {
 	required string	host = 1 [default = "localhost"];
 	required string database = 2 [default = "osirose"];
 	required string user = 3 [default = "root"];
-	required string password = 4 [default = "root"];
+	required string password = 4 [default = ""];
 	required int32	port = 5 [default = 3306];
 }
 
