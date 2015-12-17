@@ -16,6 +16,10 @@ bool	CMySQL_Result::getInt(std::string const &name, uint32_t &data)
 	return getData<uint32_t>(name, data);
 }
 
+CMySQL_Database::CMySQL_Database() :  hostname(""), database(""), username(""), password(""), m_log("MysqlDatabase"), connected(false)
+{
+}
+
 CMySQL_Database::CMySQL_Database(std::string _host, std::string _database, std::string _user, std::string _password) :
 	hostname(_host), database(_database), username(_user), password(_password), m_log("MysqlDatabase"),
 	connected(false)
@@ -31,6 +35,22 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database, std::
 
 CMySQL_Database::~CMySQL_Database()
 {}
+
+void CMySQL_Database::Connect(std::string _host, std::string _database, std::string _user, std::string _password)
+{
+	hostname = (_host);
+	database = (_database);
+	username = (_user);
+	password = (_password);
+
+	try {
+                conn.connect(database.c_str(), hostname.c_str(), username.c_str(), password.c_str());
+        } catch(const std::exception &e) {
+                m_log.icprintf( CL_RESET CL_RED "Error while connecting to the database: %s" CL_RESET "\n", conn.error());
+                throw e;
+        }
+        connected = true;
+}
 
 IResult	*CMySQL_Database::QStore(std::string _query)
 {

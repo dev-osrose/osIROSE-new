@@ -30,8 +30,11 @@ class	CMySQL_Result : public IResult
 class CMySQL_Database : public IDatabase
 {
 public:
+	CMySQL_Database();
 	CMySQL_Database(std::string _host, std::string _database, std::string _user, std::string _password);
 	virtual ~CMySQL_Database();
+
+	virtual void Connect( std::string _host, std::string _database, std::string _user, std::string _password );
 
 	virtual void	QExecute(std::string _query);
 	virtual IResult	*QStore(std::string _query);

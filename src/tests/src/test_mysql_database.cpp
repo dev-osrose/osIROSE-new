@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "gtest/gtest-spi.h"
 #include <string>
 #include <exception>
 
@@ -14,6 +15,16 @@ TEST( TestMySQL_Database, TestConstructor )
 	std::string pass = dbb.password();
 
 	EXPECT_NO_FATAL_FAILURE( CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str()));
+}
+
+TEST( TestMySQL_Database, TestQExecuteFails )
+{
+	CMySQL_Database database;
+	EXPECT_ANY_THROW(database.Connect("fdafsdohuohy530", "dhfui34hf4", "dfj3gqf27", "Rahf7823"));
+        EXPECT_ANY_THROW(database.QExecute("DROP TABLE IF EXISTS test_table;"));
+        EXPECT_ANY_THROW(database.QExecute("CREATE TABLE test_table(id INT);"));
+        EXPECT_ANY_THROW(database.QExecute("DROP TABLE test_table;") );
+        EXPECT_THROW(database.QExecute("use table test_table;"), std::exception);
 }
 
 TEST( TestMySQL_Database, TestQExecute )

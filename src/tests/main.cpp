@@ -23,7 +23,8 @@ int main( int argc, char* argv[] )
 			const TestInfo& test_info = *test_case.GetTestInfo(j);
 			// Counts failed tests that were not meant to fail (those without
 			// 'Fails' in the name).
-			if (test_info.result()->Failed() && strcmp(test_info.name(), "Fails") != 0)
+			std::string name = test_info.name();
+			if (test_info.result()->Failed() && name.find("Fails") == std::string::npos)
 			{
 				unexpectedly_failed_tests++;
 			}

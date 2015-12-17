@@ -25,6 +25,8 @@ public:
 	IDatabase() {};
 	virtual ~IDatabase() {};
 
+	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
+
 	virtual void	QExecute(std::string _query) = 0;
 	virtual IResult	*QStore(std::string	_query) = 0;
 };
