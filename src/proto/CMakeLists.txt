@@ -31,7 +31,7 @@ FILE(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
 message(STATUS "ProtoFiles=${ProtoFiles}")
 SET(args 
 	PROTOFILES ${ProtoFiles} 
-	OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}
+	OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})

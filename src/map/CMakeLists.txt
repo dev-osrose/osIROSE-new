@@ -35,7 +35,12 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 # Our Stuff 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(
+	${CMAKE_SOURCE_DIR}/src/core/include
+	${CMAKE_SOURCE_DIR}/src/proto/include
+	${CMAKE_SOURCE_DIR}/src/rosecommon/include
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 SET( SOURCES_MAIN
 	src/main.cpp )

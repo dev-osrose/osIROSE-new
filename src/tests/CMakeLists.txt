@@ -92,7 +92,7 @@ SET(SOURCES
 PROJECT(${PROJECT})
 
 INCLUDE_DIRECTORIES(
-    ${CMAKE_SOURCE_DIR}/src/proto
+    ${CMAKE_SOURCE_DIR}/src/proto/include
     ${CMAKE_SOURCE_DIR}/src/core/include
     ${CMAKE_SOURCE_DIR}/src/rosecommon/include
     ${CMAKE_SOURCE_DIR}/src/login/include

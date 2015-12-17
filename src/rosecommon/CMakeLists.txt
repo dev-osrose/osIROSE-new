@@ -36,6 +36,7 @@ ENDIF()
 
 INCLUDE_DIRECTORIES(
 	${CMAKE_SOURCE_DIR}/src/core/include
+	${CMAKE_SOURCE_DIR}/src/proto/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
