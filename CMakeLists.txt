@@ -68,7 +68,7 @@ ELSE()
 
 	#Set Protobuf Paths
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
-
+	SET(PROTOBUF_BINARY_DIR ${PROTOBUF_ROOT}/lib)
 	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
 	SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
 	SET(MYSQL_BINARY_DIR /usr/lib)
