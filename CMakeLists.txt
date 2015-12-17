@@ -73,7 +73,7 @@ ELSE()
 	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
 	SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
 	SET(MYSQL_BINARY_DIR /usr/lib)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmysqlpp -lmysqlclient -lnsl -lz -lm")
+	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
 ADD_SUBDIRECTORY(src)
