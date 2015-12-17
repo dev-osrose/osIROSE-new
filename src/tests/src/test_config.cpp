@@ -13,7 +13,7 @@ TEST(Config, TestDatabase)
 	EXPECT_EQ("localhost", dbb.host());
 	EXPECT_EQ("osirose", dbb.database());
 	EXPECT_EQ("root", dbb.user());
-	EXPECT_EQ("root", dbb.password());
+	EXPECT_EQ("", dbb.password());
 	EXPECT_EQ(3306, dbb.port());
 }
 
