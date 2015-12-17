@@ -92,6 +92,7 @@ SET(SOURCES
 PROJECT(${PROJECT})
 
 INCLUDE_DIRECTORIES(
+    ${CMAKE_SOURCE_DIR}/src/proto
     ${CMAKE_SOURCE_DIR}/src/core/include
     ${CMAKE_SOURCE_DIR}/src/rosecommon/include
     ${CMAKE_SOURCE_DIR}/src/login/include
@@ -109,6 +110,7 @@ ADD_DEPENDENCIES(${PROJECT} gtest)
 ADD_DEPENDENCIES(${PROJECT} gmock)
 ADD_DEPENDENCIES(${PROJECT} Core)
 ADD_DEPENDENCIES(${PROJECT} RoseCommon)
+ADD_DEPENDENCIES(${PROJECT} protoGen)
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 ENDIF()
@@ -126,6 +128,7 @@ TARGET_LINK_LIBRARIES(${PROJECT}
     ${CMAKE_THREAD_LIBS_INIT}
     Core
     RoseCommon
+    protoGen
     gtest
     gmock
     ${COVERAGE_LIBRARIES}

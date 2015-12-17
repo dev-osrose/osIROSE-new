@@ -39,18 +39,15 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
  
-
-#include_directories(BEFORE SYSTEM $ENV{BOOST_ROOT})
 INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_SOURCE_DIR}/src/proto
 )
-#link_directories(${CMAKE_HOME_DIRECTORY}/3rdParty/lib)
 
 SET( SOURCES_BASE
   src/logconsole
   src/cnetwork_asio
   src/config
-  src/configfile.pb
   src/pbjson.cpp
   src/logconsole
   src/cmysql_database

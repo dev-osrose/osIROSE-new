@@ -56,6 +56,7 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#------------
 	#Build Protobuf
         ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
+	SET(PROTOBUF_ROOT ${protobuf_SOURCE_DIR})
         SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
         SET(PROTOBUF_BINARY_DIR ${protobuf_BINARY_DIR})
         SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
@@ -69,6 +70,7 @@ ELSE()
 	SET(PROTOC_PATH ${CMAKE_SOURCE_DIR}/protobuf/bin)
 	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
 	SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
+	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
 
 	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
 	SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
@@ -76,5 +78,6 @@ ELSE()
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
+INCLUDE(FindProtobuf)
 ADD_SUBDIRECTORY(src)
 

@@ -65,6 +65,7 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
 target_link_libraries(${PROJECT}
 	Core
         RoseCommon
+	protoGen
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
