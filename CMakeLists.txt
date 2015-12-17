@@ -51,6 +51,9 @@ SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdParty/include)
 SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdParty/lib)
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+	#------------
+	#WINDOWS ONLY SETTINGS!!!!
+	#------------
 	#Build Protobuf
         ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
         SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
@@ -60,16 +63,18 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
 	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 ELSE()
+	#UNIX ONLY SETTINGS
+
 	#Set Protobuf Paths
 	SET(PROTOC_PATH ${CMAKE_SOURCE_DIR}/protobuf/bin)
 	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
 	SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
-ENDIF()
 
-SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
-SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
-SET(MYSQL_BINARY_DIR /usr/lib)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmysqlpp -lmysqlclient -lnsl -lz -lm")
+	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
+	SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
+	SET(MYSQL_BINARY_DIR /usr/lib)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmysqlpp -lmysqlclient -lnsl -lz -lm")
+ENDIF()
 
 ADD_SUBDIRECTORY(src)
 

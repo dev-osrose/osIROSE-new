@@ -23,6 +23,9 @@ addons:
     - libstdc++5
     - libmysqlclient-dev
     - libmysql++-dev
+    - libmysqld-dev 
+    - libmysql++-dev
+    - libmysql++3
 
 cache:
   directories:

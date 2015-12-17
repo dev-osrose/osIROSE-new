@@ -33,7 +33,7 @@ install:
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt
 - C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
-#build: #off
+build: off
 #  project: osIROSE.sln
 #  parallel: true
 #  verbosity: minimal
