@@ -241,12 +241,14 @@ IF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 ENDIF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 
 FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h 
-          PATHS "${PROTOBUF_ROOT}/usr/include"
-                "${PROTOBUF_ROOT}/usr/local/include"
-                "${PROTOBUF_ROOT}/usr/include/google"
-                "${PROTOBUF_ROOT}/usr/local/include/google"
-		"${PROTOBUF_ROOT}/include"
+          PATHS "${PROTOBUF_ROOT}/include"
+		"/usr/include"
+                "/usr/local/include"
+                "/usr/include/google"
+                "/usr/local/include/google"
 )
+#message(STATUS "PROTOBUF_ROOT=${PROTOBUF_ROOT}")
+#message(STATUS "PROTOBUF_INCLUDE_DIR=${PROTOBUF_INCLUDE_DIR}")
 
 # Google's provided vcproj files generate libraries with a "lib"
 # prefix on Windows
@@ -256,23 +258,24 @@ IF(WIN32)
 ENDIF()
 
 FIND_LIBRARY(PROTOBUF_LIBRARY NAMES protobuf
-             PATHS "${PROTOBUF_ROOT}/usr/lib"
-                   "${PROTOBUF_ROOT}/usr/local/lib"
-                   "${PROTOBUF_ROOT}/usr/local/lib/google"
-		   "${PROTOBUF_ROOT}/lib"
+             PATHS "${PROTOBUF_ROOT}/lib"
+		   "/usr/lib"
+                   "/usr/local/lib"
+                   "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Library"
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY NAMES protoc
-             PATHS "${PROTOBUF_ROOT}/usr/lib"
-                   "${PROTOBUF_ROOT}/usr/local/lib"
-                   "${PROTOBUF_ROOT}/usr/local/lib/google"
-		   "${PROTOBUF_ROOT}/lib"
+             PATHS "${PROTOBUF_ROOT}/lib"
+		   "/usr/lib"
+                   "/usr/local/lib"
+                   "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Compiler Library"
 )
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
              PATHS "${PROTOBUF_ROOT}/bin"
-                   "${PROTOBUF_ROOT}/usr/bin"
-                   "${PROTOBUF_ROOT}/usr/local/bin"
+		   "/bin"
+                   "/usr/bin"
+                   "/usr/local/bin"
              DOC "The Google Protocol Buffers Compiler"
 )
 

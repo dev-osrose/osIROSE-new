@@ -18,11 +18,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		echo 'Using cached protobuf directory.';
 	fi
 
-	cd src/core/include
-	../../../protobuf/bin/protoc --cpp_out=./ configfile.proto
-	mv configfile.pb.cc ../src/
-	cd ../../../
-
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz
 	cd lcov-1.12

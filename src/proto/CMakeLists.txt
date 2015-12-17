@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-
 SET(PROJECT protoGen)
 
 project(${PROJECT})
@@ -22,10 +21,12 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 ENDIF()
 
-find_package(Protobuf REQUIRED)
 include_directories(
 	${PROTOBUF_INCLUDE_DIRS}
 )
+
+#message(STATUS "PROTOBUF_ROOT=${PROTOBUF_ROOT}")
+#message(STATUS "PROTOBUF_INCLUDE_DIRS=${PROTOBUF_INCLUDE_DIRS}")
 
 FILE(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
 message(STATUS "ProtoFiles=${ProtoFiles}")
@@ -35,5 +36,4 @@ SET(args
 )
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
-
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})

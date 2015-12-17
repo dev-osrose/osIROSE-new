@@ -67,9 +67,6 @@ ELSE()
 	#UNIX ONLY SETTINGS
 
 	#Set Protobuf Paths
-	SET(PROTOC_PATH ${CMAKE_SOURCE_DIR}/protobuf/bin)
-	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/protobuf/include)
-	SET(PROTOBUF_BINARY_DIR ${CMAKE_SOURCE_DIR}/protobuf/lib)
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
 
 	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
@@ -78,6 +75,10 @@ ELSE()
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
-INCLUDE(FindProtobuf)
+
+#LIST(APPEND CMAKE_PREFIX_PATH "${PROTOBUF_ROOT}")
+find_package(ProtocolBuffer REQUIRED)
+#find_package(Protobuf REQUIRED)
+
 ADD_SUBDIRECTORY(src)
 
