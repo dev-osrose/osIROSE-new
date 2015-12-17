@@ -33,7 +33,7 @@ CNetwork_Asio::~CNetwork_Asio( )
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 
 	Shutdown( );
-	//	m_io_service.stop( );
+	m_io_service.stop( );
 	m_IOThread.join( );
 	m_ProcessThread.join( );
 }
@@ -91,14 +91,14 @@ bool CNetwork_Asio::Shutdown( )
 		delete _buffer;
 	}
 
-	while ( !m_DiscardQueue.empty( ) )
-	{
-		uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
-		m_DiscardQueue.pop( );
-		delete _buffer;
-	}
+//	while ( !m_DiscardQueue.empty( ) )
+//	{
+//		uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
+//		m_DiscardQueue.pop( );
+//		delete _buffer;
+//	}
 
-	m_io_service.stop( );
+//	m_io_service.stop( );
 	//        m_IOThread.join( );
 	//        m_ProcessThread.join( );
 	return true;
@@ -200,9 +200,13 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 			                  }
 			                  else
 			                  {
-				                  m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
-								  Shutdown();
-								  return;
+						if( errorCode.value( ) == 2 )
+							m_Log.icprintf( CL_RESET CL_WHITE "Client disconnected.\n" );
+						else
+				                	m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+
+						Shutdown();
+						return;
 			                  }
 
 			                  m_RecvCondition.notify_all( );

@@ -22,6 +22,15 @@ typedef uint64_t qword;
 // WC = World -> client
 enum struct ePacketType : uint16_t
 {
+	ISCSTART    = 0x300,
+	ISC_ALIVE,
+	ISC_SERVER_AUTH,
+	ISC_SERVER_REGISTER,
+	ISC_TRANSFER,
+	ISC_SHUTDOWN,
+	ISCEND,
+
+	//CLIENT PACKETS START HERE!!!
 	PAKSTART    = 0x700,
 	PAKCS_ALIVE = PAKSTART,
 	PAKSS_ERROR = PAKCS_ALIVE,

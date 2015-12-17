@@ -55,6 +55,8 @@ file(GLOB_RECURSE MAP_SOURCE . ${CMAKE_SOURCE_DIR}/src/map/[!main]*.[c][p][p])
 
 SET(SERVER_SOURCE
    ${LOGIN_SOURCE}
+   ${CHAR_SOURCE}
+   ${MAP_SOURCE}
 )
 
 SET(HEADERS
@@ -72,12 +74,12 @@ message(STATUS "SERVER_SOURCE=${SERVER_SOURCE}")
 SET(SOURCE_MAIN main)
 
 SET(SOURCES_BASE
-	src/test_crosecrypt
-	src/test_network_asio
-	src/test_crose_network
-	src/test_logconsole
 	src/test_config
+	src/test_logconsole
 	src/test_mysql_database
+	src/test_network_asio
+	src/test_crosecrypt
+	src/test_crose_network
 	src/test_login
 )
 
