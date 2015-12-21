@@ -57,14 +57,11 @@ bool CRoseClient::OnReceive( )
 
 bool CRoseClient::OnReceived( )
 {
-	//uint8_t buf[MAX_PACKET_SIZE];
-	//memcpy( buf, Buffer, _size );
-
 	if ( PacketSize == 6 )
 	{
 		PacketSize = m_Crypt.decodeClientHeader( (unsigned char*)&Buffer );
 
-		if ( PacketSize < 6 )
+		if ( PacketSize < 6 || PacketSize > MAX_PACKET_SIZE )
 		{
 			m_Log.eicprintf( "Client sent incorrect blockheader\n" );
 			return false;

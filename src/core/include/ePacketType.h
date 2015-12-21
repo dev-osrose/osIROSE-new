@@ -8,6 +8,10 @@
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
 
+#ifndef MAX_PACKET_SIZE
+#define MAX_PACKET_SIZE 0x7FF
+#endif
+
 typedef uint8_t  byte;
 typedef uint16_t word;
 typedef uint32_t dword;
@@ -99,6 +103,11 @@ struct sPacketHeader
 	uint16_t Unused;  // unused?
 };
 
+
+//-------------------------------------------
+// GAME PACKETS!!!!!!
+//-------------------------------------------
+
 struct channelInfo
 {
 	uint16_t  ChannelID;
@@ -145,9 +154,9 @@ struct CPacket
 		struct
 		{
 			sPacketHeader Header;
-			uint8_t       Data[ 0x400 - 6 ];
+			uint8_t       Data[ MAX_PACKET_SIZE - 6 ];
 		};
-		uint8_t Buffer[ 0x400 ];
+		uint8_t Buffer[ MAX_PACKET_SIZE ];
 
 		pakEncryptionRequest pEncryptReq;
 		pakLoginReply      pLoginReply;

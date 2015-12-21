@@ -27,7 +27,9 @@
 #include "logconsole.h"
 #include <condition_variable>
 
+#ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
+#endif
 
 using asio::ip::tcp;
 class CLogConsole;

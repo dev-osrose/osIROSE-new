@@ -196,7 +196,11 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 			                  PacketOffset += length;
 			                  if ( !errorCode || errorCode.value( ) == 11 )
 			                  {
-				                  OnReceived( );
+				                  if ( OnReceived( ) == false )
+						  {
+							m_Log.eicprintf(CL_RESET "Something bad happend in OnReceived... Shutting down..." CL_RESET);
+							Shutdown();
+						  }
 			                  }
 			                  else
 			                  {
