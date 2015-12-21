@@ -25,11 +25,12 @@ include_directories(
 	${PROTOBUF_INCLUDE_DIRS}
 )
 
-#message(STATUS "PROTOBUF_ROOT=${PROTOBUF_ROOT}")
-#message(STATUS "PROTOBUF_INCLUDE_DIRS=${PROTOBUF_INCLUDE_DIRS}")
 
-FILE(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
-message(STATUS "ProtoFiles=${ProtoFiles}")
+SET( ProtoFiles
+	configfile.proto
+	iscpackets.proto
+)
+#FILE(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
 SET(args 
 	PROTOFILES ${ProtoFiles} 
 	OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -37,3 +38,4 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
+ADD_DEPENDENCIES(${PROJECT} ${ProtoFiles})
