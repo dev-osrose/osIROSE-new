@@ -37,10 +37,10 @@ build: off
 #  project: osIROSE.sln
 #  parallel: true
 #  verbosity: minimal
-build_script:
-- cd build
-- cmake -DENABLE_TESTING=ON ..
-- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+#build_script:
+#- cd build
+#- cmake -DENABLE_TESTING=ON ..
+#- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: build/bin
   name: build-bin
