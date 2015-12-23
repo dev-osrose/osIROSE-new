@@ -6,6 +6,7 @@ CRoseClient::CRoseClient( )
     : CNetwork_Asio( ), m_Crypt( )
 {
 	m_Log.SetIdentity( "CRoseClient" );
+	ResetBuffer( );
 }
 
 CRoseClient::CRoseClient( tcp::socket _sock )
@@ -14,6 +15,7 @@ CRoseClient::CRoseClient( tcp::socket _sock )
 	SetSocket( std::move( _sock ) );
 	m_Log.SetIdentity( "CRoseClient" );
 	Recv( );
+	ResetBuffer( );
 }
 
 CRoseClient::~CRoseClient( )
@@ -65,6 +67,7 @@ bool CRoseClient::OnReceived( )
 		if ( PacketSize < 6 || PacketSize > MAX_PACKET_SIZE )
 		{
 			m_Log.eicprintf( "Client sent incorrect blockheader\n" );
+			ResetBuffer( );
 			return false;
 		}
 
@@ -77,6 +80,7 @@ bool CRoseClient::OnReceived( )
 	{
 		// ERROR!!!
 		m_Log.eicprintf( "Client sent illegal block\n" );
+		ResetBuffer( );
 		return false;
 	}
 

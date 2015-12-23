@@ -33,21 +33,23 @@ bool CCharISC::HandlePacket( uint8_t* _buffer )
 void CCharISC::OnConnected()
 {
 	CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
+
 	ServerReg pServerReg;
-	pServerReg.set_name("");
-	pServerReg.set_addr("");
+	pServerReg.set_name("HardCoded Name");
+	pServerReg.set_addr("127.0.0.1");
 	pServerReg.set_port(29100);
 	pServerReg.set_type(ServerReg_ServerType_CHAR);
 
+	int _size = pServerReg.ByteSize(); 
+	uint8_t* data = new uint8_t[_size];
+	if( pServerReg.SerializeToArray(data, _size) == false )
+		m_Log.eicprintf( "Couldn't serialize the data\n" );
+	pak->AddBytes(data, _size);
 
-	int size = pServerReg.ByteSize(); 
-	uint8_t* data = new uint8_t[size];
-	pServerReg.SerializeToArray(data, size);
-	//std::ostringstream stream;
-	//pServerReg.SerializeToOstream(&stream);
-	//std::string data = stream.str();
-	pak->AddBytes(data, size);
-	Send((CPacket*)pak);
+	m_Log.icprintf("Header[%i, 0x%X] Size: %i\n", pak->Header.Size, pak->Header.Command, _size);
 
+	m_Log.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
+
+	Send( (CPacket*)pak );
 	delete[] data;
 }

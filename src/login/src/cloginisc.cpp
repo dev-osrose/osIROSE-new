@@ -32,13 +32,21 @@ bool CLoginISC::HandlePacket( uint8_t* _buffer )
 
 bool CLoginISC::ServerRegister( CPacket* P )
 {
-	CRosePacket* reg = (CRosePacket*)P;
-	type = reg->pServerReg.type();
-	name = reg->pServerReg.name();
-	address =reg->pServerReg.addr();
-	port = reg->pServerReg.port();
+	CPacket* reg = (CPacket*)P;
 
-	m_Log.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name(reg->pServerReg.type()).c_str(), name.c_str(), address.c_str(), port);
+	uint16_t _size = reg->Header.Size - 6;
+	m_Log.icprintf("size: %i\n", _size);
+
+	ServerReg pServerReg;
+	if( pServerReg.ParseFromArray( reg->Data, _size ) == false ) // WHY DO YOU NOT WORK!!!!OMGFOAHSDH{O
+		m_Log.eicprintf("Couldn't decode proto msg\n");
+
+	type = pServerReg.type();
+	name = pServerReg.name();
+	address = pServerReg.addr();
+	port = pServerReg.port();
+
+	m_Log.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name(pServerReg.type()).c_str(), name.c_str(), address.c_str(), port);
 	return true;
 }
 

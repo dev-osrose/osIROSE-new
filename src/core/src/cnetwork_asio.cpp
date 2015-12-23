@@ -48,7 +48,7 @@ bool CNetwork_Asio::Run( )
 	{
 		ProcessSend( );
 		ProcessRecv( );
-		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
 	}
 
 	m_Log.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
@@ -165,28 +165,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 {
 	OnReceive( );
 	{
-		/*std::lock_guard< std::mutex > lock( m_RecvMutex );
-		m_RecvCondition.wait_for( m_RecvMutex, std::chrono::seconds( 1 ), []
-		{
-			return ;
-		} );*/
 		(void)_size;
-		//		asio::error_code errorCode;
-		//		std::size_t length = asio::read( m_socket, asio::buffer( &Buffer[BufCount], _size ), asio::transfer_at_least( 6 ), errorCode );
-		//		BufCount += length;
-		//
-		//		if ( !errorCode || errorCode.value() == 11 )
-		//		{
-		//			m_Log.icprintf( "length = %i, BufCount = %i\n", length, BufCount );
-		//			OnReceived( Buffer, (uint16_t)BufCount );
-		//		}
-		//		else
-		//		{
-		//			//EC 2 = reached end of file (Nothing waiting to be read, this is okay)
-		//			if ( errorCode.value( ) != 2 )
-		//				m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
-		//		}
-		//		m_RecvMutex.unlock( );
 
 		uint8_t BytesToRead = PacketSize - PacketOffset;
 		asio::async_read( m_socket,
@@ -318,45 +297,27 @@ void CNetwork_Asio::ProcessSend( )
 		// Loop though all of m_SendQueue
 		std::lock_guard< std::mutex > lock( m_SendMutex );
 
-		if ( m_SendQueue.empty( ) )
-			return;
+//		if ( m_SendQueue.empty( ) )
+//			return;
 
-		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
-		m_SendQueue.pop( );
-		uint16_t _size = (uint16_t)_buffer[ 0 ];
+		while ( !m_SendQueue.empty( ) )
+		{
+			uint8_t* _buffer = std::move( m_SendQueue.front( ) );
+			m_SendQueue.pop( );
+			uint16_t _size = (uint16_t)_buffer[ 0 ];
+			uint16_t _command = (uint16_t)_buffer[ 2 ];
 
-// 		{
-// 			std::lock_guard< std::mutex > lock2( m_DiscardMutex );
-// 			m_DiscardQueue.push( _buffer );
-// 		}
+			if( OnSend( _buffer ) )
+				asio::write( m_socket, asio::buffer( _buffer, _size ) );
+			else
+				m_Log.eicprintf( CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size, _command );
 
-		if( OnSend( _buffer ) )
-			asio::write( m_socket, asio::buffer( _buffer, _size ) );
-		else
-			m_Log.eicprintf( CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size, (uint16_t)_buffer[ 2 ] );
-		delete _buffer;
-		_buffer = nullptr;
-		OnSent();
-
-// 		asio::async_write( m_socket,
-// 		                   asio::buffer( _buffer,
-// 		                                 _size ),
-// 		                   [this]( std::error_code ec, std::size_t /*length*/ ) {
-// 
-// 			                   if ( !ec )
-// 			                   {
-// 				                   std::lock_guard< std::mutex > lock( m_DiscardMutex );
-// 				                   uint8_t* _buffer = std::move( m_DiscardQueue.front( ) );
-// 				                   m_DiscardQueue.pop( );
-// 				                   delete _buffer;
-// 
-// 				                   OnSent( );
-// 			                   }
-// 			                   else
-// 			                   {
-// 				                   m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::ProcessSend]: %s\n" CL_RESET, ec.message( ).c_str( ) );
-// 			                   }
-// 			               } );
+//			m_Log.oicprintf( "ProcessSend Sent a packet on CRoseISC: Header[%i, 0x%X]\n", _size, _command );
+			std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+			delete _buffer;
+			_buffer = nullptr;
+			OnSent();
+		}
 	}
 }
 

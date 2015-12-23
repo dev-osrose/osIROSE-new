@@ -210,23 +210,11 @@ TEST( TestRoseNetwork, TestISCListenAndConnect )
         CRoseISC netConnect;
         EXPECT_EQ( true, network.Init( "127.0.0.1", 29110 ) ); // We are going to connect to google's website
         EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
-        //      EXPECT_CALL( network, OnListening() )
-        //                                      .WillOnce( testing::Invoke([&]()->int {
-        //                                                      std::lock_guard<std::mutex> lock(mutex);
-        //                                                      done = true;
-        //                                                      cv.notify_all();
-        //                                                      return 1; }));
-
-        //      std::unique_lock<std::mutex> lock(mutex);
-        //      EXPECT_TRUE(cv.wait_for(lock, std::chrono::seconds(1), [&done] { return done; }));
-
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29110 ) );
         EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 
-        //std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-        CPacket* pak = new CPacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
-//        pak->pChannelListReq.lServerID = 0x77;
+        CPacket* pak = new CPacket( ePacketType::ISC_ALIVE );
         netConnect.Send( pak );
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables

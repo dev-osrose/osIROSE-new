@@ -4,12 +4,13 @@
 CRoseISC::CRoseISC( ) : CRoseClient( )
 {
 	m_Log.SetIdentity( "CRoseISC" );
+	ResetBuffer();
 }
 
 CRoseISC::CRoseISC( tcp::socket _sock ) : CRoseClient( std::move(_sock) )
 {
 	m_Log.SetIdentity( "CRoseISC" );
-	Recv();
+	ResetBuffer();
 }
 
 CRoseISC::~CRoseISC()
@@ -18,9 +19,8 @@ CRoseISC::~CRoseISC()
 
 void CRoseISC::OnConnected( )
 {
-	// Do encryption handshake here	
-	ResetBuffer();
-	Recv();
+	// Do encryption handshake here
+	CRoseClient::OnConnected( );
 }
 
 bool CRoseISC::OnDisconnect( )
@@ -35,28 +35,21 @@ void CRoseISC::OnDisconnected()
 bool CRoseISC::OnReceived()
 {
 	bool rtnVal = true;
+	//m_Log.oicprintf( CL_WHITE "Size: %i\n", PacketSize );
 	if ( PacketSize == 6 )
         {
 		PacketSize = (uint16_t)Buffer[0];
-//                PacketSize = m_Crypt.decodeClientHeader( (unsigned char*)&Buffer );
-
-                if ( PacketSize < 6 )
+		//m_Log.oicprintf( CL_WHITE "Size From buffer: %i\n", PacketSize );
+                if ( PacketSize < 6 || PacketSize > MAX_PACKET_SIZE )
                 {
                         m_Log.eicprintf( "Client sent incorrect blockheader\n" );
+			ResetBuffer();
                         return false;
                 }
 
                 if ( PacketSize > 6 )
                         return true;
         }
-
-        //decrypt packet now
-//        if ( !m_Crypt.decodeClientBody( (unsigned char*)&Buffer ) )
-//        {
-//                // ERROR!!!
-//                m_Log.eicprintf( "Client sent illegal block\n" );
-//                return false;
-//        }
 
         CPacket* pak = (CPacket*)&Buffer;
         m_Log.oicprintf( "Received a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
@@ -69,7 +62,6 @@ bool CRoseISC::OnSend( uint8_t* _buffer )
 {
 	//TODO: Encrypt the buffer here!
 	(void)_buffer;
-//	m_Crypt.encodeServerPacket( _buffer );
 	return true;
 }
 

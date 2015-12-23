@@ -166,6 +166,7 @@ struct CPacket
 
 	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
+		memset( Buffer, 0, MAX_PACKET_SIZE );
 		Header.Command = (ePacketType)mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
@@ -173,6 +174,7 @@ struct CPacket
 
 	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
+		memset( Buffer, 0, MAX_PACKET_SIZE );
 		Header.Command = mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
