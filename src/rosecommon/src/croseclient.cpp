@@ -57,6 +57,7 @@ bool CRoseClient::OnReceive( )
 
 bool CRoseClient::OnReceived( )
 {
+	bool rtnVal = true;
 	if ( PacketSize == 6 )
 	{
 		PacketSize = m_Crypt.decodeClientHeader( (unsigned char*)&Buffer );
@@ -81,10 +82,10 @@ bool CRoseClient::OnReceived( )
 
 	CPacket* pak = (CPacket*)&Buffer;
 	m_Log.oicprintf( "Received a packet on CRoseClient: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
-	HandlePacket( Buffer );
+	rtnVal = HandlePacket( Buffer );
 	ResetBuffer( );
 
-	return true;
+	return rtnVal;
 }
 
 bool CRoseClient::OnSend( uint8_t* _buffer )

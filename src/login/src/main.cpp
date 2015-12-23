@@ -17,7 +17,7 @@ int main( int argc, char* argv[] )
 	clientServer.Init( "127.0.0.1", 29000 );
 	clientServer.Listen( );
 
-	iscServer.Init( "127.0.0.1", 29001 );
+	iscServer.Init( "127.0.0.1", 29010 );
 	iscServer.Listen( );
 
 	while( clientServer.IsActive() )

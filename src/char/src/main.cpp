@@ -1,4 +1,5 @@
 #include "ccharserver.h"
+#include "ccharisc.h"
 
 
 int main( int argc, char* argv[] )
@@ -11,12 +12,15 @@ int main( int argc, char* argv[] )
 
         CCharServer clientServer;
         CCharServer iscServer( true );
+	CCharISC iscClient;
+	iscClient.Init( "127.0.0.1", 29010);
 
         clientServer.Init( "127.0.0.1", 29100 );
         clientServer.Listen( );
 
         iscServer.Init( "127.0.0.1", 29110 );
         iscServer.Listen( );
+	iscClient.Connect();
 
         while( clientServer.IsActive() )
         {

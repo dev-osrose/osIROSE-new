@@ -8,8 +8,10 @@ class CCharISC : public CRoseISC
 public:
         CCharISC( );
         CCharISC( tcp::socket _sock );
+
 protected:
         bool HandlePacket( uint8_t* _buffer );
+	virtual void OnConnected( );
 };
 
 #endif

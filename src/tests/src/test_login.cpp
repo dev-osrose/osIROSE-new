@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "ePacketType.h"
 #include "cloginserver.h"
+#include "ccharisc.h"
 #include "mock/mock_cloginclient.h"
 #include "mock/mock_cloginisc.h"
 
@@ -53,7 +54,7 @@ TEST( TestLoginServer, TestClientPacketPath )
 TEST( TestLoginServer, TestISCPacketPath )
 {
         CLoginServer network(true);
-        CLoginISC_Mock netConnect;
+        CCharISC netConnect;
         EXPECT_EQ( true, network.Init( "127.0.0.1", 29110 ) );
         EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 
@@ -62,8 +63,8 @@ TEST( TestLoginServer, TestISCPacketPath )
         EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 
         //std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-        CPacket* pak = new CPacket( ePacketType::PAKCS_ACCEPT_REQ );
-        netConnect.Send( pak );
+//        CPacket* pak = new CPacket( ePacketType::PAKCS_ACCEPT_REQ );
+//        netConnect.Send( pak );
 
         /*CPacket* pak4 = new CPacket( ePacketType::PAKCS_LOGIN_REQ );
         pak4->AddString( "cc03e747a6afbbcbf8be7668acfebee5", false );

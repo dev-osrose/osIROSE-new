@@ -198,7 +198,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 			                  {
 				                  if ( OnReceived( ) == false )
 						  {
-							m_Log.eicprintf(CL_RESET "Something bad happend in OnReceived... Shutting down..." CL_RESET);
+							m_Log.eicprintf(CL_RESET "Something bad happend in OnReceived... Shutting down...\n" CL_RESET);
 							Shutdown();
 						  }
 			                  }
@@ -330,8 +330,10 @@ void CNetwork_Asio::ProcessSend( )
 // 			m_DiscardQueue.push( _buffer );
 // 		}
 
-		OnSend( _buffer );
-		asio::write( m_socket, asio::buffer( _buffer, _size ) );
+		if( OnSend( _buffer ) )
+			asio::write( m_socket, asio::buffer( _buffer, _size ) );
+		else
+			m_Log.eicprintf( CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size, (uint16_t)_buffer[ 2 ] );
 		delete _buffer;
 		_buffer = nullptr;
 		OnSent();
