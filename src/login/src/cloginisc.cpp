@@ -38,7 +38,7 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	address =reg->pServerReg.addr();
 	port = reg->pServerReg.port();
 
-	m_Log.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name(reg->pServerReg.type()), name, address, port);
+	m_Log.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name(reg->pServerReg.type()).c_str(), name.c_str(), address.c_str(), port);
 	return true;
 }
 
