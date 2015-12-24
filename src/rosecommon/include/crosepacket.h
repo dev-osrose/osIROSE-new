@@ -21,9 +21,6 @@ struct CRosePacket// : public CPacket
 		pakLoginReply      pLoginReply;
 		pakChannelList_Req pChannelListReq;
 		pakChannel_List    pChannelList;
-
-		//ISC PACKETS
-		ServerReg pServerReg;
 	};
 
 	CRosePacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
@@ -48,7 +45,7 @@ struct CRosePacket// : public CPacket
 	template < class T >
 	void Add( T value )
 	{
-		*( (T*)&Data[ Header.Size ] ) = value;
+		*( (T*)&Buffer[ Header.Size ] ) = value;
 		Header.Size += sizeof( T );
 	}
 	void AddString( const char* value, bool NullTerminate )
@@ -66,10 +63,10 @@ struct CRosePacket// : public CPacket
 		Add< T >( strlen( (const char*)value ) );
 		AddString( value, false );
 	}
-	void AddBytes( uint8_t* value, uint32_t len )
+	void AddBytes( uint8_t* value, uint16_t len )
 	{
-		for ( uint32_t i = 0; i < len; i++ )
-			Add< uint8_t >( (uint8_t)value[ i ] );
+		for ( uint16_t i = 0; i < len; i++ )
+			Add< uint8_t >( value[ i ] );
 	}
 
 	// Functions added by Raven

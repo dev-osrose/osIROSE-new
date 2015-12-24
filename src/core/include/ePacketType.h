@@ -185,22 +185,6 @@ struct CPacket
 	}
 
 	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-	//char*				 GetString( unsigned short pos );
-	//void               AddByte( unsigned char value );
-	//void               AddWord( unsigned short value );
-	//void               AddDWord( unsigned value );
-	//void               AddQWord( unsigned long long value );
-	//void               AddFloat( float value );
-	//void               SetByte( unsigned short pos, unsigned char value );
-	//void               SetWord( unsigned short pos, unsigned short value );
-	//void               SetDWord( unsigned short pos, unsigned value );
-	//void               SetQWord( unsigned short pos, unsigned long long value );
-	//void               SetFloat( unsigned short pos, float value );
-	unsigned char      GetByte( unsigned short pos );
-	unsigned short     GetWord( unsigned short pos );
-	unsigned           GetDWord( unsigned short pos );
-	unsigned long long GetQWord( unsigned short pos );
-	float              GetFloat( unsigned short pos );
 
 	// Functions added by Drakia
 	template < class T >

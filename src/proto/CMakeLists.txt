@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-SET(PROJECT protoGen)
 
+SET(PROJECT protoGen)
 project(${PROJECT})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
@@ -30,7 +30,7 @@ SET( ProtoFiles
 	configfile.proto
 	iscpackets.proto
 )
-#FILE(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
+
 SET(args 
 	PROTOFILES ${ProtoFiles} 
 	OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -38,4 +38,4 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
-ADD_DEPENDENCIES(${PROJECT} ${ProtoFiles})
+ADD_DEPENDENCIES(${PROJECT} ${ProtoFiles} libprotobuf)

@@ -1,6 +1,7 @@
 #ifndef _IDATABASE_H_
 #define _IDATABASE_H_
 
+#include <stdint.h>
 #include <string>
 
 class	IResult

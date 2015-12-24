@@ -32,13 +32,22 @@ bool CLoginISC::HandlePacket( uint8_t* _buffer )
 
 bool CLoginISC::ServerRegister( CPacket* P )
 {
-	CPacket* reg = (CPacket*)P;
+	CPacket* pak = (CPacket*)P;
 
-	uint16_t _size = reg->Header.Size - 6;
+	uint16_t _size = pak->Header.Size - 6;
+	uint8_t* data = new uint8_t[_size];
+	memset( data, 0, _size );
+	pak->GetBytes( 0, _size, data );
+
 	m_Log.icprintf("size: %i\n", _size);
 
+	m_Log.icprintf( "IN 0x%X ", pak->Header.Command );
+	for (int i = 0; i < _size; i++)
+		m_Log.dcprintf( "%02X ", data[i] );
+	m_Log.dcprintf( "\n" );
+
 	ServerReg pServerReg;
-	if( pServerReg.ParseFromArray( reg->Data, _size ) == false ) // WHY DO YOU NOT WORK!!!!OMGFOAHSDH{O
+	if (pServerReg.ParseFromArray( data, _size ) == false) // WHY DO YOU NOT WORK!!!!OMGFOAHSDH{O
 		m_Log.eicprintf("Couldn't decode proto msg\n");
 
 	type = pServerReg.type();
