@@ -3,7 +3,7 @@
 #include "cloginisc.h"
 #include "ePacketType.h"
 
-CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc )
+CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc ), clientCount(0)
 {
 	if ( true == _isc )
 		m_Log.SetIdentity( "CLoginISCServer" );
@@ -29,6 +29,7 @@ void CLoginServer::OnAccepted( tcp::socket _sock )
 		{
 			std::lock_guard<std::mutex> lock(m_ClientListMutex);
 			CLoginClient* nClient = new CLoginClient( std::move( _sock ) );
+			nClient->SetId(clientCount++);
 			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
 	                m_ClientList.push_front( nClient );
 		}

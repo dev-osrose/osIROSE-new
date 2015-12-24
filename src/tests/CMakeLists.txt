@@ -82,6 +82,7 @@ SET(SOURCES_BASE
 	src/test_crosecrypt
 	src/test_crose_network
 	src/test_login
+	src/test_char
 )
 
 SET(SOURCES

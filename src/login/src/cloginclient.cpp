@@ -115,7 +115,7 @@ bool CLoginClient::ServerSelect( CPacket* P )
 
 	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
 	pak->Add<uint8_t>( 0 ); // Not sure what this byte is for
-	pak->Add<uint32_t>( 0 ); // Set this to client id
+	pak->Add<uint32_t>( GetId() ); // Set this to client id
 	pak->Add<uint32_t>( 0 ); // Set this to the crypt seed for the server we are connecting to
 	std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
 	for( auto& obj : CLoginServer::GetISCList() )
