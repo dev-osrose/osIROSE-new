@@ -1,6 +1,7 @@
 #ifndef _CROSE_NETWORK_H_
 #define _CROSE_NETWORK_H_
 
+#include <list>
 #include <forward_list>
 #include "cnetwork_asio.h"
 

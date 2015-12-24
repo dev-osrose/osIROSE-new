@@ -64,6 +64,18 @@ TEST( TestLoginServer, TestISCPacketPath )
         EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29110 ) );
         EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 
+	{
+		uint8_t serverCount = 0;
+		std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
+                for( auto& server : CLoginServer::GetISCList() )
+		{
+			if( server->GetType() == 1)
+				serverCount++;
+		}
+
+		EXPECT_EQ( 1, serverCount );
+	}
+
         //std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 //        CPacket* pak = new CPacket( ePacketType::ISC_ALIVE );
 //        netConnect.Send( pak );
