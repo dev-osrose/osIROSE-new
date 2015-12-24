@@ -190,7 +190,7 @@ struct CPacket
 	template < class T >
 	void Add( T value )
 	{
-		*( (T*)&Data[ Header.Size ] ) = value;
+		*( (T*)&Buffer[ Header.Size ] ) = value;
 		Header.Size += sizeof( T );
 	}
 	void AddString( const char* value, bool NullTerminate )
