@@ -8,6 +8,10 @@
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
 
+#ifndef MAX_PACKET_SIZE
+#define MAX_PACKET_SIZE 0x7FF
+#endif
+
 typedef uint8_t  byte;
 typedef uint16_t word;
 typedef uint32_t dword;
@@ -99,6 +103,11 @@ struct sPacketHeader
 	uint16_t Unused;  // unused?
 };
 
+
+//-------------------------------------------
+// GAME PACKETS!!!!!!
+//-------------------------------------------
+
 struct channelInfo
 {
 	uint16_t  ChannelID;
@@ -145,9 +154,9 @@ struct CPacket
 		struct
 		{
 			sPacketHeader Header;
-			uint8_t       Data[ 0x400 - 6 ];
+			uint8_t       Data[ MAX_PACKET_SIZE - 6 ];
 		};
-		uint8_t Buffer[ 0x400 ];
+		uint8_t Buffer[ MAX_PACKET_SIZE ];
 
 		pakEncryptionRequest pEncryptReq;
 		pakLoginReply      pLoginReply;
@@ -157,6 +166,7 @@ struct CPacket
 
 	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
+		memset( Buffer, 0, MAX_PACKET_SIZE );
 		Header.Command = (ePacketType)mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
@@ -164,6 +174,7 @@ struct CPacket
 
 	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
 	{
+		memset( Buffer, 0, MAX_PACKET_SIZE );
 		Header.Command = mycommand;
 		Header.Size    = mysize;
 		Header.Unused  = myunused;
@@ -174,28 +185,12 @@ struct CPacket
 	}
 
 	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-	//char*				 GetString( unsigned short pos );
-	//void               AddByte( unsigned char value );
-	//void               AddWord( unsigned short value );
-	//void               AddDWord( unsigned value );
-	//void               AddQWord( unsigned long long value );
-	//void               AddFloat( float value );
-	//void               SetByte( unsigned short pos, unsigned char value );
-	//void               SetWord( unsigned short pos, unsigned short value );
-	//void               SetDWord( unsigned short pos, unsigned value );
-	//void               SetQWord( unsigned short pos, unsigned long long value );
-	//void               SetFloat( unsigned short pos, float value );
-	unsigned char      GetByte( unsigned short pos );
-	unsigned short     GetWord( unsigned short pos );
-	unsigned           GetDWord( unsigned short pos );
-	unsigned long long GetQWord( unsigned short pos );
-	float              GetFloat( unsigned short pos );
 
 	// Functions added by Drakia
 	template < class T >
 	void Add( T value )
 	{
-		*( (T*)&Data[ Header.Size ] ) = value;
+		*( (T*)&Buffer[ Header.Size ] ) = value;
 		Header.Size += sizeof( T );
 	}
 	void AddString( const char* value, bool NullTerminate )

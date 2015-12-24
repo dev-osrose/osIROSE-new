@@ -13,6 +13,7 @@ CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc )
 
 CLoginServer::~CLoginServer()
 {
+	Shutdown();
 }
 
 void CLoginServer::OnAccepted( tcp::socket _sock )

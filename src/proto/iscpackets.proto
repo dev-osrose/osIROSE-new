@@ -1,0 +1,18 @@
+syntax = "proto3";
+package iscPacket;
+
+message ServerReg
+{
+	enum ServerType {
+		LOGIN = 0;
+		CHAR = 1;
+		NODE = 2;
+		MAP_MASTER = 3;
+		MAP_WORKER = 4;
+	}
+
+	ServerType type = 1;
+	string name = 2;
+	string addr = 3;
+	int32 port = 4;
+}

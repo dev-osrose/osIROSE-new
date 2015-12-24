@@ -22,7 +22,6 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 
 	if( Result == 0 )
 	{
-		std::string serverName = "abcdefgh";
 		uint32_t serverID = 1;
 
 		// loop the server list here
@@ -31,14 +30,12 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
 		for( auto& server : CLoginServer::GetISCList() )
 		{
-			if( server->GetType() == 1 )
+			if( ((CLoginISC*)server)->GetType() == 1 )
 			{
-				pak->AddString( serverName.c_str(), true );
+				pak->AddString( ((CLoginISC*)server)->GetName().c_str(), true );
 		                pak->Add< uint32_t >( serverID++ );
 			}
 		}
-		pak->AddString( serverName.c_str(), true );
-                pak->Add< uint32_t >( serverID + 1 );
 	}
 	this->Send( pak );
 }
@@ -117,11 +114,19 @@ bool CLoginClient::ServerSelect( CPacket* P )
 	m_Log.icprintf( "Server Select\n" );
 
 	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
-	pak->Add<uint8_t>( 0 );
+	pak->Add<uint8_t>( 0 ); // Not sure what this byte is for
 	pak->Add<uint32_t>( 0 ); // Set this to client id
 	pak->Add<uint32_t>( 0 ); // Set this to the crypt seed for the server we are connecting to
-	pak->AddString( "127.0.0.1", true ); // Set this to the IP address of char server
-	pak->Add<uint16_t>( 29100 ); // Set this to the char server port
+	std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
+	for( auto& obj : CLoginServer::GetISCList() )
+        {
+		CLoginISC* server = (CLoginISC*)obj;
+                if( server->GetType() == 1 )
+                {
+                       	pak->AddString( server->GetIP().c_str(), true );
+                	pak->Add< uint16_t >( server->GetPort() );
+		}
+       	}
 	this->Send( pak );
 
 	return true;
