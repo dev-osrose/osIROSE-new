@@ -18,6 +18,11 @@ bool CCharClient::HandlePacket( uint8_t* _buffer )
         CPacket* pak = (CPacket*)_buffer;
         switch ( pak->Header.Command )
         {
+	case PAKCS_JOIN_SERVER_REQ: return true; // Allow client to connect
+	case PAKCS_CHAR_LIST_REQ: return true; // SendCharList( pak );
+	case PAKCS_CREATE_CHAR_REQ: return true;
+	case PAKCS_DELETE_CHAR_REQ: return true;
+	case PAKCS_SELECT_CHAR_REQ: return true;
         default: return CRoseClient::HandlePacket( _buffer );
         }
         return true;

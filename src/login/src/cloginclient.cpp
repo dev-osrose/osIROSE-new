@@ -32,6 +32,7 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		{
 			if( ((CLoginISC*)server)->GetType() == 1 )
 			{
+				pak->Add< uint8_t >( 48 + serverID );
 				pak->AddString( ((CLoginISC*)server)->GetName().c_str(), true );
 		                pak->Add< uint32_t >( serverID++ );
 			}
