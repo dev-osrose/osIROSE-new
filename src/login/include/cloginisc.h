@@ -10,9 +10,10 @@ public:
         CLoginISC( tcp::socket _sock );
 
 	std::string GetName() { return name; }
-	std::string GetIP() { return address; }
-	uint16_t GetPort() { return port; }
-	uint8_t GetServerType() { return type; }
+	std::string GetIP() { return m_IpAddress; }
+	uint16_t GetPort() { return m_wPort; }
+	uint8_t GetServerType() { return m_iType; }
+	bool IsTestServer() { return testServer; }
 
 protected:
 	bool HandlePacket( uint8_t* _buffer );
@@ -20,10 +21,7 @@ protected:
 	bool ServerShutdown( CPacket* P );
 
 	std::string name;
-	std::string address;
-	uint16_t port;
-	uint8_t type;
-	//next type needs to be 8 bits for 4 byte alignment
+	bool testServer;
 };
 
 #endif

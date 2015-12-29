@@ -1,12 +1,14 @@
 #include "cloginisc.h"
 #include "crosepacket.h"
 
-CLoginISC::CLoginISC() : CRoseISC()
+CLoginISC::CLoginISC( )
+: CRoseISC( ), testServer(false)
 {
 	m_Log.SetIdentity( "CLoginISC" );
 }
 
-CLoginISC::CLoginISC( tcp::socket _sock ) : CRoseISC( std::move( _sock ) )
+CLoginISC::CLoginISC( tcp::socket _sock )
+: CRoseISC( std::move( _sock ) ), testServer( false )
 {
 	m_Log.SetIdentity( "CLoginISC" );
 }
@@ -35,21 +37,17 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	CPacket* pak = (CPacket*)P;
 
 	uint16_t _size = pak->Header.Size - 6;
-//	m_Log.icprintf( "IN 0x%X ", pak->Header.Command );
-//	for (int i = 0; i < _size; i++)
-//		m_Log.dcprintf( "%02X ", pak->Data[i] );
-//	m_Log.dcprintf( "\n" );
 
 	ServerReg pServerReg;
-	if (pServerReg.ParseFromArray( pak->Data, _size ) == false) // WHY DO YOU NOT WORK!!!!OMGFOAHSDH{O
-		m_Log.eicprintf("Couldn't decode proto msg\n");
+	if (pServerReg.ParseFromArray( pak->Data, _size ) == false) 
+		return false;//m_Log.eicprintf( "Couldn't decode proto msg\n" );
 
-	type = pServerReg.type();
+	m_iType = pServerReg.type( );
 	name = pServerReg.name();
-	address = pServerReg.addr();
-	port = pServerReg.port();
+	m_IpAddress = pServerReg.addr( );
+	m_wPort = pServerReg.port( );
 
-	m_Log.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name(pServerReg.type()).c_str(), name.c_str(), address.c_str(), port);
+	m_Log.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), name.c_str( ), m_IpAddress.c_str( ), m_wPort );
 	return true;
 }
 

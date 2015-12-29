@@ -8,6 +8,12 @@
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
 
+#ifdef _WIN32
+#define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pack(pop))
+#else
+#define PACK(...) __VA_ARGS__ __attribute__((__packed__))
+#endif
+
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
@@ -17,7 +23,7 @@ typedef uint16_t word;
 typedef uint32_t dword;
 typedef uint64_t qword;
 
-
+PACK(
 // CS = Client -> server
 // SC = server -> server
 // SS = server -> server
@@ -247,4 +253,5 @@ private:
 	//*/
 };
 
+);
 #endif /* EPACKETTYPE_H_ */
