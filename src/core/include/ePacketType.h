@@ -23,7 +23,6 @@ typedef uint16_t word;
 typedef uint32_t dword;
 typedef uint64_t qword;
 
-PACK(
 // CS = Client -> server
 // SC = server -> server
 // SS = server -> server
@@ -101,19 +100,20 @@ inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs 
 
 //TODO: Add structures for each type of packet so we don't have to use those nasty Add functions
 
-// Packet information
+PACK(
+	// Packet information
 struct sPacketHeader
 {
 	uint16_t Size;    // Packet size
 	ePacketType Command; // Packet command
 	uint16_t Unused;  // unused?
-};
+});
 
 
 //-------------------------------------------
 // GAME PACKETS!!!!!!
 //-------------------------------------------
-
+PACK(
 struct channelInfo
 {
 	uint16_t  ChannelID;
@@ -121,33 +121,38 @@ struct channelInfo
 	uint16_t Status;
 	//uint32_t Right;
 	//Channel Name as string
-};
+});
 
+PACK(
 struct pakChannel_List : public sPacketHeader
 {
 	uint32_t lServerID;
 	uint8_t  bServerCount;
 	// channelInfo sServers[]; // There is a better way to do this, just can't think of one ATM. -Raven
-};
+});
 
+PACK(
 struct pakChannelList_Req : public sPacketHeader
 {
 	uint32_t lServerID;
-};
+});
 
+PACK( 
 struct pakLoginReply : public sPacketHeader
 {
 	uint8_t  Result;
 	uint16_t Right;
 	uint16_t Type;
-};
+});
 
+PACK(
 struct pakEncryptionRequest : public sPacketHeader
 {
 	uint8_t  Unknown;
 	uint32_t RandValue;
-};
+});
 
+PACK(
 struct CPacket
 {
 	//unsigned short	Size;            // Packet size
@@ -251,7 +256,5 @@ private:
 	        output[charCount - 1] = 0;
 	}
 	//*/
-};
-
-);
+});
 #endif /* EPACKETTYPE_H_ */
