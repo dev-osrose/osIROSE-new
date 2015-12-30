@@ -35,6 +35,7 @@ bool CCharClient::OnReceived()
 
 bool CCharClient::JoinServerReply( CPacket* P )
 {
+        (void)P;
 	m_Log.icprintf( "JoinServerReply\n" );
 
 	return true;
@@ -42,6 +43,7 @@ bool CCharClient::JoinServerReply( CPacket* P )
 
 bool CCharClient::SendCharListReply( CPacket* P )
 {
+	(void)P;
 	m_Log.icprintf( "CharListReply\n" );
 
 	return true;
@@ -49,6 +51,7 @@ bool CCharClient::SendCharListReply( CPacket* P )
 
 bool CCharClient::SendCharCreateReply( CPacket* P )
 {
+        (void)P;
 	m_Log.icprintf( "CharCreateReply\n" );
 
 	return true;
@@ -56,6 +59,7 @@ bool CCharClient::SendCharCreateReply( CPacket* P )
 
 bool CCharClient::SendCharDeleteReply( CPacket* P )
 {
+        (void)P;
 	m_Log.icprintf( "CharDeleteReply\n" );
 
 	return true;
@@ -63,6 +67,7 @@ bool CCharClient::SendCharDeleteReply( CPacket* P )
 
 bool CCharClient::SendCharSelectReply( CPacket* P )
 {
+        (void)P;
 	m_Log.icprintf( "CharSelectReply\n" );
 
 	return true;
