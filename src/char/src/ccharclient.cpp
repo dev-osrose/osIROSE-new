@@ -35,8 +35,12 @@ bool CCharClient::OnReceived()
 
 bool CCharClient::JoinServerReply( CPacket* P )
 {
-        (void)P;
 	m_Log.icprintf( "JoinServerReply\n" );
+
+	SetId( P->Get<uint32_t>(0) );
+	uint8_t _pass[33];
+	P->GetBytes( 4, 32, _pass );
+	_pass[ 32 ] = 0;
 
 	return true;
 }
@@ -59,8 +63,21 @@ bool CCharClient::SendCharCreateReply( CPacket* P )
 
 bool CCharClient::SendCharDeleteReply( CPacket* P )
 {
-        (void)P;
+        //TODO: Find out what byte position 0 is used for.
 	m_Log.icprintf( "CharDeleteReply\n" );
+	uint8_t action =  P->Get<uint8_t>( 1 );
+	char name[17];
+	memset( name, 0, 17 );
+
+	P->GetString( 0, 16, name );
+
+	switch ( action )
+	{
+	case 0:
+	case 1:
+	default:
+		break;
+	}
 
 	return true;
 }
