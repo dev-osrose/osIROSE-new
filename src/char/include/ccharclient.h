@@ -15,6 +15,12 @@ protected:
         virtual bool HandlePacket( uint8_t* _buffer );
         virtual bool OnReceived( );
 
+		bool JoinServerReply( CPacket* P );
+		bool SendCharListReply  ( CPacket* P );
+		bool SendCharCreateReply( CPacket* P );
+		bool SendCharDeleteReply( CPacket* P );
+		bool SendCharSelectReply( CPacket* P );
+
         uint16_t m_Right;
 };
 

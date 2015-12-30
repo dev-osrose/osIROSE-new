@@ -45,11 +45,6 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 		}
 	}
 
-	m_Log.icprintf( "OUT 0x%X ", pak->Header.Command );
-	for (int i = 0; i < pak->Header.Size; i++)
-		m_Log.dcprintf( "%02X ", pak->Buffer[i] );
-	m_Log.dcprintf( "\n" );
-
 	this->Send( pak );
 }
 
@@ -60,8 +55,6 @@ bool CLoginClient::UserLogin( CPacket* P )
 	P->GetString( 32, 16, (char*)_user );
 	//uint8_t* _user = P->GetString( 32, 16 );
 	//uint8_t* _pass = P->GetString( 0, 32 );
-
-	m_Log.oicprintf( "%s / %s\n", _user, _pass );
 
 	// Query the DB
 	// 	{
@@ -98,7 +91,7 @@ bool CLoginClient::UserLogin( CPacket* P )
 
 bool CLoginClient::ChannelList( CPacket* P )
 {
-	m_Log.icprintf( "Channel List\n" );
+	//m_Log.icprintf( "Channel List\n" );
 
 	uint32_t ServerID = P->pChannelListReq.lServerID;
 
@@ -120,10 +113,8 @@ bool CLoginClient::ChannelList( CPacket* P )
 
 bool CLoginClient::ServerSelect( CPacket* P )
 {
-	(void)P;
-	//	uint32_t serverID = P->Get<uint32_t>( 0 );
-	//	uint8_t channelID = P->Get<uint8_t>( 4 );
-	//m_Log.icprintf( "Server Select\n" );
+	uint32_t serverID = P->Get<uint32_t>( 0 );
+	//uint8_t channelID = P->Get<uint8_t>( 4 );
 
 	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
 	pak->Add< uint8_t >( 0 );         // Not sure what this byte is for
@@ -133,10 +124,12 @@ bool CLoginClient::ServerSelect( CPacket* P )
 	for ( auto& obj : CLoginServer::GetISCList( ) )
 	{
 		CLoginISC* server = (CLoginISC*)obj;
-		if ( server->GetType( ) == 1 )
+		if ( server->GetType( ) == 1 && server->GetId() == serverID )
 		{
 			pak->AddString( server->GetIP( ).c_str( ), true );
 			pak->Add< uint16_t >( server->GetPort( ) );
+
+			//TODO: send char server the channel id we are connecting to
 		}
 	}
 	this->Send( pak );

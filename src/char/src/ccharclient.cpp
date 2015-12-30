@@ -18,11 +18,11 @@ bool CCharClient::HandlePacket( uint8_t* _buffer )
         CPacket* pak = (CPacket*)_buffer;
         switch ( pak->Header.Command )
         {
-		case ePacketType::PAKCS_JOIN_SERVER_REQ: return true; // Allow client to connect
-		case ePacketType::PAKCS_CHAR_LIST_REQ: return true; // SendCharList( pak );
-		case ePacketType::PAKCS_CREATE_CHAR_REQ: return true;
-		case ePacketType::PAKCS_DELETE_CHAR_REQ: return true;
-		case ePacketType::PAKCS_SELECT_CHAR_REQ: return true;
+		case ePacketType::PAKCS_JOIN_SERVER_REQ: return JoinServerReply( pak ); // Allow client to connect
+		case ePacketType::PAKCS_CHAR_LIST_REQ: return SendCharListReply( pak ); // SendCharList( pak );
+		case ePacketType::PAKCS_CREATE_CHAR_REQ: return SendCharCreateReply( pak );
+		case ePacketType::PAKCS_DELETE_CHAR_REQ: return SendCharDeleteReply( pak );
+		case ePacketType::PAKCS_SELECT_CHAR_REQ: return SendCharSelectReply( pak );
         default: return CRoseClient::HandlePacket( _buffer );
         }
         return true;
@@ -31,4 +31,39 @@ bool CCharClient::HandlePacket( uint8_t* _buffer )
 bool CCharClient::OnReceived()
 {
         return CRoseClient::OnReceived();
+}
+
+bool CCharClient::JoinServerReply( CPacket* P )
+{
+	m_Log.icprintf( "JoinServerReply\n" );
+
+	return true;
+}
+
+bool CCharClient::SendCharListReply( CPacket* P )
+{
+	m_Log.icprintf( "CharListReply\n" );
+
+	return true;
+}
+
+bool CCharClient::SendCharCreateReply( CPacket* P )
+{
+	m_Log.icprintf( "CharCreateReply\n" );
+
+	return true;
+}
+
+bool CCharClient::SendCharDeleteReply( CPacket* P )
+{
+	m_Log.icprintf( "CharDeleteReply\n" );
+
+	return true;
+}
+
+bool CCharClient::SendCharSelectReply( CPacket* P )
+{
+	m_Log.icprintf( "CharSelectReply\n" );
+
+	return true;
 }

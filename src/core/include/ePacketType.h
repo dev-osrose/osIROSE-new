@@ -1,3 +1,4 @@
+#include "logconsole.h"
 /*
  * ePacketType.h
  *
@@ -152,7 +153,7 @@ struct pakEncryptionRequest : public sPacketHeader
 	uint32_t RandValue;
 });
 
-PACK(
+//PACK(
 struct CPacket
 {
 	//unsigned short	Size;            // Packet size
@@ -193,6 +194,15 @@ struct CPacket
 
 	~CPacket( )
 	{
+	}
+
+	void Print()
+	{
+		CLogConsole Log("");
+		Log.dcprintf( "[0x%X, 0x%X] ", Header.Size, Header.Command );
+		for (int i = 0; i < Header.Size; i++)
+			Log.dcprintf( "%02X ", Buffer[i] );
+		Log.dcprintf( "\n" );
 	}
 
 	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
@@ -256,5 +266,5 @@ private:
 	        output[charCount - 1] = 0;
 	}
 	//*/
-});
+};//);
 #endif /* EPACKETTYPE_H_ */
