@@ -43,7 +43,8 @@ include_directories(
 )
 
 SET( SOURCES_MAIN
-	src/main.cpp )
+	src/main.cpp
+	src/cmapserver )
 	
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN})
