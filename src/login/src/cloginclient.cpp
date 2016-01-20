@@ -53,8 +53,6 @@ bool CLoginClient::UserLogin( CPacket* P )
 	P->GetBytes( 0, 32, _pass );
 	_pass[ 32 ] = 0; // Null term the string
 	P->GetString( 32, 16, (char*)_user );
-	//uint8_t* _user = P->GetString( 32, 16 );
-	//uint8_t* _pass = P->GetString( 0, 32 );
 
 	// Query the DB
 	// 	{

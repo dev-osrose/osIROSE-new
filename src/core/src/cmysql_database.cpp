@@ -26,8 +26,9 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database, std::
 {
 	try {
 		conn.connect(database.c_str(), hostname.c_str(), username.c_str(), password.c_str());
+		m_log.icprintf("Connected to database\n");
 	} catch(const std::exception &e) {
-		m_log.icprintf( CL_RESET CL_RED "Error while connecting to the database: %s" CL_RESET "\n", conn.error());
+		m_log.eicprintf( CL_RESET CL_RED "Error while connecting to the database: %s" CL_RESET "\n", conn.error());
 		throw e;
 	}
 	connected = true;
@@ -46,7 +47,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database, std::str
 	try {
                 conn.connect(database.c_str(), hostname.c_str(), username.c_str(), password.c_str());
         } catch(const std::exception &e) {
-                m_log.icprintf( CL_RESET CL_RED "Error while connecting to the database: %s" CL_RESET "\n", conn.error());
+                m_log.eicprintf( CL_RESET CL_RED "Error while connecting to the database: %s" CL_RESET "\n", conn.error());
                 throw e;
         }
         connected = true;
@@ -55,7 +56,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database, std::str
 IResult	*CMySQL_Database::QStore(std::string _query)
 {
 	if (!connected) {
-		m_log.icprintf(CL_RESET CL_RED "Error while executing the query '%s': not connected" CL_RESET "\n", _query.c_str());
+		m_log.eicprintf(CL_RESET CL_RED "Error while executing the query '%s': not connected" CL_RESET "\n", _query.c_str());
 		throw std::runtime_error("Error not connected");
 	}
 	m_log.icprintf(CL_RESET "Executing query: %s\n", _query.c_str());
@@ -68,7 +69,7 @@ IResult	*CMySQL_Database::QStore(std::string _query)
 void	CMySQL_Database::QExecute(std::string _query)
 {
 	if (!connected) {
-		m_log.icprintf(CL_RESET CL_RED "Error while executing the query '%s': not connected" CL_RESET "\n", _query.c_str());
+		m_log.eicprintf(CL_RESET CL_RED "Error while executing the query '%s': not connected" CL_RESET "\n", _query.c_str());
 		throw std::runtime_error("Error not connected");
 	}
 	m_log.icprintf(CL_RESET "Executing query: %s\n", _query.c_str());

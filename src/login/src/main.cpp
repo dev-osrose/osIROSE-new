@@ -1,4 +1,6 @@
 #include "cloginserver.h"
+#include "config.h"
+#include "cmysql_database.h"
 
 
 int main( int argc, char* argv[] )
@@ -10,6 +12,16 @@ int main( int argc, char* argv[] )
 
 	CLogConsole Logger("LoginServer");
 	Logger.icprintf("Starting up server...\n\n");
+
+	Config  &config = Config::getInstance();
+        const ::configFile::Database    &dbb = config.database();
+
+	std::string host = dbb.host();
+        std::string _database = dbb.database();
+        std::string user = dbb.user();
+        std::string pass = dbb.password();
+
+        CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 
 	CLoginServer clientServer;
 	CLoginServer iscServer( true );
