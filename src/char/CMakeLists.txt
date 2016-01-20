@@ -71,9 +71,17 @@ target_link_libraries(${PROJECT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf)
+        TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
+                libmysql.lib
+                wsock32.lib
+                mysqlpp.lib
+        )
 ELSE()
-	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_BINARY_DIR}/libprotobuf.a)
+        TARGET_LINK_LIBRARIES(${PROJECT}
+                ${PROTOBUF_BINARY_DIR}/libprotobuf.a
+                mysqlpp
+                mysqlclient
+                )
 ENDIF()
 
 INSTALL(
