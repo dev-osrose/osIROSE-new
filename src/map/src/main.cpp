@@ -1,5 +1,6 @@
 
 #include "cmapserver.h"
+#include "cmapisc.h"
 
 int main( int argc, char* argv[] )
 {
@@ -11,15 +12,15 @@ int main( int argc, char* argv[] )
 
 	CMapServer clientServer;
         CMapServer iscServer( true );
-//        CMapISC iscClient;
-//        iscClient.Init( "127.0.0.1", 29010);
+        CMapISC iscClient;
+        iscClient.Init( "127.0.0.1", 29110);
 
-        clientServer.Init( "127.0.0.1", 29100 );
+        clientServer.Init( "127.0.0.1", 29200 );
         clientServer.Listen( );
 
-        iscServer.Init( "127.0.0.1", 29110 );
+        iscServer.Init( "127.0.0.1", 29210 );
         iscServer.Listen( );
-//        iscClient.Connect();
+        iscClient.Connect();
 
         while( clientServer.IsActive() )
         {

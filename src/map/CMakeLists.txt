@@ -42,12 +42,19 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+SET( SOURCES_HEADER
+	include/cmapserver
+	include/cmapclient
+	include/cmapisc )
+
 SET( SOURCES_MAIN
 	src/main.cpp
-	src/cmapserver )
+	src/cmapserver
+	src/cmapclient
+	src/cmapisc )
 	
 find_package( Threads REQUIRED )
-add_executable(${PROJECT} ${SOURCES_MAIN})
+add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
