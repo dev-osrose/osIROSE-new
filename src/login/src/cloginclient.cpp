@@ -34,8 +34,9 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 			{
 				CLoginISC* svr = (CLoginISC*)server;
 
+				// This if check is needed since the client actually looks for this.
 				if ( svr->IsTestServer() )
-					pak->Add< uint8_t >( '@' ); 
+					pak->Add< uint8_t >( '@' );
 				else
 					pak->Add< uint8_t >( ' ' );
 
@@ -53,8 +54,17 @@ bool CLoginClient::UserLogin( CPacket* P )
 	P->GetBytes( 0, 32, _pass );
 	_pass[ 32 ] = 0; // Null term the string
 	P->GetString( 32, 16, (char*)_user );
+	//IResult	*res = nullptr;
+	//std::string	query = "CALL UserLogin('%s', '%s');";
 
+	//TODO: Create string safe function to sanitize sql query input
+	//TODO: Database class needs to become a singleton
+	// res = pDB->QStore(query);
+
+	//if(res != nullptr)
+	{
 	// Query the DB
+	//	if(res)
 	// 	{
 	// 		// Already logged in
 	// 		SendLoginReply( 4 );
@@ -84,6 +94,12 @@ bool CLoginClient::UserLogin( CPacket* P )
 	// 		// Server Full
 	// 		SendLoginReply( 8 );
 	//	}
+	}
+	//else
+	{
+		// The user doesn't exist or server is down.
+	//	SendLoginReply( 1 );
+	}
 	return true;
 }
 
@@ -97,8 +113,9 @@ bool CLoginClient::ChannelList( CPacket* P )
 	pak->pChannelList.lServerID    = ServerID;
 	pak->pChannelList.bServerCount = 1;
 
+	uint32_t    channelID   = 1;
 	channelInfo channel;
-	channel.ChannelID = 1;
+	channel.ChannelID = channelID;;
 	channel.pad       = 0;
 	channel.Status    = 0;
 
@@ -127,7 +144,7 @@ bool CLoginClient::ServerSelect( CPacket* P )
 			pak->AddString( server->GetIP( ).c_str( ), true );
 			pak->Add< uint16_t >( server->GetPort( ) );
 
-			//TODO: send char server the channel id we are connecting to
+			//TODO: send char server the channel id we are connecting to (the client may already do this)
 		}
 	}
 	this->Send( pak );

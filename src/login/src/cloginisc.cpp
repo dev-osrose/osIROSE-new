@@ -47,6 +47,8 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	m_IpAddress = pServerReg.addr( );
 	m_wPort = pServerReg.port( );
 
+	//todo: add channel connections here
+
 	m_Log.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), name.c_str( ), m_IpAddress.c_str( ), m_wPort );
 	return true;
 }
