@@ -44,7 +44,8 @@ SET( SOURCES_BASE
   src/crosecrypt 
   src/croseserver
   src/croseclient
-  src/croseisc )
+  src/croseisc
+  src/cdatabase_manager )
 
 add_library(RoseCommon STATIC ${SOURCES_BASE})
 
