@@ -12,11 +12,10 @@
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_socket( m_io_service ), m_Listener( m_io_service ), PacketOffset( 0 ), PacketSize( 6 ), m_Active( true )
+    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_Work( new asio_worker::element_type(m_io_service) ), m_socket( m_io_service ), m_Listener( m_io_service ), PacketOffset( 0 ), PacketSize( 6 ), m_Active( true )
 {
 	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
 	m_IOThread = std::thread( [this]( ) {
-		asio::io_service::work _Work( m_io_service );
 		m_io_service.run( );
 	} );
 	//	m_IOThread.detach();
@@ -32,10 +31,12 @@ CNetwork_Asio::~CNetwork_Asio( )
 	//	std::lock_guard< std::mutex > lock( m_SendMutex );
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 
+	m_Work.reset();
 	Shutdown( );
 	m_io_service.stop( );
 	m_IOThread.join( );
 	m_ProcessThread.join( );
+//	m_io_service.stop( );
 }
 
 bool CNetwork_Asio::Run( )
@@ -76,11 +77,19 @@ bool CNetwork_Asio::Shutdown( )
 	m_Active = false;
 	Disconnect( );
 
+	//m_io_service.post( m_Listener.FinishConnection());
+
 	if ( m_Listener.is_open( ) )
+	{
+	//m_Log.icprintf( CL_RESET CL_WHITE "Listener should be closing...\n" CL_RESET );
 		m_io_service.post( [this]( ) {
 			std::error_code ignored;
+//			m_Listener.cancel( ignored );
 			m_Listener.close( ignored );
 		} );
+
+	//m_Log.icprintf( CL_RESET CL_WHITE "Listener should be closed...\n" CL_RESET );
+	}
 
 	//	std::lock_guard< std::mutex > lock( m_SendMutex );
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );

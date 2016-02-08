@@ -34,6 +34,8 @@
 using asio::ip::tcp;
 class CLogConsole;
 
+typedef std::unique_ptr<asio::io_service::work> asio_worker;
+
 class CNetwork_Asio : public INetwork
 {
 public:
@@ -83,15 +85,16 @@ protected:
 
 protected:
 	//std::unique_ptr<asio::io_service::work> m_Work;
-	asio::io_service		m_io_service;
-	tcp::socket				m_socket;
-	tcp::acceptor			m_Listener;
-	std::queue< uint8_t* >	m_SendQueue;
-	std::queue< uint8_t* >	m_DiscardQueue;
-	std::mutex				m_SendMutex;
-	std::mutex				m_RecvMutex;
-	std::mutex				m_DiscardMutex;
-	std::condition_variable m_RecvCondition;
+	asio::io_service				m_io_service;
+	asio_worker					m_Work;
+	tcp::socket					m_socket;
+	tcp::acceptor					m_Listener;
+	std::queue< uint8_t* >				m_SendQueue;
+	std::queue< uint8_t* >				m_DiscardQueue;
+	std::mutex					m_SendMutex;
+	std::mutex					m_RecvMutex;
+	std::mutex					m_DiscardMutex;
+	std::condition_variable 			m_RecvCondition;
 
 	std::thread m_IOThread;
 	std::thread m_ProcessThread;
