@@ -1,7 +1,10 @@
 #ifndef _CLOGINISC_H_
 #define _CLOGINISC_H_
 
+#include <forward_list>
 #include "croseisc.h"
+
+struct channelInfo;
 
 class CLoginISC : public CRoseISC
 {
@@ -22,6 +25,8 @@ protected:
 
 	std::string name;
 	bool testServer;
+
+	std::forward_list< channelInfo > m_ChannelList;
 };
 
 #endif

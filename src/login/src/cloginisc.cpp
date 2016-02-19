@@ -42,12 +42,28 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	if (pServerReg.ParseFromArray( pak->Data, _size ) == false) 
 		return false;//m_Log.eicprintf( "Couldn't decode proto msg\n" );
 
-	m_iType = pServerReg.type( );
-	name = pServerReg.name();
-	m_IpAddress = pServerReg.addr( );
-	m_wPort = pServerReg.port( );
+	int16_t _type = 0;
 
-	//todo: add channel connections here
+	_type = pServerReg.type( );
+
+	//1 == char server
+	//2 == node server
+	//3 == map master server (This is the only type the login server will care about)
+	//4 == map workers/threads
+
+	//todo: replace these numbers with the actual enum name
+	if( _type == 1 )
+	{
+		name = pServerReg.name();
+		m_IpAddress = pServerReg.addr( );
+		m_wPort = pServerReg.port( );
+
+		m_iType = _type;
+	}
+	else if( _type == 3 )
+	{
+	//todo: add channel connections here (_type == 3)
+	}
 
 	m_Log.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), name.c_str( ), m_IpAddress.c_str( ), m_wPort );
 	return true;
