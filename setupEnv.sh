@@ -1,15 +1,15 @@
 #!/bin/sh
 
-apt-get install cmake
-apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
-apt-get update
-apt-get install gcc-5
-apt-get install g++-5
-apt-get install unzip
-apt-get install autoconf
-apt-get install libtool
-apt-get install libssl-dev
-apt-get install libmysqlclient-dev libmysqld-dev libmysql++-dev libmysql++-doc libmysql++3
+sudo apt-get install cmake
+sudo apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+sudo apt-get update
+sudo apt-get install gcc-5
+sudo apt-get install g++-5
+sudo apt-get install unzip
+sudo apt-get install autoconf
+sudo apt-get install libtool
+sudo apt-get install libssl-dev
+sudo apt-get install libmysqlclient-dev libmysqld-dev libmysql++-dev libmysql++-doc libmysql++3v5
 
 git submodule init
 git submodule update
