@@ -21,7 +21,7 @@ int main( int argc, char* argv[] )
         std::string user = dbb.user();
         std::string pass = dbb.password();
 
-        CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
+        CMySQL_Database database(host, _database, user, pass);
 
 	CLoginServer clientServer;
 	CLoginServer iscServer( true );
