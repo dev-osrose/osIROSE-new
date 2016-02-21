@@ -47,6 +47,11 @@ INCLUDE_DIRECTORIES(
 
 SET( SOURCES_MAIN
   src/main.cpp )
+  
+SET( SOURCES_HEADER
+  include/cloginserver
+  include/cloginclient
+  include/cloginisc )
 
 SET( SOURCES_BASE
   src/cloginserver
@@ -54,7 +59,7 @@ SET( SOURCES_BASE
   src/cloginisc )
 
 find_package( Threads REQUIRED )
-add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE})
+add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} libprotobuf)

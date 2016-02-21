@@ -44,6 +44,15 @@ INCLUDE_DIRECTORIES(
 	${CMAKE_SOURCE_DIR}/src/proto/include
 )
 
+SET( SOURCES_HEADER
+  include/logconsole
+  include/cnetwork_asio
+  include/config 
+  include/pbjson
+  include/logconsole
+  include/cmysql_database
+)
+
 SET( SOURCES_BASE
   src/logconsole
   src/cnetwork_asio
@@ -53,7 +62,7 @@ SET( SOURCES_BASE
   src/cmysql_database
 )
 
-add_library(Core STATIC ${SOURCES_BASE})
+add_library(Core STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 
 #IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #	ADD_DEPENDENCIES(Core libprotobuf)

@@ -40,6 +40,14 @@ INCLUDE_DIRECTORIES(
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+SET( SOURCES_HEADER
+  include/crosecrypt
+  include/croseserver
+  include/croseclient 
+  include/croseisc
+  include/cdatabase_manager
+)
+
 SET( SOURCES_BASE
   src/crosecrypt 
   src/croseserver
@@ -47,5 +55,5 @@ SET( SOURCES_BASE
   src/croseisc
   src/cdatabase_manager )
 
-add_library(RoseCommon STATIC ${SOURCES_BASE})
+add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 

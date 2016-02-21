@@ -46,6 +46,11 @@ SET( SOURCES_MAIN
   src/main
 )
 
+SET( SOURCES_HEADER
+  include/ccharserver
+  include/ccharclient
+  include/ccharisc )
+
 SET( SOURCES_BASE
   src/ccharserver
   src/ccharclient
@@ -53,7 +58,7 @@ SET( SOURCES_BASE
 )
 
 find_package( Threads REQUIRED )
-add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE})
+add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
