@@ -4,7 +4,7 @@
 #include <forward_list>
 #include "croseisc.h"
 
-struct channelInfo;
+struct tChannelInfo;
 
 class CLoginISC : public CRoseISC
 {
@@ -24,9 +24,11 @@ protected:
 	bool ServerShutdown( CPacket* P );
 
 	std::string name;
+	uint32_t m_ChannelCount;
+	uint32_t m_MinRight;
 	bool testServer;
-
-	std::forward_list< channelInfo > m_ChannelList;
+	
+	std::forward_list< tChannelInfo > m_ChannelList;
 };
 
 #endif

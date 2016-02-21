@@ -5,13 +5,23 @@
 
 class CMapISC : public CRoseISC
 {
-public:
-        CMapISC( );
-        CMapISC( tcp::socket _sock );
+	public:
+	CMapISC( );
+	CMapISC( tcp::socket _sock );
 
-protected:
-        bool HandlePacket( uint8_t* _buffer );
+	bool IsChar( ) const
+	{
+		return m_CharServer;
+	}
+	void SetChar( bool val )
+	{
+		m_CharServer = val;
+	}
+
+	protected:
+	bool         HandlePacket( uint8_t* _buffer );
 	virtual void OnConnected( );
+	bool         m_CharServer;
 };
 
 #endif

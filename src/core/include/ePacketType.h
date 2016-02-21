@@ -111,11 +111,24 @@ struct sPacketHeader
 });
 
 
+struct tChannelInfo
+{
+	uint16_t ChannelID;
+	uint16_t Port;
+	uint32_t MinRight;
+	std::string channelName;
+	std::string IPAddress;
+
+	tChannelInfo( ) : ChannelID( 0 ), Port( 0 ), MinRight( 0 ), channelName( "" ), IPAddress( "" )
+	{
+	}
+};
+
 //-------------------------------------------
 // GAME PACKETS!!!!!!
 //-------------------------------------------
 PACK(
-struct channelInfo
+struct pakChannelInfo
 {
 	uint16_t  ChannelID;
 	uint8_t  pad;

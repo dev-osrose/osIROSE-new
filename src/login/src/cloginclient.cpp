@@ -114,12 +114,12 @@ bool CLoginClient::ChannelList( CPacket* P )
 	pak->pChannelList.bServerCount = 1;
 
 	uint32_t    channelID   = 1;
-	channelInfo channel;
-	channel.ChannelID = channelID;;
+	pakChannelInfo channel;
+	channel.ChannelID = channelID;
 	channel.pad       = 0;
 	channel.Status    = 0;
 
-	pak->AddBytes( (uint8_t*)&channel, sizeof( channelInfo ) );
+	pak->AddBytes( (uint8_t*)&channel, sizeof( pakChannelInfo ) );
 	pak->AddString( "TestChannel", true );
 	this->Send( pak );
 

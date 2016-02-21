@@ -2,26 +2,25 @@
 #include "config.h"
 #include "cmysql_database.h"
 
-
 int main( int argc, char* argv[] )
 {
 	(void)argc;
 	(void)argv;
-	CLogConsole::SetDisplayOmittable(false);
+	CLogConsole::SetDisplayOmittable( false );
 	//setvbuf (stdout, NULL, _IONBF, 0);
 
-	CLogConsole Logger("LoginServer");
-	Logger.icprintf("Starting up server...\n\n");
+	CLogConsole Logger( "LoginServer" );
+	Logger.icprintf( "Starting up server...\n\n" );
 
-	Config  &config = Config::getInstance();
-        const ::configFile::Database    &dbb = config.database();
+	Config&                       config = Config::getInstance( );
+	const ::configFile::Database& dbb    = config.database( );
 
-	std::string host = dbb.host();
-        std::string _database = dbb.database();
-        std::string user = dbb.user();
-        std::string pass = dbb.password();
+	std::string host      = dbb.host( );
+	std::string _database = dbb.database( );
+	std::string user      = dbb.user( );
+	std::string pass      = dbb.password( );
 
-        CMySQL_Database database(host, _database, user, pass);
+	CMySQL_Database database( host, _database, user, pass );
 
 	CLoginServer clientServer;
 	CLoginServer iscServer( true );
@@ -32,7 +31,7 @@ int main( int argc, char* argv[] )
 	iscServer.Init( "127.0.0.1", 29010 );
 	iscServer.Listen( );
 
-	while( clientServer.IsActive() )
+	while ( clientServer.IsActive( ) )
 	{
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}

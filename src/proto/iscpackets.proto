@@ -15,4 +15,5 @@ message ServerReg
 	string name = 2;
 	string addr = 3;
 	int32 port = 4;
+	int32 accright = 5;
 }
