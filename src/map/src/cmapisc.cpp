@@ -42,6 +42,7 @@ void CMapISC::OnConnected( )
 	pServerReg.set_port( 29200 );
 	//TODO: Change the type depending on our config
 	pServerReg.set_type( ServerReg_ServerType_MAP_MASTER );
+	pServerReg.set_accright( 0 );
 
 	int      _size = pServerReg.ByteSize( );
 	uint8_t* data  = new uint8_t[ _size ];
