@@ -111,6 +111,7 @@ struct sPacketHeader
 });
 
 
+//todo: Move interal datatypes to their own file. They do not belong in the network packet header.
 struct tChannelInfo
 {
 	uint16_t ChannelID;
@@ -130,9 +131,9 @@ struct tChannelInfo
 PACK(
 struct pakChannelInfo
 {
-	uint16_t  ChannelID;
-	uint8_t  pad;
-	uint16_t Status;
+	uint8_t  ChannelID;
+	uint16_t  pad; // This was used to tell the client the AGE of the server. 2 bytes.
+	uint16_t Status; // This is actually the fill percentage of the server.
 	//uint32_t Right;
 	//Channel Name as string
 });

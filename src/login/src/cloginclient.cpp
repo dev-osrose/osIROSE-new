@@ -113,7 +113,7 @@ bool CLoginClient::ChannelList( CPacket* P )
 	pak->pChannelList.lServerID    = ServerID;
 	pak->pChannelList.bServerCount = 1;
 
-	uint32_t    channelID   = 1;
+	uint8_t    channelID   = 1;
 	pakChannelInfo channel;
 	channel.ChannelID = channelID;
 	channel.pad       = 0;

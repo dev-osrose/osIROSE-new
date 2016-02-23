@@ -17,3 +17,16 @@ message ServerReg
 	int32 port = 4;
 	int32 accright = 5;
 }
+
+message ServerStatus
+{
+	enum Status {
+		ONLINE = 0;
+		FAILED = 1;
+		FULL = 2;
+		INVALID = 3;
+		MAINT = 4;
+	}
+	Status status = 1;
+	int32 userPercent = 2;
+}
