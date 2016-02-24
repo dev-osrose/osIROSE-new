@@ -11,11 +11,11 @@ public:
 
 	bool IsLogin() const
 	{
-		return m_LoginConnection;
+		return login_connection_;
 	}
 	void SetLogin( bool val )
 	{
-		m_LoginConnection = val;
+		login_connection_ = val;
 	}
 
 protected:
@@ -23,7 +23,7 @@ protected:
 	bool         HandlePacket( uint8_t* _buffer );
 	virtual void OnConnected( );
 
-	bool m_LoginConnection;
+	bool login_connection_;
 };
 
 #endif

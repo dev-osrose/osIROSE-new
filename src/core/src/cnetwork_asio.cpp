@@ -12,15 +12,15 @@
 #include "cnetwork_asio.h"
 
 CNetwork_Asio::CNetwork_Asio( )
-    : INetwork( ), m_Log( "CNetwork_ASIO" ), m_Work( new asio_worker::element_type(m_io_service) ), m_socket( m_io_service ), m_Listener( m_io_service ), PacketOffset( 0 ), PacketSize( 6 ), m_Active( true )
+    : INetwork( ), log_( "CNetwork_ASIO" ), io_work_( new asio_worker::element_type(io_service_) ), socket_( io_service_ ), listener_( io_service_ ), packet_offset_( 0 ), packet_size_( 6 ), active_( true )
 {
-	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
-	m_IOThread = std::thread( [this]( ) {
-		m_io_service.run( );
+	log_.oicprintf( CL_RESET CL_WHITE "Starting NetworkIO Thread...\n" CL_RESET );
+	io_thread_ = std::thread( [this]( ) {
+		io_service_.run( );
 	} );
 	//	m_IOThread.detach();
-	m_Log.oicprintf( CL_RESET CL_WHITE "Starting NetworkProcess Thread...\n" CL_RESET );
-	m_ProcessThread = std::thread( [this]( ) {
+	log_.oicprintf( CL_RESET CL_WHITE "Starting NetworkProcess Thread...\n" CL_RESET );
+	process_thread_ = std::thread( [this]( ) {
 		Run( );
 	} );
 	//	m_ProcessThread.detach();
@@ -31,11 +31,11 @@ CNetwork_Asio::~CNetwork_Asio( )
 	//	std::lock_guard< std::mutex > lock( m_SendMutex );
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
 
-	m_Work.reset();
+	io_work_.reset();
 	Shutdown( );
-	m_io_service.stop( );
-	m_IOThread.join( );
-	m_ProcessThread.join( );
+	io_service_.stop( );
+	io_thread_.join( );
+	process_thread_.join( );
 //	m_io_service.stop( );
 }
 
@@ -45,14 +45,14 @@ bool CNetwork_Asio::Run( )
 	//	m_Active = true;
 	//asio::io_service::work _Work( m_io_service );
 	//std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-	while ( m_Active == true )
+	while ( active_ == true )
 	{
 		ProcessSend( );
 		ProcessRecv( );
 		std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
 	}
 
-	m_Log.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
+	log_.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
 	//	std::cout << "run ending\n";
 	//m_io_service.run( ); // this is to clean up
 	return true;
@@ -71,21 +71,21 @@ bool CNetwork_Asio::Init( std::string _ip, uint16_t _port )
 
 bool CNetwork_Asio::Shutdown( )
 {
-	std::lock_guard< std::mutex > lock( m_SendMutex );
-	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
+	std::lock_guard< std::mutex > lock( send_mutex_ );
+	std::lock_guard< std::mutex > lock2( discard_mutex_ );
 	//if ( m_socket.is_open( ) )
-	m_Active = false;
+	active_ = false;
 	Disconnect( );
 
 	//m_io_service.post( m_Listener.FinishConnection());
 
-	if ( m_Listener.is_open( ) )
+	if ( listener_.is_open( ) )
 	{
 	//m_Log.icprintf( CL_RESET CL_WHITE "Listener should be closing...\n" CL_RESET );
-		m_io_service.post( [this]( ) {
+		io_service_.post( [this]( ) {
 			std::error_code ignored;
 //			m_Listener.cancel( ignored );
-			m_Listener.close( ignored );
+			listener_.close( ignored );
 		} );
 
 	//m_Log.icprintf( CL_RESET CL_WHITE "Listener should be closed...\n" CL_RESET );
@@ -93,10 +93,10 @@ bool CNetwork_Asio::Shutdown( )
 
 	//	std::lock_guard< std::mutex > lock( m_SendMutex );
 	//	std::lock_guard< std::mutex > lock2( m_DiscardMutex );
-	while ( !m_SendQueue.empty( ) )
+	while ( !send_queue_.empty( ) )
 	{
-		uint8_t* _buffer = std::move( m_SendQueue.front( ) );
-		m_SendQueue.pop( );
+		uint8_t* _buffer = std::move( send_queue_.front( ) );
+		send_queue_.pop( );
 		delete _buffer;
 	}
 
@@ -115,18 +115,18 @@ bool CNetwork_Asio::Shutdown( )
 
 bool CNetwork_Asio::Connect( )
 {
-	tcp::resolver resolver( m_io_service );
+	tcp::resolver resolver( io_service_ );
 	auto endpoint_iterator = resolver.resolve( m_IpAddress, std::to_string( m_wPort ) );
 
 	OnConnect( );
-	asio::async_connect( m_socket, endpoint_iterator,
+	asio::async_connect( socket_, endpoint_iterator,
 	                     [this]( std::error_code errorCode, const asio::ip::tcp::endpoint ) {
 		                     if ( !errorCode )
 		                     {
 			                     OnConnected( );
 		                     }
 		                 } );
-	m_Active = true;
+	active_ = true;
 	return true;
 }
 
@@ -134,12 +134,12 @@ bool CNetwork_Asio::Listen( )
 {
 	OnListen( );
 	tcp::endpoint endpoint( tcp::v4( ), m_wPort );
-	m_Listener.open( endpoint.protocol( ) );
-	m_Listener.set_option( tcp::acceptor::reuse_address( true ) );
-	m_Listener.bind( endpoint );
-	m_Listener.listen( );
-	m_Log.icprintf( "Listening started on %s:%i\n", GetIpAddress( ).c_str( ), GetPort( ) );
-	m_Active = true;
+	listener_.open( endpoint.protocol( ) );
+	listener_.set_option( tcp::acceptor::reuse_address( true ) );
+	listener_.bind( endpoint );
+	listener_.listen( );
+	log_.icprintf( "Listening started on %s:%i\n", GetIpAddress( ).c_str( ), GetPort( ) );
+	active_ = true;
 	AcceptConnection( );
 	OnListening( );
 	return true;
@@ -155,9 +155,9 @@ bool CNetwork_Asio::Reconnect( )
 bool CNetwork_Asio::Disconnect( )
 {
 	OnDisconnect( );
-	m_io_service.dispatch( [this]( ) {
+	io_service_.dispatch( [this]( ) {
 		std::error_code ignored;
-		m_socket.shutdown( asio::socket_base::shutdown_both, ignored );
+		socket_.shutdown( asio::socket_base::shutdown_both, ignored );
 		OnDisconnected( );
 	} );
 	return true;
@@ -165,8 +165,8 @@ bool CNetwork_Asio::Disconnect( )
 
 bool CNetwork_Asio::Send( uint8_t* _buffer )
 {
-	std::lock_guard< std::mutex > lock( m_SendMutex );
-	m_SendQueue.push( _buffer );
+	std::lock_guard< std::mutex > lock( send_mutex_ );
+	send_queue_.push( _buffer );
 	return true;
 }
 
@@ -176,17 +176,17 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 	{
 		(void)_size;
 
-		uint8_t BytesToRead = PacketSize - PacketOffset;
-		asio::async_read( m_socket,
-		                  asio::buffer( &Buffer[ PacketOffset ], BytesToRead ),
+		uint8_t BytesToRead = packet_size_ - packet_offset_;
+		asio::async_read( socket_,
+		                  asio::buffer( &buffer_[ packet_offset_ ], BytesToRead ),
 		                  asio::transfer_exactly( BytesToRead ), // We want at least 6 bytes of data
 		                  [this]( std::error_code errorCode, std::size_t length ) {
-			                  PacketOffset += length;
+			                  packet_offset_ += length;
 			                  if ( !errorCode || errorCode.value( ) == 11 )
 			                  {
 				                  if ( OnReceived( ) == false )
 						  {
-							m_Log.eicprintf(CL_RESET "Something bad happend in OnReceived... Shutting down...\n" CL_RESET);
+							log_.eicprintf(CL_RESET "Something bad happend in OnReceived... Shutting down...\n" CL_RESET);
 							Shutdown();
 						  }
 			                  }
@@ -194,18 +194,18 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 			                  {
 						if( errorCode.value( ) == 2 )
 						{
-							m_Log.icprintf( CL_RESET CL_WHITE "Client disconnected.\n" );
+							log_.icprintf( CL_RESET CL_WHITE "Client disconnected.\n" );
 							OnDisconnected();
 						}
 						else
-				                	m_Log.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
+				                	log_.eicprintf( CL_RESET CL_WHITE "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET, errorCode.value( ), errorCode.message( ).c_str( ) );
 
 						Shutdown();
 						return;
 			                  }
 
-			                  m_RecvCondition.notify_all( );
-			                  if ( m_Active )
+			                  recv_condition_.notify_all( );
+			                  if ( active_ )
 				                  Recv( );
 			              } );
 	}
@@ -214,7 +214,7 @@ bool CNetwork_Asio::Recv( uint16_t _size /*= 6*/ )
 
 void CNetwork_Asio::AcceptConnection( )
 {
-	m_Listener.async_accept(
+	listener_.async_accept(
 	    [this]( std::error_code ec, tcp::socket socket ) {
 		    if ( !ec )
 		    {
@@ -245,7 +245,7 @@ bool CNetwork_Asio::OnConnect( )
 
 void CNetwork_Asio::OnConnected( )
 {
-	if ( !m_Listener.is_open( ) )
+	if ( !listener_.is_open( ) )
 		Recv( );
 }
 
@@ -256,7 +256,7 @@ bool CNetwork_Asio::OnListen( )
 
 void CNetwork_Asio::OnListening( )
 {
-	if ( !m_Listener.is_open( ) )
+	if ( !listener_.is_open( ) )
 		Recv( );
 }
 
@@ -304,25 +304,25 @@ void CNetwork_Asio::OnAccepted( tcp::socket _sock )
 
 void CNetwork_Asio::ProcessSend( )
 {
-	if ( m_socket.is_open( ) )
+	if ( socket_.is_open( ) )
 	{
 		// Loop though all of m_SendQueue
-		std::lock_guard< std::mutex > lock( m_SendMutex );
+		std::lock_guard< std::mutex > lock( send_mutex_ );
 
 //		if ( m_SendQueue.empty( ) )
 //			return;
 
-		while ( !m_SendQueue.empty( ) )
+		while ( !send_queue_.empty( ) )
 		{
-			uint8_t* _buffer = std::move( m_SendQueue.front( ) );
-			m_SendQueue.pop( );
+			uint8_t* _buffer = std::move( send_queue_.front( ) );
+			send_queue_.pop( );
 			uint16_t _size = (uint16_t)_buffer[ 0 ];
 			uint16_t _command = (uint16_t)_buffer[ 2 ];
 
 			if( OnSend( _buffer ) )
-				asio::write( m_socket, asio::buffer( _buffer, _size ) );
+				asio::write( socket_, asio::buffer( _buffer, _size ) );
 			else
-				m_Log.eicprintf( CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size, _command );
+				log_.eicprintf( CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size, _command );
 
 //			m_Log.oicprintf( "ProcessSend Sent a packet on CRoseISC: Header[%i, 0x%X]\n", _size, _command );
 			std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );

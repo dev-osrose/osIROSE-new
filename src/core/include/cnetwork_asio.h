@@ -23,21 +23,20 @@
 #endif
 
 #include <thread>
+#include <condition_variable>
 #include "inetwork.h"
 #include "logconsole.h"
-#include <condition_variable>
 
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
 
 using asio::ip::tcp;
-class CLogConsole;
-
-typedef std::unique_ptr<asio::io_service::work> asio_worker;
 
 class CNetwork_Asio : public INetwork
 {
+	typedef std::unique_ptr< asio::io_service::work > asio_worker;
+
 public:
 	CNetwork_Asio( );
 	virtual ~CNetwork_Asio( );
@@ -53,8 +52,8 @@ public:
 
 	virtual bool Send( uint8_t* _buffer );
 	virtual bool Recv( uint16_t _size = MAX_PACKET_SIZE );
-	bool         IsActive() { return m_Active; }
-	void         SetExtraMessageInfo( bool _enabled ) { m_Log.SetDisplayOmittable( _enabled ); }
+	bool         IsActive( ) { return active_; }
+	void         SetExtraMessageInfo( bool _enabled ) { log_.SetDisplayOmittable( _enabled ); }
 protected:
 	void AcceptConnection( );
 	void ProcessSend( );
@@ -75,33 +74,32 @@ protected:
 	virtual void OnAccepted( tcp::socket _sock );
 	virtual bool HandlePacket( uint8_t* _buffer );
 
-	void SetSocket(tcp::socket _sock) { m_socket = std::move(_sock); }
-	void ResetBuffer() 
-	{ 
-		PacketOffset = 0; 
-		PacketSize = 6;
+	void SetSocket( tcp::socket _sock ) { socket_ = std::move( _sock ); }
+	void ResetBuffer( )
+	{
+		packet_offset_ = 0;
+		packet_size_   = 6;
 	}
-	CLogConsole m_Log;
+	CLogConsole log_;
 
 protected:
-	//std::unique_ptr<asio::io_service::work> m_Work;
-	asio::io_service				m_io_service;
-	asio_worker					m_Work;
-	tcp::socket					m_socket;
-	tcp::acceptor					m_Listener;
-	std::queue< uint8_t* >				m_SendQueue;
-	std::queue< uint8_t* >				m_DiscardQueue;
-	std::mutex					m_SendMutex;
-	std::mutex					m_RecvMutex;
-	std::mutex					m_DiscardMutex;
-	std::condition_variable 			m_RecvCondition;
+	asio::io_service        io_service_;
+	asio_worker             io_work_;
+	tcp::socket             socket_;
+	tcp::acceptor           listener_;
+	std::queue< uint8_t* >  send_queue_;
+	std::queue< uint8_t* >  discard_queue_;
+	std::mutex              send_mutex_;
+	std::mutex              recv_mutex_;
+	std::mutex              discard_mutex_;
+	std::condition_variable recv_condition_;
 
-	std::thread m_IOThread;
-	std::thread m_ProcessThread;
-	uint8_t     Buffer[ MAX_PACKET_SIZE ];
-	uint16_t    PacketOffset;
-	uint16_t	PacketSize;
-	bool        m_Active;
+	std::thread io_thread_;
+	std::thread process_thread_;
+	uint8_t     buffer_[ MAX_PACKET_SIZE ];
+	uint16_t    packet_offset_;
+	uint16_t    packet_size_;
+	bool        active_;
 };
 
 #endif

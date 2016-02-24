@@ -3,14 +3,14 @@
 #include "ccharclient.h"
 #include "ePacketType.h"
 
-CCharClient::CCharClient() : CRoseClient(), m_Right( 0 )
+CCharClient::CCharClient() : CRoseClient(), access_rights_( 0 )
 {
-        m_Log.SetIdentity( "CCharClient" );
+        log_.SetIdentity( "CCharClient" );
 }
 
-CCharClient::CCharClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ), m_Right( 0 )
+CCharClient::CCharClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ), access_rights_( 0 )
 {
-        m_Log.SetIdentity( "CCharClient" );
+        log_.SetIdentity( "CCharClient" );
 }
 
 bool CCharClient::HandlePacket( uint8_t* _buffer )
@@ -35,7 +35,7 @@ bool CCharClient::OnReceived()
 
 bool CCharClient::JoinServerReply( CPacket* P )
 {
-	m_Log.icprintf( "JoinServerReply\n" );
+	log_.icprintf( "JoinServerReply\n" );
 
 	SetId( P->Get<uint32_t>(0) );
 	uint8_t _pass[33];
@@ -48,7 +48,7 @@ bool CCharClient::JoinServerReply( CPacket* P )
 bool CCharClient::SendCharListReply( CPacket* P )
 {
 	(void)P;
-	m_Log.icprintf( "CharListReply\n" );
+	log_.icprintf( "CharListReply\n" );
 
 	return true;
 }
@@ -56,7 +56,7 @@ bool CCharClient::SendCharListReply( CPacket* P )
 bool CCharClient::SendCharCreateReply( CPacket* P )
 {
         (void)P;
-	m_Log.icprintf( "CharCreateReply\n" );
+	log_.icprintf( "CharCreateReply\n" );
 
 	return true;
 }
@@ -64,7 +64,7 @@ bool CCharClient::SendCharCreateReply( CPacket* P )
 bool CCharClient::SendCharDeleteReply( CPacket* P )
 {
         //TODO: Find out what byte position 0 is used for.
-	m_Log.icprintf( "CharDeleteReply\n" );
+	log_.icprintf( "CharDeleteReply\n" );
 	uint8_t action =  P->Get<uint8_t>( 1 );
 	char name[17];
 	memset( name, 0, 17 );
@@ -85,7 +85,7 @@ bool CCharClient::SendCharDeleteReply( CPacket* P )
 bool CCharClient::SendCharSelectReply( CPacket* P )
 {
         (void)P;
-	m_Log.icprintf( "CharSelectReply\n" );
+	log_.icprintf( "CharSelectReply\n" );
 
 	return true;
 }

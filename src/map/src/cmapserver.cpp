@@ -3,12 +3,12 @@
 #include "cmapisc.h"
 #include "ePacketType.h"
 
-CMapServer::CMapServer( bool _isc, int16_t mapidx ) : CRoseServer( _isc ), mapIDX( mapidx )
+CMapServer::CMapServer( bool _isc, int16_t mapidx ) : CRoseServer( _isc ), map_idx_( mapidx )
 {
 	if ( true == _isc )
-                m_Log.SetIdentity( "CMapISCServer" );
+                log_.SetIdentity( "CMapISCServer" );
         else
-                m_Log.SetIdentity( "CMapServer" );
+                log_.SetIdentity( "CMapServer" );
 
 	if( mapidx >= 0 )
 	{
@@ -35,17 +35,17 @@ void CMapServer::OnAccepted( tcp::socket _sock )
                 std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
                 if( IsISCServer() == false )
                 {
-                        std::lock_guard<std::mutex> lock(m_ClientListMutex);
+                        std::lock_guard<std::mutex> lock(client_list_mutex_);
                         CMapClient* nClient = new CMapClient( std::move( _sock ) );
-                        m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-                        m_ClientList.push_front( nClient );
+                        log_.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+                        client_list_.push_front( nClient );
                 }
                 else
                 {
-                        std::lock_guard<std::mutex> lock(m_ISCListMutex);
+                        std::lock_guard<std::mutex> lock(isc_list_mutex_);
                         CMapISC* nClient = new CMapISC( std::move( _sock ) );
-                        m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
-                        m_ISCList.push_front( nClient );
+                        log_.icprintf( "Server connected from: %s\n", _address.c_str( ) );
+                        isc_list_.push_front( nClient );
                 }
         }
 }

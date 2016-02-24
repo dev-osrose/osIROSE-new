@@ -4,27 +4,27 @@
 #include "ePacketType.h"
 
 CLoginClient::CLoginClient( )
-    : CRoseClient( ), m_Right( 0 )
+    : CRoseClient( ), access_rights_( 0 )
 {
-	m_Log.SetIdentity( "CLoginClient" );
+	log_.SetIdentity( "CLoginClient" );
 }
 
 CLoginClient::CLoginClient( tcp::socket _sock )
-    : CRoseClient( std::move( _sock ) ), m_Right( 0 )
+    : CRoseClient( std::move( _sock ) ), access_rights_( 0 )
 {
-	m_Log.SetIdentity( "CLoginClient" );
+	log_.SetIdentity( "CLoginClient" );
 }
 
 void CLoginClient::SendLoginReply( uint8_t Result )
 {
 	CPacket* pak = new CPacket( ePacketType::PAKLC_LOGIN_REPLY, sizeof( pakLoginReply ) );
 	pak->pLoginReply.Result = Result;
-	pak->pLoginReply.Right  = m_Right;
+	pak->pLoginReply.Right  = access_rights_;
 	pak->pLoginReply.Type   = 0;
 
 	if ( Result == 0 )
 	{
-		uint32_t    serverID   = 1;
+		uint32_t serverID = 1;
 
 		// loop the server list here
 		std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex( ) );
@@ -35,12 +35,12 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 				CLoginISC* svr = (CLoginISC*)server;
 
 				// This if check is needed since the client actually looks for this.
-				if ( svr->IsTestServer() )
+				if ( svr->IsTestServer( ) )
 					pak->Add< uint8_t >( '@' );
 				else
 					pak->Add< uint8_t >( ' ' );
 
-				pak->AddString( svr->GetName().c_str(), true );
+				pak->AddString( svr->GetName( ).c_str( ), true );
 				pak->Add< uint32_t >( serverID++ );
 			}
 		}
@@ -51,9 +51,9 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 
 bool CLoginClient::UserLogin( CPacket* P )
 {
-	P->GetBytes( 0, 32, _pass );
-	_pass[ 32 ] = 0; // Null term the string
-	P->GetString( 32, 16, (char*)_user );
+	P->GetBytes( 0, 32, password_ );
+	password_[ 32 ] = 0; // Null term the string
+	P->GetString( 32, 16, (char*)username_ );
 	//IResult	*res = nullptr;
 	//std::string	query = "CALL UserLogin('%s', '%s');";
 
@@ -63,44 +63,44 @@ bool CLoginClient::UserLogin( CPacket* P )
 
 	//if(res != nullptr)
 	{
-	// Query the DB
-	//	if(res)
-	// 	{
-	// 		// Already logged in
-	// 		SendLoginReply( 4 );
-	// 	}
-	//
-	// 	{
-	// 		// Servers are under inspection
-	// 		SendLoginReply( 1 );
-	// 	}
+	    // Query the DB
+	    //	if(res)
+	    // 	{
+	    // 		// Already logged in
+	    // 		SendLoginReply( 4 );
+	    // 	}
+	    //
+	    // 	{
+	    // 		// Servers are under inspection
+	    // 		SendLoginReply( 1 );
+	    // 	}
 
-	{
-		// Okay to login!!
-		SendLoginReply( 0 );
-	}
+	    {
+	        // Okay to login!!
+	        SendLoginReply( 0 );
+}
 
-	// 	{
-	// 		// Banned
-	// 		SendLoginReply( 5 );
-	// 	}
-	//
-	// 	{
-	// 		// Incorrect Password
-	// 		SendLoginReply( 3 );
-	// 	}
-	//
-	// 	{
-	// 		// Server Full
-	// 		SendLoginReply( 8 );
-	//	}
-	}
-	//else
-	{
-		// The user doesn't exist or server is down.
+// 	{
+// 		// Banned
+// 		SendLoginReply( 5 );
+// 	}
+//
+// 	{
+// 		// Incorrect Password
+// 		SendLoginReply( 3 );
+// 	}
+//
+// 	{
+// 		// Server Full
+// 		SendLoginReply( 8 );
+//	}
+}
+//else
+{
+	// The user doesn't exist or server is down.
 	//	SendLoginReply( 1 );
-	}
-	return true;
+}
+return true;
 }
 
 bool CLoginClient::ChannelList( CPacket* P )
@@ -113,7 +113,7 @@ bool CLoginClient::ChannelList( CPacket* P )
 	pak->pChannelList.lServerID    = ServerID;
 	pak->pChannelList.bServerCount = 1;
 
-	uint8_t    channelID   = 1;
+	uint8_t        channelID = 1;
 	pakChannelInfo channel;
 	channel.ChannelID = channelID;
 	channel.pad       = 0;
@@ -128,7 +128,7 @@ bool CLoginClient::ChannelList( CPacket* P )
 
 bool CLoginClient::ServerSelect( CPacket* P )
 {
-	uint32_t serverID = P->Get<uint32_t>( 0 );
+	uint32_t serverID = P->Get< uint32_t >( 0 );
 	//uint8_t channelID = P->Get<uint8_t>( 4 );
 
 	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
@@ -139,7 +139,7 @@ bool CLoginClient::ServerSelect( CPacket* P )
 	for ( auto& obj : CLoginServer::GetISCList( ) )
 	{
 		CLoginISC* server = (CLoginISC*)obj;
-		if ( server->GetType( ) == 1 && server->GetId() == serverID )
+		if ( server->GetType( ) == 1 && server->GetId( ) == serverID )
 		{
 			pak->AddString( server->GetIP( ).c_str( ), true );
 			pak->Add< uint16_t >( server->GetPort( ) );

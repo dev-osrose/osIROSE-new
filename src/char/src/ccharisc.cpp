@@ -3,15 +3,15 @@
 #include "ccharserver.h"
 
 CCharISC::CCharISC( )
-: CRoseISC( ), m_LoginConnection( false )
+: CRoseISC( ), login_connection_( false )
 {
-	m_Log.SetIdentity( "CCharISC" );
+	log_.SetIdentity( "CCharISC" );
 }
 
 CCharISC::CCharISC( tcp::socket _sock )
-: CRoseISC( std::move( _sock ) ), m_LoginConnection( false )
+: CRoseISC( std::move( _sock ) ), login_connection_( false )
 {
-	m_Log.SetIdentity( "CCharISC" );
+	log_.SetIdentity( "CCharISC" );
 }
 
 bool CCharISC::HandlePacket( uint8_t* _buffer )
@@ -70,7 +70,7 @@ bool CCharISC::ServerRegister( CPacket* P )
 	uint8_t* data = new uint8_t[_size];
 	memset( data, 0, _size );
 	if (pServerReg.SerializeToArray( data, _size ) == false)
-		m_Log.eicprintf( "Couldn't serialize the data\n" );
+		log_.eicprintf( "Couldn't serialize the data\n" );
 	pakToLS->AddBytes( data, _size );
 
 	//todo: get the ISC connection to the login server and send the packet to it
@@ -104,7 +104,7 @@ void CCharISC::OnConnected( )
 	uint8_t* data  = new uint8_t[ _size ];
 	memset( data, 0, _size );
 	if ( pServerReg.SerializeToArray( data, _size ) == false )
-		m_Log.eicprintf( "Couldn't serialize the data\n" );
+		log_.eicprintf( "Couldn't serialize the data\n" );
 	pak->AddBytes( data, _size );
 
 	//m_Log.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );

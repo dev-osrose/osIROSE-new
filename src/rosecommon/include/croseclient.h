@@ -28,7 +28,7 @@ protected:
         virtual void OnSent( );
 	virtual bool HandlePacket( uint8_t* _buffer );
 
-	PacketCodec m_Crypt;
+	PacketCodec crypt_;
 };
 
 #endif

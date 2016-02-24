@@ -13,7 +13,7 @@ class CLoginClient_Mock : public CLoginClient
         protected:
         virtual bool OnSend( uint8_t* _buffer )
         {
-                m_Crypt.encodeClientPacket( _buffer );
+                crypt_.encodeClientPacket( _buffer );
                 return true;
         }
 };

@@ -1,17 +1,15 @@
 #include <stdint.h>
 #include "logconsole.h"
 #include "croseserver.h"
-#include "croseclient.h"
-#include "croseisc.h"
 
-std::forward_list< CRoseClient* > CRoseServer::m_ClientList;
-std::forward_list< CRoseISC* > CRoseServer::m_ISCList;
-std::mutex CRoseServer::m_ClientListMutex;
-std::mutex CRoseServer::m_ISCListMutex;
+std::forward_list< CRoseClient* > CRoseServer::client_list_;
+std::forward_list< CRoseISC* > CRoseServer::isc_list_;
+std::mutex CRoseServer::client_list_mutex_;
+std::mutex CRoseServer::isc_list_mutex_;
 
-CRoseServer::CRoseServer( bool _iscServer ) : m_ISCServer( _iscServer )
+CRoseServer::CRoseServer( bool _iscServer ) : isc_server_( _iscServer )
 {
-	m_Log.SetIdentity( "CRoseServer" );
+	log_.SetIdentity( "CRoseServer" );
 }
 
 CRoseServer::~CRoseServer( )
@@ -21,29 +19,29 @@ CRoseServer::~CRoseServer( )
 	//	delete m_ClientList;
 	if( IsISCServer() == false )
 	{
-		std::lock_guard< std::mutex > lock( m_ClientListMutex );
-		for ( auto& client : m_ClientList )
+		std::lock_guard< std::mutex > lock( client_list_mutex_ );
+		for ( auto& client : client_list_ )
 		{
 			client->Shutdown( );
 			delete client;
 		}
-		m_ClientList.clear( );
+		client_list_.clear( );
 	}
 	else
 	{
-		std::lock_guard< std::mutex > lock( m_ISCListMutex );
-		for ( auto& client : m_ISCList )
+		std::lock_guard< std::mutex > lock( isc_list_mutex_ );
+		for ( auto& client : isc_list_ )
 		{
 			client->Shutdown( );
 			delete client;
 		}
-		m_ISCList.clear( );
+		isc_list_.clear( );
 	}
 }
 
 bool CRoseServer::Run()
 {
-	while (m_Active == true)
+	while (active_ == true)
 	{
 //		m_ClientListMutex.lock();
 //		for (auto& client : m_ClientList)
@@ -62,7 +60,7 @@ bool CRoseServer::Run()
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
 
-	m_Log.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
+	log_.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );
 	return true;
 }
 
@@ -132,17 +130,17 @@ void CRoseServer::OnAccepted( tcp::socket _sock )
 		//CRoseClient* nClient = nullptr;
 		if( IsISCServer() == false )
 		{
-			std::lock_guard<std::mutex> lock(m_ClientListMutex);
+			std::lock_guard<std::mutex> lock(client_list_mutex_);
 			CRoseClient* nClient = new CRoseClient( std::move( _sock ) );
-			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-	        	m_ClientList.push_front( nClient );
+			log_.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+	        	client_list_.push_front( nClient );
 		}
 		else
 		{
-			std::lock_guard<std::mutex> lock(m_ISCListMutex);
+			std::lock_guard<std::mutex> lock(isc_list_mutex_);
 			CRoseISC* nClient = new CRoseISC( std::move( _sock ) );
-			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
-		        m_ISCList.push_front( nClient );
+			log_.icprintf( "Server connected from: %s\n", _address.c_str( ) );
+		        isc_list_.push_front( nClient );
 		}
 
 		//m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );

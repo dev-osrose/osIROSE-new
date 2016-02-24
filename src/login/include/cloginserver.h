@@ -13,7 +13,7 @@ protected:
 	virtual void OnAccepted( tcp::socket _sock );
 //	virtual bool HandlePacket( uint8_t* _buffer );
 
-	uint32_t clientCount;
+	uint32_t client_count_;
 };
 
 #endif

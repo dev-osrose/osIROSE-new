@@ -21,7 +21,7 @@ protected:
 		bool SendCharDeleteReply( CPacket* P );
 		bool SendCharSelectReply( CPacket* P );
 
-        uint16_t m_Right;
+        uint16_t access_rights_;
 };
 
 #endif

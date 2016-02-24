@@ -4,9 +4,8 @@
 #include <list>
 #include <forward_list>
 #include "cnetwork_asio.h"
-
-class CRoseClient;
-class CRoseISC;
+#include "croseclient.h"
+#include "croseisc.h"
 
 class CRoseServer : public CNetwork_Asio
 {
@@ -16,12 +15,12 @@ public:
 
 	virtual bool Run( );
 
-	bool IsISCServer() { return m_ISCServer; }
+	bool IsISCServer() { return isc_server_; }
 
-	static std::forward_list< CRoseClient* > &GetClientList() { return m_ClientList; }
-	static std::forward_list< CRoseISC* > &GetISCList() { return m_ISCList; }
-	static std::mutex &GetClientListMutex() { return m_ClientListMutex; }
-	static std::mutex &GetISCListMutex() { return m_ISCListMutex; }
+	static std::forward_list< CRoseClient* > &GetClientList() { return client_list_; }
+	static std::forward_list< CRoseISC* > &GetISCList() { return isc_list_; }
+	static std::mutex &GetClientListMutex() { return client_list_mutex_; }
+	static std::mutex &GetISCListMutex() { return isc_list_mutex_; }
 
 protected:
 	// Callback functions
@@ -31,18 +30,14 @@ protected:
 	virtual void OnListening( );
 	virtual bool OnDisconnect( );
 	virtual void OnDisconnected( );
-//	virtual bool OnReceive( );
-//	virtual void OnReceived( uint8_t* _buffer, uint16_t _size );
-//	virtual bool OnSend( uint8_t* _buffer );
-//	virtual void OnSent( );
 	virtual bool OnAccept( );
 	virtual void OnAccepted( tcp::socket _sock );
 
-	bool m_ISCServer;
-	static std::forward_list< CRoseClient* > m_ClientList;
-	static std::forward_list< CRoseISC* > m_ISCList;
-	static std::mutex m_ClientListMutex;
-	static std::mutex m_ISCListMutex;
+	bool isc_server_;
+	static std::forward_list< CRoseClient* > client_list_;
+	static std::forward_list< CRoseISC* > isc_list_;
+	static std::mutex client_list_mutex_;
+	static std::mutex isc_list_mutex_;
 };
 
 #endif

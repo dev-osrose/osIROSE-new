@@ -3,12 +3,12 @@
 #include "cloginisc.h"
 #include "ePacketType.h"
 
-CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc ), clientCount(0)
+CLoginServer::CLoginServer( bool _isc ) : CRoseServer( _isc ), client_count_(0)
 {
 	if ( true == _isc )
-		m_Log.SetIdentity( "CLoginISCServer" );
+		log_.SetIdentity( "CLoginISCServer" );
 	else
-		m_Log.SetIdentity( "CLoginServer" );
+		log_.SetIdentity( "CLoginServer" );
 }
 
 CLoginServer::~CLoginServer()
@@ -24,18 +24,18 @@ void CLoginServer::OnAccepted( tcp::socket _sock )
 		std::string _address = _sock.remote_endpoint( ).address( ).to_string( );
 		if( IsISCServer() == false )
 		{
-			std::lock_guard<std::mutex> lock(m_ClientListMutex);
+			std::lock_guard<std::mutex> lock(client_list_mutex_);
 			CLoginClient* nClient = new CLoginClient( std::move( _sock ) );
-			nClient->SetId(clientCount++);
-			m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-	                m_ClientList.push_front( nClient );
+			nClient->SetId(client_count_++);
+			log_.icprintf( "Client connected from: %s\n", _address.c_str( ) );
+	                client_list_.push_front( nClient );
 		}
 		else
 		{
-			std::lock_guard<std::mutex> lock(m_ISCListMutex);
+			std::lock_guard<std::mutex> lock(isc_list_mutex_);
 			CLoginISC* nClient = new CLoginISC( std::move( _sock ) );
-			m_Log.icprintf( "Server connected from: %s\n", _address.c_str( ) );
-                        m_ISCList.push_front( nClient );
+			log_.icprintf( "Server connected from: %s\n", _address.c_str( ) );
+                        isc_list_.push_front( nClient );
 		}
 	}
 }

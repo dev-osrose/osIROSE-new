@@ -9,7 +9,7 @@ public:
 	CMapServer( bool _isc = false, int16_t mapidx = -1 );
         virtual ~CMapServer();
 
-	int32_t GetMapIDX() { return mapIDX; }
+	int32_t GetMapIDX() { return map_idx_; }
 
 protected:
         virtual void OnAccepted( tcp::socket _sock );
@@ -19,7 +19,7 @@ protected:
 		MASTER_NODE = -1,
 		WORKER_THREAD
 	};
-	int32_t mapIDX;
+	int32_t map_idx_;
 };
 
 #endif

@@ -12,12 +12,12 @@ class CRoseISC_Mock : public CRoseISC
         public:
         CRoseISC_Mock() : CRoseISC()
         {
-                m_Log.SetIdentity( "CRoseISC_Mock" );
+                log_.SetIdentity( "CRoseISC_Mock" );
         }
 
         CRoseISC_Mock( tcp::socket _sock ) : CRoseISC( std::move(_sock) )
         {
-                m_Log.SetIdentity( "CRoseISC_Mock" );
+                log_.SetIdentity( "CRoseISC_Mock" );
         }
 
         protected:

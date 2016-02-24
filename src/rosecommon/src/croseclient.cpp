@@ -3,17 +3,17 @@
 #include "ePacketType.h"
 
 CRoseClient::CRoseClient( )
-    : CNetwork_Asio( ), m_Crypt( )
+    : CNetwork_Asio( ), crypt_( )
 {
-	m_Log.SetIdentity( "CRoseClient" );
+	log_.SetIdentity( "CRoseClient" );
 	ResetBuffer( );
 }
 
 CRoseClient::CRoseClient( tcp::socket _sock )
-    : CNetwork_Asio( ), m_Crypt( )
+    : CNetwork_Asio( ), crypt_( )
 {
 	SetSocket( std::move( _sock ) );
-	m_Log.SetIdentity( "CRoseClient" );
+	log_.SetIdentity( "CRoseClient" );
 	Recv( );
 	ResetBuffer( );
 }
@@ -60,33 +60,33 @@ bool CRoseClient::OnReceive( )
 bool CRoseClient::OnReceived( )
 {
 	bool rtnVal = true;
-	if ( PacketSize == 6 )
+	if ( packet_size_ == 6 )
 	{
-		PacketSize = m_Crypt.decodeClientHeader( (unsigned char*)&Buffer );
+		packet_size_ = crypt_.decodeClientHeader( (unsigned char*)&buffer_ );
 
-		if ( PacketSize < 6 || PacketSize > MAX_PACKET_SIZE )
+		if ( packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE )
 		{
-			m_Log.eicprintf( "Client sent incorrect blockheader\n" );
+			log_.eicprintf( "Client sent incorrect blockheader\n" );
 			ResetBuffer( );
 			return false;
 		}
 
-		if ( PacketSize > 6 )
+		if ( packet_size_ > 6 )
 			return true;
 	}
 
 	//decrypt packet now
-	if ( !m_Crypt.decodeClientBody( (unsigned char*)&Buffer ) )
+	if ( !crypt_.decodeClientBody( (unsigned char*)&buffer_ ) )
 	{
 		// ERROR!!!
-		m_Log.eicprintf( "Client sent illegal block\n" );
+		log_.eicprintf( "Client sent illegal block\n" );
 		ResetBuffer( );
 		return false;
 	}
 
-	CPacket* pak = (CPacket*)&Buffer;
-	m_Log.oicprintf( "Received a packet on CRoseClient: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
-	rtnVal = HandlePacket( Buffer );
+	CPacket* pak = (CPacket*)&buffer_;
+	log_.oicprintf( "Received a packet on CRoseClient: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
+	rtnVal = HandlePacket( buffer_ );
 	ResetBuffer( );
 
 	return rtnVal;
@@ -95,7 +95,7 @@ bool CRoseClient::OnReceived( )
 bool CRoseClient::OnSend( uint8_t* _buffer )
 {
 	//(void)_buffer;
-	m_Crypt.encodeServerPacket( _buffer );
+	crypt_.encodeServerPacket( _buffer );
 	return true;
 }
 void CRoseClient::OnSent( )
@@ -109,7 +109,7 @@ bool CRoseClient::HandlePacket( uint8_t* _buffer )
 	{
 	case ePacketType::PAKCS_ALIVE:
 	{
-		m_Log.icprintf( "Got keep alive packet\n" );
+		log_.icprintf( "Got keep alive packet\n" );
 		break;
 	}
 	case ePacketType::PAKCS_ACCEPT_REQ:
@@ -123,7 +123,7 @@ bool CRoseClient::HandlePacket( uint8_t* _buffer )
 	}
 	default:
 	{
-		m_Log.eicprintf( "Unknown Packet Type: 0x%X\n", pak->Header.Command );
+		log_.eicprintf( "Unknown Packet Type: 0x%X\n", pak->Header.Command );
 		return false;
 	}
 	}

@@ -3,14 +3,14 @@
 #include "cmapclient.h"
 #include "ePacketType.h"
 
-CMapClient::CMapClient() : CRoseClient(), m_Right( 0 )
+CMapClient::CMapClient() : CRoseClient(), access_rights_( 0 )
 {
-        m_Log.SetIdentity( "CMapClient" );
+        log_.SetIdentity( "CMapClient" );
 }
 
-CMapClient::CMapClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ), m_Right( 0 )
+CMapClient::CMapClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ), access_rights_( 0 )
 {
-        m_Log.SetIdentity( "CMapClient" );
+        log_.SetIdentity( "CMapClient" );
 }
 
 bool CMapClient::HandlePacket( uint8_t* _buffer )

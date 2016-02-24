@@ -2,15 +2,15 @@
 #include "crosepacket.h"
 
 CMapISC::CMapISC( )
-    : CRoseISC( ), m_CharServer( false )
+    : CRoseISC( ), char_server_( false )
 {
-	m_Log.SetIdentity( "CMapISC" );
+	log_.SetIdentity( "CMapISC" );
 }
 
 CMapISC::CMapISC( tcp::socket _sock )
-    : CRoseISC( std::move( _sock ) ), m_CharServer( false )
+    : CRoseISC( std::move( _sock ) ), char_server_( false )
 {
-	m_Log.SetIdentity( "CMapISC" );
+	log_.SetIdentity( "CMapISC" );
 }
 
 bool CMapISC::HandlePacket( uint8_t* _buffer )
@@ -48,7 +48,7 @@ void CMapISC::OnConnected( )
 	uint8_t* data  = new uint8_t[ _size ];
 	memset( data, 0, _size );
 	if ( pServerReg.SerializeToArray( data, _size ) == false )
-		m_Log.eicprintf( "Couldn't serialize the data\n" );
+		log_.eicprintf( "Couldn't serialize the data\n" );
 	pak->AddBytes( data, _size );
 
 	//	m_Log.icprintf( "IN 0x%X ", pak->Header.Command );
@@ -57,7 +57,7 @@ void CMapISC::OnConnected( )
 	//	m_Log.dcprintf( "\n" );
 	//	m_Log.icprintf("Header[%i, 0x%X] Size: %i\n", pak->Header.Size, pak->Header.Command, _size);
 
-	m_Log.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
+	log_.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
 
 	Send( (CPacket*)pak );
 	delete[] data;

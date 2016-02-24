@@ -12,12 +12,12 @@ class CLoginISC_Mock : public CLoginISC
         public:
 	CLoginISC_Mock() : CLoginISC()
 	{
-		m_Log.SetIdentity( "CLoginISC_Mock" );
+		log_.SetIdentity( "CLoginISC_Mock" );
 	}
 
 	CLoginISC_Mock( tcp::socket _sock ) : CLoginISC( std::move(_sock) )
         {
-		m_Log.SetIdentity( "CLoginISC_Mock" );
+		log_.SetIdentity( "CLoginISC_Mock" );
         }
 
         protected:

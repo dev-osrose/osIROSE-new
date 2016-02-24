@@ -2,15 +2,15 @@
 #include "crosepacket.h"
 
 CLoginISC::CLoginISC( )
-: CRoseISC( ), m_ChannelCount( 0 ), m_MinRight( 0 ), testServer( false )
+: CRoseISC( ), channel_count_( 0 ), min_right_( 0 ), test_server_( false )
 {
-	m_Log.SetIdentity( "CLoginISC" );
+	log_.SetIdentity( "CLoginISC" );
 }
 
 CLoginISC::CLoginISC( tcp::socket _sock )
-: CRoseISC( std::move( _sock ) ), m_ChannelCount( 0 ), m_MinRight( 0 ), testServer( false )
+: CRoseISC( std::move( _sock ) ), channel_count_( 0 ), min_right_( 0 ), test_server_( false )
 {
-	m_Log.SetIdentity( "CLoginISC" );
+	log_.SetIdentity( "CLoginISC" );
 }
 
 bool CLoginISC::HandlePacket( uint8_t* _buffer )
@@ -54,10 +54,10 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	//todo: replace these numbers with the actual enum name
 	if ( _type == 1 )
 	{
-		name        = pServerReg.name( );
+		server_name_        = pServerReg.name( );
 		m_IpAddress = pServerReg.addr( );
 		m_wPort     = pServerReg.port( );
-		m_MinRight	= pServerReg.accright( );
+		min_right_	= pServerReg.accright( );
 		m_iType = _type;
 	}
 	else if ( _type == 3 )
@@ -65,12 +65,12 @@ bool CLoginISC::ServerRegister( CPacket* P )
 		//todo: add channel connections here (_type == 3)
 		tChannelInfo channel;
 		channel.channelName = pServerReg.name( );
-		channel.ChannelID = m_ChannelCount++;
+		channel.ChannelID = channel_count_++;
 		channel.MinRight = pServerReg.accright( );
-		m_ChannelList.push_front( channel );
+		channel_list_.push_front( channel );
 	}
 
-	m_Log.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), name.c_str( ), m_IpAddress.c_str( ), m_wPort );
+	log_.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), server_name_.c_str( ), m_IpAddress.c_str( ), m_wPort );
 	return true;
 }
 

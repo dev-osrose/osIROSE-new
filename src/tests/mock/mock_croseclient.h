@@ -14,7 +14,7 @@ class CRoseClient_Mock : public CRoseClient
 
 	virtual bool OnSend( uint8_t* _buffer )
 	{
-		m_Crypt.encodeClientPacket( _buffer );
+		crypt_.encodeClientPacket( _buffer );
 		return true;
 	}
 

@@ -15,7 +15,7 @@ protected:
         virtual bool HandlePacket( uint8_t* _buffer );
         virtual bool OnReceived( );
 
-	uint16_t m_Right;
+	uint16_t access_rights_;
 };
 
 #endif
