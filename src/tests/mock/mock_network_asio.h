@@ -4,7 +4,7 @@ using ::testing::_;
 using ::testing::Invoke;
 
 #include "cnetwork_asio.h"
-class CNetwork_Asio_Mock : public CNetwork_Asio
+class CNetwork_Asio_Mock : public Core::CNetwork_Asio
 {
 	public:
 	/*CNetwork_Asio_Mock()
@@ -41,5 +41,5 @@ class CNetwork_Asio_Mock : public CNetwork_Asio
 	MOCK_METHOD0( OnSent, void( ) );
 
 	private:
-	CNetwork_Asio real_;
+	Core::CNetwork_Asio real_;
 };

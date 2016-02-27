@@ -6,8 +6,8 @@ int main( int argc, char* argv[] )
 {
 	(void)argc;
 	(void)argv;
-	CLogConsole::SetDisplayOmittable( false );
-	CLogConsole Logger( "Map Server" );
+	Core::CLogConsole::SetDisplayOmittable( false );
+	Core::CLogConsole Logger( "Map Server" );
 	Logger.icprintf( "Starting up server...\n\n" );
 
 	CMapServer clientServer;

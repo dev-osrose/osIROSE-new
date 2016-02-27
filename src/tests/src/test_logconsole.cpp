@@ -6,7 +6,7 @@
 #include <thread>
 #include "logconsole.h"
 
-CLogConsole g_Log( "TestConsoleLogging" );
+Core::CLogConsole g_Log( "TestConsoleLogging" );
 
 TEST( TestConsoleLogging, TestIncprintf )
 {

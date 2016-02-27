@@ -55,10 +55,10 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	if ( _type == 1 )
 	{
 		server_name_        = pServerReg.name( );
-		m_IpAddress = pServerReg.addr( );
-		m_wPort     = pServerReg.port( );
+		network_ip_address = pServerReg.addr( );
+		network_port_     = pServerReg.port( );
 		min_right_	= pServerReg.accright( );
-		m_iType = _type;
+		network_type_ = _type;
 	}
 	else if ( _type == 3 )
 	{
@@ -70,7 +70,7 @@ bool CLoginISC::ServerRegister( CPacket* P )
 		channel_list_.push_front( channel );
 	}
 
-	log_.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), server_name_.c_str( ), m_IpAddress.c_str( ), m_wPort );
+	log_.icprintf( "ISC Server Connected: [%s, %s, %s:%i]\n", ServerReg_ServerType_Name( pServerReg.type( ) ).c_str( ), server_name_.c_str( ), network_ip_address.c_str( ), network_port_ );
 	return true;
 }
 

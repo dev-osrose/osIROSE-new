@@ -5,8 +5,8 @@ int main( int argc, char* argv[] )
 {
 	(void)argc;
 	(void)argv;
-	CLogConsole::SetDisplayOmittable( false );
-	CLogConsole Logger( "CharServer" );
+	Core::CLogConsole::SetDisplayOmittable( false );
+	Core::CLogConsole Logger( "CharServer" );
 	Logger.icprintf( "Starting up server...\n\n" );
 
 	CCharServer clientServer;

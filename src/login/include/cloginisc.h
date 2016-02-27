@@ -13,9 +13,9 @@ public:
 	CLoginISC( tcp::socket _sock );
 
 	std::string GetName( ) { return server_name_; }
-	std::string GetIP( ) { return m_IpAddress; }
-	uint16_t    GetPort( ) { return m_wPort; }
-	uint8_t     GetServerType( ) { return m_iType; }
+	std::string GetIP( ) { return network_ip_address; }
+	uint16_t    GetPort( ) { return network_port_; }
+	uint8_t     GetServerType( ) { return network_type_; }
 	bool        IsTestServer( ) { return test_server_; }
 
 protected:

@@ -8,7 +8,7 @@ class INetwork
 {
 	public:
 	INetwork( )
-	    : m_iId( 0 ), m_iType( 0 ), m_wPort( 0 ), m_IpAddress( "" )
+	    : network_id_( 0 ), network_type_( 0 ), network_port_( 0 ), network_ip_address( "" )
 	{
 	}
 	virtual ~INetwork( ) {}
@@ -21,13 +21,13 @@ class INetwork
 	virtual bool Reconnect( ) = 0;
 	virtual bool Disconnect( ) = 0;
 
-	virtual void    SetId( uint32_t _val ) { m_iId = _val; }
-        virtual void    SetType( uint32_t _val ) { m_iType = _val; }
+	virtual void    SetId( uint32_t _val ) { network_id_ = _val; }
+        virtual void    SetType( uint32_t _val ) { network_type_ = _val; }
 
-	virtual uint32_t    GetId( ) { return m_iId; }
-	virtual uint32_t    GetType( ) { return m_iType; }
-	virtual uint16_t    GetPort( ) { return m_wPort; }
-	virtual std::string GetIpAddress( ) { return m_IpAddress; }
+	virtual uint32_t    GetId( ) { return network_id_; }
+	virtual uint32_t    GetType( ) { return network_type_; }
+	virtual uint16_t    GetPort( ) { return network_port_; }
+	virtual std::string GetIpAddress( ) { return network_ip_address; }
 
 	protected:
 	virtual bool Send( uint8_t* _buffer ) = 0;
@@ -46,11 +46,11 @@ class INetwork
 	virtual void OnSent( ) = 0;
 
 	//private:
-	uint32_t m_iId;
-	uint32_t m_iType;
-	uint16_t m_wPort;
+	uint32_t network_id_;
+	uint32_t network_type_;
+	uint16_t network_port_;
 
-	std::string m_IpAddress;
+	std::string network_ip_address;
 };
 
 #endif

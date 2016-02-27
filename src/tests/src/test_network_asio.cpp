@@ -12,7 +12,7 @@
 
 TEST( TestAsioNetworking, TestInit )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	//network.SetExtraMessageInfo(true);
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 29000 ) );
 	EXPECT_EQ( 0, network.GetId( ) );
@@ -24,7 +24,7 @@ TEST( TestAsioNetworking, TestInit )
 
 TEST( TestAsioNetworking, TestInitHostLessThanTwo )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	EXPECT_EQ( false, network.Init( "0", 29000 ) );
 	EXPECT_NE( 29000, network.GetPort( ) );
 	EXPECT_NE( "0", network.GetIpAddress( ) );
@@ -32,7 +32,7 @@ TEST( TestAsioNetworking, TestInitHostLessThanTwo )
 
 TEST( TestAsioNetworking, TestConnectIp )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
@@ -40,7 +40,7 @@ TEST( TestAsioNetworking, TestConnectIp )
 
 TEST( TestAsioNetworking, TestRecv )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) );
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
@@ -48,7 +48,7 @@ TEST( TestAsioNetworking, TestRecv )
 
 TEST( TestAsioNetworking, TestReconnect )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Disconnect( ) );
@@ -61,7 +61,7 @@ TEST( TestAsioNetworking, TestConnectHostName )
 //	CLogConsole::SetDisplayOmittable(true);
 //	CLogConsole log("TestAsioNetworking");
 //	log.icprintf("Construct\n");
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 //	log.icprintf("Init\n");
 	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
 	//EXPECT_CALL( network, OnConnect( ) );
@@ -77,7 +77,7 @@ TEST( TestAsioNetworking, TestConnectHostName )
 
 TEST( TestAsioNetworking, TestListen )
 {
-	CNetwork_Asio network;
+	Core::CNetwork_Asio network;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 23124 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
@@ -85,7 +85,7 @@ TEST( TestAsioNetworking, TestListen )
 
 TEST( TestAsioNetworking, TestListenAndConnect )
 {
-	CNetwork_Asio netConnect, network;
+	Core::CNetwork_Asio netConnect, network;
 	EXPECT_EQ( true, network.Init( "127.0.0.1", 23456 ) ); // We are going to connect to google's website
 	EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
 

@@ -9,8 +9,8 @@
 #define _CNETWORK_ASIO_H_
 
 #ifdef _WIN32
-#pragma warning( push )
-#pragma warning( disable : 6011 6031 6102 6255 6258 6326 6387 )
+#pragma warning(push)
+#pragma warning(disable : 6011 6031 6102 6255 6258 6326 6387)
 #define _WIN32_WINNT 0x0601
 #endif
 
@@ -19,87 +19,90 @@
 #include <mutex>
 
 #ifdef _WIN32
-#pragma warning( pop )
+#pragma warning(pop)
 #endif
 
 #include <thread>
 #include <condition_variable>
 #include "inetwork.h"
 #include "logconsole.h"
+#include "network_thread_pool.h"
 
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
 
 using asio::ip::tcp;
+namespace Core {
 
-class CNetwork_Asio : public INetwork
-{
-	typedef std::unique_ptr< asio::io_service::work > asio_worker;
+class CNetwork_Asio : public INetwork {
+  typedef std::unique_ptr<asio::io_service::work> asio_worker;
 
-public:
-	CNetwork_Asio( );
-	virtual ~CNetwork_Asio( );
+ public:
+  CNetwork_Asio();
+  virtual ~CNetwork_Asio();
 
-	virtual bool Init( std::string _ip, uint16_t _port );
-	virtual bool Shutdown( );
+  virtual bool Init(std::string _ip, uint16_t _port);
+  virtual bool Shutdown();
 
-	virtual bool Connect( );
-	virtual bool Listen( );
-	virtual bool Run( );
-	virtual bool Reconnect( );
-	virtual bool Disconnect( );
+  virtual bool Connect();
+  virtual bool Listen();
+  virtual bool Run();
+  virtual bool Reconnect();
+  virtual bool Disconnect();
 
-	virtual bool Send( uint8_t* _buffer );
-	virtual bool Recv( uint16_t _size = MAX_PACKET_SIZE );
-	bool         IsActive( ) { return active_; }
-	void         SetExtraMessageInfo( bool _enabled ) { log_.SetDisplayOmittable( _enabled ); }
-protected:
-	void AcceptConnection( );
-	void ProcessSend( );
-	void ProcessRecv( );
+  virtual bool Send(uint8_t* _buffer);
+  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE);
+  bool IsActive() { return active_; }
+  void SetExtraMessageInfo(bool _enabled) {
+    log_.SetDisplayOmittable(_enabled);
+  }
 
-	// Callback functions
-	virtual bool OnConnect( );
-	virtual void OnConnected( );
-	virtual bool OnListen( );
-	virtual void OnListening( );
-	virtual bool OnDisconnect( );
-	virtual void OnDisconnected( );
-	virtual bool OnReceive( );
-	virtual bool OnReceived( );
-	virtual bool OnSend( uint8_t* _buffer );
-	virtual void OnSent( );
-	virtual bool OnAccept( );
-	virtual void OnAccepted( tcp::socket _sock );
-	virtual bool HandlePacket( uint8_t* _buffer );
+ protected:
+  void AcceptConnection();
+  void ProcessSend();
+  void ProcessRecv();
 
-	void SetSocket( tcp::socket _sock ) { socket_ = std::move( _sock ); }
-	void ResetBuffer( )
-	{
-		packet_offset_ = 0;
-		packet_size_   = 6;
-	}
-	CLogConsole log_;
+  // Callback functions
+  virtual bool OnConnect();
+  virtual void OnConnected();
+  virtual bool OnListen();
+  virtual void OnListening();
+  virtual bool OnDisconnect();
+  virtual void OnDisconnected();
+  virtual bool OnReceive();
+  virtual bool OnReceived();
+  virtual bool OnSend(uint8_t* _buffer);
+  virtual void OnSent();
+  virtual bool OnAccept();
+  virtual void OnAccepted(tcp::socket _sock);
+  virtual bool HandlePacket(uint8_t* _buffer);
 
-protected:
-	asio::io_service        io_service_;
-	asio_worker             io_work_;
-	tcp::socket             socket_;
-	tcp::acceptor           listener_;
-	std::queue< uint8_t* >  send_queue_;
-	std::queue< uint8_t* >  discard_queue_;
-	std::mutex              send_mutex_;
-	std::mutex              recv_mutex_;
-	std::mutex              discard_mutex_;
-	std::condition_variable recv_condition_;
+  void SetSocket(tcp::socket _sock) { socket_ = std::move(_sock); }
+  void ResetBuffer() {
+    packet_offset_ = 0;
+    packet_size_ = 6;
+  }
+  CLogConsole log_;
 
-	std::thread io_thread_;
-	std::thread process_thread_;
-	uint8_t     buffer_[ MAX_PACKET_SIZE ];
-	uint16_t    packet_offset_;
-	uint16_t    packet_size_;
-	bool        active_;
+ protected:
+  asio::io_service* io_service_;
+  Core::NetworkThreadPool* networkService_;
+  tcp::socket socket_;
+  tcp::acceptor listener_;
+  std::queue<uint8_t*> send_queue_;
+  std::queue<uint8_t*> discard_queue_;
+  std::mutex send_mutex_;
+  std::mutex recv_mutex_;
+  std::mutex discard_mutex_;
+  std::condition_variable recv_condition_;
+
+  std::thread process_thread_;
+  uint8_t buffer_[MAX_PACKET_SIZE];
+  uint16_t packet_offset_;
+  uint16_t packet_size_;
+  bool active_;
 };
+}
 
 #endif

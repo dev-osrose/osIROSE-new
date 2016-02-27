@@ -14,12 +14,12 @@ TEST( TestMySQL_Database, TestConstructor )
 	std::string user = dbb.user();
 	std::string pass = dbb.password();
 
-	EXPECT_NO_FATAL_FAILURE( CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str()));
+	EXPECT_NO_FATAL_FAILURE( Core::CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str()));
 }
 
 TEST( TestMySQL_Database, TestQExecuteFails )
 {
-	CMySQL_Database database;
+	Core::CMySQL_Database database;
 	EXPECT_ANY_THROW(database.Connect("fdafsdohuohy530", "dhfui34hf4", "dfj3gqf27", "Rahf7823"));
         EXPECT_ANY_THROW(database.QExecute("DROP TABLE IF EXISTS test_table;"));
         EXPECT_ANY_THROW(database.QExecute("CREATE TABLE test_table(id INT);"));
@@ -35,7 +35,7 @@ TEST( TestMySQL_Database, TestQExecute )
         std::string user = dbb.user();
         std::string pass = dbb.password();
 
-	CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
+	Core::CMySQL_Database database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 	EXPECT_NO_FATAL_FAILURE( database.QExecute("DROP TABLE IF EXISTS test_table;"));
 	EXPECT_NO_FATAL_FAILURE(database.QExecute("CREATE TABLE test_table(id INT);"));
 	EXPECT_NO_FATAL_FAILURE(database.QExecute("DROP TABLE test_table;") );
@@ -50,7 +50,7 @@ TEST(TestMySQL_Database, TestQStore)
         std::string user = dbb.user();
         std::string pass = dbb.password();
 
-	CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
+	Core::CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 	database.QExecute("DROP TABLE IF EXISTS test_table;");
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
@@ -77,5 +77,5 @@ TEST(TestMySQL_Database, TestError)
         std::string user = dbb.user();
         std::string pass = dbb.password();
 
-	CMySQL_Database	database(host, _database, user, pass);
+	Core::CMySQL_Database	database(host, _database, user, pass);
 }

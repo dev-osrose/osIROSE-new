@@ -212,7 +212,7 @@ struct CPacket
 
 	void Print()
 	{
-		CLogConsole Log("");
+		Core::CLogConsole Log("");
 		Log.dcprintf( "[0x%X, 0x%X] ", Header.Size, Header.Command );
 		for (int i = 0; i < Header.Size; i++)
 			Log.dcprintf( "%02X ", Buffer[i] );
