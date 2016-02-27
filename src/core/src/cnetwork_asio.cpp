@@ -29,6 +29,7 @@ CNetwork_Asio::CNetwork_Asio()
 CNetwork_Asio::~CNetwork_Asio() {
   Shutdown();
   process_thread_.join();
+  networkService_->Shutdown();
 }
 
 bool CNetwork_Asio::Run() {
@@ -111,7 +112,7 @@ bool CNetwork_Asio::Reconnect() {
 
 bool CNetwork_Asio::Disconnect() {
   OnDisconnect();
-  networkService_->Get_IO_Service()->dispatch([this]() {
+  networkService_->Get_IO_Service()->post([this]() {
     std::error_code ignored;
     socket_.shutdown(asio::socket_base::shutdown_both, ignored);
     OnDisconnected();
