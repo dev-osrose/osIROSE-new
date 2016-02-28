@@ -15,7 +15,7 @@ CCharClient::CCharClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) 
 
 bool CCharClient::HandlePacket( uint8_t* _buffer )
 {
-        CPacket* pak = (CPacket*)_buffer;
+        CRosePacket* pak = (CRosePacket*)_buffer;
         switch ( pak->Header.Command )
         {
 		case ePacketType::PAKCS_JOIN_SERVER_REQ: return JoinServerReply( pak ); // Allow client to connect
@@ -33,7 +33,7 @@ bool CCharClient::OnReceived()
         return CRoseClient::OnReceived();
 }
 
-bool CCharClient::JoinServerReply( CPacket* P )
+bool CCharClient::JoinServerReply( CRosePacket* P )
 {
 	log_.icprintf( "JoinServerReply\n" );
 
@@ -45,7 +45,7 @@ bool CCharClient::JoinServerReply( CPacket* P )
 	return true;
 }
 
-bool CCharClient::SendCharListReply( CPacket* P )
+bool CCharClient::SendCharListReply( CRosePacket* P )
 {
 	(void)P;
 	log_.icprintf( "CharListReply\n" );
@@ -53,7 +53,7 @@ bool CCharClient::SendCharListReply( CPacket* P )
 	return true;
 }
 
-bool CCharClient::SendCharCreateReply( CPacket* P )
+bool CCharClient::SendCharCreateReply( CRosePacket* P )
 {
         (void)P;
 	log_.icprintf( "CharCreateReply\n" );
@@ -61,7 +61,7 @@ bool CCharClient::SendCharCreateReply( CPacket* P )
 	return true;
 }
 
-bool CCharClient::SendCharDeleteReply( CPacket* P )
+bool CCharClient::SendCharDeleteReply( CRosePacket* P )
 {
         //TODO: Find out what byte position 0 is used for.
 	log_.icprintf( "CharDeleteReply\n" );
@@ -82,7 +82,7 @@ bool CCharClient::SendCharDeleteReply( CPacket* P )
 	return true;
 }
 
-bool CCharClient::SendCharSelectReply( CPacket* P )
+bool CCharClient::SendCharSelectReply( CRosePacket* P )
 {
         (void)P;
 	log_.icprintf( "CharSelectReply\n" );

@@ -117,6 +117,15 @@ struct tChannelInfo
 // GAME PACKETS!!!!!!
 //-------------------------------------------
 PACK(
+	// Packet information
+struct sPacketHeader
+{
+	uint16_t Size;    // Packet size
+	ePacketType Command; // Packet command
+	uint16_t Unused;  // unused?
+});
+
+PACK(
 struct pakChannelInfo
 {
 	uint8_t  ChannelID;
@@ -153,15 +162,6 @@ struct pakEncryptionRequest : public sPacketHeader
 {
 	uint8_t  Unknown;
 	uint32_t RandValue;
-});
-
-PACK(
-	// Packet information
-struct sPacketHeader
-{
-	uint16_t Size;    // Packet size
-	ePacketType Command; // Packet command
-	uint16_t Unused;  // unused?
 });
 
 #endif /* EPACKETTYPE_H_ */

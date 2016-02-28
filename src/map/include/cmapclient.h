@@ -2,8 +2,7 @@
 #define __CMAPCLIENT_H__
 
 #include "croseclient.h"
-
-struct CPacket;
+#include "crosepacket.h"
 
 class CMapClient : public CRoseClient
 {
@@ -12,7 +11,7 @@ public:
         CMapClient( tcp::socket _sock );
 
 protected:
-        virtual bool HandlePacket( uint8_t* _buffer );
+		virtual bool HandlePacket( uint8_t* _buffer );
         virtual bool OnReceived( );
 
 	uint16_t access_rights_;

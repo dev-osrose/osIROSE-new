@@ -22,7 +22,7 @@ CRoseClient::~CRoseClient( )
 {
 }
 
-bool CRoseClient::Send( CPacket* _buffer )
+bool CRoseClient::Send( CRosePacket* _buffer )
 {
 	return CNetwork_Asio::Send( (uint8_t*)_buffer );
 }
@@ -84,7 +84,7 @@ bool CRoseClient::OnReceived( )
 		return false;
 	}
 
-	CPacket* pak = (CPacket*)&buffer_;
+	CRosePacket* pak = (CRosePacket*)&buffer_;
 	log_.oicprintf( "Received a packet on CRoseClient: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
 	rtnVal = HandlePacket( buffer_ );
 	ResetBuffer( );
@@ -104,7 +104,7 @@ void CRoseClient::OnSent( )
 
 bool CRoseClient::HandlePacket( uint8_t* _buffer )
 {
-	CPacket* pak = (CPacket*)_buffer;
+	CRosePacket* pak = (CRosePacket*)_buffer;
 	switch ( (ePacketType)pak->Header.Command )
 	{
 	case ePacketType::PAKCS_ALIVE:
@@ -115,7 +115,7 @@ bool CRoseClient::HandlePacket( uint8_t* _buffer )
 	case ePacketType::PAKCS_ACCEPT_REQ:
 	{
 		// Encryption stuff
-		CPacket* pak = new CPacket( 0x7ff, sizeof(pakEncryptionRequest) );
+		CRosePacket* pak = new CRosePacket( 0x7ff, sizeof(pakEncryptionRequest) );
 		pak->pEncryptReq.Unknown = 0x02;
 		pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time( nullptr ));
 		Send( pak );

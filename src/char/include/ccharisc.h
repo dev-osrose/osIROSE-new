@@ -2,6 +2,7 @@
 #define __CCHARISC_H__
 
 #include "croseisc.h"
+#include "crosepacket.h"
 
 class CCharISC : public CRoseISC
 {
@@ -19,7 +20,7 @@ public:
 	}
 
 protected:
-	bool         ServerRegister( CPacket* P );
+	bool         ServerRegister( CRosePacket* P );
 	bool         HandlePacket( uint8_t* _buffer );
 	virtual void OnConnected( );
 

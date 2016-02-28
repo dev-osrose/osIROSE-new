@@ -3,8 +3,7 @@
 
 #include "crosecrypt.h"
 #include "cnetwork_asio.h"
-
-struct CPacket;
+#include "crosepacket.h"
 
 class CRoseClient : public Core::CNetwork_Asio {
  public:
@@ -12,7 +11,7 @@ class CRoseClient : public Core::CNetwork_Asio {
   CRoseClient(tcp::socket _sock);
   virtual ~CRoseClient();
 
-  virtual bool Send(CPacket* _buffer);
+  virtual bool Send(CRosePacket* _buffer);
   virtual bool Send(uint8_t* _buffer);
 
  protected:

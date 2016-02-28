@@ -3,6 +3,7 @@
 
 #include <forward_list>
 #include "croseisc.h"
+#include "crosepacket.h"
 
 struct tChannelInfo;
 
@@ -20,8 +21,8 @@ public:
 
 protected:
 	bool HandlePacket( uint8_t* _buffer );
-	bool ServerRegister( CPacket* P );
-	bool ServerShutdown( CPacket* P );
+	bool ServerRegister( CRosePacket* P );
+	bool ServerShutdown( CRosePacket* P );
 
 	std::string server_name_;
 	uint32_t    channel_count_;

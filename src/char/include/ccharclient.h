@@ -2,8 +2,7 @@
 #define __CCHARCLIENT_H__
 
 #include "croseclient.h"
-
-struct CPacket;
+#include "crosepacket.h"
 
 class CCharClient : public CRoseClient
 {
@@ -15,11 +14,11 @@ protected:
         virtual bool HandlePacket( uint8_t* _buffer );
         virtual bool OnReceived( );
 
-		bool JoinServerReply( CPacket* P );
-		bool SendCharListReply  ( CPacket* P );
-		bool SendCharCreateReply( CPacket* P );
-		bool SendCharDeleteReply( CPacket* P );
-		bool SendCharSelectReply( CPacket* P );
+		bool JoinServerReply( CRosePacket* P );
+		bool SendCharListReply  ( CRosePacket* P );
+		bool SendCharCreateReply( CRosePacket* P );
+		bool SendCharDeleteReply( CRosePacket* P );
+		bool SendCharSelectReply( CRosePacket* P );
 
         uint16_t access_rights_;
 };

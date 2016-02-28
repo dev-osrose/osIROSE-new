@@ -15,7 +15,7 @@ CLoginISC::CLoginISC( tcp::socket _sock )
 
 bool CLoginISC::HandlePacket( uint8_t* _buffer )
 {
-	CPacket* pak = (CPacket*)_buffer;
+	CRosePacket* pak = (CRosePacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
 	case ePacketType::ISC_ALIVE: return true;
@@ -32,9 +32,9 @@ bool CLoginISC::HandlePacket( uint8_t* _buffer )
 	return true;
 }
 
-bool CLoginISC::ServerRegister( CPacket* P )
+bool CLoginISC::ServerRegister( CRosePacket* P )
 {
-	CPacket* pak = (CPacket*)P;
+	CRosePacket* pak = (CRosePacket*)P;
 
 	uint16_t _size = pak->Header.Size - 6;
 
@@ -74,7 +74,7 @@ bool CLoginISC::ServerRegister( CPacket* P )
 	return true;
 }
 
-bool CLoginISC::ServerShutdown( CPacket* P )
+bool CLoginISC::ServerShutdown( CRosePacket* P )
 {
 	(void)P;
 	return true;

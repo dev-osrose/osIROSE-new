@@ -15,7 +15,7 @@ CMapClient::CMapClient( tcp::socket _sock ) : CRoseClient( std::move( _sock ) ),
 
 bool CMapClient::HandlePacket( uint8_t* _buffer )
 {
-        CPacket* pak = (CPacket*)_buffer;
+        CRosePacket* pak = (CRosePacket*)_buffer;
         switch ( pak->Header.Command )
         {
 //		case ePacketType::PAKCS_JOIN_SERVER_REQ: return JoinServerReply( pak ); // Allow client to connect

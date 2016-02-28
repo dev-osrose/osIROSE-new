@@ -15,7 +15,7 @@ CMapISC::CMapISC( tcp::socket _sock )
 
 bool CMapISC::HandlePacket( uint8_t* _buffer )
 {
-	CPacket* pak = (CPacket*)_buffer;
+	CRosePacket* pak = (CRosePacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
 	case ePacketType::ISC_ALIVE: return true;
@@ -59,6 +59,6 @@ void CMapISC::OnConnected( )
 
 	log_.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
 
-	Send( (CPacket*)pak );
+	Send( (CRosePacket*)pak );
 	delete[] data;
 }

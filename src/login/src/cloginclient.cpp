@@ -17,7 +17,7 @@ CLoginClient::CLoginClient( tcp::socket _sock )
 
 void CLoginClient::SendLoginReply( uint8_t Result )
 {
-	CPacket* pak = new CPacket( ePacketType::PAKLC_LOGIN_REPLY, sizeof( pakLoginReply ) );
+	CRosePacket* pak = new CRosePacket( ePacketType::PAKLC_LOGIN_REPLY, sizeof( pakLoginReply ) );
 	pak->pLoginReply.Result = Result;
 	pak->pLoginReply.Right  = access_rights_;
 	pak->pLoginReply.Type   = 0;
@@ -49,7 +49,7 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 	this->Send( pak );
 }
 
-bool CLoginClient::UserLogin( CPacket* P )
+bool CLoginClient::UserLogin( CRosePacket* P )
 {
 	P->GetBytes( 0, 32, password_ );
 	password_[ 32 ] = 0; // Null term the string
@@ -103,13 +103,13 @@ bool CLoginClient::UserLogin( CPacket* P )
 return true;
 }
 
-bool CLoginClient::ChannelList( CPacket* P )
+bool CLoginClient::ChannelList( CRosePacket* P )
 {
 	//m_Log.icprintf( "Channel List\n" );
 
 	uint32_t ServerID = P->pChannelListReq.lServerID;
 
-	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY, sizeof( pakChannel_List ) );
+	CRosePacket* pak = new CRosePacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY, sizeof( pakChannel_List ) );
 	pak->pChannelList.lServerID    = ServerID;
 	pak->pChannelList.bServerCount = 1;
 
@@ -126,12 +126,12 @@ bool CLoginClient::ChannelList( CPacket* P )
 	return true;
 }
 
-bool CLoginClient::ServerSelect( CPacket* P )
+bool CLoginClient::ServerSelect( CRosePacket* P )
 {
 	uint32_t serverID = P->Get< uint32_t >( 0 );
 	//uint8_t channelID = P->Get<uint8_t>( 4 );
 
-	CPacket* pak = new CPacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
+	CRosePacket* pak = new CRosePacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY );
 	pak->Add< uint8_t >( 0 );         // Not sure what this byte is for
 	pak->Add< uint32_t >( GetId( ) ); // Set this to client id
 	pak->Add< uint32_t >( 0 );        // Set this to the crypt seed for the server we are connecting to
@@ -154,7 +154,7 @@ bool CLoginClient::ServerSelect( CPacket* P )
 
 bool CLoginClient::HandlePacket( uint8_t* _buffer )
 {
-	CPacket* pak = (CPacket*)_buffer;
+	CRosePacket* pak = (CRosePacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
 	case ePacketType::PAKCS_CHANNEL_LIST_REQ: return ChannelList( pak );

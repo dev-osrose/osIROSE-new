@@ -53,7 +53,7 @@ bool CRoseISC::OnReceived( )
 			return true;
 	}
 
-	CPacket* pak = (CPacket*)&buffer_;
+	CRosePacket* pak = (CRosePacket*)&buffer_;
 	log_.oicprintf( "Received a packet on CRoseISC: Header[%i, 0x%X]\n", pak->Header.Size, pak->Header.Command );
 	rtnVal = HandlePacket( buffer_ );
 	ResetBuffer( );
@@ -73,7 +73,7 @@ void CRoseISC::OnSent( )
 
 bool CRoseISC::HandlePacket( uint8_t* _buffer )
 {
-	CPacket* pak = (CPacket*)_buffer;
+	CRosePacket* pak = (CRosePacket*)_buffer;
 	switch ( pak->Header.Command )
 	{
 	case ePacketType::ISC_ALIVE: return true;

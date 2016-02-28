@@ -2,8 +2,7 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-
-struct CPacket;
+#include "crosepacket.h"
 
 class CLoginClient : public CRoseClient
 {
@@ -16,9 +15,9 @@ class CLoginClient : public CRoseClient
 	virtual bool OnReceived( );
 
 	// Packet Helper Functions
-	bool UserLogin( CPacket* P );
-	bool ChannelList( CPacket* P );
-	bool ServerSelect( CPacket* P );
+	bool UserLogin( CRosePacket* P );
+	bool ChannelList( CRosePacket* P );
+	bool ServerSelect( CRosePacket* P );
 
 	void SendLoginReply( uint8_t Result );
 
