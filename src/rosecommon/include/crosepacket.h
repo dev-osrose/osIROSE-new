@@ -6,7 +6,7 @@
 
 using namespace iscPacket;
 
-struct CRosePacket// : public CPacket
+struct CRosePacket
 {
 	union
 	{

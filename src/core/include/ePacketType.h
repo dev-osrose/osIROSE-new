@@ -1,4 +1,3 @@
-#include "logconsole.h"
 /*
  * ePacketType.h
  *
@@ -18,6 +17,8 @@
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
+
+#include <string>
 
 typedef uint8_t  byte;
 typedef uint16_t word;
@@ -99,19 +100,6 @@ enum struct ePacketType : uint16_t
 inline bool operator! (const ePacketType& rhs){return static_cast<int32_t>(rhs) == 0;}
 inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs){return (lhs != static_cast<uint32_t>(rhs));}
 
-//TODO: Add structures for each type of packet so we don't have to use those nasty Add functions
-
-PACK(
-	// Packet information
-struct sPacketHeader
-{
-	uint16_t Size;    // Packet size
-	ePacketType Command; // Packet command
-	uint16_t Unused;  // unused?
-});
-
-
-//todo: Move interal datatypes to their own file. They do not belong in the network packet header.
 struct tChannelInfo
 {
 	uint16_t ChannelID;
@@ -152,7 +140,7 @@ struct pakChannelList_Req : public sPacketHeader
 	uint32_t lServerID;
 });
 
-PACK( 
+PACK(
 struct pakLoginReply : public sPacketHeader
 {
 	uint8_t  Result;
@@ -167,118 +155,13 @@ struct pakEncryptionRequest : public sPacketHeader
 	uint32_t RandValue;
 });
 
-//PACK(
-struct CPacket
+PACK(
+	// Packet information
+struct sPacketHeader
 {
-	//unsigned short	Size;            // Packet size
-	//unsigned short	Command;         // Packet command
-	//unsigned short	Unused;	         // unused
-	//unsigned char		Buffer[0x7FF];	 // Packet data
+	uint16_t Size;    // Packet size
+	ePacketType Command; // Packet command
+	uint16_t Unused;  // unused?
+});
 
-	union
-	{
-		struct
-		{
-			sPacketHeader Header;
-			uint8_t       Data[ MAX_PACKET_SIZE - 6 ];
-		};
-		uint8_t Buffer[ MAX_PACKET_SIZE ];
-
-		pakEncryptionRequest pEncryptReq;
-		pakLoginReply      pLoginReply;
-		pakChannelList_Req pChannelListReq;
-		pakChannel_List    pChannelList;
-	};
-
-	CPacket( unsigned short mycommand = 0, unsigned short mysize = 6, unsigned short myunused = 0 )
-	{
-		memset( Buffer, 0, MAX_PACKET_SIZE );
-		Header.Command = (ePacketType)mycommand;
-		Header.Size    = mysize;
-		Header.Unused  = myunused;
-	}
-
-	CPacket( ePacketType mycommand, unsigned short mysize = 6, unsigned short myunused = 0 )
-	{
-		memset( Buffer, 0, MAX_PACKET_SIZE );
-		Header.Command = mycommand;
-		Header.Size    = mysize;
-		Header.Unused  = myunused;
-	}
-
-	~CPacket( )
-	{
-	}
-
-	void Print()
-	{
-		Core::CLogConsole Log("");
-		Log.dcprintf( "[0x%X, 0x%X] ", Header.Size, Header.Command );
-		for (int i = 0; i < Header.Size; i++)
-			Log.dcprintf( "%02X ", Buffer[i] );
-		Log.dcprintf( "\n" );
-	}
-
-	void  StartPacket( unsigned short mycommand, unsigned short mysize = 6, unsigned short myunused = 0 );
-
-	// Functions added by Drakia
-	template < class T >
-	void Add( T value )
-	{
-		*( (T*)&Buffer[ Header.Size ] ) = value;
-		Header.Size += sizeof( T );
-	}
-	void AddString( const char* value, bool NullTerminate )
-	{
-		for ( uint32_t i = 0; i < strlen( (const char*)value ); i++ )
-		{
-			Add< uint8_t >( value[ i ] );
-		}
-		if ( NullTerminate )
-			Add< uint8_t >( 0 );
-	}
-	template < class T >
-	void AddString( const char* value )
-	{
-		Add< T >( strlen( (const char*)value ) );
-		AddString( value, false );
-	}
-	void AddBytes( uint8_t* value, uint32_t len )
-	{
-		for ( uint32_t i = 0; i < len; i++ )
-			Add< uint8_t >( (uint8_t)value[ i ] );
-	}
-
-	// Functions added by Raven
-	template < class T >
-	T Get( uint16_t pos )
-	{
-		return Data[pos];
-	}
-
-	void GetString ( uint16_t pos, uint16_t size, char* outbuffer )
-	{
-		strcpy_safe( outbuffer, size, (char*)&Data[pos] );
-	}
-	void GetBytes ( uint16_t pos, uint16_t len, uint8_t* outbuffer )
-	{
-		memcpy( outbuffer, &Data[pos], len );
-	}
-
-private:
-	// This is only here until g++ adds c++11 std::strcpy_s
-	template <size_t charCount>
-	void strcpy_safe(char (&output)[charCount], const char* pSrc)
-	{
-	        strncpy(output, pSrc, charCount);
-	        output[charCount - 1] = 0;
-	}
-
-	void strcpy_safe(char* output, size_t charCount, const char* pSrc)
-	{
-        	strncpy(output, pSrc, charCount);
-	        output[charCount - 1] = 0;
-	}
-	//*/
-};//);
 #endif /* EPACKETTYPE_H_ */
