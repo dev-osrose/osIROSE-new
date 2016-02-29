@@ -14,12 +14,13 @@ CRoseClient::CRoseClient( tcp::socket _sock )
 {
 	SetSocket( std::move( _sock ) );
 	log_.SetIdentity( "CRoseClient" );
-	Recv( );
+//	Recv( );
 	ResetBuffer( );
 }
 
 CRoseClient::~CRoseClient( )
 {
+  Shutdown();
 }
 
 bool CRoseClient::Send( CRosePacket* _buffer )

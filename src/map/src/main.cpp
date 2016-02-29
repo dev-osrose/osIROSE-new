@@ -10,6 +10,8 @@ int main( int argc, char* argv[] )
 	Core::CLogConsole Logger( "Map Server" );
 	Logger.icprintf( "Starting up server...\n\n" );
 
+	Core::NetworkThreadPool::GetInstance();
+
 	CMapServer clientServer;
 	CMapServer iscServer( true );
 	CMapISC    iscClient;
@@ -28,6 +30,8 @@ int main( int argc, char* argv[] )
 	{
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
+
+	Core::NetworkThreadPool::DeleteInstance();
 
 	return 0;
 }

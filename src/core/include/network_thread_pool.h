@@ -12,12 +12,18 @@ class NetworkThreadPool {
 
  public:
   static NetworkThreadPool& GetInstance() {
-    static NetworkThreadPool instance;
-    return instance;
+    if(instance_ == nullptr)
+      instance_ = new NetworkThreadPool();
+    return *instance_;
+  }
+
+  static void DeleteInstance() {
+    if(instance_ != nullptr)
+      delete instance_;
   }
 
   asio::io_service* Get_IO_Service() { return &io_service_; }
-  uint32_t Get_CPU_Count() { return std::thread::hardware_concurrency(); }
+  uint32_t Get_CPU_Count() { return std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : 1; }
   void Shutdown() {
     io_work_.reset();
 
@@ -33,6 +39,8 @@ class NetworkThreadPool {
  private:
   NetworkThreadPool() : io_work_(new asio_worker::element_type(io_service_)) {
     uint32_t core_count = Get_CPU_Count();
+
+    printf("%i threads\n", core_count);
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       io_thread_[idx] = std::thread([this]() { io_service_.run(); });
     }
@@ -43,7 +51,11 @@ class NetworkThreadPool {
   std::thread io_thread_[256];
   asio::io_service io_service_;
   asio_worker io_work_;
+  static NetworkThreadPool* instance_;
 };
+
+//NetworkThreadPool* NetworkThreadPool::instance = nullptr;
 }
+
 
 #endif  // thread_pool_h__

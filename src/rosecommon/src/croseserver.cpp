@@ -43,7 +43,7 @@ bool CRoseServer::Run()
 {
 	while (active_ == true)
 	{
-//		m_ClientListMutex.lock();
+//		client_list_mutex_.lock();
 //		for (auto& client : m_ClientList)
 //		{
 //			if ( client->IsActive() == false )
@@ -54,10 +54,23 @@ bool CRoseServer::Run()
 //			}
 //		}
 //		m_ClientListMutex.unlock();
+//                std::lock_guard< std::mutex > lock( isc_list_mutex_ );
+//		isc_list_mutex_.lock();
+//                for ( auto& client : isc_list_ )
+//                {
+//			if( client->IsActive() == false )
+//			{
+//                	        client->Shutdown( );
+//        	                delete client;
+//	                        isc_list_.remove( client );
+//			}
+//                }
+//		isc_list_mutex_.unlock();
 
+		AcceptConnection();
 		ProcessSend();
 		ProcessRecv();
-		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
 	}
 
 	log_.oicprintf( CL_RESET CL_WHITE "Network Process thread shutting down...\n" CL_RESET );

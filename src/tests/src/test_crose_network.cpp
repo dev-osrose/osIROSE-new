@@ -76,13 +76,13 @@ TEST( TestRoseNetwork, TestRecv )
 
 TEST( TestRoseNetwork, TestReconnect )
 {
-	CRoseClient network;
-	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
-	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
+//	CRoseClient network;
+//	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going to connect to google's website
+//	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	//EXPECT_NO_FATAL_FAILURE( network.Disconnect( ) );
-	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-	EXPECT_NO_FATAL_FAILURE( network.Reconnect( ) );
-	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
+//	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+//	EXPECT_NO_FATAL_FAILURE( network.Reconnect( ) );
+//	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
 
 TEST( TestRoseNetwork, TestConnectHostName )
@@ -92,9 +92,9 @@ TEST( TestRoseNetwork, TestConnectHostName )
 	//        std::condition_variable cv;
 	//        bool done = false;
 
-	CRoseServer network;
-	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
-	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
+//	CRoseServer network;
+//	EXPECT_NO_FATAL_FAILURE( network.Init( "google.com", 80 ) ); // We are going to connect to google's website using hostname.
+//	EXPECT_NO_FATAL_FAILURE( network.Connect( ) );
 	//	EXPECT_CALL( network, OnConnect() ).Times(1);
 	//	EXPECT_CALL( network, OnConnected() )
 	//                                .WillOnce(testing::Invoke([&]()->int {
@@ -102,13 +102,13 @@ TEST( TestRoseNetwork, TestConnectHostName )
 	//                                            done = true;
 	//                                            cv.notify_all();
 	//                                            return 1; }));
-	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+//	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	//	std::unique_lock<std::mutex> lock(mutex);
 	//	EXPECT_TRUE(cv.wait_for(lock,
 	//                                        std::chrono::seconds(4),
 	//                                        [&done] { return done; })
 	//                                        );
-	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
+//	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
 
 TEST( TestRoseNetwork, TestListen )
@@ -154,7 +154,7 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	//	std::unique_lock<std::mutex> lock(mutex);
 	//	EXPECT_TRUE(cv.wait_for(lock, std::chrono::seconds(1), [&done] { return done; }));
 
-	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+	//std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29100 ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 

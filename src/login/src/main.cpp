@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
 
   Core::CLogConsole Logger("LoginServer");
   Logger.icprintf("Starting up server...\n\n");
+  Core::NetworkThreadPool::GetInstance();
 
   Config& config = Config::getInstance();
   const ::configFile::Database& dbb = config.database();
@@ -33,5 +34,7 @@ int main(int argc, char* argv[]) {
   while (clientServer.IsActive()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
+
+  Core::NetworkThreadPool::DeleteInstance();
   return 0;
 }

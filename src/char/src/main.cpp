@@ -9,6 +9,8 @@ int main( int argc, char* argv[] )
 	Core::CLogConsole Logger( "CharServer" );
 	Logger.icprintf( "Starting up server...\n\n" );
 
+	Core::NetworkThreadPool::GetInstance();
+
 	CCharServer clientServer;
 	CCharServer iscServer( true );
 	CCharISC    iscClient;
@@ -27,5 +29,6 @@ int main( int argc, char* argv[] )
 	{
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
+	Core::NetworkThreadPool::DeleteInstance();
 	return 0;
 }
