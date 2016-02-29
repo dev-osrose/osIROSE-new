@@ -37,7 +37,8 @@ cache:
 #  project: osIROSE.sln
 #  parallel: true
 #  verbosity: minimal
-fast_finish: true
+matrix:
+  fast_finish: true
 build_script:
 - cd build
 - cmake -DENABLE_TESTING=ON ..
