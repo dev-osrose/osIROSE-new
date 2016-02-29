@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "mock/mock_network_asio.h"
 #include "ePacketType.h"
+#include "crosepacket.h"
 #include "logconsole.h"
 //#include "croseserver.h"
 
@@ -101,8 +102,8 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
   EXPECT_NO_FATAL_FAILURE( netConnect.Connect() );
 
   log.icprintf( "pak\n" );
-  CPacket* pak =
-      new CPacket(ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req));
+  CRosePacket* pak =
+      new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req));
   pak->pChannelListReq.lServerID = 0x77;
   
   log.icprintf( "send\n" );

@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "ePacketType.h"
+#include "crosepacket.h"
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
@@ -19,19 +20,19 @@ TEST( TestCharServer, TestClientPacketPath )
         EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
-        CPacket* pak = new CPacket( ePacketType::PAKCS_ACCEPT_REQ );
+        CRosePacket* pak = new CRosePacket( ePacketType::PAKCS_ACCEPT_REQ );
         netConnect.Send( pak );
 
-        CPacket* pak4 = new CPacket( ePacketType::PAKCS_LOGIN_REQ );
+        CRosePacket* pak4 = new CRosePacket( ePacketType::PAKCS_LOGIN_REQ );
         netConnect.Send( pak4 );
 
-        CPacket* pak2 = new CPacket( ePacketType::PAKCS_CHANNEL_LIST_REQ );
+        CRosePacket* pak2 = new CRosePacket( ePacketType::PAKCS_CHANNEL_LIST_REQ );
         netConnect.Send( pak2 );
 
-        CPacket* pak5 = new CPacket( ePacketType::PAKCS_SRV_SELECT_REQ );
+        CRosePacket* pak5 = new CRosePacket( ePacketType::PAKCS_SRV_SELECT_REQ );
         netConnect.Send( pak5 );
 
-        CPacket* pak3 = new CPacket( ePacketType::PAKCS_ALIVE );
+        CRosePacket* pak3 = new CRosePacket( ePacketType::PAKCS_ALIVE );
         netConnect.Send( pak3 );
 
         std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "ePacketType.h"
+#include "crosepacket.h"
 #include "crosecrypt.h"
 
 //PacketCodec *g_Crypt = nullptr;
@@ -22,7 +23,7 @@ TEST( TestRoseCrypt, TestEncryptData )
 {
 	PacketCodec g_Crypt;
 
-	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
+	CRosePacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
 	pak.pChannelListReq.lServerID = 0x77;
 
 	EXPECT_NO_FATAL_FAILURE( g_Crypt.encodeServerPacket( pak.Buffer ) );
@@ -41,7 +42,7 @@ TEST( TestRoseCrypt, TestEncryptData )
 TEST( TestRoseCrypt, TestDecryptData )
 {
 	PacketCodec g_Crypt;
-	CPacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req) );
+	CRosePacket pak( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req) );
 	pak.pChannelListReq.lServerID = 0x77;
 
 	EXPECT_NO_FATAL_FAILURE( g_Crypt.encodeClientPacket( pak.Buffer ) );
