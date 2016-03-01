@@ -96,7 +96,7 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
   CRosePacket* pak =
       new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req));
   pak->pChannelListReq.lServerID = 0x77;
-  netConnect.Send( pak->Buffer );
+  netConnect.Send( std::unique_ptr<uint8_t>( (uint8_t*)&pak->Buffer ));
   EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect() );
   EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown() );
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());

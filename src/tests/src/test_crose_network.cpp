@@ -161,13 +161,13 @@ TEST( TestRoseNetwork, TestListenAndConnect )
 	//std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 	CRosePacket* pak = new CRosePacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
 	pak->pChannelListReq.lServerID = 0x77;
-	netConnect.Send( pak->Buffer );
+	netConnect.Send( pak );
 
-	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
+//	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
 	EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
 	EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );
 
-	std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+	std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 
 	EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
@@ -194,7 +194,7 @@ TEST( TestRoseNetwork, TestListenAndConnect2 )
 	CRosePacket* pak3 = new CRosePacket( ePacketType::PAKCS_ALIVE );
         netConnect.Send( pak3 );
 
-        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
+//        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); // Change this to condition variables
         EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
         EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown( ) );
 

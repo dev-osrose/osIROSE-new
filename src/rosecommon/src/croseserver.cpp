@@ -9,6 +9,7 @@ std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
   log_.SetIdentity("CRoseServer");
+//  process_thread_ = std::thread([this]() { Run(); });
 }
 
 CRoseServer::~CRoseServer() {
@@ -30,6 +31,7 @@ CRoseServer::~CRoseServer() {
     }
     isc_list_.clear();
   }
+//  process_thread_.join();
 }
 
 bool CRoseServer::Run() {
@@ -57,8 +59,8 @@ bool CRoseServer::Run() {
     isc_list_mutex_.unlock();
 
 //    AcceptConnection();
-    ProcessSend();
-    ProcessRecv();
+//    ProcessSend();
+//    ProcessRecv();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 

@@ -24,19 +24,24 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true) {
-  process_thread_ = std::thread([this]() { Run(); });
+//  process_thread_ = std::thread([this]() { Run(); });
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
   Shutdown();
-  process_thread_.join();
+//  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  do
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+  while (!discard_queue_.empty());
 }
 
 bool CNetwork_Asio::Run() {
   while (active_ == true) {
-    // AcceptConnection();
-    ProcessSend();
-    ProcessRecv();
+//    AcceptConnection();
+//    ProcessSend();
+//    ProcessRecv();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
   return true;
@@ -53,29 +58,29 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
 }
 
 bool CNetwork_Asio::Shutdown() {
-  std::lock_guard<std::mutex> lock(send_mutex_);
-  std::lock_guard<std::mutex> lock2(discard_mutex_);
+//  std::lock_guard<std::mutex> lock(send_mutex_);
+//  std::lock_guard<std::mutex> lock2(discard_mutex_);
   active_ = false;
   Disconnect();
 
   if (listener_.is_open()) {
-    networkService_->Get_IO_Service()->post([this]() {
+//    networkService_->Get_IO_Service()->post([this]() {
       std::error_code ignored;
       listener_.close(ignored);
-    });
+//    });
   }
 
-  while (!send_queue_.empty()) {
-    uint8_t* _buffer = std::move(send_queue_.front());
-    send_queue_.pop();
-    delete _buffer;
-  }
+//  while (!send_queue_.empty()) {
+//    uint8_t* _buffer = std::move(send_queue_.front());
+//    send_queue_.pop();
+//    delete _buffer;
+//  }
 
-  while (!discard_queue_.empty()) {
-    uint8_t* _buffer = std::move(discard_queue_.front());
-    send_queue_.pop();
-    delete _buffer;
-  }
+//  while (!discard_queue_.empty()) {
+//    uint8_t* _buffer = std::move(discard_queue_.front());
+//    send_queue_.pop();
+//    delete _buffer;
+//  }
   return true;
 }
 
@@ -120,17 +125,54 @@ bool CNetwork_Asio::Reconnect() {
 
 bool CNetwork_Asio::Disconnect() {
   OnDisconnect();
-  networkService_->Get_IO_Service()->post([this]() {
+//  networkService_->Get_IO_Service()->post([this]() {
     std::error_code ignored;
     socket_.shutdown(asio::socket_base::shutdown_both, ignored);
     OnDisconnected();
-  });
+//  });
   return true;
 }
 
-bool CNetwork_Asio::Send(uint8_t* _buffer) {
-  std::lock_guard<std::mutex> lock(send_mutex_);
-  send_queue_.push(_buffer);
+bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
+//  if(_buffer != nullptr)
+  {
+    std::lock_guard<std::mutex> lock(send_mutex_);
+//    std::unique_ptr<uint8_t*> p1(_buffer);
+//    send_queue_.push(std::move(_buffer));
+  }
+//  ProcessSend();
+
+      uint8_t* raw_ptr = _buffer.get();
+      uint16_t _size = (uint16_t)raw_ptr[0];
+      uint16_t _command = (uint16_t)raw_ptr[2];
+
+      discard_mutex_.lock();
+      discard_queue_.push(std::move(_buffer));
+      raw_ptr = discard_queue_.back().get();
+      discard_mutex_.unlock();
+
+      if (OnSend(raw_ptr))
+        asio::async_write(socket_, asio::buffer(raw_ptr, _size),
+                          [this](const asio::error_code& error,
+                                 std::size_t bytes_transferred) {
+                            (void)bytes_transferred;
+                            if (!error) {
+                              OnSent();
+				}
+                              discard_mutex_.lock();
+                              {
+                                std::unique_ptr<uint8_t> _buffer =
+                                    std::move(discard_queue_.front());
+                                discard_queue_.pop();
+//                                delete _buffer;
+                                _buffer.reset(nullptr);
+                              }
+                              discard_mutex_.unlock();
+                            
+                          });
+      else
+        log_.eicprintf(CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size,
+                       _command);
   return true;
 }
 
@@ -242,22 +284,23 @@ bool CNetwork_Asio::OnAccept() { return true; }
 void CNetwork_Asio::OnAccepted(tcp::socket _sock) { (void)_sock; }
 
 void CNetwork_Asio::ProcessSend() {
-  if (socket_.is_open()) {
+/*  if (socket_.is_open()) {
     // Loop though all of Send Queue
     std::lock_guard<std::mutex> lock(send_mutex_);
 
     while (!send_queue_.empty()) {
-      uint8_t* _buffer = std::move(send_queue_.front());
+      std::unique_ptr<uint8_t> _buffer = std::move(send_queue_.front());
       send_queue_.pop();
-      uint16_t _size = (uint16_t)_buffer[0];
-      uint16_t _command = (uint16_t)_buffer[2];
+      uint8_t* raw_ptr = _buffer.get();
+      uint16_t _size = (uint16_t)raw_ptr[0];
+      uint16_t _command = (uint16_t)raw_ptr[2];
 
       discard_mutex_.lock();
-      discard_queue_.push(_buffer);
+      discard_queue_.push(std::move(_buffer));
       discard_mutex_.unlock();
 
-      if (OnSend(_buffer))
-        asio::async_write(socket_, asio::buffer(_buffer, _size),
+      if (OnSend(raw_ptr))
+        asio::async_write(socket_, asio::buffer(raw_ptr, _size),
                           [this](const asio::error_code& error,
                                  std::size_t bytes_transferred) {
                             (void)bytes_transferred;
@@ -266,11 +309,11 @@ void CNetwork_Asio::ProcessSend() {
 
                               discard_mutex_.lock();
                               {
-                                uint8_t* _buffer =
-                                    std::move(discard_queue_.front());
+//                                std::unique_ptr<uint8_t*> _buffer =
+//                                    std::move(discard_queue_.front());
                                 discard_queue_.pop();
-                                delete _buffer;
-                                _buffer = nullptr;
+//                                delete _buffer;
+//                                _buffer.reset(nullptr);
                               }
                               discard_mutex_.unlock();
                             }
@@ -284,7 +327,7 @@ void CNetwork_Asio::ProcessSend() {
       //_buffer = nullptr;
       // OnSent();
     }
-  }
+  }*/
 }
 
 void CNetwork_Asio::ProcessRecv() {
