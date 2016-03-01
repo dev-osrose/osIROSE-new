@@ -42,7 +42,10 @@ cache:
 matrix:
   fast_finish: true
 build_script:
-- cd build
+- cd ./3rdParty/build
+- cmake ../../tools/
+- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cd ../../build
 - cmake -DENABLE_TESTING=ON ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
