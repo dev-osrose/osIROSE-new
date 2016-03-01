@@ -21,6 +21,8 @@ OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
 OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
+find_package(MySQL REQUIRED)
+
 IF(ENABLE_TESTING)
 	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
