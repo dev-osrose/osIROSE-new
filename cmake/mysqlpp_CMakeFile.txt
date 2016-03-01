@@ -26,27 +26,81 @@ foreach(flag_var
 endforeach(flag_var)
 
 ENDIF()
- 
-INCLUDE_DIRECTORIES(
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-SET( SOURCES_HEADER
-  include/logconsole
-  include/cnetwork_asio
-  include/config 
-  include/pbjson
-  include/logconsole
-  include/cmysql_database
-)
 
 SET( SOURCES_BASE
-  src/logconsole
-  src/cnetwork_asio
-  src/config
-  src/pbjson.cpp
-  src/logconsole
-  src/cmysql_database
+beemutex.cpp
+cmdline.cpp
+connection.cpp
+cpool.cpp
+datetime.cpp
+dbdriver.cpp
+field_names.cpp
+field_types.cpp
+manip.cpp
+myset.cpp
+mysql++.cpp
+mystring.cpp
+null.cpp
+options.cpp
+qparms.cpp
+query.cpp
+result.cpp
+row.cpp
+scopedconnection.cpp
+sql_buffer.cpp
+sqlstream.cpp
+ssqls2.cpp
+stadapter.cpp
+tcp_connection.cpp
+transaction.cpp
+type_info.cpp
+uds_connection.cpp
+utility.cpp
+vallist.cpp
+wnp_connection.cpp
+autoflag.h
+beemutex.h
+cmdline.h
+common.h
+comparable.h
+connection.h
+cpool.h
+datetime.h
+dbdriver.h
+exceptions.h
+field.h
+field_names.h
+field_types.h
+insertpolicy.h
+manip.h
+myset.h
+mystring.h
+noexceptions.h
+null.h
+options.h
+qparms.h
+querydef.h
+query.h
+refcounted.h
+result.h
+row.h
+scopedconnection.h
+sql_buffer.h
+sqlstream.h
+sql_types.h
+ssqls2.h
+ssqls.h
+stadapter.h
+stream2string.h
+tcp_connection.h
+tiny_int.h
+transaction.h
+type_info.h
+uds_connection.h
+utility.h
+vallist.h
+wnp_connection.h
+mysql++.h
 )
 
-add_library(mysqlpp STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+add_library(mysqlpp STATIC ${SOURCES_BASE})
