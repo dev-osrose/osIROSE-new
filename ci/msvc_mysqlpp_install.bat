@@ -11,4 +11,4 @@ cd C:/projects/osIROSE/mysqlpp/
 py querydef.pl
 py ssqls.pl
 cd ../..
-pause
+exit 0
