@@ -1,114 +1,83 @@
-#--------------------------------------------------------
-# Copyright (C) 1995-2007 MySQL AB
+# - Try to find MySQL.
+# Once done this will define:
+# MYSQL_FOUND			- If false, do not try to use MySQL.
+# MYSQL_INCLUDE_DIRS	- Where to find mysql.h, etc.
+# MYSQL_LIBRARIES		- The libraries to link against.
+# MYSQL_VERSION_STRING	- Version in a string of MySQL.
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
-# published by the Free Software Foundation.
+# Created by RenatoUtsch based on eAthena implementation.
 #
-# There are special exceptions to the terms and conditions of the GPL
-# as it is applied to this software. View the full text of the exception
-# in file LICENSE.exceptions in the top-level directory of this software
-# distribution.
+# Please note that this module only supports Windows and Linux officially, but
+# should work on all UNIX-like operational systems too.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+
+#=============================================================================
+# Copyright 2012 RenatoUtsch
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file Copyright.txt for details.
 #
-# The MySQL Connector/ODBC is licensed under the terms of the
-# GPL, like most MySQL Connectors. There are special exceptions
-# to the terms and conditions of the GPL as it is applied to
-# this software, see the FLOSS License Exception available on
-# mysql.com.
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of CMake, substitute the full
+#  License text for the above reference.)
 
-##########################################################################
+if( WIN32 )
+
+	SET(BINDIR32_ENV_NAME "ProgramFiles(x86)")
+	find_path( MYSQL_INCLUDE_DIR
+		NAMES "mysql.h"
+		PATHS "C:/Program Files/MySQL/*/include"
+			  "$ENV{PROGRAMFILES}/MySQL/*/include"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
+	
+	find_library( MYSQL_LIBRARY
+		NAMES "mysqlclient" "mysqlclient_r"
+		PATHS "C:/Program Files/MySQL/*/lib"
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
+else()
+	find_path( MYSQL_INCLUDE_DIR
+		NAMES "mysql.h"
+		PATHS "/usr/include/mysql"
+			  "/usr/local/include/mysql"
+			  "/usr/mysql/include/mysql" )
+	
+	find_library( MYSQL_LIBRARY
+		NAMES "mysqlclient" "mysqlclient_r"
+		PATHS "/lib/mysql"
+			  "/lib64/mysql"
+			  "/usr/lib/mysql"
+			  "/usr/lib64/mysql"
+			  "/usr/local/lib/mysql"
+			  "/usr/local/lib64/mysql"
+			  "/usr/mysql/lib/mysql"
+			  "/usr/mysql/lib64/mysql" )
+endif()
 
 
-#-------------- FIND MYSQL_INCLUDE_DIR ------------------
-FIND_PATH(MYSQL_INCLUDE_DIR 
-  NAMES "mysql.h"
-  PATHS "/usr/include/mysql"
-  "/usr/local/include/mysql"
-  "/opt/mysql/mysql/include"
-  "/opt/mysql/mysql/include/mysql"
-  "/opt/mysql/include"
-  "/opt/local/include/mysql5"
-  "/usr/local/mysql/include"
-  "/usr/local/mysql/include/mysql"
-  "$ENV{ProgramFiles}/MySQL/*/include"
-  "$ENV{ProgramFiles(x86)}/MySQL/*/include"
-  "$ENV{SystemDrive}/MySQL/*/include"
-)
 
-#----------------- FIND MYSQL_LIB_DIR -------------------
-IF (WIN32)
-  # Set lib path suffixes
-  # dist = for mysql binary distributions
-  # build = for custom built tree
-  IF (CMAKE_BUILD_TYPE STREQUAL Debug)
-    SET(libsuffixDist debug)
-    SET(libsuffixBuild Debug)
-  ELSE (CMAKE_BUILD_TYPE STREQUAL Debug)
-    SET(libsuffixDist opt)
-    SET(libsuffixBuild Release)
-    ADD_DEFINITIONS(-DDBUG_OFF)
-  ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
+if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
+	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"
+		MYSQL_VERSION_H REGEX "^#define[ \t]+MYSQL_SERVER_VERSION[ \t]+\"[^\"]+\".*$" )
+	string( REGEX REPLACE
+		"^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
+		"${MYSQL_VERSION_H}" )
+endif()
 
-  FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient
-    PATHS
-    "$ENV{MYSQL_DIR}/lib/${libsuffixDist}"
-    "$ENV{MYSQL_DIR}/libmysql"
-    "$ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}"
-    "$ENV{MYSQL_DIR}/client/${libsuffixBuild}"
-    "$ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}"
-    "$ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}"
-    "$ENV{ProgramFiles(x86)}/MySQL/*/lib/${libsuffixDist}"
-    "$ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist}"
-)
-ELSE (WIN32)
-  FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient_r
-    PATHS
-    /usr/lib/mysql
-    /usr/local/lib/mysql
-    /usr/local/mysql/lib
-    /usr/local/mysql/lib/mysql
-    /opt/local/mysql5/lib
-    /opt/local/lib/mysql5/mysql
-    /opt/mysql/mysql/lib/mysql
-    /opt/mysql/lib/mysql)
-ENDIF (WIN32)
+# handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
+# all listed variables are TRUE
+include( FindPackageHandleStandardArgs )
+find_package_handle_standard_args( MYSQL DEFAULT_MSG
+	MYSQL_LIBRARY MYSQL_INCLUDE_DIR
+	MYSQL_VERSION_STRING )
 
-IF(MYSQL_LIB)
-  GET_FILENAME_COMPONENT(MYSQL_LIB_DIR ${MYSQL_LIB} PATH)
-ENDIF(MYSQL_LIB)
+set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
+set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
 
-IF (MYSQL_INCLUDE_DIR AND MYSQL_LIB_DIR)
-  SET(MYSQL_FOUND TRUE)
+mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY )
 
-  INCLUDE_DIRECTORIES(${MYSQL_INCLUDE_DIR})
-  LINK_DIRECTORIES(${MYSQL_LIB_DIR})
-
-  FIND_LIBRARY(MYSQL_ZLIB zlib PATHS ${MYSQL_LIB_DIR})
-  FIND_LIBRARY(MYSQL_TAOCRYPT taocrypt PATHS ${MYSQL_LIB_DIR})
-  SET(MYSQL_CLIENT_LIBS mysqlclient_r)
-  IF (MYSQL_ZLIB)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} zlib)
-  ENDIF (MYSQL_ZLIB)
-  IF (MYSQL_TAOCRYPT)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} taocrypt)
-  ENDIF (MYSQL_TAOCRYPT)
-  # Added needed mysqlclient dependencies on Windows
-  IF (WIN32)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} ws2_32)
-  ENDIF (WIN32)
-
-  MESSAGE(STATUS "MySQL Include dir: ${MYSQL_INCLUDE_DIR}  library dir: ${MYSQL_LIB_DIR}")
-  MESSAGE(STATUS "MySQL client libraries: ${MYSQL_CLIENT_LIBS}")
-ELSEIF (MySQL_FIND_REQUIRED)
-  MESSAGE(FATAL_ERROR "Cannot find MySQL. Include dir: ${MYSQL_INCLUDE_DIR}  library dir: ${MYSQL_LIB_DIR}")
-ENDIF (MYSQL_INCLUDE_DIR AND MYSQL_LIB_DIR)
