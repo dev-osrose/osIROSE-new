@@ -1,0 +1,52 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+
+INCLUDE_DIRECTORIES(
+	SYSTEM ${MYSQL_INCLUDE_DIR}
+	SYSTEM ${MYSQL_C_INCLUDE_DIR}
+)
+
+LINK_DIRECTORIES(${MYSQL_BINARY_DIR} ${MYSQL_C_BINARY_DIR})
+
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+project("mysqlpp")
+
+SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
+
+IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+
+foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+   if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+   endif(${flag_var} MATCHES "/MD")
+endforeach(flag_var)
+
+ENDIF()
+ 
+INCLUDE_DIRECTORIES(
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+SET( SOURCES_HEADER
+  include/logconsole
+  include/cnetwork_asio
+  include/config 
+  include/pbjson
+  include/logconsole
+  include/cmysql_database
+)
+
+SET( SOURCES_BASE
+  src/logconsole
+  src/cnetwork_asio
+  src/config
+  src/pbjson.cpp
+  src/logconsole
+  src/cmysql_database
+)
+
+add_library(mysqlpp STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
