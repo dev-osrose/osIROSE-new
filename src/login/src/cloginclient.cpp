@@ -112,7 +112,6 @@ bool CLoginClient::ChannelList(CRosePacket* P) {
         tChannelInfo info = obj;
         {
           pak->pChannelList.bServerCount += 1;
-          pakChannelInfo channel;
           channel.ChannelID = info.ChannelID;
           channel.pad = 0;
           channel.Status = 0;
