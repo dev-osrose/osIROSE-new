@@ -40,7 +40,7 @@ FIND_PATH(MYSQL_INCLUDE_DIR mysql.h
   /usr/local/mysql/include
   /usr/local/mysql/include/mysql
   $ENV{ProgramFiles}/MySQL/*/include
-  $ENV{PROGRAMFILES(x86)}/MySQL/*/include"
+  "$ENV{PROGRAMFILES(x86)}/MySQL/*/include"
   $ENV{SystemDrive}/MySQL/*/include)
 
 #----------------- FIND MYSQL_LIB_DIR -------------------
@@ -65,7 +65,6 @@ IF (WIN32)
     $ENV{MYSQL_DIR}/client/${libsuffixBuild}
     $ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}
     $ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}
-#    "$ENV{PROGRAMFILES(x86)}/MySQL/*/lib"
     "$ENV{PROGRAMFILES(x86)}/MySQL/*/lib/${libsuffixDist}"
     $ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist})
 ELSE (WIN32)
