@@ -30,18 +30,20 @@
 
 
 #-------------- FIND MYSQL_INCLUDE_DIR ------------------
-FIND_PATH(MYSQL_INCLUDE_DIR mysql.h
-  /usr/include/mysql
-  /usr/local/include/mysql
-  /opt/mysql/mysql/include
-  /opt/mysql/mysql/include/mysql
-  /opt/mysql/include
-  /opt/local/include/mysql5
-  /usr/local/mysql/include
-  /usr/local/mysql/include/mysql
-  $ENV{ProgramFiles}/MySQL/*/include
-  $ENV{PROGRAMFILES(x86)}/MySQL/*/include
-  $ENV{SystemDrive}/MySQL/*/include)
+FIND_PATH(MYSQL_INCLUDE_DIR 
+  NAMES "mysql.h"
+  PATHS "/usr/include/mysql"
+  "/usr/local/include/mysql"
+  "/opt/mysql/mysql/include"
+  "/opt/mysql/mysql/include/mysql"
+  "/opt/mysql/include"
+  "/opt/local/include/mysql5"
+  "/usr/local/mysql/include"
+  "/usr/local/mysql/include/mysql"
+  "$ENV{ProgramFiles}/MySQL/*/include"
+  "$ENV{ProgramFiles(x86)}/MySQL/*/include"
+  "$ENV{SystemDrive}/MySQL/*/include"
+)
 
 #----------------- FIND MYSQL_LIB_DIR -------------------
 IF (WIN32)
@@ -59,14 +61,15 @@ IF (WIN32)
 
   FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient
     PATHS
-    $ENV{MYSQL_DIR}/lib/${libsuffixDist}
-    $ENV{MYSQL_DIR}/libmysql
-    $ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}
-    $ENV{MYSQL_DIR}/client/${libsuffixBuild}
-    $ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}
-    $ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}
-    $ENV{PROGRAMFILES(x86)}/MySQL/*/lib/${libsuffixDist}
-    $ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist})
+    "$ENV{MYSQL_DIR}/lib/${libsuffixDist}"
+    "$ENV{MYSQL_DIR}/libmysql"
+    "$ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}"
+    "$ENV{MYSQL_DIR}/client/${libsuffixBuild}"
+    "$ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}"
+    "$ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}"
+    "$ENV{ProgramFiles(x86)}/MySQL/*/lib/${libsuffixDist}"
+    "$ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist}"
+)
 ELSE (WIN32)
   FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient_r
     PATHS
