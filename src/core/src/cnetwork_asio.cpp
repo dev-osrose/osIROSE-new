@@ -252,6 +252,10 @@ void CNetwork_Asio::ProcessSend() {
       uint16_t _size = (uint16_t)_buffer[0];
       uint16_t _command = (uint16_t)_buffer[2];
 
+      discard_mutex_.lock();
+      discard_queue_.push( _buffer );
+      discard_mutex_.unlock();
+
       if (OnSend(_buffer))
         asio::async_write(socket_, asio::buffer(_buffer, _size),
                           [this](const asio::error_code& error,
@@ -275,9 +279,6 @@ void CNetwork_Asio::ProcessSend() {
         log_.eicprintf(CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size,
                        _command);
 
-      discard_mutex_.lock();
-      discard_queue_.push(_buffer);
-      discard_mutex_.unlock();
       // std::this_thread::sleep_for(std::chrono::milliseconds(1));
       // delete _buffer;
       //_buffer = nullptr;
