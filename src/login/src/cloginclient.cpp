@@ -41,7 +41,7 @@ void CLoginClient::SendLoginReply( uint8_t Result )
 					pak->Add< uint8_t >( ' ' );
 
 				pak->AddString( svr->GetName( ).c_str( ), true );
-				pak->Add< uint32_t >( serverID++ );
+				pak->Add< uint32_t >( svr->GetId() );
 			}
 		}
 	}
@@ -76,6 +76,7 @@ bool CLoginClient::UserLogin( CRosePacket* P )
 	    // 	}
 
 	    {
+          access_rights_ = 10;
 	        // Okay to login!!
 	        SendLoginReply( 0 );
 }
@@ -111,16 +112,32 @@ bool CLoginClient::ChannelList( CRosePacket* P )
 
 	CRosePacket* pak = new CRosePacket( ePacketType::PAKLC_CHANNEL_LIST_REPLY, sizeof( pakChannel_List ) );
 	pak->pChannelList.lServerID    = ServerID;
-	pak->pChannelList.bServerCount = 1;
+    pak->pChannelList.bServerCount = 0;
 
-	uint8_t        channelID = 1;
-	pakChannelInfo channel;
-	channel.ChannelID = channelID;
-	channel.pad       = 0;
-	channel.Status    = 0;
+    pakChannelInfo channel;
+    std::lock_guard< std::mutex > lock( CLoginServer::GetISCListMutex() );
+    for (auto& obj : CLoginServer::GetISCList())
+    {
+      CLoginISC* server = (CLoginISC*)obj;
+      if(server->GetType() == iscPacket::ServerReg_ServerType_CHAR && server->GetId() == ServerID)
+      {
+        for (auto& obj : server->GetChannelList())
+        {
+          tChannelInfo info = obj;
+          {
+            pak->pChannelList.bServerCount += 1;
+            pakChannelInfo channel;
+            channel.ChannelID = info.ChannelID;
+            channel.pad = 0;
+            channel.Status = 0;
 
-	pak->AddBytes( (uint8_t*)&channel, sizeof( pakChannelInfo ) );
-	pak->AddString( "TestChannel", true );
+            pak->AddBytes( (uint8_t*)&channel, sizeof(pakChannelInfo) );
+            pak->AddString( info.channelName.c_str(), true );
+          }
+        }
+      }
+    }
+	
 	this->Send( pak );
 
 	return true;

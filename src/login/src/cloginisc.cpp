@@ -2,13 +2,13 @@
 #include "crosepacket.h"
 
 CLoginISC::CLoginISC( )
-: CRoseISC( ), channel_count_( 0 ), min_right_( 0 ), test_server_( false )
+: CRoseISC( ), channel_count_( 1 ), min_right_( 0 ), test_server_( false )
 {
 	log_.SetIdentity( "CLoginISC" );
 }
 
 CLoginISC::CLoginISC( tcp::socket _sock )
-: CRoseISC( std::move( _sock ) ), channel_count_( 0 ), min_right_( 0 ), test_server_( false )
+: CRoseISC( std::move( _sock ) ), channel_count_( 1 ), min_right_( 0 ), test_server_( false )
 {
 	log_.SetIdentity( "CLoginISC" );
 }

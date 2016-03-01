@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
   std::string user = dbb.user();
   std::string pass = dbb.password();
 
-  Core::CMySQL_Database database(host, _database, user, pass);
+  //Core::CMySQL_Database database(host, _database, user, pass);
 
   CLoginServer clientServer;
   CLoginServer iscServer(true);
