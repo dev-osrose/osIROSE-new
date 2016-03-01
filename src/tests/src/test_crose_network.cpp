@@ -187,7 +187,7 @@ TEST( TestRoseNetwork, TestListenAndConnect2 )
 	CRosePacket* pak = new CRosePacket( ePacketType::PAKCS_ACCEPT_REQ );
         netConnect.Send( pak );
 
-        CRosePacket* pak2 = new CRosePacket( ePacketType::PAKCS_CHAR_LIST_REQ, sizeof( pakChannelList_Req ) );
+        CRosePacket* pak2 = new CRosePacket( ePacketType::PAKCS_CHANNEL_LIST_REQ, sizeof( pakChannelList_Req ) );
         pak2->pChannelListReq.lServerID = 0x77;
         netConnect.Send( pak2 );
 

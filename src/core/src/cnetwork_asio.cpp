@@ -120,7 +120,7 @@ bool CNetwork_Asio::Reconnect() {
 
 bool CNetwork_Asio::Disconnect() {
   OnDisconnect();
-  networkService_->Get_IO_Service()->dispatch([this]() {
+  networkService_->Get_IO_Service()->post([this]() {
     std::error_code ignored;
     socket_.shutdown(asio::socket_base::shutdown_both, ignored);
     OnDisconnected();
@@ -253,7 +253,7 @@ void CNetwork_Asio::ProcessSend() {
       uint16_t _command = (uint16_t)_buffer[2];
 
       discard_mutex_.lock();
-      discard_queue_.push( _buffer );
+      discard_queue_.push(_buffer);
       discard_mutex_.unlock();
 
       if (OnSend(_buffer))

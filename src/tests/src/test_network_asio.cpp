@@ -81,44 +81,23 @@ TEST(TestAsioNetworking, TestListen) {
 TEST(TestAsioNetworking, TestListenAndConnect) {
   Core::CLogConsole log("TestListenAndConnect");
 
-  log.icprintf("Start\n");
   Core::CNetwork_Asio netConnect, network;
   
-  log.icprintf( "Init #1\n" );
   EXPECT_EQ( true, network.Init(
                       "127.0.0.1",
                       23456));  // We are going to connect to google's website
   
-  log.icprintf( "Listen\n" );
   EXPECT_NO_FATAL_FAILURE( network.Listen() );
 
-  log.icprintf( "Sleep #1\n" );
   std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-  
-  log.icprintf( "Init #2\n" );
   EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 23456 ) );
-  
-  log.icprintf( "Connect\n" );
   EXPECT_NO_FATAL_FAILURE( netConnect.Connect() );
 
-  log.icprintf( "pak\n" );
   CRosePacket* pak =
       new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req));
   pak->pChannelListReq.lServerID = 0x77;
-  
-  log.icprintf( "send\n" );
   netConnect.Send( pak->Buffer );
-
-  log.icprintf( "sleep #2\n" );
-  std::this_thread::sleep_for(
-      std::chrono::milliseconds(100));  // Change this to condition variables
-  
-  log.icprintf( "Disconnect #2\n" );
   EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect() );
-  
-  log.icprintf( "Shutdown #2\n" );
   EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown() );
-
-  log.icprintf( "Shutdown #1\n" );
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }
