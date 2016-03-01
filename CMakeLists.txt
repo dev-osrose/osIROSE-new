@@ -55,6 +55,9 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#WINDOWS ONLY SETTINGS!!!!
 	#------------
 	#Build Protobuf
+	OPTION(MYSQL_C_INLCUDE_DIR "Path to MYSQL Connector C includes" "C:/Program Files/MySQL/MySQL Connector C 6.1/include")
+	OPTION(MYSQL_C_BINARY_DIR "Path to MYSQL Connector C libs" "C:/Program Files/MySQL/MySQL Connector C 6.1/lib/opt")
+	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
         ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
 	SET(PROTOBUF_ROOT ${protobuf_SOURCE_DIR})
         SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
