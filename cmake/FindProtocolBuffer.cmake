@@ -258,21 +258,21 @@ IF(WIN32)
 ENDIF()
 
 FIND_LIBRARY(PROTOBUF_LIBRARY NAMES protobuf
-             PATHS "${PROTOBUF_ROOT}/lib"
+             PATHS "${PROTOBUF_ROOT}/lib/*"
 		   "/usr/lib"
                    "/usr/local/lib"
                    "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Library"
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY NAMES protoc
-             PATHS "${PROTOBUF_ROOT}/lib"
+             PATHS "${PROTOBUF_ROOT}/lib/*"
 		   "/usr/lib"
                    "/usr/local/lib"
                    "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Compiler Library"
 )
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
-             PATHS "${PROTOBUF_ROOT}/bin"
+             PATHS "${PROTOBUF_ROOT}/bin/*"
 		   "/bin"
                    "/usr/bin"
                    "/usr/local/bin"

@@ -62,7 +62,7 @@ find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+#	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
@@ -76,7 +76,7 @@ target_link_libraries(${PROJECT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-        TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
+        TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
                 libmysql.lib
                 wsock32.lib
                 mysqlpp.lib
