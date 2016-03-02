@@ -21,12 +21,22 @@ OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
 OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 
+find_package(MySQL REQUIRED)
+
+foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+   if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+   endif(${flag_var} MATCHES "/MD")
+endforeach(flag_var)
+
 IF(ENABLE_TESTING)
 	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 		#Build GoogleTest
-		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
-		
+#		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
+		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
 		#Build Protobuf
 #		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
 #		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
@@ -55,13 +65,14 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#WINDOWS ONLY SETTINGS!!!!
 	#------------
 	#Build Protobuf
-        ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
-	SET(PROTOBUF_ROOT ${protobuf_SOURCE_DIR})
-        SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
-        SET(PROTOBUF_BINARY_DIR ${protobuf_BINARY_DIR})
-        SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
-        SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-        SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
+	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
+	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/3rdParty CACHE STRING "")
+	SET(MYSQL_LIBRARIES libmysql.lib CACHE STRING "")
+	SET(MYSQLpp_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/mysqlpp)
+	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/protobuf/src CACHE STRING "")
+    SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
+    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+    SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
 	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 ELSE()
 	#UNIX ONLY SETTINGS
@@ -70,15 +81,12 @@ ELSE()
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
 	SET(PROTOBUF_BINARY_DIR ${PROTOBUF_ROOT}/lib)
 	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
-	SET(MYSQL++_INCLUDE_DIR /usr/include/mysql++)
+	SET(MYSQLpp_INCLUDE_DIR /usr/include/mysql++)
 	SET(MYSQL_BINARY_DIR /usr/lib)
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
-
-#LIST(APPEND CMAKE_PREFIX_PATH "${PROTOBUF_ROOT}")
 find_package(ProtocolBuffer REQUIRED)
-#find_package(Protobuf REQUIRED)
 
 ADD_SUBDIRECTORY(src)
 

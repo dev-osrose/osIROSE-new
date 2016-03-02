@@ -4,13 +4,13 @@ SET(PROJECT protoGen)
 project(${PROJECT})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-foreach(flag_var
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-   if(${flag_var} MATCHES "/MD")
-      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-   endif(${flag_var} MATCHES "/MD")
-endforeach(flag_var)
+#foreach(flag_var
+#        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+#        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+#   if(${flag_var} MATCHES "/MD")
+#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#   endif(${flag_var} MATCHES "/MD")
+#endforeach(flag_var)
 ELSE()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
@@ -38,4 +38,4 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
-ADD_DEPENDENCIES(${PROJECT} ${ProtoFiles} libprotobuf)
+#ADD_DEPENDENCIES(${PROJECT} ${ProtoFiles} libprotobuf)
