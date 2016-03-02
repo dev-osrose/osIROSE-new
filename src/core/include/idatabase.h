@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <memory>
 
 class	IResult
 {
@@ -29,7 +30,7 @@ public:
 	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
 
 	virtual void	QExecute(std::string _query) = 0;
-	virtual IResult	*QStore(std::string	_query) = 0;
+	virtual std::unique_ptr<IResult>	QStore(std::string	_query) = 0;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "idatabase.h"
 #include <mysql++.h>
 #include "logconsole.h"
+#include <mutex>
 
 namespace Core {
 class CMySQL_Result : public IResult {
@@ -15,10 +16,11 @@ class CMySQL_Result : public IResult {
   virtual bool getInt(std::string const &, uint32_t &data);
 
  private:
-  mysqlpp::StoreQueryResult res;
+  mysqlpp::StoreQueryResult res_;
+
   template <typename T>
   bool getData(std::string const &name, T &data) {
-    auto tmp = res[row][name.c_str()];
+    auto tmp = res_[row][name.c_str()];
     if (tmp.is_null()) return false;
     data = static_cast<T>(tmp);
     return true;
@@ -36,17 +38,18 @@ class CMySQL_Database : public IDatabase {
                        std::string _user, std::string _password);
 
   virtual void QExecute(std::string _query);
-  virtual IResult *QStore(std::string _query);
+  virtual std::unique_ptr<IResult> QStore(std::string _query);
 
  private:
-  std::string hostname;
-  std::string database;
-  std::string username;
-  std::string password;
+  std::string hostname_;
+  std::string database_;
+  std::string username_;
+  std::string password_;
 
-  mysqlpp::Connection conn;
-  CLogConsole m_log;
-  bool connected;
+  std::mutex mutex_;
+  mysqlpp::Connection conn_;
+  CLogConsole log_;
+  bool connected_;
 };
 }
 
