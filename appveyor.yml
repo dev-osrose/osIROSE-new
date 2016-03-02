@@ -40,8 +40,8 @@ cache:
 #  project: osIROSE.sln
 #  parallel: true
 #  verbosity: minimal
-matrix:
-  fast_finish: true
+#matrix:
+#  fast_finish: true
 build_script:
 - cd 3rdParty/build
 - cmake ../../tools/
@@ -67,5 +67,5 @@ test:
   assemblies: 'build\bin\$(configuration)\osirose-tests.exe'
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
