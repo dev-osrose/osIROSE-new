@@ -47,7 +47,6 @@ class CNetwork_Asio : public INetwork {
 
   virtual bool Connect();
   virtual bool Listen();
-  virtual bool Run();
   virtual bool Reconnect();
   virtual bool Disconnect();
 
@@ -60,8 +59,6 @@ class CNetwork_Asio : public INetwork {
 
  protected:
   void AcceptConnection();
-  void ProcessSend();
-  void ProcessRecv();
 
   // Callback functions
   virtual bool OnConnect();

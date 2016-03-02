@@ -9,7 +9,7 @@ std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
   log_.SetIdentity("CRoseServer");
-//  process_thread_ = std::thread([this]() { Run(); });
+  //  process_thread_ = std::thread([this]() { Run(); });
 }
 
 CRoseServer::~CRoseServer() {
@@ -31,42 +31,6 @@ CRoseServer::~CRoseServer() {
     }
     isc_list_.clear();
   }
-//  process_thread_.join();
-}
-
-bool CRoseServer::Run() {
-  while (active_ == true) {
-    //		client_list_mutex_.lock();
-    //		for (auto& client : m_ClientList)
-    //		{
-    //			if ( client->IsActive() == false )
-    //			{
-    //				client->Shutdown();
-    //				delete client;
-    //				m_ClientList.remove( client );
-    //			}
-    //		}
-    //		m_ClientListMutex.unlock();
-    //        std::lock_guard< std::mutex > lock( isc_list_mutex_ );
-    isc_list_mutex_.lock();
-    for (auto& client : isc_list_) {
-      if (client->IsActive() == false) {
-        client->Shutdown();
-        delete client;
-        isc_list_.remove(client);
-      }
-    }
-    isc_list_mutex_.unlock();
-
-//    AcceptConnection();
-//    ProcessSend();
-//    ProcessRecv();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  }
-
-  log_.oicprintf(CL_RESET CL_WHITE
-                 "Network Process thread shutting down...\n" CL_RESET);
-  return true;
 }
 
 bool CRoseServer::OnConnect() { return true; }
@@ -80,30 +44,6 @@ void CRoseServer::OnListening() {}
 bool CRoseServer::OnDisconnect() { return true; }
 
 void CRoseServer::OnDisconnected() {}
-
-/*bool CRoseServer::OnReceive( )
-{
-        return true;
-}
-
-void CRoseServer::OnReceived( uint8_t* _buffer, uint16_t _size )
-{
-        //Decrypt buffer here
-        //Check header to see if we have the full packet.
-        //If header.Size < _size we have more then one packet in the buffer.
-        CNetwork_Asio::OnReceived( _buffer, _size );
-}
-
-bool CRoseServer::OnSend( uint8_t* _buffer )
-{
-        //Encrypt buffer here
-        CNetwork_Asio::OnSend( _buffer );
-        return true;
-}
-
-void CRoseServer::OnSent( )
-{
-}*/
 
 bool CRoseServer::OnAccept() { return true; }
 

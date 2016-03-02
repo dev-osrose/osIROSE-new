@@ -12,8 +12,6 @@ class CRoseServer : public Core::CNetwork_Asio {
   CRoseServer(bool _iscServer = false);
   virtual ~CRoseServer();
 
-  virtual bool Run();
-
   bool IsISCServer() { return isc_server_; }
 
   static std::forward_list<CRoseClient*>& GetClientList() {
