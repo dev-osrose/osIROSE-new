@@ -35,7 +35,7 @@ if( WIN32 )
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
 	
 	find_library( MYSQL_LIBRARY
-		NAMES "mysqlclient" "mysqlclient_r"
+		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
 		PATHS "C:/Program Files/MySQL/*/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
@@ -48,7 +48,7 @@ else()
 			  "/usr/mysql/include/mysql" )
 	
 	find_library( MYSQL_LIBRARY
-		NAMES "mysqlclient" "mysqlclient_r"
+		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
 		PATHS "/lib/mysql"
 			  "/lib64/mysql"
 			  "/usr/lib/mysql"

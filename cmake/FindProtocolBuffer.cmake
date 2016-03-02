@@ -242,7 +242,7 @@ ENDIF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 
 FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h 
           PATHS "${PROTOBUF_ROOT}/include"
-		"/usr/include"
+				"/usr/include"
                 "/usr/local/include"
                 "/usr/include/google"
                 "/usr/local/include/google"
@@ -257,25 +257,28 @@ IF(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
 ENDIF()
 
-FIND_LIBRARY(PROTOBUF_LIBRARY NAMES protobuf
+FIND_LIBRARY(PROTOBUF_LIBRARY 
+			 NAMES "protobuf" "libprotobuf" "libprotobufd"
              PATHS "${PROTOBUF_ROOT}/lib/*"
-		   "/usr/lib"
-                   "/usr/local/lib"
-                   "/usr/local/lib/google"
+					"/usr/lib"
+					"/usr/local/lib"
+					"/usr/local/lib/google"
              DOC "The Google Protocol Buffers Library"
 )
-FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY NAMES protoc
+FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
+			 NAMES "protoc" "libprotoc" "libprotocd"
              PATHS "${PROTOBUF_ROOT}/lib/*"
-		   "/usr/lib"
-                   "/usr/local/lib"
-                   "/usr/local/lib/google"
+					"/usr/lib"
+					"/usr/local/lib"
+					"/usr/local/lib/google"
              DOC "The Google Protocol Buffers Compiler Library"
 )
-FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
+FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE 
+			 NAMES protoc
              PATHS "${PROTOBUF_ROOT}/bin/*"
-		   "/bin"
-                   "/usr/bin"
-                   "/usr/local/bin"
+					"/bin"
+					"/usr/bin"
+					"/usr/local/bin"
              DOC "The Google Protocol Buffers Compiler"
 )
 
