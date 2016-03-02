@@ -16,6 +16,7 @@ clone_folder: C:\projects\osIROSE
 services: mysql56
 install:
 - ps: Start-FileDownload http://tangentsoft.net/mysql++/releases/mysql++-3.2.2.tar.gz -FileName C:\projects\mysqlpp.tar.gz
+- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-winx64.msi -FileName C:\projects\mysql-connector-c-6.1.6-winx64.msi
 - cmd: "./ci/msvc_mysqlpp_install.bat"
 - ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
 - ps: >-
