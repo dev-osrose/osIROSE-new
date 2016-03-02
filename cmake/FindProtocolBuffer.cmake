@@ -259,7 +259,8 @@ ENDIF()
 
 FIND_LIBRARY(PROTOBUF_LIBRARY 
 			 NAMES "protobuf" "libprotobuf" "libprotobufd"
-             PATHS "${PROTOBUF_ROOT}/lib/*"
+             PATHS "${PROTOBUF_ROOT}/lib"
+					"${PROTOBUF_ROOT}/lib/*"
 					"/usr/lib"
 					"/usr/local/lib"
 					"/usr/local/lib/google"
@@ -267,7 +268,8 @@ FIND_LIBRARY(PROTOBUF_LIBRARY
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
 			 NAMES "protoc" "libprotoc" "libprotocd"
-             PATHS "${PROTOBUF_ROOT}/lib/*"
+             PATHS "${PROTOBUF_ROOT}/lib"
+					"${PROTOBUF_ROOT}/lib/*"
 					"/usr/lib"
 					"/usr/local/lib"
 					"/usr/local/lib/google"
@@ -275,7 +277,8 @@ FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY
 )
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE 
 			 NAMES protoc
-             PATHS "${PROTOBUF_ROOT}/bin/*"
+             PATHS "${PROTOBUF_ROOT}/bin"
+					"${PROTOBUF_ROOT}/bin/*"
 					"/bin"
 					"/usr/bin"
 					"/usr/local/bin"
