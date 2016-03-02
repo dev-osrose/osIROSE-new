@@ -29,27 +29,31 @@ if( WIN32 )
 	SET(BINDIR32_ENV_NAME "ProgramFiles(x86)")
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
-		PATHS "C:/Program Files/MySQL/*/include"
+		PATHS "${EXTERNAL_INCLUDE_DIR}"
+			  "C:/Program Files/MySQL/*/include"
 			  "$ENV{PROGRAMFILES}/MySQL/*/include"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
-		PATHS "C:/Program Files/MySQL/*/lib"
+		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "C:/Program Files/MySQL/*/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
 else()
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
-		PATHS "/usr/include/mysql"
+		PATHS "${EXTERNAL_INCLUDE_DIR}"
+			  "/usr/include/mysql"
 			  "/usr/local/include/mysql"
 			  "/usr/mysql/include/mysql" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
-		PATHS "/lib/mysql"
+		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "/lib/mysql"
 			  "/lib64/mysql"
 			  "/usr/lib/mysql"
 			  "/usr/lib64/mysql"
