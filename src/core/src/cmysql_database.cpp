@@ -5,12 +5,25 @@
 
 namespace Core {
 
-CMySQL_Result::CMySQL_Result(mysqlpp::StoreQueryResult _res)
-    : IResult(), res_(_res) {}
+bool CMySQL_Row::getString(std::string const &name, std::string &data) {
+  return getData<std::string>(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, uint32_t &data) {
+  return getData<uint32_t>(name, data);
+}
+
+bool CMySQL_Row::getFloat(std::string const &name, float &data) {
+  return getData<float>(name, data);
+}
+
+CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
+    : IResult(), res_(_res) {
+}
 
 bool CMySQL_Result::incrementRow() {
 	uint32_t	tmp = row_;
-	row_ = row_ >= res_.size() : res_.size() - 1 : row_ + 1;
+	row_ = row_ >= res_.size() ? res_.size() - 1 : row_ + 1;
 	return tmp == res_.size();
 }
 
@@ -24,6 +37,22 @@ bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
 
 bool CMySQL_Result::getFloat(std::string const &name, float &data) {
   return getData<float>(name, data);
+}
+
+IResult::iterator	CMySQL_Result::begin() {
+	return *(*res_.begin());
+}
+
+IResult::iterator	CMySQL_Result::end() {
+	return *(*res_.end());
+}
+
+IResult::const_iterator	CMySQL_Result::cbegin() {
+	return *(*res_.cbegin());
+}
+
+IResult::const_iterator	CMySQL_Result::cend() {
+	return *(*res_.cend());
 }
 
 CMySQL_Database::CMySQL_Database()

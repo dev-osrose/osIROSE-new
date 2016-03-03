@@ -5,22 +5,50 @@
 #include <mysql++.h>
 #include "logconsole.h"
 #include <mutex>
+#include <vector>
 
 namespace Core {
+
+class CMySQL_Row : public IRow {
+	public:
+		CMySQL_Row(const mysqlpp::Row &row) : row_(row) {}
+		virtual ~CMySQL_Row() {}
+
+		virtual bool getString(std::string const &columnName, std::string &data);
+		virtual bool getInt(std::string const &columnName, uint32_t &data);
+		virtual bool getFloat(std::string const &columnName, float &data);
+
+	private:
+		mysqlpp::Row	row_;
+
+		template <typename T>
+		bool getData(std::string const &name, T &data) {
+			auto tmp = row_[name.c_str()];
+			if (tmp.is_null()) return false;
+			data = static_cast<T>(tmp);
+			return true;
+		}
+};
+
 class CMySQL_Result : public IResult {
  public:
-  CMySQL_Result(mysqlpp::StoreQueryResult);
+  CMySQL_Result(const mysqlpp::StoreQueryResult&);
   virtual ~CMySQL_Result() {}
 
-  virtual bool incrementRow();
+  virtual bool 		incrementRow();
   virtual uint32_t	size() const {return res_.size();}
 
-  virtual bool getString(std::string const &, std::string &data);
-  virtual bool getInt(std::string const &, uint32_t &data);
-  virtual bool getFloat(std::string const &, float &data);
+  virtual bool getString(std::string const &columnName, std::string &data);
+  virtual bool getInt(std::string const &columnName, uint32_t &data);
+  virtual bool getFloat(std::string const &columnName, float &data);
+
+  IResult::iterator		begin();
+  IResult::iterator		end();
+  Iresult::const_iterator	cbegin();
+  Iresult::const_iterator	cend();
 
  private:
-  mysqlpp::StoreQueryResult res_;
+  std::vector<std::unique_ptr<Irow>>	res_;
 
   template <typename T>
   bool getData(std::string const &name, T &data) {
