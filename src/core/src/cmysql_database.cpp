@@ -16,6 +16,10 @@ bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
   return getData<uint32_t>(name, data);
 }
 
+bool CMySQL_Result::getFloat(std::string const &name, float &data) {
+  return getData<float>(name, data);
+}
+
 CMySQL_Database::CMySQL_Database()
     : hostname_(""),
       database_(""),

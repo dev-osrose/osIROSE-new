@@ -14,6 +14,7 @@ class CMySQL_Result : public IResult {
 
   virtual bool getString(std::string const &, std::string &data);
   virtual bool getInt(std::string const &, uint32_t &data);
+  virtual bool getFloat(std::string const &, float &data);
 
  private:
   mysqlpp::StoreQueryResult res_;

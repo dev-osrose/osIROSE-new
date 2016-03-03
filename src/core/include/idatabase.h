@@ -16,6 +16,7 @@ class	IResult
 		// return false if the value is NULL, true otherwise
 		virtual	bool	getString(std::string const&, std::string &data) = 0;
 		virtual bool	getInt(std::string const&, uint32_t &data) = 0;
+		virtual bool	getFloat(std::string const&, float &data) = 0;
 
 	protected:
 		uint32_t	row;

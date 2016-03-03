@@ -53,9 +53,9 @@ TEST(TestMySQL_Database, TestQStore)
 
 	Core::CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
 	database.QExecute("DROP TABLE IF EXISTS test_table;");
-	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
-	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
-	database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, 'null values', NULL);");
+	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), fl FLOAT, data BLOB);");
+	database.QExecute("insert into test_table(id, value, str, fl, data) values(0, 12, 'plop', 3.14, '\x08\x12\x24');");
+	database.QExecute("insert into test_table(id, value, str, fl, data) values(1, NULL, 'null values', NULL, NULL);");
 	std::unique_ptr<IResult>	res;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 	uint32_t	id;
@@ -64,6 +64,9 @@ TEST(TestMySQL_Database, TestQStore)
 	std::string	str;
 	EXPECT_EQ(res->getString("str", str), true);
 	EXPECT_EQ(str, "plop");
+	float dec;
+	EXPECT_EQ(res->getFloat("fl", dec), true);
+	EXPECT_FLOAT_EQ(dec, 3.14);
 	res->useRow(1);
 	EXPECT_EQ(res->getInt("value", id), false);
 	EXPECT_EQ(id, 0);
