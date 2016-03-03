@@ -15,8 +15,9 @@ message	Server {
 	required int32	accessLevel = 3 [default = 100];
 	required int32	parentId = 4 [default = 0];
 	required int32	maxConnections = 5 [default = 100];
-	required bool	useThreads = 6 [default = false];
-	required int32	mode = 7 [default = 0];
+	required bool	useThreads = 6 [default = true];
+	required int32	maxThreads = 7 [default = 512];
+	required int32	mode = 8 [default = 0];
 }
 
 message LoginServer {
@@ -24,13 +25,14 @@ message LoginServer {
 }
 
 message CharServer {
-	required string loginIP = 1 [default = "127.0.0.1"];
-	required int32 loginIscPort = 2 [default = 29010];
-	required int32 iscPort = 3 [default = 29110];
+	required string worldName = 1 [default = "osIROSE"];
+	required string loginIP = 2 [default = "127.0.0.1"];
+	required int32 loginIscPort = 3 [default = 29010];
+	required int32 iscPort = 4 [default = 29110];
 }
 
 message MapServer {
-	required string channelName = 1 [default = "osIROSE"];
+	required string channelName = 1 [default = "Athena"];
 	required string charIP = 2 [default = "127.0.0.1"];
 	required int32 charIscPort = 3 [default = 29010];
 	required int32 iscPort = 4 [default = 29210];

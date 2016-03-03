@@ -26,6 +26,6 @@ TEST(Config, TestServer)
 	EXPECT_EQ(100, sd.accesslevel());
 	EXPECT_EQ(0, sd.parentid());
 	EXPECT_EQ(100, sd.maxconnections());
-	EXPECT_EQ(false, sd.usethreads());
+	EXPECT_EQ(true, sd.usethreads());
 	EXPECT_EQ(0, sd.mode());
 }
