@@ -25,7 +25,6 @@ class	IResult
 class IDatabase
 {
 public:
-	IDatabase() {};
 	virtual ~IDatabase() {};
 
 	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
