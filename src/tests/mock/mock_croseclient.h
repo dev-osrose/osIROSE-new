@@ -18,8 +18,24 @@ class CRoseClient_Mock : public CRoseClient
 		return true;
 	}
 
+virtual bool HandlePacket(uint8_t* _buffer) {
+  CRosePacket* pak = (CRosePacket*)_buffer;
+  switch ((ePacketType)pak->Header.Command) {
+    case ePacketType::PAKCS_ALIVE: {
+      log_.icprintf("[%d] Got keep alive packet\n");
+      break;
+    }
+    default: {
+      log_.eicprintf("Unknown Packet Type: 0x%X\n", pak->Header.Command);
+      return false;
+    }
+  }
+  return true;
+}
+
+
         private:
-        CNetwork_Asio real_;
+        CRoseClient real_;
 };
 
 #endif

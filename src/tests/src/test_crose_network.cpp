@@ -1,11 +1,14 @@
 #include "gtest/gtest.h"
 
+//#define STRESS_TEST
+
 #include <stdint.h>
 #include "croseserver.h"
 #include "mock/mock_croseclient.h"
 #include "mock/mock_croseisc.h"
 #include "ePacketType.h"
 #include "crosepacket.h"
+#include "logconsole.h"
 
 TEST( TestRoseNetwork, Constructor )
 {
@@ -224,3 +227,61 @@ TEST( TestRoseNetwork, TestISCListenAndConnect )
 
         EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
+static uint32_t stress_index = 0;
+
+#ifdef STRESS_TEST
+#ifndef WIN32
+#include <sys/time.h>
+#include <chrono>
+
+unsigned int GetTickCount()
+{
+//        struct timeval tv;
+//        if(gettimeofday(&tv, NULL) != 0)
+//                return 0;
+
+//        return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::high_resolution_clock::now().time_since_epoch() ).count();
+}
+#endif
+
+TEST( TestRoseNetwork, TestNetworkStress )
+{
+  static Core::CLogConsole log("TestNetworkStress");
+  CRoseServer network;
+  EXPECT_EQ( true, network.Init( "127.0.0.1", 29111 ) );
+  EXPECT_NO_FATAL_FAILURE( network.Listen( ) );
+
+  std::thread io_thread_[1000];
+  for( int idx = 0; idx < 1000; idx++ )
+  {
+    io_thread_[idx] = std::thread([this]() {
+      auto starttime = GetTickCount( );
+      CRoseClient_Mock netConnect;
+      netConnect.SetId(stress_index++);
+
+      EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 29111 ) );
+      EXPECT_NO_FATAL_FAILURE( netConnect.Connect( ) );
+
+      CRosePacket* pak = new CRosePacket( ePacketType::PAKCS_ALIVE );
+      netConnect.Send( pak );
+      std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+      netConnect.Disconnect();
+      auto diff = GetTickCount()-starttime;
+
+      log.icprintf("[%d] Completed in %d ms\n", netConnect.GetId(), diff);
+      return 0;
+    });
+
+    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+  }
+  std::this_thread::sleep_for( std::chrono::milliseconds( 400 ) );
+  log.icprintf("Waiting for threads to finish\n");
+  for( int idx = 0; idx < 1000; idx++ )
+  {
+    io_thread_[idx].join();
+  }
+
+  stress_index = 0;
+}
+#endif
