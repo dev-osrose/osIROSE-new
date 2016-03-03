@@ -56,7 +56,7 @@ TEST(TestMySQL_Database, TestQStore)
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), fl FLOAT, data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(0, 12, 'plop', 3.14, '\x08\x12\x24');");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(1, NULL, 'null values', NULL, NULL);");
-	std::unique_ptr<IResult>	res;
+	std::unique_ptr<Core::IResult>	res;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 	uint32_t	id;
 	EXPECT_EQ(res->getInt("id", id), true);
@@ -96,7 +96,7 @@ TEST(TestMySQL_Database, TestMultipleResults)
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
 	database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, 'null values', NULL);");
-	std::unique_ptr<IResult>	res, res2;
+	std::unique_ptr<Core::IResult>	res, res2;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 	EXPECT_NO_FATAL_FAILURE(res2 = std::move(database.QStore("select * from test_table;")));
 }
@@ -116,12 +116,12 @@ TEST(TestMySQL_Database, TestThreaded)
 	database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, 'null values', NULL);");
 	
 	std::thread first([&database] () {
-			std::unique_ptr<IResult> res;
+			std::unique_ptr<Core::IResult> res;
 			for (int i = 0; i < 20; ++i)
 				EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 			});
 	std::thread second([&database] () {
-			std::unique_ptr<IResult> res;
+			std::unique_ptr<Core::IResult> res;
 			for (int i = 0; i < 20; ++i)
 				EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 			});
