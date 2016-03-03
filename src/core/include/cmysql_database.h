@@ -33,7 +33,7 @@ class CMySQL_Row : public IRow {
 class CMySQL_Result : public IResult {
  public:
   CMySQL_Result(const mysqlpp::StoreQueryResult&);
-  virtual ~CMySQL_Result() {}
+  virtual ~CMySQL_Result();
 
   virtual bool 		incrementRow();
   virtual uint32_t	size() const {return res_.size();}
@@ -44,19 +44,11 @@ class CMySQL_Result : public IResult {
 
   IResult::iterator		begin();
   IResult::iterator		end();
-  Iresult::const_iterator	cbegin();
-  Iresult::const_iterator	cend();
+  IResult::const_iterator	cbegin();
+  IRresult::const_iterator	cend();
 
  private:
-  std::vector<std::unique_ptr<IRow>>	res_;
-
-  template <typename T>
-  bool getData(std::string const &name, T &data) {
-    auto tmp = res_[row_][name.c_str()];
-    if (tmp.is_null()) return false;
-    data = static_cast<T>(tmp);
-    return true;
-  }
+  std::vector<IRow*>	res_;
 };
 
 class CMySQL_Database : public IDatabase {
