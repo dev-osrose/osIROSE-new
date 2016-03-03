@@ -227,9 +227,9 @@ TEST( TestRoseNetwork, TestISCListenAndConnect )
 
         EXPECT_NO_FATAL_FAILURE( network.Shutdown( ) );
 }
-static uint32_t stress_index = 0;
-
 #ifdef STRESS_TEST
+
+static uint32_t stress_index = 0;
 #ifndef WIN32
 #include <sys/time.h>
 #include <chrono>

@@ -2,6 +2,8 @@
 #include "croseclient.h"
 #include "ePacketType.h"
 
+#define STRESS_TEST
+
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   log_.SetIdentity("CRoseClient");
   ResetBuffer();
@@ -39,7 +41,11 @@ bool CRoseClient::OnReceive() { return true; }
 bool CRoseClient::OnReceived() {
   bool rtnVal = true;
   if (packet_size_ == 6) {
+#ifndef STRESS_TEST
     packet_size_ = crypt_.decodeClientHeader((unsigned char*)&buffer_);
+#else
+    packet_size_ = buffer_[0];
+#endif
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       log_.eicprintf("Client sent incorrect blockheader\n");
@@ -51,12 +57,14 @@ bool CRoseClient::OnReceived() {
   }
 
   // decrypt packet now
+#ifndef STRESS_TEST
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
     log_.eicprintf("Client sent illegal block\n");
     ResetBuffer();
     return false;
   }
+#endif
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
   log_.oicprintf("Received a packet on CRoseClient: Header[%i, 0x%X]\n",
@@ -68,8 +76,10 @@ bool CRoseClient::OnReceived() {
 }
 
 bool CRoseClient::OnSend(uint8_t* _buffer) {
-  //(void)_buffer;
+  (void)_buffer;
+#ifndef STRESS_TEST
   crypt_.encodeServerPacket(_buffer);
+#endif
   return true;
 }
 void CRoseClient::OnSent() {}
@@ -85,6 +95,14 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 #endif
       break;
     }
+#ifdef STRESS_TEST
+    case (ePacketType)0x6F6D: {
+      CRosePacket* pak = new CRosePacket(0x6F6D, 8);
+      memcpy(pak->Buffer, _buffer, 8);
+      Send(pak);
+      break;
+    }
+#endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
       CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest));

@@ -47,7 +47,7 @@ cache:
 #  verbosity: minimal
 build_script:
 - cd 3rdParty/build
-- cmake ../../tools/
+- cmake -DBUILD_PROTOBUF=ON ../../tools/
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cd ../../build
 - cmake -DENABLE_TESTING=ON ..

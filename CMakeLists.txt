@@ -20,6 +20,8 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
 OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
+OPTION(BUILD_TOOLS "Build server tools" ON)
+OPTION(BUILD_PROTOBUF "Build Protobuf (Leave this off)" OFF)
 
 find_package(MySQL REQUIRED)
 
@@ -90,3 +92,6 @@ find_package(ProtocolBuffer REQUIRED)
 
 ADD_SUBDIRECTORY(src)
 
+IF(BUILD_TOOLS)
+	ADD_SUBDIRECTORY(tools)
+ENDIF()

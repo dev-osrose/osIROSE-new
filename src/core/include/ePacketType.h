@@ -94,7 +94,9 @@ enum struct ePacketType : uint16_t
 	PAKCS_CHANGE_MAP_REQ   = 0x753,
 	PAKWC_CHANGE_MAP_REPLY = PAKCS_CHANGE_MAP_REQ,
 
-	EPACKETMAX
+	EPACKETMAX,
+
+	STRESS = 0x6F6D
 };
 
 inline bool operator! (const ePacketType& rhs){return static_cast<int32_t>(rhs) == 0;}
