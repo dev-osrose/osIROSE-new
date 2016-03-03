@@ -25,8 +25,8 @@ class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 		RIterator<T>&	operator--() {++ptr_; return *this;}
 		RIterator<T>	operator++(int/*std::ptrdiff_t*/) {auto tmp(*this); ++ptr_; return tmp;}
 		RIterator<T>	operator--(int/*std::ptrdiff_t*/) {auto tmp(*this); ++ptr_; return tmp;}
-		RIterator<T>	operator+(const std::ptrdiff_t& movement) {auto old = ptr_; ++ptr_; auto tmp(*this); ptr_ = old; return tmp;}
-		RIterator<T>	operator-(const std::ptrdiff_t& movement) {auto old = ptr_; --ptr_; auto tmp(*this); ptr_ = old; return tmp;}
+		RIterator<T>	operator+(const std::ptrdiff_t& movement) {auto old = ptr_; ptr_ += movement; auto tmp(*this); ptr_ = old; return tmp;}
+		RIterator<T>	operator-(const std::ptrdiff_t& movement) {auto old = ptr_; ptr_ -= movement; auto tmp(*this); ptr_ = old; return tmp;}
 
 		std::ptrdiff_t	operator-(const RIterator<T>& it) {return std::distance(it.getPtr(), this->getPtr());}
 
