@@ -8,6 +8,12 @@ namespace Core {
 CMySQL_Result::CMySQL_Result(mysqlpp::StoreQueryResult _res)
     : IResult(), res_(_res) {}
 
+bool CMySQL_Result::incrementRow() {
+	uint32_t	tmp = row_;
+	row_ = row_ >= res_.size() : res_.size() - 1 : row_ + 1;
+	return tmp == res_.size();
+}
+
 bool CMySQL_Result::getString(std::string const &name, std::string &data) {
   return getData<std::string>(name, data);
 }

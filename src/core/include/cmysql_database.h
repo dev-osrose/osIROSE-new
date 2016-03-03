@@ -12,6 +12,9 @@ class CMySQL_Result : public IResult {
   CMySQL_Result(mysqlpp::StoreQueryResult);
   virtual ~CMySQL_Result() {}
 
+  virtual bool incrementRow();
+  virtual uint32_t	size() const {return res_.size();}
+
   virtual bool getString(std::string const &, std::string &data);
   virtual bool getInt(std::string const &, uint32_t &data);
   virtual bool getFloat(std::string const &, float &data);
@@ -21,7 +24,7 @@ class CMySQL_Result : public IResult {
 
   template <typename T>
   bool getData(std::string const &name, T &data) {
-    auto tmp = res_[row][name.c_str()];
+    auto tmp = res_[row_][name.c_str()];
     if (tmp.is_null()) return false;
     data = static_cast<T>(tmp);
     return true;

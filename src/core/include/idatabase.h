@@ -8,10 +8,13 @@
 class	IResult
 {
 	public:
-		IResult() : row(0) {}
+		IResult() : row_(0) {}
 		virtual ~IResult() {}
 
-		virtual void	useRow(uint32_t _row) {row = _row;}
+		virtual void		useRow(uint32_t _row) {row_ = _row;}
+		virtual bool		incrementRow() {++row_; return true;}
+		virtual bool		decrementRow() {uint32_t tmp = row_; row_ = row_ <= 0 ? 0 : row_ - 1; return tmp;}
+		virtual uint32_t	size() const = 0;
 
 		// return false if the value is NULL, true otherwise
 		virtual	bool	getString(std::string const&, std::string &data) = 0;
@@ -19,7 +22,7 @@ class	IResult
 		virtual bool	getFloat(std::string const&, float &data) = 0;
 
 	protected:
-		uint32_t	row;
+		uint32_t	row_;
 };
 
 class IDatabase
@@ -29,8 +32,8 @@ public:
 
 	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
 
-	virtual void	QExecute(std::string _query) = 0;
-	virtual std::unique_ptr<IResult>	QStore(std::string	_query) = 0;
+	virtual void				QExecute(std::string _query) = 0;
+	virtual std::unique_ptr<IResult>	QStore(std::string _query) = 0;
 };
 
 #endif
