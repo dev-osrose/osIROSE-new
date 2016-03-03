@@ -48,7 +48,7 @@ class CMySQL_Result : public IResult {
   Iresult::const_iterator	cend();
 
  private:
-  std::vector<std::unique_ptr<Irow>>	res_;
+  std::vector<std::unique_ptr<IRow>>	res_;
 
   template <typename T>
   bool getData(std::string const &name, T &data) {

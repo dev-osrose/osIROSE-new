@@ -6,7 +6,7 @@
 namespace Core {
 // random access iterator template
 template<typename T>
-class RIterator : public std::iterator<std::random_access_tag, T> {
+class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 	public:
 		RIterator(T* ptr = nullptr) {ptr_ = ptr;}
 		RIterator(const RIterator<T>& it) = default;
@@ -19,16 +19,16 @@ class RIterator : public std::iterator<std::random_access_tag, T> {
 
 		bool		operator==(const RIterator<T>& it) const {return ptr_ == it.getConstPtr();}
 		bool		operator!=(const RIterator<T>& it) const {return ptr_ != it.getConstPtr();}
-		RIterator<T>&	operator+=(const ptrdiff_t& movement) {ptr_ += movement; return *this;}
-		RIterator<T>&	operator-=(const ptrdiff_t& movement) {ptr_ -= movement; return *this;}
+		RIterator<T>&	operator+=(const std::ptrdiff_t& movement) {ptr_ += movement; return *this;}
+		RIterator<T>&	operator-=(const std::ptrdiff_t& movement) {ptr_ -= movement; return *this;}
 		RIterator<T>&	operator++() {++ptr_; return *this;}
 		RIterator<T>&	operator--() {++ptr_; return *this;}
-		RIterator<T>	operator++(ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
-		RIterator<T>	operator--(ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
-		RIterator<T>	operator+(const ptrdiff_t& movement) {auto old = ptr_; ++ptr_; auto tmp(*this); ptr_ = old; return tmp;}
-		RIterator<T>	operator-(const ptrdiff_t& movement) {auto old = ptr_; --ptr_; auto tmp(*this); ptr_ = old; return tmp;}
+		RIterator<T>	operator++(std::ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
+		RIterator<T>	operator--(std::ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
+		RIterator<T>	operator+(const std::ptrdiff_t& movement) {auto old = ptr_; ++ptr_; auto tmp(*this); ptr_ = old; return tmp;}
+		RIterator<T>	operator-(const std::ptrdiff_t& movement) {auto old = ptr_; --ptr_; auto tmp(*this); ptr_ = old; return tmp;}
 
-		ptrdiff_t	operator-(const RIterator<T>& it) {return std::distance(it.getPtr(), this->getPtr());}
+		std::ptrdiff_t	operator-(const RIterator<T>& it) {return std::distance(it.getPtr(), this->getPtr());}
 
 		T&		operator*() {return *ptr_;}
 		const T&	operator*() const {return *ptr_;}
