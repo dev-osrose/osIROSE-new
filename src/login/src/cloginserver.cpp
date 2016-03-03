@@ -43,7 +43,7 @@ CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
   });*/
 }
 
-CLoginServer::~CLoginServer() { active_ = false; process_thread_.join(); Shutdown(); }
+CLoginServer::~CLoginServer() { Shutdown(); }
 
 void CLoginServer::OnAccepted(tcp::socket _sock) {
   if (_sock.is_open()) {

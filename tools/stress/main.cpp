@@ -1,3 +1,5 @@
+#define THREAD_COUNT 1000
+
 #include <iostream>
 #include <asio.hpp>
 #include <thread>
@@ -34,10 +36,8 @@ int main( int argc, char* argv[] )
 
   log.icprintf("Setting host to %s\n", host_ip.c_str());
 
-  int thread_count = 1000;
-
-  std::thread io_thread_[thread_count];
-  for( int idx = 0; idx < thread_count; idx++ )
+  std::thread io_thread_[THREAD_COUNT];
+  for( int idx = 0; idx < THREAD_COUNT; idx++ )
   {
     io_thread_[idx] = std::thread([]() {
       auto starttime = GetTickCount( );
@@ -90,7 +90,7 @@ int main( int argc, char* argv[] )
   }
   std::this_thread::sleep_for( std::chrono::milliseconds( 400 ) );
   log.icprintf("Waiting for threads to finish\n");
-  for( int idx = 0; idx < thread_count; idx++ )
+  for( int idx = 0; idx < THREAD_COUNT; idx++ )
   {
     io_thread_[idx].join();
   }

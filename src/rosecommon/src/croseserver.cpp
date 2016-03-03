@@ -12,8 +12,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
   //  process_thread_ = std::thread([this]() { Run(); });
 
   process_thread_ = std::thread([this]() {
-    active_ = true;
-    while( IsActive() )
+    do
     {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
@@ -38,8 +37,9 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
         }
       }
     }
-    std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+//    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
     }
+    while(active_ == true);
 
     return 0;
   });
@@ -49,6 +49,9 @@ CRoseServer::~CRoseServer() {
   // std::lock_guard< std::mutex > lock( m_ClientListMutex );
   // for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
   //	delete m_ClientList;
+  Shutdown();
+  process_thread_.join();
+
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
     for (auto& client : client_list_) {
