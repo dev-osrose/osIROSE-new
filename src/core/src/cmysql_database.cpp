@@ -20,11 +20,11 @@ bool CMySQL_Row::getFloat(std::string const &name, float &data) {
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
     : IResult() {
 	for (auto const &it : _res)
-		res_.pushback(new CMySQL_Row(it));
+		res_.push_back(new CMySQL_Row(it));
 }
 
 CMySQL_Result::~CMySQL_Result() {
-	for (auto it : _res)
+	for (auto it : res_)
 		delete it;
 }
 
@@ -43,7 +43,7 @@ bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
 }
 
 bool CMySQL_Result::getFloat(std::string const &name, float &data) {
-  return static_cast<CMySQL_Row*>(res_[row_])->getInt(name, data);
+  return static_cast<CMySQL_Row*>(res_[row_])->getFloat(name, data);
 }
 
 IResult::iterator	CMySQL_Result::begin() {

@@ -6,7 +6,7 @@
 namespace Core {
 // random access iterator template
 template<typename T>
-class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
+class RIterator : public std::iterator<std::random_access_iterator_tag, T, std::ptrdiff_t> {
 	public:
 		RIterator(T* ptr = nullptr) {ptr_ = ptr;}
 		RIterator(const RIterator<T>& it) = default;
