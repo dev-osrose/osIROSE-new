@@ -54,11 +54,11 @@ IResult::iterator	CMySQL_Result::end() {
 	return *res_.end();
 }
 
-IResult::const_iterator	CMySQL_Result::cbegin() {
+IResult::const_iterator	CMySQL_Result::cbegin() const {
 	return *res_.cbegin();
 }
 
-IResult::const_iterator	CMySQL_Result::cend() {
+IResult::const_iterator	CMySQL_Result::cend() const {
 	return *res_.cend();
 }
 

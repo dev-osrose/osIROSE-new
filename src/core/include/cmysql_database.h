@@ -42,10 +42,10 @@ class CMySQL_Result : public IResult {
   virtual bool getInt(std::string const &columnName, uint32_t &data);
   virtual bool getFloat(std::string const &columnName, float &data);
 
-  IResult::iterator		begin();
-  IResult::iterator		end();
-  IResult::const_iterator	cbegin();
-  IRresult::const_iterator	cend();
+  virtual IResult::iterator		begin();
+  virtual IResult::iterator		end();
+  virtual IResult::const_iterator	cbegin() const;
+  virtual IResult::const_iterator	cend() const;
 
  private:
   std::vector<IRow*>	res_;

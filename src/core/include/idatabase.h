@@ -37,10 +37,10 @@ class	IResult
 		virtual bool	getInt(std::string const &columnName, uint32_t &data) = 0;
 		virtual bool	getFloat(std::string const &columnName, float &data) = 0;
 
-		iterator	begin() = 0;
-		iterator	end() = 0;
-		const_iterator	cbegin() = 0;
-		const_iterator	cend() = 0;
+		virtual iterator	begin() = 0;
+		virtual iterator	end() = 0;
+		virtual const_iterator	cbegin() const = 0;
+		virtual const_iterator	cend() const = 0;
 
 	protected:
 		uint32_t	row_;

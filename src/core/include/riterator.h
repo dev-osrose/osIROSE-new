@@ -6,7 +6,7 @@
 namespace Core {
 // random access iterator template
 template<typename T>
-class RIterator : public std::iterator<std::random_access_iterator_tag, T, std::ptrdiff_t> {
+class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 	public:
 		RIterator(T* ptr = nullptr) {ptr_ = ptr;}
 		RIterator(const RIterator<T>& it) = default;
@@ -23,8 +23,8 @@ class RIterator : public std::iterator<std::random_access_iterator_tag, T, std::
 		RIterator<T>&	operator-=(const std::ptrdiff_t& movement) {ptr_ -= movement; return *this;}
 		RIterator<T>&	operator++() {++ptr_; return *this;}
 		RIterator<T>&	operator--() {++ptr_; return *this;}
-		RIterator<T>	operator++(std::ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
-		RIterator<T>	operator--(std::ptrdiff_t) {auto tmp(*this); ++ptr_; return tmp;}
+		RIterator<T>	operator++(int/*std::ptrdiff_t*/) {auto tmp(*this); ++ptr_; return tmp;}
+		RIterator<T>	operator--(int/*std::ptrdiff_t*/) {auto tmp(*this); ++ptr_; return tmp;}
 		RIterator<T>	operator+(const std::ptrdiff_t& movement) {auto old = ptr_; ++ptr_; auto tmp(*this); ptr_ = old; return tmp;}
 		RIterator<T>	operator-(const std::ptrdiff_t& movement) {auto old = ptr_; --ptr_; auto tmp(*this); ptr_ = old; return tmp;}
 
