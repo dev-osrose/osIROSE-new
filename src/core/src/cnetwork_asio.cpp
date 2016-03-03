@@ -135,7 +135,7 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
 
         });
   else
-    log_.eicprintf(CL_RESET "Not sending packet: Header[%i, 0x%X]\n", _size,
+    log_.eicprintf(CL_RESET "[%d] Not sending packet: Header[%i, 0x%X]\n", GetId(), _size,
                    _command);
   return true;
 }
@@ -156,20 +156,20 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               log_.eicprintf(CL_RESET
-                             "Something bad happened in OnReceived... Shutting "
-                             "down...\n" CL_RESET);
+                             "[%d] Something bad happened in OnReceived... Shutting "
+                             "down...\n" CL_RESET, GetId());
               Shutdown();
             }
           } else {
             if (errorCode.value() == 2) {
-              log_.icprintf(CL_RESET CL_WHITE "Client disconnected.\n");
+              log_.icprintf(CL_RESET CL_WHITE "[%d] Client disconnected.\n", GetId());
               OnDisconnected();
               Shutdown();
             } else {
               log_.eicprintf(
                   CL_RESET CL_WHITE
-                  "Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET,
-                  errorCode.value(), errorCode.message().c_str());
+                  "[%d] Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET,
+                  GetId(), errorCode.value(), errorCode.message().c_str());
 
               Shutdown();
               return;

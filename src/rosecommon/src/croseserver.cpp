@@ -56,11 +56,14 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CRoseClient* nClient = new CRoseClient(std::move(_sock));
+      //std::distance(std::begin(client_list_), std::end(client_list_));
+      nClient->SetId(std::distance(std::begin(client_list_), std::end(client_list_)));
       log_.icprintf("Client connected from: %s\n", _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(std::move(_sock));
+      nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
       log_.icprintf("Server connected from: %s\n", _address.c_str());
       isc_list_.push_front(nClient);
     }

@@ -28,6 +28,13 @@ class NetworkThreadPool {
     io_work_.reset();
 
     uint32_t core_count = Get_CPU_Count();
+    core_count *= 2;
+
+    if(core_count > 512)
+      core_count = 512;
+    else if(core_count == 0)
+      core_count = 1;
+
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       io_thread_[idx].join();
     }
@@ -40,7 +47,14 @@ class NetworkThreadPool {
   NetworkThreadPool() : io_work_(new asio_worker::element_type(io_service_)) {
     uint32_t core_count = Get_CPU_Count();
 
-    printf("%i threads\n", core_count);
+    core_count *= 2;
+
+    if(core_count > 512)
+      core_count = 512;
+    else if(core_count == 0)
+      core_count = 1;
+
+    printf("Using %i threads\n", core_count);
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       io_thread_[idx] = std::thread([this]() { io_service_.run(); });
     }
@@ -48,13 +62,11 @@ class NetworkThreadPool {
 
   ~NetworkThreadPool() { Shutdown(); }
 
-  std::thread io_thread_[256];
+  std::thread io_thread_[512];
   asio::io_service io_service_;
   asio_worker io_work_;
   static NetworkThreadPool* instance_;
 };
-
-//NetworkThreadPool* NetworkThreadPool::instance = nullptr;
 }
 
 
