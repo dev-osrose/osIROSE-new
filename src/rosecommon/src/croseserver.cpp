@@ -21,7 +21,6 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           client->Shutdown();
           delete client;
           client_list_.remove(client);
-          //client = client_list_.before_begin();
           break;
         }
       }
@@ -32,12 +31,11 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           client->Shutdown();
           delete client;
           isc_list_.remove(client);
-          //client = isc_list_.before_begin();
           break;
         }
       }
     }
-//    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
     }
     while(active_ == true);
 
@@ -46,9 +44,6 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
 }
 
 CRoseServer::~CRoseServer() {
-  // std::lock_guard< std::mutex > lock( m_ClientListMutex );
-  // for(uint32_t idx = 0; idx < m_ClientList.size(); ++idx)
-  //	delete m_ClientList;
   Shutdown();
   process_thread_.join();
 

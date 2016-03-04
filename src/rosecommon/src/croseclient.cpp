@@ -2,7 +2,7 @@
 #include "croseclient.h"
 #include "ePacketType.h"
 
-#define STRESS_TEST
+//#define STRESS_TEST
 
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   log_.SetIdentity("CRoseClient");

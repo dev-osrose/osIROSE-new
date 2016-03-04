@@ -40,7 +40,7 @@ int main( int argc, char* argv[] )
   for( int idx = 0; idx < THREAD_COUNT; idx++ )
   {
     io_thread_[idx] = std::thread([]() {
-      auto starttime = GetTickCount( );
+      unsigned int starttime = GetTickCount( );
       int thread_id = stress_index++;
 
       char buf[8];
@@ -72,7 +72,6 @@ int main( int argc, char* argv[] )
         log.icprintf("[%d] Failed to read data: [%d] %s\n", thread_id, ec.value(), ec.message().c_str());
         return 1;
       }
-      socket.shutdown(asio::socket_base::shutdown_both, ec);
       pakin = (packet*)&buf;
 
       if (memcmp(&pak, pakin, 8) != 0) {
@@ -80,13 +79,13 @@ int main( int argc, char* argv[] )
         return 1;
       }
 
-      auto diff = GetTickCount()-starttime;
-
-      log.icprintf("[%d] Completed in %d ms\n", thread_id, diff);
+      log.icprintf("[%d] Completed in %d ms\n", thread_id, GetTickCount()-starttime);
+      std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+      socket.shutdown(asio::socket_base::shutdown_both, ec);
       return 0;
     });
 
-    std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
   }
   std::this_thread::sleep_for( std::chrono::milliseconds( 400 ) );
   log.icprintf("Waiting for threads to finish\n");

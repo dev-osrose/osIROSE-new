@@ -52,7 +52,7 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CLoginClient* nClient = new CLoginClient(std::move(_sock));
-      nClient->SetId(std::distance(std::begin(client_list_), std::end(client_list_)));
+      nClient->SetId(client_count_++);
       log_.icprintf("[%d] Client connected from: %s\n", nClient->GetId(), _address.c_str());
       client_list_.push_front(nClient);
     } else {
