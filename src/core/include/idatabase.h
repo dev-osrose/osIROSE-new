@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
-#include "riterator.h"
+#include <vector>
 
 namespace Core {
 class	IRow
@@ -21,15 +21,15 @@ class	IRow
 class	IResult
 {
 	public:
-		typedef RIterator<IRow>		iterator;
-		typedef RIterator<const IRow>	const_iterator;
+		typedef std::vector<std::unique_ptr<IRow>>::iterator		iterator;
+		typedef std::vector<std::unique_ptr<IRow>>::const_iterator	const_iterator;
 
-		IResult() : row_(0) {}
+		IResult() : current_row_(0) {}
 		virtual ~IResult() {}
 
-		virtual void		useRow(uint32_t _row) {row_ = _row;}
-		virtual bool		incrementRow() {++row_; return true;}
-		virtual bool		decrementRow() {uint32_t tmp = row_; row_ = row_ <= 0 ? 0 : row_ - 1; return tmp;}
+		virtual void		useRow(uint32_t _row) {current_row_ = _row;}
+		virtual bool		incrementRow() {++current_row_; return true;}
+		virtual bool		decrementRow() {uint32_t tmp = current_row_; current_row_ = current_row_ <= 0 ? 0 : current_row_ - 1; return tmp;}
 		virtual uint32_t	size() const = 0;
 
 		// return false if the value is NULL, true otherwise
@@ -37,13 +37,14 @@ class	IResult
 		virtual bool	getInt(std::string const &columnName, uint32_t &data) = 0;
 		virtual bool	getFloat(std::string const &columnName, float &data) = 0;
 
-		virtual iterator	begin() = 0;
-		virtual iterator	end() = 0;
-		virtual const_iterator	cbegin() const = 0;
-		virtual const_iterator	cend() const = 0;
+		virtual iterator	begin() {return rows_.begin();}
+		virtual iterator	end() {return rows_.end();}
+		virtual const_iterator	cbegin() const {return rows_.cbegin();}
+		virtual const_iterator	cend() const {return rows_.cend();}
 
 	protected:
-		uint32_t	row_;
+		uint32_t				current_row_;
+		std::vector<std::unique_ptr<IRow>>	rows_;
 };
 
 class IDatabase

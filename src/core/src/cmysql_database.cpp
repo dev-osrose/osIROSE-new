@@ -20,46 +20,25 @@ bool CMySQL_Row::getFloat(std::string const &name, float &data) {
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
     : IResult() {
 	for (auto const &it : _res)
-		res_.push_back(new CMySQL_Row(it));
-}
-
-CMySQL_Result::~CMySQL_Result() {
-	for (auto it : res_)
-		delete it;
+		rows_.push_back(istd::unique_ptr<IRow>(new CMySQL_Row(it)));
 }
 
 bool CMySQL_Result::incrementRow() {
-	uint32_t	tmp = row_;
-	row_ = row_ >= res_.size() ? res_.size() - 1 : row_ + 1;
+	uint32_t	tmp = current_row_;
+	current_row_ = current_row_ >= res_.size() ? res_.size() - 1 : current_row_ + 1;
 	return tmp == res_.size();
 }
 
 bool CMySQL_Result::getString(std::string const &name, std::string &data) {
-  return static_cast<CMySQL_Row*>(res_[row_])->getString(name, data);
+  return rows_[current_row_]->getString(name, data);
 }
 
 bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
-  return static_cast<CMySQL_Row*>(res_[row_])->getInt(name, data);
+  return rows_[current_row_]->getInt(name, data);
 }
 
 bool CMySQL_Result::getFloat(std::string const &name, float &data) {
-  return static_cast<CMySQL_Row*>(res_[row_])->getFloat(name, data);
-}
-
-IResult::iterator	CMySQL_Result::begin() {
-	return *res_.begin();
-}
-
-IResult::iterator	CMySQL_Result::end() {
-	return *res_.end();
-}
-
-IResult::const_iterator	CMySQL_Result::cbegin() const {
-	return *res_.cbegin();
-}
-
-IResult::const_iterator	CMySQL_Result::cend() const {
-	return *res_.cend();
+  return rows_[current_row_]->getFloat(name, data);
 }
 
 CMySQL_Database::CMySQL_Database()

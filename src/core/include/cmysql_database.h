@@ -5,7 +5,6 @@
 #include <mysql++.h>
 #include "logconsole.h"
 #include <mutex>
-#include <vector>
 
 namespace Core {
 
@@ -33,7 +32,7 @@ class CMySQL_Row : public IRow {
 class CMySQL_Result : public IResult {
  public:
   CMySQL_Result(const mysqlpp::StoreQueryResult&);
-  virtual ~CMySQL_Result();
+  virtual ~CMySQL_Result() {}
 
   virtual bool 		incrementRow();
   virtual uint32_t	size() const {return res_.size();}
@@ -41,14 +40,6 @@ class CMySQL_Result : public IResult {
   virtual bool getString(std::string const &columnName, std::string &data);
   virtual bool getInt(std::string const &columnName, uint32_t &data);
   virtual bool getFloat(std::string const &columnName, float &data);
-
-  virtual IResult::iterator		begin();
-  virtual IResult::iterator		end();
-  virtual IResult::const_iterator	cbegin() const;
-  virtual IResult::const_iterator	cend() const;
-
- private:
-  std::vector<IRow*>	res_;
 };
 
 class CMySQL_Database : public IDatabase {
