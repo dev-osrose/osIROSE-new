@@ -9,13 +9,13 @@ namespace Core {
 #define uint8 unsigned char
 #define uint32 unsigned long
 
-#define NEWBUF(buf)       \
-  struct {                \
-    char s_[SBUF_SIZE];   \
-    struct StringBuf* d_; \
-    char* v_;             \
-    int l_;               \
-  } buf = {"", NULL, NULL, 0};  \
+#define NEWBUF(buf)               \
+  struct {                        \
+    char s_[SBUF_SIZE];           \
+    struct StringBuf* d_;         \
+    char* v_;                     \
+    int l_;                       \
+  } buf = {"", NULL, NULL, 0}; \ \
 //define NEWBUF
 
 #define BUFVPRINTF(buf, fmt, args)                            \
@@ -29,7 +29,7 @@ namespace Core {
 #define BUFLEN(buf) buf.l_
 
 #define FREEBUF(buf) \
-  buf.v_ = NULL;  \
+  buf.v_ = NULL; \  \
 //define FREEBUF
 
 #define ISDIGIT(d) (d >= '0' && d <= '9')
@@ -176,7 +176,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
 
   /////////////////////////////////////////////////////////////////
   unsigned long written;
-  char *p, *q;
+  char* p, *q;
   NEWBUF(tempbuf);  // temporary buffer
 
   if (!fmt || !*fmt) return 0;
@@ -198,7 +198,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
       if (0 == WriteConsole(handle, q, 1, &written, 0))
         WriteFile(handle, q, 1, &written, 0);
       p = q + 1;  // and start searching again
-    } else {  // from here, we will skip the '\033['
+    } else {      // from here, we will skip the '\033['
       // we break at the first unprocessible position
       // assuming regular text is starting there
       uint8 numbers[16], numpoint = 0;

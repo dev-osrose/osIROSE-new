@@ -54,42 +54,42 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 
   // if(res != nullptr)
   {// Query the DB
-   //	if(res)
-   // 	{
-   // 		// Already logged in
-   // 		SendLoginReply( 4 );
-   // 	}
-   //
-   // 	{
-   // 		// Servers are under inspection
-   // 		SendLoginReply( 1 );
-   // 	}
+    //	if(res)
+    // 	{
+    // 		// Already logged in
+    // 		SendLoginReply( 4 );
+    // 	}
+    //
+    // 	{
+    // 		// Servers are under inspection
+    // 		SendLoginReply( 1 );
+    // 	}
 
-   {// Okay to login!!
-    SendLoginReply(0);
-}
+    {  // Okay to login!!
+      SendLoginReply(0);
+    }
 
-// 	{
-// 		// Banned
-// 		SendLoginReply( 5 );
-// 	}
-//
-// 	{
-// 		// Incorrect Password
-// 		SendLoginReply( 3 );
-// 	}
-//
-// 	{
-// 		// Server Full
-// 		SendLoginReply( 8 );
-//	}
-}
-// else
-{
-  // The user doesn't exist or server is down.
-  //	SendLoginReply( 1 );
-}
-return true;
+    // 	{
+    // 		// Banned
+    // 		SendLoginReply( 5 );
+    // 	}
+    //
+    // 	{
+    // 		// Incorrect Password
+    // 		SendLoginReply( 3 );
+    // 	}
+    //
+    // 	{
+    // 		// Server Full
+    // 		SendLoginReply( 8 );
+    //	}
+  }
+  // else
+  {
+    // The user doesn't exist or server is down.
+    //	SendLoginReply( 1 );
+  }
+  return true;
 }
 
 bool CLoginClient::ChannelList(CRosePacket* P) {

@@ -32,8 +32,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Test that were meant to fail should not affect the test program outcome.
-  if (unexpectedly_failed_tests == 0)
-    ret_val = 0;
+  if (unexpectedly_failed_tests == 0) ret_val = 0;
 
   // Core::NetworkThreadPool::DeleteInstance();
 

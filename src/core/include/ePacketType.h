@@ -132,8 +132,8 @@ PACK(struct pakChannelInfo {
   uint16_t
       pad;  // This was used to tell the client the AGE of the server. 2 bytes.
   uint16_t Status;  // This is actually the fill percentage of the server.
-  // uint32_t Right;
-  // Channel Name as string
+                    // uint32_t Right;
+                    // Channel Name as string
 });
 
 PACK(struct pakChannel_List

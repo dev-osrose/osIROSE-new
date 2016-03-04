@@ -59,14 +59,14 @@ TEST(TestAsioNetworking, TestReconnect) {
 TEST(TestAsioNetworking, TestConnectHostName) {
   //	CLogConsole log("TestAsioNetworking");
   //	log.icprintf("Construct\n");
-//  Core::CNetwork_Asio network;
+  //  Core::CNetwork_Asio network;
   //	log.icprintf("Init\n");
-//  EXPECT_NO_FATAL_FAILURE(network.Init(
-//      "google.com",
-//      80));  // We are going to connect to google's website using hostname.
-//  EXPECT_NO_FATAL_FAILURE(network.Connect());
-//  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+  //  EXPECT_NO_FATAL_FAILURE(network.Init(
+  //      "google.com",
+  //      80));  // We are going to connect to google's website using hostname.
+  //  EXPECT_NO_FATAL_FAILURE(network.Connect());
+  //  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  //  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }
 
 TEST(TestAsioNetworking, TestListen) {
@@ -82,22 +82,22 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
   Core::CLogConsole log("TestListenAndConnect");
 
   Core::CNetwork_Asio netConnect, network;
-  
-  EXPECT_EQ( true, network.Init(
+
+  EXPECT_EQ(true, network.Init(
                       "127.0.0.1",
                       23456));  // We are going to connect to google's website
-  
-  EXPECT_NO_FATAL_FAILURE( network.Listen() );
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-  EXPECT_EQ( true, netConnect.Init( "127.0.0.1", 23456 ) );
-  EXPECT_NO_FATAL_FAILURE( netConnect.Connect() );
+  EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-  CRosePacket* pak =
-      new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, sizeof(pakChannelList_Req));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 23456));
+  EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
+
+  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ,
+                                     sizeof(pakChannelList_Req));
   pak->pChannelListReq.lServerID = 0x77;
-  netConnect.Send( std::unique_ptr<uint8_t>( (uint8_t*)&pak->Buffer ));
-  EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect() );
-  EXPECT_NO_FATAL_FAILURE( netConnect.Shutdown() );
+  netConnect.Send(std::unique_ptr<uint8_t>((uint8_t*)&pak->Buffer));
+  EXPECT_NO_FATAL_FAILURE(netConnect.Disconnect());
+  EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }

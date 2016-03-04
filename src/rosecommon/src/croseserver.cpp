@@ -12,32 +12,30 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
   //  process_thread_ = std::thread([this]() { Run(); });
 
   process_thread_ = std::thread([this]() {
-    do
-    {
-    if (IsISCServer() == false) {
-      std::lock_guard<std::mutex> lock(client_list_mutex_);
-      for (auto& client : client_list_) {
-        if(client->IsActive() == false) {
-          client->Shutdown();
-          delete client;
-          client_list_.remove(client);
-          break;
+    do {
+      if (IsISCServer() == false) {
+        std::lock_guard<std::mutex> lock(client_list_mutex_);
+        for (auto& client : client_list_) {
+          if (client->IsActive() == false) {
+            client->Shutdown();
+            delete client;
+            client_list_.remove(client);
+            break;
+          }
+        }
+      } else {
+        std::lock_guard<std::mutex> lock(isc_list_mutex_);
+        for (auto& client : isc_list_) {
+          if (client->IsActive() == false) {
+            client->Shutdown();
+            delete client;
+            isc_list_.remove(client);
+            break;
+          }
         }
       }
-    } else {
-      std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      for (auto& client : isc_list_) {
-        if(client->IsActive() == false) {
-          client->Shutdown();
-          delete client;
-          isc_list_.remove(client);
-          break;
-        }
-      }
-    }
-    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
-    }
-    while(active_ == true);
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    } while (active_ == true);
 
     return 0;
   });
@@ -87,15 +85,18 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CRoseClient* nClient = new CRoseClient(std::move(_sock));
-      //std::distance(std::begin(client_list_), std::end(client_list_));
-      nClient->SetId(std::distance(std::begin(client_list_), std::end(client_list_)));
-      log_.icprintf("[%d] Client connected from: %s\n", nClient->GetId(), _address.c_str());
+      // std::distance(std::begin(client_list_), std::end(client_list_));
+      nClient->SetId(
+          std::distance(std::begin(client_list_), std::end(client_list_)));
+      log_.icprintf("[%d] Client connected from: %s\n", nClient->GetId(),
+                    _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(std::move(_sock));
       nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-      log_.icprintf("[%d] Server connected from: %s\n", nClient->GetId(), _address.c_str());
+      log_.icprintf("[%d] Server connected from: %s\n", nClient->GetId(),
+                    _address.c_str());
       isc_list_.push_front(nClient);
     }
 

@@ -19,8 +19,8 @@ CRoseClient::CRoseClient(tcp::socket _sock) : CNetwork_Asio(), crypt_() {
 CRoseClient::~CRoseClient() { Shutdown(); }
 
 bool CRoseClient::Send(CRosePacket* _buffer) {
-//  std::unique_ptr<uint8_t*> buf( ((uint8_t*)_buffer) );
-  return CNetwork_Asio::Send(std::unique_ptr<uint8_t>( (uint8_t*)_buffer));
+  //  std::unique_ptr<uint8_t*> buf( ((uint8_t*)_buffer) );
+  return CNetwork_Asio::Send(std::unique_ptr<uint8_t>((uint8_t*)_buffer));
 }
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t> _buffer) {
@@ -56,7 +56,7 @@ bool CRoseClient::OnReceived() {
     if (packet_size_ > 6) return true;
   }
 
-  // decrypt packet now
+// decrypt packet now
 #ifndef STRESS_TEST
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
@@ -90,7 +90,8 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_ALIVE: {
 //      log_.icprintf("Got keep alive packet\n");
 #ifdef STRESS_TEST
-      CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader));
+      CRosePacket* pak =
+          new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader));
       Send(pak);
 #endif
       break;

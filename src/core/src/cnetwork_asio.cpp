@@ -117,26 +117,25 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
   discard_mutex_.unlock();
 
   if (OnSend(raw_ptr))
-    asio::async_write(
-        socket_, asio::buffer(raw_ptr, _size),
-        [this](const asio::error_code& error, std::size_t bytes_transferred) {
-          (void)bytes_transferred;
-          if (!error) {
-            OnSent();
-          }
-          discard_mutex_.lock();
-          {
-            std::unique_ptr<uint8_t> _buffer =
-                std::move(discard_queue_.front());
-            discard_queue_.pop();
-            _buffer.reset(nullptr);
-          }
-          discard_mutex_.unlock();
+    asio::async_write(socket_, asio::buffer(raw_ptr, _size),
+                      [this](const asio::error_code& error,
+                             std::size_t bytes_transferred) {
+      (void)bytes_transferred;
+      if (!error) {
+        OnSent();
+      }
+      discard_mutex_.lock();
+      {
+        std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
+        discard_queue_.pop();
+        _buffer.reset(nullptr);
+      }
+      discard_mutex_.unlock();
 
-        });
+    });
   else
-    log_.eicprintf(CL_RESET "[%d] Not sending packet: Header[%i, 0x%X]\n", GetId(), _size,
-                   _command);
+    log_.eicprintf(CL_RESET "[%d] Not sending packet: Header[%i, 0x%X]\n",
+                   GetId(), _size, _command);
   return true;
 }
 
@@ -147,37 +146,40 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
 
     std::error_code errorCode;
     int16_t BytesToRead = packet_size_ - packet_offset_;
-    asio::async_read(
-        socket_, asio::buffer(&buffer_[packet_offset_], BytesToRead),
-        asio::transfer_exactly(
-            BytesToRead),  // We want at least 6 bytes of data
-        [this](std::error_code errorCode, std::size_t length) {
-          packet_offset_ += length;
-          if (!errorCode || errorCode.value() == 11) {
-            if (OnReceived() == false) {
-              log_.eicprintf(CL_RESET
-                             "[%d] Something bad happened in OnReceived... Shutting "
-                             "down...\n" CL_RESET, GetId());
-              Shutdown();
-            }
-          } else {
-            if (errorCode.value() == 2) {
-              log_.icprintf(CL_RESET CL_WHITE "[%d] Client disconnected.\n", GetId());
-              OnDisconnected();
-              Shutdown();
-            } else {
-              log_.eicprintf(
-                  CL_RESET CL_WHITE
-                  "[%d] Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET,
-                  GetId(), errorCode.value(), errorCode.message().c_str());
+    asio::async_read(socket_,
+                     asio::buffer(&buffer_[packet_offset_], BytesToRead),
+                     asio::transfer_exactly(
+                         BytesToRead),  // We want at least 6 bytes of data
+                     [this](std::error_code errorCode, std::size_t length) {
+      packet_offset_ += length;
+      if (!errorCode || errorCode.value() == 11) {
+        if (OnReceived() == false) {
+          log_.eicprintf(
+              CL_RESET
+              "[%d] Something bad happened in OnReceived... Shutting "
+              "down...\n" CL_RESET,
+              GetId());
+          Shutdown();
+        }
+      } else {
+        if (errorCode.value() == 2) {
+          log_.icprintf(CL_RESET CL_WHITE "[%d] Client disconnected.\n",
+                        GetId());
+          OnDisconnected();
+          Shutdown();
+        } else {
+          log_.eicprintf(
+              CL_RESET CL_WHITE
+              "[%d] Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET,
+              GetId(), errorCode.value(), errorCode.message().c_str());
 
-              Shutdown();
-              return;
-            }
-          }
-          recv_condition_.notify_all();
-          if (active_) Recv();
-        });
+          Shutdown();
+          return;
+        }
+      }
+      recv_condition_.notify_all();
+      if (active_) Recv();
+    });
   }
   return true;
 }

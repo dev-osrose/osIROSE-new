@@ -63,41 +63,41 @@ class RoseRandomNumber {
 
 // PACK(
 struct HeadCryptedServer {
-  uint32_t AddBufferLen2 : 3;  // S2
-  uint32_t AddTableValue1 : 3;  // R1
-  uint32_t Command3 : 3;  // T3
-  uint32_t EncryptValue1 : 3;  // R7
-  uint32_t AddBufferLen3 : 3;  // S3
-  uint32_t AddTableValue3 : 3;  // R3
-  uint32_t Command2 : 3;  // T2
-  uint32_t AddTableValue4 : 2;  // R4
-  uint32_t Command1 : 3;  // T1
+  uint32_t AddBufferLen2 : 3;     // S2
+  uint32_t AddTableValue1 : 3;    // R1
+  uint32_t Command3 : 3;          // T3
+  uint32_t EncryptValue1 : 3;     // R7
+  uint32_t AddBufferLen3 : 3;     // S3
+  uint32_t AddTableValue3 : 3;    // R3
+  uint32_t Command2 : 3;          // T2
+  uint32_t AddTableValue4 : 2;    // R4
+  uint32_t Command1 : 3;          // T1
   uint32_t EncryptAddValue1 : 2;  // R5
-  uint32_t AddBufferLen4 : 2;  // S4
+  uint32_t AddBufferLen4 : 2;     // S4
   uint32_t EncryptAddValue2 : 2;  // R6
-  uint8_t AddBufferLen1 : 3;  // S1
-  uint8_t AddTableValue2 : 3;  // R2
-  uint8_t Command4 : 2;  // T4
-};  // );
+  uint8_t AddBufferLen1 : 3;      // S1
+  uint8_t AddTableValue2 : 3;     // R2
+  uint8_t Command4 : 2;           // T4
+};                                // );
 
 // PACK(
 struct HeadCryptedClient {
-  uint32_t Command2 : 3;  // T2
-  uint32_t AddTableValue2 : 3;  // R2
-  uint32_t AddBufferLen1 : 3;  // S1
-  uint32_t AddTableValue3 : 3;  // R3
-  uint32_t Command1 : 3;  // T1
-  uint32_t EncryptValue1 : 3;  // R7
-  uint32_t AddBufferLen2 : 3;  // S2
+  uint32_t Command2 : 3;          // T2
+  uint32_t AddTableValue2 : 3;    // R2
+  uint32_t AddBufferLen1 : 3;     // S1
+  uint32_t AddTableValue3 : 3;    // R3
+  uint32_t Command1 : 3;          // T1
+  uint32_t EncryptValue1 : 3;     // R7
+  uint32_t AddBufferLen2 : 3;     // S2
   uint32_t EncryptAddValue2 : 2;  // R6
-  uint32_t AddBufferLen3 : 3;  // S3
-  uint32_t AddTableValue4 : 2;  // R4
-  uint32_t Command4 : 2;  // T4
+  uint32_t AddBufferLen3 : 3;     // S3
+  uint32_t AddTableValue4 : 2;    // R4
+  uint32_t Command4 : 2;          // T4
   uint32_t EncryptAddValue1 : 2;  // R5
-  uint8_t Command3 : 3;  // T3
-  uint8_t AddTableValue1 : 3;  // R1
-  uint8_t AddBufferLen4 : 2;  // S4
-};  // );
+  uint8_t Command3 : 3;           // T3
+  uint8_t AddTableValue1 : 3;     // R1
+  uint8_t AddBufferLen4 : 2;      // S4
+};                                // );
 
 // PACK(
 struct HeadDecrypted {
