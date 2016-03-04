@@ -3,14 +3,13 @@
 
 #include "croseserver.h"
 
-class CCharServer : public CRoseServer
-{
-public:
-        CCharServer( bool _isc = false );
-        virtual ~CCharServer();
+class CCharServer : public CRoseServer {
+ public:
+  CCharServer(bool _isc = false);
+  virtual ~CCharServer();
 
-protected:
-        virtual void OnAccepted( tcp::socket _sock );
+ protected:
+  virtual void OnAccepted(tcp::socket _sock);
 };
 
 #endif

@@ -5,20 +5,19 @@
 #include "configfile.pb.h"
 #include "pbjson.hpp"
 
-class	Config : public configFile::Configuration
-{
-	public:
-		static Config	&getInstance(std::string filename = "server.ini");
+class Config : public configFile::Configuration {
+ public:
+  static Config &getInstance(std::string filename = "server.ini");
 
-		static std::string	prettify(std::string);
+  static std::string prettify(std::string);
 
-	private:
-		Config(std::string filename);
-		Config(const Config&) = delete;
-		Config	&operator=(const Config&) = delete;
-		~Config();
+ private:
+  Config(std::string filename);
+  Config(const Config &) = delete;
+  Config &operator=(const Config &) = delete;
+  ~Config();
 
-		std::string	file;
+  std::string file;
 };
 
 #endif /* !_CONFIG_H_ */

@@ -17,7 +17,9 @@ class CLoginISC : public CRoseISC {
   uint16_t GetPort() { return network_port_; }
   uint8_t GetServerType() { return network_type_; }
   bool IsTestServer() { return test_server_; }
-  std::forward_list<tChannelInfo> GetChannelList() const { return channel_list_; }
+  std::forward_list<tChannelInfo> GetChannelList() const {
+    return channel_list_;
+  }
 
  protected:
   bool HandlePacket(uint8_t* _buffer);

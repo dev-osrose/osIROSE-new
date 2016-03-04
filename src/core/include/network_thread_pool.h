@@ -12,27 +12,29 @@ class NetworkThreadPool {
 
  public:
   static NetworkThreadPool& GetInstance() {
-    if(instance_ == nullptr)
-      instance_ = new NetworkThreadPool();
+    if (instance_ == nullptr) instance_ = new NetworkThreadPool();
     return *instance_;
   }
 
   static void DeleteInstance() {
-    if(instance_ != nullptr)
-      delete instance_;
+    if (instance_ != nullptr) delete instance_;
   }
 
   asio::io_service* Get_IO_Service() { return &io_service_; }
-  uint32_t Get_CPU_Count() { return std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : 1; }
+  uint32_t Get_CPU_Count() {
+    return std::thread::hardware_concurrency()
+               ? std::thread::hardware_concurrency()
+               : 1;
+  }
   void Shutdown() {
     io_work_.reset();
 
     uint32_t core_count = Get_CPU_Count();
     core_count *= 2;
 
-    if(core_count > 512)
+    if (core_count > 512)
       core_count = 512;
-    else if(core_count == 0)
+    else if (core_count == 0)
       core_count = 1;
 
     for (uint32_t idx = 0; idx < core_count; ++idx) {
@@ -49,9 +51,9 @@ class NetworkThreadPool {
 
     core_count *= 2;
 
-    if(core_count > 512)
+    if (core_count > 512)
       core_count = 512;
-    else if(core_count == 0)
+    else if (core_count == 0)
       core_count = 1;
 
     printf("Using %i threads\n", core_count);
@@ -68,6 +70,5 @@ class NetworkThreadPool {
   static NetworkThreadPool* instance_;
 };
 }
-
 
 #endif  // thread_pool_h__
