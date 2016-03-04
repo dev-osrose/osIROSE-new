@@ -25,7 +25,7 @@ CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
 
 bool CMySQL_Result::incrementRow() {
 	uint32_t	tmp = current_row_;
-	current_row_ = current_row_ >= res_.size() ? res_.size() - 1 : current_row_ + 1;
+	current_row_ = current_row_ >= rows_.size() ? rows_.size() - 1 : current_row_ + 1;
 	return tmp == res_.size();
 }
 

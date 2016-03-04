@@ -35,7 +35,7 @@ class CMySQL_Result : public IResult {
   virtual ~CMySQL_Result() {}
 
   virtual bool 		incrementRow();
-  virtual uint32_t	size() const {return res_.size();}
+  virtual uint32_t	size() const {return rows_.size();}
 
   virtual bool getString(std::string const &columnName, std::string &data);
   virtual bool getInt(std::string const &columnName, uint32_t &data);
