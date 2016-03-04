@@ -20,7 +20,7 @@ bool CMySQL_Row::getFloat(std::string const &name, float &data) {
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
     : IResult() {
 	for (auto const &it : _res)
-		rows_.push_back(istd::unique_ptr<IRow>(new CMySQL_Row(it)));
+		rows_.emplace_back(std::unique_ptr<IRow>(new CMySQL_Row(it)));
 }
 
 bool CMySQL_Result::incrementRow() {
