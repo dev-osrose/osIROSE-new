@@ -102,7 +102,7 @@ std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  log_.icprintf(CL_RESET "Executing query: %s\n", _query.c_str());
+  log_.oicprintf(CL_RESET "Executing query: %s\n", _query.c_str());
   mysqlpp::Query query = conn_.query(_query.c_str());
   return std::unique_ptr<IResult>(new CMySQL_Result(query.store()));
 }
@@ -117,7 +117,7 @@ void CMySQL_Database::QExecute(std::string _query) {
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  log_.icprintf(CL_RESET "Executing query: %s\n", _query.c_str());
+  log_.oicprintf(CL_RESET "Executing query: %s\n", _query.c_str());
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }
