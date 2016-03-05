@@ -128,3 +128,32 @@ TEST(TestMySQL_Database, TestThreaded)
 	first.join();
 	second.join();
 }
+
+TEST(TestMySQL_Database, TestIRowAndIterator)
+{
+	const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+	std::string host = dbb.host();
+	std::string _database = dbb.database();
+	std::string user = dbb.user();
+	std::string pass = dbb.password();
+
+	Core::CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
+	database.QExecute("DROP TABLE IF EXISTS test_table;");
+	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
+	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
+	database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, NULL, NULL);");
+
+	std::unique_ptr<Core::IResult> res = database.QStore("select * from test_table;");
+	EXPECT_NO_FATAL_FAILURE([&res] () {
+			std::string a;
+			for (auto &it : *res) {
+				std::string tmp;
+				uint32_t t;
+				it->getInt("id", t);
+				a += std::to_string(t);
+				if (it->getString("str", tmp))
+					a += tmp;
+			}
+			EXPECT_EQ(a, "0plop1");
+		}());
+}

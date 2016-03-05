@@ -8,7 +8,7 @@ namespace Core {
 template<typename T>
 class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 	public:
-		RIterator(T* ptr = nullptr) {ptr_ = ptr;}
+		RIterator(T* ptr = nullptr) : ptr_(ptr) {}
 		RIterator(const RIterator<T>& it) = default;
 		~RIterator() {}
 
@@ -17,8 +17,8 @@ class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 
 		operator	bool() const {return ptr_ != nullptr;}
 
-		bool		operator==(const RIterator<T>& it) const {return ptr_ == it.getConstPtr();}
-		bool		operator!=(const RIterator<T>& it) const {return ptr_ != it.getConstPtr();}
+		bool			operator==(const RIterator<T>& it) const {return ptr_ == it.getConstPtr();}
+		bool			operator!=(const RIterator<T>& it) const {return ptr_ != it.getConstPtr();}
 		RIterator<T>&	operator+=(const std::ptrdiff_t& movement) {ptr_ += movement; return *this;}
 		RIterator<T>&	operator-=(const std::ptrdiff_t& movement) {ptr_ -= movement; return *this;}
 		RIterator<T>&	operator++() {++ptr_; return *this;}
@@ -30,11 +30,11 @@ class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 
 		std::ptrdiff_t	operator-(const RIterator<T>& it) {return std::distance(it.getPtr(), this->getPtr());}
 
-		T&		operator*() {return *ptr_;}
+		T&			operator*() {return *ptr_;}
 		const T&	operator*() const {return *ptr_;}
-		T*		operator->() {return ptr_;}
+		T*			operator->() {return ptr_;}
 
-		T*		getPtr() const {return ptr_;}
+		T*			getPtr() const {return ptr_;}
 		const T*	getConstPtr() const {return ptr_;}
 
 	protected:
