@@ -31,6 +31,13 @@ OPTION(BUILD_PROTOBUF
   "Build Protobuf (Leave this off)" OFF)
 OPTION(BUILD_API_DOC
   "Build doxygen documentation" OFF)
+  
+IF (BUILD_API_DOC)
+  FIND_PACKAGE(Doxygen)
+  IF (DOXYGEN_FOUND)
+    ADD_SUBDIRECTORY(doc)
+  ENDIF (DOXYGEN_FOUND)
+ENDIF (BUILD_API_DOC)
 
 find_package(MySQL REQUIRED)
 
@@ -45,17 +52,8 @@ endforeach(flag_var)
 IF(ENABLE_TESTING)
 	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-		#Build GoogleTest
-#		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
+		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
-		#Build Protobuf
-#		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
-#		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
-#		SET(PROTOBUF_BINARY_DIR ${protobuf_BINARY_DIR})
-#		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
-#		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-#		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
-#		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 	ELSE()
 		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
@@ -75,15 +73,15 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#------------
 	#WINDOWS ONLY SETTINGS!!!!
 	#------------
-	#Build Protobuf
+	#Build mysql++
 	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/3rdParty CACHE STRING "")
 	SET(MYSQL_LIBRARIES libmysql.lib CACHE STRING "")
 	SET(MYSQLpp_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/mysqlpp)
 	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/protobuf/src CACHE STRING "")
-    SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
-    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-    SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
+  SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
+  SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+  SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
 	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 ELSE()
 	#UNIX ONLY SETTINGS
@@ -105,9 +103,3 @@ IF(BUILD_TOOLS)
 	ADD_SUBDIRECTORY(tools)
 ENDIF()
 
-IF (BUILD_API_DOC)
-  FIND_PACKAGE(Doxygen)
-  IF (DOXYGEN_FOUND)
-    ADD_SUBDIRECTORY(doc)
-  ENDIF (DOXYGEN_FOUND)
-ENDIF (BUILD_API_DOC)
