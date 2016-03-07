@@ -2,12 +2,10 @@
 
 #include <mutex>
 #include "logconsole.h"
+#include <stdint.h>
 namespace Core {
 #define SBUF_SIZE \
   2048  // never put less that what's required for the debug message
-
-#define uint8 unsigned char
-#define uint32 unsigned long
 
 #define NEWBUF(buf)               \
   struct {                        \
@@ -168,7 +166,7 @@ Escape sequences for Select Character Set
 #define is_console(handle) (FILE_TYPE_CHAR == GetFileType(handle))
 
 ///////////////////////////////////////////////////////////////////////////////
-int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
+static int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
   /////////////////////////////////////////////////////////////////
   /* XXX Two streams are being used. Disabled to avoid inconsistency [flaviojs]
   static COORD saveposition = {0,0};
@@ -201,7 +199,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
     } else {      // from here, we will skip the '\033['
       // we break at the first unprocessible position
       // assuming regular text is starting there
-      uint8 numbers[16], numpoint = 0;
+      uint8_t numbers[16], numpoint = 0;
       CONSOLE_SCREEN_BUFFER_INFO info;
 
       // initialize
@@ -231,7 +229,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
           // and next number
           continue;
         } else if (*q == 'm') {  // \033[#;...;#m - Set Graphics Rendition (SGR)
-          uint8 i;
+          uint8_t i;
           for (i = 0; i <= numpoint; ++i) {
             if (0x00 == (0xF0 & numbers[i])) {  // upper nibble 0
               if (0 == numbers[i]) {            // reset
@@ -264,7 +262,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
                                     BACKGROUND_GREEN | BACKGROUND_BLUE;
               }
             } else if (0x30 == (0xF0 & numbers[i])) {  // foreground
-              uint8 num = numbers[i] & 0x0F;
+              uint8_t num = numbers[i] & 0x0F;
               if (num == 9) info.wAttributes |= FOREGROUND_INTENSITY;
               if (num > 7) num = 7;  // set white for 37, 38 and 39
               info.wAttributes &=
@@ -276,7 +274,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
               if ((num & 0x04) > 0)  // third bit set = blue
                 info.wAttributes |= FOREGROUND_BLUE;
             } else if (0x40 == (0xF0 & numbers[i])) {  // background
-              uint8 num = numbers[i] & 0x0F;
+              uint8_t num = numbers[i] & 0x0F;
               if (num == 9) info.wAttributes |= BACKGROUND_INTENSITY;
               if (num > 7) num = 7;  // set white for 47, 48 and 49
               info.wAttributes &=
@@ -298,10 +296,10 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
           //    position is unchanged.
           //    \033[2J - Clears the screen and moves the cursor to the home
           //    position (line 1, column 1).
-          uint8 num =
+          uint8_t num =
               (numbers[numpoint] >> 4) * 10 + (numbers[numpoint] & 0x0F);
           int cnt;
-          uint32 tmp;
+          uint32_t tmp;
           COORD origin = {0, 0};
           if (num == 1) {  // chars from start up to and including cursor
             cnt = info.dwSize.X * info.dwCursorPosition.Y +
@@ -326,11 +324,11 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
           //    position.
           //    \033[2K - Clears all characters of the whole line.
 
-          uint8 num =
+          uint8_t num =
               (numbers[numpoint] >> 4) * 10 + (numbers[numpoint] & 0x0F);
           COORD origin = {0, info.dwCursorPosition.Y};
           SHORT cnt;
-          uint32 tmp;
+          uint32_t tmp;
           if (num == 1) {
             cnt = info.dwCursorPosition.X + 1;
           } else if (num == 2) {
@@ -469,7 +467,7 @@ int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
   return 0;
 }
 
-int FPRINTF(HANDLE handle, const char* fmt, ...) {
+static int FPRINTF(HANDLE handle, const char* fmt, ...) {
   int ret;
   va_list argptr;
   va_start(argptr, fmt);
@@ -630,7 +628,7 @@ int	FPRINTF(FILE *file, const char *fmt, ...)
 
 #endif  // not _WIN32
 
-int clprintf(const char* fmt, ...) {
+static int clprintf(const char* fmt, ...) {
   int ret;
   va_list argptr;
   va_start(argptr, fmt);
@@ -643,7 +641,7 @@ int clprintf(const char* fmt, ...) {
   return ret;
 }
 
-int clvprintf(const char* fmt, va_list argptr) {
+static int clvprintf(const char* fmt, va_list argptr) {
   int ret;
 #ifdef _WIN32
   ret = VFPRINTF(STDOUT, fmt, argptr);
