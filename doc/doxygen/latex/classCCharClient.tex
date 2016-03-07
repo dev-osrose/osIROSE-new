@@ -1,0 +1,144 @@
+\hypertarget{classCCharClient}{}\section{C\+Char\+Client Class Reference}
+\label{classCCharClient}\index{C\+Char\+Client@{C\+Char\+Client}}
+
+
+{\ttfamily \#include $<$char/include/ccharclient.\+h$>$}
+
+
+
+Inheritance diagram for C\+Char\+Client\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{classCCharClient__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for C\+Char\+Client\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCCharClient__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCCharClient_a142815393ef1539fdee80cc425a0ed2f}{C\+Char\+Client} ()
+\item 
+\hyperlink{classCCharClient_a945d2d2ad1afc5492ec4481825d8dd86}{C\+Char\+Client} (tcp\+::socket \+\_\+sock)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classCCharClient_ae9d8df0ca2e016d3ed58353ce06b4edf}{Handle\+Packet} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} $\ast$\+\_\+buffer)
+\item 
+virtual bool \hyperlink{classCCharClient_acd27b8c60adcbc4212753e439c494dab}{On\+Received} ()
+\item 
+bool \hyperlink{classCCharClient_a722f185fee844b1965bc97e434be35e1}{Join\+Server\+Reply} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCCharClient_a04e443f08d4f488a6e8972a6b2ca4a96}{Send\+Char\+List\+Reply} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCCharClient_a12a650e77e5beff3b906b53efe9495fa}{Send\+Char\+Create\+Reply} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCCharClient_ac0c5180f8b3ad8abf9c8f738c9a6cf82}{Send\+Char\+Delete\+Reply} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCCharClient_a60b7f6e48b1f68ad2de8db649da401ef}{Send\+Char\+Select\+Reply} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{stdint_8h_a273cf69d639a59973b6019625df33e30}{uint16\+\_\+t} \hyperlink{classCCharClient_a7ba9ed7830f1222806e482f4fefee34b}{access\+\_\+rights\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Char\+Client@{C\+Char\+Client}!C\+Char\+Client@{C\+Char\+Client}}
+\index{C\+Char\+Client@{C\+Char\+Client}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{C\+Char\+Client()}{CCharClient()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Char\+Client\+::\+C\+Char\+Client (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCCharClient_a142815393ef1539fdee80cc425a0ed2f}{}\label{classCCharClient_a142815393ef1539fdee80cc425a0ed2f}
+\index{C\+Char\+Client@{C\+Char\+Client}!C\+Char\+Client@{C\+Char\+Client}}
+\index{C\+Char\+Client@{C\+Char\+Client}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{C\+Char\+Client(tcp\+::socket \+\_\+sock)}{CCharClient(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Char\+Client\+::\+C\+Char\+Client (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)}\hypertarget{classCCharClient_a945d2d2ad1afc5492ec4481825d8dd86}{}\label{classCCharClient_a945d2d2ad1afc5492ec4481825d8dd86}
+
+
+\subsection{Member Function Documentation}
+\index{C\+Char\+Client@{C\+Char\+Client}!Handle\+Packet@{Handle\+Packet}}
+\index{Handle\+Packet@{Handle\+Packet}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Handle\+Packet(uint8\+\_\+t $\ast$\+\_\+buffer)}{HandlePacket(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Handle\+Packet (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t} $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCCharClient_ae9d8df0ca2e016d3ed58353ce06b4edf}{}\label{classCCharClient_ae9d8df0ca2e016d3ed58353ce06b4edf}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac138e3beed05b7a647508f4704b75aa5}{C\+Rose\+Client}.
+
+\index{C\+Char\+Client@{C\+Char\+Client}!Join\+Server\+Reply@{Join\+Server\+Reply}}
+\index{Join\+Server\+Reply@{Join\+Server\+Reply}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Join\+Server\+Reply(\+C\+Rose\+Packet $\ast$\+P)}{JoinServerReply(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Join\+Server\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_a722f185fee844b1965bc97e434be35e1}{}\label{classCCharClient_a722f185fee844b1965bc97e434be35e1}
+\index{C\+Char\+Client@{C\+Char\+Client}!On\+Received@{On\+Received}}
+\index{On\+Received@{On\+Received}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{On\+Received()}{OnReceived()}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+On\+Received (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCCharClient_acd27b8c60adcbc4212753e439c494dab}{}\label{classCCharClient_acd27b8c60adcbc4212753e439c494dab}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac2e1b4badf1f40ca96fb43f3d4c233fc}{C\+Rose\+Client}.
+
+\index{C\+Char\+Client@{C\+Char\+Client}!Send\+Char\+Create\+Reply@{Send\+Char\+Create\+Reply}}
+\index{Send\+Char\+Create\+Reply@{Send\+Char\+Create\+Reply}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Send\+Char\+Create\+Reply(\+C\+Rose\+Packet $\ast$\+P)}{SendCharCreateReply(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Send\+Char\+Create\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_a12a650e77e5beff3b906b53efe9495fa}{}\label{classCCharClient_a12a650e77e5beff3b906b53efe9495fa}
+\index{C\+Char\+Client@{C\+Char\+Client}!Send\+Char\+Delete\+Reply@{Send\+Char\+Delete\+Reply}}
+\index{Send\+Char\+Delete\+Reply@{Send\+Char\+Delete\+Reply}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Send\+Char\+Delete\+Reply(\+C\+Rose\+Packet $\ast$\+P)}{SendCharDeleteReply(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Send\+Char\+Delete\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_ac0c5180f8b3ad8abf9c8f738c9a6cf82}{}\label{classCCharClient_ac0c5180f8b3ad8abf9c8f738c9a6cf82}
+\index{C\+Char\+Client@{C\+Char\+Client}!Send\+Char\+List\+Reply@{Send\+Char\+List\+Reply}}
+\index{Send\+Char\+List\+Reply@{Send\+Char\+List\+Reply}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Send\+Char\+List\+Reply(\+C\+Rose\+Packet $\ast$\+P)}{SendCharListReply(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Send\+Char\+List\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_a04e443f08d4f488a6e8972a6b2ca4a96}{}\label{classCCharClient_a04e443f08d4f488a6e8972a6b2ca4a96}
+\index{C\+Char\+Client@{C\+Char\+Client}!Send\+Char\+Select\+Reply@{Send\+Char\+Select\+Reply}}
+\index{Send\+Char\+Select\+Reply@{Send\+Char\+Select\+Reply}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{Send\+Char\+Select\+Reply(\+C\+Rose\+Packet $\ast$\+P)}{SendCharSelectReply(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+Client\+::\+Send\+Char\+Select\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_a60b7f6e48b1f68ad2de8db649da401ef}{}\label{classCCharClient_a60b7f6e48b1f68ad2de8db649da401ef}
+
+
+\subsection{Member Data Documentation}
+\index{C\+Char\+Client@{C\+Char\+Client}!access\+\_\+rights\+\_\+@{access\+\_\+rights\+\_\+}}
+\index{access\+\_\+rights\+\_\+@{access\+\_\+rights\+\_\+}!C\+Char\+Client@{C\+Char\+Client}}
+\subsubsection[{\texorpdfstring{access\+\_\+rights\+\_\+}{access_rights_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} C\+Char\+Client\+::access\+\_\+rights\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharClient_a7ba9ed7830f1222806e482f4fefee34b}{}\label{classCCharClient_a7ba9ed7830f1222806e482f4fefee34b}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+char/include/\hyperlink{ccharclient_8h}{ccharclient.\+h}\item 
+char/src/\hyperlink{ccharclient_8cpp}{ccharclient.\+cpp}\end{DoxyCompactItemize}

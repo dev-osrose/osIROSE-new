@@ -1,0 +1,171 @@
+\hypertarget{classCRoseISC}{}\section{C\+Rose\+I\+SC Class Reference}
+\label{classCRoseISC}\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+
+
+{\ttfamily \#include $<$rosecommon/include/croseisc.\+h$>$}
+
+
+
+Inheritance diagram for C\+Rose\+I\+SC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{classCRoseISC__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for C\+Rose\+I\+SC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCRoseISC__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCRoseISC_abe9e787025541c0ca996ff9ce8d0e8dd}{C\+Rose\+I\+SC} ()
+\item 
+\hyperlink{classCRoseISC_a60f233074af16d42996db4576c8ba52b}{C\+Rose\+I\+SC} (tcp\+::socket \+\_\+sock)
+\item 
+virtual \hyperlink{classCRoseISC_aeb35b944ca0881209c8eef2af81f3cc5}{$\sim$\+C\+Rose\+I\+SC} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classCRoseISC_a81103ca6aff03e08c5dc15faa666b6ef}{On\+Connected} ()
+\item 
+virtual bool \hyperlink{classCRoseISC_a0aedc4da227fda95634988d71bf61033}{On\+Disconnect} ()
+\item 
+virtual void \hyperlink{classCRoseISC_a1fd6d96a47de1042670a20957a8916d8}{On\+Disconnected} ()
+\item 
+virtual bool \hyperlink{classCRoseISC_a556a6577a72ee036955df48fb89395cd}{On\+Received} ()
+\item 
+virtual bool \hyperlink{classCRoseISC_a95d93a42933566edfa0c29f33aa19c97}{On\+Send} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} $\ast$\+\_\+buffer)
+\item 
+virtual void \hyperlink{classCRoseISC_adfbcc83f4dcf0f7bbe2c6f8b3980f5f1}{On\+Sent} ()
+\item 
+virtual bool \hyperlink{classCRoseISC_ab56709ba16b2cf652f461c7cd9e8dd3d}{Handle\+Packet} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} $\ast$\+\_\+buffer)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{C\+Rose\+I\+S\+C()}{CRoseISC()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Rose\+I\+S\+C\+::\+C\+Rose\+I\+SC (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCRoseISC_abe9e787025541c0ca996ff9ce8d0e8dd}{}\label{classCRoseISC_abe9e787025541c0ca996ff9ce8d0e8dd}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{C\+Rose\+I\+S\+C(tcp\+::socket \+\_\+sock)}{CRoseISC(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Rose\+I\+S\+C\+::\+C\+Rose\+I\+SC (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)}\hypertarget{classCRoseISC_a60f233074af16d42996db4576c8ba52b}{}\label{classCRoseISC_a60f233074af16d42996db4576c8ba52b}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!````~C\+Rose\+I\+SC@{$\sim$\+C\+Rose\+I\+SC}}
+\index{````~C\+Rose\+I\+SC@{$\sim$\+C\+Rose\+I\+SC}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{$\sim$\+C\+Rose\+I\+S\+C()}{~CRoseISC()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Rose\+I\+S\+C\+::$\sim$\+C\+Rose\+I\+SC (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCRoseISC_aeb35b944ca0881209c8eef2af81f3cc5}{}\label{classCRoseISC_aeb35b944ca0881209c8eef2af81f3cc5}
+
+
+\subsection{Member Function Documentation}
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!Handle\+Packet@{Handle\+Packet}}
+\index{Handle\+Packet@{Handle\+Packet}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{Handle\+Packet(uint8\+\_\+t $\ast$\+\_\+buffer)}{HandlePacket(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Rose\+I\+S\+C\+::\+Handle\+Packet (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t} $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_ab56709ba16b2cf652f461c7cd9e8dd3d}{}\label{classCRoseISC_ab56709ba16b2cf652f461c7cd9e8dd3d}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac138e3beed05b7a647508f4704b75aa5}{C\+Rose\+Client}.
+
+
+
+Reimplemented in \hyperlink{classCLoginISC_a86ee4bb27b8053bfb709bf110093185a}{C\+Login\+I\+SC}, \hyperlink{classCCharISC_a9f039fb39ae52a5794ac1030ea562683}{C\+Char\+I\+SC}, and \hyperlink{classCMapISC_a2253227777dbbc8a19d0238d82bbdec2}{C\+Map\+I\+SC}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Connected@{On\+Connected}}
+\index{On\+Connected@{On\+Connected}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Connected()}{OnConnected()}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Rose\+I\+S\+C\+::\+On\+Connected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_a81103ca6aff03e08c5dc15faa666b6ef}{}\label{classCRoseISC_a81103ca6aff03e08c5dc15faa666b6ef}
+
+
+Reimplemented from \hyperlink{classCRoseClient_a4530061e80795225e9236dcfcad8e82c}{C\+Rose\+Client}.
+
+
+
+Reimplemented in \hyperlink{classCCharISC_ab90f705e4c92b4c7d5f2094b16a0b6d2}{C\+Char\+I\+SC}, and \hyperlink{classCMapISC_ad6274ebb755c947f065fcb8d64eb2de7}{C\+Map\+I\+SC}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Disconnect@{On\+Disconnect}}
+\index{On\+Disconnect@{On\+Disconnect}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Disconnect()}{OnDisconnect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Rose\+I\+S\+C\+::\+On\+Disconnect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_a0aedc4da227fda95634988d71bf61033}{}\label{classCRoseISC_a0aedc4da227fda95634988d71bf61033}
+
+
+Reimplemented from \hyperlink{classCRoseClient_a2acc0696fe18b4632e8e9fe621cc9a90}{C\+Rose\+Client}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Disconnected@{On\+Disconnected}}
+\index{On\+Disconnected@{On\+Disconnected}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Disconnected()}{OnDisconnected()}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Rose\+I\+S\+C\+::\+On\+Disconnected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_a1fd6d96a47de1042670a20957a8916d8}{}\label{classCRoseISC_a1fd6d96a47de1042670a20957a8916d8}
+
+
+Reimplemented from \hyperlink{classCRoseClient_a804ac017f0af609e71d9998f92084579}{C\+Rose\+Client}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Received@{On\+Received}}
+\index{On\+Received@{On\+Received}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Received()}{OnReceived()}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Rose\+I\+S\+C\+::\+On\+Received (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_a556a6577a72ee036955df48fb89395cd}{}\label{classCRoseISC_a556a6577a72ee036955df48fb89395cd}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac2e1b4badf1f40ca96fb43f3d4c233fc}{C\+Rose\+Client}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Send@{On\+Send}}
+\index{On\+Send@{On\+Send}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Send(uint8\+\_\+t $\ast$\+\_\+buffer)}{OnSend(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Rose\+I\+S\+C\+::\+On\+Send (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t} $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_a95d93a42933566edfa0c29f33aa19c97}{}\label{classCRoseISC_a95d93a42933566edfa0c29f33aa19c97}
+
+
+Reimplemented from \hyperlink{classCRoseClient_a320e55d923e9e8bc57b2701f1f68c2bd}{C\+Rose\+Client}.
+
+\index{C\+Rose\+I\+SC@{C\+Rose\+I\+SC}!On\+Sent@{On\+Sent}}
+\index{On\+Sent@{On\+Sent}!C\+Rose\+I\+SC@{C\+Rose\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Sent()}{OnSent()}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Rose\+I\+S\+C\+::\+On\+Sent (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCRoseISC_adfbcc83f4dcf0f7bbe2c6f8b3980f5f1}{}\label{classCRoseISC_adfbcc83f4dcf0f7bbe2c6f8b3980f5f1}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac9200621c8aee5cadebe4d158cfac5ed}{C\+Rose\+Client}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rosecommon/include/\hyperlink{croseisc_8h}{croseisc.\+h}\item 
+rosecommon/src/\hyperlink{croseisc_8cpp}{croseisc.\+cpp}\end{DoxyCompactItemize}

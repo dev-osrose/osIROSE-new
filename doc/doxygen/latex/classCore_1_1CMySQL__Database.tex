@@ -1,0 +1,111 @@
+\hypertarget{classCore_1_1CMySQL__Database}{}\section{Core\+:\+:C\+My\+S\+Q\+L\+\_\+\+Database Class Reference}
+\label{classCore_1_1CMySQL__Database}\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+
+
+{\ttfamily \#include $<$core/include/cmysql\+\_\+database.\+h$>$}
+
+
+
+Inheritance diagram for Core\+:\+:C\+My\+S\+Q\+L\+\_\+\+Database\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classCore_1_1CMySQL__Database__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Core\+:\+:C\+My\+S\+Q\+L\+\_\+\+Database\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classCore_1_1CMySQL__Database__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCore_1_1CMySQL__Database_a37cbb9051d1a66753a8230bfb2f84f5e}{C\+My\+S\+Q\+L\+\_\+\+Database} ()
+\item 
+\hyperlink{classCore_1_1CMySQL__Database_a53a4d1a974841dbb5c5e5fe00d7f2949}{C\+My\+S\+Q\+L\+\_\+\+Database} (std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)
+\item 
+virtual \hyperlink{classCore_1_1CMySQL__Database_a2d5a1c5d996209c8a13a276e931703c8}{$\sim$\+C\+My\+S\+Q\+L\+\_\+\+Database} ()
+\item 
+virtual void \hyperlink{classCore_1_1CMySQL__Database_a4dd288c35b1606b4ae105b968e0f9e9d}{Connect} (std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)
+\item 
+virtual void \hyperlink{classCore_1_1CMySQL__Database_a1341fb3ef4974c6f4990334e409cd472}{Q\+Execute} (std\+::string \+\_\+query)
+\item 
+virtual std\+::unique\+\_\+ptr$<$ \hyperlink{classCore_1_1IResult}{I\+Result} $>$ \hyperlink{classCore_1_1CMySQL__Database_ab6b2e371bfde191cb00f98d29434e256}{Q\+Store} (std\+::string \+\_\+query)
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!C\+My\+S\+Q\+L\+\_\+\+Database@{C\+My\+S\+Q\+L\+\_\+\+Database}}
+\index{C\+My\+S\+Q\+L\+\_\+\+Database@{C\+My\+S\+Q\+L\+\_\+\+Database}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{C\+My\+S\+Q\+L\+\_\+\+Database()}{CMySQL_Database()}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::\+C\+My\+S\+Q\+L\+\_\+\+Database (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCore_1_1CMySQL__Database_a37cbb9051d1a66753a8230bfb2f84f5e}{}\label{classCore_1_1CMySQL__Database_a37cbb9051d1a66753a8230bfb2f84f5e}
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!C\+My\+S\+Q\+L\+\_\+\+Database@{C\+My\+S\+Q\+L\+\_\+\+Database}}
+\index{C\+My\+S\+Q\+L\+\_\+\+Database@{C\+My\+S\+Q\+L\+\_\+\+Database}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{C\+My\+S\+Q\+L\+\_\+\+Database(std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)}{CMySQL_Database(std::string _host, std::string _database, std::string _user, std::string _password)}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::\+C\+My\+S\+Q\+L\+\_\+\+Database (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+host, }
+\item[{std\+::string}]{\+\_\+database, }
+\item[{std\+::string}]{\+\_\+user, }
+\item[{std\+::string}]{\+\_\+password}
+\end{DoxyParamCaption}
+)}\hypertarget{classCore_1_1CMySQL__Database_a53a4d1a974841dbb5c5e5fe00d7f2949}{}\label{classCore_1_1CMySQL__Database_a53a4d1a974841dbb5c5e5fe00d7f2949}
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!````~C\+My\+S\+Q\+L\+\_\+\+Database@{$\sim$\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\index{````~C\+My\+S\+Q\+L\+\_\+\+Database@{$\sim$\+C\+My\+S\+Q\+L\+\_\+\+Database}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{$\sim$\+C\+My\+S\+Q\+L\+\_\+\+Database()}{~CMySQL_Database()}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::$\sim$\+C\+My\+S\+Q\+L\+\_\+\+Database (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CMySQL__Database_a2d5a1c5d996209c8a13a276e931703c8}{}\label{classCore_1_1CMySQL__Database_a2d5a1c5d996209c8a13a276e931703c8}
+
+
+\subsection{Member Function Documentation}
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!Connect@{Connect}}
+\index{Connect@{Connect}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{Connect(std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)}{Connect(std::string _host, std::string _database, std::string _user, std::string _password)}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::\+Connect (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+host, }
+\item[{std\+::string}]{\+\_\+database, }
+\item[{std\+::string}]{\+\_\+user, }
+\item[{std\+::string}]{\+\_\+password}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CMySQL__Database_a4dd288c35b1606b4ae105b968e0f9e9d}{}\label{classCore_1_1CMySQL__Database_a4dd288c35b1606b4ae105b968e0f9e9d}
+
+
+Implements \hyperlink{classCore_1_1IDatabase_ae44631affbe063b1874a24d8c5bfa7a1}{Core\+::\+I\+Database}.
+
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!Q\+Execute@{Q\+Execute}}
+\index{Q\+Execute@{Q\+Execute}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{Q\+Execute(std\+::string \+\_\+query)}{QExecute(std::string _query)}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::\+Q\+Execute (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+query}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CMySQL__Database_a1341fb3ef4974c6f4990334e409cd472}{}\label{classCore_1_1CMySQL__Database_a1341fb3ef4974c6f4990334e409cd472}
+
+
+Implements \hyperlink{classCore_1_1IDatabase_a4c99cdc857e6177f6dcbb20ec4991885}{Core\+::\+I\+Database}.
+
+\index{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}!Q\+Store@{Q\+Store}}
+\index{Q\+Store@{Q\+Store}!Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database@{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}}
+\subsubsection[{\texorpdfstring{Q\+Store(std\+::string \+\_\+query)}{QStore(std::string _query)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unique\+\_\+ptr$<$ {\bf I\+Result} $>$ Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database\+::\+Q\+Store (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+query}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CMySQL__Database_ab6b2e371bfde191cb00f98d29434e256}{}\label{classCore_1_1CMySQL__Database_ab6b2e371bfde191cb00f98d29434e256}
+
+
+Implements \hyperlink{classCore_1_1IDatabase_aef93e70d32f2604712bf6439511f3485}{Core\+::\+I\+Database}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{cmysql__database_8h}{cmysql\+\_\+database.\+h}\item 
+\hyperlink{cmysql__database_8cpp}{cmysql\+\_\+database.\+cpp}\end{DoxyCompactItemize}

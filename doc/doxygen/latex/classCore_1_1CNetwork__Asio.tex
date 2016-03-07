@@ -1,0 +1,453 @@
+\hypertarget{classCore_1_1CNetwork__Asio}{}\section{Core\+:\+:C\+Network\+\_\+\+Asio Class Reference}
+\label{classCore_1_1CNetwork__Asio}\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+
+
+{\ttfamily \#include $<$core/include/cnetwork\+\_\+asio.\+h$>$}
+
+
+
+Inheritance diagram for Core\+:\+:C\+Network\+\_\+\+Asio\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{classCore_1_1CNetwork__Asio__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Core\+:\+:C\+Network\+\_\+\+Asio\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCore_1_1CNetwork__Asio__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCore_1_1CNetwork__Asio_a9ef0f93160b19262ebad0ebc42f8c910}{C\+Network\+\_\+\+Asio} ()
+\item 
+virtual \hyperlink{classCore_1_1CNetwork__Asio_a642030ea5baa0f3a5b08a73dfdc4df79}{$\sim$\+C\+Network\+\_\+\+Asio} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a6510dd6c07d2de995242f9ea827b97d1}{Init} (std\+::string \+\_\+ip, uint16\+\_\+t \+\_\+port)
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a1990de08bdc733e76d575f13b03072d0}{Shutdown} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a126de0c3a03d6f2efe21f2b1888285b4}{Connect} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_accbfdbf25e902928bbe3809307510505}{Listen} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a57f1ef8e8849990b393b27fcece6871d}{Reconnect} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_aa98b86ad1ade6a4de084577a30b6d6d4}{Disconnect} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a2f84428ff2250e960ba2739b45f491a2}{Send} (std\+::unique\+\_\+ptr$<$ uint8\+\_\+t $>$ \+\_\+buffer)
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a08865b2606dcef0e38f27532b1ae3909}{Recv} (uint16\+\_\+t \+\_\+size=\hyperlink{cnetwork__asio_8h_a879456c3b8e2853f7044d764e9c180d4}{M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE})
+\item 
+bool \hyperlink{classCore_1_1CNetwork__Asio_a0529c15321b8065795b692d2da8830a6}{Is\+Active} ()
+\item 
+void \hyperlink{classCore_1_1CNetwork__Asio_ad2664e347338dc680ba117f896c759b5}{Set\+Extra\+Message\+Info} (bool \+\_\+enabled)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classCore_1_1CNetwork__Asio_a048ed61b243deed5905b89b0826f413b}{Accept\+Connection} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a8b5610d420eaa22aafa429fe9d7590a9}{On\+Connect} ()
+\item 
+virtual void \hyperlink{classCore_1_1CNetwork__Asio_a654726debc63f13a31e8f3c0d517259e}{On\+Connected} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a09c413ff854b8d8aa53b09f3eb610a34}{On\+Listen} ()
+\item 
+virtual void \hyperlink{classCore_1_1CNetwork__Asio_a1534e01f0aae39a12af3ac3e88aa7954}{On\+Listening} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_afb65283ace223c5a3bea6029b8c6a809}{On\+Disconnect} ()
+\item 
+virtual void \hyperlink{classCore_1_1CNetwork__Asio_a1e813736a887fe3a128b1672be1cbb10}{On\+Disconnected} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_af97c853ab0bcba0372919f0a243f4cb5}{On\+Receive} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_acb2952682b6abbce60b01d9c75b02729}{On\+Received} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a3cfea157222e7ef2c1e67f2c0e25ed8c}{On\+Send} (uint8\+\_\+t $\ast$\+\_\+buffer)
+\item 
+virtual void \hyperlink{classCore_1_1CNetwork__Asio_a79ff0fbfb787e26a079ef259160de6e3}{On\+Sent} ()
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_aa66213bfe03d098460347866bcf8a5fb}{On\+Accept} ()
+\item 
+virtual void \hyperlink{classCore_1_1CNetwork__Asio_a520443f28e0df2f1f38cfc685414aa98}{On\+Accepted} (tcp\+::socket \+\_\+sock)
+\item 
+virtual bool \hyperlink{classCore_1_1CNetwork__Asio_a8f1418b5bae79829a617fe8d0ae1a44d}{Handle\+Packet} (uint8\+\_\+t $\ast$\+\_\+buffer)
+\item 
+void \hyperlink{classCore_1_1CNetwork__Asio_a9d50c31ca63f017cfbdcbd97a4c8be0e}{Set\+Socket} (tcp\+::socket \+\_\+sock)
+\item 
+void \hyperlink{classCore_1_1CNetwork__Asio_a8781a7dee1202b6b984d25afd0002b0a}{Reset\+Buffer} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCore_1_1CLogConsole}{C\+Log\+Console} \hyperlink{classCore_1_1CNetwork__Asio_a0330ebff658531de39d4ab56ebfd3ef0}{log\+\_\+}
+\item 
+asio\+::io\+\_\+service $\ast$ \hyperlink{classCore_1_1CNetwork__Asio_ae8f0c7bd6d91e2c6f08b1a9c0c3d0e79}{io\+\_\+service\+\_\+}
+\item 
+\hyperlink{classCore_1_1NetworkThreadPool}{Core\+::\+Network\+Thread\+Pool} $\ast$ \hyperlink{classCore_1_1CNetwork__Asio_a2cd9b91538970582937b8f03df08bf4c}{network\+Service\+\_\+}
+\item 
+tcp\+::socket \hyperlink{classCore_1_1CNetwork__Asio_a57eebf57efe1aa1728b3e3746cde10fb}{socket\+\_\+}
+\item 
+tcp\+::acceptor \hyperlink{classCore_1_1CNetwork__Asio_ae41e74304ef2de1b82bc6467b13fdb6f}{listener\+\_\+}
+\item 
+std\+::queue$<$ std\+::unique\+\_\+ptr$<$ uint8\+\_\+t $>$ $>$ \hyperlink{classCore_1_1CNetwork__Asio_addc81f6507aaaefff55125bbd14eabae}{send\+\_\+queue\+\_\+}
+\item 
+std\+::queue$<$ std\+::unique\+\_\+ptr$<$ uint8\+\_\+t $>$ $>$ \hyperlink{classCore_1_1CNetwork__Asio_ade3431dccfe1d5d1faf9c539031c80be}{discard\+\_\+queue\+\_\+}
+\item 
+std\+::mutex \hyperlink{classCore_1_1CNetwork__Asio_a957a4eb9ab4221cf7056a902c42796f3}{send\+\_\+mutex\+\_\+}
+\item 
+std\+::mutex \hyperlink{classCore_1_1CNetwork__Asio_acc7289205677c219ac90c8c1445d0770}{recv\+\_\+mutex\+\_\+}
+\item 
+std\+::mutex \hyperlink{classCore_1_1CNetwork__Asio_a5d307130d59994026ce19f258dd31048}{discard\+\_\+mutex\+\_\+}
+\item 
+std\+::condition\+\_\+variable \hyperlink{classCore_1_1CNetwork__Asio_a928266d06111ae3e88fcc6608cd88cec}{recv\+\_\+condition\+\_\+}
+\item 
+std\+::thread \hyperlink{classCore_1_1CNetwork__Asio_a8434441ee967ff416a48f4de34e07e04}{process\+\_\+thread\+\_\+}
+\item 
+uint8\+\_\+t \hyperlink{classCore_1_1CNetwork__Asio_a41089e546d53aba73073ccc49cf96fd8}{buffer\+\_\+} \mbox{[}\hyperlink{cnetwork__asio_8h_a879456c3b8e2853f7044d764e9c180d4}{M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}\mbox{]}
+\item 
+uint16\+\_\+t \hyperlink{classCore_1_1CNetwork__Asio_a614aae7d1116f4dd01516e7858f3aca0}{packet\+\_\+offset\+\_\+}
+\item 
+uint16\+\_\+t \hyperlink{classCore_1_1CNetwork__Asio_a25301a85d636297711946f55d6664cff}{packet\+\_\+size\+\_\+}
+\item 
+bool \hyperlink{classCore_1_1CNetwork__Asio_abedfebd59927120d57e68b724e8431e6}{active\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!C\+Network\+\_\+\+Asio@{C\+Network\+\_\+\+Asio}}
+\index{C\+Network\+\_\+\+Asio@{C\+Network\+\_\+\+Asio}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{C\+Network\+\_\+\+Asio()}{CNetwork_Asio()}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+C\+Network\+\_\+\+Asio\+::\+C\+Network\+\_\+\+Asio (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCore_1_1CNetwork__Asio_a9ef0f93160b19262ebad0ebc42f8c910}{}\label{classCore_1_1CNetwork__Asio_a9ef0f93160b19262ebad0ebc42f8c910}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!````~C\+Network\+\_\+\+Asio@{$\sim$\+C\+Network\+\_\+\+Asio}}
+\index{````~C\+Network\+\_\+\+Asio@{$\sim$\+C\+Network\+\_\+\+Asio}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{$\sim$\+C\+Network\+\_\+\+Asio()}{~CNetwork_Asio()}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+C\+Network\+\_\+\+Asio\+::$\sim$\+C\+Network\+\_\+\+Asio (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a642030ea5baa0f3a5b08a73dfdc4df79}{}\label{classCore_1_1CNetwork__Asio_a642030ea5baa0f3a5b08a73dfdc4df79}
+
+
+\subsection{Member Function Documentation}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Accept\+Connection@{Accept\+Connection}}
+\index{Accept\+Connection@{Accept\+Connection}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Accept\+Connection()}{AcceptConnection()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+Accept\+Connection (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a048ed61b243deed5905b89b0826f413b}{}\label{classCore_1_1CNetwork__Asio_a048ed61b243deed5905b89b0826f413b}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Connect@{Connect}}
+\index{Connect@{Connect}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Connect()}{Connect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Connect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a126de0c3a03d6f2efe21f2b1888285b4}{}\label{classCore_1_1CNetwork__Asio_a126de0c3a03d6f2efe21f2b1888285b4}
+
+
+Implements \hyperlink{classINetwork_a1b646635942e454f2f2d938bc1fb8685}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Disconnect@{Disconnect}}
+\index{Disconnect@{Disconnect}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Disconnect()}{Disconnect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Disconnect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_aa98b86ad1ade6a4de084577a30b6d6d4}{}\label{classCore_1_1CNetwork__Asio_aa98b86ad1ade6a4de084577a30b6d6d4}
+
+
+Implements \hyperlink{classINetwork_a44726fff2e6720f61aa34e4a4ef4780d}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Handle\+Packet@{Handle\+Packet}}
+\index{Handle\+Packet@{Handle\+Packet}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Handle\+Packet(uint8\+\_\+t $\ast$\+\_\+buffer)}{HandlePacket(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Handle\+Packet (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a8f1418b5bae79829a617fe8d0ae1a44d}{}\label{classCore_1_1CNetwork__Asio_a8f1418b5bae79829a617fe8d0ae1a44d}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Init@{Init}}
+\index{Init@{Init}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Init(std\+::string \+\_\+ip, uint16\+\_\+t \+\_\+port)}{Init(std::string _ip, uint16_t _port)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Init (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+ip, }
+\item[{uint16\+\_\+t}]{\+\_\+port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a6510dd6c07d2de995242f9ea827b97d1}{}\label{classCore_1_1CNetwork__Asio_a6510dd6c07d2de995242f9ea827b97d1}
+
+
+Implements \hyperlink{classINetwork_aff192e3d6708cb1aadef3f6667e02708}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Is\+Active@{Is\+Active}}
+\index{Is\+Active@{Is\+Active}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Is\+Active()}{IsActive()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Is\+Active (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCore_1_1CNetwork__Asio_a0529c15321b8065795b692d2da8830a6}{}\label{classCore_1_1CNetwork__Asio_a0529c15321b8065795b692d2da8830a6}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Listen@{Listen}}
+\index{Listen@{Listen}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Listen()}{Listen()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Listen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_accbfdbf25e902928bbe3809307510505}{}\label{classCore_1_1CNetwork__Asio_accbfdbf25e902928bbe3809307510505}
+
+
+Implements \hyperlink{classINetwork_a3f47952a34fec9118c26901783009ac1}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Accept@{On\+Accept}}
+\index{On\+Accept@{On\+Accept}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Accept()}{OnAccept()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Accept (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_aa66213bfe03d098460347866bcf8a5fb}{}\label{classCore_1_1CNetwork__Asio_aa66213bfe03d098460347866bcf8a5fb}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Accepted@{On\+Accepted}}
+\index{On\+Accepted@{On\+Accepted}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Accepted(tcp\+::socket \+\_\+sock)}{OnAccepted(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Accepted (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a520443f28e0df2f1f38cfc685414aa98}{}\label{classCore_1_1CNetwork__Asio_a520443f28e0df2f1f38cfc685414aa98}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Connect@{On\+Connect}}
+\index{On\+Connect@{On\+Connect}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Connect()}{OnConnect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Connect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a8b5610d420eaa22aafa429fe9d7590a9}{}\label{classCore_1_1CNetwork__Asio_a8b5610d420eaa22aafa429fe9d7590a9}
+
+
+Implements \hyperlink{classINetwork_a98765191b21294b10ef55b164fccba68}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Connected@{On\+Connected}}
+\index{On\+Connected@{On\+Connected}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Connected()}{OnConnected()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Connected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a654726debc63f13a31e8f3c0d517259e}{}\label{classCore_1_1CNetwork__Asio_a654726debc63f13a31e8f3c0d517259e}
+
+
+Implements \hyperlink{classINetwork_ad5ed4b018281bf80253c62fb85c2a4b0}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Disconnect@{On\+Disconnect}}
+\index{On\+Disconnect@{On\+Disconnect}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Disconnect()}{OnDisconnect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Disconnect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_afb65283ace223c5a3bea6029b8c6a809}{}\label{classCore_1_1CNetwork__Asio_afb65283ace223c5a3bea6029b8c6a809}
+
+
+Implements \hyperlink{classINetwork_af73c81a512e929292a17ac4e513278e0}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Disconnected@{On\+Disconnected}}
+\index{On\+Disconnected@{On\+Disconnected}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Disconnected()}{OnDisconnected()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Disconnected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a1e813736a887fe3a128b1672be1cbb10}{}\label{classCore_1_1CNetwork__Asio_a1e813736a887fe3a128b1672be1cbb10}
+
+
+Implements \hyperlink{classINetwork_ad2157eb3fcf7e65a272ab5bb21791c68}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Listen@{On\+Listen}}
+\index{On\+Listen@{On\+Listen}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Listen()}{OnListen()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Listen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a09c413ff854b8d8aa53b09f3eb610a34}{}\label{classCore_1_1CNetwork__Asio_a09c413ff854b8d8aa53b09f3eb610a34}
+
+
+Implements \hyperlink{classINetwork_af584043f1045c9da0eb6c21ebf1a29df}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Listening@{On\+Listening}}
+\index{On\+Listening@{On\+Listening}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Listening()}{OnListening()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Listening (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a1534e01f0aae39a12af3ac3e88aa7954}{}\label{classCore_1_1CNetwork__Asio_a1534e01f0aae39a12af3ac3e88aa7954}
+
+
+Implements \hyperlink{classINetwork_a5d65c0819ad2fadb745319d1d16a6f3d}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Receive@{On\+Receive}}
+\index{On\+Receive@{On\+Receive}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Receive()}{OnReceive()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Receive (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_af97c853ab0bcba0372919f0a243f4cb5}{}\label{classCore_1_1CNetwork__Asio_af97c853ab0bcba0372919f0a243f4cb5}
+
+
+Implements \hyperlink{classINetwork_a7c7d806e714b1b2864e4841af5bb744c}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Received@{On\+Received}}
+\index{On\+Received@{On\+Received}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Received()}{OnReceived()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Received (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_acb2952682b6abbce60b01d9c75b02729}{}\label{classCore_1_1CNetwork__Asio_acb2952682b6abbce60b01d9c75b02729}
+
+
+Implements \hyperlink{classINetwork_af9f74cbe26deddffebde1943c3969086}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Send@{On\+Send}}
+\index{On\+Send@{On\+Send}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Send(uint8\+\_\+t $\ast$\+\_\+buffer)}{OnSend(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Send (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a3cfea157222e7ef2c1e67f2c0e25ed8c}{}\label{classCore_1_1CNetwork__Asio_a3cfea157222e7ef2c1e67f2c0e25ed8c}
+
+
+Implements \hyperlink{classINetwork_a327d045f1e37d2996c121eb7b09b59a0}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!On\+Sent@{On\+Sent}}
+\index{On\+Sent@{On\+Sent}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{On\+Sent()}{OnSent()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+On\+Sent (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a79ff0fbfb787e26a079ef259160de6e3}{}\label{classCore_1_1CNetwork__Asio_a79ff0fbfb787e26a079ef259160de6e3}
+
+
+Implements \hyperlink{classINetwork_a863af3061bc113972f0c0fbfd48d15b4}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Reconnect@{Reconnect}}
+\index{Reconnect@{Reconnect}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Reconnect()}{Reconnect()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Reconnect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a57f1ef8e8849990b393b27fcece6871d}{}\label{classCore_1_1CNetwork__Asio_a57f1ef8e8849990b393b27fcece6871d}
+
+
+Implements \hyperlink{classINetwork_a3bfb80fcd053977e3674a2da6601f2c1}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Recv@{Recv}}
+\index{Recv@{Recv}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Recv(uint16\+\_\+t \+\_\+size=\+M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+Z\+E)}{Recv(uint16_t _size=MAX_PACKET_SIZE)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Recv (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{\+\_\+size = {\ttfamily {\bf M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a08865b2606dcef0e38f27532b1ae3909}{}\label{classCore_1_1CNetwork__Asio_a08865b2606dcef0e38f27532b1ae3909}
+
+
+Implements \hyperlink{classINetwork_aff58817dbf43572dff6784187e1dc128}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Reset\+Buffer@{Reset\+Buffer}}
+\index{Reset\+Buffer@{Reset\+Buffer}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Reset\+Buffer()}{ResetBuffer()}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+Reset\+Buffer (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a8781a7dee1202b6b984d25afd0002b0a}{}\label{classCore_1_1CNetwork__Asio_a8781a7dee1202b6b984d25afd0002b0a}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Send@{Send}}
+\index{Send@{Send}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Send(std\+::unique\+\_\+ptr$<$ uint8\+\_\+t $>$ \+\_\+buffer)}{Send(std::unique_ptr< uint8_t > _buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Send (
+\begin{DoxyParamCaption}
+\item[{std\+::unique\+\_\+ptr$<$ uint8\+\_\+t $>$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a2f84428ff2250e960ba2739b45f491a2}{}\label{classCore_1_1CNetwork__Asio_a2f84428ff2250e960ba2739b45f491a2}
+
+
+Implements \hyperlink{classINetwork_ab7738d2dffb9aad6260fca88c0c84e38}{I\+Network}.
+
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Set\+Extra\+Message\+Info@{Set\+Extra\+Message\+Info}}
+\index{Set\+Extra\+Message\+Info@{Set\+Extra\+Message\+Info}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Set\+Extra\+Message\+Info(bool \+\_\+enabled)}{SetExtraMessageInfo(bool _enabled)}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+Set\+Extra\+Message\+Info (
+\begin{DoxyParamCaption}
+\item[{bool}]{\+\_\+enabled}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCore_1_1CNetwork__Asio_ad2664e347338dc680ba117f896c759b5}{}\label{classCore_1_1CNetwork__Asio_ad2664e347338dc680ba117f896c759b5}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Set\+Socket@{Set\+Socket}}
+\index{Set\+Socket@{Set\+Socket}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Set\+Socket(tcp\+::socket \+\_\+sock)}{SetSocket(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}void Core\+::\+C\+Network\+\_\+\+Asio\+::\+Set\+Socket (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a9d50c31ca63f017cfbdcbd97a4c8be0e}{}\label{classCore_1_1CNetwork__Asio_a9d50c31ca63f017cfbdcbd97a4c8be0e}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!Shutdown@{Shutdown}}
+\index{Shutdown@{Shutdown}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{Shutdown()}{Shutdown()}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::\+Shutdown (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCore_1_1CNetwork__Asio_a1990de08bdc733e76d575f13b03072d0}{}\label{classCore_1_1CNetwork__Asio_a1990de08bdc733e76d575f13b03072d0}
+
+
+Implements \hyperlink{classINetwork_a6b3892964c456b4b16c8579f8833e93f}{I\+Network}.
+
+
+
+\subsection{Member Data Documentation}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!active\+\_\+@{active\+\_\+}}
+\index{active\+\_\+@{active\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{active\+\_\+}{active_}}]{\setlength{\rightskip}{0pt plus 5cm}bool Core\+::\+C\+Network\+\_\+\+Asio\+::active\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_abedfebd59927120d57e68b724e8431e6}{}\label{classCore_1_1CNetwork__Asio_abedfebd59927120d57e68b724e8431e6}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!buffer\+\_\+@{buffer\+\_\+}}
+\index{buffer\+\_\+@{buffer\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{buffer\+\_\+}{buffer_}}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t Core\+::\+C\+Network\+\_\+\+Asio\+::buffer\+\_\+\mbox{[}{\bf M\+A\+X\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}\mbox{]}\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a41089e546d53aba73073ccc49cf96fd8}{}\label{classCore_1_1CNetwork__Asio_a41089e546d53aba73073ccc49cf96fd8}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!discard\+\_\+mutex\+\_\+@{discard\+\_\+mutex\+\_\+}}
+\index{discard\+\_\+mutex\+\_\+@{discard\+\_\+mutex\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{discard\+\_\+mutex\+\_\+}{discard_mutex_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::mutex Core\+::\+C\+Network\+\_\+\+Asio\+::discard\+\_\+mutex\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a5d307130d59994026ce19f258dd31048}{}\label{classCore_1_1CNetwork__Asio_a5d307130d59994026ce19f258dd31048}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!discard\+\_\+queue\+\_\+@{discard\+\_\+queue\+\_\+}}
+\index{discard\+\_\+queue\+\_\+@{discard\+\_\+queue\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{discard\+\_\+queue\+\_\+}{discard_queue_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::queue$<$std\+::unique\+\_\+ptr$<$uint8\+\_\+t$>$ $>$ Core\+::\+C\+Network\+\_\+\+Asio\+::discard\+\_\+queue\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_ade3431dccfe1d5d1faf9c539031c80be}{}\label{classCore_1_1CNetwork__Asio_ade3431dccfe1d5d1faf9c539031c80be}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!io\+\_\+service\+\_\+@{io\+\_\+service\+\_\+}}
+\index{io\+\_\+service\+\_\+@{io\+\_\+service\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{io\+\_\+service\+\_\+}{io_service_}}]{\setlength{\rightskip}{0pt plus 5cm}asio\+::io\+\_\+service$\ast$ Core\+::\+C\+Network\+\_\+\+Asio\+::io\+\_\+service\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_ae8f0c7bd6d91e2c6f08b1a9c0c3d0e79}{}\label{classCore_1_1CNetwork__Asio_ae8f0c7bd6d91e2c6f08b1a9c0c3d0e79}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!listener\+\_\+@{listener\+\_\+}}
+\index{listener\+\_\+@{listener\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{listener\+\_\+}{listener_}}]{\setlength{\rightskip}{0pt plus 5cm}tcp\+::acceptor Core\+::\+C\+Network\+\_\+\+Asio\+::listener\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_ae41e74304ef2de1b82bc6467b13fdb6f}{}\label{classCore_1_1CNetwork__Asio_ae41e74304ef2de1b82bc6467b13fdb6f}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!log\+\_\+@{log\+\_\+}}
+\index{log\+\_\+@{log\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{log\+\_\+}{log_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf C\+Log\+Console} Core\+::\+C\+Network\+\_\+\+Asio\+::log\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a0330ebff658531de39d4ab56ebfd3ef0}{}\label{classCore_1_1CNetwork__Asio_a0330ebff658531de39d4ab56ebfd3ef0}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!network\+Service\+\_\+@{network\+Service\+\_\+}}
+\index{network\+Service\+\_\+@{network\+Service\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{network\+Service\+\_\+}{networkService_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Core\+::\+Network\+Thread\+Pool}$\ast$ Core\+::\+C\+Network\+\_\+\+Asio\+::network\+Service\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a2cd9b91538970582937b8f03df08bf4c}{}\label{classCore_1_1CNetwork__Asio_a2cd9b91538970582937b8f03df08bf4c}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!packet\+\_\+offset\+\_\+@{packet\+\_\+offset\+\_\+}}
+\index{packet\+\_\+offset\+\_\+@{packet\+\_\+offset\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{packet\+\_\+offset\+\_\+}{packet_offset_}}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t Core\+::\+C\+Network\+\_\+\+Asio\+::packet\+\_\+offset\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a614aae7d1116f4dd01516e7858f3aca0}{}\label{classCore_1_1CNetwork__Asio_a614aae7d1116f4dd01516e7858f3aca0}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!packet\+\_\+size\+\_\+@{packet\+\_\+size\+\_\+}}
+\index{packet\+\_\+size\+\_\+@{packet\+\_\+size\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{packet\+\_\+size\+\_\+}{packet_size_}}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t Core\+::\+C\+Network\+\_\+\+Asio\+::packet\+\_\+size\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a25301a85d636297711946f55d6664cff}{}\label{classCore_1_1CNetwork__Asio_a25301a85d636297711946f55d6664cff}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!process\+\_\+thread\+\_\+@{process\+\_\+thread\+\_\+}}
+\index{process\+\_\+thread\+\_\+@{process\+\_\+thread\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{process\+\_\+thread\+\_\+}{process_thread_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::thread Core\+::\+C\+Network\+\_\+\+Asio\+::process\+\_\+thread\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a8434441ee967ff416a48f4de34e07e04}{}\label{classCore_1_1CNetwork__Asio_a8434441ee967ff416a48f4de34e07e04}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!recv\+\_\+condition\+\_\+@{recv\+\_\+condition\+\_\+}}
+\index{recv\+\_\+condition\+\_\+@{recv\+\_\+condition\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{recv\+\_\+condition\+\_\+}{recv_condition_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::condition\+\_\+variable Core\+::\+C\+Network\+\_\+\+Asio\+::recv\+\_\+condition\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a928266d06111ae3e88fcc6608cd88cec}{}\label{classCore_1_1CNetwork__Asio_a928266d06111ae3e88fcc6608cd88cec}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!recv\+\_\+mutex\+\_\+@{recv\+\_\+mutex\+\_\+}}
+\index{recv\+\_\+mutex\+\_\+@{recv\+\_\+mutex\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{recv\+\_\+mutex\+\_\+}{recv_mutex_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::mutex Core\+::\+C\+Network\+\_\+\+Asio\+::recv\+\_\+mutex\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_acc7289205677c219ac90c8c1445d0770}{}\label{classCore_1_1CNetwork__Asio_acc7289205677c219ac90c8c1445d0770}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!send\+\_\+mutex\+\_\+@{send\+\_\+mutex\+\_\+}}
+\index{send\+\_\+mutex\+\_\+@{send\+\_\+mutex\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{send\+\_\+mutex\+\_\+}{send_mutex_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::mutex Core\+::\+C\+Network\+\_\+\+Asio\+::send\+\_\+mutex\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a957a4eb9ab4221cf7056a902c42796f3}{}\label{classCore_1_1CNetwork__Asio_a957a4eb9ab4221cf7056a902c42796f3}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!send\+\_\+queue\+\_\+@{send\+\_\+queue\+\_\+}}
+\index{send\+\_\+queue\+\_\+@{send\+\_\+queue\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{send\+\_\+queue\+\_\+}{send_queue_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::queue$<$std\+::unique\+\_\+ptr$<$uint8\+\_\+t$>$ $>$ Core\+::\+C\+Network\+\_\+\+Asio\+::send\+\_\+queue\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_addc81f6507aaaefff55125bbd14eabae}{}\label{classCore_1_1CNetwork__Asio_addc81f6507aaaefff55125bbd14eabae}
+\index{Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}!socket\+\_\+@{socket\+\_\+}}
+\index{socket\+\_\+@{socket\+\_\+}!Core\+::\+C\+Network\+\_\+\+Asio@{Core\+::\+C\+Network\+\_\+\+Asio}}
+\subsubsection[{\texorpdfstring{socket\+\_\+}{socket_}}]{\setlength{\rightskip}{0pt plus 5cm}tcp\+::socket Core\+::\+C\+Network\+\_\+\+Asio\+::socket\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1CNetwork__Asio_a57eebf57efe1aa1728b3e3746cde10fb}{}\label{classCore_1_1CNetwork__Asio_a57eebf57efe1aa1728b3e3746cde10fb}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{cnetwork__asio_8h}{cnetwork\+\_\+asio.\+h}\item 
+\hyperlink{cnetwork__asio_8cpp}{cnetwork\+\_\+asio.\+cpp}\end{DoxyCompactItemize}

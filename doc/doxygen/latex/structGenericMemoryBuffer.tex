@@ -1,0 +1,173 @@
+\hypertarget{structGenericMemoryBuffer}{}\section{Generic\+Memory\+Buffer$<$ Allocator $>$ Struct Template Reference}
+\label{structGenericMemoryBuffer}\index{Generic\+Memory\+Buffer$<$ Allocator $>$@{Generic\+Memory\+Buffer$<$ Allocator $>$}}
+
+
+Represents an in-\/memory output byte stream.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/memorybuffer.\+h$>$}
+
+
+
+Collaboration diagram for Generic\+Memory\+Buffer$<$ Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=215pt]{structGenericMemoryBuffer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef char \hyperlink{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structGenericMemoryBuffer_ad08f7da47bca43fcdb0c3b10e22dfa1d}{Generic\+Memory\+Buffer} (Allocator $\ast$allocator=0, size\+\_\+t capacity=\hyperlink{structGenericMemoryBuffer_af6ecdbdbb8d3aa53cdef6e788e4980be}{k\+Default\+Capacity})
+\item 
+void \hyperlink{structGenericMemoryBuffer_a9dfb477983e211893601f8ab637b42d8}{Put} (\hyperlink{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}{Ch} c)
+\item 
+void \hyperlink{structGenericMemoryBuffer_a9861181cab6f5bec2ec08b601aa53575}{Flush} ()
+\item 
+void \hyperlink{structGenericMemoryBuffer_a036cbe2556778e1edc525602a9821df2}{Clear} ()
+\item 
+void \hyperlink{structGenericMemoryBuffer_a3b87deb9bf34c394c8fb262ab53c0c4b}{Shrink\+To\+Fit} ()
+\item 
+\hyperlink{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}{Ch} $\ast$ \hyperlink{structGenericMemoryBuffer_a56f7b14d2940b682fe592f598d6792ec}{Push} (size\+\_\+t count)
+\item 
+void \hyperlink{structGenericMemoryBuffer_a82a6706286f1356e1769282f5d496005}{Pop} (size\+\_\+t count)
+\item 
+const \hyperlink{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}{Ch} $\ast$ \hyperlink{structGenericMemoryBuffer_a9afc78eef159fcbc10d0cea84ccfb26d}{Get\+Buffer} () const 
+\item 
+size\+\_\+t \hyperlink{structGenericMemoryBuffer_adc22f10318fa6dbdf7eb1fa9041bb68d}{Get\+Size} () const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classinternal_1_1Stack}{internal\+::\+Stack}$<$ Allocator $>$ \hyperlink{structGenericMemoryBuffer_a977b479180bebe8ae14ca1c11d52a486}{stack\+\_\+}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const size\+\_\+t \hyperlink{structGenericMemoryBuffer_af6ecdbdbb8d3aa53cdef6e788e4980be}{k\+Default\+Capacity} = 256
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Allocator = Crt\+Allocator$>$\\*
+struct Generic\+Memory\+Buffer$<$ Allocator $>$}
+
+Represents an in-\/memory output byte stream. 
+
+This class is mainly for being wrapped by \hyperlink{classEncodedOutputStream}{Encoded\+Output\+Stream} or \hyperlink{classAutoUTFOutputStream}{Auto\+U\+T\+F\+Output\+Stream}.
+
+It is similar to File\+Write\+Buffer but the destination is an in-\/memory buffer instead of a file.
+
+Differences between Memory\+Buffer and String\+Buffer\+:
+\begin{DoxyEnumerate}
+\item String\+Buffer has Encoding but Memory\+Buffer is only a byte buffer.
+\item \hyperlink{classGenericStringBuffer_a42ed917a29012d932802f2709e11c572}{String\+Buffer\+::\+Get\+String()} returns a null-\/terminated string. \hyperlink{structGenericMemoryBuffer_a9afc78eef159fcbc10d0cea84ccfb26d}{Memory\+Buffer\+::\+Get\+Buffer()} returns a buffer without terminator.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Allocator} & type for allocating memory buffer. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyNote}{Note}
+implements Stream concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ typedef char {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::{\bf Ch}}\hypertarget{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}{}\label{structGenericMemoryBuffer_a212f137abfd8bce2ad216b2d960c027f}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Generic\+Memory\+Buffer(\+Allocator $\ast$allocator=0, size\+\_\+t capacity=k\+Default\+Capacity)}{GenericMemoryBuffer(Allocator *allocator=0, size_t capacity=kDefaultCapacity)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::{\bf Generic\+Memory\+Buffer} (
+\begin{DoxyParamCaption}
+\item[{Allocator $\ast$}]{allocator = {\ttfamily 0}, }
+\item[{size\+\_\+t}]{capacity = {\ttfamily {\bf k\+Default\+Capacity}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_ad08f7da47bca43fcdb0c3b10e22dfa1d}{}\label{structGenericMemoryBuffer_ad08f7da47bca43fcdb0c3b10e22dfa1d}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Clear@{Clear}}
+\index{Clear@{Clear}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Clear()}{Clear()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a036cbe2556778e1edc525602a9821df2}{}\label{structGenericMemoryBuffer_a036cbe2556778e1edc525602a9821df2}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Flush@{Flush}}
+\index{Flush@{Flush}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a9861181cab6f5bec2ec08b601aa53575}{}\label{structGenericMemoryBuffer_a9861181cab6f5bec2ec08b601aa53575}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Get\+Buffer@{Get\+Buffer}}
+\index{Get\+Buffer@{Get\+Buffer}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Get\+Buffer() const }{GetBuffer() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ const {\bf Ch}$\ast$ {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Get\+Buffer (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a9afc78eef159fcbc10d0cea84ccfb26d}{}\label{structGenericMemoryBuffer_a9afc78eef159fcbc10d0cea84ccfb26d}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Get\+Size@{Get\+Size}}
+\index{Get\+Size@{Get\+Size}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Get\+Size() const }{GetSize() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ size\+\_\+t {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Get\+Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_adc22f10318fa6dbdf7eb1fa9041bb68d}{}\label{structGenericMemoryBuffer_adc22f10318fa6dbdf7eb1fa9041bb68d}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Pop@{Pop}}
+\index{Pop@{Pop}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Pop(size\+\_\+t count)}{Pop(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Pop (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a82a6706286f1356e1769282f5d496005}{}\label{structGenericMemoryBuffer_a82a6706286f1356e1769282f5d496005}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Push@{Push}}
+\index{Push@{Push}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Push(size\+\_\+t count)}{Push(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ {\bf Ch}$\ast$ {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Push (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a56f7b14d2940b682fe592f598d6792ec}{}\label{structGenericMemoryBuffer_a56f7b14d2940b682fe592f598d6792ec}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Put@{Put}}
+\index{Put@{Put}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Put(\+Ch c)}{Put(Ch c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a9dfb477983e211893601f8ab637b42d8}{}\label{structGenericMemoryBuffer_a9dfb477983e211893601f8ab637b42d8}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!Shrink\+To\+Fit@{Shrink\+To\+Fit}}
+\index{Shrink\+To\+Fit@{Shrink\+To\+Fit}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{Shrink\+To\+Fit()}{ShrinkToFit()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::Shrink\+To\+Fit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericMemoryBuffer_a3b87deb9bf34c394c8fb262ab53c0c4b}{}\label{structGenericMemoryBuffer_a3b87deb9bf34c394c8fb262ab53c0c4b}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!k\+Default\+Capacity@{k\+Default\+Capacity}}
+\index{k\+Default\+Capacity@{k\+Default\+Capacity}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{k\+Default\+Capacity}{kDefaultCapacity}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ const size\+\_\+t {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::k\+Default\+Capacity = 256\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{structGenericMemoryBuffer_af6ecdbdbb8d3aa53cdef6e788e4980be}{}\label{structGenericMemoryBuffer_af6ecdbdbb8d3aa53cdef6e788e4980be}
+\index{Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}!stack\+\_\+@{stack\+\_\+}}
+\index{stack\+\_\+@{stack\+\_\+}!Generic\+Memory\+Buffer@{Generic\+Memory\+Buffer}}
+\subsubsection[{\texorpdfstring{stack\+\_\+}{stack_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Allocator  = Crt\+Allocator$>$ {\bf internal\+::\+Stack}$<$Allocator$>$ {\bf Generic\+Memory\+Buffer}$<$ Allocator $>$\+::stack\+\_\+\hspace{0.3cm}{\ttfamily [mutable]}}\hypertarget{structGenericMemoryBuffer_a977b479180bebe8ae14ca1c11d52a486}{}\label{structGenericMemoryBuffer_a977b479180bebe8ae14ca1c11d52a486}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{memorybuffer_8h}{memorybuffer.\+h}\end{DoxyCompactItemize}

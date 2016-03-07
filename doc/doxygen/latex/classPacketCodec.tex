@@ -1,0 +1,102 @@
+\hypertarget{classPacketCodec}{}\section{Packet\+Codec Class Reference}
+\label{classPacketCodec}\index{Packet\+Codec@{Packet\+Codec}}
+
+
+{\ttfamily \#include $<$rosecommon/include/crosecrypt.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPacketCodec_af5076f3934efefc2383cc3a0414784ab}{Packet\+Codec} (unsigned int seed=0x0042\+D266)
+\item 
+\hyperlink{classPacketCodec_a4da74febdcdd96286a61590f5b2bf489}{$\sim$\+Packet\+Codec} ()
+\item 
+void \hyperlink{classPacketCodec_a7b4fbb4772a79a8d26093b15f7fed6cb}{encode\+Server\+Packet} (unsigned char $\ast$buffer)
+\item 
+\hyperlink{stdint_8h_a273cf69d639a59973b6019625df33e30}{uint16\+\_\+t} \hyperlink{classPacketCodec_a03c807711bfc939b0d27125683832dac}{decode\+Client\+Header} (unsigned char $\ast$buffer)
+\item 
+bool \hyperlink{classPacketCodec_a7c040ee471f449f6eb7eb9b81514e80d}{decode\+Client\+Body} (unsigned char $\ast$buffer)
+\item 
+void \hyperlink{classPacketCodec_a48fdc9c5cae80527fac83d5eb9344684}{encode\+Client\+Packet} (unsigned char $\ast$buffer)
+\item 
+\hyperlink{stdint_8h_a273cf69d639a59973b6019625df33e30}{uint16\+\_\+t} \hyperlink{classPacketCodec_ae3c09d11fe66cbc5115eb08c487b4681}{decode\+Server\+Header} (unsigned char $\ast$buffer)
+\item 
+bool \hyperlink{classPacketCodec_a60857bd77baaa3cbf8ebfd5d493bd8cb}{decode\+Server\+Body} (unsigned char $\ast$buffer)
+\item 
+void \hyperlink{classPacketCodec_a9744a55192c25f1b21ef6acefddeada6}{change\+Seed} (unsigned int seed)
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Packet\+Codec@{Packet\+Codec}!Packet\+Codec@{Packet\+Codec}}
+\index{Packet\+Codec@{Packet\+Codec}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{Packet\+Codec(unsigned int seed=0x0042\+D266)}{PacketCodec(unsigned int seed=0x0042D266)}}]{\setlength{\rightskip}{0pt plus 5cm}Packet\+Codec\+::\+Packet\+Codec (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{seed = {\ttfamily 0x0042D266}}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_af5076f3934efefc2383cc3a0414784ab}{}\label{classPacketCodec_af5076f3934efefc2383cc3a0414784ab}
+\index{Packet\+Codec@{Packet\+Codec}!````~Packet\+Codec@{$\sim$\+Packet\+Codec}}
+\index{````~Packet\+Codec@{$\sim$\+Packet\+Codec}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{$\sim$\+Packet\+Codec()}{~PacketCodec()}}]{\setlength{\rightskip}{0pt plus 5cm}Packet\+Codec\+::$\sim$\+Packet\+Codec (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a4da74febdcdd96286a61590f5b2bf489}{}\label{classPacketCodec_a4da74febdcdd96286a61590f5b2bf489}
+
+
+\subsection{Member Function Documentation}
+\index{Packet\+Codec@{Packet\+Codec}!change\+Seed@{change\+Seed}}
+\index{change\+Seed@{change\+Seed}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{change\+Seed(unsigned int seed)}{changeSeed(unsigned int seed)}}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Codec\+::change\+Seed (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{seed}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a9744a55192c25f1b21ef6acefddeada6}{}\label{classPacketCodec_a9744a55192c25f1b21ef6acefddeada6}
+\index{Packet\+Codec@{Packet\+Codec}!decode\+Client\+Body@{decode\+Client\+Body}}
+\index{decode\+Client\+Body@{decode\+Client\+Body}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{decode\+Client\+Body(unsigned char $\ast$buffer)}{decodeClientBody(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\+Codec\+::decode\+Client\+Body (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a7c040ee471f449f6eb7eb9b81514e80d}{}\label{classPacketCodec_a7c040ee471f449f6eb7eb9b81514e80d}
+\index{Packet\+Codec@{Packet\+Codec}!decode\+Client\+Header@{decode\+Client\+Header}}
+\index{decode\+Client\+Header@{decode\+Client\+Header}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{decode\+Client\+Header(unsigned char $\ast$buffer)}{decodeClientHeader(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} Packet\+Codec\+::decode\+Client\+Header (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a03c807711bfc939b0d27125683832dac}{}\label{classPacketCodec_a03c807711bfc939b0d27125683832dac}
+\index{Packet\+Codec@{Packet\+Codec}!decode\+Server\+Body@{decode\+Server\+Body}}
+\index{decode\+Server\+Body@{decode\+Server\+Body}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{decode\+Server\+Body(unsigned char $\ast$buffer)}{decodeServerBody(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\+Codec\+::decode\+Server\+Body (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a60857bd77baaa3cbf8ebfd5d493bd8cb}{}\label{classPacketCodec_a60857bd77baaa3cbf8ebfd5d493bd8cb}
+\index{Packet\+Codec@{Packet\+Codec}!decode\+Server\+Header@{decode\+Server\+Header}}
+\index{decode\+Server\+Header@{decode\+Server\+Header}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{decode\+Server\+Header(unsigned char $\ast$buffer)}{decodeServerHeader(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} Packet\+Codec\+::decode\+Server\+Header (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_ae3c09d11fe66cbc5115eb08c487b4681}{}\label{classPacketCodec_ae3c09d11fe66cbc5115eb08c487b4681}
+\index{Packet\+Codec@{Packet\+Codec}!encode\+Client\+Packet@{encode\+Client\+Packet}}
+\index{encode\+Client\+Packet@{encode\+Client\+Packet}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{encode\+Client\+Packet(unsigned char $\ast$buffer)}{encodeClientPacket(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Codec\+::encode\+Client\+Packet (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a48fdc9c5cae80527fac83d5eb9344684}{}\label{classPacketCodec_a48fdc9c5cae80527fac83d5eb9344684}
+\index{Packet\+Codec@{Packet\+Codec}!encode\+Server\+Packet@{encode\+Server\+Packet}}
+\index{encode\+Server\+Packet@{encode\+Server\+Packet}!Packet\+Codec@{Packet\+Codec}}
+\subsubsection[{\texorpdfstring{encode\+Server\+Packet(unsigned char $\ast$buffer)}{encodeServerPacket(unsigned char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\+Codec\+::encode\+Server\+Packet (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{classPacketCodec_a7b4fbb4772a79a8d26093b15f7fed6cb}{}\label{classPacketCodec_a7b4fbb4772a79a8d26093b15f7fed6cb}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rosecommon/include/\hyperlink{crosecrypt_8h}{crosecrypt.\+h}\item 
+rosecommon/src/\hyperlink{crosecrypt_8cpp}{crosecrypt.\+cpp}\end{DoxyCompactItemize}

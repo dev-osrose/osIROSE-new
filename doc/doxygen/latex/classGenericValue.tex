@@ -1,0 +1,669 @@
+\hypertarget{classGenericValue}{}\section{Generic\+Value$<$ Encoding, Allocator $>$ Class Template Reference}
+\label{classGenericValue}\index{Generic\+Value$<$ Encoding, Allocator $>$@{Generic\+Value$<$ Encoding, Allocator $>$}}
+
+
+Represents a J\+S\+ON value. Use Value for \hyperlink{structUTF8}{U\+T\+F8} encoding and default allocator.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/document.\+h$>$}
+
+
+
+Inheritance diagram for Generic\+Value$<$ Encoding, Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{classGenericValue__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Generic\+Value$<$ Encoding, Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classGenericValue__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structGenericValue_1_1Array}{Array}
+\item 
+union \hyperlink{unionGenericValue_1_1Data}{Data}
+\item 
+union \hyperlink{unionGenericValue_1_1Number}{Number}
+\item 
+struct \hyperlink{structGenericValue_1_1Object}{Object}
+\item 
+struct \hyperlink{structGenericValue_1_1ShortString}{Short\+String}
+\item 
+struct \hyperlink{structGenericValue_1_1String}{String}
+\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac48966386b231124da7c3fb870e237ee}{k\+Bool\+Flag} = 0x100, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caa4776df2584fe4f341b183cdf3e00a79}{k\+Number\+Flag} = 0x200, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae3fb211193e0067efaddeb5a067120fb}{k\+Int\+Flag} = 0x400, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca7eba561e6cc6dcd704f907c5a005f3ce}{k\+Uint\+Flag} = 0x800, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca87c567a71dfa5a63363d82d32346884a}{k\+Int64\+Flag} = 0x1000, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac9200c78f749b6efaae640167a370c94}{k\+Uint64\+Flag} = 0x2000, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca70c741e7c488835892aa857f50090d7c}{k\+Double\+Flag} = 0x4000, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf3bf3661275a38c86addba900c52dccb}{k\+String\+Flag} = 0x100000, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10ef921aef1773bc1f88796bf1828f92}{k\+Copy\+Flag} = 0x200000, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae58a76d504c6a67566aebfa4a6bd2e55}{k\+Inline\+Str\+Flag} = 0x400000, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca8c5507cf143edac6e50abec2d89cc40d}{k\+Null\+Flag} = k\+Null\+Type, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca75dbcdbacc82f9379c602f0b6c41cf07}{k\+True\+Flag} = k\+True\+Type $\vert$ k\+Bool\+Flag, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca66d3877b074bb1a0455a6f6d3f7f91a3}{k\+False\+Flag} = k\+False\+Type $\vert$ k\+Bool\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cacfe8b720220d0a2e378683367386cbaf}{k\+Number\+Int\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Int\+Flag $\vert$ k\+Int64\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae8c6c6286edf9c309e77af0ea0cf039c}{k\+Number\+Uint\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Uint\+Flag $\vert$ k\+Uint64\+Flag $\vert$ k\+Int64\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cad117eb41bb8015a76aadf6149bbd8ce5}{k\+Number\+Int64\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Int64\+Flag, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caaa1ee6a546d4db67f4bdef41d1f54f02}{k\+Number\+Uint64\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Uint64\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca29bc91c155577923abd8f19aa050058b}{k\+Number\+Double\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Double\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cab7805b1908fd181afc8d70fe07b17e18}{k\+Number\+Any\+Flag} = k\+Number\+Type $\vert$ k\+Number\+Flag $\vert$ k\+Int\+Flag $\vert$ k\+Int64\+Flag $\vert$ k\+Uint\+Flag $\vert$ k\+Uint64\+Flag $\vert$ k\+Double\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca5d26a84f26833eafd0028c0102a388a9}{k\+Const\+String\+Flag} = k\+String\+Type $\vert$ k\+String\+Flag, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10c83f7f191dce81bb0273adc0d838de}{k\+Copy\+String\+Flag} = k\+String\+Type $\vert$ k\+String\+Flag $\vert$ k\+Copy\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caca24fa09485fa10b17071509a985ff01}{k\+Short\+String\+Flag} = k\+String\+Type $\vert$ k\+String\+Flag $\vert$ k\+Copy\+Flag $\vert$ k\+Inline\+Str\+Flag, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caba5811d4baeb56dc793a6510fe28748c}{k\+Object\+Flag} = k\+Object\+Type, 
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf7d99965ba807c718b482a9a7fb28b47}{k\+Array\+Flag} = k\+Array\+Type, 
+\\*
+\hyperlink{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca793e0bc40e0abe1ed8bcb3e6fbba65c2}{k\+Type\+Mask} = 0x\+FF
+ \}
+\item 
+typedef \hyperlink{structGenericMember}{Generic\+Member}$<$ Encoding, Allocator $>$ \hyperlink{classGenericValue_a7ccf27c44058b4c11c3efc6473afb886}{Member}
+\begin{DoxyCompactList}\small\item\em Name-\/value pair in an object. \end{DoxyCompactList}\item 
+typedef Encoding \hyperlink{classGenericValue_a28c2cb8d04d12566c1af37597a46d209}{Encoding\+Type}
+\begin{DoxyCompactList}\small\item\em Encoding type from template parameter. \end{DoxyCompactList}\item 
+typedef Allocator \hyperlink{classGenericValue_a7beb83860c1b8d2a0e2a7da9796b2fa1}{Allocator\+Type}
+\begin{DoxyCompactList}\small\item\em Allocator type from template parameter. \end{DoxyCompactList}\item 
+typedef Encoding\+::\+Ch \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch}
+\begin{DoxyCompactList}\small\item\em Character type derived from Encoding. \end{DoxyCompactList}\item 
+typedef \hyperlink{structGenericStringRef}{Generic\+String\+Ref}$<$ \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $>$ \hyperlink{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{String\+Ref\+Type}
+\begin{DoxyCompactList}\small\item\em Reference to a constant string. \end{DoxyCompactList}\item 
+typedef \hyperlink{classGenericMemberIterator}{Generic\+Member\+Iterator}$<$ false, Encoding, Allocator $>$\+::Iterator \hyperlink{classGenericValue_a349b8faae61edc42b4289726820be439}{Member\+Iterator}
+\begin{DoxyCompactList}\small\item\em Member iterator for iterating in object. \end{DoxyCompactList}\item 
+typedef \hyperlink{classGenericMemberIterator}{Generic\+Member\+Iterator}$<$ true, Encoding, Allocator $>$\+::Iterator \hyperlink{classGenericValue_aac08c3e660a9036d3dcb8b10ff6c61f4}{Const\+Member\+Iterator}
+\begin{DoxyCompactList}\small\item\em Constant member iterator for iterating in object. \end{DoxyCompactList}\item 
+typedef \hyperlink{classGenericValue}{Generic\+Value} $\ast$ \hyperlink{classGenericValue_aee30721a49688ba0f865f5d581eb6be9}{Value\+Iterator}
+\begin{DoxyCompactList}\small\item\em Value iterator for iterating in array. \end{DoxyCompactList}\item 
+typedef const \hyperlink{classGenericValue}{Generic\+Value} $\ast$ \hyperlink{classGenericValue_a49010c6d6886f96ff0b0c51bccc7f6ea}{Const\+Value\+Iterator}
+\begin{DoxyCompactList}\small\item\em Constant value iterator for iterating in array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classGenericValue_a4a4418a93777942e1fb7ea71f8aaf680}{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN} ((internal\+::\+Is\+Pointer$<$ T $>$),(\hyperlink{classGenericValue}{Generic\+Value} \&)) operator
+\begin{DoxyCompactList}\small\item\em Assignment with primitive types. \end{DoxyCompactList}\item 
+void \hyperlink{classGenericValue_a8f5f309065479de40a16cf28a340da65}{Set\+Array\+Raw} (\hyperlink{classGenericValue}{Generic\+Value} $\ast$values, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} count, Allocator \&allocator)
+\item 
+void \hyperlink{classGenericValue_a26c8ec7d68858df1038506df7fcff22d}{Set\+Object\+Raw} (\hyperlink{classGenericValue_a7ccf27c44058b4c11c3efc6473afb886}{Member} $\ast$members, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} count, Allocator \&allocator)
+\begin{DoxyCompactList}\small\item\em Initialize this value as object with initial data, without calling destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classGenericValue_a1451603922dcdf34976f125dc60f70ee}{Set\+String\+Raw} (\hyperlink{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{String\+Ref\+Type} s) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Initialize this value as constant string, without calling destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classGenericValue_ad3d91db36dfdbfc1af40a79aae07723c}{Set\+String\+Raw} (\hyperlink{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{String\+Ref\+Type} s, Allocator \&allocator)
+\begin{DoxyCompactList}\small\item\em Initialize this value as copy string with initial data, without calling destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classGenericValue_abb8ea2dfbe74ff4ee7dac6be31317f81}{Raw\+Assign} (\hyperlink{classGenericValue}{Generic\+Value} \&rhs) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Assignment without calling destructor. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Source\+Allocator $>$ }\\bool \hyperlink{classGenericValue_a5ff908402687e14f5f14552ec58113a4}{String\+Equal} (const \hyperlink{classGenericValue}{Generic\+Value}$<$ Encoding, Source\+Allocator $>$ \&rhs) const 
+\end{DoxyCompactItemize}
+\begin{Indent}{\bf Assignment operators}\par
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGenericValue}{Generic\+Value} \& \hyperlink{classGenericValue_a9018a40d7c52efc00daf803c51d3236c}{operator=} (\hyperlink{classGenericValue}{Generic\+Value} \&rhs) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Assignment with move semantics. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue}{Generic\+Value} \& \hyperlink{classGenericValue_a386708557555e6389184de608af5e6a6}{operator=} (\hyperlink{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{String\+Ref\+Type} str) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Assignment of constant string reference (no copy) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{unionGenericValue_1_1Data}{Data} \hyperlink{classGenericValue_aaf80f2c91d26fdde60b9edeeecd3509f}{data\+\_\+}
+\item 
+unsigned \hyperlink{classGenericValue_ad0f9ce0bc0d1714678a77a2295da420c}{flags\+\_\+}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} \hyperlink{classGenericValue_a188f57bdb1923c1fefe74baa995871a3}{k\+Default\+Array\+Capacity} = 16
+\item 
+static const \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} \hyperlink{classGenericValue_a284d018914629aed9a4bd97fe2dc5899}{k\+Default\+Object\+Capacity} = 16
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename , typename , typename $>$ }\\class \hyperlink{classGenericValue_ab05bc9e52e201a2867ea5bac141ee1ae}{Generic\+Document}
+\end{DoxyCompactItemize}
+\subsection*{Constructors and destructor.}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGenericValue_ab0205d57176d83814ea4e4598c596fe8}{Generic\+Value} () R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Default constructor creates a null value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a83c8f84b8e61f2f40414b703b75aea61}{Generic\+Value} (\hyperlink{rapidjson_8h_a1d1cfd8ffb84e947f82999c682b666a7}{Type} type) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor with J\+S\+ON value type. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Source\+Allocator $>$ }\\\hyperlink{classGenericValue_a5161c0c98ba9144c50a38acde28a5ede}{Generic\+Value} (const \hyperlink{classGenericValue}{Generic\+Value}$<$ Encoding, Source\+Allocator $>$ \&rhs, Allocator \&allocator)
+\begin{DoxyCompactList}\small\item\em Explicit copy constructor (with allocator) \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{classGenericValue_a88f02daf621c42b96d49d608fa9214de}{Generic\+Value} (T b, R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+E\+N\+A\+B\+L\+E\+IF((internal\+::\+Is\+Same$<$ T, bool $>$))) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for boolean value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_aafc754ade38421c179f5c8933ecbaf45}{Generic\+Value} (int i) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for int value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a972bff6c56ac3d04622ff7fad8d98331}{Generic\+Value} (unsigned u) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for unsigned value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a964b69f1d2596f75ded5421b6db01a14}{Generic\+Value} (\hyperlink{stdint_8h_a414156feea104f8f75b4ed9e3121b2f6}{int64\+\_\+t} i64) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for int64\+\_\+t value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_ad04805a57f5050c8e04be469ba64d6f3}{Generic\+Value} (\hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} u64) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for uint64\+\_\+t value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a267d05b7e98c3507908eaf085fe41155}{Generic\+Value} (double d) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for double value. \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a4d9af98141360cd801daab4ed1ca2c91}{Generic\+Value} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$s, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} length) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for constant string (i.\+e. do not make a copy of string) \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_abb2887958974fef1b2b5c8e32cc72ddb}{Generic\+Value} (\hyperlink{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{String\+Ref\+Type} s) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Constructor for constant string (i.\+e. do not make a copy of string) \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a9ec2c7cda8c8845acfa3565c6b1b4e10}{Generic\+Value} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$s, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} length, Allocator \&allocator)
+\begin{DoxyCompactList}\small\item\em Constructor for copy-\/string (i.\+e. do make a copy of string) \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a9b72b2e3347d4cd77b16c3b45e8decf1}{Generic\+Value} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$s, Allocator \&allocator)
+\begin{DoxyCompactList}\small\item\em Constructor for copy-\/string (i.\+e. do make a copy of string) \end{DoxyCompactList}\item 
+\hyperlink{classGenericValue_a213ba89ef5ef961a5e655bd8c78ac9f4}{$\sim$\+Generic\+Value} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$\\*
+class Generic\+Value$<$ Encoding, Allocator $>$}
+
+Represents a J\+S\+ON value. Use Value for \hyperlink{structUTF8}{U\+T\+F8} encoding and default allocator. 
+
+A J\+S\+ON value can be one of 7 types. This class is a variant type supporting these types.
+
+Use the Value if \hyperlink{structUTF8}{U\+T\+F8} and default allocator
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Encoding} & Encoding of the value. (Even non-\/string values need to have the same encoding in a document) \\
+\hline
+{\em Allocator} & Allocator type for allocating memory of object, array and string. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+Value@{Generic\+Value}!Allocator\+Type@{Allocator\+Type}}
+\index{Allocator\+Type@{Allocator\+Type}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Allocator\+Type}{AllocatorType}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef Allocator {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Allocator\+Type}}\hypertarget{classGenericValue_a7beb83860c1b8d2a0e2a7da9796b2fa1}{}\label{classGenericValue_a7beb83860c1b8d2a0e2a7da9796b2fa1}
+
+
+Allocator type from template parameter. 
+
+\index{Generic\+Value@{Generic\+Value}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef Encoding\+::\+Ch {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Ch}}\hypertarget{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{}\label{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}
+
+
+Character type derived from Encoding. 
+
+\index{Generic\+Value@{Generic\+Value}!Const\+Member\+Iterator@{Const\+Member\+Iterator}}
+\index{Const\+Member\+Iterator@{Const\+Member\+Iterator}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Const\+Member\+Iterator}{ConstMemberIterator}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef {\bf Generic\+Member\+Iterator}$<$true,Encoding,Allocator$>$\+::Iterator {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Const\+Member\+Iterator}}\hypertarget{classGenericValue_aac08c3e660a9036d3dcb8b10ff6c61f4}{}\label{classGenericValue_aac08c3e660a9036d3dcb8b10ff6c61f4}
+
+
+Constant member iterator for iterating in object. 
+
+\index{Generic\+Value@{Generic\+Value}!Const\+Value\+Iterator@{Const\+Value\+Iterator}}
+\index{Const\+Value\+Iterator@{Const\+Value\+Iterator}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Const\+Value\+Iterator}{ConstValueIterator}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef const {\bf Generic\+Value}$\ast$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Const\+Value\+Iterator}}\hypertarget{classGenericValue_a49010c6d6886f96ff0b0c51bccc7f6ea}{}\label{classGenericValue_a49010c6d6886f96ff0b0c51bccc7f6ea}
+
+
+Constant value iterator for iterating in array. 
+
+\index{Generic\+Value@{Generic\+Value}!Encoding\+Type@{Encoding\+Type}}
+\index{Encoding\+Type@{Encoding\+Type}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Encoding\+Type}{EncodingType}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef Encoding {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Encoding\+Type}}\hypertarget{classGenericValue_a28c2cb8d04d12566c1af37597a46d209}{}\label{classGenericValue_a28c2cb8d04d12566c1af37597a46d209}
+
+
+Encoding type from template parameter. 
+
+\index{Generic\+Value@{Generic\+Value}!Member@{Member}}
+\index{Member@{Member}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Member}{Member}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef {\bf Generic\+Member}$<$Encoding, Allocator$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Member}}\hypertarget{classGenericValue_a7ccf27c44058b4c11c3efc6473afb886}{}\label{classGenericValue_a7ccf27c44058b4c11c3efc6473afb886}
+
+
+Name-\/value pair in an object. 
+
+\index{Generic\+Value@{Generic\+Value}!Member\+Iterator@{Member\+Iterator}}
+\index{Member\+Iterator@{Member\+Iterator}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Member\+Iterator}{MemberIterator}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef {\bf Generic\+Member\+Iterator}$<$false,Encoding,Allocator$>$\+::Iterator {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Member\+Iterator}}\hypertarget{classGenericValue_a349b8faae61edc42b4289726820be439}{}\label{classGenericValue_a349b8faae61edc42b4289726820be439}
+
+
+Member iterator for iterating in object. 
+
+\index{Generic\+Value@{Generic\+Value}!String\+Ref\+Type@{String\+Ref\+Type}}
+\index{String\+Ref\+Type@{String\+Ref\+Type}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{String\+Ref\+Type}{StringRefType}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef {\bf Generic\+String\+Ref}$<${\bf Ch}$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf String\+Ref\+Type}}\hypertarget{classGenericValue_a32e0f30ee278072374c8168b14d3317f}{}\label{classGenericValue_a32e0f30ee278072374c8168b14d3317f}
+
+
+Reference to a constant string. 
+
+\index{Generic\+Value@{Generic\+Value}!Value\+Iterator@{Value\+Iterator}}
+\index{Value\+Iterator@{Value\+Iterator}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Value\+Iterator}{ValueIterator}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ typedef {\bf Generic\+Value}$\ast$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Value\+Iterator}}\hypertarget{classGenericValue_aee30721a49688ba0f865f5d581eb6be9}{}\label{classGenericValue_aee30721a49688ba0f865f5d581eb6be9}
+
+
+Value iterator for iterating in array. 
+
+
+
+\subsection{Member Enumeration Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ anonymous enum}\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3c}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3c}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Bool\+Flag@{k\+Bool\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Bool\+Flag@{k\+Bool\+Flag}}\item[{\em 
+k\+Bool\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac48966386b231124da7c3fb870e237ee}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac48966386b231124da7c3fb870e237ee}
+}]\index{k\+Number\+Flag@{k\+Number\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Flag@{k\+Number\+Flag}}\item[{\em 
+k\+Number\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caa4776df2584fe4f341b183cdf3e00a79}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caa4776df2584fe4f341b183cdf3e00a79}
+}]\index{k\+Int\+Flag@{k\+Int\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Int\+Flag@{k\+Int\+Flag}}\item[{\em 
+k\+Int\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae3fb211193e0067efaddeb5a067120fb}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae3fb211193e0067efaddeb5a067120fb}
+}]\index{k\+Uint\+Flag@{k\+Uint\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Uint\+Flag@{k\+Uint\+Flag}}\item[{\em 
+k\+Uint\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca7eba561e6cc6dcd704f907c5a005f3ce}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca7eba561e6cc6dcd704f907c5a005f3ce}
+}]\index{k\+Int64\+Flag@{k\+Int64\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Int64\+Flag@{k\+Int64\+Flag}}\item[{\em 
+k\+Int64\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca87c567a71dfa5a63363d82d32346884a}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca87c567a71dfa5a63363d82d32346884a}
+}]\index{k\+Uint64\+Flag@{k\+Uint64\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Uint64\+Flag@{k\+Uint64\+Flag}}\item[{\em 
+k\+Uint64\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac9200c78f749b6efaae640167a370c94}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cac9200c78f749b6efaae640167a370c94}
+}]\index{k\+Double\+Flag@{k\+Double\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Double\+Flag@{k\+Double\+Flag}}\item[{\em 
+k\+Double\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca70c741e7c488835892aa857f50090d7c}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca70c741e7c488835892aa857f50090d7c}
+}]\index{k\+String\+Flag@{k\+String\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+String\+Flag@{k\+String\+Flag}}\item[{\em 
+k\+String\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf3bf3661275a38c86addba900c52dccb}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf3bf3661275a38c86addba900c52dccb}
+}]\index{k\+Copy\+Flag@{k\+Copy\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Copy\+Flag@{k\+Copy\+Flag}}\item[{\em 
+k\+Copy\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10ef921aef1773bc1f88796bf1828f92}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10ef921aef1773bc1f88796bf1828f92}
+}]\index{k\+Inline\+Str\+Flag@{k\+Inline\+Str\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Inline\+Str\+Flag@{k\+Inline\+Str\+Flag}}\item[{\em 
+k\+Inline\+Str\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae58a76d504c6a67566aebfa4a6bd2e55}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae58a76d504c6a67566aebfa4a6bd2e55}
+}]\index{k\+Null\+Flag@{k\+Null\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Null\+Flag@{k\+Null\+Flag}}\item[{\em 
+k\+Null\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca8c5507cf143edac6e50abec2d89cc40d}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca8c5507cf143edac6e50abec2d89cc40d}
+}]\index{k\+True\+Flag@{k\+True\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+True\+Flag@{k\+True\+Flag}}\item[{\em 
+k\+True\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca75dbcdbacc82f9379c602f0b6c41cf07}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca75dbcdbacc82f9379c602f0b6c41cf07}
+}]\index{k\+False\+Flag@{k\+False\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+False\+Flag@{k\+False\+Flag}}\item[{\em 
+k\+False\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca66d3877b074bb1a0455a6f6d3f7f91a3}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca66d3877b074bb1a0455a6f6d3f7f91a3}
+}]\index{k\+Number\+Int\+Flag@{k\+Number\+Int\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Int\+Flag@{k\+Number\+Int\+Flag}}\item[{\em 
+k\+Number\+Int\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cacfe8b720220d0a2e378683367386cbaf}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cacfe8b720220d0a2e378683367386cbaf}
+}]\index{k\+Number\+Uint\+Flag@{k\+Number\+Uint\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Uint\+Flag@{k\+Number\+Uint\+Flag}}\item[{\em 
+k\+Number\+Uint\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae8c6c6286edf9c309e77af0ea0cf039c}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cae8c6c6286edf9c309e77af0ea0cf039c}
+}]\index{k\+Number\+Int64\+Flag@{k\+Number\+Int64\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Int64\+Flag@{k\+Number\+Int64\+Flag}}\item[{\em 
+k\+Number\+Int64\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cad117eb41bb8015a76aadf6149bbd8ce5}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cad117eb41bb8015a76aadf6149bbd8ce5}
+}]\index{k\+Number\+Uint64\+Flag@{k\+Number\+Uint64\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Uint64\+Flag@{k\+Number\+Uint64\+Flag}}\item[{\em 
+k\+Number\+Uint64\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caaa1ee6a546d4db67f4bdef41d1f54f02}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caaa1ee6a546d4db67f4bdef41d1f54f02}
+}]\index{k\+Number\+Double\+Flag@{k\+Number\+Double\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Double\+Flag@{k\+Number\+Double\+Flag}}\item[{\em 
+k\+Number\+Double\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca29bc91c155577923abd8f19aa050058b}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca29bc91c155577923abd8f19aa050058b}
+}]\index{k\+Number\+Any\+Flag@{k\+Number\+Any\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Number\+Any\+Flag@{k\+Number\+Any\+Flag}}\item[{\em 
+k\+Number\+Any\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cab7805b1908fd181afc8d70fe07b17e18}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3cab7805b1908fd181afc8d70fe07b17e18}
+}]\index{k\+Const\+String\+Flag@{k\+Const\+String\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Const\+String\+Flag@{k\+Const\+String\+Flag}}\item[{\em 
+k\+Const\+String\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca5d26a84f26833eafd0028c0102a388a9}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca5d26a84f26833eafd0028c0102a388a9}
+}]\index{k\+Copy\+String\+Flag@{k\+Copy\+String\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Copy\+String\+Flag@{k\+Copy\+String\+Flag}}\item[{\em 
+k\+Copy\+String\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10c83f7f191dce81bb0273adc0d838de}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca10c83f7f191dce81bb0273adc0d838de}
+}]\index{k\+Short\+String\+Flag@{k\+Short\+String\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Short\+String\+Flag@{k\+Short\+String\+Flag}}\item[{\em 
+k\+Short\+String\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caca24fa09485fa10b17071509a985ff01}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caca24fa09485fa10b17071509a985ff01}
+}]\index{k\+Object\+Flag@{k\+Object\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Object\+Flag@{k\+Object\+Flag}}\item[{\em 
+k\+Object\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caba5811d4baeb56dc793a6510fe28748c}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caba5811d4baeb56dc793a6510fe28748c}
+}]\index{k\+Array\+Flag@{k\+Array\+Flag}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Array\+Flag@{k\+Array\+Flag}}\item[{\em 
+k\+Array\+Flag\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf7d99965ba807c718b482a9a7fb28b47}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3caf7d99965ba807c718b482a9a7fb28b47}
+}]\index{k\+Type\+Mask@{k\+Type\+Mask}!Generic\+Value@{Generic\+Value}}\index{Generic\+Value@{Generic\+Value}!k\+Type\+Mask@{k\+Type\+Mask}}\item[{\em 
+k\+Type\+Mask\hypertarget{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca793e0bc40e0abe1ed8bcb3e6fbba65c2}{}\label{classGenericValue_aacdfd9d0f85a6161380a134e6d0c9d3ca793e0bc40e0abe1ed8bcb3e6fbba65c2}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value() R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue() RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_ab0205d57176d83814ea4e4598c596fe8}{}\label{classGenericValue_ab0205d57176d83814ea4e4598c596fe8}
+
+
+Default constructor creates a null value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(\+Type type) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(Type type) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{{\bf Type}}]{type}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_a83c8f84b8e61f2f40414b703b75aea61}{}\label{classGenericValue_a83c8f84b8e61f2f40414b703b75aea61}
+
+
+Constructor with J\+S\+ON value type. 
+
+This creates a Value of specified type with default content. 
+\begin{DoxyParams}{Parameters}
+{\em type} & Type of the value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Default content for number is zero. 
+\end{DoxyNote}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(const Generic\+Value$<$ Encoding, Source\+Allocator $>$ \&rhs, Allocator \&allocator)}{GenericValue(const GenericValue< Encoding, SourceAllocator > &rhs, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator $>$ template$<$typename Source\+Allocator $>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Generic\+Value}$<$ Encoding, Source\+Allocator $>$ \&}]{rhs, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a5161c0c98ba9144c50a38acde28a5ede}{}\label{classGenericValue_a5161c0c98ba9144c50a38acde28a5ede}
+
+
+Explicit copy constructor (with allocator) 
+
+Creates a copy of a Value by using the given Allocator 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Source\+Allocator} & allocator of {\ttfamily rhs} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em rhs} & Value to copy from (read-\/only) \\
+\hline
+{\em allocator} & Allocator for allocating copied elements and buffers. Commonly use \hyperlink{classGenericDocument_aa4609d6b19f86aec1a6b96edf2c27686}{Generic\+Document\+::\+Get\+Allocator()}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Copy\+From() 
+\end{DoxySeeAlso}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(\+T b, R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+E\+N\+A\+B\+L\+E\+I\+F((internal\+::\+Is\+Same$<$ T, bool $>$))) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(T b, RAPIDJSON_ENABLEIF((internal::IsSame< T, bool >))) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ template$<$typename T $>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{T}]{b, }
+\item[{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+E\+N\+A\+B\+L\+E\+IF((internal\+::\+Is\+Same$<$ T, bool $>$))}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_a88f02daf621c42b96d49d608fa9214de}{}\label{classGenericValue_a88f02daf621c42b96d49d608fa9214de}
+
+
+Constructor for boolean value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & Boolean value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This constructor is limited to {\itshape real} boolean values and rejects implicitly converted types like arbitrary pointers. Use an explicit cast to {\ttfamily bool}, if you want to construct a boolean J\+S\+ON value in such cases. 
+\end{DoxyNote}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(int i) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(int i) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_aafc754ade38421c179f5c8933ecbaf45}{}\label{classGenericValue_aafc754ade38421c179f5c8933ecbaf45}
+
+
+Constructor for int value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(unsigned u) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(unsigned u) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{u}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_a972bff6c56ac3d04622ff7fad8d98331}{}\label{classGenericValue_a972bff6c56ac3d04622ff7fad8d98331}
+
+
+Constructor for unsigned value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(int64\+\_\+t i64) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(int64_t i64) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{{\bf int64\+\_\+t}}]{i64}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_a964b69f1d2596f75ded5421b6db01a14}{}\label{classGenericValue_a964b69f1d2596f75ded5421b6db01a14}
+
+
+Constructor for int64\+\_\+t value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(uint64\+\_\+t u64) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(uint64_t u64) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64\+\_\+t}}]{u64}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_ad04805a57f5050c8e04be469ba64d6f3}{}\label{classGenericValue_ad04805a57f5050c8e04be469ba64d6f3}
+
+
+Constructor for uint64\+\_\+t value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(double d) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(double d) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{double}]{d}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_a267d05b7e98c3507908eaf085fe41155}{}\label{classGenericValue_a267d05b7e98c3507908eaf085fe41155}
+
+
+Constructor for double value. 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(const Ch $\ast$s, Size\+Type length) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(const Ch *s, SizeType length) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{s, }
+\item[{{\bf Size\+Type}}]{length}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a4d9af98141360cd801daab4ed1ca2c91}{}\label{classGenericValue_a4d9af98141360cd801daab4ed1ca2c91}
+
+
+Constructor for constant string (i.\+e. do not make a copy of string) 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(\+String\+Ref\+Type s) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericValue(StringRefType s) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{{\bf String\+Ref\+Type}}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classGenericValue_abb2887958974fef1b2b5c8e32cc72ddb}{}\label{classGenericValue_abb2887958974fef1b2b5c8e32cc72ddb}
+
+
+Constructor for constant string (i.\+e. do not make a copy of string) 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(const Ch $\ast$s, Size\+Type length, Allocator \&allocator)}{GenericValue(const Ch *s, SizeType length, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{s, }
+\item[{{\bf Size\+Type}}]{length, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a9ec2c7cda8c8845acfa3565c6b1b4e10}{}\label{classGenericValue_a9ec2c7cda8c8845acfa3565c6b1b4e10}
+
+
+Constructor for copy-\/string (i.\+e. do make a copy of string) 
+
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Value(const Ch $\ast$s, Allocator \&allocator)}{GenericValue(const Ch *s, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::{\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{s, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a9b72b2e3347d4cd77b16c3b45e8decf1}{}\label{classGenericValue_a9b72b2e3347d4cd77b16c3b45e8decf1}
+
+
+Constructor for copy-\/string (i.\+e. do make a copy of string) 
+
+\index{Generic\+Value@{Generic\+Value}!````~Generic\+Value@{$\sim$\+Generic\+Value}}
+\index{````~Generic\+Value@{$\sim$\+Generic\+Value}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{$\sim$\+Generic\+Value()}{~GenericValue()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::$\sim${\bf Generic\+Value} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a213ba89ef5ef961a5e655bd8c78ac9f4}{}\label{classGenericValue_a213ba89ef5ef961a5e655bd8c78ac9f4}
+
+
+Destructor. 
+
+Need to destruct elements of array, members of object, or copy-\/string. 
+
+\subsection{Member Function Documentation}
+\index{Generic\+Value@{Generic\+Value}!operator=@{operator=}}
+\index{operator=@{operator=}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{operator=(\+Generic\+Value \&rhs) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{operator=(GenericValue &rhs) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}\& {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::operator= (
+\begin{DoxyParamCaption}
+\item[{{\bf Generic\+Value}$<$ Encoding, Allocator $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a9018a40d7c52efc00daf803c51d3236c}{}\label{classGenericValue_a9018a40d7c52efc00daf803c51d3236c}
+
+
+Assignment with move semantics. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhs} & Source of the assignment. It will become a null value after assignment. \\
+\hline
+\end{DoxyParams}
+\index{Generic\+Value@{Generic\+Value}!operator=@{operator=}}
+\index{operator=@{operator=}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{operator=(\+String\+Ref\+Type str) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{operator=(StringRefType str) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Generic\+Value}\& {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::operator= (
+\begin{DoxyParamCaption}
+\item[{{\bf String\+Ref\+Type}}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a386708557555e6389184de608af5e6a6}{}\label{classGenericValue_a386708557555e6389184de608af5e6a6}
+
+
+Assignment of constant string reference (no copy) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant string reference to be assigned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This overload is needed to avoid clashes with the generic primitive type assignment overload below. 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{structGenericStringRef}{Generic\+String\+Ref}, operator=(\+T) 
+\end{DoxySeeAlso}
+\index{Generic\+Value@{Generic\+Value}!R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN@{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN}}
+\index{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN@{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+R\+N((internal\+::\+Is\+Pointer$<$ T $>$),(\+Generic\+Value \&)) operator}{RAPIDJSON_DISABLEIF_RETURN((internal::IsPointer< T >),(GenericValue &)) operator}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ template$<$typename T $>$ {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+D\+I\+S\+A\+B\+L\+E\+I\+F\+\_\+\+R\+E\+T\+U\+RN (
+\begin{DoxyParamCaption}
+\item[{(internal\+::\+Is\+Pointer$<$ T $>$)}]{, }
+\item[{({\bf Generic\+Value}$<$ Encoding, Allocator $>$ \&)}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{classGenericValue_a4a4418a93777942e1fb7ea71f8aaf680}{}\label{classGenericValue_a4a4418a93777942e1fb7ea71f8aaf680}
+
+
+Assignment with primitive types. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Either \hyperlink{rapidjson_8h_a1d1cfd8ffb84e947f82999c682b666a7}{Type}, {\ttfamily int}, {\ttfamily unsigned}, {\ttfamily int64\+\_\+t}, {\ttfamily uint64\+\_\+t} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The value to be assigned.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The source type {\ttfamily T} explicitly disallows all pointer types, especially ({\ttfamily const}) \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch}$\ast$. This helps avoiding implicitly referencing character strings with insufficient lifetime, use Set\+String(const Ch$\ast$, Allocator\&) (for copying) or \hyperlink{document_8h_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref()} (to explicitly mark the pointer as constant) instead. All other pointer types would implicitly convert to {\ttfamily bool}, use Set\+Bool() instead.\+Set boolean value 
+\end{DoxyNote}
+\index{Generic\+Value@{Generic\+Value}!Raw\+Assign@{Raw\+Assign}}
+\index{Raw\+Assign@{Raw\+Assign}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Raw\+Assign(\+Generic\+Value \&rhs) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{RawAssign(GenericValue &rhs) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ void {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::Raw\+Assign (
+\begin{DoxyParamCaption}
+\item[{{\bf Generic\+Value}$<$ Encoding, Allocator $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_abb8ea2dfbe74ff4ee7dac6be31317f81}{}\label{classGenericValue_abb8ea2dfbe74ff4ee7dac6be31317f81}
+
+
+Assignment without calling destructor. 
+
+\index{Generic\+Value@{Generic\+Value}!Set\+Array\+Raw@{Set\+Array\+Raw}}
+\index{Set\+Array\+Raw@{Set\+Array\+Raw}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Set\+Array\+Raw(\+Generic\+Value $\ast$values, Size\+Type count, Allocator \&allocator)}{SetArrayRaw(GenericValue *values, SizeType count, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ void {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::Set\+Array\+Raw (
+\begin{DoxyParamCaption}
+\item[{{\bf Generic\+Value}$<$ Encoding, Allocator $>$ $\ast$}]{values, }
+\item[{{\bf Size\+Type}}]{count, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a8f5f309065479de40a16cf28a340da65}{}\label{classGenericValue_a8f5f309065479de40a16cf28a340da65}
+\index{Generic\+Value@{Generic\+Value}!Set\+Object\+Raw@{Set\+Object\+Raw}}
+\index{Set\+Object\+Raw@{Set\+Object\+Raw}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Set\+Object\+Raw(\+Member $\ast$members, Size\+Type count, Allocator \&allocator)}{SetObjectRaw(Member *members, SizeType count, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ void {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::Set\+Object\+Raw (
+\begin{DoxyParamCaption}
+\item[{{\bf Member} $\ast$}]{members, }
+\item[{{\bf Size\+Type}}]{count, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a26c8ec7d68858df1038506df7fcff22d}{}\label{classGenericValue_a26c8ec7d68858df1038506df7fcff22d}
+
+
+Initialize this value as object with initial data, without calling destructor. 
+
+\index{Generic\+Value@{Generic\+Value}!Set\+String\+Raw@{Set\+String\+Raw}}
+\index{Set\+String\+Raw@{Set\+String\+Raw}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Set\+String\+Raw(\+String\+Ref\+Type s) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{SetStringRaw(StringRefType s) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ void {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::Set\+String\+Raw (
+\begin{DoxyParamCaption}
+\item[{{\bf String\+Ref\+Type}}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a1451603922dcdf34976f125dc60f70ee}{}\label{classGenericValue_a1451603922dcdf34976f125dc60f70ee}
+
+
+Initialize this value as constant string, without calling destructor. 
+
+\index{Generic\+Value@{Generic\+Value}!Set\+String\+Raw@{Set\+String\+Raw}}
+\index{Set\+String\+Raw@{Set\+String\+Raw}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Set\+String\+Raw(\+String\+Ref\+Type s, Allocator \&allocator)}{SetStringRaw(StringRefType s, Allocator &allocator)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ void {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::Set\+String\+Raw (
+\begin{DoxyParamCaption}
+\item[{{\bf String\+Ref\+Type}}]{s, }
+\item[{Allocator \&}]{allocator}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_ad3d91db36dfdbfc1af40a79aae07723c}{}\label{classGenericValue_ad3d91db36dfdbfc1af40a79aae07723c}
+
+
+Initialize this value as copy string with initial data, without calling destructor. 
+
+\index{Generic\+Value@{Generic\+Value}!String\+Equal@{String\+Equal}}
+\index{String\+Equal@{String\+Equal}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{String\+Equal(const Generic\+Value$<$ Encoding, Source\+Allocator $>$ \&rhs) const }{StringEqual(const GenericValue< Encoding, SourceAllocator > &rhs) const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ template$<$typename Source\+Allocator $>$ bool {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::String\+Equal (
+\begin{DoxyParamCaption}
+\item[{const {\bf Generic\+Value}$<$ Encoding, Source\+Allocator $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericValue_a5ff908402687e14f5f14552ec58113a4}{}\label{classGenericValue_a5ff908402687e14f5f14552ec58113a4}
+
+
+\subsection{Friends And Related Function Documentation}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Document@{Generic\+Document}}
+\index{Generic\+Document@{Generic\+Document}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{Generic\+Document}{GenericDocument}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ template$<$typename , typename , typename $>$ friend class {\bf Generic\+Document}\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{classGenericValue_ab05bc9e52e201a2867ea5bac141ee1ae}{}\label{classGenericValue_ab05bc9e52e201a2867ea5bac141ee1ae}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+Value@{Generic\+Value}!data\+\_\+@{data\+\_\+}}
+\index{data\+\_\+@{data\+\_\+}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{data\+\_\+}{data_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ {\bf Data} {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::data\+\_\+}\hypertarget{classGenericValue_aaf80f2c91d26fdde60b9edeeecd3509f}{}\label{classGenericValue_aaf80f2c91d26fdde60b9edeeecd3509f}
+\index{Generic\+Value@{Generic\+Value}!flags\+\_\+@{flags\+\_\+}}
+\index{flags\+\_\+@{flags\+\_\+}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{flags\+\_\+}{flags_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ unsigned {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::flags\+\_\+}\hypertarget{classGenericValue_ad0f9ce0bc0d1714678a77a2295da420c}{}\label{classGenericValue_ad0f9ce0bc0d1714678a77a2295da420c}
+\index{Generic\+Value@{Generic\+Value}!k\+Default\+Array\+Capacity@{k\+Default\+Array\+Capacity}}
+\index{k\+Default\+Array\+Capacity@{k\+Default\+Array\+Capacity}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{k\+Default\+Array\+Capacity}{kDefaultArrayCapacity}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ const {\bf Size\+Type} {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::k\+Default\+Array\+Capacity = 16\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classGenericValue_a188f57bdb1923c1fefe74baa995871a3}{}\label{classGenericValue_a188f57bdb1923c1fefe74baa995871a3}
+\index{Generic\+Value@{Generic\+Value}!k\+Default\+Object\+Capacity@{k\+Default\+Object\+Capacity}}
+\index{k\+Default\+Object\+Capacity@{k\+Default\+Object\+Capacity}!Generic\+Value@{Generic\+Value}}
+\subsubsection[{\texorpdfstring{k\+Default\+Object\+Capacity}{kDefaultObjectCapacity}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$$>$ const {\bf Size\+Type} {\bf Generic\+Value}$<$ Encoding, Allocator $>$\+::k\+Default\+Object\+Capacity = 16\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classGenericValue_a284d018914629aed9a4bd97fe2dc5899}{}\label{classGenericValue_a284d018914629aed9a4bd97fe2dc5899}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{document_8h}{document.\+h}\end{DoxyCompactItemize}

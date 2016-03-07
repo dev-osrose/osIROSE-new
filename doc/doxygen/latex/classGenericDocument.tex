@@ -1,0 +1,429 @@
+\hypertarget{classGenericDocument}{}\section{Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$ Class Template Reference}
+\label{classGenericDocument}\index{Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$@{Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$}}
+
+
+A document for parsing J\+S\+ON text as D\+OM.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/document.\+h$>$}
+
+
+
+Inheritance diagram for Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{classGenericDocument__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classGenericDocument__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Encoding\+::\+Ch \hyperlink{classGenericDocument_a6f5b0b7b6626508d094ae67490269700}{Ch}
+\begin{DoxyCompactList}\small\item\em Character type derived from Encoding. \end{DoxyCompactList}\item 
+typedef \hyperlink{classGenericValue}{Generic\+Value}$<$ Encoding, Allocator $>$ \hyperlink{classGenericDocument_a8936205dc215dda029060d7e835e0549}{Value\+Type}
+\begin{DoxyCompactList}\small\item\em Value type of the document. \end{DoxyCompactList}\item 
+typedef Allocator \hyperlink{classGenericDocument_a35155b912da66ced38d22e2551364c57}{Allocator\+Type}
+\begin{DoxyCompactList}\small\item\em Allocator type from template parameter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGenericDocument_a6b1c313ad538cafc4d23d4bd5f97178c}{Generic\+Document} (Allocator $\ast$allocator=0, size\+\_\+t stack\+Capacity=k\+Default\+Stack\+Capacity, Stack\+Allocator $\ast$stack\+Allocator=0)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classGenericDocument_aa9f980909298a4de32f66526484820bf}{$\sim$\+Generic\+Document} ()
+\item 
+Allocator \& \hyperlink{classGenericDocument_aa4609d6b19f86aec1a6b96edf2c27686}{Get\+Allocator} ()
+\begin{DoxyCompactList}\small\item\em Get the allocator of this document. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{classGenericDocument_aa99f03016f4907332fcf70aadb645194}{Get\+Stack\+Capacity} () const 
+\begin{DoxyCompactList}\small\item\em Get the capacity of stack in bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}{\bf Parse from stream}\par
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$unsigned parse\+Flags, typename Source\+Encoding , typename Input\+Stream $>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_afe94c0abc83a20f2d7dc1ba7677e6238}{Parse\+Stream} (Input\+Stream \&is)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from an input stream (with Encoding conversion) \end{DoxyCompactList}\item 
+{\footnotesize template$<$unsigned parse\+Flags, typename Input\+Stream $>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_a6e154066c6f5024b91aaab25e03700e3}{Parse\+Stream} (Input\+Stream \&is)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from an input stream. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Input\+Stream $>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_abe07ededbe9aaceb0058e3d254892b71}{Parse\+Stream} (Input\+Stream \&is)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from an input stream (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Parse in-\/place from mutable string}\par
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$unsigned parse\+Flags$>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_a301f8f297a5a0da4b6be5459ad766f75}{Parse\+Insitu} (\hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from a mutable string. \end{DoxyCompactList}\item 
+\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_a81922881357539d5482d31aea14b5664}{Parse\+Insitu} (\hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from a mutable string (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Parse from read-\/only string}\par
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$unsigned parse\+Flags, typename Source\+Encoding $>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_aebd4e7fddd80c1e1174837aee6d2159b}{Parse} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from a read-\/only string (with Encoding conversion) \end{DoxyCompactList}\item 
+{\footnotesize template$<$unsigned parse\+Flags$>$ }\\\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_a5e377f840009b5cee6757be29525ce0b}{Parse} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from a read-\/only string. \end{DoxyCompactList}\item 
+\hyperlink{classGenericDocument}{Generic\+Document} \& \hyperlink{classGenericDocument_a49ae6de6fd0bc820d9864a106c10b4da}{Parse} (const \hyperlink{classGenericValue_ade0e0ce64ccd5d852da57a35e720bafb}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Parse J\+S\+ON text from a read-\/only string (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Handling parse errors}\par
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classGenericDocument_afe0c87d9fc13a78597360e0646479419}{Has\+Parse\+Error} () const 
+\begin{DoxyCompactList}\small\item\em Whether a parse error has occured in the last parsing. \end{DoxyCompactList}\item 
+\hyperlink{group__RAPIDJSON__ERRORS_ga8d4b32dfc45840bca189ade2bbcb6ba7}{Parse\+Error\+Code} \hyperlink{classGenericDocument_aab4771355aa3c6e5368da3ae36f38cc1}{Get\+Parse\+Error} () const 
+\begin{DoxyCompactList}\small\item\em Get the \hyperlink{group__RAPIDJSON__ERRORS_ga8d4b32dfc45840bca189ade2bbcb6ba7}{Parse\+Error\+Code} of last parsing. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{classGenericDocument_a2db6ad11d157342f725470fb898b6712}{Get\+Error\+Offset} () const 
+\begin{DoxyCompactList}\small\item\em Get the position of last parsing error in input, 0 otherwise. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename , typename , typename $>$ }\\class \hyperlink{classGenericDocument_a22b985b0f7f78ef254a566655ee0550f}{Generic\+Reader}
+\item 
+{\footnotesize template$<$typename , typename $>$ }\\class \hyperlink{classGenericDocument_a899449e1a645b5e377af059fb61113d8}{Generic\+Value}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$\\*
+class Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$}
+
+A document for parsing J\+S\+ON text as D\+OM. 
+
+\begin{DoxyNote}{Note}
+implements Handler concept 
+\end{DoxyNote}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Encoding} & Encoding for both parsing and string storage. \\
+\hline
+{\em Allocator} & Allocator for allocating memory for the D\+OM \\
+\hline
+{\em Stack\+Allocator} & Allocator for allocating memory for stack during parsing. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyWarning}{Warning}
+Although \hyperlink{classGenericDocument}{Generic\+Document} inherits from \hyperlink{classGenericValue}{Generic\+Value}, the A\+PI does {\bfseries not} provide any virtual functions, especially no virtual destructor. To avoid memory leaks, do not {\ttfamily delete} a \hyperlink{classGenericDocument}{Generic\+Document} object via a pointer to a \hyperlink{classGenericValue}{Generic\+Value}. 
+\end{DoxyWarning}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+Document@{Generic\+Document}!Allocator\+Type@{Allocator\+Type}}
+\index{Allocator\+Type@{Allocator\+Type}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Allocator\+Type}{AllocatorType}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ typedef Allocator {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::{\bf Allocator\+Type}}\hypertarget{classGenericDocument_a35155b912da66ced38d22e2551364c57}{}\label{classGenericDocument_a35155b912da66ced38d22e2551364c57}
+
+
+Allocator type from template parameter. 
+
+\index{Generic\+Document@{Generic\+Document}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ typedef Encoding\+::\+Ch {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::{\bf Ch}}\hypertarget{classGenericDocument_a6f5b0b7b6626508d094ae67490269700}{}\label{classGenericDocument_a6f5b0b7b6626508d094ae67490269700}
+
+
+Character type derived from Encoding. 
+
+\index{Generic\+Document@{Generic\+Document}!Value\+Type@{Value\+Type}}
+\index{Value\+Type@{Value\+Type}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Value\+Type}{ValueType}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ typedef {\bf Generic\+Value}$<$Encoding, Allocator$>$ {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::{\bf Value\+Type}}\hypertarget{classGenericDocument_a8936205dc215dda029060d7e835e0549}{}\label{classGenericDocument_a8936205dc215dda029060d7e835e0549}
+
+
+Value type of the document. 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+Document@{Generic\+Document}!Generic\+Document@{Generic\+Document}}
+\index{Generic\+Document@{Generic\+Document}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Generic\+Document(\+Allocator $\ast$allocator=0, size\+\_\+t stack\+Capacity=k\+Default\+Stack\+Capacity, Stack\+Allocator $\ast$stack\+Allocator=0)}{GenericDocument(Allocator *allocator=0, size_t stackCapacity=kDefaultStackCapacity, StackAllocator *stackAllocator=0)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::{\bf Generic\+Document} (
+\begin{DoxyParamCaption}
+\item[{Allocator $\ast$}]{allocator = {\ttfamily 0}, }
+\item[{size\+\_\+t}]{stack\+Capacity = {\ttfamily kDefaultStackCapacity}, }
+\item[{Stack\+Allocator $\ast$}]{stack\+Allocator = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a6b1c313ad538cafc4d23d4bd5f97178c}{}\label{classGenericDocument_a6b1c313ad538cafc4d23d4bd5f97178c}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em allocator} & Optional allocator for allocating memory. \\
+\hline
+{\em stack\+Capacity} & Optional initial capacity of stack in bytes. \\
+\hline
+{\em stack\+Allocator} & Optional allocator for allocating memory for stack. \\
+\hline
+\end{DoxyParams}
+\index{Generic\+Document@{Generic\+Document}!````~Generic\+Document@{$\sim$\+Generic\+Document}}
+\index{````~Generic\+Document@{$\sim$\+Generic\+Document}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{$\sim$\+Generic\+Document()}{~GenericDocument()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::$\sim${\bf Generic\+Document} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_aa9f980909298a4de32f66526484820bf}{}\label{classGenericDocument_aa9f980909298a4de32f66526484820bf}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+Document@{Generic\+Document}!Get\+Allocator@{Get\+Allocator}}
+\index{Get\+Allocator@{Get\+Allocator}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Get\+Allocator()}{GetAllocator()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ Allocator\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Get\+Allocator (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_aa4609d6b19f86aec1a6b96edf2c27686}{}\label{classGenericDocument_aa4609d6b19f86aec1a6b96edf2c27686}
+
+
+Get the allocator of this document. 
+
+\index{Generic\+Document@{Generic\+Document}!Get\+Error\+Offset@{Get\+Error\+Offset}}
+\index{Get\+Error\+Offset@{Get\+Error\+Offset}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Get\+Error\+Offset() const }{GetErrorOffset() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ size\+\_\+t {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Get\+Error\+Offset (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a2db6ad11d157342f725470fb898b6712}{}\label{classGenericDocument_a2db6ad11d157342f725470fb898b6712}
+
+
+Get the position of last parsing error in input, 0 otherwise. 
+
+\index{Generic\+Document@{Generic\+Document}!Get\+Parse\+Error@{Get\+Parse\+Error}}
+\index{Get\+Parse\+Error@{Get\+Parse\+Error}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Get\+Parse\+Error() const }{GetParseError() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ {\bf Parse\+Error\+Code} {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Get\+Parse\+Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_aab4771355aa3c6e5368da3ae36f38cc1}{}\label{classGenericDocument_aab4771355aa3c6e5368da3ae36f38cc1}
+
+
+Get the \hyperlink{group__RAPIDJSON__ERRORS_ga8d4b32dfc45840bca189ade2bbcb6ba7}{Parse\+Error\+Code} of last parsing. 
+
+\index{Generic\+Document@{Generic\+Document}!Get\+Stack\+Capacity@{Get\+Stack\+Capacity}}
+\index{Get\+Stack\+Capacity@{Get\+Stack\+Capacity}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Get\+Stack\+Capacity() const }{GetStackCapacity() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ size\+\_\+t {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Get\+Stack\+Capacity (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_aa99f03016f4907332fcf70aadb645194}{}\label{classGenericDocument_aa99f03016f4907332fcf70aadb645194}
+
+
+Get the capacity of stack in bytes. 
+
+\index{Generic\+Document@{Generic\+Document}!Has\+Parse\+Error@{Has\+Parse\+Error}}
+\index{Has\+Parse\+Error@{Has\+Parse\+Error}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Has\+Parse\+Error() const }{HasParseError() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ bool {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Has\+Parse\+Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_afe0c87d9fc13a78597360e0646479419}{}\label{classGenericDocument_afe0c87d9fc13a78597360e0646479419}
+
+
+Whether a parse error has occured in the last parsing. 
+
+\index{Generic\+Document@{Generic\+Document}!Parse@{Parse}}
+\index{Parse@{Parse}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse(const Ch $\ast$str)}{Parse(const Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$unsigned parse\+Flags, typename Source\+Encoding $>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_aebd4e7fddd80c1e1174837aee6d2159b}{}\label{classGenericDocument_aebd4e7fddd80c1e1174837aee6d2159b}
+
+
+Parse J\+S\+ON text from a read-\/only string (with Encoding conversion) 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em parse\+Flags} & Combination of \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450}{Parse\+Flag} (must not contain \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a13188bd483b4df0b6582bebe2aeb5b01}{k\+Parse\+Insitu\+Flag}). \\
+\hline
+{\em Source\+Encoding} & Transcoding from input Encoding \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Read-\/only zero-\/terminated string to be parsed. \\
+\hline
+\end{DoxyParams}
+\index{Generic\+Document@{Generic\+Document}!Parse@{Parse}}
+\index{Parse@{Parse}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse(const Ch $\ast$str)}{Parse(const Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$unsigned parse\+Flags$>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a5e377f840009b5cee6757be29525ce0b}{}\label{classGenericDocument_a5e377f840009b5cee6757be29525ce0b}
+
+
+Parse J\+S\+ON text from a read-\/only string. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em parse\+Flags} & Combination of \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450}{Parse\+Flag} (must not contain \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a13188bd483b4df0b6582bebe2aeb5b01}{k\+Parse\+Insitu\+Flag}). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Read-\/only zero-\/terminated string to be parsed. \\
+\hline
+\end{DoxyParams}
+\index{Generic\+Document@{Generic\+Document}!Parse@{Parse}}
+\index{Parse@{Parse}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse(const Ch $\ast$str)}{Parse(const Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a49ae6de6fd0bc820d9864a106c10b4da}{}\label{classGenericDocument_a49ae6de6fd0bc820d9864a106c10b4da}
+
+
+Parse J\+S\+ON text from a read-\/only string (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Read-\/only zero-\/terminated string to be parsed. \\
+\hline
+\end{DoxyParams}
+\index{Generic\+Document@{Generic\+Document}!Parse\+Insitu@{Parse\+Insitu}}
+\index{Parse\+Insitu@{Parse\+Insitu}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse\+Insitu(\+Ch $\ast$str)}{ParseInsitu(Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$unsigned parse\+Flags$>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse\+Insitu (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a301f8f297a5a0da4b6be5459ad766f75}{}\label{classGenericDocument_a301f8f297a5a0da4b6be5459ad766f75}
+
+
+Parse J\+S\+ON text from a mutable string. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em parse\+Flags} & Combination of \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450}{Parse\+Flag}. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Mutable zero-\/terminated string to be parsed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The document itself for fluent A\+PI. 
+\end{DoxyReturn}
+\index{Generic\+Document@{Generic\+Document}!Parse\+Insitu@{Parse\+Insitu}}
+\index{Parse\+Insitu@{Parse\+Insitu}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse\+Insitu(\+Ch $\ast$str)}{ParseInsitu(Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse\+Insitu (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a81922881357539d5482d31aea14b5664}{}\label{classGenericDocument_a81922881357539d5482d31aea14b5664}
+
+
+Parse J\+S\+ON text from a mutable string (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Mutable zero-\/terminated string to be parsed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The document itself for fluent A\+PI. 
+\end{DoxyReturn}
+\index{Generic\+Document@{Generic\+Document}!Parse\+Stream@{Parse\+Stream}}
+\index{Parse\+Stream@{Parse\+Stream}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse\+Stream(\+Input\+Stream \&is)}{ParseStream(InputStream &is)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$unsigned parse\+Flags, typename Source\+Encoding , typename Input\+Stream $>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse\+Stream (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_afe94c0abc83a20f2d7dc1ba7677e6238}{}\label{classGenericDocument_afe94c0abc83a20f2d7dc1ba7677e6238}
+
+
+Parse J\+S\+ON text from an input stream (with Encoding conversion) 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em parse\+Flags} & Combination of \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450}{Parse\+Flag}. \\
+\hline
+{\em Source\+Encoding} & Encoding of input stream \\
+\hline
+{\em Input\+Stream} & Type of input stream, implementing Stream concept \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em is} & Input stream to be parsed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The document itself for fluent A\+PI. 
+\end{DoxyReturn}
+\index{Generic\+Document@{Generic\+Document}!Parse\+Stream@{Parse\+Stream}}
+\index{Parse\+Stream@{Parse\+Stream}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse\+Stream(\+Input\+Stream \&is)}{ParseStream(InputStream &is)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$unsigned parse\+Flags, typename Input\+Stream $>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse\+Stream (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_a6e154066c6f5024b91aaab25e03700e3}{}\label{classGenericDocument_a6e154066c6f5024b91aaab25e03700e3}
+
+
+Parse J\+S\+ON text from an input stream. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em parse\+Flags} & Combination of \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450}{Parse\+Flag}. \\
+\hline
+{\em Input\+Stream} & Type of input stream, implementing Stream concept \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em is} & Input stream to be parsed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The document itself for fluent A\+PI. 
+\end{DoxyReturn}
+\index{Generic\+Document@{Generic\+Document}!Parse\+Stream@{Parse\+Stream}}
+\index{Parse\+Stream@{Parse\+Stream}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Parse\+Stream(\+Input\+Stream \&is)}{ParseStream(InputStream &is)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$typename Input\+Stream $>$ {\bf Generic\+Document}\& {\bf Generic\+Document}$<$ Encoding, Allocator, Stack\+Allocator $>$\+::Parse\+Stream (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericDocument_abe07ededbe9aaceb0058e3d254892b71}{}\label{classGenericDocument_abe07ededbe9aaceb0058e3d254892b71}
+
+
+Parse J\+S\+ON text from an input stream (with \hyperlink{reader_8h_ab7be7dabe6ffcba60fad441505583450a9104b0946d648e9467cb7a967401ec80}{k\+Parse\+Default\+Flags}) 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Input\+Stream} & Type of input stream, implementing Stream concept \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em is} & Input stream to be parsed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The document itself for fluent A\+PI. 
+\end{DoxyReturn}
+
+
+\subsection{Friends And Related Function Documentation}
+\index{Generic\+Document@{Generic\+Document}!Generic\+Reader@{Generic\+Reader}}
+\index{Generic\+Reader@{Generic\+Reader}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Generic\+Reader}{GenericReader}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$typename , typename , typename $>$ friend class {\bf Generic\+Reader}\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{classGenericDocument_a22b985b0f7f78ef254a566655ee0550f}{}\label{classGenericDocument_a22b985b0f7f78ef254a566655ee0550f}
+\index{Generic\+Document@{Generic\+Document}!Generic\+Value@{Generic\+Value}}
+\index{Generic\+Value@{Generic\+Value}!Generic\+Document@{Generic\+Document}}
+\subsubsection[{\texorpdfstring{Generic\+Value}{GenericValue}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding, typename Allocator = Memory\+Pool\+Allocator$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$ template$<$typename , typename $>$ friend class {\bf Generic\+Value}\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{classGenericDocument_a899449e1a645b5e377af059fb61113d8}{}\label{classGenericDocument_a899449e1a645b5e377af059fb61113d8}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{document_8h}{document.\+h}\end{DoxyCompactItemize}

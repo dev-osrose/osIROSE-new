@@ -1,0 +1,80 @@
+\hypertarget{classCore_1_1IDatabase}{}\section{Core\+:\+:I\+Database Class Reference}
+\label{classCore_1_1IDatabase}\index{Core\+::\+I\+Database@{Core\+::\+I\+Database}}
+
+
+{\ttfamily \#include $<$core/include/idatabase.\+h$>$}
+
+
+
+Inheritance diagram for Core\+:\+:I\+Database\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classCore_1_1IDatabase__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{classCore_1_1IDatabase_a81a3968a3ae51cc872cd3ce528b18da5}{$\sim$\+I\+Database} ()
+\item 
+virtual void \hyperlink{classCore_1_1IDatabase_ae44631affbe063b1874a24d8c5bfa7a1}{Connect} (std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)=0
+\item 
+virtual void \hyperlink{classCore_1_1IDatabase_a4c99cdc857e6177f6dcbb20ec4991885}{Q\+Execute} (std\+::string \+\_\+query)=0
+\item 
+virtual std\+::unique\+\_\+ptr$<$ \hyperlink{classCore_1_1IResult}{I\+Result} $>$ \hyperlink{classCore_1_1IDatabase_aef93e70d32f2604712bf6439511f3485}{Q\+Store} (std\+::string \+\_\+query)=0
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Core\+::\+I\+Database@{Core\+::\+I\+Database}!````~I\+Database@{$\sim$\+I\+Database}}
+\index{````~I\+Database@{$\sim$\+I\+Database}!Core\+::\+I\+Database@{Core\+::\+I\+Database}}
+\subsubsection[{\texorpdfstring{$\sim$\+I\+Database()}{~IDatabase()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual Core\+::\+I\+Database\+::$\sim$\+I\+Database (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IDatabase_a81a3968a3ae51cc872cd3ce528b18da5}{}\label{classCore_1_1IDatabase_a81a3968a3ae51cc872cd3ce528b18da5}
+
+
+\subsection{Member Function Documentation}
+\index{Core\+::\+I\+Database@{Core\+::\+I\+Database}!Connect@{Connect}}
+\index{Connect@{Connect}!Core\+::\+I\+Database@{Core\+::\+I\+Database}}
+\subsubsection[{\texorpdfstring{Connect(std\+::string \+\_\+host, std\+::string \+\_\+database, std\+::string \+\_\+user, std\+::string \+\_\+password)=0}{Connect(std::string _host, std::string _database, std::string _user, std::string _password)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Core\+::\+I\+Database\+::\+Connect (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+host, }
+\item[{std\+::string}]{\+\_\+database, }
+\item[{std\+::string}]{\+\_\+user, }
+\item[{std\+::string}]{\+\_\+password}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IDatabase_ae44631affbe063b1874a24d8c5bfa7a1}{}\label{classCore_1_1IDatabase_ae44631affbe063b1874a24d8c5bfa7a1}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Database_a4dd288c35b1606b4ae105b968e0f9e9d}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}.
+
+\index{Core\+::\+I\+Database@{Core\+::\+I\+Database}!Q\+Execute@{Q\+Execute}}
+\index{Q\+Execute@{Q\+Execute}!Core\+::\+I\+Database@{Core\+::\+I\+Database}}
+\subsubsection[{\texorpdfstring{Q\+Execute(std\+::string \+\_\+query)=0}{QExecute(std::string _query)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Core\+::\+I\+Database\+::\+Q\+Execute (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+query}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IDatabase_a4c99cdc857e6177f6dcbb20ec4991885}{}\label{classCore_1_1IDatabase_a4c99cdc857e6177f6dcbb20ec4991885}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Database_a1341fb3ef4974c6f4990334e409cd472}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}.
+
+\index{Core\+::\+I\+Database@{Core\+::\+I\+Database}!Q\+Store@{Q\+Store}}
+\index{Q\+Store@{Q\+Store}!Core\+::\+I\+Database@{Core\+::\+I\+Database}}
+\subsubsection[{\texorpdfstring{Q\+Store(std\+::string \+\_\+query)=0}{QStore(std::string _query)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\+::unique\+\_\+ptr$<${\bf I\+Result}$>$ Core\+::\+I\+Database\+::\+Q\+Store (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{\+\_\+query}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IDatabase_aef93e70d32f2604712bf6439511f3485}{}\label{classCore_1_1IDatabase_aef93e70d32f2604712bf6439511f3485}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Database_ab6b2e371bfde191cb00f98d29434e256}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Database}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{idatabase_8h}{idatabase.\+h}\end{DoxyCompactItemize}

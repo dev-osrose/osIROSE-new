@@ -1,0 +1,139 @@
+\hypertarget{structUTF8}{}\section{U\+T\+F8$<$ Char\+Type $>$ Struct Template Reference}
+\label{structUTF8}\index{U\+T\+F8$<$ Char\+Type $>$@{U\+T\+F8$<$ Char\+Type $>$}}
+
+
+U\+T\+F-\/8 encoding.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/encodings.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{structUTF8_a6d7cd5f1f72db45d041344c35f47da74a1a78b02dbcc9ddfd12f86a51cddf8fad}{support\+Unicode} = 1
+ \}
+\item 
+typedef Char\+Type \hyperlink{structUTF8_a8e78c8113f3660178d8121b7d3e55890}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Output\+Stream $>$ }\\static void \hyperlink{structUTF8_af286ed19ca60d261a9b11b65bee1298b}{Encode} (Output\+Stream \&os, unsigned codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream $>$ }\\static bool \hyperlink{structUTF8_a17c6badb31acf4f784111c886737fb17}{Decode} (Input\+Stream \&is, unsigned $\ast$codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream , typename Output\+Stream $>$ }\\static bool \hyperlink{structUTF8_a9e2e7e37d819baeb5e643654c6e61e33}{Validate} (Input\+Stream \&is, Output\+Stream \&os)
+\item 
+static unsigned char \hyperlink{structUTF8_ac06bbf38df41adb0c7b9eaa93f85cc38}{Get\+Range} (unsigned char c)
+\item 
+{\footnotesize template$<$typename Input\+Byte\+Stream $>$ }\\static Char\+Type \hyperlink{structUTF8_a1b2359d6ea50ae32fefc9b28e9878a31}{Take\+B\+OM} (Input\+Byte\+Stream \&is)
+\item 
+{\footnotesize template$<$typename Input\+Byte\+Stream $>$ }\\static \hyperlink{structUTF8_a8e78c8113f3660178d8121b7d3e55890}{Ch} \hyperlink{structUTF8_a5b2561a5031c8a699e593cd51b2c6864}{Take} (Input\+Byte\+Stream \&is)
+\item 
+{\footnotesize template$<$typename Output\+Byte\+Stream $>$ }\\static void \hyperlink{structUTF8_a6b171e5f0662ad81d498875bbdbc536a}{Put\+B\+OM} (Output\+Byte\+Stream \&os)
+\item 
+{\footnotesize template$<$typename Output\+Byte\+Stream $>$ }\\static void \hyperlink{structUTF8_ab24c23227413798e9be28a21eb26fe51}{Put} (Output\+Byte\+Stream \&os, \hyperlink{structUTF8_a8e78c8113f3660178d8121b7d3e55890}{Ch} c)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Char\+Type = char$>$\\*
+struct U\+T\+F8$<$ Char\+Type $>$}
+
+U\+T\+F-\/8 encoding. 
+
+\href{http://en.wikipedia.org/wiki/UTF-8}{\tt http\+://en.\+wikipedia.\+org/wiki/\+U\+T\+F-\/8} \href{http://tools.ietf.org/html/rfc3629}{\tt http\+://tools.\+ietf.\+org/html/rfc3629} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & Code unit for storing 8-\/bit U\+T\+F-\/8 data. Default is char. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyNote}{Note}
+implements Encoding concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{U\+T\+F8@{U\+T\+F8}!Ch@{Ch}}
+\index{Ch@{Ch}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ typedef Char\+Type {\bf U\+T\+F8}$<$ Char\+Type $>$\+::{\bf Ch}}\hypertarget{structUTF8_a8e78c8113f3660178d8121b7d3e55890}{}\label{structUTF8_a8e78c8113f3660178d8121b7d3e55890}
+
+
+\subsection{Member Enumeration Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ anonymous enum}\hypertarget{structUTF8_a6d7cd5f1f72db45d041344c35f47da74}{}\label{structUTF8_a6d7cd5f1f72db45d041344c35f47da74}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{support\+Unicode@{support\+Unicode}!U\+T\+F8@{U\+T\+F8}}\index{U\+T\+F8@{U\+T\+F8}!support\+Unicode@{support\+Unicode}}\item[{\em 
+support\+Unicode\hypertarget{structUTF8_a6d7cd5f1f72db45d041344c35f47da74a1a78b02dbcc9ddfd12f86a51cddf8fad}{}\label{structUTF8_a6d7cd5f1f72db45d041344c35f47da74a1a78b02dbcc9ddfd12f86a51cddf8fad}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{U\+T\+F8@{U\+T\+F8}!Decode@{Decode}}
+\index{Decode@{Decode}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Decode(\+Input\+Stream \&is, unsigned $\ast$codepoint)}{Decode(InputStream &is, unsigned *codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Input\+Stream $>$ static bool {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Decode (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{unsigned $\ast$}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_a17c6badb31acf4f784111c886737fb17}{}\label{structUTF8_a17c6badb31acf4f784111c886737fb17}
+\index{U\+T\+F8@{U\+T\+F8}!Encode@{Encode}}
+\index{Encode@{Encode}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Encode(\+Output\+Stream \&os, unsigned codepoint)}{Encode(OutputStream &os, unsigned codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Output\+Stream $>$ static void {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Encode (
+\begin{DoxyParamCaption}
+\item[{Output\+Stream \&}]{os, }
+\item[{unsigned}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_af286ed19ca60d261a9b11b65bee1298b}{}\label{structUTF8_af286ed19ca60d261a9b11b65bee1298b}
+\index{U\+T\+F8@{U\+T\+F8}!Get\+Range@{Get\+Range}}
+\index{Get\+Range@{Get\+Range}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Get\+Range(unsigned char c)}{GetRange(unsigned char c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ static unsigned char {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Get\+Range (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_ac06bbf38df41adb0c7b9eaa93f85cc38}{}\label{structUTF8_ac06bbf38df41adb0c7b9eaa93f85cc38}
+\index{U\+T\+F8@{U\+T\+F8}!Put@{Put}}
+\index{Put@{Put}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Put(\+Output\+Byte\+Stream \&os, Ch c)}{Put(OutputByteStream &os, Ch c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Output\+Byte\+Stream $>$ static void {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{Output\+Byte\+Stream \&}]{os, }
+\item[{{\bf Ch}}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_ab24c23227413798e9be28a21eb26fe51}{}\label{structUTF8_ab24c23227413798e9be28a21eb26fe51}
+\index{U\+T\+F8@{U\+T\+F8}!Put\+B\+OM@{Put\+B\+OM}}
+\index{Put\+B\+OM@{Put\+B\+OM}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Put\+B\+O\+M(\+Output\+Byte\+Stream \&os)}{PutBOM(OutputByteStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Output\+Byte\+Stream $>$ static void {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Put\+B\+OM (
+\begin{DoxyParamCaption}
+\item[{Output\+Byte\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_a6b171e5f0662ad81d498875bbdbc536a}{}\label{structUTF8_a6b171e5f0662ad81d498875bbdbc536a}
+\index{U\+T\+F8@{U\+T\+F8}!Take@{Take}}
+\index{Take@{Take}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Take(\+Input\+Byte\+Stream \&is)}{Take(InputByteStream &is)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Input\+Byte\+Stream $>$ static {\bf Ch} {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Take (
+\begin{DoxyParamCaption}
+\item[{Input\+Byte\+Stream \&}]{is}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_a5b2561a5031c8a699e593cd51b2c6864}{}\label{structUTF8_a5b2561a5031c8a699e593cd51b2c6864}
+\index{U\+T\+F8@{U\+T\+F8}!Take\+B\+OM@{Take\+B\+OM}}
+\index{Take\+B\+OM@{Take\+B\+OM}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Take\+B\+O\+M(\+Input\+Byte\+Stream \&is)}{TakeBOM(InputByteStream &is)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Input\+Byte\+Stream $>$ static Char\+Type {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Take\+B\+OM (
+\begin{DoxyParamCaption}
+\item[{Input\+Byte\+Stream \&}]{is}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_a1b2359d6ea50ae32fefc9b28e9878a31}{}\label{structUTF8_a1b2359d6ea50ae32fefc9b28e9878a31}
+\index{U\+T\+F8@{U\+T\+F8}!Validate@{Validate}}
+\index{Validate@{Validate}!U\+T\+F8@{U\+T\+F8}}
+\subsubsection[{\texorpdfstring{Validate(\+Input\+Stream \&is, Output\+Stream \&os)}{Validate(InputStream &is, OutputStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = char$>$ template$<$typename Input\+Stream , typename Output\+Stream $>$ static bool {\bf U\+T\+F8}$<$ Char\+Type $>$\+::Validate (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{Output\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF8_a9e2e7e37d819baeb5e643654c6e61e33}{}\label{structUTF8_a9e2e7e37d819baeb5e643654c6e61e33}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{encodings_8h}{encodings.\+h}\end{DoxyCompactItemize}

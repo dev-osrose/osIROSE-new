@@ -1,0 +1,145 @@
+\hypertarget{classCLoginClient}{}\section{C\+Login\+Client Class Reference}
+\label{classCLoginClient}\index{C\+Login\+Client@{C\+Login\+Client}}
+
+
+{\ttfamily \#include $<$login/include/cloginclient.\+h$>$}
+
+
+
+Inheritance diagram for C\+Login\+Client\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{classCLoginClient__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for C\+Login\+Client\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCLoginClient__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCLoginClient_a2d5906e8e6be7586741218d7e1654aa4}{C\+Login\+Client} ()
+\item 
+\hyperlink{classCLoginClient_a9d2564bbd681f8887a171423e595b33b}{C\+Login\+Client} (tcp\+::socket \+\_\+sock)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classCLoginClient_ac081b7927d80954c1c84dd8cd233988e}{Handle\+Packet} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} $\ast$\+\_\+buffer)
+\item 
+virtual bool \hyperlink{classCLoginClient_ab5db56bf61fcc302a57f172213eb6dea}{On\+Received} ()
+\item 
+bool \hyperlink{classCLoginClient_a8bb96e780399576e63f4fa40d726179b}{User\+Login} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCLoginClient_aee4d56bef943f6dbd2978c735e394c90}{Channel\+List} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCLoginClient_af9a73e5c18de872bc48a6fc32bede669}{Server\+Select} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+void \hyperlink{classCLoginClient_a96cd39b6672010bdd2f3ebf8a4eff601}{Send\+Login\+Reply} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} Result)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{stdint_8h_a273cf69d639a59973b6019625df33e30}{uint16\+\_\+t} \hyperlink{classCLoginClient_a741464bea0292576c3080f9666aff921}{access\+\_\+rights\+\_\+}
+\item 
+\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} \hyperlink{classCLoginClient_a5588c992cfae4c522ae032e268d63443}{username\+\_\+} \mbox{[}17\mbox{]}
+\item 
+\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} \hyperlink{classCLoginClient_ae5e1619291b95ab70a2e0e32a70f9b2e}{password\+\_\+} \mbox{[}33\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Login\+Client@{C\+Login\+Client}!C\+Login\+Client@{C\+Login\+Client}}
+\index{C\+Login\+Client@{C\+Login\+Client}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{C\+Login\+Client()}{CLoginClient()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Login\+Client\+::\+C\+Login\+Client (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCLoginClient_a2d5906e8e6be7586741218d7e1654aa4}{}\label{classCLoginClient_a2d5906e8e6be7586741218d7e1654aa4}
+\index{C\+Login\+Client@{C\+Login\+Client}!C\+Login\+Client@{C\+Login\+Client}}
+\index{C\+Login\+Client@{C\+Login\+Client}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{C\+Login\+Client(tcp\+::socket \+\_\+sock)}{CLoginClient(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Login\+Client\+::\+C\+Login\+Client (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)}\hypertarget{classCLoginClient_a9d2564bbd681f8887a171423e595b33b}{}\label{classCLoginClient_a9d2564bbd681f8887a171423e595b33b}
+
+
+\subsection{Member Function Documentation}
+\index{C\+Login\+Client@{C\+Login\+Client}!Channel\+List@{Channel\+List}}
+\index{Channel\+List@{Channel\+List}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{Channel\+List(\+C\+Rose\+Packet $\ast$\+P)}{ChannelList(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Login\+Client\+::\+Channel\+List (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_aee4d56bef943f6dbd2978c735e394c90}{}\label{classCLoginClient_aee4d56bef943f6dbd2978c735e394c90}
+\index{C\+Login\+Client@{C\+Login\+Client}!Handle\+Packet@{Handle\+Packet}}
+\index{Handle\+Packet@{Handle\+Packet}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{Handle\+Packet(uint8\+\_\+t $\ast$\+\_\+buffer)}{HandlePacket(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Login\+Client\+::\+Handle\+Packet (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t} $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCLoginClient_ac081b7927d80954c1c84dd8cd233988e}{}\label{classCLoginClient_ac081b7927d80954c1c84dd8cd233988e}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac138e3beed05b7a647508f4704b75aa5}{C\+Rose\+Client}.
+
+\index{C\+Login\+Client@{C\+Login\+Client}!On\+Received@{On\+Received}}
+\index{On\+Received@{On\+Received}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{On\+Received()}{OnReceived()}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Login\+Client\+::\+On\+Received (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCLoginClient_ab5db56bf61fcc302a57f172213eb6dea}{}\label{classCLoginClient_ab5db56bf61fcc302a57f172213eb6dea}
+
+
+Reimplemented from \hyperlink{classCRoseClient_ac2e1b4badf1f40ca96fb43f3d4c233fc}{C\+Rose\+Client}.
+
+\index{C\+Login\+Client@{C\+Login\+Client}!Send\+Login\+Reply@{Send\+Login\+Reply}}
+\index{Send\+Login\+Reply@{Send\+Login\+Reply}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{Send\+Login\+Reply(uint8\+\_\+t Result)}{SendLoginReply(uint8_t Result)}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Login\+Client\+::\+Send\+Login\+Reply (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t}}]{Result}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_a96cd39b6672010bdd2f3ebf8a4eff601}{}\label{classCLoginClient_a96cd39b6672010bdd2f3ebf8a4eff601}
+\index{C\+Login\+Client@{C\+Login\+Client}!Server\+Select@{Server\+Select}}
+\index{Server\+Select@{Server\+Select}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{Server\+Select(\+C\+Rose\+Packet $\ast$\+P)}{ServerSelect(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Login\+Client\+::\+Server\+Select (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_af9a73e5c18de872bc48a6fc32bede669}{}\label{classCLoginClient_af9a73e5c18de872bc48a6fc32bede669}
+\index{C\+Login\+Client@{C\+Login\+Client}!User\+Login@{User\+Login}}
+\index{User\+Login@{User\+Login}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{User\+Login(\+C\+Rose\+Packet $\ast$\+P)}{UserLogin(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Login\+Client\+::\+User\+Login (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_a8bb96e780399576e63f4fa40d726179b}{}\label{classCLoginClient_a8bb96e780399576e63f4fa40d726179b}
+
+
+\subsection{Member Data Documentation}
+\index{C\+Login\+Client@{C\+Login\+Client}!access\+\_\+rights\+\_\+@{access\+\_\+rights\+\_\+}}
+\index{access\+\_\+rights\+\_\+@{access\+\_\+rights\+\_\+}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{access\+\_\+rights\+\_\+}{access_rights_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} C\+Login\+Client\+::access\+\_\+rights\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_a741464bea0292576c3080f9666aff921}{}\label{classCLoginClient_a741464bea0292576c3080f9666aff921}
+\index{C\+Login\+Client@{C\+Login\+Client}!password\+\_\+@{password\+\_\+}}
+\index{password\+\_\+@{password\+\_\+}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{password\+\_\+}{password_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} C\+Login\+Client\+::password\+\_\+\mbox{[}33\mbox{]}\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_ae5e1619291b95ab70a2e0e32a70f9b2e}{}\label{classCLoginClient_ae5e1619291b95ab70a2e0e32a70f9b2e}
+\index{C\+Login\+Client@{C\+Login\+Client}!username\+\_\+@{username\+\_\+}}
+\index{username\+\_\+@{username\+\_\+}!C\+Login\+Client@{C\+Login\+Client}}
+\subsubsection[{\texorpdfstring{username\+\_\+}{username_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} C\+Login\+Client\+::username\+\_\+\mbox{[}17\mbox{]}\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCLoginClient_a5588c992cfae4c522ae032e268d63443}{}\label{classCLoginClient_a5588c992cfae4c522ae032e268d63443}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+login/include/\hyperlink{cloginclient_8h}{cloginclient.\+h}\item 
+login/src/\hyperlink{cloginclient_8cpp}{cloginclient.\+cpp}\end{DoxyCompactItemize}

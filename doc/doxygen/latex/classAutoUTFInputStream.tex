@@ -1,0 +1,153 @@
+\hypertarget{classAutoUTFInputStream}{}\section{Auto\+U\+T\+F\+Input\+Stream$<$ Char\+Type, Input\+Byte\+Stream $>$ Class Template Reference}
+\label{classAutoUTFInputStream}\index{Auto\+U\+T\+F\+Input\+Stream$<$ Char\+Type, Input\+Byte\+Stream $>$@{Auto\+U\+T\+F\+Input\+Stream$<$ Char\+Type, Input\+Byte\+Stream $>$}}
+
+
+Input stream wrapper with dynamically bound encoding and automatic encoding detection.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/encodedstream.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Char\+Type \hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classAutoUTFInputStream_a83837fced0971ba26dd9a8ec1575abb0}{Auto\+U\+T\+F\+Input\+Stream} (Input\+Byte\+Stream \&is, \hyperlink{encodings_8h_ac9448aedf514a5bb509bae73a9ce4e58}{U\+T\+F\+Type} type=\hyperlink{encodings_8h_ac9448aedf514a5bb509bae73a9ce4e58a7fd9945f1c494a4a4ee9446017e790f1}{k\+U\+T\+F8})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{encodings_8h_ac9448aedf514a5bb509bae73a9ce4e58}{U\+T\+F\+Type} \hyperlink{classAutoUTFInputStream_a4b8a3fa5d465a98ec93373cc88102d34}{Get\+Type} () const 
+\item 
+bool \hyperlink{classAutoUTFInputStream_a74bf5085aaefeb533cbe31719cb0be23}{Has\+B\+OM} () const 
+\item 
+\hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch} \hyperlink{classAutoUTFInputStream_a091e55c06a8013b978c9bab05c9068e3}{Peek} () const 
+\item 
+\hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch} \hyperlink{classAutoUTFInputStream_a652cd1ae8bd848a5ecce4efa1ebd0f38}{Take} ()
+\item 
+size\+\_\+t \hyperlink{classAutoUTFInputStream_a759b3d2690679ff9eef0c18cb2fbb0cf}{Tell} () const 
+\item 
+void \hyperlink{classAutoUTFInputStream_a5ea730d1ab715f58ce4f9e3dcd77810a}{Put} (\hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch})
+\item 
+void \hyperlink{classAutoUTFInputStream_aecc08f52794d761fc1b729907a83dcf8}{Flush} ()
+\item 
+\hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch} $\ast$ \hyperlink{classAutoUTFInputStream_a761841842c147c0bb1a69bfacbc117a2}{Put\+Begin} ()
+\item 
+size\+\_\+t \hyperlink{classAutoUTFInputStream_a41bd66602f82d344383792feac34f9f7}{Put\+End} (\hyperlink{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{Ch} $\ast$)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Char\+Type, typename Input\+Byte\+Stream$>$\\*
+class Auto\+U\+T\+F\+Input\+Stream$<$ Char\+Type, Input\+Byte\+Stream $>$}
+
+Input stream wrapper with dynamically bound encoding and automatic encoding detection. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & Type of character for reading. \\
+\hline
+{\em Input\+Byte\+Stream} & type of input byte stream to be wrapped. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Ch@{Ch}}
+\index{Ch@{Ch}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ typedef Char\+Type {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::{\bf Ch}}\hypertarget{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}{}\label{classAutoUTFInputStream_a3bb3eb46f2c20404a7ac21963cfe348f}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Auto\+U\+T\+F\+Input\+Stream(\+Input\+Byte\+Stream \&is, U\+T\+F\+Type type=k\+U\+T\+F8)}{AutoUTFInputStream(InputByteStream &is, UTFType type=kUTF8)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::{\bf Auto\+U\+T\+F\+Input\+Stream} (
+\begin{DoxyParamCaption}
+\item[{Input\+Byte\+Stream \&}]{is, }
+\item[{{\bf U\+T\+F\+Type}}]{type = {\ttfamily {\bf k\+U\+T\+F8}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a83837fced0971ba26dd9a8ec1575abb0}{}\label{classAutoUTFInputStream_a83837fced0971ba26dd9a8ec1575abb0}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em is} & input stream to be wrapped. \\
+\hline
+{\em type} & U\+TF encoding type if it is not detected from the stream. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Flush@{Flush}}
+\index{Flush@{Flush}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ void {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_aecc08f52794d761fc1b729907a83dcf8}{}\label{classAutoUTFInputStream_aecc08f52794d761fc1b729907a83dcf8}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Get\+Type@{Get\+Type}}
+\index{Get\+Type@{Get\+Type}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Get\+Type() const }{GetType() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ {\bf U\+T\+F\+Type} {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Get\+Type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a4b8a3fa5d465a98ec93373cc88102d34}{}\label{classAutoUTFInputStream_a4b8a3fa5d465a98ec93373cc88102d34}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Has\+B\+OM@{Has\+B\+OM}}
+\index{Has\+B\+OM@{Has\+B\+OM}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Has\+B\+O\+M() const }{HasBOM() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ bool {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Has\+B\+OM (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a74bf5085aaefeb533cbe31719cb0be23}{}\label{classAutoUTFInputStream_a74bf5085aaefeb533cbe31719cb0be23}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Peek@{Peek}}
+\index{Peek@{Peek}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Peek() const }{Peek() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ {\bf Ch} {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Peek (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a091e55c06a8013b978c9bab05c9068e3}{}\label{classAutoUTFInputStream_a091e55c06a8013b978c9bab05c9068e3}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Put@{Put}}
+\index{Put@{Put}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Put(\+Ch)}{Put(Ch)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ void {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a5ea730d1ab715f58ce4f9e3dcd77810a}{}\label{classAutoUTFInputStream_a5ea730d1ab715f58ce4f9e3dcd77810a}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Put\+Begin@{Put\+Begin}}
+\index{Put\+Begin@{Put\+Begin}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+Begin()}{PutBegin()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ {\bf Ch}$\ast$ {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Put\+Begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a761841842c147c0bb1a69bfacbc117a2}{}\label{classAutoUTFInputStream_a761841842c147c0bb1a69bfacbc117a2}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Put\+End@{Put\+End}}
+\index{Put\+End@{Put\+End}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+End(\+Ch $\ast$)}{PutEnd(Ch *)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ size\+\_\+t {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Put\+End (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a41bd66602f82d344383792feac34f9f7}{}\label{classAutoUTFInputStream_a41bd66602f82d344383792feac34f9f7}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Take@{Take}}
+\index{Take@{Take}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Take()}{Take()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ {\bf Ch} {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Take (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a652cd1ae8bd848a5ecce4efa1ebd0f38}{}\label{classAutoUTFInputStream_a652cd1ae8bd848a5ecce4efa1ebd0f38}
+\index{Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}!Tell@{Tell}}
+\index{Tell@{Tell}!Auto\+U\+T\+F\+Input\+Stream@{Auto\+U\+T\+F\+Input\+Stream}}
+\subsubsection[{\texorpdfstring{Tell() const }{Tell() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type , typename Input\+Byte\+Stream $>$ size\+\_\+t {\bf Auto\+U\+T\+F\+Input\+Stream}$<$ Char\+Type, Input\+Byte\+Stream $>$\+::Tell (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classAutoUTFInputStream_a759b3d2690679ff9eef0c18cb2fbb0cf}{}\label{classAutoUTFInputStream_a759b3d2690679ff9eef0c18cb2fbb0cf}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{encodedstream_8h}{encodedstream.\+h}\end{DoxyCompactItemize}

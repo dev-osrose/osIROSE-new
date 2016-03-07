@@ -1,0 +1,58 @@
+\hypertarget{pbjson_8cpp}{}\section{core/src/pbjson.cpp File Reference}
+\label{pbjson_8cpp}\index{core/src/pbjson.\+cpp@{core/src/pbjson.\+cpp}}
+{\ttfamily \#include \char`\"{}pbjson.\+hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}bin2ascii.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}rapidjson/rapidjson.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}rapidjson/writer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}rapidjson/stringbuffer.\+h\char`\"{}}\\*
+Include dependency graph for pbjson.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pbjson_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacepbjson}{pbjson}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pbjson_8cpp_ab81c8f8b633e0fbb4a252ee35c17b91c}{R\+E\+T\+U\+R\+N\+\_\+\+E\+RR}(id,  cause)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespacepbjson_a931d89259b15f87fb5ba514710433fe2}{pbjson\+::json2string} (const \hyperlink{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{rapidjson\+::\+Value} $\ast$json, std\+::string \&str)
+\item 
+void \hyperlink{namespacepbjson_a7c8080c9c186ef58e215fda623b24897}{pbjson\+::pb2json} (const Message $\ast$msg, std\+::string \&str)
+\item 
+\hyperlink{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{rapidjson\+::\+Value} $\ast$ \hyperlink{namespacepbjson_a77e3796d92415cdf030291b845a9a5d2}{pbjson\+::pb2jsonobject} (const google\+::protobuf\+::\+Message $\ast$msg)
+\item 
+\hyperlink{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{rapidjson\+::\+Value} $\ast$ \hyperlink{namespacepbjson_ab6084bc917c23308e401e1e2d672ceda}{pbjson\+::pb2jsonobject} (const google\+::protobuf\+::\+Message $\ast$msg, \hyperlink{classGenericValue_a7beb83860c1b8d2a0e2a7da9796b2fa1}{rapidjson\+::\+Value\+::\+Allocator\+Type} \&allocator)
+\item 
+int \hyperlink{namespacepbjson_ad97f792e973f44aa3a8e13c9dd52b812}{pbjson\+::json2pb} (const std\+::string \&json, google\+::protobuf\+::\+Message $\ast$msg, std\+::string \&err)
+\item 
+int \hyperlink{namespacepbjson_a8404dbd232535892c13710986a52e5a0}{pbjson\+::jsonobject2pb} (const \hyperlink{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{rapidjson\+::\+Value} $\ast$json, google\+::protobuf\+::\+Message $\ast$msg, std\+::string \&err)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{pbjson.\+cpp@{pbjson.\+cpp}!R\+E\+T\+U\+R\+N\+\_\+\+E\+RR@{R\+E\+T\+U\+R\+N\+\_\+\+E\+RR}}
+\index{R\+E\+T\+U\+R\+N\+\_\+\+E\+RR@{R\+E\+T\+U\+R\+N\+\_\+\+E\+RR}!pbjson.\+cpp@{pbjson.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+E\+T\+U\+R\+N\+\_\+\+E\+RR}{RETURN_ERR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+T\+U\+R\+N\+\_\+\+E\+RR(
+\begin{DoxyParamCaption}
+\item[{}]{id, }
+\item[{}]{cause}
+\end{DoxyParamCaption}
+)}\hypertarget{pbjson_8cpp_ab81c8f8b633e0fbb4a252ee35c17b91c}{}\label{pbjson_8cpp_ab81c8f8b633e0fbb4a252ee35c17b91c}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do}\{\(\backslash\)
+                                  err = cause; \(\backslash\)
+                                  return id;   \(\backslash\)
+                              \}\textcolor{keywordflow}{while}(0)
+\end{DoxyCode}

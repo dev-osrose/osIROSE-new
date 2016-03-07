@@ -1,0 +1,158 @@
+\hypertarget{structGenericInsituStringStream}{}\section{Generic\+Insitu\+String\+Stream$<$ Encoding $>$ Struct Template Reference}
+\label{structGenericInsituStringStream}\index{Generic\+Insitu\+String\+Stream$<$ Encoding $>$@{Generic\+Insitu\+String\+Stream$<$ Encoding $>$}}
+
+
+A read-\/write string stream.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/rapidjson.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Encoding\+::\+Ch \hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structGenericInsituStringStream_ad8b8417f0501ac261c7232023292c183}{Generic\+Insitu\+String\+Stream} (\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$src)
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} \hyperlink{structGenericInsituStringStream_ae21ba3ff4595ccd5caa4a9858e793f3f}{Peek} ()
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} \hyperlink{structGenericInsituStringStream_afde4e46663225e4c32cfdbcd261f321e}{Take} ()
+\item 
+size\+\_\+t \hyperlink{structGenericInsituStringStream_aa9a84abb24e8c93b683a2e7bfea309db}{Tell} ()
+\item 
+void \hyperlink{structGenericInsituStringStream_a74f92f9a4c34bd65aab4b99f519a543a}{Put} (\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} c)
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$ \hyperlink{structGenericInsituStringStream_afc671072f56eb6e8d9009061c6565dd4}{Put\+Begin} ()
+\item 
+size\+\_\+t \hyperlink{structGenericInsituStringStream_a93702b08ff29c66bde389b0d4e9efa5a}{Put\+End} (\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$begin)
+\item 
+void \hyperlink{structGenericInsituStringStream_a53597dc98a03a6a051c37c4f1046bd04}{Flush} ()
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$ \hyperlink{structGenericInsituStringStream_af91a643e5a93292bc0fbda33320caf20}{Push} (size\+\_\+t count)
+\item 
+void \hyperlink{structGenericInsituStringStream_ad2c56d9dd64268ad72aab95f981fd761}{Pop} (size\+\_\+t count)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$ \hyperlink{structGenericInsituStringStream_af3cc551dd07fcca39db84459f4d4e718}{src\+\_\+}
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$ \hyperlink{structGenericInsituStringStream_ab0e7a73638a7a8db81aa9b26714b0e3b}{dst\+\_\+}
+\item 
+\hyperlink{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{Ch} $\ast$ \hyperlink{structGenericInsituStringStream_af5a7116bdd9bfde5141c298a5b7566b0}{head\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Encoding$>$\\*
+struct Generic\+Insitu\+String\+Stream$<$ Encoding $>$}
+
+A read-\/write string stream. 
+
+This string stream is particularly designed for in-\/situ parsing. \begin{DoxyNote}{Note}
+implements Stream concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ typedef Encoding\+::\+Ch {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::{\bf Ch}}\hypertarget{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}{}\label{structGenericInsituStringStream_a277308a58f551f11d0d9a20823702b5a}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Generic\+Insitu\+String\+Stream(\+Ch $\ast$src)}{GenericInsituStringStream(Ch *src)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::{\bf Generic\+Insitu\+String\+Stream} (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{src}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_ad8b8417f0501ac261c7232023292c183}{}\label{structGenericInsituStringStream_ad8b8417f0501ac261c7232023292c183}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Flush@{Flush}}
+\index{Flush@{Flush}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ void {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_a53597dc98a03a6a051c37c4f1046bd04}{}\label{structGenericInsituStringStream_a53597dc98a03a6a051c37c4f1046bd04}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Peek@{Peek}}
+\index{Peek@{Peek}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Peek()}{Peek()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch} {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Peek (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_ae21ba3ff4595ccd5caa4a9858e793f3f}{}\label{structGenericInsituStringStream_ae21ba3ff4595ccd5caa4a9858e793f3f}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Pop@{Pop}}
+\index{Pop@{Pop}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Pop(size\+\_\+t count)}{Pop(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ void {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Pop (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_ad2c56d9dd64268ad72aab95f981fd761}{}\label{structGenericInsituStringStream_ad2c56d9dd64268ad72aab95f981fd761}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Push@{Push}}
+\index{Push@{Push}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Push(size\+\_\+t count)}{Push(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Push (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_af91a643e5a93292bc0fbda33320caf20}{}\label{structGenericInsituStringStream_af91a643e5a93292bc0fbda33320caf20}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Put@{Put}}
+\index{Put@{Put}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put(\+Ch c)}{Put(Ch c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ void {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_a74f92f9a4c34bd65aab4b99f519a543a}{}\label{structGenericInsituStringStream_a74f92f9a4c34bd65aab4b99f519a543a}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Put\+Begin@{Put\+Begin}}
+\index{Put\+Begin@{Put\+Begin}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+Begin()}{PutBegin()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Put\+Begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_afc671072f56eb6e8d9009061c6565dd4}{}\label{structGenericInsituStringStream_afc671072f56eb6e8d9009061c6565dd4}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Put\+End@{Put\+End}}
+\index{Put\+End@{Put\+End}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+End(\+Ch $\ast$begin)}{PutEnd(Ch *begin)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ size\+\_\+t {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Put\+End (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{begin}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_a93702b08ff29c66bde389b0d4e9efa5a}{}\label{structGenericInsituStringStream_a93702b08ff29c66bde389b0d4e9efa5a}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Take@{Take}}
+\index{Take@{Take}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Take()}{Take()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch} {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Take (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_afde4e46663225e4c32cfdbcd261f321e}{}\label{structGenericInsituStringStream_afde4e46663225e4c32cfdbcd261f321e}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!Tell@{Tell}}
+\index{Tell@{Tell}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Tell()}{Tell()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ size\+\_\+t {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::Tell (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericInsituStringStream_aa9a84abb24e8c93b683a2e7bfea309db}{}\label{structGenericInsituStringStream_aa9a84abb24e8c93b683a2e7bfea309db}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!dst\+\_\+@{dst\+\_\+}}
+\index{dst\+\_\+@{dst\+\_\+}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{dst\+\_\+}{dst_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::dst\+\_\+}\hypertarget{structGenericInsituStringStream_ab0e7a73638a7a8db81aa9b26714b0e3b}{}\label{structGenericInsituStringStream_ab0e7a73638a7a8db81aa9b26714b0e3b}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!head\+\_\+@{head\+\_\+}}
+\index{head\+\_\+@{head\+\_\+}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{head\+\_\+}{head_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::head\+\_\+}\hypertarget{structGenericInsituStringStream_af5a7116bdd9bfde5141c298a5b7566b0}{}\label{structGenericInsituStringStream_af5a7116bdd9bfde5141c298a5b7566b0}
+\index{Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}!src\+\_\+@{src\+\_\+}}
+\index{src\+\_\+@{src\+\_\+}!Generic\+Insitu\+String\+Stream@{Generic\+Insitu\+String\+Stream}}
+\subsubsection[{\texorpdfstring{src\+\_\+}{src_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+Insitu\+String\+Stream}$<$ Encoding $>$\+::src\+\_\+}\hypertarget{structGenericInsituStringStream_af3cc551dd07fcca39db84459f4d4e718}{}\label{structGenericInsituStringStream_af3cc551dd07fcca39db84459f4d4e718}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{rapidjson_8h}{rapidjson.\+h}\end{DoxyCompactItemize}

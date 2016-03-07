@@ -1,0 +1,143 @@
+\hypertarget{structGenericStringStream}{}\section{Generic\+String\+Stream$<$ Encoding $>$ Struct Template Reference}
+\label{structGenericStringStream}\index{Generic\+String\+Stream$<$ Encoding $>$@{Generic\+String\+Stream$<$ Encoding $>$}}
+
+
+Read-\/only string stream.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/rapidjson.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Encoding\+::\+Ch \hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structGenericStringStream_a6b20885ed64e33f5d081a1e83b07da06}{Generic\+String\+Stream} (const \hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} $\ast$src)
+\item 
+\hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} \hyperlink{structGenericStringStream_a87d794a70cf132f32521fb2b145ba58d}{Peek} () const 
+\item 
+\hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} \hyperlink{structGenericStringStream_a0d26e3e77e4fca64a87c2d71f48ac5e5}{Take} ()
+\item 
+size\+\_\+t \hyperlink{structGenericStringStream_a71dde3ded678912be1ef56376a72a653}{Tell} () const 
+\item 
+\hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} $\ast$ \hyperlink{structGenericStringStream_a88c908b4dac9773240ce4bca4b6dd837}{Put\+Begin} ()
+\item 
+void \hyperlink{structGenericStringStream_aaa59dc5313151a4125bf7840f87a33eb}{Put} (\hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch})
+\item 
+void \hyperlink{structGenericStringStream_a5ff1a870d9334cd054cf4ca34c86ddc3}{Flush} ()
+\item 
+size\+\_\+t \hyperlink{structGenericStringStream_a07b942bacda494afb3b2f7629cef14af}{Put\+End} (\hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} $\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} $\ast$ \hyperlink{structGenericStringStream_aeda813798e3f2d6bfdac86afc11b6b80}{src\+\_\+}
+\begin{DoxyCompactList}\small\item\em Current read position. \end{DoxyCompactList}\item 
+const \hyperlink{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{Ch} $\ast$ \hyperlink{structGenericStringStream_a3c86ef1e1f0655028cb8a3afce11ee4f}{head\+\_\+}
+\begin{DoxyCompactList}\small\item\em Original head of the string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Encoding$>$\\*
+struct Generic\+String\+Stream$<$ Encoding $>$}
+
+Read-\/only string stream. 
+
+\begin{DoxyNote}{Note}
+implements Stream concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ typedef Encoding\+::\+Ch {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::{\bf Ch}}\hypertarget{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}{}\label{structGenericStringStream_a4289aca895330084ff3168e37e4f08bd}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Generic\+String\+Stream(const Ch $\ast$src)}{GenericStringStream(const Ch *src)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::{\bf Generic\+String\+Stream} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{src}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a6b20885ed64e33f5d081a1e83b07da06}{}\label{structGenericStringStream_a6b20885ed64e33f5d081a1e83b07da06}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Flush@{Flush}}
+\index{Flush@{Flush}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ void {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a5ff1a870d9334cd054cf4ca34c86ddc3}{}\label{structGenericStringStream_a5ff1a870d9334cd054cf4ca34c86ddc3}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Peek@{Peek}}
+\index{Peek@{Peek}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Peek() const }{Peek() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch} {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Peek (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a87d794a70cf132f32521fb2b145ba58d}{}\label{structGenericStringStream_a87d794a70cf132f32521fb2b145ba58d}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Put@{Put}}
+\index{Put@{Put}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put(\+Ch)}{Put(Ch)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ void {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_aaa59dc5313151a4125bf7840f87a33eb}{}\label{structGenericStringStream_aaa59dc5313151a4125bf7840f87a33eb}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Put\+Begin@{Put\+Begin}}
+\index{Put\+Begin@{Put\+Begin}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+Begin()}{PutBegin()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch}$\ast$ {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Put\+Begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a88c908b4dac9773240ce4bca4b6dd837}{}\label{structGenericStringStream_a88c908b4dac9773240ce4bca4b6dd837}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Put\+End@{Put\+End}}
+\index{Put\+End@{Put\+End}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+End(\+Ch $\ast$)}{PutEnd(Ch *)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ size\+\_\+t {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Put\+End (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch} $\ast$}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a07b942bacda494afb3b2f7629cef14af}{}\label{structGenericStringStream_a07b942bacda494afb3b2f7629cef14af}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Take@{Take}}
+\index{Take@{Take}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Take()}{Take()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ {\bf Ch} {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Take (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a0d26e3e77e4fca64a87c2d71f48ac5e5}{}\label{structGenericStringStream_a0d26e3e77e4fca64a87c2d71f48ac5e5}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!Tell@{Tell}}
+\index{Tell@{Tell}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{Tell() const }{Tell() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ size\+\_\+t {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::Tell (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringStream_a71dde3ded678912be1ef56376a72a653}{}\label{structGenericStringStream_a71dde3ded678912be1ef56376a72a653}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!head\+\_\+@{head\+\_\+}}
+\index{head\+\_\+@{head\+\_\+}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{head\+\_\+}{head_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ const {\bf Ch}$\ast$ {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::head\+\_\+}\hypertarget{structGenericStringStream_a3c86ef1e1f0655028cb8a3afce11ee4f}{}\label{structGenericStringStream_a3c86ef1e1f0655028cb8a3afce11ee4f}
+
+
+Original head of the string. 
+
+\index{Generic\+String\+Stream@{Generic\+String\+Stream}!src\+\_\+@{src\+\_\+}}
+\index{src\+\_\+@{src\+\_\+}!Generic\+String\+Stream@{Generic\+String\+Stream}}
+\subsubsection[{\texorpdfstring{src\+\_\+}{src_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding$>$ const {\bf Ch}$\ast$ {\bf Generic\+String\+Stream}$<$ Encoding $>$\+::src\+\_\+}\hypertarget{structGenericStringStream_aeda813798e3f2d6bfdac86afc11b6b80}{}\label{structGenericStringStream_aeda813798e3f2d6bfdac86afc11b6b80}
+
+
+Current read position. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{rapidjson_8h}{rapidjson.\+h}\end{DoxyCompactItemize}

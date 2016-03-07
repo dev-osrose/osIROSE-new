@@ -1,0 +1,267 @@
+\hypertarget{structGenericStringRef}{}\section{Generic\+String\+Ref$<$ Char\+Type $>$ Struct Template Reference}
+\label{structGenericStringRef}\index{Generic\+String\+Ref$<$ Char\+Type $>$@{Generic\+String\+Ref$<$ Char\+Type $>$}}
+
+
+Reference to a constant string (not taking a copy)  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/document.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Char\+Type \hyperlink{structGenericStringRef_a16908c3fce41be380061330c14ba2140}{Ch}
+\begin{DoxyCompactList}\small\item\em character type of the string \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$Size\+Type N$>$ }\\\hyperlink{structGenericStringRef_aae0c070f914d2486a560150a927c22dc}{Generic\+String\+Ref} (const Char\+Type(\&str)\mbox{[}N\mbox{]}) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT
+\begin{DoxyCompactList}\small\item\em Create string reference from {\ttfamily const} character array. \end{DoxyCompactList}\item 
+\hyperlink{structGenericStringRef_a9e80d81d5ad49cf0fb4128ace8c548d9}{Generic\+String\+Ref} (const Char\+Type $\ast$str)
+\begin{DoxyCompactList}\small\item\em Explicitly create string reference from {\ttfamily const} character pointer. \end{DoxyCompactList}\item 
+\hyperlink{structGenericStringRef_a8b2c6a7fdc4da1e7055f7fdcf0ac517f}{Generic\+String\+Ref} (const Char\+Type $\ast$str, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} len)
+\begin{DoxyCompactList}\small\item\em Create constant string reference from pointer and length. \end{DoxyCompactList}\item 
+\hyperlink{structGenericStringRef_a61a4241c23f65626ddc1da4ae5dac1b8}{operator const Ch $\ast$} () const 
+\begin{DoxyCompactList}\small\item\em implicit conversion to plain Char\+Type pointer \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{structGenericStringRef_a16908c3fce41be380061330c14ba2140}{Ch} $\ast$const \hyperlink{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}{s}
+\begin{DoxyCompactList}\small\item\em plain Char\+Type pointer \end{DoxyCompactList}\item 
+const \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} \hyperlink{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}{length}
+\begin{DoxyCompactList}\small\item\em length of the string (excluding the trailing N\+U\+LL terminator) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Related Functions}
+(Note that these are not member functions.) \begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Char\+Type $>$ }\\\hyperlink{structGenericStringRef}{Generic\+String\+Ref}$<$ Char\+Type $>$ \hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref} (const Char\+Type $\ast$str)
+\begin{DoxyCompactList}\small\item\em Mark a character pointer as constant string. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Char\+Type $>$ }\\\hyperlink{structGenericStringRef}{Generic\+String\+Ref}$<$ Char\+Type $>$ \hyperlink{structGenericStringRef_a578c51ab574a50a9c760b9da7c7562f2}{String\+Ref} (const Char\+Type $\ast$str, size\+\_\+t \hyperlink{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}{length})
+\begin{DoxyCompactList}\small\item\em Mark a character pointer as constant string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Char\+Type$>$\\*
+struct Generic\+String\+Ref$<$ Char\+Type $>$}
+
+Reference to a constant string (not taking a copy) 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & character type of the string\\
+\hline
+\end{DoxyTemplParams}
+This helper class is used to automatically infer constant string references for string literals, especially from {\ttfamily const} {\bfseries }(!) character arrays.
+
+The main use is for creating J\+S\+ON string values without copying the source string via an Allocator. This requires that the referenced string pointers have a sufficient lifetime, which exceeds the lifetime of the associated \hyperlink{classGenericValue}{Generic\+Value}.
+
+{\bfseries Example} 
+\begin{DoxyCode}
+\hyperlink{classGenericValue}{Value} v(\textcolor{stringliteral}{"foo"});   \textcolor{comment}{// ok, no need to copy & calculate length}
+\textcolor{keyword}{const} \textcolor{keywordtype}{char} foo[] = \textcolor{stringliteral}{"foo"};
+v.SetString(foo); \textcolor{comment}{// ok}
+
+\textcolor{keyword}{const} \textcolor{keywordtype}{char}* bar = foo;
+\textcolor{comment}{// Value x(bar); // not ok, can't rely on bar's lifetime}
+\hyperlink{classGenericValue}{Value} x(\hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{StringRef}(bar)); \textcolor{comment}{// lifetime explicitly guaranteed by user}
+\hyperlink{classGenericValue}{Value} y(\hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{StringRef}(bar, 3));  \textcolor{comment}{// ok, explicitly pass length}
+\end{DoxyCode}
+
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref}, Generic\+Value\+::\+Set\+String 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ typedef Char\+Type {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::{\bf Ch}}\hypertarget{structGenericStringRef_a16908c3fce41be380061330c14ba2140}{}\label{structGenericStringRef_a16908c3fce41be380061330c14ba2140}
+
+
+character type of the string 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{Generic\+String\+Ref(const Char\+Type(\&str)[N]) R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+N\+O\+E\+X\+C\+E\+PT}{GenericStringRef(const CharType(&str)[N]) RAPIDJSON_NOEXCEPT}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ template$<$Size\+Type N$>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::{\bf Generic\+String\+Ref} (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type(\&)}]{str\mbox{[}\+N\mbox{]}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringRef_aae0c070f914d2486a560150a927c22dc}{}\label{structGenericStringRef_aae0c070f914d2486a560150a927c22dc}
+
+
+Create string reference from {\ttfamily const} character array. 
+
+This constructor implicitly creates a constant string reference from a {\ttfamily const} character array. It has better performance than \hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref(const Char\+Type$\ast$)} by inferring the string \hyperlink{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}{length} from the array length, and also supports strings containing null characters.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em N} & length of the string, automatically inferred\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant character array, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+\hyperlink{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}{s} == str
+\end{DoxyPostcond}
+\begin{DoxyNote}{Note}
+Constant complexity. 
+
+There is a hidden, private overload to disallow references to non-\/const character arrays to be created via this constructor. By this, e.\+g. function-\/scope arrays used to be filled via {\ttfamily snprintf} are excluded from consideration. In such cases, the referenced string should be {\bfseries copied} to the \hyperlink{classGenericValue}{Generic\+Value} instead. 
+\end{DoxyNote}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{Generic\+String\+Ref(const Char\+Type $\ast$str)}{GenericStringRef(const CharType *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::{\bf Generic\+String\+Ref} (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{structGenericStringRef_a9e80d81d5ad49cf0fb4128ace8c548d9}{}\label{structGenericStringRef_a9e80d81d5ad49cf0fb4128ace8c548d9}
+
+
+Explicitly create string reference from {\ttfamily const} character pointer. 
+
+This constructor can be used to {\bfseries explicitly} create a reference to a constant string pointer.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref(const Char\+Type$\ast$)}
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant character pointer, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+\hyperlink{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}{s} == str
+\end{DoxyPostcond}
+\begin{DoxyNote}{Note}
+There is a hidden, private overload to disallow references to non-\/const character arrays to be created via this constructor. By this, e.\+g. function-\/scope arrays used to be filled via {\ttfamily snprintf} are excluded from consideration. In such cases, the referenced string should be {\bfseries copied} to the \hyperlink{classGenericValue}{Generic\+Value} instead. 
+\end{DoxyNote}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{Generic\+String\+Ref(const Char\+Type $\ast$str, Size\+Type len)}{GenericStringRef(const CharType *str, SizeType len)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::{\bf Generic\+String\+Ref} (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str, }
+\item[{{\bf Size\+Type}}]{len}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringRef_a8b2c6a7fdc4da1e7055f7fdcf0ac517f}{}\label{structGenericStringRef_a8b2c6a7fdc4da1e7055f7fdcf0ac517f}
+
+
+Create constant string reference from pointer and length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & constant string, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value} \\
+\hline
+{\em len} & length of the string, excluding the trailing N\+U\+LL terminator\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+\hyperlink{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}{s} == str \&\& \hyperlink{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}{length} == len 
+\end{DoxyPostcond}
+\begin{DoxyNote}{Note}
+Constant complexity. 
+\end{DoxyNote}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!operator const Ch $\ast$@{operator const Ch $\ast$}}
+\index{operator const Ch $\ast$@{operator const Ch $\ast$}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{operator const Ch $\ast$() const }{operator const Ch *() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::operator const {\bf Ch} $\ast$ (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{structGenericStringRef_a61a4241c23f65626ddc1da4ae5dac1b8}{}\label{structGenericStringRef_a61a4241c23f65626ddc1da4ae5dac1b8}
+
+
+implicit conversion to plain Char\+Type pointer 
+
+
+
+\subsection{Friends And Related Function Documentation}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!String\+Ref@{String\+Ref}}
+\index{String\+Ref@{String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{String\+Ref(const Char\+Type $\ast$str)}{StringRef(const CharType *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$ String\+Ref (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [related]}}\hypertarget{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}{}\label{structGenericStringRef_aa6b9fd9f6aa49405a574c362ba9af6b5}
+
+
+Mark a character pointer as constant string. 
+
+Mark a plain character pointer as a \char`\"{}string literal\char`\"{}. This function can be used to avoid copying a character string to be referenced as a value in a J\+S\+ON \hyperlink{classGenericValue}{Generic\+Value} object, if the string\textquotesingle{}s lifetime is known to be valid long enough. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & Character type of the string \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant string, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structGenericStringRef}{Generic\+String\+Ref} string reference object
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classGenericValue_abb2887958974fef1b2b5c8e32cc72ddb}{Generic\+Value\+::\+Generic\+Value(\+String\+Ref\+Type)}, \hyperlink{classGenericValue_a386708557555e6389184de608af5e6a6}{Generic\+Value\+::operator=(\+String\+Ref\+Type)}, Generic\+Value\+::\+Set\+String(\+String\+Ref\+Type), Generic\+Value\+::\+Push\+Back(\+String\+Ref\+Type, Allocator\&), Generic\+Value\+::\+Add\+Member 
+\end{DoxySeeAlso}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!String\+Ref@{String\+Ref}}
+\index{String\+Ref@{String\+Ref}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{String\+Ref(const Char\+Type $\ast$str, size\+\_\+t length)}{StringRef(const CharType *str, size_t length)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$ String\+Ref (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [related]}}\hypertarget{structGenericStringRef_a578c51ab574a50a9c760b9da7c7562f2}{}\label{structGenericStringRef_a578c51ab574a50a9c760b9da7c7562f2}
+
+
+Mark a character pointer as constant string. 
+
+Mark a plain character pointer as a \char`\"{}string literal\char`\"{}. This function can be used to avoid copying a character string to be referenced as a value in a J\+S\+ON \hyperlink{classGenericValue}{Generic\+Value} object, if the string\textquotesingle{}s lifetime is known to be valid long enough.
+
+This version has better performance with supplied length, and also supports string containing null characters.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & character type of the string \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant string, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value} \\
+\hline
+{\em length} & The length of source string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structGenericStringRef}{Generic\+String\+Ref} string reference object 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!length@{length}}
+\index{length@{length}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{length}{length}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ const {\bf Size\+Type} {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::length}\hypertarget{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}{}\label{structGenericStringRef_a4a96d618744ad73f766a1551b1d517fe}
+
+
+length of the string (excluding the trailing N\+U\+LL terminator) 
+
+\index{Generic\+String\+Ref@{Generic\+String\+Ref}!s@{s}}
+\index{s@{s}!Generic\+String\+Ref@{Generic\+String\+Ref}}
+\subsubsection[{\texorpdfstring{s}{s}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type$>$ const {\bf Ch}$\ast$ const {\bf Generic\+String\+Ref}$<$ Char\+Type $>$\+::s}\hypertarget{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}{}\label{structGenericStringRef_ac555994afd329bc9bc1780acf2f9d9be}
+
+
+plain Char\+Type pointer 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{document_8h}{document.\+h}\end{DoxyCompactItemize}

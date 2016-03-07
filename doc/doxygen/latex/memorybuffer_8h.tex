@@ -1,0 +1,49 @@
+\hypertarget{memorybuffer_8h}{}\section{core/include/rapidjson/memorybuffer.h File Reference}
+\label{memorybuffer_8h}\index{core/include/rapidjson/memorybuffer.\+h@{core/include/rapidjson/memorybuffer.\+h}}
+{\ttfamily \#include \char`\"{}rapidjson.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal/stack.\+h\char`\"{}}\\*
+Include dependency graph for memorybuffer.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{memorybuffer_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structGenericMemoryBuffer}{Generic\+Memory\+Buffer$<$ Allocator $>$}
+\begin{DoxyCompactList}\small\item\em Represents an in-\/memory output byte stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{structGenericMemoryBuffer}{Generic\+Memory\+Buffer} \hyperlink{memorybuffer_8h_aad74f4c6994a951097a63ee117039085}{Memory\+Buffer}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$$>$ }\\void \hyperlink{memorybuffer_8h_a635d8eaaf48777150dc08f7d5a8be054}{PutN} (\hyperlink{memorybuffer_8h_aad74f4c6994a951097a63ee117039085}{Memory\+Buffer} \&memory\+Buffer, char c, size\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Implement specialized version of \hyperlink{memorybuffer_8h_a635d8eaaf48777150dc08f7d5a8be054}{Put\+N()} with memset() for better performance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{memorybuffer.\+h@{memorybuffer.\+h}!Memory\+Buffer@{Memory\+Buffer}}
+\index{Memory\+Buffer@{Memory\+Buffer}!memorybuffer.\+h@{memorybuffer.\+h}}
+\subsubsection[{\texorpdfstring{Memory\+Buffer}{MemoryBuffer}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Generic\+Memory\+Buffer} {\bf Memory\+Buffer}}\hypertarget{memorybuffer_8h_aad74f4c6994a951097a63ee117039085}{}\label{memorybuffer_8h_aad74f4c6994a951097a63ee117039085}
+
+
+\subsection{Function Documentation}
+\index{memorybuffer.\+h@{memorybuffer.\+h}!PutN@{PutN}}
+\index{PutN@{PutN}!memorybuffer.\+h@{memorybuffer.\+h}}
+\subsubsection[{\texorpdfstring{Put\+N(\+Memory\+Buffer \&memory\+Buffer, char c, size\+\_\+t n)}{PutN(MemoryBuffer &memoryBuffer, char c, size_t n)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$$>$ void PutN (
+\begin{DoxyParamCaption}
+\item[{{\bf Memory\+Buffer} \&}]{memory\+Buffer, }
+\item[{char}]{c, }
+\item[{size\+\_\+t}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{memorybuffer_8h_a635d8eaaf48777150dc08f7d5a8be054}{}\label{memorybuffer_8h_a635d8eaaf48777150dc08f7d5a8be054}
+
+
+Implement specialized version of \hyperlink{memorybuffer_8h_a635d8eaaf48777150dc08f7d5a8be054}{Put\+N()} with memset() for better performance. 
+

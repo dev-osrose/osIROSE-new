@@ -1,0 +1,119 @@
+\hypertarget{classCMapServer}{}\section{C\+Map\+Server Class Reference}
+\label{classCMapServer}\index{C\+Map\+Server@{C\+Map\+Server}}
+
+
+{\ttfamily \#include $<$map/include/cmapserver.\+h$>$}
+
+
+
+Inheritance diagram for C\+Map\+Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{classCMapServer__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for C\+Map\+Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCMapServer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCMapServer_a7b684adad7c42a4e5346944eefadf8bb}{C\+Map\+Server} (bool \+\_\+isc=false, \hyperlink{stdint_8h_a269259c924dce846340ddbb810db2e3c}{int16\+\_\+t} mapidx=-\/1)
+\item 
+virtual \hyperlink{classCMapServer_ad8d59e4ffdb19d532ba39841e1a71c5c}{$\sim$\+C\+Map\+Server} ()
+\item 
+\hyperlink{stdint_8h_ab1967d8591af1a4e48c37fd2b0f184d0}{int32\+\_\+t} \hyperlink{classCMapServer_a32f94668a9c281bb756abb27555879c1}{Get\+Map\+I\+DX} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffc}{Server\+Type} \+: int8\+\_\+t \{ \hyperlink{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffca59c59426a33fb4498cd4e8c9cc330619}{Server\+Type\+::\+M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE} = -\/1, 
+\hyperlink{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffcaf23d8032f692800f9da91040a57ee6d9}{Server\+Type\+::\+W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classCMapServer_ac9329021a750c230f141b25cfed46a61}{On\+Accepted} (tcp\+::socket \+\_\+sock)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{stdint_8h_ab1967d8591af1a4e48c37fd2b0f184d0}{int32\+\_\+t} \hyperlink{classCMapServer_aface94fa06dc496f2234f9b2ea883a23}{map\+\_\+idx\+\_\+}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Enumeration Documentation}
+\index{C\+Map\+Server@{C\+Map\+Server}!Server\+Type@{Server\+Type}}
+\index{Server\+Type@{Server\+Type}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{Server\+Type}{ServerType}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf C\+Map\+Server\+::\+Server\+Type} \+: {\bf int8\+\_\+t}\hspace{0.3cm}{\ttfamily [strong]}, {\ttfamily [protected]}}\hypertarget{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffc}{}\label{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffc}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE@{M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE}!C\+Map\+Server@{C\+Map\+Server}}\index{C\+Map\+Server@{C\+Map\+Server}!M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE@{M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE}}\item[{\em 
+M\+A\+S\+T\+E\+R\+\_\+\+N\+O\+DE\hypertarget{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffca59c59426a33fb4498cd4e8c9cc330619}{}\label{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffca59c59426a33fb4498cd4e8c9cc330619}
+}]\index{W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD@{W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD}!C\+Map\+Server@{C\+Map\+Server}}\index{C\+Map\+Server@{C\+Map\+Server}!W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD@{W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD}}\item[{\em 
+W\+O\+R\+K\+E\+R\+\_\+\+T\+H\+R\+E\+AD\hypertarget{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffcaf23d8032f692800f9da91040a57ee6d9}{}\label{classCMapServer_a6cfeacd7632a08bc2b12d37fb4fa3ffcaf23d8032f692800f9da91040a57ee6d9}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Map\+Server@{C\+Map\+Server}!C\+Map\+Server@{C\+Map\+Server}}
+\index{C\+Map\+Server@{C\+Map\+Server}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{C\+Map\+Server(bool \+\_\+isc=false, int16\+\_\+t mapidx=-\/1)}{CMapServer(bool _isc=false, int16_t mapidx=-1)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Map\+Server\+::\+C\+Map\+Server (
+\begin{DoxyParamCaption}
+\item[{bool}]{\+\_\+isc = {\ttfamily false}, }
+\item[{{\bf int16\+\_\+t}}]{mapidx = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}\hypertarget{classCMapServer_a7b684adad7c42a4e5346944eefadf8bb}{}\label{classCMapServer_a7b684adad7c42a4e5346944eefadf8bb}
+\index{C\+Map\+Server@{C\+Map\+Server}!````~C\+Map\+Server@{$\sim$\+C\+Map\+Server}}
+\index{````~C\+Map\+Server@{$\sim$\+C\+Map\+Server}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{$\sim$\+C\+Map\+Server()}{~CMapServer()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Map\+Server\+::$\sim$\+C\+Map\+Server (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classCMapServer_ad8d59e4ffdb19d532ba39841e1a71c5c}{}\label{classCMapServer_ad8d59e4ffdb19d532ba39841e1a71c5c}
+
+
+\subsection{Member Function Documentation}
+\index{C\+Map\+Server@{C\+Map\+Server}!Get\+Map\+I\+DX@{Get\+Map\+I\+DX}}
+\index{Get\+Map\+I\+DX@{Get\+Map\+I\+DX}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{Get\+Map\+I\+D\+X()}{GetMapIDX()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int32\+\_\+t} C\+Map\+Server\+::\+Get\+Map\+I\+DX (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCMapServer_a32f94668a9c281bb756abb27555879c1}{}\label{classCMapServer_a32f94668a9c281bb756abb27555879c1}
+\index{C\+Map\+Server@{C\+Map\+Server}!On\+Accepted@{On\+Accepted}}
+\index{On\+Accepted@{On\+Accepted}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{On\+Accepted(tcp\+::socket \+\_\+sock)}{OnAccepted(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Map\+Server\+::\+On\+Accepted (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCMapServer_ac9329021a750c230f141b25cfed46a61}{}\label{classCMapServer_ac9329021a750c230f141b25cfed46a61}
+
+
+Reimplemented from \hyperlink{classCRoseServer_a7d3dc93a0a3495c2233aced6b8ca9733}{C\+Rose\+Server}.
+
+
+
+\subsection{Member Data Documentation}
+\index{C\+Map\+Server@{C\+Map\+Server}!map\+\_\+idx\+\_\+@{map\+\_\+idx\+\_\+}}
+\index{map\+\_\+idx\+\_\+@{map\+\_\+idx\+\_\+}!C\+Map\+Server@{C\+Map\+Server}}
+\subsubsection[{\texorpdfstring{map\+\_\+idx\+\_\+}{map_idx_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int32\+\_\+t} C\+Map\+Server\+::map\+\_\+idx\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCMapServer_aface94fa06dc496f2234f9b2ea883a23}{}\label{classCMapServer_aface94fa06dc496f2234f9b2ea883a23}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+map/include/\hyperlink{cmapserver_8h}{cmapserver.\+h}\item 
+map/src/\hyperlink{cmapserver_8cpp}{cmapserver.\+cpp}\end{DoxyCompactItemize}

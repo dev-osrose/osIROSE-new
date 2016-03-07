@@ -1,0 +1,332 @@
+\hypertarget{namespaceinternal}{}\section{internal Namespace Reference}
+\label{namespaceinternal}\index{internal@{internal}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classinternal_1_1BigInteger}{Big\+Integer}
+\item 
+struct \hyperlink{structinternal_1_1DiyFp}{Diy\+Fp}
+\item 
+class \hyperlink{classinternal_1_1Double}{Double}
+\item 
+struct \hyperlink{structinternal_1_1IsGenericValue}{Is\+Generic\+Value}
+\item 
+struct \hyperlink{structinternal_1_1IsGenericValueImpl}{Is\+Generic\+Value\+Impl}
+\item 
+struct \hyperlink{structinternal_1_1IsGenericValueImpl_3_01T_00_01typename_01Void_3_01typename_01T_1_1EncodingType794abcc01fcce01e300668fa57e4d036}{Is\+Generic\+Value\+Impl$<$ T, typename Void$<$ typename T\+::\+Encoding\+Type $>$\+::\+Type, typename Void$<$ typename T\+::\+Allocator\+Type $>$\+::\+Type $>$}
+\item 
+class \hyperlink{classinternal_1_1Stack}{Stack}
+\begin{DoxyCompactList}\small\item\em A type-\/unsafe stack for storing different types of data. \end{DoxyCompactList}\item 
+class \hyperlink{classinternal_1_1StreamLocalCopy}{Stream\+Local\+Copy}
+\item 
+class \hyperlink{classinternal_1_1StreamLocalCopy_3_01Stream_00_010_01_4}{Stream\+Local\+Copy$<$ Stream, 0 $>$}
+\begin{DoxyCompactList}\small\item\em Keep reference. \end{DoxyCompactList}\item 
+class \hyperlink{classinternal_1_1StreamLocalCopy_3_01Stream_00_011_01_4}{Stream\+Local\+Copy$<$ Stream, 1 $>$}
+\begin{DoxyCompactList}\small\item\em Do copy optimization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structinternal_1_1DiyFp}{Diy\+Fp} \hyperlink{namespaceinternal_a3e95f043ed6c40cda1c1bc33c2f0ece2}{Get\+Cached\+Power\+By\+Index} (size\+\_\+t index)
+\item 
+\hyperlink{structinternal_1_1DiyFp}{Diy\+Fp} \hyperlink{namespaceinternal_abac3dbfa1070756c37725829148f6038}{Get\+Cached\+Power} (int e, int $\ast$K)
+\item 
+\hyperlink{structinternal_1_1DiyFp}{Diy\+Fp} \hyperlink{namespaceinternal_a74b8503d044bf6c0a5e90c5bea3aba42}{Get\+Cached\+Power10} (int exp, int $\ast$out\+Exp)
+\item 
+void \hyperlink{namespaceinternal_a234e10bef097ccb2f202b7a133086e71}{Grisu\+Round} (char $\ast$buffer, int len, \hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} delta, \hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} rest, \hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} ten\+\_\+kappa, \hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} wp\+\_\+w)
+\item 
+unsigned \hyperlink{namespaceinternal_ab2e324c403dc7671f732e8959886a8d1}{Count\+Decimal\+Digit32} (\hyperlink{stdint_8h_a435d1572bf3f880d55459d9805097f62}{uint32\+\_\+t} n)
+\item 
+void \hyperlink{namespaceinternal_a47be9aea8d0f9cae49dc03dc046d2450}{Digit\+Gen} (const \hyperlink{structinternal_1_1DiyFp}{Diy\+Fp} \&W, const \hyperlink{structinternal_1_1DiyFp}{Diy\+Fp} \&Mp, \hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} delta, char $\ast$buffer, int $\ast$len, int $\ast$K)
+\item 
+void \hyperlink{namespaceinternal_aeb7b6c0784b644968003cbd1b9da57e3}{Grisu2} (double value, char $\ast$buffer, int $\ast$length, int $\ast$K)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_acc9a114f2a03bb4c68e9ee99b9ca99c5}{Write\+Exponent} (int K, char $\ast$buffer)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_a18aa7a3da7eb23f64a2eb7f3ed01a44a}{Prettify} (char $\ast$buffer, int length, int k)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_a43bb02fa46863dcc2dc8a2484f7ad5b1}{dtoa} (double value, char $\ast$buffer)
+\item 
+const char $\ast$ \hyperlink{namespaceinternal_a95459e80b3f0e89ad03ebd0c8e55844c}{Get\+Digits\+Lut} ()
+\item 
+char $\ast$ \hyperlink{namespaceinternal_a8628d3698be60950743bc49d41a1cca7}{u32toa} (\hyperlink{stdint_8h_a435d1572bf3f880d55459d9805097f62}{uint32\+\_\+t} value, char $\ast$buffer)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_a79bdea0c3f5e0c34c5c0aa686fc823c1}{i32toa} (\hyperlink{stdint_8h_ab1967d8591af1a4e48c37fd2b0f184d0}{int32\+\_\+t} value, char $\ast$buffer)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_aff16deebb94b3ea88a1dfff7bbc377b0}{u64toa} (\hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} value, char $\ast$buffer)
+\item 
+char $\ast$ \hyperlink{namespaceinternal_a51566359e64c9746656c396c63a23d61}{i64toa} (\hyperlink{stdint_8h_a414156feea104f8f75b4ed9e3121b2f6}{int64\+\_\+t} value, char $\ast$buffer)
+\item 
+double \hyperlink{namespaceinternal_af01c41d045d596e2f8d1888cf6fbecb6}{Pow10} (int n)
+\begin{DoxyCompactList}\small\item\em Computes integer powers of 10 in double (10.\+0$^\wedge$n). \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Ch $>$ }\\\hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} \hyperlink{namespaceinternal_a86326fb0c9d7c7ea8edd7deedbb2b26e}{Str\+Len} (const Ch $\ast$s)
+\begin{DoxyCompactList}\small\item\em Custom strlen() which works on different character types. \end{DoxyCompactList}\item 
+double \hyperlink{namespaceinternal_aa1bb51d788788eb5390a16462b40d98d}{Fast\+Path} (double significand, int exp)
+\item 
+double \hyperlink{namespaceinternal_a9e5fac4695310f09892fe52b1d24ab19}{Strtod\+Normal\+Precision} (double d, int p)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \hyperlink{namespaceinternal_ace304441347098a4953ea99f50805da9}{Min3} (T a, T b, T c)
+\item 
+int \hyperlink{namespaceinternal_a190f9c286df64526a7e3550528ed6b02}{Check\+Within\+Half\+U\+LP} (double b, const \hyperlink{classinternal_1_1BigInteger}{Big\+Integer} \&d, int d\+Exp)
+\item 
+bool \hyperlink{namespaceinternal_a598b2d2f85130bff3c3942e4750b9185}{Strtod\+Fast} (double d, int p, double $\ast$result)
+\item 
+bool \hyperlink{namespaceinternal_a8861eacf25d2024c832dfa611407d25a}{Strtod\+Diy\+Fp} (const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp, double $\ast$result)
+\item 
+double \hyperlink{namespaceinternal_a21546973704caf6e4c8b0d4869a614a6}{Strtod\+Big\+Integer} (double approx, const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp)
+\item 
+double \hyperlink{namespaceinternal_a899ff5a0c5f9b203d720bb6f5631ed10}{Strtod\+Full\+Precision} (double d, int p, const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{internal@{internal}!Check\+Within\+Half\+U\+LP@{Check\+Within\+Half\+U\+LP}}
+\index{Check\+Within\+Half\+U\+LP@{Check\+Within\+Half\+U\+LP}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Check\+Within\+Half\+U\+L\+P(double b, const Big\+Integer \&d, int d\+Exp)}{CheckWithinHalfULP(double b, const BigInteger &d, int dExp)}}]{\setlength{\rightskip}{0pt plus 5cm}int internal\+::\+Check\+Within\+Half\+U\+LP (
+\begin{DoxyParamCaption}
+\item[{double}]{b, }
+\item[{const {\bf Big\+Integer} \&}]{d, }
+\item[{int}]{d\+Exp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a190f9c286df64526a7e3550528ed6b02}{}\label{namespaceinternal_a190f9c286df64526a7e3550528ed6b02}
+\index{internal@{internal}!Count\+Decimal\+Digit32@{Count\+Decimal\+Digit32}}
+\index{Count\+Decimal\+Digit32@{Count\+Decimal\+Digit32}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Count\+Decimal\+Digit32(uint32\+\_\+t n)}{CountDecimalDigit32(uint32_t n)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned internal\+::\+Count\+Decimal\+Digit32 (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_ab2e324c403dc7671f732e8959886a8d1}{}\label{namespaceinternal_ab2e324c403dc7671f732e8959886a8d1}
+\index{internal@{internal}!Digit\+Gen@{Digit\+Gen}}
+\index{Digit\+Gen@{Digit\+Gen}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Digit\+Gen(const Diy\+Fp \&\+W, const Diy\+Fp \&\+Mp, uint64\+\_\+t delta, char $\ast$buffer, int $\ast$len, int $\ast$\+K)}{DigitGen(const DiyFp &W, const DiyFp &Mp, uint64_t delta, char *buffer, int *len, int *K)}}]{\setlength{\rightskip}{0pt plus 5cm}void internal\+::\+Digit\+Gen (
+\begin{DoxyParamCaption}
+\item[{const {\bf Diy\+Fp} \&}]{W, }
+\item[{const {\bf Diy\+Fp} \&}]{Mp, }
+\item[{{\bf uint64\+\_\+t}}]{delta, }
+\item[{char $\ast$}]{buffer, }
+\item[{int $\ast$}]{len, }
+\item[{int $\ast$}]{K}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a47be9aea8d0f9cae49dc03dc046d2450}{}\label{namespaceinternal_a47be9aea8d0f9cae49dc03dc046d2450}
+\index{internal@{internal}!dtoa@{dtoa}}
+\index{dtoa@{dtoa}!internal@{internal}}
+\subsubsection[{\texorpdfstring{dtoa(double value, char $\ast$buffer)}{dtoa(double value, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::dtoa (
+\begin{DoxyParamCaption}
+\item[{double}]{value, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a43bb02fa46863dcc2dc8a2484f7ad5b1}{}\label{namespaceinternal_a43bb02fa46863dcc2dc8a2484f7ad5b1}
+\index{internal@{internal}!Fast\+Path@{Fast\+Path}}
+\index{Fast\+Path@{Fast\+Path}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Fast\+Path(double significand, int exp)}{FastPath(double significand, int exp)}}]{\setlength{\rightskip}{0pt plus 5cm}double internal\+::\+Fast\+Path (
+\begin{DoxyParamCaption}
+\item[{double}]{significand, }
+\item[{int}]{exp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_aa1bb51d788788eb5390a16462b40d98d}{}\label{namespaceinternal_aa1bb51d788788eb5390a16462b40d98d}
+\index{internal@{internal}!Get\+Cached\+Power@{Get\+Cached\+Power}}
+\index{Get\+Cached\+Power@{Get\+Cached\+Power}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Get\+Cached\+Power(int e, int $\ast$\+K)}{GetCachedPower(int e, int *K)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Diy\+Fp} internal\+::\+Get\+Cached\+Power (
+\begin{DoxyParamCaption}
+\item[{int}]{e, }
+\item[{int $\ast$}]{K}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_abac3dbfa1070756c37725829148f6038}{}\label{namespaceinternal_abac3dbfa1070756c37725829148f6038}
+\index{internal@{internal}!Get\+Cached\+Power10@{Get\+Cached\+Power10}}
+\index{Get\+Cached\+Power10@{Get\+Cached\+Power10}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Get\+Cached\+Power10(int exp, int $\ast$out\+Exp)}{GetCachedPower10(int exp, int *outExp)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Diy\+Fp} internal\+::\+Get\+Cached\+Power10 (
+\begin{DoxyParamCaption}
+\item[{int}]{exp, }
+\item[{int $\ast$}]{out\+Exp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a74b8503d044bf6c0a5e90c5bea3aba42}{}\label{namespaceinternal_a74b8503d044bf6c0a5e90c5bea3aba42}
+\index{internal@{internal}!Get\+Cached\+Power\+By\+Index@{Get\+Cached\+Power\+By\+Index}}
+\index{Get\+Cached\+Power\+By\+Index@{Get\+Cached\+Power\+By\+Index}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Get\+Cached\+Power\+By\+Index(size\+\_\+t index)}{GetCachedPowerByIndex(size_t index)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Diy\+Fp} internal\+::\+Get\+Cached\+Power\+By\+Index (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a3e95f043ed6c40cda1c1bc33c2f0ece2}{}\label{namespaceinternal_a3e95f043ed6c40cda1c1bc33c2f0ece2}
+\index{internal@{internal}!Get\+Digits\+Lut@{Get\+Digits\+Lut}}
+\index{Get\+Digits\+Lut@{Get\+Digits\+Lut}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Get\+Digits\+Lut()}{GetDigitsLut()}}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ internal\+::\+Get\+Digits\+Lut (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a95459e80b3f0e89ad03ebd0c8e55844c}{}\label{namespaceinternal_a95459e80b3f0e89ad03ebd0c8e55844c}
+\index{internal@{internal}!Grisu2@{Grisu2}}
+\index{Grisu2@{Grisu2}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Grisu2(double value, char $\ast$buffer, int $\ast$length, int $\ast$\+K)}{Grisu2(double value, char *buffer, int *length, int *K)}}]{\setlength{\rightskip}{0pt plus 5cm}void internal\+::\+Grisu2 (
+\begin{DoxyParamCaption}
+\item[{double}]{value, }
+\item[{char $\ast$}]{buffer, }
+\item[{int $\ast$}]{length, }
+\item[{int $\ast$}]{K}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_aeb7b6c0784b644968003cbd1b9da57e3}{}\label{namespaceinternal_aeb7b6c0784b644968003cbd1b9da57e3}
+\index{internal@{internal}!Grisu\+Round@{Grisu\+Round}}
+\index{Grisu\+Round@{Grisu\+Round}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Grisu\+Round(char $\ast$buffer, int len, uint64\+\_\+t delta, uint64\+\_\+t rest, uint64\+\_\+t ten\+\_\+kappa, uint64\+\_\+t wp\+\_\+w)}{GrisuRound(char *buffer, int len, uint64_t delta, uint64_t rest, uint64_t ten_kappa, uint64_t wp_w)}}]{\setlength{\rightskip}{0pt plus 5cm}void internal\+::\+Grisu\+Round (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buffer, }
+\item[{int}]{len, }
+\item[{{\bf uint64\+\_\+t}}]{delta, }
+\item[{{\bf uint64\+\_\+t}}]{rest, }
+\item[{{\bf uint64\+\_\+t}}]{ten\+\_\+kappa, }
+\item[{{\bf uint64\+\_\+t}}]{wp\+\_\+w}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a234e10bef097ccb2f202b7a133086e71}{}\label{namespaceinternal_a234e10bef097ccb2f202b7a133086e71}
+closer \index{internal@{internal}!i32toa@{i32toa}}
+\index{i32toa@{i32toa}!internal@{internal}}
+\subsubsection[{\texorpdfstring{i32toa(int32\+\_\+t value, char $\ast$buffer)}{i32toa(int32_t value, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::i32toa (
+\begin{DoxyParamCaption}
+\item[{{\bf int32\+\_\+t}}]{value, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a79bdea0c3f5e0c34c5c0aa686fc823c1}{}\label{namespaceinternal_a79bdea0c3f5e0c34c5c0aa686fc823c1}
+\index{internal@{internal}!i64toa@{i64toa}}
+\index{i64toa@{i64toa}!internal@{internal}}
+\subsubsection[{\texorpdfstring{i64toa(int64\+\_\+t value, char $\ast$buffer)}{i64toa(int64_t value, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::i64toa (
+\begin{DoxyParamCaption}
+\item[{{\bf int64\+\_\+t}}]{value, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a51566359e64c9746656c396c63a23d61}{}\label{namespaceinternal_a51566359e64c9746656c396c63a23d61}
+\index{internal@{internal}!Min3@{Min3}}
+\index{Min3@{Min3}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Min3(\+T a, T b, T c)}{Min3(T a, T b, T c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T internal\+::\+Min3 (
+\begin{DoxyParamCaption}
+\item[{T}]{a, }
+\item[{T}]{b, }
+\item[{T}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_ace304441347098a4953ea99f50805da9}{}\label{namespaceinternal_ace304441347098a4953ea99f50805da9}
+\index{internal@{internal}!Pow10@{Pow10}}
+\index{Pow10@{Pow10}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Pow10(int n)}{Pow10(int n)}}]{\setlength{\rightskip}{0pt plus 5cm}double internal\+::\+Pow10 (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_af01c41d045d596e2f8d1888cf6fbecb6}{}\label{namespaceinternal_af01c41d045d596e2f8d1888cf6fbecb6}
+
+
+Computes integer powers of 10 in double (10.\+0$^\wedge$n). 
+
+This function uses lookup table for fast and accurate results. 
+\begin{DoxyParams}{Parameters}
+{\em n} & non-\/negative exponent. Must $<$= 308. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+10.\+0$^\wedge$n 
+\end{DoxyReturn}
+\index{internal@{internal}!Prettify@{Prettify}}
+\index{Prettify@{Prettify}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Prettify(char $\ast$buffer, int length, int k)}{Prettify(char *buffer, int length, int k)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::\+Prettify (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buffer, }
+\item[{int}]{length, }
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a18aa7a3da7eb23f64a2eb7f3ed01a44a}{}\label{namespaceinternal_a18aa7a3da7eb23f64a2eb7f3ed01a44a}
+\index{internal@{internal}!Str\+Len@{Str\+Len}}
+\index{Str\+Len@{Str\+Len}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Str\+Len(const Ch $\ast$s)}{StrLen(const Ch *s)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Ch $>$ {\bf Size\+Type} internal\+::\+Str\+Len (
+\begin{DoxyParamCaption}
+\item[{const Ch $\ast$}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a86326fb0c9d7c7ea8edd7deedbb2b26e}{}\label{namespaceinternal_a86326fb0c9d7c7ea8edd7deedbb2b26e}
+
+
+Custom strlen() which works on different character types. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Ch} & Character type (e.\+g. char, wchar\+\_\+t, short) \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Null-\/terminated input string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of characters in the string. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This has the same semantics as strlen(), the return value is not number of Unicode codepoints. 
+\end{DoxyNote}
+\index{internal@{internal}!Strtod\+Big\+Integer@{Strtod\+Big\+Integer}}
+\index{Strtod\+Big\+Integer@{Strtod\+Big\+Integer}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Strtod\+Big\+Integer(double approx, const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp)}{StrtodBigInteger(double approx, const char *decimals, size_t length, size_t decimalPosition, int exp)}}]{\setlength{\rightskip}{0pt plus 5cm}double internal\+::\+Strtod\+Big\+Integer (
+\begin{DoxyParamCaption}
+\item[{double}]{approx, }
+\item[{const char $\ast$}]{decimals, }
+\item[{size\+\_\+t}]{length, }
+\item[{size\+\_\+t}]{decimal\+Position, }
+\item[{int}]{exp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a21546973704caf6e4c8b0d4869a614a6}{}\label{namespaceinternal_a21546973704caf6e4c8b0d4869a614a6}
+\index{internal@{internal}!Strtod\+Diy\+Fp@{Strtod\+Diy\+Fp}}
+\index{Strtod\+Diy\+Fp@{Strtod\+Diy\+Fp}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Strtod\+Diy\+Fp(const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp, double $\ast$result)}{StrtodDiyFp(const char *decimals, size_t length, size_t decimalPosition, int exp, double *result)}}]{\setlength{\rightskip}{0pt plus 5cm}bool internal\+::\+Strtod\+Diy\+Fp (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{decimals, }
+\item[{size\+\_\+t}]{length, }
+\item[{size\+\_\+t}]{decimal\+Position, }
+\item[{int}]{exp, }
+\item[{double $\ast$}]{result}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a8861eacf25d2024c832dfa611407d25a}{}\label{namespaceinternal_a8861eacf25d2024c832dfa611407d25a}
+\index{internal@{internal}!Strtod\+Fast@{Strtod\+Fast}}
+\index{Strtod\+Fast@{Strtod\+Fast}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Strtod\+Fast(double d, int p, double $\ast$result)}{StrtodFast(double d, int p, double *result)}}]{\setlength{\rightskip}{0pt plus 5cm}bool internal\+::\+Strtod\+Fast (
+\begin{DoxyParamCaption}
+\item[{double}]{d, }
+\item[{int}]{p, }
+\item[{double $\ast$}]{result}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a598b2d2f85130bff3c3942e4750b9185}{}\label{namespaceinternal_a598b2d2f85130bff3c3942e4750b9185}
+\index{internal@{internal}!Strtod\+Full\+Precision@{Strtod\+Full\+Precision}}
+\index{Strtod\+Full\+Precision@{Strtod\+Full\+Precision}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Strtod\+Full\+Precision(double d, int p, const char $\ast$decimals, size\+\_\+t length, size\+\_\+t decimal\+Position, int exp)}{StrtodFullPrecision(double d, int p, const char *decimals, size_t length, size_t decimalPosition, int exp)}}]{\setlength{\rightskip}{0pt plus 5cm}double internal\+::\+Strtod\+Full\+Precision (
+\begin{DoxyParamCaption}
+\item[{double}]{d, }
+\item[{int}]{p, }
+\item[{const char $\ast$}]{decimals, }
+\item[{size\+\_\+t}]{length, }
+\item[{size\+\_\+t}]{decimal\+Position, }
+\item[{int}]{exp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a899ff5a0c5f9b203d720bb6f5631ed10}{}\label{namespaceinternal_a899ff5a0c5f9b203d720bb6f5631ed10}
+\index{internal@{internal}!Strtod\+Normal\+Precision@{Strtod\+Normal\+Precision}}
+\index{Strtod\+Normal\+Precision@{Strtod\+Normal\+Precision}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Strtod\+Normal\+Precision(double d, int p)}{StrtodNormalPrecision(double d, int p)}}]{\setlength{\rightskip}{0pt plus 5cm}double internal\+::\+Strtod\+Normal\+Precision (
+\begin{DoxyParamCaption}
+\item[{double}]{d, }
+\item[{int}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a9e5fac4695310f09892fe52b1d24ab19}{}\label{namespaceinternal_a9e5fac4695310f09892fe52b1d24ab19}
+\index{internal@{internal}!u32toa@{u32toa}}
+\index{u32toa@{u32toa}!internal@{internal}}
+\subsubsection[{\texorpdfstring{u32toa(uint32\+\_\+t value, char $\ast$buffer)}{u32toa(uint32_t value, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::u32toa (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{value, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_a8628d3698be60950743bc49d41a1cca7}{}\label{namespaceinternal_a8628d3698be60950743bc49d41a1cca7}
+\index{internal@{internal}!u64toa@{u64toa}}
+\index{u64toa@{u64toa}!internal@{internal}}
+\subsubsection[{\texorpdfstring{u64toa(uint64\+\_\+t value, char $\ast$buffer)}{u64toa(uint64_t value, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::u64toa (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64\+\_\+t}}]{value, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_aff16deebb94b3ea88a1dfff7bbc377b0}{}\label{namespaceinternal_aff16deebb94b3ea88a1dfff7bbc377b0}
+\index{internal@{internal}!Write\+Exponent@{Write\+Exponent}}
+\index{Write\+Exponent@{Write\+Exponent}!internal@{internal}}
+\subsubsection[{\texorpdfstring{Write\+Exponent(int K, char $\ast$buffer)}{WriteExponent(int K, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ internal\+::\+Write\+Exponent (
+\begin{DoxyParamCaption}
+\item[{int}]{K, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{namespaceinternal_acc9a114f2a03bb4c68e9ee99b9ca99c5}{}\label{namespaceinternal_acc9a114f2a03bb4c68e9ee99b9ca99c5}

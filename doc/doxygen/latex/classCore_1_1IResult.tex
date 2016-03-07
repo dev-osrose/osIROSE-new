@@ -1,0 +1,201 @@
+\hypertarget{classCore_1_1IResult}{}\section{Core\+:\+:I\+Result Class Reference}
+\label{classCore_1_1IResult}\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+
+
+{\ttfamily \#include $<$core/include/idatabase.\+h$>$}
+
+
+
+Inheritance diagram for Core\+:\+:I\+Result\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classCore_1_1IResult__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classCore_1_1IRow}{I\+Row} $>$ $>$\+::\hyperlink{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}{iterator} \hyperlink{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}{iterator}
+\item 
+typedef std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classCore_1_1IRow}{I\+Row} $>$ $>$\+::\hyperlink{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}{const\+\_\+iterator} \hyperlink{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCore_1_1IResult_a4ef27140c899f8d161cdcd6b530ac379}{I\+Result} ()
+\item 
+virtual \hyperlink{classCore_1_1IResult_a73060de3740b154e3400fbbe9c5b984b}{$\sim$\+I\+Result} ()
+\item 
+virtual void \hyperlink{classCore_1_1IResult_ae0b4b5bca1f1ad8d4d7d887b656c67a7}{use\+Row} (uint32\+\_\+t \+\_\+row)
+\item 
+virtual bool \hyperlink{classCore_1_1IResult_a93fe49ee2a9ab7ed520293d9e1339a96}{increment\+Row} ()
+\item 
+virtual bool \hyperlink{classCore_1_1IResult_a3c210ff7fa555d104732198808356488}{decrement\+Row} ()
+\item 
+virtual uint32\+\_\+t \hyperlink{classCore_1_1IResult_a308ce2382287ba5de5102fc532097709}{size} () const =0
+\item 
+virtual bool \hyperlink{classCore_1_1IResult_a6b96b8324d81a1a65d60a4f6a6e78052}{get\+String} (std\+::string const \&column\+Name, std\+::string \&data)=0
+\item 
+virtual bool \hyperlink{classCore_1_1IResult_a9c01330c5b826ca948b48e13a330f4cd}{get\+Int} (std\+::string const \&column\+Name, uint32\+\_\+t \&data)=0
+\item 
+virtual bool \hyperlink{classCore_1_1IResult_a32e076c5c5ba522e4c58095637fe0f3e}{get\+Float} (std\+::string const \&column\+Name, float \&data)=0
+\item 
+virtual \hyperlink{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}{iterator} \hyperlink{classCore_1_1IResult_a63b3ed4907f4735ed0bf044d3ab8dca8}{begin} ()
+\item 
+virtual \hyperlink{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}{iterator} \hyperlink{classCore_1_1IResult_af2845d0ea33b90ea185af8904e336424}{end} ()
+\item 
+virtual \hyperlink{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}{const\+\_\+iterator} \hyperlink{classCore_1_1IResult_a01a761f10597a834c9a26c0e58825973}{cbegin} () const 
+\item 
+virtual \hyperlink{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}{const\+\_\+iterator} \hyperlink{classCore_1_1IResult_a73c390c4889a8ae7aaaf07e0dfd05fb4}{cend} () const 
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \hyperlink{classCore_1_1IResult_a43afac5e5868af6111ae94d01ae98b28}{current\+\_\+row\+\_\+}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classCore_1_1IRow}{I\+Row} $>$ $>$ \hyperlink{classCore_1_1IResult_a80b0e69abcc0fdc6a4efa005ae81834c}{rows\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{const\+\_\+iterator}{const_iterator}}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<$std\+::unique\+\_\+ptr$<${\bf I\+Row}$>$ $>$\+::{\bf const\+\_\+iterator} {\bf Core\+::\+I\+Result\+::const\+\_\+iterator}}\hypertarget{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}{}\label{classCore_1_1IResult_a4f549868ef8d40c199565efd7b89f45c}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!iterator@{iterator}}
+\index{iterator@{iterator}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{iterator}{iterator}}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<$std\+::unique\+\_\+ptr$<${\bf I\+Row}$>$ $>$\+::{\bf iterator} {\bf Core\+::\+I\+Result\+::iterator}}\hypertarget{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}{}\label{classCore_1_1IResult_a1b8d24ea97ebbe669bb13c09ad5ad796}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!I\+Result@{I\+Result}}
+\index{I\+Result@{I\+Result}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{I\+Result()}{IResult()}}]{\setlength{\rightskip}{0pt plus 5cm}Core\+::\+I\+Result\+::\+I\+Result (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCore_1_1IResult_a4ef27140c899f8d161cdcd6b530ac379}{}\label{classCore_1_1IResult_a4ef27140c899f8d161cdcd6b530ac379}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!````~I\+Result@{$\sim$\+I\+Result}}
+\index{````~I\+Result@{$\sim$\+I\+Result}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{$\sim$\+I\+Result()}{~IResult()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual Core\+::\+I\+Result\+::$\sim$\+I\+Result (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a73060de3740b154e3400fbbe9c5b984b}{}\label{classCore_1_1IResult_a73060de3740b154e3400fbbe9c5b984b}
+
+
+\subsection{Member Function Documentation}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!begin@{begin}}
+\index{begin@{begin}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{begin()}{begin()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf iterator} Core\+::\+I\+Result\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a63b3ed4907f4735ed0bf044d3ab8dca8}{}\label{classCore_1_1IResult_a63b3ed4907f4735ed0bf044d3ab8dca8}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!cbegin@{cbegin}}
+\index{cbegin@{cbegin}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{cbegin() const }{cbegin() const }}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf const\+\_\+iterator} Core\+::\+I\+Result\+::cbegin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a01a761f10597a834c9a26c0e58825973}{}\label{classCore_1_1IResult_a01a761f10597a834c9a26c0e58825973}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!cend@{cend}}
+\index{cend@{cend}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{cend() const }{cend() const }}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf const\+\_\+iterator} Core\+::\+I\+Result\+::cend (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a73c390c4889a8ae7aaaf07e0dfd05fb4}{}\label{classCore_1_1IResult_a73c390c4889a8ae7aaaf07e0dfd05fb4}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!decrement\+Row@{decrement\+Row}}
+\index{decrement\+Row@{decrement\+Row}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{decrement\+Row()}{decrementRow()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Core\+::\+I\+Result\+::decrement\+Row (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a3c210ff7fa555d104732198808356488}{}\label{classCore_1_1IResult_a3c210ff7fa555d104732198808356488}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!end@{end}}
+\index{end@{end}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{end()}{end()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf iterator} Core\+::\+I\+Result\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_af2845d0ea33b90ea185af8904e336424}{}\label{classCore_1_1IResult_af2845d0ea33b90ea185af8904e336424}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!get\+Float@{get\+Float}}
+\index{get\+Float@{get\+Float}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{get\+Float(std\+::string const \&column\+Name, float \&data)=0}{getFloat(std::string const &columnName, float &data)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Core\+::\+I\+Result\+::get\+Float (
+\begin{DoxyParamCaption}
+\item[{std\+::string const \&}]{column\+Name, }
+\item[{float \&}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IResult_a32e076c5c5ba522e4c58095637fe0f3e}{}\label{classCore_1_1IResult_a32e076c5c5ba522e4c58095637fe0f3e}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Result_aa3d600b73235197ae49926fdc726e1a2}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Result}.
+
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!get\+Int@{get\+Int}}
+\index{get\+Int@{get\+Int}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{get\+Int(std\+::string const \&column\+Name, uint32\+\_\+t \&data)=0}{getInt(std::string const &columnName, uint32_t &data)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Core\+::\+I\+Result\+::get\+Int (
+\begin{DoxyParamCaption}
+\item[{std\+::string const \&}]{column\+Name, }
+\item[{uint32\+\_\+t \&}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IResult_a9c01330c5b826ca948b48e13a330f4cd}{}\label{classCore_1_1IResult_a9c01330c5b826ca948b48e13a330f4cd}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Result_add098e59d4e53d790a8934acc64543e8}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Result}.
+
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!get\+String@{get\+String}}
+\index{get\+String@{get\+String}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{get\+String(std\+::string const \&column\+Name, std\+::string \&data)=0}{getString(std::string const &columnName, std::string &data)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Core\+::\+I\+Result\+::get\+String (
+\begin{DoxyParamCaption}
+\item[{std\+::string const \&}]{column\+Name, }
+\item[{std\+::string \&}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IResult_a6b96b8324d81a1a65d60a4f6a6e78052}{}\label{classCore_1_1IResult_a6b96b8324d81a1a65d60a4f6a6e78052}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Result_a839fa1572ea7a20041ec8b5181017e80}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Result}.
+
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!increment\+Row@{increment\+Row}}
+\index{increment\+Row@{increment\+Row}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{increment\+Row()}{incrementRow()}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Core\+::\+I\+Result\+::increment\+Row (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_a93fe49ee2a9ab7ed520293d9e1339a96}{}\label{classCore_1_1IResult_a93fe49ee2a9ab7ed520293d9e1339a96}
+
+
+Reimplemented in \hyperlink{classCore_1_1CMySQL__Result_a432de24b42bb64ff4eb082ee6db97d52}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Result}.
+
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!size@{size}}
+\index{size@{size}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{size() const =0}{size() const =0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual uint32\+\_\+t Core\+::\+I\+Result\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classCore_1_1IResult_a308ce2382287ba5de5102fc532097709}{}\label{classCore_1_1IResult_a308ce2382287ba5de5102fc532097709}
+
+
+Implemented in \hyperlink{classCore_1_1CMySQL__Result_af5e5f0783f0ee7e09ae508bb81176bb8}{Core\+::\+C\+My\+S\+Q\+L\+\_\+\+Result}.
+
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!use\+Row@{use\+Row}}
+\index{use\+Row@{use\+Row}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{use\+Row(uint32\+\_\+t \+\_\+row)}{useRow(uint32_t _row)}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Core\+::\+I\+Result\+::use\+Row (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{\+\_\+row}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{classCore_1_1IResult_ae0b4b5bca1f1ad8d4d7d887b656c67a7}{}\label{classCore_1_1IResult_ae0b4b5bca1f1ad8d4d7d887b656c67a7}
+
+
+\subsection{Member Data Documentation}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!current\+\_\+row\+\_\+@{current\+\_\+row\+\_\+}}
+\index{current\+\_\+row\+\_\+@{current\+\_\+row\+\_\+}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{current\+\_\+row\+\_\+}{current_row_}}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Core\+::\+I\+Result\+::current\+\_\+row\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1IResult_a43afac5e5868af6111ae94d01ae98b28}{}\label{classCore_1_1IResult_a43afac5e5868af6111ae94d01ae98b28}
+\index{Core\+::\+I\+Result@{Core\+::\+I\+Result}!rows\+\_\+@{rows\+\_\+}}
+\index{rows\+\_\+@{rows\+\_\+}!Core\+::\+I\+Result@{Core\+::\+I\+Result}}
+\subsubsection[{\texorpdfstring{rows\+\_\+}{rows_}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$std\+::unique\+\_\+ptr$<${\bf I\+Row}$>$ $>$ Core\+::\+I\+Result\+::rows\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCore_1_1IResult_a80b0e69abcc0fdc6a4efa005ae81834c}{}\label{classCore_1_1IResult_a80b0e69abcc0fdc6a4efa005ae81834c}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{idatabase_8h}{idatabase.\+h}\end{DoxyCompactItemize}

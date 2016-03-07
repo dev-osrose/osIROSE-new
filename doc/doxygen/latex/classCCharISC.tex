@@ -1,0 +1,126 @@
+\hypertarget{classCCharISC}{}\section{C\+Char\+I\+SC Class Reference}
+\label{classCCharISC}\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+
+
+{\ttfamily \#include $<$char/include/ccharisc.\+h$>$}
+
+
+
+Inheritance diagram for C\+Char\+I\+SC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{classCCharISC__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for C\+Char\+I\+SC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCCharISC__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classCCharISC_ae18a0ff7d066dd5f2d778467e4df78a6}{C\+Char\+I\+SC} ()
+\item 
+\hyperlink{classCCharISC_a2bfe32cf5c0434bbe4afe3b054c06a97}{C\+Char\+I\+SC} (tcp\+::socket \+\_\+sock)
+\item 
+bool \hyperlink{classCCharISC_af36d30519afd9ae4d8be42863d1c8160}{Is\+Login} () const 
+\item 
+void \hyperlink{classCCharISC_a5800f34ef8ddb45225e36806a6aec617}{Set\+Login} (bool val)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classCCharISC_ac6746e044beeedafd54e70758505a1ca}{Server\+Register} (\hyperlink{structCRosePacket}{C\+Rose\+Packet} $\ast$P)
+\item 
+bool \hyperlink{classCCharISC_a9f039fb39ae52a5794ac1030ea562683}{Handle\+Packet} (\hyperlink{stdint_8h_aba7bc1797add20fe3efdf37ced1182c5}{uint8\+\_\+t} $\ast$\+\_\+buffer)
+\item 
+virtual void \hyperlink{classCCharISC_ab90f705e4c92b4c7d5f2094b16a0b6d2}{On\+Connected} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classCCharISC_a0dbfbafebc493e1c0da28bc0cf77eba0}{login\+\_\+connection\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{C\+Char\+I\+S\+C()}{CCharISC()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Char\+I\+S\+C\+::\+C\+Char\+I\+SC (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classCCharISC_ae18a0ff7d066dd5f2d778467e4df78a6}{}\label{classCCharISC_ae18a0ff7d066dd5f2d778467e4df78a6}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{C\+Char\+I\+S\+C(tcp\+::socket \+\_\+sock)}{CCharISC(tcp::socket _sock)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Char\+I\+S\+C\+::\+C\+Char\+I\+SC (
+\begin{DoxyParamCaption}
+\item[{tcp\+::socket}]{\+\_\+sock}
+\end{DoxyParamCaption}
+)}\hypertarget{classCCharISC_a2bfe32cf5c0434bbe4afe3b054c06a97}{}\label{classCCharISC_a2bfe32cf5c0434bbe4afe3b054c06a97}
+
+
+\subsection{Member Function Documentation}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!Handle\+Packet@{Handle\+Packet}}
+\index{Handle\+Packet@{Handle\+Packet}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{Handle\+Packet(uint8\+\_\+t $\ast$\+\_\+buffer)}{HandlePacket(uint8_t *_buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+I\+S\+C\+::\+Handle\+Packet (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t} $\ast$}]{\+\_\+buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCCharISC_a9f039fb39ae52a5794ac1030ea562683}{}\label{classCCharISC_a9f039fb39ae52a5794ac1030ea562683}
+
+
+Reimplemented from \hyperlink{classCRoseISC_ab56709ba16b2cf652f461c7cd9e8dd3d}{C\+Rose\+I\+SC}.
+
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!Is\+Login@{Is\+Login}}
+\index{Is\+Login@{Is\+Login}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{Is\+Login() const }{IsLogin() const }}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+I\+S\+C\+::\+Is\+Login (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCCharISC_af36d30519afd9ae4d8be42863d1c8160}{}\label{classCCharISC_af36d30519afd9ae4d8be42863d1c8160}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!On\+Connected@{On\+Connected}}
+\index{On\+Connected@{On\+Connected}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{On\+Connected()}{OnConnected()}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Char\+I\+S\+C\+::\+On\+Connected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{classCCharISC_ab90f705e4c92b4c7d5f2094b16a0b6d2}{}\label{classCCharISC_ab90f705e4c92b4c7d5f2094b16a0b6d2}
+
+
+Reimplemented from \hyperlink{classCRoseISC_a81103ca6aff03e08c5dc15faa666b6ef}{C\+Rose\+I\+SC}.
+
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!Server\+Register@{Server\+Register}}
+\index{Server\+Register@{Server\+Register}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{Server\+Register(\+C\+Rose\+Packet $\ast$\+P)}{ServerRegister(CRosePacket *P)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+I\+S\+C\+::\+Server\+Register (
+\begin{DoxyParamCaption}
+\item[{{\bf C\+Rose\+Packet} $\ast$}]{P}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharISC_ac6746e044beeedafd54e70758505a1ca}{}\label{classCCharISC_ac6746e044beeedafd54e70758505a1ca}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!Set\+Login@{Set\+Login}}
+\index{Set\+Login@{Set\+Login}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{Set\+Login(bool val)}{SetLogin(bool val)}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Char\+I\+S\+C\+::\+Set\+Login (
+\begin{DoxyParamCaption}
+\item[{bool}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classCCharISC_a5800f34ef8ddb45225e36806a6aec617}{}\label{classCCharISC_a5800f34ef8ddb45225e36806a6aec617}
+
+
+\subsection{Member Data Documentation}
+\index{C\+Char\+I\+SC@{C\+Char\+I\+SC}!login\+\_\+connection\+\_\+@{login\+\_\+connection\+\_\+}}
+\index{login\+\_\+connection\+\_\+@{login\+\_\+connection\+\_\+}!C\+Char\+I\+SC@{C\+Char\+I\+SC}}
+\subsubsection[{\texorpdfstring{login\+\_\+connection\+\_\+}{login_connection_}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Char\+I\+S\+C\+::login\+\_\+connection\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classCCharISC_a0dbfbafebc493e1c0da28bc0cf77eba0}{}\label{classCCharISC_a0dbfbafebc493e1c0da28bc0cf77eba0}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+char/include/\hyperlink{ccharisc_8h}{ccharisc.\+h}\item 
+char/src/\hyperlink{ccharisc_8cpp}{ccharisc.\+cpp}\end{DoxyCompactItemize}

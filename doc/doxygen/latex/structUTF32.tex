@@ -1,0 +1,117 @@
+\hypertarget{structUTF32}{}\section{U\+T\+F32$<$ Char\+Type $>$ Struct Template Reference}
+\label{structUTF32}\index{U\+T\+F32$<$ Char\+Type $>$@{U\+T\+F32$<$ Char\+Type $>$}}
+
+
+U\+T\+F-\/32 encoding.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/encodings.\+h$>$}
+
+
+
+Inheritance diagram for U\+T\+F32$<$ Char\+Type $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{structUTF32__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{structUTF32_abe791c52b9d1305aacf92ddc15c11ab4ae44852fd9d88deed3a956b89108412a5}{support\+Unicode} = 1
+ \}
+\item 
+typedef Char\+Type \hyperlink{structUTF32_ab4502672d56436e730ca5f647bb52be9}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structUTF32_aae11b766f799d311679d59e9f7077f83}{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT} (sizeof(\hyperlink{structUTF32_ab4502672d56436e730ca5f647bb52be9}{Ch}) $>$=4)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Output\+Stream $>$ }\\static void \hyperlink{structUTF32_a511d1b09672ce535085895a28d8c2f13}{Encode} (Output\+Stream \&os, unsigned codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream $>$ }\\static bool \hyperlink{structUTF32_a6e7258a5e982e101345dffdc355e9b53}{Decode} (Input\+Stream \&is, unsigned $\ast$codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream , typename Output\+Stream $>$ }\\static bool \hyperlink{structUTF32_a71336fb0546b3079e01bbd51d2fa2e45}{Validate} (Input\+Stream \&is, Output\+Stream \&os)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Char\+Type = unsigned$>$\\*
+struct U\+T\+F32$<$ Char\+Type $>$}
+
+U\+T\+F-\/32 encoding. 
+
+\href{http://en.wikipedia.org/wiki/UTF-32}{\tt http\+://en.\+wikipedia.\+org/wiki/\+U\+T\+F-\/32} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & Type for storing 32-\/bit U\+T\+F-\/32 data. Default is unsigned. C++11 may use char32\+\_\+t instead. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyNote}{Note}
+implements Encoding concept
+
+For in-\/memory access, no need to concern endianness. The code units and code points are represented by C\+PU\textquotesingle{}s endianness. For streaming, use \hyperlink{structUTF32LE}{U\+T\+F32\+LE} and \hyperlink{structUTF32BE}{U\+T\+F32\+BE}, which handle endianness. 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{U\+T\+F32@{U\+T\+F32}!Ch@{Ch}}
+\index{Ch@{Ch}!U\+T\+F32@{U\+T\+F32}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ typedef Char\+Type {\bf U\+T\+F32}$<$ Char\+Type $>$\+::{\bf Ch}}\hypertarget{structUTF32_ab4502672d56436e730ca5f647bb52be9}{}\label{structUTF32_ab4502672d56436e730ca5f647bb52be9}
+
+
+\subsection{Member Enumeration Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ anonymous enum}\hypertarget{structUTF32_abe791c52b9d1305aacf92ddc15c11ab4}{}\label{structUTF32_abe791c52b9d1305aacf92ddc15c11ab4}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{support\+Unicode@{support\+Unicode}!U\+T\+F32@{U\+T\+F32}}\index{U\+T\+F32@{U\+T\+F32}!support\+Unicode@{support\+Unicode}}\item[{\em 
+support\+Unicode\hypertarget{structUTF32_abe791c52b9d1305aacf92ddc15c11ab4ae44852fd9d88deed3a956b89108412a5}{}\label{structUTF32_abe791c52b9d1305aacf92ddc15c11ab4ae44852fd9d88deed3a956b89108412a5}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{U\+T\+F32@{U\+T\+F32}!Decode@{Decode}}
+\index{Decode@{Decode}!U\+T\+F32@{U\+T\+F32}}
+\subsubsection[{\texorpdfstring{Decode(\+Input\+Stream \&is, unsigned $\ast$codepoint)}{Decode(InputStream &is, unsigned *codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ template$<$typename Input\+Stream $>$ static bool {\bf U\+T\+F32}$<$ Char\+Type $>$\+::Decode (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{unsigned $\ast$}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF32_a6e7258a5e982e101345dffdc355e9b53}{}\label{structUTF32_a6e7258a5e982e101345dffdc355e9b53}
+\index{U\+T\+F32@{U\+T\+F32}!Encode@{Encode}}
+\index{Encode@{Encode}!U\+T\+F32@{U\+T\+F32}}
+\subsubsection[{\texorpdfstring{Encode(\+Output\+Stream \&os, unsigned codepoint)}{Encode(OutputStream &os, unsigned codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ template$<$typename Output\+Stream $>$ static void {\bf U\+T\+F32}$<$ Char\+Type $>$\+::Encode (
+\begin{DoxyParamCaption}
+\item[{Output\+Stream \&}]{os, }
+\item[{unsigned}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF32_a511d1b09672ce535085895a28d8c2f13}{}\label{structUTF32_a511d1b09672ce535085895a28d8c2f13}
+\index{U\+T\+F32@{U\+T\+F32}!R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT@{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT}}
+\index{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT@{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT}!U\+T\+F32@{U\+T\+F32}}
+\subsubsection[{\texorpdfstring{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+R\+T(sizeof(\+Ch) $>$=4)}{RAPIDJSON_STATIC_ASSERT(sizeof(Ch) >=4)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ {\bf U\+T\+F32}$<$ Char\+Type $>$\+::R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+S\+T\+A\+T\+I\+C\+\_\+\+A\+S\+S\+E\+RT (
+\begin{DoxyParamCaption}
+\item[{sizeof({\bf Ch}) $>$=}]{4}
+\end{DoxyParamCaption}
+)}\hypertarget{structUTF32_aae11b766f799d311679d59e9f7077f83}{}\label{structUTF32_aae11b766f799d311679d59e9f7077f83}
+\index{U\+T\+F32@{U\+T\+F32}!Validate@{Validate}}
+\index{Validate@{Validate}!U\+T\+F32@{U\+T\+F32}}
+\subsubsection[{\texorpdfstring{Validate(\+Input\+Stream \&is, Output\+Stream \&os)}{Validate(InputStream &is, OutputStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type  = unsigned$>$ template$<$typename Input\+Stream , typename Output\+Stream $>$ static bool {\bf U\+T\+F32}$<$ Char\+Type $>$\+::Validate (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{Output\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structUTF32_a71336fb0546b3079e01bbd51d2fa2e45}{}\label{structUTF32_a71336fb0546b3079e01bbd51d2fa2e45}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{encodings_8h}{encodings.\+h}\end{DoxyCompactItemize}

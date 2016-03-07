@@ -1,0 +1,88 @@
+\hypertarget{structAutoUTF}{}\section{Auto\+U\+TF$<$ Char\+Type $>$ Struct Template Reference}
+\label{structAutoUTF}\index{Auto\+U\+T\+F$<$ Char\+Type $>$@{Auto\+U\+T\+F$<$ Char\+Type $>$}}
+
+
+Dynamically select encoding according to stream\textquotesingle{}s runtime-\/specified U\+TF encoding type.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/encodings.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{structAutoUTF_a678e20a7f8d022be68adbb49fa56a094adc86ae046cd64f591495ac635a5c04c2}{support\+Unicode} = 1
+ \}
+\item 
+typedef Char\+Type \hyperlink{structAutoUTF_a0609343de776df3bc31b4c980eb3cf1c}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Output\+Stream $>$ }\\static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE void \hyperlink{structAutoUTF_a414946115261f886e74dd42cb4b98781}{Encode} (Output\+Stream \&os, unsigned codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream $>$ }\\static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool \hyperlink{structAutoUTF_aa5e3c1dc23dbb75f6442ff69500a35b0}{Decode} (Input\+Stream \&is, unsigned $\ast$codepoint)
+\item 
+{\footnotesize template$<$typename Input\+Stream , typename Output\+Stream $>$ }\\static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool \hyperlink{structAutoUTF_a36dd6f226d6a07c12161e21c0aff20b1}{Validate} (Input\+Stream \&is, Output\+Stream \&os)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Char\+Type$>$\\*
+struct Auto\+U\+T\+F$<$ Char\+Type $>$}
+
+Dynamically select encoding according to stream\textquotesingle{}s runtime-\/specified U\+TF encoding type. 
+
+\begin{DoxyNote}{Note}
+This class can be used with Auto\+U\+T\+F\+Inputt\+Stream and \hyperlink{classAutoUTFOutputStream}{Auto\+U\+T\+F\+Output\+Stream}, which provides Get\+Type(). 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{Auto\+U\+TF@{Auto\+U\+TF}!Ch@{Ch}}
+\index{Ch@{Ch}!Auto\+U\+TF@{Auto\+U\+TF}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ typedef Char\+Type {\bf Auto\+U\+TF}$<$ Char\+Type $>$\+::{\bf Ch}}\hypertarget{structAutoUTF_a0609343de776df3bc31b4c980eb3cf1c}{}\label{structAutoUTF_a0609343de776df3bc31b4c980eb3cf1c}
+
+
+\subsection{Member Enumeration Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ anonymous enum}\hypertarget{structAutoUTF_a678e20a7f8d022be68adbb49fa56a094}{}\label{structAutoUTF_a678e20a7f8d022be68adbb49fa56a094}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{support\+Unicode@{support\+Unicode}!Auto\+U\+TF@{Auto\+U\+TF}}\index{Auto\+U\+TF@{Auto\+U\+TF}!support\+Unicode@{support\+Unicode}}\item[{\em 
+support\+Unicode\hypertarget{structAutoUTF_a678e20a7f8d022be68adbb49fa56a094adc86ae046cd64f591495ac635a5c04c2}{}\label{structAutoUTF_a678e20a7f8d022be68adbb49fa56a094adc86ae046cd64f591495ac635a5c04c2}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{Auto\+U\+TF@{Auto\+U\+TF}!Decode@{Decode}}
+\index{Decode@{Decode}!Auto\+U\+TF@{Auto\+U\+TF}}
+\subsubsection[{\texorpdfstring{Decode(\+Input\+Stream \&is, unsigned $\ast$codepoint)}{Decode(InputStream &is, unsigned *codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ template$<$typename Input\+Stream $>$ static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool {\bf Auto\+U\+TF}$<$ Char\+Type $>$\+::Decode (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{unsigned $\ast$}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structAutoUTF_aa5e3c1dc23dbb75f6442ff69500a35b0}{}\label{structAutoUTF_aa5e3c1dc23dbb75f6442ff69500a35b0}
+\index{Auto\+U\+TF@{Auto\+U\+TF}!Encode@{Encode}}
+\index{Encode@{Encode}!Auto\+U\+TF@{Auto\+U\+TF}}
+\subsubsection[{\texorpdfstring{Encode(\+Output\+Stream \&os, unsigned codepoint)}{Encode(OutputStream &os, unsigned codepoint)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ template$<$typename Output\+Stream $>$ static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE void {\bf Auto\+U\+TF}$<$ Char\+Type $>$\+::Encode (
+\begin{DoxyParamCaption}
+\item[{Output\+Stream \&}]{os, }
+\item[{unsigned}]{codepoint}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structAutoUTF_a414946115261f886e74dd42cb4b98781}{}\label{structAutoUTF_a414946115261f886e74dd42cb4b98781}
+\index{Auto\+U\+TF@{Auto\+U\+TF}!Validate@{Validate}}
+\index{Validate@{Validate}!Auto\+U\+TF@{Auto\+U\+TF}}
+\subsubsection[{\texorpdfstring{Validate(\+Input\+Stream \&is, Output\+Stream \&os)}{Validate(InputStream &is, OutputStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ template$<$typename Input\+Stream , typename Output\+Stream $>$ static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool {\bf Auto\+U\+TF}$<$ Char\+Type $>$\+::Validate (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{Output\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structAutoUTF_a36dd6f226d6a07c12161e21c0aff20b1}{}\label{structAutoUTF_a36dd6f226d6a07c12161e21c0aff20b1}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{encodings_8h}{encodings.\+h}\end{DoxyCompactItemize}

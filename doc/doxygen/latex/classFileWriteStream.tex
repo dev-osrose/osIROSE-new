@@ -1,0 +1,132 @@
+\hypertarget{classFileWriteStream}{}\section{File\+Write\+Stream Class Reference}
+\label{classFileWriteStream}\index{File\+Write\+Stream@{File\+Write\+Stream}}
+
+
+Wrapper of C file stream for input using fread().  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/filewritestream.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef char \hyperlink{classFileWriteStream_abc16aeb69ad4176263ddfcb837fb7b49}{Ch}
+\begin{DoxyCompactList}\small\item\em Character type. Only support char. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classFileWriteStream_a553ea3e7377a7f7cace2daa3cc90e1a1}{File\+Write\+Stream} (std\+::\+F\+I\+LE $\ast$fp, char $\ast$buffer, size\+\_\+t buffer\+Size)
+\item 
+void \hyperlink{classFileWriteStream_af6a6061d0accd939fa475b9b34427d85}{Put} (char c)
+\item 
+void \hyperlink{classFileWriteStream_ad9ec108b24316a2c1c83c6ddc75d308a}{PutN} (char c, size\+\_\+t n)
+\item 
+void \hyperlink{classFileWriteStream_a939fbf183ba36464c5e0837df4329d37}{Flush} ()
+\item 
+char \hyperlink{classFileWriteStream_a83a8321c33738544f05330f3638e51c0}{Peek} () const 
+\item 
+char \hyperlink{classFileWriteStream_ac927a0ae09a85eaba58a74ceb04b40ed}{Take} ()
+\item 
+size\+\_\+t \hyperlink{classFileWriteStream_a72889b68dbd766cea0e003389b990722}{Tell} () const 
+\item 
+char $\ast$ \hyperlink{classFileWriteStream_a4d1340a64fde3f16ac2afce19537c75e}{Put\+Begin} ()
+\item 
+size\+\_\+t \hyperlink{classFileWriteStream_a54b14047e4c998db0594290605f8f0dc}{Put\+End} (char $\ast$)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Wrapper of C file stream for input using fread(). 
+
+\begin{DoxyNote}{Note}
+implements Stream concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Ch@{Ch}}
+\index{Ch@{Ch}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}typedef char {\bf File\+Write\+Stream\+::\+Ch}}\hypertarget{classFileWriteStream_abc16aeb69ad4176263ddfcb837fb7b49}{}\label{classFileWriteStream_abc16aeb69ad4176263ddfcb837fb7b49}
+
+
+Character type. Only support char. 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!File\+Write\+Stream@{File\+Write\+Stream}}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{File\+Write\+Stream(std\+::\+F\+I\+L\+E $\ast$fp, char $\ast$buffer, size\+\_\+t buffer\+Size)}{FileWriteStream(std::FILE *fp, char *buffer, size_t bufferSize)}}]{\setlength{\rightskip}{0pt plus 5cm}File\+Write\+Stream\+::\+File\+Write\+Stream (
+\begin{DoxyParamCaption}
+\item[{std\+::\+F\+I\+LE $\ast$}]{fp, }
+\item[{char $\ast$}]{buffer, }
+\item[{size\+\_\+t}]{buffer\+Size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a553ea3e7377a7f7cace2daa3cc90e1a1}{}\label{classFileWriteStream_a553ea3e7377a7f7cace2daa3cc90e1a1}
+
+
+\subsection{Member Function Documentation}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Flush@{Flush}}
+\index{Flush@{Flush}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Write\+Stream\+::\+Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a939fbf183ba36464c5e0837df4329d37}{}\label{classFileWriteStream_a939fbf183ba36464c5e0837df4329d37}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Peek@{Peek}}
+\index{Peek@{Peek}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Peek() const }{Peek() const }}]{\setlength{\rightskip}{0pt plus 5cm}char File\+Write\+Stream\+::\+Peek (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a83a8321c33738544f05330f3638e51c0}{}\label{classFileWriteStream_a83a8321c33738544f05330f3638e51c0}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Put@{Put}}
+\index{Put@{Put}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Put(char c)}{Put(char c)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Write\+Stream\+::\+Put (
+\begin{DoxyParamCaption}
+\item[{char}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_af6a6061d0accd939fa475b9b34427d85}{}\label{classFileWriteStream_af6a6061d0accd939fa475b9b34427d85}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Put\+Begin@{Put\+Begin}}
+\index{Put\+Begin@{Put\+Begin}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+Begin()}{PutBegin()}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ File\+Write\+Stream\+::\+Put\+Begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a4d1340a64fde3f16ac2afce19537c75e}{}\label{classFileWriteStream_a4d1340a64fde3f16ac2afce19537c75e}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Put\+End@{Put\+End}}
+\index{Put\+End@{Put\+End}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+End(char $\ast$)}{PutEnd(char *)}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t File\+Write\+Stream\+::\+Put\+End (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a54b14047e4c998db0594290605f8f0dc}{}\label{classFileWriteStream_a54b14047e4c998db0594290605f8f0dc}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!PutN@{PutN}}
+\index{PutN@{PutN}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Put\+N(char c, size\+\_\+t n)}{PutN(char c, size_t n)}}]{\setlength{\rightskip}{0pt plus 5cm}void File\+Write\+Stream\+::\+PutN (
+\begin{DoxyParamCaption}
+\item[{char}]{c, }
+\item[{size\+\_\+t}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_ad9ec108b24316a2c1c83c6ddc75d308a}{}\label{classFileWriteStream_ad9ec108b24316a2c1c83c6ddc75d308a}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Take@{Take}}
+\index{Take@{Take}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Take()}{Take()}}]{\setlength{\rightskip}{0pt plus 5cm}char File\+Write\+Stream\+::\+Take (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_ac927a0ae09a85eaba58a74ceb04b40ed}{}\label{classFileWriteStream_ac927a0ae09a85eaba58a74ceb04b40ed}
+\index{File\+Write\+Stream@{File\+Write\+Stream}!Tell@{Tell}}
+\index{Tell@{Tell}!File\+Write\+Stream@{File\+Write\+Stream}}
+\subsubsection[{\texorpdfstring{Tell() const }{Tell() const }}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t File\+Write\+Stream\+::\+Tell (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classFileWriteStream_a72889b68dbd766cea0e003389b990722}{}\label{classFileWriteStream_a72889b68dbd766cea0e003389b990722}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{filewritestream_8h}{filewritestream.\+h}\end{DoxyCompactItemize}

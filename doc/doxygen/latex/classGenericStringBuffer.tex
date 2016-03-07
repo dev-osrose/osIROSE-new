@@ -1,0 +1,165 @@
+\hypertarget{classGenericStringBuffer}{}\section{Generic\+String\+Buffer$<$ Encoding, Allocator $>$ Class Template Reference}
+\label{classGenericStringBuffer}\index{Generic\+String\+Buffer$<$ Encoding, Allocator $>$@{Generic\+String\+Buffer$<$ Encoding, Allocator $>$}}
+
+
+Represents an in-\/memory output stream.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/stringbuffer.\+h$>$}
+
+
+
+Collaboration diagram for Generic\+String\+Buffer$<$ Encoding, Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classGenericStringBuffer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Encoding\+::\+Ch \hyperlink{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGenericStringBuffer_a62f5ea1a53a2a3f98088f8c152b6183e}{Generic\+String\+Buffer} (Allocator $\ast$allocator=0, size\+\_\+t capacity=\hyperlink{classGenericStringBuffer_ae74f9df854dd5a7db4315ef44b016d22}{k\+Default\+Capacity})
+\item 
+void \hyperlink{classGenericStringBuffer_a8be5c8fadccacdcf40e20220f38e0afa}{Put} (\hyperlink{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}{Ch} c)
+\item 
+void \hyperlink{classGenericStringBuffer_a28bb539487db17b07314a532f3b8847c}{Flush} ()
+\item 
+void \hyperlink{classGenericStringBuffer_a42f15c959046d899cb74c3120a6995f9}{Clear} ()
+\item 
+void \hyperlink{classGenericStringBuffer_a0dbdb77489b95923795011a24f705be5}{Shrink\+To\+Fit} ()
+\item 
+\hyperlink{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}{Ch} $\ast$ \hyperlink{classGenericStringBuffer_a49fd10cdd5dd97a4cf9813d01334d660}{Push} (size\+\_\+t count)
+\item 
+void \hyperlink{classGenericStringBuffer_a0038e53ba03c271bc4cbbac403ec4de4}{Pop} (size\+\_\+t count)
+\item 
+const \hyperlink{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}{Ch} $\ast$ \hyperlink{classGenericStringBuffer_a42ed917a29012d932802f2709e11c572}{Get\+String} () const 
+\item 
+size\+\_\+t \hyperlink{classGenericStringBuffer_abd04725d776322157be3381f5559c40b}{Get\+Size} () const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classinternal_1_1Stack}{internal\+::\+Stack}$<$ Allocator $>$ \hyperlink{classGenericStringBuffer_aaef716643febb9de5957dbf8ff904409}{stack\+\_\+}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const size\+\_\+t \hyperlink{classGenericStringBuffer_ae74f9df854dd5a7db4315ef44b016d22}{k\+Default\+Capacity} = 256
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Encoding, typename Allocator = Crt\+Allocator$>$\\*
+class Generic\+String\+Buffer$<$ Encoding, Allocator $>$}
+
+Represents an in-\/memory output stream. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Encoding} & Encoding of the stream. \\
+\hline
+{\em Allocator} & type for allocating memory buffer. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyNote}{Note}
+implements Stream concept 
+\end{DoxyNote}
+
+
+\subsection{Member Typedef Documentation}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Ch@{Ch}}
+\index{Ch@{Ch}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ typedef Encoding\+::\+Ch {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::{\bf Ch}}\hypertarget{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}{}\label{classGenericStringBuffer_a735b75db076ffe86d0d294be49655d46}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Generic\+String\+Buffer(\+Allocator $\ast$allocator=0, size\+\_\+t capacity=k\+Default\+Capacity)}{GenericStringBuffer(Allocator *allocator=0, size_t capacity=kDefaultCapacity)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::{\bf Generic\+String\+Buffer} (
+\begin{DoxyParamCaption}
+\item[{Allocator $\ast$}]{allocator = {\ttfamily 0}, }
+\item[{size\+\_\+t}]{capacity = {\ttfamily {\bf k\+Default\+Capacity}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a62f5ea1a53a2a3f98088f8c152b6183e}{}\label{classGenericStringBuffer_a62f5ea1a53a2a3f98088f8c152b6183e}
+
+
+\subsection{Member Function Documentation}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Clear@{Clear}}
+\index{Clear@{Clear}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Clear()}{Clear()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a42f15c959046d899cb74c3120a6995f9}{}\label{classGenericStringBuffer_a42f15c959046d899cb74c3120a6995f9}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Flush@{Flush}}
+\index{Flush@{Flush}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Flush()}{Flush()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a28bb539487db17b07314a532f3b8847c}{}\label{classGenericStringBuffer_a28bb539487db17b07314a532f3b8847c}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Get\+Size@{Get\+Size}}
+\index{Get\+Size@{Get\+Size}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Get\+Size() const }{GetSize() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ size\+\_\+t {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Get\+Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_abd04725d776322157be3381f5559c40b}{}\label{classGenericStringBuffer_abd04725d776322157be3381f5559c40b}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Get\+String@{Get\+String}}
+\index{Get\+String@{Get\+String}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Get\+String() const }{GetString() const }}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ const {\bf Ch}$\ast$ {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Get\+String (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a42ed917a29012d932802f2709e11c572}{}\label{classGenericStringBuffer_a42ed917a29012d932802f2709e11c572}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Pop@{Pop}}
+\index{Pop@{Pop}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Pop(size\+\_\+t count)}{Pop(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Pop (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a0038e53ba03c271bc4cbbac403ec4de4}{}\label{classGenericStringBuffer_a0038e53ba03c271bc4cbbac403ec4de4}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Push@{Push}}
+\index{Push@{Push}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Push(size\+\_\+t count)}{Push(size_t count)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ {\bf Ch}$\ast$ {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Push (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a49fd10cdd5dd97a4cf9813d01334d660}{}\label{classGenericStringBuffer_a49fd10cdd5dd97a4cf9813d01334d660}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Put@{Put}}
+\index{Put@{Put}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Put(\+Ch c)}{Put(Ch c)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Put (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a8be5c8fadccacdcf40e20220f38e0afa}{}\label{classGenericStringBuffer_a8be5c8fadccacdcf40e20220f38e0afa}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!Shrink\+To\+Fit@{Shrink\+To\+Fit}}
+\index{Shrink\+To\+Fit@{Shrink\+To\+Fit}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{Shrink\+To\+Fit()}{ShrinkToFit()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ void {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::Shrink\+To\+Fit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classGenericStringBuffer_a0dbdb77489b95923795011a24f705be5}{}\label{classGenericStringBuffer_a0dbdb77489b95923795011a24f705be5}
+
+
+\subsection{Member Data Documentation}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!k\+Default\+Capacity@{k\+Default\+Capacity}}
+\index{k\+Default\+Capacity@{k\+Default\+Capacity}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{k\+Default\+Capacity}{kDefaultCapacity}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ const size\+\_\+t {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::k\+Default\+Capacity = 256\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classGenericStringBuffer_ae74f9df854dd5a7db4315ef44b016d22}{}\label{classGenericStringBuffer_ae74f9df854dd5a7db4315ef44b016d22}
+\index{Generic\+String\+Buffer@{Generic\+String\+Buffer}!stack\+\_\+@{stack\+\_\+}}
+\index{stack\+\_\+@{stack\+\_\+}!Generic\+String\+Buffer@{Generic\+String\+Buffer}}
+\subsubsection[{\texorpdfstring{stack\+\_\+}{stack_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Encoding , typename Allocator  = Crt\+Allocator$>$ {\bf internal\+::\+Stack}$<$Allocator$>$ {\bf Generic\+String\+Buffer}$<$ Encoding, Allocator $>$\+::stack\+\_\+\hspace{0.3cm}{\ttfamily [mutable]}}\hypertarget{classGenericStringBuffer_aaef716643febb9de5957dbf8ff904409}{}\label{classGenericStringBuffer_aaef716643febb9de5957dbf8ff904409}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{stringbuffer_8h}{stringbuffer.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classGenericValue.html" title="Represents a JSON value. Use Value for UTF8 encoding and default allocator. " alt="" coords="5,5,176,47"/>
+<area shape="rect" id="node2" href="$classGenericDocument.html" title="A document for parsing JSON text as DOM. " alt="" coords="224,5,421,47"/>
+</map>

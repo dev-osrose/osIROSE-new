@@ -1,0 +1,154 @@
+\hypertarget{document_8h}{}\section{core/include/rapidjson/document.h File Reference}
+\label{document_8h}\index{core/include/rapidjson/document.\+h@{core/include/rapidjson/document.\+h}}
+{\ttfamily \#include \char`\"{}reader.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal/meta.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal/strfunc.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$new$>$}\\*
+{\ttfamily \#include $<$iterator$>$}\\*
+Include dependency graph for document.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{document_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classGenericValue}{Generic\+Value$<$ Encoding, Allocator $>$}
+\begin{DoxyCompactList}\small\item\em Represents a J\+S\+ON value. Use Value for \hyperlink{structUTF8}{U\+T\+F8} encoding and default allocator. \end{DoxyCompactList}\item 
+struct \hyperlink{structGenericMember}{Generic\+Member$<$ Encoding, Allocator $>$}
+\begin{DoxyCompactList}\small\item\em Name-\/value pair in a J\+S\+ON object value. \end{DoxyCompactList}\item 
+class \hyperlink{classGenericMemberIterator}{Generic\+Member\+Iterator$<$ Const, Encoding, Allocator $>$}
+\begin{DoxyCompactList}\small\item\em (Constant) member iterator for a J\+S\+ON object value \end{DoxyCompactList}\item 
+struct \hyperlink{structGenericStringRef}{Generic\+String\+Ref$<$ Char\+Type $>$}
+\begin{DoxyCompactList}\small\item\em Reference to a constant string (not taking a copy) \end{DoxyCompactList}\item 
+struct \hyperlink{structinternal_1_1IsGenericValueImpl}{internal\+::\+Is\+Generic\+Value\+Impl$<$ T, Encoding, Allocator $>$}
+\item 
+struct \hyperlink{structinternal_1_1IsGenericValueImpl_3_01T_00_01typename_01Void_3_01typename_01T_1_1EncodingType794abcc01fcce01e300668fa57e4d036}{internal\+::\+Is\+Generic\+Value\+Impl$<$ T, typename Void$<$ typename T\+::\+Encoding\+Type $>$\+::\+Type, typename Void$<$ typename T\+::\+Allocator\+Type $>$\+::\+Type $>$}
+\item 
+struct \hyperlink{structinternal_1_1IsGenericValue}{internal\+::\+Is\+Generic\+Value$<$ T $>$}
+\item 
+class \hyperlink{classGenericValue}{Generic\+Value$<$ Encoding, Allocator $>$}
+\begin{DoxyCompactList}\small\item\em Represents a J\+S\+ON value. Use Value for \hyperlink{structUTF8}{U\+T\+F8} encoding and default allocator. \end{DoxyCompactList}\item 
+struct \hyperlink{structGenericValue_1_1String}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+String}
+\item 
+struct \hyperlink{structGenericValue_1_1ShortString}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Short\+String}
+\item 
+union \hyperlink{unionGenericValue_1_1Number}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Number}
+\item 
+struct \hyperlink{structGenericValue_1_1Number_1_1I}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Number\+::I}
+\item 
+struct \hyperlink{structGenericValue_1_1Number_1_1U}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Number\+::U}
+\item 
+struct \hyperlink{structGenericValue_1_1Object}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Object}
+\item 
+struct \hyperlink{structGenericValue_1_1Array}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Array}
+\item 
+union \hyperlink{unionGenericValue_1_1Data}{Generic\+Value$<$ Encoding, Allocator $>$\+::\+Data}
+\item 
+class \hyperlink{classGenericDocument}{Generic\+Document$<$ Encoding, Allocator, Stack\+Allocator $>$}
+\begin{DoxyCompactList}\small\item\em A document for parsing J\+S\+ON text as D\+OM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespaceinternal}{internal}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__RAPIDJSON__CONFIG_ga2f2eef0ee4477f3fe5874703a66e997f}{R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+H\+A\+S\+\_\+\+S\+T\+D\+S\+T\+R\+I\+NG}
+\begin{DoxyCompactList}\small\item\em Enable Rapid\+J\+S\+ON support for {\ttfamily std\+::string}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classGenericValue}{Generic\+Value}$<$ \hyperlink{structUTF8}{U\+T\+F8}$<$$>$ $>$ \hyperlink{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{Value}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classGenericValue}{Generic\+Value} with \hyperlink{structUTF8}{U\+T\+F8} encoding. \end{DoxyCompactList}\item 
+typedef \hyperlink{classGenericDocument}{Generic\+Document}$<$ \hyperlink{structUTF8}{U\+T\+F8}$<$$>$ $>$ \hyperlink{document_8h_ac6ea5b168e3fe8c7fa532450fc9391f7}{Document}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classGenericDocument}{Generic\+Document} with \hyperlink{structUTF8}{U\+T\+F8} encoding. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Char\+Type $>$ }\\\hyperlink{structGenericStringRef}{Generic\+String\+Ref}$<$ Char\+Type $>$ \hyperlink{document_8h_aa6b9fd9f6aa49405a574c362ba9af6b5}{String\+Ref} (const Char\+Type $\ast$str)
+\begin{DoxyCompactList}\small\item\em Mark a character pointer as constant string. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Char\+Type $>$ }\\\hyperlink{structGenericStringRef}{Generic\+String\+Ref}$<$ Char\+Type $>$ \hyperlink{document_8h_a578c51ab574a50a9c760b9da7c7562f2}{String\+Ref} (const Char\+Type $\ast$str, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Mark a character pointer as constant string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{document.\+h@{document.\+h}!Document@{Document}}
+\index{Document@{Document}!document.\+h@{document.\+h}}
+\subsubsection[{\texorpdfstring{Document}{Document}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Generic\+Document}$<${\bf U\+T\+F8}$<$$>$ $>$ {\bf Document}}\hypertarget{document_8h_ac6ea5b168e3fe8c7fa532450fc9391f7}{}\label{document_8h_ac6ea5b168e3fe8c7fa532450fc9391f7}
+
+
+\hyperlink{classGenericDocument}{Generic\+Document} with \hyperlink{structUTF8}{U\+T\+F8} encoding. 
+
+\index{document.\+h@{document.\+h}!Value@{Value}}
+\index{Value@{Value}!document.\+h@{document.\+h}}
+\subsubsection[{\texorpdfstring{Value}{Value}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Generic\+Value}$<${\bf U\+T\+F8}$<$$>$ $>$ {\bf Value}}\hypertarget{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}{}\label{document_8h_a071cf97155ba72ac9a1fc4ad7e63d481}
+
+
+\hyperlink{classGenericValue}{Generic\+Value} with \hyperlink{structUTF8}{U\+T\+F8} encoding. 
+
+
+
+\subsection{Function Documentation}
+\index{document.\+h@{document.\+h}!String\+Ref@{String\+Ref}}
+\index{String\+Ref@{String\+Ref}!document.\+h@{document.\+h}}
+\subsubsection[{\texorpdfstring{String\+Ref(const Char\+Type $\ast$str)}{StringRef(const CharType *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$ String\+Ref (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{document_8h_aa6b9fd9f6aa49405a574c362ba9af6b5}{}\label{document_8h_aa6b9fd9f6aa49405a574c362ba9af6b5}
+
+
+Mark a character pointer as constant string. 
+
+Mark a plain character pointer as a \char`\"{}string literal\char`\"{}. This function can be used to avoid copying a character string to be referenced as a value in a J\+S\+ON \hyperlink{classGenericValue}{Generic\+Value} object, if the string\textquotesingle{}s lifetime is known to be valid long enough. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & Character type of the string \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant string, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structGenericStringRef}{Generic\+String\+Ref} string reference object
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classGenericValue_abb2887958974fef1b2b5c8e32cc72ddb}{Generic\+Value\+::\+Generic\+Value(\+String\+Ref\+Type)}, \hyperlink{classGenericValue_a386708557555e6389184de608af5e6a6}{Generic\+Value\+::operator=(\+String\+Ref\+Type)}, Generic\+Value\+::\+Set\+String(\+String\+Ref\+Type), Generic\+Value\+::\+Push\+Back(\+String\+Ref\+Type, Allocator\&), Generic\+Value\+::\+Add\+Member 
+\end{DoxySeeAlso}
+\index{document.\+h@{document.\+h}!String\+Ref@{String\+Ref}}
+\index{String\+Ref@{String\+Ref}!document.\+h@{document.\+h}}
+\subsubsection[{\texorpdfstring{String\+Ref(const Char\+Type $\ast$str, size\+\_\+t length)}{StringRef(const CharType *str, size_t length)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Char\+Type $>$ {\bf Generic\+String\+Ref}$<$ Char\+Type $>$ String\+Ref (
+\begin{DoxyParamCaption}
+\item[{const Char\+Type $\ast$}]{str, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{document_8h_a578c51ab574a50a9c760b9da7c7562f2}{}\label{document_8h_a578c51ab574a50a9c760b9da7c7562f2}
+
+
+Mark a character pointer as constant string. 
+
+Mark a plain character pointer as a \char`\"{}string literal\char`\"{}. This function can be used to avoid copying a character string to be referenced as a value in a J\+S\+ON \hyperlink{classGenericValue}{Generic\+Value} object, if the string\textquotesingle{}s lifetime is known to be valid long enough.
+
+This version has better performance with supplied length, and also supports string containing null characters.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Char\+Type} & character type of the string \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Constant string, lifetime assumed to be longer than the use of the string in e.\+g. a \hyperlink{classGenericValue}{Generic\+Value} \\
+\hline
+{\em length} & The length of source string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structGenericStringRef}{Generic\+String\+Ref} string reference object 
+\end{DoxyReturn}

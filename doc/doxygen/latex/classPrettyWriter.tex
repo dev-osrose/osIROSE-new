@@ -1,0 +1,320 @@
+\hypertarget{classPrettyWriter}{}\section{Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$ Class Template Reference}
+\label{classPrettyWriter}\index{Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$@{Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$}}
+
+
+\hyperlink{classWriter}{Writer} with indentation and spacing.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/prettywriter.\+h$>$}
+
+
+
+Inheritance diagram for Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{classPrettyWriter__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classPrettyWriter__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classWriter}{Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$ \hyperlink{classPrettyWriter_ab6074f4c51db129e195bc5752eb2b448}{Base}
+\item 
+typedef \hyperlink{classWriter_a5ba0d623162839460024b517fc2d5868}{Base\+::\+Ch} \hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPrettyWriter_a83f9be5c5d595a08636962e4ddd27b60}{Pretty\+Writer} (Output\+Stream \&os, Stack\+Allocator $\ast$allocator=0, size\+\_\+t level\+Depth=\hyperlink{classWriter_aad47efc97708b2a64e4a0994cbbfae25}{Base\+::k\+Default\+Level\+Depth})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classPrettyWriter}{Pretty\+Writer} \& \hyperlink{classPrettyWriter_afe3a560009b5cd6a79a1e91c807387ad}{Set\+Indent} (\hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} indent\+Char, unsigned indent\+Char\+Count)
+\begin{DoxyCompactList}\small\item\em Set custom indentation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}{\bf Implementation of Handler}\par
+{\em \begin{DoxySeeAlso}{See also}
+Handler 
+\end{DoxySeeAlso}
+}\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classPrettyWriter_acbcab646050e5e9204ab2b13c798092b}{Null} ()
+\item 
+bool \hyperlink{classPrettyWriter_afddf1586eeba72bc4fbb0e1346ced9b9}{Bool} (bool b)
+\item 
+bool \hyperlink{classPrettyWriter_a14da2a84e9f41ba42edf2819363be614}{Int} (int i)
+\item 
+bool \hyperlink{classPrettyWriter_a65227d9de9a9f92eb3ca83c616a9c809}{Uint} (unsigned u)
+\item 
+bool \hyperlink{classPrettyWriter_a2ce0d71e221d72b8cf17d2b60ae610af}{Int64} (\hyperlink{stdint_8h_a414156feea104f8f75b4ed9e3121b2f6}{int64\+\_\+t} i64)
+\item 
+bool \hyperlink{classPrettyWriter_a888229dc2e5a15b2fd577b47e86a17b3}{Uint64} (\hyperlink{stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} u64)
+\item 
+bool \hyperlink{classPrettyWriter_a20ffcf3ada1be664719f44cec76711ed}{Double} (double d)
+\item 
+bool \hyperlink{classPrettyWriter_ae6cec4b69e86cff3121451f29e4862ef}{String} (const \hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} $\ast$str, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} length, bool copy=false)
+\item 
+bool \hyperlink{classPrettyWriter_a445e063722149f86bf1a0cd7b8892f07}{Start\+Object} ()
+\item 
+bool \hyperlink{classPrettyWriter_a26932858cdca972598f7caa6f415f310}{Key} (const \hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} $\ast$str, \hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} length, bool copy=false)
+\item 
+bool \hyperlink{classPrettyWriter_a5837a63cac4735eaeedbaff287e1ab9e}{End\+Object} (\hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} member\+Count=0)
+\item 
+bool \hyperlink{classPrettyWriter_a12dd02678ab52b9061bb6ac01cca2601}{Start\+Array} ()
+\item 
+bool \hyperlink{classPrettyWriter_a5196275e826a37a163d178da612f58f9}{End\+Array} (\hyperlink{rapidjson_8h_a5ed6e6e67250fadbd041127e6386dcb5}{Size\+Type} member\+Count=0)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Convenience extensions}\par
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classPrettyWriter_ac6ef0185174838b7034b4183013ee073}{String} (const \hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} $\ast$str)
+\begin{DoxyCompactList}\small\item\em Simpler but slower overload. \end{DoxyCompactList}\item 
+bool \hyperlink{classPrettyWriter_a0a4859ad940668cf33d18b144e5e1cdd}{Key} (const \hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} $\ast$str)
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPrettyWriter_a7841433d45abbfc5a1799be0ca1ed792}{Pretty\+Prefix} (\hyperlink{rapidjson_8h_a1d1cfd8ffb84e947f82999c682b666a7}{Type} type)
+\item 
+void \hyperlink{classPrettyWriter_a649ec900d77960e085f76bb4d3c351d9}{Write\+Indent} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{Ch} \hyperlink{classPrettyWriter_a2cee1f24795fd6c56420df31d336c41d}{indent\+Char\+\_\+}
+\item 
+unsigned \hyperlink{classPrettyWriter_ab2cffe9d93ce8a4890f927832f00d9f1}{indent\+Char\+Count\+\_\+}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Output\+Stream, typename Source\+Encoding = U\+T\+F8$<$$>$, typename Target\+Encoding = U\+T\+F8$<$$>$, typename Stack\+Allocator = Crt\+Allocator$>$\\*
+class Pretty\+Writer$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$}
+
+\hyperlink{classWriter}{Writer} with indentation and spacing. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Output\+Stream} & Type of ouptut os. \\
+\hline
+{\em Source\+Encoding} & Encoding of source string. \\
+\hline
+{\em Target\+Encoding} & Encoding of output stream. \\
+\hline
+{\em Stack\+Allocator} & Type of allocator for allocating memory of stack. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\index{Pretty\+Writer@{Pretty\+Writer}!Base@{Base}}
+\index{Base@{Base}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Base}{Base}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ typedef {\bf Writer}$<$Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator$>$ {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::{\bf Base}}\hypertarget{classPrettyWriter_ab6074f4c51db129e195bc5752eb2b448}{}\label{classPrettyWriter_ab6074f4c51db129e195bc5752eb2b448}
+\index{Pretty\+Writer@{Pretty\+Writer}!Ch@{Ch}}
+\index{Ch@{Ch}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Ch}{Ch}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ typedef {\bf Base\+::\+Ch} {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::{\bf Ch}}\hypertarget{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}{}\label{classPrettyWriter_ae5f474c0f087932d795c1cb4b9d0c312}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Pretty\+Writer@{Pretty\+Writer}!Pretty\+Writer@{Pretty\+Writer}}
+\index{Pretty\+Writer@{Pretty\+Writer}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Pretty\+Writer(\+Output\+Stream \&os, Stack\+Allocator $\ast$allocator=0, size\+\_\+t level\+Depth=\+Base\+::k\+Default\+Level\+Depth)}{PrettyWriter(OutputStream &os, StackAllocator *allocator=0, size_t levelDepth=Base::kDefaultLevelDepth)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::{\bf Pretty\+Writer} (
+\begin{DoxyParamCaption}
+\item[{Output\+Stream \&}]{os, }
+\item[{Stack\+Allocator $\ast$}]{allocator = {\ttfamily 0}, }
+\item[{size\+\_\+t}]{level\+Depth = {\ttfamily {\bf Base\+::k\+Default\+Level\+Depth}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a83f9be5c5d595a08636962e4ddd27b60}{}\label{classPrettyWriter_a83f9be5c5d595a08636962e4ddd27b60}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em os} & Output stream. \\
+\hline
+{\em allocator} & User supplied allocator. If it is null, it will create a private one. \\
+\hline
+{\em level\+Depth} & Initial capacity of stack. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\index{Pretty\+Writer@{Pretty\+Writer}!Bool@{Bool}}
+\index{Bool@{Bool}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Bool(bool b)}{Bool(bool b)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Bool (
+\begin{DoxyParamCaption}
+\item[{bool}]{b}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_afddf1586eeba72bc4fbb0e1346ced9b9}{}\label{classPrettyWriter_afddf1586eeba72bc4fbb0e1346ced9b9}
+\index{Pretty\+Writer@{Pretty\+Writer}!Double@{Double}}
+\index{Double@{Double}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Double(double d)}{Double(double d)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Double (
+\begin{DoxyParamCaption}
+\item[{double}]{d}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a20ffcf3ada1be664719f44cec76711ed}{}\label{classPrettyWriter_a20ffcf3ada1be664719f44cec76711ed}
+\index{Pretty\+Writer@{Pretty\+Writer}!End\+Array@{End\+Array}}
+\index{End\+Array@{End\+Array}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{End\+Array(\+Size\+Type member\+Count=0)}{EndArray(SizeType memberCount=0)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::End\+Array (
+\begin{DoxyParamCaption}
+\item[{{\bf Size\+Type}}]{member\+Count = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a5196275e826a37a163d178da612f58f9}{}\label{classPrettyWriter_a5196275e826a37a163d178da612f58f9}
+\index{Pretty\+Writer@{Pretty\+Writer}!End\+Object@{End\+Object}}
+\index{End\+Object@{End\+Object}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{End\+Object(\+Size\+Type member\+Count=0)}{EndObject(SizeType memberCount=0)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::End\+Object (
+\begin{DoxyParamCaption}
+\item[{{\bf Size\+Type}}]{member\+Count = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a5837a63cac4735eaeedbaff287e1ab9e}{}\label{classPrettyWriter_a5837a63cac4735eaeedbaff287e1ab9e}
+\index{Pretty\+Writer@{Pretty\+Writer}!Int@{Int}}
+\index{Int@{Int}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Int(int i)}{Int(int i)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Int (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a14da2a84e9f41ba42edf2819363be614}{}\label{classPrettyWriter_a14da2a84e9f41ba42edf2819363be614}
+\index{Pretty\+Writer@{Pretty\+Writer}!Int64@{Int64}}
+\index{Int64@{Int64}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Int64(int64\+\_\+t i64)}{Int64(int64_t i64)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Int64 (
+\begin{DoxyParamCaption}
+\item[{{\bf int64\+\_\+t}}]{i64}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a2ce0d71e221d72b8cf17d2b60ae610af}{}\label{classPrettyWriter_a2ce0d71e221d72b8cf17d2b60ae610af}
+\index{Pretty\+Writer@{Pretty\+Writer}!Key@{Key}}
+\index{Key@{Key}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Key(const Ch $\ast$str, Size\+Type length, bool copy=false)}{Key(const Ch *str, SizeType length, bool copy=false)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Key (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str, }
+\item[{{\bf Size\+Type}}]{length, }
+\item[{bool}]{copy = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a26932858cdca972598f7caa6f415f310}{}\label{classPrettyWriter_a26932858cdca972598f7caa6f415f310}
+\index{Pretty\+Writer@{Pretty\+Writer}!Key@{Key}}
+\index{Key@{Key}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Key(const Ch $\ast$str)}{Key(const Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Key (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a0a4859ad940668cf33d18b144e5e1cdd}{}\label{classPrettyWriter_a0a4859ad940668cf33d18b144e5e1cdd}
+\index{Pretty\+Writer@{Pretty\+Writer}!Null@{Null}}
+\index{Null@{Null}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Null()}{Null()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Null (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_acbcab646050e5e9204ab2b13c798092b}{}\label{classPrettyWriter_acbcab646050e5e9204ab2b13c798092b}
+\index{Pretty\+Writer@{Pretty\+Writer}!Pretty\+Prefix@{Pretty\+Prefix}}
+\index{Pretty\+Prefix@{Pretty\+Prefix}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Pretty\+Prefix(\+Type type)}{PrettyPrefix(Type type)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ void {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Pretty\+Prefix (
+\begin{DoxyParamCaption}
+\item[{{\bf Type}}]{type}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\hypertarget{classPrettyWriter_a7841433d45abbfc5a1799be0ca1ed792}{}\label{classPrettyWriter_a7841433d45abbfc5a1799be0ca1ed792}
+\index{Pretty\+Writer@{Pretty\+Writer}!Set\+Indent@{Set\+Indent}}
+\index{Set\+Indent@{Set\+Indent}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Set\+Indent(\+Ch indent\+Char, unsigned indent\+Char\+Count)}{SetIndent(Ch indentChar, unsigned indentCharCount)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ {\bf Pretty\+Writer}\& {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Set\+Indent (
+\begin{DoxyParamCaption}
+\item[{{\bf Ch}}]{indent\+Char, }
+\item[{unsigned}]{indent\+Char\+Count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_afe3a560009b5cd6a79a1e91c807387ad}{}\label{classPrettyWriter_afe3a560009b5cd6a79a1e91c807387ad}
+
+
+Set custom indentation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indent\+Char} & Character for indentation. Must be whitespace character (\textquotesingle{} \textquotesingle{}, \textquotesingle{}\textbackslash{}t\textquotesingle{}, \textquotesingle{}\textbackslash{}n\textquotesingle{}, \textquotesingle{}\textbackslash{}r\textquotesingle{}). \\
+\hline
+{\em indent\+Char\+Count} & Number of indent characters for each indentation level. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The default indentation is 4 spaces. 
+\end{DoxyNote}
+\index{Pretty\+Writer@{Pretty\+Writer}!Start\+Array@{Start\+Array}}
+\index{Start\+Array@{Start\+Array}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Start\+Array()}{StartArray()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Start\+Array (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a12dd02678ab52b9061bb6ac01cca2601}{}\label{classPrettyWriter_a12dd02678ab52b9061bb6ac01cca2601}
+\index{Pretty\+Writer@{Pretty\+Writer}!Start\+Object@{Start\+Object}}
+\index{Start\+Object@{Start\+Object}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Start\+Object()}{StartObject()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Start\+Object (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a445e063722149f86bf1a0cd7b8892f07}{}\label{classPrettyWriter_a445e063722149f86bf1a0cd7b8892f07}
+\index{Pretty\+Writer@{Pretty\+Writer}!String@{String}}
+\index{String@{String}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{String(const Ch $\ast$str, Size\+Type length, bool copy=false)}{String(const Ch *str, SizeType length, bool copy=false)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::String (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str, }
+\item[{{\bf Size\+Type}}]{length, }
+\item[{bool}]{copy = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_ae6cec4b69e86cff3121451f29e4862ef}{}\label{classPrettyWriter_ae6cec4b69e86cff3121451f29e4862ef}
+\index{Pretty\+Writer@{Pretty\+Writer}!String@{String}}
+\index{String@{String}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{String(const Ch $\ast$str)}{String(const Ch *str)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::String (
+\begin{DoxyParamCaption}
+\item[{const {\bf Ch} $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_ac6ef0185174838b7034b4183013ee073}{}\label{classPrettyWriter_ac6ef0185174838b7034b4183013ee073}
+
+
+Simpler but slower overload. 
+
+\index{Pretty\+Writer@{Pretty\+Writer}!Uint@{Uint}}
+\index{Uint@{Uint}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Uint(unsigned u)}{Uint(unsigned u)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Uint (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{u}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a65227d9de9a9f92eb3ca83c616a9c809}{}\label{classPrettyWriter_a65227d9de9a9f92eb3ca83c616a9c809}
+\index{Pretty\+Writer@{Pretty\+Writer}!Uint64@{Uint64}}
+\index{Uint64@{Uint64}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Uint64(uint64\+\_\+t u64)}{Uint64(uint64_t u64)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ bool {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Uint64 (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64\+\_\+t}}]{u64}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classPrettyWriter_a888229dc2e5a15b2fd577b47e86a17b3}{}\label{classPrettyWriter_a888229dc2e5a15b2fd577b47e86a17b3}
+\index{Pretty\+Writer@{Pretty\+Writer}!Write\+Indent@{Write\+Indent}}
+\index{Write\+Indent@{Write\+Indent}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{Write\+Indent()}{WriteIndent()}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ void {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::Write\+Indent (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\hypertarget{classPrettyWriter_a649ec900d77960e085f76bb4d3c351d9}{}\label{classPrettyWriter_a649ec900d77960e085f76bb4d3c351d9}
+
+
+\subsection{Member Data Documentation}
+\index{Pretty\+Writer@{Pretty\+Writer}!indent\+Char\+\_\+@{indent\+Char\+\_\+}}
+\index{indent\+Char\+\_\+@{indent\+Char\+\_\+}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{indent\+Char\+\_\+}{indentChar_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ {\bf Ch} {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::indent\+Char\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classPrettyWriter_a2cee1f24795fd6c56420df31d336c41d}{}\label{classPrettyWriter_a2cee1f24795fd6c56420df31d336c41d}
+\index{Pretty\+Writer@{Pretty\+Writer}!indent\+Char\+Count\+\_\+@{indent\+Char\+Count\+\_\+}}
+\index{indent\+Char\+Count\+\_\+@{indent\+Char\+Count\+\_\+}!Pretty\+Writer@{Pretty\+Writer}}
+\subsubsection[{\texorpdfstring{indent\+Char\+Count\+\_\+}{indentCharCount_}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Output\+Stream , typename Source\+Encoding  = U\+T\+F8$<$$>$, typename Target\+Encoding  = U\+T\+F8$<$$>$, typename Stack\+Allocator  = Crt\+Allocator$>$ unsigned {\bf Pretty\+Writer}$<$ Output\+Stream, Source\+Encoding, Target\+Encoding, Stack\+Allocator $>$\+::indent\+Char\+Count\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{classPrettyWriter_ab2cffe9d93ce8a4890f927832f00d9f1}{}\label{classPrettyWriter_ab2cffe9d93ce8a4890f927832f00d9f1}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{prettywriter_8h}{prettywriter.\+h}\end{DoxyCompactItemize}

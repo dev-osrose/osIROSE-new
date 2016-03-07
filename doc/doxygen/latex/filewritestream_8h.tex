@@ -1,0 +1,38 @@
+\hypertarget{filewritestream_8h}{}\section{core/include/rapidjson/filewritestream.h File Reference}
+\label{filewritestream_8h}\index{core/include/rapidjson/filewritestream.\+h@{core/include/rapidjson/filewritestream.\+h}}
+{\ttfamily \#include \char`\"{}rapidjson.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$cstdio$>$}\\*
+Include dependency graph for filewritestream.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{filewritestream_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classFileWriteStream}{File\+Write\+Stream}
+\begin{DoxyCompactList}\small\item\em Wrapper of C file stream for input using fread(). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$$>$ }\\void \hyperlink{filewritestream_8h_a5c9b0f0e6249be2acf7f3505c295c132}{PutN} (\hyperlink{classFileWriteStream}{File\+Write\+Stream} \&stream, char c, size\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Implement specialized version of \hyperlink{filewritestream_8h_a5c9b0f0e6249be2acf7f3505c295c132}{Put\+N()} with memset() for better performance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{filewritestream.\+h@{filewritestream.\+h}!PutN@{PutN}}
+\index{PutN@{PutN}!filewritestream.\+h@{filewritestream.\+h}}
+\subsubsection[{\texorpdfstring{Put\+N(\+File\+Write\+Stream \&stream, char c, size\+\_\+t n)}{PutN(FileWriteStream &stream, char c, size_t n)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$$>$ void PutN (
+\begin{DoxyParamCaption}
+\item[{{\bf File\+Write\+Stream} \&}]{stream, }
+\item[{char}]{c, }
+\item[{size\+\_\+t}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{filewritestream_8h_a5c9b0f0e6249be2acf7f3505c295c132}{}\label{filewritestream_8h_a5c9b0f0e6249be2acf7f3505c295c132}
+
+
+Implement specialized version of \hyperlink{filewritestream_8h_a5c9b0f0e6249be2acf7f3505c295c132}{Put\+N()} with memset() for better performance. 
+

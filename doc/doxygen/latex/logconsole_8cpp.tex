@@ -1,0 +1,146 @@
+\hypertarget{logconsole_8cpp}{}\section{logconsole.\+cpp File Reference}
+\label{logconsole_8cpp}\index{logconsole.\+cpp@{logconsole.\+cpp}}
+{\ttfamily \#include $<$mutex$>$}\\*
+{\ttfamily \#include \char`\"{}logconsole.\+h\char`\"{}}\\*
+Include dependency graph for logconsole.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{logconsole_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespaceCore}{Core}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}{S\+B\+U\+F\+\_\+\+S\+I\+ZE}~2048
+\item 
+\#define \hyperlink{logconsole_8cpp_a2d25bcd37166cc98f0d823cdb8c553ef}{uint8}~unsigned char
+\item 
+\#define \hyperlink{logconsole_8cpp_a9695cf1104606879c5d3f0221635a069}{uint32}~unsigned long
+\item 
+\#define \hyperlink{logconsole_8cpp_af62e66227ee4bc21dc19daf0f55f45a7}{N\+E\+W\+B\+UF}(buf)
+\item 
+\#define \hyperlink{logconsole_8cpp_a6c3d088b0a89908a6244864824623799}{B\+U\+F\+V\+P\+R\+I\+N\+TF}(buf,  fmt,  args)
+\item 
+\#define \hyperlink{logconsole_8cpp_a41152762b11d02d1db3448a92f91b71f}{B\+U\+F\+V\+AL}(buf)~buf.\+v\+\_\+
+\item 
+\#define \hyperlink{logconsole_8cpp_aa1718d5aeea7b902569252f6c6802bc6}{B\+U\+F\+L\+EN}(buf)~buf.\+l\+\_\+
+\item 
+\#define \hyperlink{logconsole_8cpp_a6d59088b73a3126218b9bef83f4abc8a}{F\+R\+E\+E\+B\+UF}(buf)
+\item 
+\#define \hyperlink{logconsole_8cpp_a6582f05711954011e2ceacc62d6ebad2}{I\+S\+D\+I\+G\+IT}(d)~(d $>$= \textquotesingle{}0\textquotesingle{} \&\& d $<$= \textquotesingle{}9\textquotesingle{})
+\item 
+\#define \hyperlink{logconsole_8cpp_afeee3cbb310f621900e0b8e455155b92}{is\+\_\+console}(file)~(0 != isatty(fileno(file)))
+\item 
+\#define \hyperlink{logconsole_8cpp_aaf117506502202ece7cb35a86682e66f}{F\+F\+L\+U\+SH}~fflush
+\item 
+\#define \hyperlink{logconsole_8cpp_a8875037d0772a4fc34516f1e03d7e238}{S\+T\+D\+O\+UT}~stdout
+\item 
+\#define \hyperlink{logconsole_8cpp_a3a540e3eef339eec06aff31c4ba1eb25}{S\+T\+D\+E\+RR}~stderr
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{namespaceCore_ac841f812f5ff61ba38222f7d441509d3}{Core\+::clprintf} (const char $\ast$fmt,...)
+\item 
+int \hyperlink{namespaceCore_a630dcb213704b7856eec935d8695ffe9}{Core\+::clvprintf} (const char $\ast$fmt, va\+\_\+list)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!B\+U\+F\+L\+EN@{B\+U\+F\+L\+EN}}
+\index{B\+U\+F\+L\+EN@{B\+U\+F\+L\+EN}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+L\+EN}{BUFLEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+L\+EN(
+\begin{DoxyParamCaption}
+\item[{}]{buf}
+\end{DoxyParamCaption}
+)~buf.\+l\+\_\+}\hypertarget{logconsole_8cpp_aa1718d5aeea7b902569252f6c6802bc6}{}\label{logconsole_8cpp_aa1718d5aeea7b902569252f6c6802bc6}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!B\+U\+F\+V\+AL@{B\+U\+F\+V\+AL}}
+\index{B\+U\+F\+V\+AL@{B\+U\+F\+V\+AL}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+V\+AL}{BUFVAL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+V\+AL(
+\begin{DoxyParamCaption}
+\item[{}]{buf}
+\end{DoxyParamCaption}
+)~buf.\+v\+\_\+}\hypertarget{logconsole_8cpp_a41152762b11d02d1db3448a92f91b71f}{}\label{logconsole_8cpp_a41152762b11d02d1db3448a92f91b71f}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!B\+U\+F\+V\+P\+R\+I\+N\+TF@{B\+U\+F\+V\+P\+R\+I\+N\+TF}}
+\index{B\+U\+F\+V\+P\+R\+I\+N\+TF@{B\+U\+F\+V\+P\+R\+I\+N\+TF}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+V\+P\+R\+I\+N\+TF}{BUFVPRINTF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+V\+P\+R\+I\+N\+TF(
+\begin{DoxyParamCaption}
+\item[{}]{buf, }
+\item[{}]{fmt, }
+\item[{}]{args}
+\end{DoxyParamCaption}
+)}\hypertarget{logconsole_8cpp_a6c3d088b0a89908a6244864824623799}{}\label{logconsole_8cpp_a6c3d088b0a89908a6244864824623799}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+buf.l\_ = vsnprintf(buf.s\_, \hyperlink{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}{SBUF\_SIZE}, fmt, args);           \(\backslash\)
+  if (buf.l\_ >= 0 && buf.l\_ < \hyperlink{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}{SBUF\_SIZE}) \{\textcolor{comment}{/* static buffer */} \(\backslash\)
+    buf.v\_ = buf.s\_;                                          \(\backslash\)
+  \}
+\end{DoxyCode}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!F\+F\+L\+U\+SH@{F\+F\+L\+U\+SH}}
+\index{F\+F\+L\+U\+SH@{F\+F\+L\+U\+SH}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+F\+L\+U\+SH}{FFLUSH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+F\+L\+U\+SH~fflush}\hypertarget{logconsole_8cpp_aaf117506502202ece7cb35a86682e66f}{}\label{logconsole_8cpp_aaf117506502202ece7cb35a86682e66f}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!F\+R\+E\+E\+B\+UF@{F\+R\+E\+E\+B\+UF}}
+\index{F\+R\+E\+E\+B\+UF@{F\+R\+E\+E\+B\+UF}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+E\+E\+B\+UF}{FREEBUF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+E\+E\+B\+UF(
+\begin{DoxyParamCaption}
+\item[{}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{logconsole_8cpp_a6d59088b73a3126218b9bef83f4abc8a}{}\label{logconsole_8cpp_a6d59088b73a3126218b9bef83f4abc8a}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+buf.v\_ = NULL; \(\backslash\)
+  \(\backslash\)
+\end{DoxyCode}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!is\+\_\+console@{is\+\_\+console}}
+\index{is\+\_\+console@{is\+\_\+console}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{is\+\_\+console}{is_console}}]{\setlength{\rightskip}{0pt plus 5cm}\#define is\+\_\+console(
+\begin{DoxyParamCaption}
+\item[{}]{file}
+\end{DoxyParamCaption}
+)~(0 != isatty(fileno(file)))}\hypertarget{logconsole_8cpp_afeee3cbb310f621900e0b8e455155b92}{}\label{logconsole_8cpp_afeee3cbb310f621900e0b8e455155b92}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!I\+S\+D\+I\+G\+IT@{I\+S\+D\+I\+G\+IT}}
+\index{I\+S\+D\+I\+G\+IT@{I\+S\+D\+I\+G\+IT}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+S\+D\+I\+G\+IT}{ISDIGIT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+D\+I\+G\+IT(
+\begin{DoxyParamCaption}
+\item[{}]{d}
+\end{DoxyParamCaption}
+)~(d $>$= \textquotesingle{}0\textquotesingle{} \&\& d $<$= \textquotesingle{}9\textquotesingle{})}\hypertarget{logconsole_8cpp_a6582f05711954011e2ceacc62d6ebad2}{}\label{logconsole_8cpp_a6582f05711954011e2ceacc62d6ebad2}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!N\+E\+W\+B\+UF@{N\+E\+W\+B\+UF}}
+\index{N\+E\+W\+B\+UF@{N\+E\+W\+B\+UF}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{N\+E\+W\+B\+UF}{NEWBUF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+E\+W\+B\+UF(
+\begin{DoxyParamCaption}
+\item[{}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{logconsole_8cpp_af62e66227ee4bc21dc19daf0f55f45a7}{}\label{logconsole_8cpp_af62e66227ee4bc21dc19daf0f55f45a7}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{struct }\{                        \(\backslash\)
+    char s\_[\hyperlink{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}{SBUF\_SIZE}];           \(\backslash\)
+    struct StringBuf* d\_;         \(\backslash\)
+    char* v\_;                     \(\backslash\)
+    int l\_;                       \(\backslash\)
+  \} buf = \{\textcolor{stringliteral}{""}, NULL, NULL, 0\}; \(\backslash\)
+ \(\backslash\)
+\end{DoxyCode}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!S\+B\+U\+F\+\_\+\+S\+I\+ZE@{S\+B\+U\+F\+\_\+\+S\+I\+ZE}}
+\index{S\+B\+U\+F\+\_\+\+S\+I\+ZE@{S\+B\+U\+F\+\_\+\+S\+I\+ZE}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+B\+U\+F\+\_\+\+S\+I\+ZE}{SBUF_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+B\+U\+F\+\_\+\+S\+I\+ZE~2048}\hypertarget{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}{}\label{logconsole_8cpp_a2facdfca371afebb3364c87fae328d95}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!S\+T\+D\+E\+RR@{S\+T\+D\+E\+RR}}
+\index{S\+T\+D\+E\+RR@{S\+T\+D\+E\+RR}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+T\+D\+E\+RR}{STDERR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+D\+E\+RR~stderr}\hypertarget{logconsole_8cpp_a3a540e3eef339eec06aff31c4ba1eb25}{}\label{logconsole_8cpp_a3a540e3eef339eec06aff31c4ba1eb25}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!S\+T\+D\+O\+UT@{S\+T\+D\+O\+UT}}
+\index{S\+T\+D\+O\+UT@{S\+T\+D\+O\+UT}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+T\+D\+O\+UT}{STDOUT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+D\+O\+UT~stdout}\hypertarget{logconsole_8cpp_a8875037d0772a4fc34516f1e03d7e238}{}\label{logconsole_8cpp_a8875037d0772a4fc34516f1e03d7e238}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!uint32@{uint32}}
+\index{uint32@{uint32}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{uint32}{uint32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define uint32~unsigned long}\hypertarget{logconsole_8cpp_a9695cf1104606879c5d3f0221635a069}{}\label{logconsole_8cpp_a9695cf1104606879c5d3f0221635a069}
+\index{logconsole.\+cpp@{logconsole.\+cpp}!uint8@{uint8}}
+\index{uint8@{uint8}!logconsole.\+cpp@{logconsole.\+cpp}}
+\subsubsection[{\texorpdfstring{uint8}{uint8}}]{\setlength{\rightskip}{0pt plus 5cm}\#define uint8~unsigned char}\hypertarget{logconsole_8cpp_a2d25bcd37166cc98f0d823cdb8c553ef}{}\label{logconsole_8cpp_a2d25bcd37166cc98f0d823cdb8c553ef}

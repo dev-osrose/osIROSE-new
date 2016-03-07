@@ -1,0 +1,6 @@
+<map id="CRoseServer" name="CRoseServer">
+<area shape="rect" id="node2" href="$classCore_1_1CNetwork__Asio.html" title="Core::CNetwork_Asio" alt="" coords="98,95,249,121"/>
+<area shape="rect" id="node3" href="$classINetwork.html" title="INetwork" alt="" coords="5,5,80,32"/>
+<area shape="rect" id="node4" href="$classCore_1_1CLogConsole.html" title="Core::CLogConsole" alt="" coords="105,5,242,32"/>
+<area shape="rect" id="node5" href="$classCore_1_1NetworkThreadPool.html" title="Core::NetworkThreadPool" alt="" coords="267,5,440,32"/>
+</map>

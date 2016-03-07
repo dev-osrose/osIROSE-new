@@ -1,0 +1,61 @@
+\hypertarget{stringbuffer_8h}{}\section{core/include/rapidjson/stringbuffer.h File Reference}
+\label{stringbuffer_8h}\index{core/include/rapidjson/stringbuffer.\+h@{core/include/rapidjson/stringbuffer.\+h}}
+{\ttfamily \#include \char`\"{}rapidjson.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal/stack.\+h\char`\"{}}\\*
+Include dependency graph for stringbuffer.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{stringbuffer_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=311pt]{stringbuffer_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classGenericStringBuffer}{Generic\+String\+Buffer$<$ Encoding, Allocator $>$}
+\begin{DoxyCompactList}\small\item\em Represents an in-\/memory output stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classGenericStringBuffer}{Generic\+String\+Buffer}$<$ \hyperlink{structUTF8}{U\+T\+F8}$<$$>$ $>$ \hyperlink{stringbuffer_8h_a88f2d61781c8daefde48a81bdeac6ecd}{String\+Buffer}
+\begin{DoxyCompactList}\small\item\em String buffer with \hyperlink{structUTF8}{U\+T\+F8} encoding. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$$>$ }\\void \hyperlink{stringbuffer_8h_a4bcf83273503d7b834ec530e84914f8c}{PutN} (\hyperlink{classGenericStringBuffer}{Generic\+String\+Buffer}$<$ \hyperlink{structUTF8}{U\+T\+F8}$<$$>$ $>$ \&stream, char c, size\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Implement specialized version of \hyperlink{stringbuffer_8h_a4bcf83273503d7b834ec530e84914f8c}{Put\+N()} with memset() for better performance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{stringbuffer.\+h@{stringbuffer.\+h}!String\+Buffer@{String\+Buffer}}
+\index{String\+Buffer@{String\+Buffer}!stringbuffer.\+h@{stringbuffer.\+h}}
+\subsubsection[{\texorpdfstring{String\+Buffer}{StringBuffer}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Generic\+String\+Buffer}$<${\bf U\+T\+F8}$<$$>$ $>$ {\bf String\+Buffer}}\hypertarget{stringbuffer_8h_a88f2d61781c8daefde48a81bdeac6ecd}{}\label{stringbuffer_8h_a88f2d61781c8daefde48a81bdeac6ecd}
+
+
+String buffer with \hyperlink{structUTF8}{U\+T\+F8} encoding. 
+
+
+
+\subsection{Function Documentation}
+\index{stringbuffer.\+h@{stringbuffer.\+h}!PutN@{PutN}}
+\index{PutN@{PutN}!stringbuffer.\+h@{stringbuffer.\+h}}
+\subsubsection[{\texorpdfstring{Put\+N(\+Generic\+String\+Buffer$<$ U\+T\+F8$<$$>$ $>$ \&stream, char c, size\+\_\+t n)}{PutN(GenericStringBuffer< UTF8<> > &stream, char c, size_t n)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$$>$ void PutN (
+\begin{DoxyParamCaption}
+\item[{{\bf Generic\+String\+Buffer}$<$ {\bf U\+T\+F8}$<$$>$ $>$ \&}]{stream, }
+\item[{char}]{c, }
+\item[{size\+\_\+t}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{stringbuffer_8h_a4bcf83273503d7b834ec530e84914f8c}{}\label{stringbuffer_8h_a4bcf83273503d7b834ec530e84914f8c}
+
+
+Implement specialized version of \hyperlink{stringbuffer_8h_a4bcf83273503d7b834ec530e84914f8c}{Put\+N()} with memset() for better performance. 
+

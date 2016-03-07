@@ -1,0 +1,56 @@
+\hypertarget{structTranscoder}{}\section{Transcoder$<$ Source\+Encoding, Target\+Encoding $>$ Struct Template Reference}
+\label{structTranscoder}\index{Transcoder$<$ Source\+Encoding, Target\+Encoding $>$@{Transcoder$<$ Source\+Encoding, Target\+Encoding $>$}}
+
+
+Encoding conversion.  
+
+
+
+
+{\ttfamily \#include $<$core/include/rapidjson/encodings.\+h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Input\+Stream , typename Output\+Stream $>$ }\\static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool \hyperlink{structTranscoder_a0ea2edfe35784ebf1063921d2bd5fb66}{Transcode} (Input\+Stream \&is, Output\+Stream \&os)
+\begin{DoxyCompactList}\small\item\em Take one Unicode codepoint from source encoding, convert it to target encoding and put it to the output stream. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Input\+Stream , typename Output\+Stream $>$ }\\static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool \hyperlink{structTranscoder_a8a64aa837f7962894a99f63232472543}{Validate} (Input\+Stream \&is, Output\+Stream \&os)
+\begin{DoxyCompactList}\small\item\em Validate one Unicode codepoint from an encoded stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Source\+Encoding, typename Target\+Encoding$>$\\*
+struct Transcoder$<$ Source\+Encoding, Target\+Encoding $>$}
+
+Encoding conversion. 
+
+\subsection{Member Function Documentation}
+\index{Transcoder@{Transcoder}!Transcode@{Transcode}}
+\index{Transcode@{Transcode}!Transcoder@{Transcoder}}
+\subsubsection[{\texorpdfstring{Transcode(\+Input\+Stream \&is, Output\+Stream \&os)}{Transcode(InputStream &is, OutputStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Source\+Encoding , typename Target\+Encoding $>$ template$<$typename Input\+Stream , typename Output\+Stream $>$ static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool {\bf Transcoder}$<$ Source\+Encoding, Target\+Encoding $>$\+::Transcode (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{Output\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structTranscoder_a0ea2edfe35784ebf1063921d2bd5fb66}{}\label{structTranscoder_a0ea2edfe35784ebf1063921d2bd5fb66}
+
+
+Take one Unicode codepoint from source encoding, convert it to target encoding and put it to the output stream. 
+
+\index{Transcoder@{Transcoder}!Validate@{Validate}}
+\index{Validate@{Validate}!Transcoder@{Transcoder}}
+\subsubsection[{\texorpdfstring{Validate(\+Input\+Stream \&is, Output\+Stream \&os)}{Validate(InputStream &is, OutputStream &os)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename Source\+Encoding , typename Target\+Encoding $>$ template$<$typename Input\+Stream , typename Output\+Stream $>$ static R\+A\+P\+I\+D\+J\+S\+O\+N\+\_\+\+F\+O\+R\+C\+E\+I\+N\+L\+I\+NE bool {\bf Transcoder}$<$ Source\+Encoding, Target\+Encoding $>$\+::Validate (
+\begin{DoxyParamCaption}
+\item[{Input\+Stream \&}]{is, }
+\item[{Output\+Stream \&}]{os}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{structTranscoder_a8a64aa837f7962894a99f63232472543}{}\label{structTranscoder_a8a64aa837f7962894a99f63232472543}
+
+
+Validate one Unicode codepoint from an encoded stream. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/rapidjson/\hyperlink{encodings_8h}{encodings.\+h}\end{DoxyCompactItemize}
