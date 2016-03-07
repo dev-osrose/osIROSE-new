@@ -1,9 +1,0 @@
-<map id="core/include/rapidjson/internal/ieee754.h" name="core/include/rapidjson/internal/ieee754.h">
-<area shape="rect" id="node2" href="$strtod_8h.html" title="core/include/rapidjson\l/internal/strtod.h" alt="" coords="5,95,153,136"/>
-<area shape="rect" id="node5" href="$dtoa_8h.html" title="core/include/rapidjson\l/internal/dtoa.h" alt="" coords="177,95,325,136"/>
-<area shape="rect" id="node3" href="$reader_8h.html" title="core/include/rapidjson\l/reader.h" alt="" coords="5,184,153,225"/>
-<area shape="rect" id="node4" href="$document_8h.html" title="core/include/rapidjson\l/document.h" alt="" coords="5,273,153,315"/>
-<area shape="rect" id="node6" href="$writer_8h.html" title="core/include/rapidjson\l/writer.h" alt="" coords="177,184,325,225"/>
-<area shape="rect" id="node7" href="$prettywriter_8h.html" title="core/include/rapidjson\l/prettywriter.h" alt="" coords="177,273,325,315"/>
-<area shape="rect" id="node8" href="$pbjson_8cpp.html" title="core/src/pbjson.cpp" alt="" coords="349,281,485,307"/>
-</map>

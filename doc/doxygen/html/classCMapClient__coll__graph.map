@@ -1,8 +1,0 @@
-<map id="CMapClient" name="CMapClient">
-<area shape="rect" id="node2" href="$classCRoseClient.html" title="CRoseClient" alt="" coords="237,184,334,211"/>
-<area shape="rect" id="node3" href="$classCore_1_1CNetwork__Asio.html" title="Core::CNetwork_Asio" alt="" coords="98,95,249,121"/>
-<area shape="rect" id="node4" href="$classINetwork.html" title="INetwork" alt="" coords="5,5,80,32"/>
-<area shape="rect" id="node5" href="$classCore_1_1CLogConsole.html" title="Core::CLogConsole" alt="" coords="105,5,242,32"/>
-<area shape="rect" id="node6" href="$classCore_1_1NetworkThreadPool.html" title="Core::NetworkThreadPool" alt="" coords="267,5,440,32"/>
-<area shape="rect" id="node7" href="$classPacketCodec.html" title="PacketCodec" alt="" coords="273,95,375,121"/>
-</map>
