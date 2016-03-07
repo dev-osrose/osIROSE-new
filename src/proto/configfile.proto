@@ -10,7 +10,7 @@ message	Database {
 }
 
 message	Server {
-	required int32	id 				= 1 [default = "0"];
+	required int32	id 				= 1 [default = 0];
 	required string	ip 				= 2 [default = "127.0.0.1"];
 	required int32	accessLevel 	= 3 [default = 100];
 	required int32	parentId 		= 4 [default = 0]; // Might not be used
