@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
   Core::CLogConsole Logger("CharServer");
   Logger.icprintf("Starting up server...\n\n");
 
-  Config& config = Config::getInstance();
+  Core::Config& config = Core::Config::getInstance();
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
   CCharServer clientServer;

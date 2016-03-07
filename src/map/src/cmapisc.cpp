@@ -35,7 +35,7 @@ bool CMapISC::HandlePacket(uint8_t* _buffer) {
 void CMapISC::OnConnected() {
   CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
-  Config& config = Config::getInstance();
+  Core::Config& config = Core::Config::getInstance();
 
   ServerReg pServerReg;
   pServerReg.set_name(config.map_server().channelname());

@@ -10,7 +10,7 @@ CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
   else
     log_.SetIdentity("CLoginServer");
 
-  Config& config = Config::getInstance();
+  Core::Config& config = Core::Config::getInstance();
   const ::configFile::Database& dbb = config.database();
 
   std::string host = dbb.host();
