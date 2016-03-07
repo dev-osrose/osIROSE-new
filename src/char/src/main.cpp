@@ -1,5 +1,6 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
+#include "config.h"
 
 int main(int argc, char* argv[]) {
   (void)argc;
@@ -8,19 +9,20 @@ int main(int argc, char* argv[]) {
   Core::CLogConsole Logger("CharServer");
   Logger.icprintf("Starting up server...\n\n");
 
-  Core::NetworkThreadPool::GetInstance();
+  Config& config = Config::getInstance();
+  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
   CCharServer clientServer;
   CCharServer iscServer(true);
   CCharISC iscClient;
-  iscClient.Init("127.0.0.1", 29010);
+  iscClient.Init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient.SetLogin(true);
 
-  clientServer.Init("127.0.0.1", 29100);
+  clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
   clientServer.Listen();
   clientServer.GetISCList().push_front((CCharISC*)&iscClient);
 
-  iscServer.Init("127.0.0.1", 29110);
+  iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
   iscServer.Listen();
   iscClient.Connect();
 

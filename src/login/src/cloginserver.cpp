@@ -2,6 +2,7 @@
 #include "cloginclient.h"
 #include "cloginisc.h"
 #include "ePacketType.h"
+#include "config.h"
 
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
   if (true == _isc)
@@ -9,38 +10,15 @@ CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
   else
     log_.SetIdentity("CLoginServer");
 
-  /*  process_thread_ = std::thread([this]() {
-      active_ = true;
-      while( IsActive() )
-      {
-      if (IsISCServer() == false) {
-        std::lock_guard<std::mutex> lock(client_list_mutex_);
-        for (auto& client : client_list_) {
-          if(client->IsActive() == false) {
-            client->Shutdown();
-            delete client;
-            client_list_.remove(client);
-            //client = client_list_.before_begin();
-            break;
-          }
-        }
-      } else {
-        std::lock_guard<std::mutex> lock(isc_list_mutex_);
-        for (auto& client : isc_list_) {
-          if(client->IsActive() == false) {
-            client->Shutdown();
-            delete client;
-            isc_list_.remove(client);
-            //client = isc_list_.before_begin();
-            break;
-          }
-        }
-      }
-      std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-      }
+  Config& config = Config::getInstance();
+  const ::configFile::Database& dbb = config.database();
 
-      return 0;
-    });*/
+  std::string host = dbb.host();
+  std::string database = dbb.database();
+  std::string user = dbb.user();
+  std::string pass = dbb.password();
+
+  database_ = std::unique_ptr<Core::CMySQL_Database>( new Core::CMySQL_Database( host, database, user, pass ) );
 }
 
 CLoginServer::~CLoginServer() { Shutdown(); }
@@ -64,17 +42,3 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
     }
   }
 }
-
-// bool CLoginServer::HandlePacket( uint8_t* _buffer )
-//{
-//	CPacket* pak = (CPacket*)_buffer;
-//	switch ( pak->Header.Command )
-//	{
-//	default:
-//	{
-//		CRoseServer::HandlePacket( _buffer );
-//		return false;
-//	}
-//	}
-//	return true;
-//}

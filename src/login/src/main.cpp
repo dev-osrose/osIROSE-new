@@ -10,25 +10,17 @@ int main(int argc, char* argv[]) {
 
   Core::CLogConsole Logger("LoginServer");
   Logger.icprintf("Starting up server...\n\n");
-  Core::NetworkThreadPool::GetInstance();
 
   Core::Config& config = Core::Config::getInstance();
-  const ::configFile::Database& dbb = config.database();
-
-  std::string host = dbb.host();
-  std::string _database = dbb.database();
-  std::string user = dbb.user();
-  std::string pass = dbb.password();
-
-  Core::CMySQL_Database database(host, _database, user, pass);
+  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
   CLoginServer clientServer;
   CLoginServer iscServer(true);
 
-  clientServer.Init("127.0.0.1", 29000);
+  clientServer.Init(config.serverdata().ip(), config.login_server().clientport());
   clientServer.Listen();
 
-  iscServer.Init("127.0.0.1", 29010);
+  iscServer.Init(config.serverdata().ip(), config.login_server().iscport());
   iscServer.Listen();
 
   while (clientServer.IsActive()) {

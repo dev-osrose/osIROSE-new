@@ -46,50 +46,51 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
   password_[32] = 0;  // Null term the string
   P->GetString(32, 16, (char*)username_);
   // IResult	*res = nullptr;
-  // std::string	query = "CALL UserLogin('%s', '%s');";
+  //std::unique_ptr<Core::IResult>	res;
+  std::string	query = "CALL UserLogin('%s', '%s');";
 
   // TODO: Create string safe function to sanitize sql query input
   // TODO: Database class needs to become a singleton
-  // res = pDB->QStore(query);
+  //res = std::move(pDB->QStore(query));
 
   // if(res != nullptr)
   {// Query the DB
-    //	if(res)
-    // 	{
-    // 		// Already logged in
-    // 		SendLoginReply( 4 );
-    // 	}
-    //
-    // 	{
-    // 		// Servers are under inspection
-    // 		SendLoginReply( 1 );
-    // 	}
+   //	if(res)
+   // 	{
+   // 		// Already logged in
+   // 		SendLoginReply( 4 );
+   // 	}
+   //
+   // 	{
+   // 		// Servers are under inspection
+   // 		SendLoginReply( 1 );
+   // 	}
 
-    {  // Okay to login!!
-      SendLoginReply(0);
-    }
+   {// Okay to login!!
+    SendLoginReply(0);
+}
 
-    // 	{
-    // 		// Banned
-    // 		SendLoginReply( 5 );
-    // 	}
-    //
-    // 	{
-    // 		// Incorrect Password
-    // 		SendLoginReply( 3 );
-    // 	}
-    //
-    // 	{
-    // 		// Server Full
-    // 		SendLoginReply( 8 );
-    //	}
-  }
-  // else
-  {
-    // The user doesn't exist or server is down.
-    //	SendLoginReply( 1 );
-  }
-  return true;
+// 	{
+// 		// Banned
+// 		SendLoginReply( 5 );
+// 	}
+//
+// 	{
+// 		// Incorrect Password
+// 		SendLoginReply( 3 );
+// 	}
+//
+// 	{
+// 		// Server Full
+// 		SendLoginReply( 8 );
+//	}
+}
+// else
+{
+  // The user doesn't exist or server is down.
+  //	SendLoginReply( 1 );
+}
+return true;
 }
 
 bool CLoginClient::ChannelList(CRosePacket* P) {
