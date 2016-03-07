@@ -2,17 +2,27 @@
  * \file inetwork.h
  *
  * \author RavenX8
- * \date march 2016
+ * \date nov 2015
  *
+ * The interface definition for the network classes
  */
 #ifndef INETWORK_H_
 #define INETWORK_H_
 
-// TODO: Add parameters for the functions
 #include <stdint.h>
 
 namespace Core {
 
+/*!
+ * \class INetwork
+ *
+ * \brief An interface for networking sockets
+ *
+ * This interface is used to define the basic need for the server networking.
+ *
+ * \author Raven
+ * \date nov 2015
+ */
 class INetwork {
  public:
   INetwork()
@@ -22,12 +32,57 @@ class INetwork {
         network_ip_address("") {}
   virtual ~INetwork() {}
 
+  /*!
+	 * \brief Used to set the underlying IP adrress and port used in the rest of the functions.
+	 *
+	 * This function should be called before using any other function. This sets up the class to a default working state.
+	 *
+	 * \param[in] _ip The IP Address that the network will listen on or connect to.
+	 * \param[in] _port The port that the network with either listen on or connect to.
+	 */
   virtual bool Init(std::string _ip, uint16_t _port) = 0;
+  
+  /*!
+	 * \brief Used to shutdown networking operations
+	 *
+	 * This function cleans up all of the packet queues and shuts down the current socket.
+	 */
   virtual bool Shutdown() = 0;
 
+  /*!
+	 * \brief Used to connect to the ip and port stored by Init
+	 *
+	 * This function opens a network connection to the stored ip and port.
+   *
+   * \sa Init OnConnect OnConnected
+	 */
   virtual bool Connect() = 0;
+  
+  /*!
+	 * \brief Used to open a listen socket on the ip and port stored by Init
+	 *
+	 * This function opens a networking socket to listen for connection requests.
+   *
+   * \sa Init OnListen OnListening
+	 */
   virtual bool Listen() = 0;
+  
+  /*!
+	 * \brief Used to reconnect to the currently connected ip and port.
+	 *
+	 * This function resets the current class back to its default state right after calling Init
+   *
+   * \sa Init Connect Disconnect
+	 */
   virtual bool Reconnect() = 0;
+  
+  /*!
+	 * \brief Used to close the current socket connection.
+	 *
+	 * This function disconnects the currect socket connection. 
+   *
+   * \sa Connect OnDisconnect OnDisconnected
+	 */
   virtual bool Disconnect() = 0;
 
   virtual void SetId(uint32_t _val) { network_id_ = _val; }

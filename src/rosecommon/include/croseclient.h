@@ -16,15 +16,15 @@ class CRoseClient : public Core::CNetwork_Asio {
 
  protected:
   // Callback functions
-  virtual bool OnConnect();
-  virtual void OnConnected();
-  virtual bool OnDisconnect();
-  virtual void OnDisconnected();
-  virtual bool OnReceive();
-  virtual bool OnReceived();
-  virtual bool OnSend(uint8_t* _buffer);
-  virtual void OnSent();
-  virtual bool HandlePacket(uint8_t* _buffer);
+  virtual bool OnConnect() override;
+  virtual void OnConnected() override;
+  virtual bool OnDisconnect() override;
+  virtual void OnDisconnected() override;
+  virtual bool OnReceive() override;
+  virtual bool OnReceived() override;
+  virtual bool OnSend(uint8_t* _buffer) override;
+  virtual void OnSent() override;
+  virtual bool HandlePacket(uint8_t* _buffer) override;
 
   PacketCodec crypt_;
 };

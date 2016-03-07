@@ -30,7 +30,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   virtual bool OnDisconnect();
   virtual void OnDisconnected();
   virtual bool OnAccept();
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual void OnAccepted(tcp::socket _sock) override;
 
   bool isc_server_;
   static std::forward_list<CRoseClient*> client_list_;
