@@ -11,7 +11,7 @@ Config &Config::getInstance(std::string filename) {
   return instance;
 }
 
-std::string Config::prettify(std::string data) {
+std::string prettify(const std::string &data) {
   std::string res;
   int dist = 0;
   for (auto &it : data) {
