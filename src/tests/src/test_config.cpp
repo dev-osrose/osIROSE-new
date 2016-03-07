@@ -22,7 +22,7 @@ TEST(Config, TestServer) {
   EXPECT_EQ("127.0.0.1", sd.ip());
   EXPECT_EQ(100, sd.accesslevel());
   EXPECT_EQ(0, sd.parentid());
-  EXPECT_EQ(100, sd.maxconnections());
+  EXPECT_EQ(0, sd.maxconnections());
   EXPECT_EQ(true, sd.usethreads());
   EXPECT_EQ(0, sd.mode());
 }
