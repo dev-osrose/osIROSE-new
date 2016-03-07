@@ -3,8 +3,7 @@
 #include <iostream>
 #include <exception>
 
-using namespace std;
-using namespace pbjson;
+namespace Core {
 
 Config &Config::getInstance(std::string filename) {
   static Config instance(filename);
@@ -39,30 +38,28 @@ std::string prettify(const std::string &data) {
   return res;
 }
 
-Config::Config(string filename) : Configuration(), file(filename) {
+Config::Config(std::string filename) : Configuration(), file_(filename), log_("Configuration") {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-  fstream in(file.c_str(), ios::in);
+  std::fstream in(file_.c_str(), std::ios::in);
   if (!in.is_open()) {
-    cout << file << " file not found. Creating one" << endl;
-    fstream out(file.c_str(), ios::out | ios::trunc);
+	log_.oicprintf("file %s not found. Creating one...\n", filename.c_str());
+	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);
     if (!out.is_open()) throw std::exception();
-    string json;
-    pb2json(this, json);
+	std::string json;
+	pbjson::pb2json(this, json);
     out << prettify(json);
   } else {
-    string json, err;
-    getline(in, json, static_cast<char>(in.eof()));
-    if (json2pb(json, this, err) < 0) {
-      cerr << "Error while parsing the file: " << err << endl;
+	std::string json, err;
+	std::getline(in, json, static_cast<char>(in.eof()));
+    if (pbjson::json2pb(json, this, err) < 0) {
+		log_.eicprintf(CL_RESET CL_RED "Error while parsing the file: %s" CL_RESET "\n", err.c_str());
       throw std::exception();
     }
   }
 }
 
 Config::~Config() {
-  /* fstream	out(file.c_str(), ios::out | ios::trunc); */
-  /* string	json; */
-  /* pb2json(this, json); */
-  /* out << json; */
   google::protobuf::ShutdownProtobufLibrary();
+}
+
 }

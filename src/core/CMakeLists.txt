@@ -52,6 +52,10 @@ SET( SOURCES_HEADER
   include/pbjson
   include/logconsole
   include/cmysql_database
+  include/network_thread_pool
+  include/idatabase
+  include/inetwork
+  include/riterator
 )
 
 SET( SOURCES_BASE

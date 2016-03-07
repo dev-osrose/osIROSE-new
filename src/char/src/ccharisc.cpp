@@ -1,6 +1,7 @@
 #include "ccharisc.h"
 #include "crosepacket.h"
 #include "ccharserver.h"
+#include "config.h"
 
 CCharISC::CCharISC() : CRoseISC(), login_connection_(false) {
   log_.SetIdentity("CCharISC");
@@ -85,12 +86,14 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
 void CCharISC::OnConnected() {
   CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
+  Core::Config& config = Core::Config::getInstance();
+
   ServerReg pServerReg;
-  pServerReg.set_name("HardCoded");
-  pServerReg.set_addr("127.0.0.1");
-  pServerReg.set_port(29100);
+  pServerReg.set_name(config.char_server().worldname());
+  pServerReg.set_addr(config.serverdata().ip());
+  pServerReg.set_port(config.char_server().clientport());
   pServerReg.set_type(ServerReg_ServerType_CHAR);
-  pServerReg.set_accright(0);
+  pServerReg.set_accright(config.char_server().accesslevel());
 
   int _size = pServerReg.ByteSize();
   uint8_t* data = new uint8_t[_size];
@@ -99,8 +102,8 @@ void CCharISC::OnConnected() {
     log_.eicprintf("Couldn't serialize the data\n");
   pak->AddBytes(data, _size);
 
-  // m_Log.oicprintf( "Sent a packet on CRoseISC: Header[%i, 0x%X]\n",
-  // pak->Header.Size, pak->Header.Command );
+  log_.oicprintf("Sent a packet on CRoseISC: Header[%i, 0x%X]\n",
+                 pak->Header.Size, pak->Header.Command);
 
   Send((CRosePacket*)pak);
   delete[] data;

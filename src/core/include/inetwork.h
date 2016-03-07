@@ -11,6 +11,8 @@
 // TODO: Add parameters for the functions
 #include <stdint.h>
 
+namespace Core {
+
 class INetwork {
  public:
   INetwork()
@@ -59,5 +61,6 @@ class INetwork {
 
   std::string network_ip_address;
 };
+}
 
 #endif

@@ -1,6 +1,7 @@
 
 #include "cmapserver.h"
 #include "cmapisc.h"
+#include "config.h"
 
 int main(int argc, char* argv[]) {
   (void)argc;
@@ -9,19 +10,20 @@ int main(int argc, char* argv[]) {
   Core::CLogConsole Logger("Map Server");
   Logger.icprintf("Starting up server...\n\n");
 
-  Core::NetworkThreadPool::GetInstance();
+  Core::Config& config = Core::Config::getInstance();
+  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
   CMapServer clientServer;
   CMapServer iscServer(true);
   CMapISC iscClient;
-  iscClient.Init("127.0.0.1", 29110);
+  iscClient.Init(config.map_server().charip(), config.map_server().chariscport());
   iscClient.SetChar(true);
 
-  clientServer.Init("127.0.0.1", 29200);
+  clientServer.Init(config.serverdata().ip(), config.map_server().clientport());
   clientServer.Listen();
   clientServer.GetISCList().push_front((CMapISC*)&iscClient);
 
-  iscServer.Init("127.0.0.1", 29210);
+  iscServer.Init(config.serverdata().ip(), config.map_server().iscport());
   iscServer.Listen();
   iscClient.Connect();
 

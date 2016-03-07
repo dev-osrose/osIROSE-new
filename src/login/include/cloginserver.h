@@ -2,6 +2,7 @@
 #define _CLOGINSERVER_H_
 
 #include "croseserver.h"
+#include "cmysql_database.h"
 
 class CLoginServer : public CRoseServer {
  public:
@@ -15,8 +16,7 @@ class CLoginServer : public CRoseServer {
 
  protected:
   virtual void OnAccepted(tcp::socket _sock);
-  //	virtual bool HandlePacket( uint8_t* _buffer );
-
+  std::unique_ptr<Core::CMySQL_Database>	database_;
   uint32_t client_count_;
 };
 
