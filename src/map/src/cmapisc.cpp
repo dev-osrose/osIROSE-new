@@ -1,5 +1,6 @@
 #include "cmapisc.h"
 #include "crosepacket.h"
+#include "config.h"
 
 CMapISC::CMapISC() : CRoseISC(), char_server_(false) {
   log_.SetIdentity("CMapISC");
@@ -34,13 +35,14 @@ bool CMapISC::HandlePacket(uint8_t* _buffer) {
 void CMapISC::OnConnected() {
   CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
+  Core::Config& config = Core::Config::getInstance();
+
   ServerReg pServerReg;
-  pServerReg.set_name("HardCoded Channel");
-  pServerReg.set_addr("127.0.0.1");
-  pServerReg.set_port(29200);
-  // TODO: Change the type depending on our config
+  pServerReg.set_name(config.map_server().channelname());
+  pServerReg.set_addr(config.serverdata().ip());
+  pServerReg.set_port(config.map_server().clientport());
   pServerReg.set_type(ServerReg_ServerType_MAP_MASTER);
-  pServerReg.set_accright(0);
+  pServerReg.set_accright(config.map_server().accesslevel());
 
   int _size = pServerReg.ByteSize();
   uint8_t* data = new uint8_t[_size];

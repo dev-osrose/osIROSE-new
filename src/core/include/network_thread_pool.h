@@ -11,8 +11,8 @@ class NetworkThreadPool {
   typedef std::unique_ptr<asio::io_service::work> asio_worker;
 
  public:
-  static NetworkThreadPool& GetInstance() {
-    if (instance_ == nullptr) instance_ = new NetworkThreadPool();
+  static NetworkThreadPool& GetInstance(uint16_t maxthreads = 0) {
+    if (instance_ == nullptr) instance_ = new NetworkThreadPool(maxthreads);
     return *instance_;
   }
 
@@ -29,41 +29,38 @@ class NetworkThreadPool {
   void Shutdown() {
     io_work_.reset();
 
-    uint32_t core_count = Get_CPU_Count();
-    core_count *= 2;
-
-    if (core_count > 512)
-      core_count = 512;
-    else if (core_count == 0)
-      core_count = 1;
-
-    for (uint32_t idx = 0; idx < core_count; ++idx) {
+    for (uint32_t idx = 0; idx < threads_running_; ++idx) {
       io_thread_[idx].join();
     }
-
+    threads_running_ = 0;
     io_service_.stop();
   }
 
  protected:
  private:
-  NetworkThreadPool() : io_work_(new asio_worker::element_type(io_service_)) {
-    uint32_t core_count = Get_CPU_Count();
+  NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)) {
+    uint16_t core_count = Get_CPU_Count();
 
     core_count *= 2;
+
+    if(maxthreads != 0 && core_count > maxthreads)
+      core_count = maxthreads;
 
     if (core_count > 512)
       core_count = 512;
     else if (core_count == 0)
       core_count = 1;
 
-    printf("Using %i threads\n", core_count);
-    for (uint32_t idx = 0; idx < core_count; ++idx) {
-      io_thread_[idx] = std::thread([this]() { io_service_.run(); });
+    threads_running_ = core_count;
+    printf("Using %i threads\n", threads_running_);
+    for (uint32_t idx = 0; idx < threads_running_; ++idx) {
+      io_thread_[idx] = std::thread([this]() { io_service_.run(); }); //todo(raven): change this to poll and loop while we are active.
     }
   }
 
   ~NetworkThreadPool() { Shutdown(); }
 
+  uint16_t threads_running_;
   std::thread io_thread_[512];
   asio::io_service io_service_;
   asio_worker io_work_;

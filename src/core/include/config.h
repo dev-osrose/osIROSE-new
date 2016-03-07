@@ -12,6 +12,9 @@
 #include <string>
 #include "configfile.pb.h"
 #include "pbjson.hpp"
+#include "logconsole.h"
+
+namespace Core {
 
 /*!
  * \class Config
@@ -42,7 +45,8 @@ class Config : public configFile::Configuration {
   Config &operator=(const Config &) = delete;
   ~Config();
 
-  std::string file;
+  std::string file_;
+  CLogConsole log_;
 };
 
 /*!
@@ -54,5 +58,6 @@ class Config : public configFile::Configuration {
  * \param[out] std::string The json table prettified
  */
 std::string prettify(const std::string &json);
+}
 
 #endif /* !_CONFIG_H_ */
