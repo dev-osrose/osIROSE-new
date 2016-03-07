@@ -1,3 +1,10 @@
+/*!
+ * \file inetwork.h
+ *
+ * \author RavenX8
+ * \date march 2016
+ *
+ */
 #ifndef INETWORK_H_
 #define INETWORK_H_
 
