@@ -4,6 +4,9 @@
 #include <string>
 #include "configfile.pb.h"
 #include "pbjson.hpp"
+#include "logconsole.h"
+
+namespace Core {
 
 class Config : public configFile::Configuration {
  public:
@@ -17,7 +20,10 @@ class Config : public configFile::Configuration {
   Config &operator=(const Config &) = delete;
   ~Config();
 
-  std::string file;
+  std::string file_;
+  CLogConsole log_;
 };
+
+}
 
 #endif /* !_CONFIG_H_ */

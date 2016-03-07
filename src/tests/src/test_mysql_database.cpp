@@ -9,7 +9,7 @@
 
 TEST( TestMySQL_Database, TestConstructor )
 {
-	const ::configFile::Database	&dbb = Config::getInstance("test.ini").database();
+	const ::configFile::Database	&dbb = Core::Config::getInstance("test.ini").database();
 	std::string host = dbb.host();
 	std::string _database = dbb.database();
 	std::string user = dbb.user();
@@ -30,7 +30,7 @@ TEST( TestMySQL_Database, TestQExecuteFails )
 
 TEST( TestMySQL_Database, TestQExecute )
 {
-        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
         std::string host = dbb.host();
         std::string _database = dbb.database();
         std::string user = dbb.user();
@@ -45,7 +45,7 @@ TEST( TestMySQL_Database, TestQExecute )
 
 TEST(TestMySQL_Database, TestQStore)
 {
-        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
         std::string host = dbb.host();
         std::string _database = dbb.database();
         std::string user = dbb.user();
@@ -74,7 +74,7 @@ TEST(TestMySQL_Database, TestQStore)
 
 TEST(TestMySQL_Database, TestError)
 {
-        const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+        const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
         std::string host = dbb.host();
         std::string _database = dbb.database();
         std::string user = dbb.user();
@@ -85,7 +85,7 @@ TEST(TestMySQL_Database, TestError)
 
 TEST(TestMySQL_Database, TestMultipleResults)
 {
-	const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+	const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
 	std::string host = dbb.host();
 	std::string _database = dbb.database();
 	std::string user = dbb.user();
@@ -103,7 +103,7 @@ TEST(TestMySQL_Database, TestMultipleResults)
 
 TEST(TestMySQL_Database, TestThreaded)
 {
-	const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+	const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
 	std::string host = dbb.host();
 	std::string _database = dbb.database();
 	std::string user = dbb.user();
@@ -131,7 +131,7 @@ TEST(TestMySQL_Database, TestThreaded)
 
 TEST(TestMySQL_Database, TestIRowAndIterator)
 {
-	const ::configFile::Database    &dbb = Config::getInstance("test.ini").database();
+	const ::configFile::Database    &dbb = Core::Config::getInstance("test.ini").database();
 	std::string host = dbb.host();
 	std::string _database = dbb.database();
 	std::string user = dbb.user();

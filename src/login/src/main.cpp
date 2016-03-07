@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
   Logger.icprintf("Starting up server...\n\n");
   Core::NetworkThreadPool::GetInstance();
 
-  Config& config = Config::getInstance();
+  Core::Config& config = Core::Config::getInstance();
   const ::configFile::Database& dbb = config.database();
 
   std::string host = dbb.host();
