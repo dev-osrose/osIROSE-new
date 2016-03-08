@@ -8,13 +8,15 @@ class CDatabaseMgr {
   static CDatabaseMgr& getInstance();
   static void deleteInstance();
 
-  Core::CMySQL_Database& GetDatabase() { return *(database_.get()); }
+  //Core::CMySQL_Database& GetDatabase() { return *(database_.get()); }
+  Core::CMySQL_Database& GetDatabase() { return database_; }
 
  private:
   CDatabaseMgr();
   ~CDatabaseMgr();
 
-  std::unique_ptr<Core::CMySQL_Database> database_;
+  //std::unique_ptr<Core::CMySQL_Database> database_;
+  Core::CMySQL_Database database_;
 };
 
 #endif
