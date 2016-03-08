@@ -1,6 +1,7 @@
 #include "cloginserver.h"
 #include "config.h"
 #include "cmysql_database.h"
+#include "cdatabase_manager.h"
 
 int main(int argc, char* argv[]) {
   (void)argc;
@@ -13,6 +14,14 @@ int main(int argc, char* argv[]) {
 
   Core::Config& config = Core::Config::getInstance();
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+  const ::configFile::Database& dbb = config.database();
+
+  std::string host = dbb.host();
+  std::string database = dbb.database();
+  std::string user = dbb.user();
+  std::string pass = dbb.password();
+
+  CDatabaseMgr::getInstance().GetDatabase().Connect( host, database, user, pass );
 
   CLoginServer clientServer;
   CLoginServer iscServer(true);

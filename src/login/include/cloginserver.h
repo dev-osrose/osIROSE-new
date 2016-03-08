@@ -16,7 +16,6 @@ class CLoginServer : public CRoseServer {
 
  protected:
   virtual void OnAccepted(tcp::socket _sock);
-  std::unique_ptr<Core::CMySQL_Database>	database_;
   uint32_t client_count_;
 };
 

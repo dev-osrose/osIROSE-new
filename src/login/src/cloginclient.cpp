@@ -2,6 +2,7 @@
 #include "cloginisc.h"
 #include "cloginclient.h"
 #include "ePacketType.h"
+#include "cdatabase_manager.h"
 
 CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0) {
   log_.SetIdentity("CLoginClient");
@@ -16,10 +17,12 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
   CRosePacket* pak =
       new CRosePacket(ePacketType::PAKLC_LOGIN_REPLY, sizeof(pakLoginReply));
   pak->pLoginReply.Result = Result;
-  pak->pLoginReply.Right = access_rights_;
+  pak->pLoginReply.Right = 0;
   pak->pLoginReply.Type = 0;
 
   if (Result == 0) {
+    pak->pLoginReply.Right = access_rights_;
+
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList()) {
@@ -46,51 +49,51 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
   password_[32] = 0;  // Null term the string
   P->GetString(32, 16, (char*)username_);
   // IResult	*res = nullptr;
-  //std::unique_ptr<Core::IResult>	res;
-  std::string	query = "CALL UserLogin('%s', '%s');";
+  std::unique_ptr<Core::IResult> res;
+  std::string query = "CALL UserLogin('%s', '%s');";
 
   // TODO: Create string safe function to sanitize sql query input
   // TODO: Database class needs to become a singleton
-  //res = std::move(pDB->QStore(query));
+  Core::CMySQL_Database& database = CDatabaseMgr::getInstance().GetDatabase();
+  res = std::move(database.QStore(query));
 
-  // if(res != nullptr)
-  {// Query the DB
-   //	if(res)
-   // 	{
-   // 		// Already logged in
-   // 		SendLoginReply( 4 );
-   // 	}
-   //
-   // 	{
-   // 		// Servers are under inspection
-   // 		SendLoginReply( 1 );
-   // 	}
+  if (res != nullptr) {  // Query the DB
+    if (res->size() != 0) {
+      //	if(res)
+      // 	{
+      // 		// Already logged in
+      // 		SendLoginReply( 4 );
+      // 	}
+      //
+      // 	{
+      // 		// Servers are under inspection
+      // 		SendLoginReply( 1 );
+      // 	}
 
-   {// Okay to login!!
-    SendLoginReply(0);
-}
+      {  // Okay to login!!
+        SendLoginReply(0);
+      }
 
-// 	{
-// 		// Banned
-// 		SendLoginReply( 5 );
-// 	}
-//
-// 	{
-// 		// Incorrect Password
-// 		SendLoginReply( 3 );
-// 	}
-//
-// 	{
-// 		// Server Full
-// 		SendLoginReply( 8 );
-//	}
-}
-// else
-{
-  // The user doesn't exist or server is down.
-  //	SendLoginReply( 1 );
-}
-return true;
+      // 	{
+      // 		// Banned
+      // 		SendLoginReply( 5 );
+      // 	}
+      //
+      // 	{
+      // 		// Incorrect Password
+      // 		SendLoginReply( 3 );
+      // 	}
+      //
+      // 	{
+      // 		// Server Full
+      // 		SendLoginReply( 8 );
+      //	}
+    } else {
+      // The user doesn't exist or server is down.
+      SendLoginReply( 1 );
+    }
+  }
+  return true;
 }
 
 bool CLoginClient::ChannelList(CRosePacket* P) {
