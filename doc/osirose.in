@@ -811,7 +811,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = "${CMAKE_SOURCE_DIR}/src/core/include/rapidjson" "${CMAKE_SOURCE_DIR}/src/core/include/bin2ascii.h" "${CMAKE_SOURCE_DIR}/src/core/include/pbjson.hpp" "${CMAKE_SOURCE_DIR}/src/core/src/pbjson.cpp"  "${CMAKE_SOURCE_DIR}/src/tests"
+EXCLUDE                = "${CMAKE_SOURCE_DIR}/src/core/include/rapidjson" "${CMAKE_SOURCE_DIR}/src/core/include/bin2ascii.h" "${CMAKE_SOURCE_DIR}/src/core/include/pbjson.hpp" "${CMAKE_SOURCE_DIR}/src/tests" "${CMAKE_SOURCE_DIR}/src/proto" "${CMAKE_SOURCE_DIR}/src/tests"
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
