@@ -7,6 +7,7 @@
 #include "config.h"
 #include "cmysql_database.h"
 #include "cmysql_databasepool.h"
+#include "database.h"
 
 TEST( TestMySQL_Database, TestConstructor )
 {
@@ -167,12 +168,12 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 	Core::CLogConsole::SetDisplayOmittable(true);
 	EXPECT_NO_FATAL_FAILURE(Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance());
 	EXPECT_NO_FATAL_FAILURE([] () {
-			Core::IDatabasePool &pool = Core::databasePool<Filename>::getInstance();
+			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
 			EXPECT_NO_FATAL_FAILURE(Core::IDatabase &database = pool.getDatabase());
 		});
 
 	EXPECT_NO_FATAL_FAILURE([] () {
-			Core::IDatabasePool &pool = Core::databasePool<Filename>::getInstance();
+			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
 			Core::IDatabase &database = pool.getDatabase();
 			database.QExecute("DROP TABLE IF EXISTS test_table;");
 			database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
