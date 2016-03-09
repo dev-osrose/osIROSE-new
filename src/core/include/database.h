@@ -19,8 +19,29 @@
 namespace Core {
 
 #ifdef USE_MYSQL_ONE_INSTANCE
+/*!
+ * \var databasePoolFilename
+ *
+ * brief a typedef provided for syntaxic sugar. It needs a template parameter for the filename.
+ *
+ * Usage : auto &database = Core::databasePoolFilename<Filename>::getInstance().getDatabase(); with Filename declared
+ * as follow : struct Filename { constexpr static const char *str() { return "your filename"; } };
+ * The default filename is "server.ini", you might want to see \s databasePool
+ * \sa databasePool
+ *
+ */
 template <typename Filename>
 using databasePoolFilename = IDatabasePoolAbstractFactory<CMySQL_DatabasePoolFactory<Filename>>;
+/*!
+ * \var databasePool
+ *
+ * brief a typedef provided for syntaxic sugar.
+ *
+ * Usage : auto &database = Core::databasePool::getInstance().getDatabase();
+ * The default filename "server.ini" will be used by this typedef.
+ * \sa databasePoolFilename
+ *
+ */
 using databasePool = databasePoolFilename<Config::Filename>;
 #endif
 
