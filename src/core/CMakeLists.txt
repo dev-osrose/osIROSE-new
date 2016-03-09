@@ -19,6 +19,10 @@ project(${PROJECT})
 
 #SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
+IF(ENABLE_MYSQL_ONE_INSTANCE)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_MYSQL_ONE_INSTANCE")
+ENDIF()
+
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
@@ -55,6 +59,9 @@ SET( SOURCES_HEADER
   include/network_thread_pool
   include/idatabase
   include/inetwork
+  include/idatabasepool
+  include/cmysql_databasepool
+  include/singleton
   include/riterator
 )
 

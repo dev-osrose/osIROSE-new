@@ -14,6 +14,12 @@ class Config : public configFile::Configuration {
 
   static std::string prettify(std::string);
 
+  struct Filename {
+	  constexpr static const char *str() {
+		  return "server.ini";
+	  }
+  };
+
  private:
   Config(std::string filename);
   Config(const Config &) = delete;
@@ -23,7 +29,6 @@ class Config : public configFile::Configuration {
   std::string file_;
   CLogConsole log_;
 };
-
 }
 
 #endif /* !_CONFIG_H_ */

@@ -47,7 +47,6 @@ SET( SOURCES_HEADER
   include/croseserver
   include/croseclient 
   include/croseisc
-  include/cdatabase_manager
 )
 
 SET( SOURCES_BASE
@@ -55,7 +54,7 @@ SET( SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
-  src/cdatabase_manager )
+)
 
 add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 

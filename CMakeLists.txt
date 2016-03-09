@@ -22,8 +22,15 @@ OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 OPTION(BUILD_TOOLS "Build server tools" ON)
 OPTION(BUILD_PROTOBUF "Build Protobuf (Leave this off)" OFF)
+OPTION(ENABLE_MYSQL_ONE_INSTANCE "Enable use of the single instance mysql database" ON)
 
-find_package(MySQL REQUIRED)
+IF(ENABLE_MYSQL_ONE_INSTANCE)
+  SET(ENABLE_MYSQL ON)
+ENDIF()
+
+IF(ENABLE_MYSQL)
+  find_package(MySQL REQUIRED)
+ENDIF()
 
 foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
@@ -67,10 +74,12 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#WINDOWS ONLY SETTINGS!!!!
 	#------------
 	#Build Protobuf
-	ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
+	IF(ENABLE_MYSQL)
+	 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
+	 SET(MYSQL_LIBRARIES libmysql.lib CACHE STRING "")
+	 SET(MYSQLpp_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/mysqlpp)
+	ENDIF()
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/3rdParty CACHE STRING "")
-	SET(MYSQL_LIBRARIES libmysql.lib CACHE STRING "")
-	SET(MYSQLpp_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/mysqlpp)
 	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/protobuf/src CACHE STRING "")
     SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
     SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
@@ -82,9 +91,11 @@ ELSE()
 	#Set Protobuf Paths
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
 	SET(PROTOBUF_BINARY_DIR ${PROTOBUF_ROOT}/lib)
-	SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
-	SET(MYSQLpp_INCLUDE_DIR /usr/include/mysql++)
-	SET(MYSQL_BINARY_DIR /usr/lib)
+	IF(ENABLE_MYSQL)
+		SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
+		SET(MYSQLpp_INCLUDE_DIR /usr/include/mysql++)
+		SET(MYSQL_BINARY_DIR /usr/lib)
+	ENDIF()
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 

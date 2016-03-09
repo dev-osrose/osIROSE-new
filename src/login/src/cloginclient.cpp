@@ -2,7 +2,7 @@
 #include "cloginisc.h"
 #include "cloginclient.h"
 #include "ePacketType.h"
-#include "cdatabase_manager.h"
+#include "database.h"
 
 CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0) {
   log_.SetIdentity("CLoginClient");
@@ -53,9 +53,8 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
   std::string query = "CALL UserLogin('%s', '%s');";
 
   // TODO: Create string safe function to sanitize sql query input
-  // TODO: Database class needs to become a singleton
-  Core::CMySQL_Database& database = CDatabaseMgr::getInstance().GetDatabase();
-  res = std::move(database.QStore(query));
+  Core::IDatabase &database = Core::databasePool::getInstance().getDatabase();
+  res = database.QStore(query);
 
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
