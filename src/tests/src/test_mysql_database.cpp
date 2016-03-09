@@ -22,7 +22,6 @@ TEST( TestMySQL_Database, TestConstructor )
 
 TEST( TestMySQL_Database, TestQExecuteFails )
 {
-	return;
 	Core::CMySQL_Database database;
 	EXPECT_ANY_THROW(database.Connect("azertyu", "dhfui34hf4", "dfj3gqf27", "Rahf7823"));
         EXPECT_ANY_THROW(database.QExecute("DROP TABLE IF EXISTS test_table;"));
