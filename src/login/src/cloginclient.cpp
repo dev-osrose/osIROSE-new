@@ -54,7 +54,7 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 
   // TODO: Create string safe function to sanitize sql query input
   Core::IDatabase &database = Core::databasePool::getInstance().getDatabase();
-  res = std::move(database.QStore(query));
+  res = database.QStore(query);
 
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
