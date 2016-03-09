@@ -22,7 +22,7 @@ OPTION(ENABLE_TESTING "Enable testing" OFF)
 OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
 OPTION(BUILD_TOOLS "Build server tools" ON)
 OPTION(BUILD_PROTOBUF "Build Protobuf (Leave this off)" OFF)
-OPTION(ENABLE_MYSQL "Enable use of mysql database" ON)
+OPTION(ENABLE_MYSQL_ONE_INSTANCE "Enable use of the single instance mysql database" ON)
 
 IF(ENABLE_MYSQL)
   find_package(MySQL REQUIRED)

@@ -3,7 +3,7 @@
 #include "cloginisc.h"
 #include "ePacketType.h"
 #include "config.h"
-#include "cdatabase_manager.h"
+#include "database.h"
 
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
   if (true == _isc)
