@@ -21,7 +21,7 @@ namespace Core {
 #ifdef USE_MYSQL_ONE_INSTANCE
 template <typename Filename>
 using databasePoolFilename = IDatabasePoolAbstractFactory<CMySQL_DatabasePoolFactory<Filename>>;
-using databasePool = databasePoolFilename<CMySQL_DatabasePoolFactory<Config::Filename>;
+using databasePool = databasePoolFilename<Config::Filename>;
 #endif
 
 }
