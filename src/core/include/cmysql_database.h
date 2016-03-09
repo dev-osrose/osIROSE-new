@@ -47,7 +47,7 @@ class CMySQL_Database : public IDatabase {
   CMySQL_Database();
   CMySQL_Database(std::string _host, std::string _database, std::string _user,
                   std::string _password);
-  virtual ~CMySQL_Database();
+  virtual ~CMySQL_Database() {}
 
   virtual void Connect(std::string _host, std::string _database,
                        std::string _user, std::string _password);
