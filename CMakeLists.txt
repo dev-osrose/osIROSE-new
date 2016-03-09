@@ -24,6 +24,10 @@ OPTION(BUILD_TOOLS "Build server tools" ON)
 OPTION(BUILD_PROTOBUF "Build Protobuf (Leave this off)" OFF)
 OPTION(ENABLE_MYSQL_ONE_INSTANCE "Enable use of the single instance mysql database" ON)
 
+IF(ENAMBLE_MYSQL_ONE_INSTANCE)
+  SET(ENABLE_MYSQL)
+ENDIF()
+
 IF(ENABLE_MYSQL)
   find_package(MySQL REQUIRED)
 ENDIF()
