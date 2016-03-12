@@ -4,7 +4,7 @@
 #include "croseclient.h"
 #include "crosepacket.h"
 
-class CMapClient : public CRoseClient {
+class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
   CMapClient(tcp::socket _sock);

@@ -3,7 +3,7 @@
 
 #include "croseserver.h"
 
-class CCharServer : public CRoseServer {
+class CCharServer : public RoseCommon::CRoseServer {
  public:
   CCharServer(bool _isc = false);
   virtual ~CCharServer();

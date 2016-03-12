@@ -5,6 +5,8 @@
 #include "cnetwork_asio.h"
 #include "crosepacket.h"
 
+namespace RoseCommon {
+
 class CRoseClient : public Core::CNetwork_Asio {
  public:
   CRoseClient();
@@ -28,5 +30,7 @@ class CRoseClient : public Core::CNetwork_Asio {
 
   PacketCodec crypt_;
 };
+
+}
 
 #endif

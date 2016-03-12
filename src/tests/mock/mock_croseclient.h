@@ -7,7 +7,7 @@ using ::testing::_;
 using ::testing::Invoke;
 
 #include "croseclient.h"
-class CRoseClient_Mock : public CRoseClient {
+class CRoseClient_Mock : public RoseCommon::CRoseClient {
  public:
  protected:
   virtual bool OnSend(uint8_t* _buffer) {
@@ -16,9 +16,9 @@ class CRoseClient_Mock : public CRoseClient {
   }
 
   virtual bool HandlePacket(uint8_t* _buffer) {
-    CRosePacket* pak = (CRosePacket*)_buffer;
-    switch ((ePacketType)pak->Header.Command) {
-      case ePacketType::PAKCS_ALIVE: {
+	  RoseCommon::CRosePacket* pak = (RoseCommon::CRosePacket*)_buffer;
+    switch ((RoseCommon::ePacketType)pak->Header.Command) {
+		case RoseCommon::ePacketType::PAKCS_ALIVE: {
         log_.icprintf("[%d] Got keep alive packet\n");
         break;
       }
@@ -31,7 +31,7 @@ class CRoseClient_Mock : public CRoseClient {
   }
 
  private:
-  CRoseClient real_;
+  RoseCommon::CRoseClient real_;
 };
 
 #endif

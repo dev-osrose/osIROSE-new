@@ -1,7 +1,9 @@
 #include "cmapserver.h"
 #include "cmapisc.h"
 #include "cmapclient.h"
-#include "ePacketType.h"
+#include "epackettype.h"
+
+using namespace RoseCommon;
 
 CMapClient::CMapClient() : CRoseClient(), access_rights_(0) {
   log_.SetIdentity("CMapClient");

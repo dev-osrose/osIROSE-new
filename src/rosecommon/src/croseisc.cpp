@@ -1,5 +1,7 @@
 #include "croseisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
+
+namespace RoseCommon {
 
 CRoseISC::CRoseISC() : CRoseClient() {
   log_.SetIdentity("CRoseISC");
@@ -64,4 +66,5 @@ bool CRoseISC::HandlePacket(uint8_t* _buffer) {
     }
   }
   return true;
+}
 }

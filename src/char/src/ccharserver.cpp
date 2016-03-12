@@ -1,7 +1,9 @@
 #include "ccharserver.h"
 #include "ccharclient.h"
 #include "ccharisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
+
+using namespace RoseCommon;
 
 CCharServer::CCharServer(bool _isc) : CRoseServer(_isc) {
   if (true == _isc)

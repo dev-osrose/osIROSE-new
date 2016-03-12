@@ -3,7 +3,7 @@
 
 #include "croseisc.h"
 
-class CMapISC : public CRoseISC {
+class CMapISC : public RoseCommon::CRoseISC {
  public:
   CMapISC();
   CMapISC(tcp::socket _sock);

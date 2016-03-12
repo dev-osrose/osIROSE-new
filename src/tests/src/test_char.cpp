@@ -1,11 +1,13 @@
 #include "gtest/gtest.h"
 
 #include <stdint.h>
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
+
+using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;

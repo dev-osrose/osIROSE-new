@@ -1,7 +1,9 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
-#include "ePacketType.h"
+#include "epackettype.h"
+
+using namespace RoseCommon;
 
 CCharClient::CCharClient() : CRoseClient(), access_rights_(0) {
   log_.SetIdentity("CCharClient");

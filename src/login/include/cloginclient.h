@@ -4,7 +4,7 @@
 #include "croseclient.h"
 #include "crosepacket.h"
 
-class CLoginClient : public CRoseClient {
+class CLoginClient : public RoseCommon::CRoseClient {
  public:
   CLoginClient();
   CLoginClient(tcp::socket _sock);
@@ -14,9 +14,9 @@ class CLoginClient : public CRoseClient {
   virtual bool OnReceived();
 
   // Packet Helper Functions
-  bool UserLogin(CRosePacket* P);
-  bool ChannelList(CRosePacket* P);
-  bool ServerSelect(CRosePacket* P);
+  bool UserLogin(RoseCommon::CRosePacket* P);
+  bool ChannelList(RoseCommon::CRosePacket* P);
+  bool ServerSelect(RoseCommon::CRosePacket* P);
 
   void SendLoginReply(uint8_t Result);
 

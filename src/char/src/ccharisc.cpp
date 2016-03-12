@@ -3,6 +3,8 @@
 #include "ccharserver.h"
 #include "config.h"
 
+using namespace RoseCommon;
+
 CCharISC::CCharISC() : CRoseISC(), login_connection_(false) {
   log_.SetIdentity("CCharISC");
 }

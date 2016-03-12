@@ -1,7 +1,7 @@
 #include "cloginserver.h"
 #include "cloginclient.h"
 #include "cloginisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "config.h"
 
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {

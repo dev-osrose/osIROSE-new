@@ -8,6 +8,8 @@
 
 //* Official CrcTable
 ///*
+//
+namespace RoseCommon {
 
 #ifdef __GNUC__
 #define PACK(...) __VA_ARGS__ __attribute__((__packed__))
@@ -173,5 +175,7 @@ class PacketCodec {
   int** m_Rt;
   unsigned short* m_Ri;
 };
+
+}
 
 #endif

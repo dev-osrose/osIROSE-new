@@ -7,6 +7,8 @@
 #include "croseclient.h"
 #include "croseisc.h"
 
+namespace RoseCommon {
+
 class CRoseServer : public Core::CNetwork_Asio {
  public:
   CRoseServer(bool _iscServer = false);
@@ -38,5 +40,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
 };
+
+}
 
 #endif

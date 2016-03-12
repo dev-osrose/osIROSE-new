@@ -1,5 +1,5 @@
 /*
- * ePacketType.h
+ * epackettype.h
  *
  *  Created on: Nov 10, 2015
  *      Author: ctorres
@@ -7,6 +7,10 @@
 
 #ifndef EPACKETTYPE_H_
 #define EPACKETTYPE_H_
+
+#include <string>
+
+namespace RoseCommon {
 
 #ifdef _WIN32
 #define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pack(pop))
@@ -17,8 +21,6 @@
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
-
-#include <string>
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -158,5 +160,7 @@ PACK(struct pakEncryptionRequest
   uint8_t Unknown;
   uint32_t RandValue;
 });
+
+}
 
 #endif /* EPACKETTYPE_H_ */

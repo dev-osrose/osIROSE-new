@@ -3,6 +3,8 @@
 
 #include "croseclient.h"
 
+namespace RoseCommon {
+
 class CRoseISC : public CRoseClient {
  public:
   CRoseISC();
@@ -20,4 +22,5 @@ class CRoseISC : public CRoseClient {
   virtual bool HandlePacket(uint8_t* _buffer) override;
 };
 
+}
 #endif

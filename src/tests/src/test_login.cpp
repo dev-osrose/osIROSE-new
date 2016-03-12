@@ -1,12 +1,14 @@
 #include "gtest/gtest.h"
 
 #include <stdint.h>
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "crosepacket.h"
 #include "cloginserver.h"
 #include "ccharisc.h"
 #include "mock/mock_cloginclient.h"
 #include "mock/mock_cloginisc.h"
+
+using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;

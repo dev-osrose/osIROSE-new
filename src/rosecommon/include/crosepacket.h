@@ -1,10 +1,12 @@
 #ifndef _CROSEPACKET_H_
 #define _CROSEPACKET_H_
 
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "iscpackets.pb.h"
 
 using namespace iscPacket;
+
+namespace RoseCommon {
 
 struct CRosePacket {
   union {
@@ -83,5 +85,7 @@ struct CRosePacket {
     output[charCount - 1] = 0;
   }
 };
+
+}
 
 #endif
