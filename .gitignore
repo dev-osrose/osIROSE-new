@@ -16,9 +16,6 @@ Makefile
 3rdParty
 dep
 
-# doxygen files
-doc/doxygen
-
 # configuration file
 server.ini
 
