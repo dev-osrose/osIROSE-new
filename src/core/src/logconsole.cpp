@@ -13,7 +13,8 @@ namespace Core {
     struct StringBuf* d_;         \
     char* v_;                     \
     int l_;                       \
-  } buf = {"", NULL, NULL, 0}; \ \
+  } buf = {"", NULL, NULL, 0}; \
+ \
 //define NEWBUF
 
 #define BUFVPRINTF(buf, fmt, args)                            \
@@ -27,7 +28,8 @@ namespace Core {
 #define BUFLEN(buf) buf.l_
 
 #define FREEBUF(buf) \
-  buf.v_ = NULL; \  \
+  buf.v_ = NULL; \
+  \
 //define FREEBUF
 
 #define ISDIGIT(d) (d >= '0' && d <= '9')
@@ -314,8 +316,8 @@ static int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
                   info.dwCursorPosition.X;
           }
           FillConsoleOutputAttribute(handle, info.wAttributes, cnt, origin,
-                                     &tmp);
-          FillConsoleOutputCharacter(handle, ' ', cnt, origin, &tmp);
+                                     (LPDWORD)&tmp);
+          FillConsoleOutputCharacter(handle, ' ', cnt, origin, (LPDWORD)&tmp);
         } else if (*q == 'K') {  // \033[K  : clear line from actual position to
                                  // end of the line
           //    \033[0K - Clears all characters from the cursor position to the
@@ -341,8 +343,8 @@ static int VFPRINTF(HANDLE handle, const char* fmt, va_list argptr) {
                 info.dwCursorPosition.X;  // how many spaces until line is full
           }
           FillConsoleOutputAttribute(handle, info.wAttributes, cnt, origin,
-                                     &tmp);
-          FillConsoleOutputCharacter(handle, ' ', cnt, origin, &tmp);
+                                     (LPDWORD)&tmp);
+          FillConsoleOutputCharacter(handle, ' ', cnt, origin, (LPDWORD)&tmp);
         } else if (*q == 'H' ||
                    *q == 'f') {  // \033[#;#H - Cursor Position (CUP)
           // \033[#;#f - Horizontal & Vertical Position

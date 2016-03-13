@@ -6,6 +6,8 @@
 
 #include "config.h"
 #include "cmysql_database.h"
+#include "cmysql_databasepool.h"
+#include "database.h"
 
 TEST( TestMySQL_Database, TestConstructor )
 {
@@ -21,7 +23,7 @@ TEST( TestMySQL_Database, TestConstructor )
 TEST( TestMySQL_Database, TestQExecuteFails )
 {
 	Core::CMySQL_Database database;
-	EXPECT_ANY_THROW(database.Connect("1.0.0.1", "dhfui34hf4", "dfj3gqf27", "Rahf7823"));
+	EXPECT_ANY_THROW(database.Connect("azertyu", "dhfui34hf4", "dfj3gqf27", "Rahf7823"));
         EXPECT_ANY_THROW(database.QExecute("DROP TABLE IF EXISTS test_table;"));
         EXPECT_ANY_THROW(database.QExecute("CREATE TABLE test_table(id INT);"));
         EXPECT_ANY_THROW(database.QExecute("DROP TABLE test_table;") );
@@ -137,7 +139,7 @@ TEST(TestMySQL_Database, TestIRowAndIterator)
 	std::string user = dbb.user();
 	std::string pass = dbb.password();
 
-	Core::CMySQL_Database	database(host.c_str(), _database.c_str(), user.c_str(), pass.c_str());
+	Core::CMySQL_Database	database(host, _database, user, pass);
 	database.QExecute("DROP TABLE IF EXISTS test_table;");
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
@@ -156,4 +158,30 @@ TEST(TestMySQL_Database, TestIRowAndIterator)
 			}
 			EXPECT_EQ(a, "0plop1");
 		}());
+}
+
+TEST(TestMySQL_DatabasePool, TestGetInstance) {
+	struct Filename {
+		constexpr static const char *str() { return "test.ini"; }
+	};
+	Core::CLogConsole::SetDisplayOmittable(true);
+	EXPECT_NO_FATAL_FAILURE(Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance());
+	EXPECT_NO_FATAL_FAILURE([] () {
+			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
+			EXPECT_NO_FATAL_FAILURE(Core::IDatabase &database = pool.getDatabase());
+		});
+
+	EXPECT_NO_FATAL_FAILURE([] () {
+			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
+			Core::IDatabase &database = pool.getDatabase();
+			database.QExecute("DROP TABLE IF EXISTS test_table;");
+			database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), data BLOB);");
+			database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
+			database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, NULL, NULL);");
+			auto res = database.QStore("select * from test_table;");
+			std::string s;
+			res->getString("str", s);
+			EXPECT_EQ(s, "plop");
+		}());
+	Core::CLogConsole::SetDisplayOmittable(true);
 }

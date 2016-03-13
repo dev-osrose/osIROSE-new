@@ -1,6 +1,5 @@
 #include "cloginserver.h"
 #include "config.h"
-#include "cmysql_database.h"
 
 int main(int argc, char* argv[]) {
   (void)argc;

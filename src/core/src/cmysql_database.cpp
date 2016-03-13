@@ -70,8 +70,6 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
   connected_ = true;
 }
 
-CMySQL_Database::~CMySQL_Database() {}
-
 void CMySQL_Database::Connect(std::string _host, std::string _database,
                               std::string _user, std::string _password) {
   hostname_ = (_host);

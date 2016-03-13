@@ -39,6 +39,12 @@ class Config : public configFile::Configuration {
   static Config &getInstance(std::string filename = "server.ini");
 
 
+  struct Filename {
+	  constexpr static const char *str() {
+		  return "server.ini";
+	  }
+  };
+
  private:
   Config(std::string filename);
   Config(const Config &) = delete;

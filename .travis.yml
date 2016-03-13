@@ -67,6 +67,7 @@ install:
 
 before_script:
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql -e 'create database osirose;'; fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql"; fi
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build && cd build; fi
 
 script: 

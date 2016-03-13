@@ -47,7 +47,6 @@ SET( SOURCES_HEADER
   include/croseserver
   include/croseclient 
   include/croseisc
-  include/cdatabase_manager
 )
 
 SET( SOURCES_BASE
