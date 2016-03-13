@@ -1,3 +1,11 @@
+/*!
+ * \file logconsole.h
+ *
+ * \author RavenX8
+ * \date march 2016
+ *
+ * Console logging class
+ */
 #ifndef __CONSOLE_H_
 #define __CONSOLE_H_
 
@@ -61,6 +69,16 @@ namespace Core {
 #define CL_BT_CYAN "\033[1;36m"
 #define CL_BT_WHITE "\033[1;37m"
 
+/*!
+ * \class CLogConsole
+ *
+ * \brief The console logging class
+ *
+ * This class is used to log on screen
+ *
+ * \author RavenX8
+ * \date march 2016
+ */
 class CLogConsole {
  private:
   char ident[64];
@@ -70,22 +88,81 @@ class CLogConsole {
   int mylen;
 
  public:
+  /*!
+   * \param[in] The identification that will apear before the log
+   */
   CLogConsole(const char* id);
+  /*!
+   * \brief The logging won't print the identification but will correctly indent the message
+   *
+   * \param[in] fmt The printf's style formated string
+   * \param[in] ... The other arguments as needed
+   * \param[out] int The number of characters written to the screen
+   */
   int incprintf(const char* fmt, ...);  // indentated coloured printf -> no
                                         // identification, but appropriate
                                         // indent from the left
+  /*!
+   * \brief The logging will print the identification and will correctly indent the message
+   *
+   * \param[in] fmt The printf's style formated string
+   * \param[in] ... The other arguments as needed
+   * \param[out] int The number of characters written to the screen
+   */
   int icprintf(const char* fmt,
                ...);  // identified coloured printf -> [ident] sdfhsfh
+
+  /*!
+   * \brief The logging will print the identification and will correctly indent the message only if \s display_omittable is set
+   * \sa SetDisplayOmittable
+   *
+   * \param[in] fmt The printf's style formated string
+   * \param[in] ... The other arguments as needed
+   * \param[out] int The number of characters written to the screen
+   */
   int oicprintf(const char* fmt, ...);  // omittable identified coloured printf
                                         // -> [ident] sdfhsfh if debugging
+
+  /*!
+   * \brief The logging will print the identification and will correctly indent the error message (flashier colors)
+   *
+   * \param[in] fmt The printf's style formated string
+   * \param[in] ... The other arguments as needed
+   * \param[out] int The number of characters written to the screen
+   */
   int eicprintf(const char* fmt, ...);  // identified coloured error printf ->
                                         // [ident] sdfhsfh, but with flashier
                                         // colours
+
+  /*!
+   * \brief The logging won't print the identification and won't indent the message
+   *
+   * \param[in] fmt The printf's style formated string
+   * \param[in] ... The other arguments as needed
+   * \param[out] int The number of characters written to the screen
+   */
   int dcprintf(const char* fmt, ...);   // direct coloured printf -> sdfhsh
 
+  /*!
+   * \brief A progress bar will be shown on screen
+   *
+   * \param[in] width The total width of the progress bar
+   * \param[in] per The current percentage of the progress bar
+   */
   void RenderProgressBar(int width, int per);
 
+  /*!
+   * \brief Change the logger identity code after the instance was created
+   *
+   * \param[in] id The identification string
+   */
   void SetIdentity(const char* id);
+
+  /*!
+   * \brief Change if all debugging messages are shown from now on or not
+   *
+   * \param[in] a Set if debug messages will be printed or not
+   */
   static void SetDisplayOmittable(bool a) { display_omittable = a; }
 };
 

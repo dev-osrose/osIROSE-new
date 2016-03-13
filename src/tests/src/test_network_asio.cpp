@@ -4,12 +4,13 @@
 #include <condition_variable>
 #include <stdint.h>
 #include "mock/mock_network_asio.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"
 //#include "croseserver.h"
 
 // using ::testing::Expectation;
+using namespace RoseCommon;
 
 TEST(TestAsioNetworking, TestInit) {
   Core::CNetwork_Asio network;

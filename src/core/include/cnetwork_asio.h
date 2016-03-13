@@ -35,6 +35,18 @@
 using asio::ip::tcp;
 namespace Core {
 
+/*!
+ * \class CNetwork_Asio
+ *
+ * \brief An asio impl for networking sockets
+ *
+ * This class uses ASIO (http://think-async.com/) to implement the networking interface
+ *
+ * \sa INetwork
+ *
+ * \author Raven
+ * \date nov 2015
+ */
 class CNetwork_Asio : public INetwork {
   typedef std::unique_ptr<asio::io_service::work> asio_worker;
 
@@ -42,16 +54,16 @@ class CNetwork_Asio : public INetwork {
   CNetwork_Asio();
   virtual ~CNetwork_Asio();
 
-  virtual bool Init(std::string _ip, uint16_t _port);
-  virtual bool Shutdown();
+  virtual bool Init(std::string _ip, uint16_t _port) override;
+  virtual bool Shutdown() override;
 
-  virtual bool Connect();
-  virtual bool Listen();
-  virtual bool Reconnect();
-  virtual bool Disconnect();
+  virtual bool Connect() override;
+  virtual bool Listen() override;
+  virtual bool Reconnect() override;
+  virtual bool Disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer);
-  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE);
+  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
+  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
   bool IsActive() { return active_; }
   void SetExtraMessageInfo(bool _enabled) {
     log_.SetDisplayOmittable(_enabled);
@@ -61,16 +73,16 @@ class CNetwork_Asio : public INetwork {
   void AcceptConnection();
 
   // Callback functions
-  virtual bool OnConnect();
-  virtual void OnConnected();
-  virtual bool OnListen();
-  virtual void OnListening();
-  virtual bool OnDisconnect();
-  virtual void OnDisconnected();
-  virtual bool OnReceive();
-  virtual bool OnReceived();
-  virtual bool OnSend(uint8_t* _buffer);
-  virtual void OnSent();
+  virtual bool OnConnect() override;
+  virtual void OnConnected() override;
+  virtual bool OnListen() override;
+  virtual void OnListening() override;
+  virtual bool OnDisconnect() override;
+  virtual void OnDisconnected() override;
+  virtual bool OnReceive() override;
+  virtual bool OnReceived() override;
+  virtual bool OnSend(uint8_t* _buffer) override;
+  virtual void OnSent() override;
   virtual bool OnAccept();
   virtual void OnAccepted(tcp::socket _sock);
   virtual bool HandlePacket(uint8_t* _buffer);

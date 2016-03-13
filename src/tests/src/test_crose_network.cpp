@@ -6,9 +6,11 @@
 #include "croseserver.h"
 #include "mock/mock_croseclient.h"
 #include "mock/mock_croseisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"
+
+using namespace RoseCommon;
 
 TEST(TestRoseNetwork, Constructor) { CRoseServer network; }
 

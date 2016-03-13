@@ -3,7 +3,7 @@
 
 #include "croseserver.h"
 
-class CMapServer : public CRoseServer {
+class CMapServer : public RoseCommon::CRoseServer {
  public:
   CMapServer(bool _isc = false, int16_t mapidx = -1);
   virtual ~CMapServer();

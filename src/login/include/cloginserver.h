@@ -4,7 +4,7 @@
 #include "croseserver.h"
 #include "cmysql_database.h"
 
-class CLoginServer : public CRoseServer {
+class CLoginServer : public RoseCommon::CRoseServer {
  public:
   CLoginServer(bool _isc = false);
   virtual ~CLoginServer();

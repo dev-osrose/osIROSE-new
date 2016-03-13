@@ -1,7 +1,9 @@
 #include <ctime>
 #include "croseclient.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 
+
+namespace RoseCommon {
 //#define STRESS_TEST
 
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
@@ -118,4 +120,6 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
     }
   }
   return true;
+}
+
 }

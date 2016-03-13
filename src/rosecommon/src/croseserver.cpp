@@ -2,6 +2,8 @@
 #include "logconsole.h"
 #include "croseserver.h"
 
+namespace RoseCommon {
+
 std::forward_list<CRoseClient*> CRoseServer::client_list_;
 std::forward_list<CRoseISC*> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
@@ -103,4 +105,6 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
     // m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
     // m_ClientList.push_back( nClient );
   }
+}
+
 }

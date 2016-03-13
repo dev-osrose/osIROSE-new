@@ -21,25 +21,12 @@ class NetworkThreadPool {
   }
 
   asio::io_service* Get_IO_Service() { return &io_service_; }
-  uint32_t Get_CPU_Count() {
-    return std::thread::hardware_concurrency()
-               ? std::thread::hardware_concurrency()
-               : 1;
-  }
-  void Shutdown() {
-    io_work_.reset();
 
-    for (uint32_t idx = 0; idx < threads_running_; ++idx) {
-      io_thread_[idx].join();
-    }
-    threads_running_ = 0;
-    io_service_.stop();
-  }
-
- protected:
  private:
   NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)) {
-    uint16_t core_count = Get_CPU_Count();
+    uint16_t core_count = std::thread::hardware_concurrency()
+               ? std::thread::hardware_concurrency()
+               : 1;;
 
     core_count *= 2;
 
@@ -59,6 +46,16 @@ class NetworkThreadPool {
   }
 
   ~NetworkThreadPool() { Shutdown(); }
+  
+  void Shutdown() {
+    io_work_.reset();
+
+    for (uint32_t idx = 0; idx < threads_running_; ++idx) {
+      io_thread_[idx].join();
+    }
+    threads_running_ = 0;
+    io_service_.stop();
+  }
 
   uint16_t threads_running_;
   std::thread io_thread_[512];

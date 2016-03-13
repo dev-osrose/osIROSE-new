@@ -3,8 +3,10 @@ PROJECT("osIROSE")
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-SET(VERSION_MAJOR 1)
-SET(VERSION_MINOR 0)
+INCLUDE(OsIROSECMakeTools)
+
+SET(VERSION_MAJOR 0)
+SET(VERSION_MINOR 1)
 SET(VERSION_PATCH 0)
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
@@ -17,12 +19,27 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-OPTION(PROJECT_DEBUG "Enable debugging messages support" ON)
-OPTION(ENABLE_TESTING "Enable testing" OFF)
-OPTION(ENABLE_TESTING_COVERAGE, "Enable generating code coverage report" OFF)
-OPTION(BUILD_TOOLS "Build server tools" ON)
-OPTION(BUILD_PROTOBUF "Build Protobuf (Leave this off)" OFF)
-OPTION(ENABLE_MYSQL_ONE_INSTANCE "Enable use of the single instance mysql database" ON)
+OPTION(PROJECT_DEBUG 
+  "Enable debugging messages support" ON)
+OPTION(ENABLE_TESTING 
+  "Enable testing" OFF)
+OPTION(ENABLE_TESTING_COVERAGE, 
+  "Enable generating code coverage report" OFF)
+OPTION(BUILD_TOOLS 
+  "Build server tools" ON)
+OPTION(BUILD_PROTOBUF 
+  "Build Protobuf (Leave this off)" OFF)
+OPTION(BUILD_API_DOC
+  "Build doxygen documentation" OFF)
+OPTION(ENABLE_MYSQL_ONE_INSTANCE 
+	"Enable use of the single instance mysql database" ON)
+  
+IF (BUILD_API_DOC)
+  FIND_PACKAGE(Doxygen)
+  IF (DOXYGEN_FOUND)
+    ADD_SUBDIRECTORY(doc)
+  ENDIF (DOXYGEN_FOUND)
+ENDIF (BUILD_API_DOC)
 
 IF(ENABLE_MYSQL_ONE_INSTANCE)
   SET(ENABLE_MYSQL ON)
@@ -43,17 +60,8 @@ endforeach(flag_var)
 IF(ENABLE_TESTING)
 	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-		#Build GoogleTest
-#		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googletest)
+		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
-		#Build Protobuf
-#		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/protobuf/cmake)
-#		SET(PROTOBUF_INCLUDE_DIR ${protobuf_SOURCE_DIR}/../src)
-#		SET(PROTOBUF_BINARY_DIR ${protobuf_BINARY_DIR})
-#		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
-#		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-#		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
-#		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 	ELSE()
 		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
@@ -81,9 +89,9 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ENDIF()
 	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/3rdParty CACHE STRING "")
 	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/protobuf/src CACHE STRING "")
-    SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
-    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-    SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
+  SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
+  SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+  SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
 	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 ELSE()
 	#UNIX ONLY SETTINGS
@@ -106,3 +114,4 @@ ADD_SUBDIRECTORY(src)
 IF(BUILD_TOOLS)
 	ADD_SUBDIRECTORY(tools)
 ENDIF()
+

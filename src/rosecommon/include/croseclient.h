@@ -5,6 +5,8 @@
 #include "cnetwork_asio.h"
 #include "crosepacket.h"
 
+namespace RoseCommon {
+
 class CRoseClient : public Core::CNetwork_Asio {
  public:
   CRoseClient();
@@ -12,21 +14,23 @@ class CRoseClient : public Core::CNetwork_Asio {
   virtual ~CRoseClient();
 
   virtual bool Send(CRosePacket* _buffer);
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer);
+  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
 
  protected:
   // Callback functions
-  virtual bool OnConnect();
-  virtual void OnConnected();
-  virtual bool OnDisconnect();
-  virtual void OnDisconnected();
-  virtual bool OnReceive();
-  virtual bool OnReceived();
-  virtual bool OnSend(uint8_t* _buffer);
-  virtual void OnSent();
-  virtual bool HandlePacket(uint8_t* _buffer);
+  virtual bool OnConnect() override;
+  virtual void OnConnected() override;
+  virtual bool OnDisconnect() override;
+  virtual void OnDisconnected() override;
+  virtual bool OnReceive() override;
+  virtual bool OnReceived() override;
+  virtual bool OnSend(uint8_t* _buffer) override;
+  virtual void OnSent() override;
+  virtual bool HandlePacket(uint8_t* _buffer) override;
 
   PacketCodec crypt_;
 };
+
+}
 
 #endif

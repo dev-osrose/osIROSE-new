@@ -1,10 +1,29 @@
+/*!
+ * \file riterator.h
+ *
+ * \author L3nn0x
+ * \date march 2016
+ *
+ * Contains a custom random iterator implementation
+ */
+
 #ifndef __CUSTOM_ITERATOR_H__
 #define __CUSTOM_ITERATOR_H__
 
 #include <iterator>
 
 namespace Core {
-// random access iterator template
+/*!
+ * \class RIterator
+ *
+ * \brief A custom random access iterator implementation
+ *
+ * This class can be used as is to implement a custom random access iterator.
+ *
+ * \author L3nn0x
+ * \date march 2016
+ */
+
 template<typename T>
 class RIterator : public std::iterator<std::random_access_iterator_tag, T> {
 	public:

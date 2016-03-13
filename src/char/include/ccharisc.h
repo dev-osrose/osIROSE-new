@@ -4,7 +4,7 @@
 #include "croseisc.h"
 #include "crosepacket.h"
 
-class CCharISC : public CRoseISC {
+class CCharISC : public RoseCommon::CRoseISC {
  public:
   CCharISC();
   CCharISC(tcp::socket _sock);
@@ -13,7 +13,7 @@ class CCharISC : public CRoseISC {
   void SetLogin(bool val) { login_connection_ = val; }
 
  protected:
-  bool ServerRegister(CRosePacket* P);
+  bool ServerRegister(RoseCommon::CRosePacket* P);
   bool HandlePacket(uint8_t* _buffer);
   virtual void OnConnected();
 

@@ -3,6 +3,8 @@
 
 #include "croseclient.h"
 
+namespace RoseCommon {
+
 class CRoseISC : public CRoseClient {
  public:
   CRoseISC();
@@ -11,13 +13,14 @@ class CRoseISC : public CRoseClient {
 
  protected:
   // Override the callback functions we will use only
-  virtual void OnConnected();
-  virtual bool OnDisconnect();
-  virtual void OnDisconnected();
-  virtual bool OnReceived();
-  virtual bool OnSend(uint8_t* _buffer);
-  virtual void OnSent();
-  virtual bool HandlePacket(uint8_t* _buffer);
+  virtual void OnConnected() override;
+  virtual bool OnDisconnect() override;
+  virtual void OnDisconnected() override;
+  virtual bool OnReceived() override;
+  virtual bool OnSend(uint8_t* _buffer) override;
+  virtual void OnSent() override;
+  virtual bool HandlePacket(uint8_t* _buffer) override;
 };
 
+}
 #endif

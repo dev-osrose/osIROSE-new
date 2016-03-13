@@ -1,8 +1,10 @@
 #include "cloginserver.h"
 #include "cloginisc.h"
 #include "cloginclient.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "database.h"
+
+using namespace RoseCommon;
 
 CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0) {
   log_.SetIdentity("CLoginClient");

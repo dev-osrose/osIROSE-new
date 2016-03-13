@@ -1,7 +1,9 @@
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "cmapisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
+
+using namespace RoseCommon;
 
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
     : CRoseServer(_isc), map_idx_(mapidx) {

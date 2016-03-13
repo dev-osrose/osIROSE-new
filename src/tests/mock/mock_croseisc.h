@@ -7,7 +7,7 @@ using ::testing::_;
 using ::testing::Invoke;
 
 #include "croseisc.h"
-class CRoseISC_Mock : public CRoseISC {
+class CRoseISC_Mock : public RoseCommon::CRoseISC {
  public:
   CRoseISC_Mock() : CRoseISC() { log_.SetIdentity("CRoseISC_Mock"); }
 

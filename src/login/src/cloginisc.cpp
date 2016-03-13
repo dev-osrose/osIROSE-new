@@ -1,6 +1,8 @@
 #include "cloginisc.h"
 #include "crosepacket.h"
 
+using namespace RoseCommon;
+
 CLoginISC::CLoginISC()
     : CRoseISC(), channel_count_(1), min_right_(0), test_server_(false) {
   log_.SetIdentity("CLoginISC");

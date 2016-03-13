@@ -1,7 +1,7 @@
 #include "cloginserver.h"
 #include "cloginclient.h"
 #include "cloginisc.h"
-#include "ePacketType.h"
+#include "epackettype.h"
 #include "config.h"
 #include "database.h"
 

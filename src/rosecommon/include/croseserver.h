@@ -7,6 +7,8 @@
 #include "croseclient.h"
 #include "croseisc.h"
 
+namespace RoseCommon {
+
 class CRoseServer : public Core::CNetwork_Asio {
  public:
   CRoseServer(bool _iscServer = false);
@@ -23,14 +25,14 @@ class CRoseServer : public Core::CNetwork_Asio {
 
  protected:
   // Callback functions
-  virtual bool OnConnect();
-  virtual void OnConnected();
-  virtual bool OnListen();
-  virtual void OnListening();
-  virtual bool OnDisconnect();
-  virtual void OnDisconnected();
-  virtual bool OnAccept();
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual bool OnConnect() override;
+  virtual void OnConnected() override;
+  virtual bool OnListen() override;
+  virtual void OnListening() override;
+  virtual bool OnDisconnect() override;
+  virtual void OnDisconnected() override;
+  virtual bool OnAccept() override;
+  virtual void OnAccepted(tcp::socket _sock) override;
 
   bool isc_server_;
   static std::forward_list<CRoseClient*> client_list_;
@@ -38,5 +40,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
 };
+
+}
 
 #endif

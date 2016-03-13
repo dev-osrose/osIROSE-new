@@ -1,3 +1,12 @@
+/*!
+ * \file cmysql_database
+ *
+ * \author L3nn0x
+ * \date march 2016
+ *
+ * The MySQL implementation of \s IDatabase, \s IResult and \s IRow
+ * \sa IDatabase IResult IRow
+ */
 #ifndef _CMYSQL_DATABASE_H_
 #define _CMYSQL_DATABASE_H_
 
@@ -7,7 +16,15 @@
 #include <mutex>
 
 namespace Core {
-
+/*!
+ * \class CMySQL_Row
+ *
+ * \brief The MySQL implementation of \s IRow
+ * \sa IRow CMySQL_Result IResult CMySQL_Database IDatabase
+ *
+ * \author L3nn0x
+ * \date march 2016
+ */
 class CMySQL_Row : public IRow {
 	public:
 		CMySQL_Row(const mysqlpp::Row &row) : row_(row) {}
@@ -29,6 +46,15 @@ class CMySQL_Row : public IRow {
 		}
 };
 
+/*!
+ * \class CMySQL_Result
+ *
+ * \brief The MySQL implementation of \s IResult
+ * \sa IRow CMySQL_Row IResult CMySQL_Database IDatabase
+ *
+ * \author L3nn0x
+ * \date march 2016
+ */
 class CMySQL_Result : public IResult {
  public:
   CMySQL_Result(const mysqlpp::StoreQueryResult&);
@@ -42,6 +68,15 @@ class CMySQL_Result : public IResult {
   virtual bool getFloat(std::string const &columnName, float &data);
 };
 
+/*!
+ * \class CMySQL_Database
+ *
+ * \brief The MySQL implementation of \s IDatabase
+ * \sa IRow CMySQL_Row IResult CMySQL_Result IDatabase
+ *
+ * \author L3nn0x
+ * \date march 2016
+ */
 class CMySQL_Database : public IDatabase {
  public:
   CMySQL_Database();

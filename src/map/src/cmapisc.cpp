@@ -2,6 +2,8 @@
 #include "crosepacket.h"
 #include "config.h"
 
+using namespace RoseCommon;
+
 CMapISC::CMapISC() : CRoseISC(), char_server_(false) {
   log_.SetIdentity("CMapISC");
 }

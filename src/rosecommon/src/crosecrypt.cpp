@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include "crosecrypt.h"
 
+namespace RoseCommon {
+
 RoseRandomNumber::RoseRandomNumber(unsigned int seed)
     : m_type(RoseRandomNumber::BC),
       m_VcSeed(seed),
@@ -218,4 +220,6 @@ bool PacketCodec::find_DupINDEX(int val, int range) {
     if (m_Ri[i] == val) return true;
   }
   return false;
+}
+
 }
