@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="osirose" version="4">
+  <OBJECT>
+    <ID name="osirose" mc="Standard.Package" uid="3d289c29-dc18-4a0b-b990-3fe53053a9ee"/>
+    <PID name="osIROSE" mc="Standard.Project" uid="c57c6592-b6d6-4f50-bbac-95ecb0c50319"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[osirose]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="Socket" mc="Standard.Class" uid="fbaa23c1-0e8f-41ba-9e25-db03944000c3"/>
+        <COMPID name="Packet" mc="Standard.Class" uid="305d9cd2-1a00-4204-9be8-52f1df336c2a"/>
+        <COMPID name="Client" mc="Standard.Class" uid="516fe7f7-fba3-49d8-af37-7c8f7201c23a"/>
+        <COMPID name="Crypt" mc="Standard.Class" uid="d79bff6a-a2e4-4e07-8d1b-a1c51274ae41"/>
+        <COMPID name="Channel" mc="Standard.Class" uid="50b6efc7-8399-4b35-9e66-78369480306b"/>
+        <COMPID name="Database" mc="Standard.Class" uid="8298eda8-5caf-4297-b90c-3e02438c7d44"/>
+        <COMPID name="ClientFactory" mc="Standard.Class" uid="e90acb15-d539-46d7-9421-5bfd9730a0a2"/>
+        <COMPID name="ChannelFactory" mc="Standard.Class" uid="5fc50625-13a9-45ec-aa38-e7f85a3b5e0a"/>
+        <COMPID name="LoginServer" mc="Standard.Class" uid="e2f4072e-3824-49e9-ad38-f6139e3b8d7d"/>
+        <COMPID name="CharServer" mc="Standard.Class" uid="ec99e55f-d8e8-4d98-9508-1689685e30b7"/>
+        <COMPID name="BaseServer" mc="Standard.Class" uid="e659dbf2-a162-4c52-97b1-ac2fb24bc9af"/>
+        <COMPID name="World" mc="Standard.Class" uid="53a08473-8ca8-48bd-ae7c-eab65b27920c"/>
+        <COMPID name="WorldFactory" mc="Standard.Class" uid="64a44269-a8a5-451b-98a9-f421a0502013"/>
+      </COMP>
+      <COMP relation="Product">
+        <COMPID name="overview diagram" mc="Standard.ClassDiagram" uid="e1923074-d40d-4d50-bdaa-cd1b986d4b48"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

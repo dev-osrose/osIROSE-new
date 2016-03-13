@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="osIROSE" version="4">
+  <OBJECT>
+    <ID name="osIROSE" mc="Standard.Project" uid="c57c6592-b6d6-4f50-bbac-95ecb0c50319"/>
+    <ATTRIBUTES>
+      <ATT name="ProjectContext"></ATT>
+      <ATT name="ProjectDescr"></ATT>
+      <ATT name="Name"><![CDATA[osIROSE]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="DiagramRoot">
+        <COMPID name="osIROSE" mc="Standard.DiagramSet" uid="2408487b-d9d2-409b-b74d-fc9a5836b263"/>
+      </COMP>
+      <COMP relation="Model">
+        <COMPID name="osirose" mc="Standard.Package" uid="3d289c29-dc18-4a0b-b990-3fe53053a9ee"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="state" version="4">
+  <OBJECT>
+    <ID name="state" mc="Standard.Stereotype" uid="002005c0-0001-0011-0000-000000000000"/>
+    <PID name="default" mc="Standard.Profile" uid="007004e8-0000-0282-0000-000000000000"/>
+    <ATTRIBUTES>
+      <ATT name="Image"><![CDATA[res/bmp/staticdiagram_state_image.png]]></ATT>
+      <ATT name="Icon"><![CDATA[res/bmp/staticdiagram_state.png]]></ATT>
+      <ATT name="IsHidden">true</ATT>
+      <ATT name="LabelKey"><![CDATA[%stereotype.state.label]]></ATT>
+      <ATT name="BaseClassName"><![CDATA[StaticDiagram]]></ATT>
+      <ATT name="Name"><![CDATA[state]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES></DEPENDENCIES>
+  </OBJECT>
+</EXT>

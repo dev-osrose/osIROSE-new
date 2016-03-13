@@ -1,6 +1,9 @@
-[submodule "tools/coveralls-cmake"]
-	path = tools/coveralls-cmake
-	url = https://github.com/JoakimSoderberg/coveralls-cmake.git
 [submodule "tools/googletest"]
 	path = tools/googletest
 	url = https://github.com/google/googletest
+[submodule "tools/protobuf"]
+	path = tools/protobuf
+	url = https://github.com/google/protobuf.git
+[submodule "tools/asio"]
+	path = tools/asio
+	url = https://github.com/chriskohlhoff/asio.git

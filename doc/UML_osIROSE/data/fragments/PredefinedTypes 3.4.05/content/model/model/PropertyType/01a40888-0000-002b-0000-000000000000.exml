@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Boolean" version="4">
+  <OBJECT>
+    <ID name="Boolean" mc="Standard.PropertyType" uid="01a40888-0000-002b-0000-000000000000"/>
+    <PID name="Analyst Properties" mc="Standard.PropertyContainer" uid="ebe0fc1e-a2a8-4070-809f-4bf73eb50c43"/>
+    <ATTRIBUTES>
+      <ATT name="BaseType">Boolean</ATT>
+      <ATT name="Name"><![CDATA[Boolean]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES></DEPENDENCIES>
+  </OBJECT>
+</EXT>

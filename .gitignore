@@ -10,7 +10,6 @@
 # CMake files
 CMakeCache.txt
 CMakeFiles
-*.cmake
 Makefile
 
 # dependencies
@@ -22,6 +21,9 @@ server.ini
 
 # log files
 log
+
+# protobuf generated files
+src/proto/include
 
 # Build results
 
@@ -154,6 +156,11 @@ App_Data/*.ldf
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Installation files
+lcov-1.12*
+protobuf
+ruby-2.2.3*
 
 # =========================
 # Windows detritus

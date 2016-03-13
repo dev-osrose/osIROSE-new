@@ -1,72 +1,77 @@
-
+sudo: false
 language: cpp
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
+    - extras-precise
+    - boost-latest
+    packages:
+    - cmake
+    - lcov
+    - libboost-dev
+    - llvm-3.7
+    - llvm-3.7-dev
+    - llvm-runtime
+    - gcc-4.9
+    - gcc-5
+    - g++-4.9
+    - g++-5
+    - clang-3.7
+    - libstdc++5
+    - libmysqlclient-dev
+    - libmysql++-dev
+    - libmysqld-dev 
+    - libmysql++-dev
+    - libmysql++3
+
+cache:
+  directories:
+  - ./protobuf
+
+services: 
+    - mysql
+  
 matrix:
   include:
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Debug UNITTEST=ON
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="4.9" BUILD_TYPE=Release UNITTEST=OFF
+      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Debug  UNITTEST=ON
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
     - compiler: gcc
-      env: GCC_VERSION="5" BUILD_TYPE=Release  UNITTEST=OFF
+      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Debug UNITTEST=ON
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
     - compiler: clang
-      env: LIBCXX=1 BUILD_TYPE=Release UNITTEST=OFF
-    - compiler: clang
-      env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug UNITTEST=ON
-    - compiler: clang
-      env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release UNITTEST=OFF
+      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
   allow_failures:
-    - env: LIBCXX=1 BUILD_TYPE=Debug UNITTEST=ON
-    - env: LIBCXX=1 BUILD_TYPE=Release UNITTEST=OFF
-    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Debug UNITTEST=ON
-    - env: UNSUPPORTED_FOR_NOW=1 BUILD_TYPE=Release UNITTEST=OFF
+    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
 
 before_install:
-- export MAIN_PATH=$(pwd)
-- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-- sudo add-apt-repository -y "deb http://mirrors.kernel.org/ubuntu/ trusty main"
-- sudo add-apt-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
-- sudo apt-get update -qq
-- git submodule update --init --recursive
-
-#get the latest version of gcc
-- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq "g++-${GCC_VERSION}"; fi
-- if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-- if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq "clang-3.4"; fi
-#- if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.4" CC="clang-3.4"; fi
-- export BS_FLAGS="--cxx=$CXX"
-
-# Install libc++
-- if [ -n "$LIBCXX" ]; then export BS_FLAGS="$BS_FLAGS --use-libcxx"; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd libcxx/lib && bash buildit; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++/v1; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
-- if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
-
-# Otherwise attempt to install g++ 4.8 libstdc++ instead for use in clang
-- if [ -z "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo apt-get install -qq g++-4.9; fi
+- export PROOT=$TRAVIS_BUILD_DIR
+- if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
+- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh; fi
+- export LCOV_PATH=$HOME/usr/bin/lcov
+- export GENHTML_PATH=$HOME/usr/bin/genhtml
+- export PREFIX=$HOME
+- if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7"; fi
+- ./ci/before_install.sh
 
 install:
-- cd "$MAIN_PATH"
-- sh install_dependencies.sh
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ./ci/install.sh; fi
 
 before_script:
-- export GTEST_DIR="$MAIN_PATH/tools/googletest/googletest"
-- export COVERALLS_SERVICE_NAME=travis-ci
-- mkdir build
-- cd build
-- if [ "$UNITTEST" = "ON" ]; then cmake -DCOVERALLS="$UNITTEST" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..; fi
-- if [ "$UNITTEST" = "OFF" ]; then cmake ..; fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql -e 'create database osirose;'; fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql"; fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build && cd build; fi
 
 script: 
-- make -j 2
-- if [ "$UNITTEST" = "ON" ]; then make coveralls; fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ../ci/script.sh; fi
 
 notifications:
   slack:

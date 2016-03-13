@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Scope" version="4">
+  <OBJECT>
+    <ID name="Scope" mc="Standard.EnumeratedPropertyType" uid="00bc470c-0000-001b-0000-000000000000"/>
+    <PID name="Analyst Properties" mc="Standard.PropertyContainer" uid="ebe0fc1e-a2a8-4070-809f-4bf73eb50c43"/>
+    <ATTRIBUTES>
+      <ATT name="BaseType">Enumerate</ATT>
+      <ATT name="Name"><![CDATA[Scope]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="Litteral">
+        <OBJECT>
+          <ID name="Strategic" mc="Standard.PropertyEnumerationLitteral" uid="00bc470c-0000-001c-0000-000000000000"/>
+          <ATTRIBUTES>
+            <ATT name="Name"><![CDATA[Strategic]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Operational" mc="Standard.PropertyEnumerationLitteral" uid="00bc470c-0000-001d-0000-000000000000"/>
+          <ATTRIBUTES>
+            <ATT name="Name"><![CDATA[Operational]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Relative" mc="Standard.PropertyEnumerationLitteral" uid="00bc470c-0000-001e-0000-000000000000"/>
+          <ATTRIBUTES>
+            <ATT name="Name"><![CDATA[Relative]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
