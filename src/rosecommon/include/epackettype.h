@@ -9,6 +9,7 @@
 #define EPACKETTYPE_H_
 
 #include <string>
+#include <stdint.h>
 
 namespace RoseCommon {
 
@@ -21,11 +22,6 @@ namespace RoseCommon {
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
 #endif
-
-typedef uint8_t byte;
-typedef uint16_t word;
-typedef uint32_t dword;
-typedef uint64_t qword;
 
 // CS = Client -> server
 // SC = server -> server

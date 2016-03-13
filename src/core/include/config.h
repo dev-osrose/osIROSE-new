@@ -14,6 +14,11 @@
 #include "pbjson.hpp"
 #include "logconsole.h"
 
+#ifdef _WIN32
+// this is only needed until we stop supporting visual studio 2013 and below
+#define constexpr
+#endif
+
 namespace Core {
 
 /*!
