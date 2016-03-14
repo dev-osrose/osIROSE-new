@@ -14,7 +14,7 @@ environment:
   INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;
 matrix:
 #  fast_finish: true
-  allow_failures:
+#  allow_failures:
 #    - os: Windows Server 2012 R2
 #    - os: MinGW
 clone_depth: 50
