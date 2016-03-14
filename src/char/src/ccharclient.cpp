@@ -65,6 +65,9 @@ bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
   uint8_t charid = P->Get<uint8_t>( 0 );
   bool _delete = P->Get<uint8_t>( 1 );
 
+  if( charid > 6 )
+    return false;
+
   char name[17];
   memset(name, 0, 17);
   P->GetString(0, 16, name);

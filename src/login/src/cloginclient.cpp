@@ -158,7 +158,7 @@ bool CLoginClient::ChannelList(CRosePacket* P) {
 
 bool CLoginClient::ServerSelect(CRosePacket* P) {
   uint32_t serverID = P->Get<uint32_t>(0);
-  uint8_t channelID = P->Get<uint8_t>( 4 );
+  //uint8_t channelID = P->Get<uint8_t>( 4 );
 
   CRosePacket* pak = new CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY);
   
