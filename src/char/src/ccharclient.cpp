@@ -61,19 +61,16 @@ bool CCharClient::SendCharCreateReply(CRosePacket* P) {
 }
 
 bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
-  // TODO: Find out what byte position 0 is used for.
   log_.icprintf("CharDeleteReply\n");
-  uint8_t action = P->Get<uint8_t>(1);
+  uint8_t charid = P->Get<uint8_t>( 0 );
+  bool _delete = P->Get<uint8_t>( 1 );
+
   char name[17];
   memset(name, 0, 17);
-
   P->GetString(0, 16, name);
-
-  switch (action) {
-    case 0:
-    case 1:
-    default:
-      break;
+  if(_delete)
+  {
+    // we need to delete the char
   }
 
   return true;

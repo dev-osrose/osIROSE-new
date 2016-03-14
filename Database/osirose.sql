@@ -27,20 +27,12 @@ CREATE TABLE `accounts` (
   `username` varchar(64) DEFAULT NULL,
   `password` varchar(32) DEFAULT NULL,
   `access` int(11) DEFAULT '100',
-  `lastip` varchar(15) DEFAULT '0.0.0.0',
-  `lasttime` int(11) DEFAULT '0',
-  `lastsvr` int(11) DEFAULT '0',
-  `lastchar` varchar(64) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `nb_donation` int(11) DEFAULT '0',
-  `donation` varchar(255) DEFAULT '0',
   `active` int(11) DEFAULT '1',
-  `active_key` varchar(255) DEFAULT NULL,
-  `zulystorage` int(11) DEFAULT '0',
   `platinum` tinyint(1) DEFAULT '0',
   `online` tinyint(1) DEFAULT '0',
   `login_count` int(11) DEFAULT '0',
-  `isSiteLogged` tinyint(1) DEFAULT '0',
+  `lastip` varchar(15) DEFAULT '0.0.0.0',
+  `lasttime` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=ascii;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -189,11 +181,11 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UserLogin`(IN `_user` VARCHAR(16), IN `_pass` VARCHAR(32))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UserLogin`(IN `_user` VARCHAR(16))
     READS SQL DATA
-SELECT access, active, `online` FROM accounts WHERE username = _user AND password = _pass ;;
+SELECT password, access, active, `online` FROM accounts WHERE username = _user ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -209,4 +201,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-02 23:49:39
+-- Dump completed on 2016-03-13 23:55:32

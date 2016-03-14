@@ -22,7 +22,6 @@ class CLoginClient : public RoseCommon::CRoseClient {
 
   uint16_t access_rights_;
   uint8_t username_[17];
-  uint8_t password_[33];
 };
 
 #endif
