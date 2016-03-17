@@ -33,6 +33,8 @@ OPTION(BUILD_API_DOC
   "Build doxygen documentation" OFF)
 OPTION(ENABLE_MYSQL_ONE_INSTANCE 
 	"Enable use of the single instance mysql database" ON)
+OPTION(ENABLE_EXPERMENTAL
+  "Enable expermental features" OFF)
   
 IF (BUILD_API_DOC)
   FIND_PACKAGE(Doxygen)
@@ -92,7 +94,7 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
   SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
   SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
-	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+  SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 ELSE()
 	#UNIX ONLY SETTINGS
 
@@ -108,6 +110,10 @@ ELSE()
 ENDIF()
 
 find_package(ProtocolBuffer REQUIRED)
+
+IF(ENABLE_EXPERMENTAL)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_EXPERMENTAL")
+ENDIF()
 
 ADD_SUBDIRECTORY(src)
 
