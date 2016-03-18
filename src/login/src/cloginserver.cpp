@@ -5,7 +5,7 @@
 #include "config.h"
 #include "database.h"
 
-CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0) {
+CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
   if (true == _isc)
     log_.SetIdentity("CLoginISCServer");
   else
@@ -28,6 +28,7 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CLoginISC* nClient = new CLoginISC(std::move(_sock));
+      nClient->SetId(server_count_++);
       log_.icprintf("Server connected from: %s\n", _address.c_str());
       isc_list_.push_front(nClient);
     }

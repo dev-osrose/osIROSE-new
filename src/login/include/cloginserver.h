@@ -17,6 +17,7 @@ class CLoginServer : public RoseCommon::CRoseServer {
  protected:
   virtual void OnAccepted(tcp::socket _sock);
   uint32_t client_count_;
+  uint32_t server_count_;
 };
 
 #endif
