@@ -38,11 +38,11 @@ std::string prettify(const std::string &data) {
   return res;
 }
 
-Config::Config(std::string filename) : Configuration(), file_(filename), log_("Configuration") {
+Config::Config(std::string filename) : Configuration(), file_(filename) {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   std::fstream in(file_.c_str(), std::ios::in);
   if (!in.is_open()) {
-	log_.oicprintf("file %s not found. Creating one...\n", filename.c_str());
+    logger_->debug() << "file " << filename << " not found. Creating one";
 	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);
     if (!out.is_open()) throw std::exception();
 	std::string json;
@@ -52,7 +52,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename), log_("C
 	std::string json, err;
 	std::getline(in, json, static_cast<char>(in.eof()));
     if (pbjson::json2pb(json, this, err) < 0) {
-		log_.eicprintf(CL_RESET CL_RED "Error while parsing the file: %s" CL_RESET "\n", err.c_str());
+      logger_->error() << "Error while parsing the file: " << err;
       throw std::exception();
     }
   }

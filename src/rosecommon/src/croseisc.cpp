@@ -4,12 +4,10 @@
 namespace RoseCommon {
 
 CRoseISC::CRoseISC() : CRoseClient() {
-  log_.SetIdentity("CRoseISC");
   ResetBuffer();
 }
 
 CRoseISC::CRoseISC(tcp::socket _sock) : CRoseClient(std::move(_sock)) {
-  log_.SetIdentity("CRoseISC");
   ResetBuffer();
 }
 
@@ -31,7 +29,7 @@ bool CRoseISC::OnReceived() {
     packet_size_ = (uint16_t)buffer_[0];
     // m_Log.oicprintf( CL_WHITE "Size From buffer: %i\n", PacketSize );
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
-      log_.eicprintf("Client sent incorrect blockheader\n");
+      logger_->debug() << "Client sent incorrect block header";
       ResetBuffer();
       return false;
     }
@@ -40,9 +38,8 @@ bool CRoseISC::OnReceived() {
   }
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
-  log_.oicprintf("Received a packet on CRoseISC: Header[%i, 0x%X]\n",
-                 pak->Header.Size, pak->Header.Command);
-  rtnVal = HandlePacket(buffer_);
+  logger_->debug() << "Received a packet on CRoseISC: Header[" << pak->Header.Size << ", " << (uint16_t)pak->Header.Command << "]";
+  rtnVal = HandlePacket( buffer_ );
   ResetBuffer();
   return rtnVal;
 }
@@ -61,7 +58,7 @@ bool CRoseISC::HandlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_ALIVE:
       return true;
     default: {
-      log_.eicprintf("Unknown Packet Type: 0x%X\n", pak->Header.Command);
+      logger_->warn() << "Unknown Packet Type: " << (uint16_t)pak->Header.Command;
       return false;
     }
   }

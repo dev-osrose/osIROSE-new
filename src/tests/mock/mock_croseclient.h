@@ -19,11 +19,11 @@ class CRoseClient_Mock : public RoseCommon::CRoseClient {
 	  RoseCommon::CRosePacket* pak = (RoseCommon::CRosePacket*)_buffer;
     switch ((RoseCommon::ePacketType)pak->Header.Command) {
 		case RoseCommon::ePacketType::PAKCS_ALIVE: {
-        log_.icprintf("[%d] Got keep alive packet\n");
+        //logger_->notice("Got keep alive packet\n");
         break;
       }
       default: {
-        log_.eicprintf("Unknown Packet Type: 0x%X\n", pak->Header.Command);
+        //logger_->error("Unknown Packet Type: 0x%X\n", pak->Header.Command);
         return false;
       }
     }

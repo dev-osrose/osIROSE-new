@@ -6,12 +6,10 @@
 using namespace RoseCommon;
 
 CMapClient::CMapClient() : CRoseClient(), access_rights_(0) {
-  log_.SetIdentity("CMapClient");
 }
 
 CMapClient::CMapClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)), access_rights_(0) {
-  log_.SetIdentity("CMapClient");
 }
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {

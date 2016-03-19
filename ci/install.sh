@@ -5,8 +5,8 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	echo 'Setting up protobuf...';
 	if [ ! -d "./protobuf/lib" ]; then
+		echo 'Setting up protobuf...';
 		cd tools/protobuf
 		./autogen.sh
 		./configure --prefix=$PROOT/protobuf > /dev/null
@@ -26,9 +26,11 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	cd ..
 	gem install coveralls-lcov
     
-	mkdir 3rdParty
-	mkdir 3rdParty/include
-	mkdir 3rdParty/lib
+	mkdir 3rdparty
+	mkdir 3rdparty/include
+	mkdir 3rdparty/lib
+	
+	cp -r ./tools/spdlog/include ./3rdparty/include
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1

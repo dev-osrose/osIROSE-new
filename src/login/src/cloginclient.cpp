@@ -7,12 +7,10 @@
 using namespace RoseCommon;
 
 CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0) {
-  log_.SetIdentity("CLoginClient");
 }
 
 CLoginClient::CLoginClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)), access_rights_(0) {
-  log_.SetIdentity("CLoginClient");
 }
 
 void CLoginClient::SendLoginReply(uint8_t Result) {

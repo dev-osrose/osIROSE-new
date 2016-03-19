@@ -4,8 +4,8 @@
 
 #include <stdint.h>
 #include "croseserver.h"
-#include "mock/mock_croseclient.h"
-#include "mock/mock_croseisc.h"
+//#include "mock/mock_croseclient.h"
+//#include "mock/mock_croseisc.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"
@@ -187,7 +187,7 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
 
 TEST(TestRoseNetwork, TestListenAndConnect2) {
   CRoseServer network;
-  CRoseClient_Mock netConnect;
+  CRoseClient netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 

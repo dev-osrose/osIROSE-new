@@ -80,7 +80,6 @@ TEST(TestAsioNetworking, TestListen) {
 }
 
 TEST(TestAsioNetworking, TestListenAndConnect) {
-  Core::CLogConsole log("TestListenAndConnect");
 
   Core::CNetwork_Asio netConnect, network;
 

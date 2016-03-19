@@ -10,6 +10,7 @@
 #define INETWORK_H_
 
 #include <stdint.h>
+#include <memory>
 
 namespace Core {
 

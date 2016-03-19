@@ -7,13 +7,11 @@ namespace RoseCommon {
 //#define STRESS_TEST
 
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
-  log_.SetIdentity("CRoseClient");
   ResetBuffer();
 }
 
 CRoseClient::CRoseClient(tcp::socket _sock) : CNetwork_Asio(), crypt_() {
   SetSocket(std::move(_sock));
-  log_.SetIdentity("CRoseClient");
   Recv();
   ResetBuffer();
 }
@@ -50,7 +48,7 @@ bool CRoseClient::OnReceived() {
 #endif
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
-      log_.eicprintf("Client sent incorrect blockheader\n");
+      logger_->debug() << "Client sent incorrect block header";
       ResetBuffer();
       return false;
     }
@@ -62,15 +60,14 @@ bool CRoseClient::OnReceived() {
 #ifndef STRESS_TEST
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
-    log_.eicprintf("Client sent illegal block\n");
+    logger_->debug() << "Client sent illegal block";
     ResetBuffer();
     return false;
   }
 #endif
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
-  log_.oicprintf("Received a packet on CRoseClient: Header[%i, 0x%X]\n",
-                 pak->Header.Size, pak->Header.Command);
+  logger_->debug() << "Received a packet on CRoseClient: Header[" << pak->Header.Size << ", " << (uint16_t)pak->Header.Command << "]";
   rtnVal = HandlePacket(buffer_);
   ResetBuffer();
 
@@ -115,7 +112,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       break;
     }
     default: {
-      log_.eicprintf("Unknown Packet Type: 0x%X\n", pak->Header.Command);
+      logger_->warn() << "Unknown Packet Type: " << (uint16_t)pak->Header.Command;
       return false;
     }
   }

@@ -2,6 +2,7 @@
 #include "cmysql_database.h"
 #include <exception>
 #include <stdexcept>
+#include <spdlog/spdlog.h>
 
 namespace Core {
 
@@ -46,8 +47,11 @@ CMySQL_Database::CMySQL_Database()
       database_(""),
       username_(""),
       password_(""),
-      log_("MysqlDatabase"),
-      connected_(false) {}
+      connected_(false) {
+  logger_ = spdlog::get( "console" );
+  if (logger_ == nullptr)
+    logger_ = spdlog::stdout_logger_mt( "console" );
+}
 
 CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
                                  std::string _user, std::string _password)
@@ -55,16 +59,16 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       database_(_database),
       username_(_user),
       password_(_password),
-      log_("MysqlDatabase"),
       connected_(false) {
+  logger_ = spdlog::get( "console" );
+  if (logger_ == nullptr)
+    logger_ = spdlog::stdout_logger_mt( "console" );;
   try {
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());
-    log_.icprintf("Connected to database\n");
+    logger_->notice() << "Connected to database";
   } catch (const std::exception &e) {
-    log_.eicprintf(CL_RESET CL_RED
-                    "Error while connecting to the database: %s" CL_RESET "\n",
-                    conn_.error());
+    logger_->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
     throw e;
   }
   connected_ = true;
@@ -82,9 +86,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());
   } catch (const std::exception &e) {
-    log_.eicprintf(CL_RESET CL_RED
-                    "Error while connecting to the database: %s" CL_RESET "\n",
-                    conn_.error());
+    logger_->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
     throw e;
   }
   connected_ = true;
@@ -92,30 +94,24 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
 
 std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
   if (!connected_) {
-    log_.eicprintf(
-        CL_RESET CL_RED
-        "Error while executing the query '%s': not connected" CL_RESET "\n",
-        _query.c_str());
-    throw std::runtime_error("Error not connected");
+    logger_->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
+    throw std::runtime_error( "Error not connected" );
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  log_.oicprintf(CL_RESET "Executing query: %s\n", _query.c_str());
+  logger_->debug() << "Executing query: " << _query.c_str();
   mysqlpp::Query query = conn_.query(_query.c_str());
   return std::unique_ptr<IResult>(new CMySQL_Result(query.store()));
 }
 
 void CMySQL_Database::QExecute(std::string _query) {
   if (!connected_) {
-    log_.eicprintf(
-        CL_RESET CL_RED
-        "Error while executing the query '%s': not connected" CL_RESET "\n",
-        _query.c_str());
-    throw std::runtime_error("Error not connected");
+    logger_->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
+    throw std::runtime_error( "Error not connected" );
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  log_.oicprintf(CL_RESET "Executing query: %s\n", _query.c_str());
+  logger_->debug() << "Executing query: " << _query.c_str();
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }

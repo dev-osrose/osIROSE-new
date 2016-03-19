@@ -9,10 +9,9 @@ using ::testing::Invoke;
 #include "croseisc.h"
 class CRoseISC_Mock : public RoseCommon::CRoseISC {
  public:
-  CRoseISC_Mock() : CRoseISC() { log_.SetIdentity("CRoseISC_Mock"); }
+  CRoseISC_Mock() : CRoseISC() { }
 
   CRoseISC_Mock(tcp::socket _sock) : CRoseISC(std::move(_sock)) {
-    log_.SetIdentity("CRoseISC_Mock");
   }
 
  protected:

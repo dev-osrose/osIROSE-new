@@ -6,9 +6,10 @@
 int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
-  Core::CLogConsole::SetDisplayOmittable(false);
-  Core::CLogConsole Logger("Map Server");
-  Logger.icprintf("Starting up server...\n\n");
+  size_t q_size = 1048576;
+  spdlog::set_async_mode( q_size );
+  auto console = spdlog::stdout_logger_mt( "console" );
+  console->notice( "Starting up server..." );
 
   Core::Config& config = Core::Config::getInstance();
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
@@ -31,7 +32,8 @@ int main(int argc, char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
+  console->notice( "Server shutting down..." );
   Core::NetworkThreadPool::DeleteInstance();
-
+  spdlog::drop_all();
   return 0;
 }

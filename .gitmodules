@@ -7,3 +7,6 @@
 [submodule "tools/asio"]
 	path = tools/asio
 	url = https://github.com/chriskohlhoff/asio.git
+[submodule "tools/spdlog"]
+	path = tools/spdlog
+	url = https://github.com/gabime/spdlog.git

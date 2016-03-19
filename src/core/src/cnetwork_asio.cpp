@@ -8,22 +8,24 @@
 #include <cstdlib>
 #include <iostream>
 #include <thread>
-#include "logconsole.h"
-
 #include "cnetwork_asio.h"
+
 namespace Core {
 
 NetworkThreadPool* NetworkThreadPool::instance_ = nullptr;
 
 CNetwork_Asio::CNetwork_Asio()
     : INetwork(),
-      log_("CNetwork_ASIO"),
       networkService_(&NetworkThreadPool::GetInstance()),
       socket_(*networkService_->Get_IO_Service()),
       listener_(*networkService_->Get_IO_Service()),
       packet_offset_(0),
       packet_size_(6),
-      active_(true) {}
+      active_(true) {
+  logger_ = spdlog::get( "console" );
+  if (logger_ == nullptr)
+    logger_ = spdlog::stdout_logger_mt( "console" );
+}
 
 CNetwork_Asio::~CNetwork_Asio() {
   Shutdown();
@@ -81,8 +83,7 @@ bool CNetwork_Asio::Listen() {
   listener_.non_blocking(true);
   listener_.bind(endpoint);
   listener_.listen();
-  log_.icprintf("Listening started on %s:%i\n", GetIpAddress().c_str(),
-                GetPort());
+  logger_->notice() << "Listening started on " << GetIpAddress() << ":" << GetPort();
   active_ = true;
   AcceptConnection();
   OnListening();
@@ -134,8 +135,7 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
 
     });
   else
-    log_.eicprintf(CL_RESET "[%d] Not sending packet: Header[%i, 0x%X]\n",
-                   GetId(), _size, _command);
+    logger_->debug() << "Not sending packet: [" << _size << ", " << _command << "] -> client " << GetId();
   return true;
 }
 
@@ -154,24 +154,16 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
       packet_offset_ += length;
       if (!errorCode || errorCode.value() == 11) {
         if (OnReceived() == false) {
-          log_.eicprintf(
-              CL_RESET
-              "[%d] Something bad happened in OnReceived... Shutting "
-              "down...\n" CL_RESET,
-              GetId());
+          logger_->debug() << "Something bad happened in OnReceived... Shutting down -> client " << GetId();
           Shutdown();
         }
       } else {
         if (errorCode.value() == 2) {
-          log_.icprintf(CL_RESET CL_WHITE "[%d] Client disconnected.\n",
-                        GetId());
+          logger_->notice() << "Client " << GetId() << " disconnected.";
           OnDisconnected();
           Shutdown();
         } else {
-          log_.eicprintf(
-              CL_RESET CL_WHITE
-              "[%d] Error occurred[CNetwork_Asio::Recv:%i]: %s\n" CL_RESET,
-              GetId(), errorCode.value(), errorCode.message().c_str());
+          logger_->debug() << GetId() << "-> Error " << errorCode.value() << " occurred: " << errorCode.message();
 
           Shutdown();
           return;

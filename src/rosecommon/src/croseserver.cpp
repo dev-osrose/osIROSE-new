@@ -10,7 +10,6 @@ std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
-  log_.SetIdentity("CRoseServer");
   //  process_thread_ = std::thread([this]() { Run(); });
 
   process_thread_ = std::thread([this]() {
@@ -90,14 +89,14 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
       // std::distance(std::begin(client_list_), std::end(client_list_));
       nClient->SetId(
           std::distance(std::begin(client_list_), std::end(client_list_)));
-      log_.icprintf("[%d] Client connected from: %s\n", nClient->GetId(),
+      logger_->notice("[%d] Client connected from: %s", nClient->GetId(),
                     _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(std::move(_sock));
       nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-      log_.icprintf("[%d] Server connected from: %s\n", nClient->GetId(),
+      logger_->notice("[%d] Server connected from: %s", nClient->GetId(),
                     _address.c_str());
       isc_list_.push_front(nClient);
     }

@@ -12,8 +12,12 @@
 
 #include "idatabase.h"
 #include <mysql++.h>
-#include "logconsole.h"
 #include <mutex>
+#include "logconsole.h"
+
+namespace spdlog {
+  class logger;
+}
 
 namespace Core {
 /*!
@@ -98,7 +102,7 @@ class CMySQL_Database : public IDatabase {
 
   std::mutex mutex_;
   mysqlpp::Connection conn_;
-  CLogConsole log_;
+  std::shared_ptr<spdlog::logger> logger_;
   bool connected_;
 };
 }

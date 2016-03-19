@@ -17,6 +17,7 @@
 #include <asio.hpp>
 #include <queue>
 #include <mutex>
+#include <spdlog/spdlog.h>
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -65,9 +66,6 @@ class CNetwork_Asio : public INetwork {
   virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
   bool IsActive() { return active_; }
-  void SetExtraMessageInfo(bool _enabled) {
-    log_.SetDisplayOmittable(_enabled);
-  }
 
  protected:
   void AcceptConnection();
@@ -92,7 +90,7 @@ class CNetwork_Asio : public INetwork {
     packet_offset_ = 0;
     packet_size_ = 6;
   }
-  CLogConsole log_;
+  std::shared_ptr<spdlog::logger> logger_;
 
  protected:
   asio::io_service* io_service_;

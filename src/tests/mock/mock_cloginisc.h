@@ -9,10 +9,9 @@ using ::testing::Invoke;
 #include "cloginisc.h"
 class CLoginISC_Mock : public CLoginISC {
  public:
-  CLoginISC_Mock() : CLoginISC() { log_.SetIdentity("CLoginISC_Mock"); }
+  CLoginISC_Mock() : CLoginISC() { }
 
   CLoginISC_Mock(tcp::socket _sock) : CLoginISC(std::move(_sock)) {
-    log_.SetIdentity("CLoginISC_Mock");
   }
 
  protected:

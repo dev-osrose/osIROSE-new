@@ -1,5 +1,5 @@
-#ifndef thread_pool_h__
-#define thread_pool_h__
+#ifndef _thread_pool_h_
+#define _thread_pool_h_
 #include <thread>
 #include <asio.hpp>
 #include <queue>
@@ -39,7 +39,6 @@ class NetworkThreadPool {
       core_count = 1;
 
     threads_running_ = core_count;
-    printf("Using %i threads\n", threads_running_);
     for (uint32_t idx = 0; idx < threads_running_; ++idx) {
       io_thread_[idx] = std::thread([this]() { io_service_.run(); }); //todo(raven): change this to poll and loop while we are active.
     }
@@ -65,4 +64,4 @@ class NetworkThreadPool {
 };
 }
 
-#endif  // thread_pool_h__
+#endif  // __thread_pool_h__

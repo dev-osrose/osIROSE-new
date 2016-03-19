@@ -5,7 +5,6 @@ using namespace RoseCommon;
 
 CLoginISC::CLoginISC()
     : CRoseISC(), channel_count_(1), min_right_(0), test_server_(false) {
-  log_.SetIdentity("CLoginISC");
 }
 
 CLoginISC::CLoginISC(tcp::socket _sock)
@@ -13,7 +12,6 @@ CLoginISC::CLoginISC(tcp::socket _sock)
       channel_count_(1),
       min_right_(0),
       test_server_(false) {
-  log_.SetIdentity("CLoginISC");
 }
 
 bool CLoginISC::HandlePacket(uint8_t* _buffer) {
@@ -72,7 +70,7 @@ bool CLoginISC::ServerRegister(CRosePacket* P) {
     channel_list_.push_front(channel);
   }
 
-  log_.icprintf("ISC Server Connected: [%s, %s, %s:%i]\n",
+  logger_->notice("ISC Server Connected: [%s, %s, %s:%i]\n",
                 ServerReg_ServerType_Name(pServerReg.type()).c_str(),
                 server_name_.c_str(), network_ip_address.c_str(),
                 network_port_);

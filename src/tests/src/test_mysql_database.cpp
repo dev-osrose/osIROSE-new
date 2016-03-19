@@ -164,7 +164,6 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 	struct Filename {
 		constexpr static const char *str() { return "test.ini"; }
 	};
-	Core::CLogConsole::SetDisplayOmittable(true);
 	EXPECT_NO_FATAL_FAILURE(Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance());
 	EXPECT_NO_FATAL_FAILURE([] () {
 			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
@@ -183,5 +182,4 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 			res->getString("str", s);
 			EXPECT_EQ(s, "plop");
 		}());
-	Core::CLogConsole::SetDisplayOmittable(true);
 }

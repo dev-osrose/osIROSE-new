@@ -6,12 +6,12 @@
 using namespace RoseCommon;
 
 CCharISC::CCharISC() : CRoseISC(), login_connection_(false) {
-  log_.SetIdentity("CCharISC");
+
 }
 
 CCharISC::CCharISC(tcp::socket _sock)
     : CRoseISC(std::move(_sock)), login_connection_(false) {
-  log_.SetIdentity("CCharISC");
+
 }
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
@@ -68,7 +68,7 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
   uint8_t* data = new uint8_t[_size];
   memset(data, 0, _size);
   if (pServerReg.SerializeToArray(data, _size) == false)
-    log_.eicprintf("Couldn't serialize the data\n");
+    logger_->error("Couldn't serialize the data");
   pakToLS->AddBytes(data, _size);
 
   // todo: get the ISC connection to the login server and send the packet to it
@@ -101,11 +101,11 @@ void CCharISC::OnConnected() {
   uint8_t* data = new uint8_t[_size];
   memset(data, 0, _size);
   if (pServerReg.SerializeToArray(data, _size) == false)
-    log_.eicprintf("Couldn't serialize the data\n");
+    logger_->error("Couldn't serialize the data");
   pak->AddBytes(data, _size);
 
-  log_.oicprintf("Sent a packet on CRoseISC: Header[%i, 0x%X]\n",
-                 pak->Header.Size, pak->Header.Command);
+  logger_->trace("Sent a packet on CRoseISC: Header[%i, 0x%X]",
+                 pak->Header.Size, (uint16_t)pak->Header.Command);
 
   Send((CRosePacket*)pak);
   delete[] data;

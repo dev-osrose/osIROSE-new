@@ -9,6 +9,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#include <spdlog/spdlog.h>
 #include <string>
 #include "configfile.pb.h"
 #include "pbjson.hpp"
@@ -57,7 +58,7 @@ class Config : public configFile::Configuration {
   ~Config();
 
   std::string file_;
-  CLogConsole log_;
+  std::shared_ptr<spdlog::logger> logger_;
 };
 
 /*!

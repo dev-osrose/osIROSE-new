@@ -6,12 +6,10 @@
 using namespace RoseCommon;
 
 CCharClient::CCharClient() : CRoseClient(), access_rights_(0) {
-  log_.SetIdentity("CCharClient");
 }
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)), access_rights_(0) {
-  log_.SetIdentity("CCharClient");
 }
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
@@ -36,7 +34,7 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
 bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 bool CCharClient::JoinServerReply(CRosePacket* P) {
-  log_.icprintf("JoinServerReply\n");
+  logger_->notice("JoinServerReply\n");
 
   SetId(P->Get<uint32_t>(0));
   uint8_t _pass[33];
@@ -48,20 +46,20 @@ bool CCharClient::JoinServerReply(CRosePacket* P) {
 
 bool CCharClient::SendCharListReply(CRosePacket* P) {
   (void)P;
-  log_.icprintf("CharListReply\n");
+  logger_->notice("CharListReply\n");
 
   return true;
 }
 
 bool CCharClient::SendCharCreateReply(CRosePacket* P) {
   (void)P;
-  log_.icprintf("CharCreateReply\n");
+  logger_->notice("CharCreateReply\n");
 
   return true;
 }
 
 bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
-  log_.icprintf("CharDeleteReply\n");
+  logger_->notice("CharDeleteReply\n");
   uint8_t charid = P->Get<uint8_t>( 0 );
   bool _delete = P->Get<uint8_t>( 1 );
 
@@ -81,7 +79,7 @@ bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
 
 bool CCharClient::SendCharSelectReply(CRosePacket* P) {
   (void)P;
-  log_.icprintf("CharSelectReply\n");
+  logger_->notice("CharSelectReply\n");
 
   return true;
 }

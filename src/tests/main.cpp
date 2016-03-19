@@ -12,6 +12,10 @@ int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
 
   UnitTest &unit_test = *UnitTest::GetInstance();
+
+  //size_t q_size = 1048576;
+  //spdlog::set_async_mode( q_size );
+
   Core::NetworkThreadPool::GetInstance();
 
   int ret_val = RUN_ALL_TESTS();

@@ -26,14 +26,6 @@ ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
-#foreach(flag_var
-#        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-#        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-#   if(${flag_var} MATCHES "/MD")
-#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#   endif(${flag_var} MATCHES "/MD")
-#endforeach(flag_var)
-
 ELSE()
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -Wextra -Werror")
 ENDIF()
@@ -70,7 +62,6 @@ SET( SOURCES_BASE
   src/cnetwork_asio
   src/config
   src/pbjson.cpp
-  src/logconsole
   src/cmysql_database
 )
 
@@ -78,7 +69,5 @@ add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	ADD_DEPENDENCIES(${PROJECT} protoGen)
-#ELSE()
-#	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_BINARY_DIR}/libprotobuf.a)
 ENDIF()
 
