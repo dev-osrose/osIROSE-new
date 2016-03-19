@@ -30,7 +30,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdparty/include
 	mkdir 3rdparty/lib
 	
-	cp -r ./tools/spdlog/include ./3rdparty/include
+	cp -r ./tools/spdlog/include ./3rdparty
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
