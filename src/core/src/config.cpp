@@ -41,6 +41,10 @@ std::string prettify(const std::string &data) {
 Config::Config(std::string filename) : Configuration(), file_(filename) {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   std::fstream in(file_.c_str(), std::ios::in);
+
+  logger_ = spdlog::get( "console" );
+  if (logger_ == nullptr)
+    logger_ = spdlog::stdout_logger_mt( "console" );
   if (!in.is_open()) {
     logger_->debug() << "file " << filename << " not found. Creating one";
 	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);

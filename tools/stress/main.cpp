@@ -33,6 +33,7 @@ int main( int argc, char* argv[] )
 
   static int stress_index = 0;
   static std::string host_ip = argv[1];
+  spdlog::set_pattern( "[%H:%M:%S.%e %z] [%L] [thread %t] %v" );
   static auto log = spdlog::stdout_logger_mt("StressTest");
 
   log->notice( "Setting host to %s\n", host_ip.c_str() );

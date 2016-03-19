@@ -1,6 +1,7 @@
 // Unit test driver
 #include "gtest/gtest.h"
 #include "network_thread_pool.h"
+#include <spdlog/spdlog.h>
 
 using ::testing::InitGoogleTest;
 using ::testing::Test;
@@ -13,8 +14,9 @@ int main(int argc, char *argv[]) {
 
   UnitTest &unit_test = *UnitTest::GetInstance();
 
-  //size_t q_size = 1048576;
-  //spdlog::set_async_mode( q_size );
+  size_t q_size = 1048576;
+  spdlog::set_async_mode( q_size );
+  spdlog::stdout_logger_mt( "console" );
 
   Core::NetworkThreadPool::GetInstance();
 

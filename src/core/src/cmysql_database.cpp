@@ -62,7 +62,7 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       connected_(false) {
   logger_ = spdlog::get( "console" );
   if (logger_ == nullptr)
-    logger_ = spdlog::stdout_logger_mt( "console" );;
+    logger_ = spdlog::stdout_logger_mt( "console" );
   try {
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());

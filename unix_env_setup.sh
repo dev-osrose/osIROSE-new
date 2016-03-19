@@ -9,7 +9,7 @@ sudo apt-get install unzip
 sudo apt-get install autoconf
 sudo apt-get install libtool
 sudo apt-get install libssl-dev
-sudo apt-get install libmysqlclient-dev libmysqld-dev libmysql++-dev libmysql++-doc libmysql++3v5
+sudo apt-get install libmysqlclient-dev libmysqld-dev libmysql++-dev libmysql++-doc libmysql++3v5 libmysql++3
 
 git submodule init
 git submodule update
