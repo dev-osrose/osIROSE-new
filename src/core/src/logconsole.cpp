@@ -20,7 +20,6 @@ std::shared_ptr<spdlog::logger> CLog::CreateLoggers(log_type _type, spdlog::leve
   {
     std::ostringstream format;
     format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
-//    spdlog::set_pattern( "\033[1;32m" "[%H:%M:%S.%e %z] [%L] [thread %t]" "\033[1;37m" "%v" "\033[0m" );
     spdlog::set_pattern(format.str());
 
     size_t q_size = 1048576;
@@ -60,25 +59,15 @@ std::shared_ptr<spdlog::logger> CLog::CreateLoggers(log_type _type, spdlog::leve
     net_sink.push_back( console_sink );
     net_sink.push_back( daily_sink );
 
-//    std::cout << "console_sink use_count: " << console_sink.use_count() << "\n";
-//    std::cout << "daily_sink use_count: " << console_sink.use_count() << "\n";
-
     auto net_logger = std::make_shared<spdlog::logger>(name.c_str(), begin(net_sink), end(net_sink));
-//    std::cout << "net_logger use_count: " << console_sink.use_count() << "\n";
-//    std::cout << "console_sink use_count: " << console_sink.use_count() << "\n";
-//    std::cout << "daily_sink use_count: " << console_sink.use_count() << "\n";
-
     net_logger->set_level(_level);
 
     spdlog::register_logger(net_logger);
 
     net_sink.clear();
-//    std::cout << "console_sink use_count: " << console_sink.use_count() << "\n";
-//    std::cout << "daily_sink use_count: " << console_sink.use_count() << "\n";
     console_sink.reset();
     daily_sink.reset();
-//    net_logger.reset();
-    return std::move(net_logger);
+    return net_logger;
   }
   catch (const spdlog::spdlog_ex& ex)
   {
