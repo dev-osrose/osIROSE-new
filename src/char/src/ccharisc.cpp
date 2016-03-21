@@ -104,7 +104,7 @@ void CCharISC::OnConnected() {
     logger_->error("Couldn't serialize the data");
   pak->AddBytes(data, _size);
 
-  logger_->trace("Sent a packet on CRoseISC: Header[%i, 0x%X]",
+  logger_->trace("Sent a packet on CRoseISC: Header[{0}, 0x{1:x}]",
                  pak->Header.Size, (uint16_t)pak->Header.Command);
 
   Send((CRosePacket*)pak);

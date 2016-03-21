@@ -18,14 +18,14 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CLoginClient* nClient = new CLoginClient(std::move(_sock));
       nClient->SetId(client_count_++);
-      logger_->notice("[%d] Client connected from: %s\n", nClient->GetId(),
+      logger_->notice("[{}] Client connected from: {}\n", nClient->GetId(),
                     _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CLoginISC* nClient = new CLoginISC(std::move(_sock));
       nClient->SetId(server_count_++);
-      logger_->notice("Server connected from: %s\n", _address.c_str());
+      logger_->notice("Server connected from: {}\n", _address.c_str());
       isc_list_.push_front(nClient);
     }
   }

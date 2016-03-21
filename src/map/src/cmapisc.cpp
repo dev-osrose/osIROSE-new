@@ -58,7 +58,7 @@ void CMapISC::OnConnected() {
   //	m_Log.icprintf("Header[%i, 0x%X] Size: %i\n", pak->Header.Size,
   //pak->Header.Command, _size);
 
-  logger_->trace("Sent a packet on CRoseISC: Header[%i, 0x%X]\n",
+  logger_->trace("Sent a packet on CRoseISC: Header[{0}, 0x{1:x}]\n",
                  pak->Header.Size, (uint16_t)pak->Header.Command);
 
   Send((CRosePacket*)pak);

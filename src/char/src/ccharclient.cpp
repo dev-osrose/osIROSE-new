@@ -34,7 +34,7 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
 bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 bool CCharClient::JoinServerReply(CRosePacket* P) {
-  logger_->notice("JoinServerReply\n");
+  logger_->trace("JoinServerReply\n");
 
   SetId(P->Get<uint32_t>(0));
   uint8_t _pass[33];
@@ -46,20 +46,20 @@ bool CCharClient::JoinServerReply(CRosePacket* P) {
 
 bool CCharClient::SendCharListReply(CRosePacket* P) {
   (void)P;
-  logger_->notice("CharListReply\n");
+  logger_->trace("CharListReply\n");
 
   return true;
 }
 
 bool CCharClient::SendCharCreateReply(CRosePacket* P) {
   (void)P;
-  logger_->notice("CharCreateReply\n");
+  logger_->trace("CharCreateReply\n");
 
   return true;
 }
 
 bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
-  logger_->notice("CharDeleteReply\n");
+  logger_->trace("CharDeleteReply\n");
   uint8_t charid = P->Get<uint8_t>( 0 );
   bool _delete = P->Get<uint8_t>( 1 );
 
@@ -79,7 +79,7 @@ bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
 
 bool CCharClient::SendCharSelectReply(CRosePacket* P) {
   (void)P;
-  logger_->notice("CharSelectReply\n");
+  logger_->trace("CharSelectReply\n");
 
   return true;
 }

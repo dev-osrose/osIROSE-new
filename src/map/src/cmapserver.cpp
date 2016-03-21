@@ -27,12 +27,12 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CMapClient* nClient = new CMapClient(std::move(_sock));
-      logger_->notice("Client connected from: %s", _address.c_str());
+      logger_->notice("Client connected from: {}", _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CMapISC* nClient = new CMapISC(std::move(_sock));
-      logger_->notice("Server connected from: %s", _address.c_str());
+      logger_->notice("Server connected from: {}", _address.c_str());
       isc_list_.push_front(nClient);
     }
   }
