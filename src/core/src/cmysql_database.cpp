@@ -47,11 +47,7 @@ CMySQL_Database::CMySQL_Database()
       username_(""),
       password_(""),
       connected_(false) {
-  logger_ = spdlog::get( "db" );
-  if (logger_ == nullptr)
-  {
-    logger_ = CLog::CreateLoggers(log_type::DATABASE);
-  }
+  logger_ = CLog::GetLogger(log_type::DATABASE);
 }
 
 CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
@@ -61,17 +57,15 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       username_(_user),
       password_(_password),
       connected_(false) {
-  logger_ = spdlog::get( "db" );
-  if (logger_ == nullptr)
-  {
-    logger_ = CLog::CreateLoggers(log_type::DATABASE);
-  }
+    logger_ = CLog::GetLogger(log_type::DATABASE);
   try {
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());
-    logger_->notice() << "Connected to database";
+    if(auto log = logger_.lock())
+      log->notice() << "Connected to database";
   } catch (const std::exception &e) {
-    logger_->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
+    if(auto log = logger_.lock())
+      log->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
     throw e;
   }
   connected_ = true;
@@ -89,7 +83,8 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());
   } catch (const std::exception &e) {
-    logger_->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
+    if(auto log = logger_.lock())
+      log->critical() << Color::FG_RED << "Error while connecting to the database: " << conn_.error() << Color::CL_RESET;
     throw e;
   }
   connected_ = true;
@@ -97,24 +92,28 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
 
 std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
   if (!connected_) {
-    logger_->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
+    if(auto log = logger_.lock())
+      log->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
     throw std::runtime_error( "Error not connected" );
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  logger_->debug() << "Executing query: " << _query.c_str();
+  if(auto log = logger_.lock())
+      log->debug() << "Executing query: " << _query.c_str();
   mysqlpp::Query query = conn_.query(_query.c_str());
   return std::unique_ptr<IResult>(new CMySQL_Result(query.store()));
 }
 
 void CMySQL_Database::QExecute(std::string _query) {
   if (!connected_) {
-    logger_->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
+    if(auto log = logger_.lock())
+      log->critical() << Color::FG_RED << "Error while executing the query: " << _query.c_str() << ": not connected" << Color::CL_RESET;
     throw std::runtime_error( "Error not connected" );
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start(); // This is if we pass the database around different threads
-  logger_->debug() << "Executing query: " << _query.c_str();
+  if(auto log = logger_.lock())
+      log->debug() << "Executing query: " << _query.c_str();
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }

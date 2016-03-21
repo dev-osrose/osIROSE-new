@@ -22,11 +22,7 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true) {
-  logger_ = spdlog::get( "net" );
-  if (logger_ == nullptr)
-  {
-    logger_ = CLog::CreateLoggers(log_type::NETWORK, spdlog::level::notice);
-  }
+    logger_ = CLog::GetLogger(log_type::NETWORK, spdlog::level::notice).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {

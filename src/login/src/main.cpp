@@ -11,7 +11,6 @@ int main(int argc, char* argv[]) {
 //  spdlog::set_async_mode( q_size );
   auto console = spdlog::get( "server" );
   console->notice( "Starting up server..." );
-//  Core::CLog::CreateLoggers();
 
   Core::Config& config = Core::Config::getInstance();
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());

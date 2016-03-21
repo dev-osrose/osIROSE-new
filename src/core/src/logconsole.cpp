@@ -14,8 +14,27 @@ std::ostream& Core::Color::operator<<(std::ostream& os, Core::Color::CodeBG code
 }
 
 namespace Core {
-std::shared_ptr<spdlog::logger> CLog::CreateLoggers(log_type _type, spdlog::level::level_enum _level)
+std::weak_ptr<spdlog::logger> CLog::GetLogger(log_type _type, spdlog::level::level_enum _level)
 {
+  std::shared_ptr<spdlog::logger> logger = nullptr;
+  switch(_type)
+  {
+    case log_type::NETWORK:
+      logger = spdlog::get("net");
+      break;
+
+    case log_type::DATABASE:
+      logger = spdlog::get("db");
+      break;
+
+    case log_type::GENERAL:
+    default:
+      logger = spdlog::get("server");
+      break;
+  }
+  if(logger == nullptr)
+  {
+
   try
   {
     std::ostringstream format;
@@ -73,6 +92,7 @@ std::shared_ptr<spdlog::logger> CLog::CreateLoggers(log_type _type, spdlog::leve
   {
       std::cout << "Log failed: " << ex.what() << std::endl;
   }
-  return nullptr;
+  }
+  return logger;
 }
 }

@@ -99,7 +99,7 @@ class CMySQL_Database : public IDatabase {
   std::mutex mutex_;
   mysqlpp::Connection conn_;
   bool connected_;
-  std::shared_ptr<spdlog::logger> logger_;
+  std::weak_ptr<spdlog::logger> logger_;
 };
 }
 
