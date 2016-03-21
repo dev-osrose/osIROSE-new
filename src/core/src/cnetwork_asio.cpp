@@ -22,9 +22,11 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true) {
-  logger_ = spdlog::get( "console" );
+  logger_ = spdlog::get( "net" );
   if (logger_ == nullptr)
-    logger_ = spdlog::stdout_logger_mt( "console" );
+  {
+    logger_ = CLog::CreateLoggers(log_type::NETWORK, spdlog::level::notice);
+  }
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
@@ -33,6 +35,8 @@ CNetwork_Asio::~CNetwork_Asio() {
   do {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   } while (!discard_queue_.empty());
+
+  logger_.reset();
 }
 
 bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {

@@ -42,9 +42,11 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   std::fstream in(file_.c_str(), std::ios::in);
 
-  logger_ = spdlog::get( "console" );
+  logger_ = spdlog::get( "server" );
   if (logger_ == nullptr)
-    logger_ = spdlog::stdout_logger_mt( "console" );
+  {
+    logger_ = CLog::CreateLoggers(log_type::GENERAL);
+  }
   if (!in.is_open()) {
     logger_->debug() << "file " << filename << " not found. Creating one";
 	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);
@@ -63,6 +65,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
 }
 
 Config::~Config() {
+  logger_.reset();
   google::protobuf::ShutdownProtobufLibrary();
 }
 

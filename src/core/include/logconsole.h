@@ -12,11 +12,12 @@
 #include <ios>
 #include <iomanip>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 namespace Core {
 
 namespace Color {
-enum Code {
+enum CodeFG {
   // Reset formats
   CL_RESET = 0,
   CL_BOLD = 21,
@@ -50,8 +51,10 @@ enum Code {
   FG_LT_MAGENTA = 95,
   FG_LT_CYAN = 96,
   FG_WHITE = 97,
-  FG_DEFAULT = 39,
+  FG_DEFAULT = 39
+};
 
+enum CodeBG {
   BG_BLACK = 40,
   BG_RED = 41,
   BG_GREEN = 42,
@@ -71,7 +74,20 @@ enum Code {
 
   BG_DEFAULT = 49
 };
+  std::ostream& operator<<(std::ostream& os, Core::Color::CodeFG code);
+  std::ostream& operator<<(std::ostream& os, Core::Color::CodeBG code);
 }
+
+enum class log_type {
+  GENERAL,
+  NETWORK,
+  DATABASE
+};
+
+class CLog {
+public:
+  static std::shared_ptr<spdlog::logger> CreateLoggers(log_type _type, spdlog::level::level_enum _level = spdlog::level::notice);
+};
 }
 
 #endif

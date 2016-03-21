@@ -5,12 +5,13 @@ int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
 
-  spdlog::set_pattern( "[%H:%M:%S.%e %z] [%L] [thread %t] %v" );
+//  spdlog::set_pattern( "[%H:%M:%S.%e %z] [%L] [thread %t] %v" );
 
-  size_t q_size = 1048576;
-  spdlog::set_async_mode( q_size );
-  auto console = spdlog::stdout_logger_mt( "console" );
+//  size_t q_size = 1048576;
+//  spdlog::set_async_mode( q_size );
+  auto console = spdlog::get( "server" );
   console->notice( "Starting up server..." );
+//  Core::CLog::CreateLoggers();
 
   Core::Config& config = Core::Config::getInstance();
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());

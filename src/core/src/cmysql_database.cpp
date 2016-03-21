@@ -2,7 +2,6 @@
 #include "cmysql_database.h"
 #include <exception>
 #include <stdexcept>
-#include <spdlog/spdlog.h>
 
 namespace Core {
 
@@ -48,9 +47,11 @@ CMySQL_Database::CMySQL_Database()
       username_(""),
       password_(""),
       connected_(false) {
-  logger_ = spdlog::get( "console" );
+  logger_ = spdlog::get( "db" );
   if (logger_ == nullptr)
-    logger_ = spdlog::stdout_logger_mt( "console" );
+  {
+    logger_ = CLog::CreateLoggers(log_type::DATABASE);
+  }
 }
 
 CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
@@ -60,9 +61,11 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       username_(_user),
       password_(_password),
       connected_(false) {
-  logger_ = spdlog::get( "console" );
+  logger_ = spdlog::get( "db" );
   if (logger_ == nullptr)
-    logger_ = spdlog::stdout_logger_mt( "console" );
+  {
+    logger_ = CLog::CreateLoggers(log_type::DATABASE);
+  }
   try {
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());
