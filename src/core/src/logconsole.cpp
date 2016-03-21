@@ -16,7 +16,7 @@ std::ostream& Core::Color::operator<<(std::ostream& os, Core::Color::CodeBG code
 namespace Core {
 std::weak_ptr<spdlog::logger> CLog::GetLogger(log_type _type, spdlog::level::level_enum _level)
 {
-  std::shared_ptr<spdlog::logger> logger = nullptr;
+  std::weak_ptr<spdlog::logger> logger;
   switch(_type)
   {
     case log_type::NETWORK:
@@ -32,14 +32,14 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(log_type _type, spdlog::level::lev
       logger = spdlog::get("server");
       break;
   }
-  if(logger == nullptr)
+
+  if( logger.expired() )
   {
 
   try
   {
     std::ostringstream format;
     format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
-    spdlog::set_pattern(format.str());
 
     size_t q_size = 1048576;
     spdlog::set_async_mode( q_size, spdlog::async_overflow_policy::block_retry,
@@ -80,6 +80,7 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(log_type _type, spdlog::level::lev
 
     auto net_logger = std::make_shared<spdlog::logger>(name.c_str(), begin(net_sink), end(net_sink));
     net_logger->set_level(_level);
+    net_logger->set_pattern(format.str());
 
     spdlog::register_logger(net_logger);
 

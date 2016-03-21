@@ -67,7 +67,7 @@ bool CRoseClient::OnReceived() {
 #endif
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug() << "Received a packet on CRoseClient: Header[" << pak->Header.Size << ", " << (uint16_t)pak->Header.Command << "]";
+  logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
   rtnVal = HandlePacket(buffer_);
   ResetBuffer();
 
@@ -112,7 +112,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       break;
     }
     default: {
-      logger_->warn() << "Unknown Packet Type: " << (uint16_t)pak->Header.Command;
+      logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)pak->Header.Command);
       return false;
     }
   }

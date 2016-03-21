@@ -38,7 +38,7 @@ bool CRoseISC::OnReceived() {
   }
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug() << "Received a packet on CRoseISC: Header[" << pak->Header.Size << ", " << (uint16_t)pak->Header.Command << "]";
+  logger_->debug("Received a packet on CRoseISC: Header[{0}, {1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
   rtnVal = HandlePacket( buffer_ );
   ResetBuffer();
   return rtnVal;
@@ -58,7 +58,7 @@ bool CRoseISC::HandlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_ALIVE:
       return true;
     default: {
-      logger_->warn() << "Unknown Packet Type: " << (uint16_t)pak->Header.Command;
+      logger_->warn("Unknown Packet Type: {0:x}", (uint16_t)pak->Header.Command);
       return false;
     }
   }

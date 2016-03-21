@@ -47,7 +47,13 @@ CMySQL_Database::CMySQL_Database()
       username_(""),
       password_(""),
       connected_(false) {
-  logger_ = CLog::GetLogger(log_type::DATABASE);
+  logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
+}
+
+CMySQL_Database::~CMySQL_Database() {
+  if(auto log = logger_.lock())
+    log->debug() << "db shared_ptr used by " << log.use_count()-1;
+  logger_.reset();
 }
 
 CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
@@ -57,7 +63,7 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       username_(_user),
       password_(_password),
       connected_(false) {
-    logger_ = CLog::GetLogger(log_type::DATABASE);
+    logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
   try {
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                  password_.c_str());

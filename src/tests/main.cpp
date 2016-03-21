@@ -14,6 +14,10 @@ int main(int argc, char *argv[]) {
 
   UnitTest &unit_test = *UnitTest::GetInstance();
 
+  std::ostringstream format;
+  format << Core::Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Core::Color::FG_WHITE << " %v " << Core::Color::CL_RESET;
+  spdlog::set_pattern(format.str());
+
 //  size_t q_size = 1048576;
 //  spdlog::set_async_mode( q_size );
 
@@ -28,10 +32,10 @@ int main(int argc, char *argv[]) {
   spdlog::set_pattern( "\033[1;32m" "[%H:%M:%S.%e %z] [%L] [thread %t]" "\033[1;37m" "%v" "\033[0m" );
 
   Core::NetworkThreadPool::GetInstance();
-
   int ret_val = RUN_ALL_TESTS();
   spdlog::drop_all();
   Core::NetworkThreadPool::DeleteInstance();
+
   int unexpectedly_failed_tests = 0;
   for (int i = 0; i < unit_test.total_test_case_count(); ++i) {
     const TestCase &test_case = *unit_test.GetTestCase(i);

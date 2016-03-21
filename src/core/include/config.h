@@ -58,7 +58,6 @@ class Config : public configFile::Configuration {
   ~Config();
 
   std::string file_;
-  std::shared_ptr<spdlog::logger> logger_;
 };
 
 /*!

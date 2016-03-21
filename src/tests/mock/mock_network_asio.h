@@ -48,5 +48,5 @@ class CNetwork_Asio_Mock : public Core::CNetwork_Asio {
   MOCK_METHOD0(OnSent, void());
 
  private:
-  Core::CNetwork_Asio real_;
+//  Core::CNetwork_Asio real_;
 };

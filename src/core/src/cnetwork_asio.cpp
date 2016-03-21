@@ -22,7 +22,7 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true) {
-    logger_ = CLog::GetLogger(log_type::NETWORK, spdlog::level::notice).lock();
+    logger_ = CLog::GetLogger(log_type::NETWORK, spdlog::level::debug).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
@@ -32,6 +32,7 @@ CNetwork_Asio::~CNetwork_Asio() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   } while (!discard_queue_.empty());
 
+  logger_->debug() << "net shared_ptr used by " << logger_.use_count()-1;
   logger_.reset();
 }
 
@@ -135,7 +136,7 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
 
     });
   else
-    logger_->debug() << "Not sending packet: [" << _size << ", " << _command << "] -> client " << GetId();
+    logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
   return true;
 }
 
