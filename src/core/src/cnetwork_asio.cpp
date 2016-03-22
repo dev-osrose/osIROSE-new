@@ -47,7 +47,6 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
 }
 
 bool CNetwork_Asio::Shutdown() {
-  active_ = false;
   Disconnect();
 
   if (listener_.is_open()) {
@@ -56,6 +55,7 @@ bool CNetwork_Asio::Shutdown() {
     listener_.close(ignored);
     //    });
   }
+  active_ = false;
   return true;
 }
 
