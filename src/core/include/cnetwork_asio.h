@@ -92,7 +92,7 @@ class CNetwork_Asio : public INetwork {
   virtual bool OnShutdown() override;
   virtual bool HandlePacket(uint8_t* _buffer);
 
-  void SetSocket(tcp::socket _sock) { socket_ = std::move(_sock); }
+  void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
     packet_offset_ = 0;
     packet_size_ = 6;

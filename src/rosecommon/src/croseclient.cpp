@@ -10,7 +10,7 @@ CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   ResetBuffer();
 }
 
-CRoseClient::CRoseClient(tcp::socket _sock) : CNetwork_Asio(), crypt_() {
+CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
   SetSocket(std::move(_sock));
   Recv();
   ResetBuffer();
