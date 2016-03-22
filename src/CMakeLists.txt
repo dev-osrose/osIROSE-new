@@ -10,6 +10,10 @@ IF( ENABLE_ASAN )
 	SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
 ENDIF()
 
+IF( DISABLE_CRYPT )
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_CRYPT")
+ENDIF()
+
 #this is a temp fix for windows builds
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWIN32_LEAN_AND_MEAN")
 

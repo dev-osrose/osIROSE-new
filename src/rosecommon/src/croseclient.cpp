@@ -41,7 +41,7 @@ bool CRoseClient::OnReceive() { return true; }
 bool CRoseClient::OnReceived() {
   bool rtnVal = true;
   if (packet_size_ == 6) {
-#ifndef STRESS_TEST
+#ifndef DISABLE_CRYPT
     packet_size_ = crypt_.decodeClientHeader((unsigned char*)&buffer_);
 #else
     packet_size_ = buffer_[0];
@@ -57,7 +57,7 @@ bool CRoseClient::OnReceived() {
   }
 
 // decrypt packet now
-#ifndef STRESS_TEST
+#ifndef DISABLE_CRYPT
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
     logger_->debug() << "Client sent illegal block";
@@ -76,7 +76,7 @@ bool CRoseClient::OnReceived() {
 
 bool CRoseClient::OnSend(uint8_t* _buffer) {
   (void)_buffer;
-#ifndef STRESS_TEST
+#ifndef DISABLE_CRYPT
   crypt_.encodeServerPacket(_buffer);
 #endif
   return true;

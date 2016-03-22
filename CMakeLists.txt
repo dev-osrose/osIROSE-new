@@ -35,6 +35,8 @@ OPTION(ENABLE_MYSQL_ONE_INSTANCE
 	"Enable use of the single instance mysql database" ON)
 OPTION(ENABLE_EXPERMENTAL
   "Enable expermental features" OFF)
+OPTION(DISABLE_CRYPT
+  "Enable this to not use encryption functions" OFF)
   
 IF (BUILD_API_DOC)
   FIND_PACKAGE(Doxygen)
