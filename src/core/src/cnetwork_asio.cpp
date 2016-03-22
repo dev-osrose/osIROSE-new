@@ -21,7 +21,8 @@ CNetwork_Asio::CNetwork_Asio()
       listener_(*networkService_->Get_IO_Service()),
       packet_offset_(0),
       packet_size_(6),
-      active_(true) {
+      active_(true),
+      last_update_time_( Core::Time::GetTickCount() ) {
     logger_ = CLog::GetLogger(log_type::NETWORK, spdlog::level::debug).lock();
 }
 
@@ -47,15 +48,16 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
 }
 
 bool CNetwork_Asio::Shutdown() {
-  Disconnect();
 
-  if (listener_.is_open()) {
-    //    networkService_->Get_IO_Service()->post([this]() {
-    std::error_code ignored;
-    listener_.close(ignored);
-    //    });
+  if(OnShutdown() == true) {
+    Disconnect();
+
+    if (listener_.is_open()) {
+      std::error_code ignored;
+      listener_.close(ignored);
+    }
+    active_ = false;
   }
-  active_ = false;
   return true;
 }
 
@@ -170,6 +172,15 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           return;
         }
       }
+//      std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+//      int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - last_update_time_ ).count();
+//      if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
+//      {
+//        logger_->notice() << "Client " << GetId() << " timed out. " << dt;
+//        Shutdown();
+//        return;
+//      }
+      last_update_time_ = Core::Time::GetTickCount();
       recv_condition_.notify_all();
       if (active_) Recv();
     });
@@ -217,6 +228,8 @@ void CNetwork_Asio::OnDisconnected() {}
 bool CNetwork_Asio::OnReceive() { return true; }
 
 bool CNetwork_Asio::OnReceived() { return true; }
+
+bool CNetwork_Asio::OnShutdown() { return true; }
 
 bool CNetwork_Asio::OnSend(uint8_t* _buffer) {
   (void)_buffer;

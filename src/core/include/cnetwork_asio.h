@@ -28,6 +28,7 @@
 #include "inetwork.h"
 #include "logconsole.h"
 #include "network_thread_pool.h"
+#include "platform_defines.h"
 
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
@@ -65,7 +66,11 @@ class CNetwork_Asio : public INetwork {
 
   virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
-  bool IsActive() { return active_; }
+  bool IsActive() {
+    return active_;
+  }
+
+  std::chrono::steady_clock::time_point GetLastUpdateTime() { return last_update_time_; }
 
  protected:
   void AcceptConnection();
@@ -83,6 +88,7 @@ class CNetwork_Asio : public INetwork {
   virtual void OnSent() override;
   virtual bool OnAccept();
   virtual void OnAccepted(tcp::socket _sock);
+  virtual bool OnShutdown();
   virtual bool HandlePacket(uint8_t* _buffer);
 
   void SetSocket(tcp::socket _sock) { socket_ = std::move(_sock); }
@@ -109,6 +115,7 @@ class CNetwork_Asio : public INetwork {
   uint16_t packet_offset_;
   uint16_t packet_size_;
   bool active_;
+  std::chrono::steady_clock::time_point last_update_time_;
 };
 }
 

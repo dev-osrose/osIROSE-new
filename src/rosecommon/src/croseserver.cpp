@@ -23,6 +23,15 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
             client_list_.remove(client);
             break;
           }
+
+          std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - client->GetLastUpdateTime() ).count();
+          if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
+          {
+            logger_->notice() << "Client " << client->GetId() << " timed out. " << dt;
+            client->Shutdown();
+            // Do not delete them now. Do it next time.
+          }
         }
       } else {
         std::lock_guard<std::mutex> lock(isc_list_mutex_);
@@ -33,9 +42,18 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
             isc_list_.remove(client);
             break;
           }
+
+          std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - client->GetLastUpdateTime() ).count();
+          if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
+          {
+            logger_->notice() << "Server " << client->GetId() << " timed out. " << dt;
+            client->Shutdown();
+            // Do not delete them now. Do it next time.
+          }
         }
       }
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     } while (active_ == true);
 
     return 0;

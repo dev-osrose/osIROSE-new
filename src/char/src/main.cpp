@@ -16,17 +16,17 @@ int main(int argc, char* argv[]) {
 
   CCharServer clientServer;
   CCharServer iscServer(true);
-  CCharISC iscClient;
-  iscClient.Init(config.char_server().loginip(), config.char_server().loginiscport());
-  iscClient.SetLogin(true);
+  CCharISC* iscClient = new CCharISC();
+  iscClient->Init(config.char_server().loginip(), config.char_server().loginiscport());
+  iscClient->SetLogin(true);
 
   clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
   clientServer.Listen();
-  clientServer.GetISCList().push_front((CCharISC*)&iscClient);
+  clientServer.GetISCList().push_front(iscClient);
 
   iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
   iscServer.Listen();
-  iscClient.Connect();
+  iscClient->Connect();
 
   while (clientServer.IsActive()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

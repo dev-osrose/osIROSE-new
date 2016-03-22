@@ -55,6 +55,7 @@ SET( SOURCES_HEADER
   include/cmysql_databasepool
   include/singleton
   include/riterator
+  include/platform_defines
 )
 
 SET( SOURCES_BASE
