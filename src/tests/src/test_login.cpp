@@ -48,36 +48,37 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
-  // EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
+
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
-  // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }
 
 TEST(TestLoginServer, TestISCRosePacketPath) {
   //	CLogConsole::SetDisplayOmittable( true );
 
-/*  CLoginServer network(true);
+  CLoginServer network(true);
   CCharISC netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-  //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  //std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+  Core::NetworkThreadPool::GetInstance().Get_IO_Service()->poll();
+
+  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
   netConnect.Send( pak );
-  {
-    uint8_t serverCount = 0;
-    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-    for (auto& server : CLoginServer::GetISCList()) {
-      if (server->GetType() == 1) serverCount++;
-    }
+//  {
+//    uint8_t serverCount = 0;
+//    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
+//    for (auto& server : CLoginServer::GetISCList()) {
+//      if (server->GetType() == 1) serverCount++;
+//    }
 
-    EXPECT_EQ(1, serverCount);
-  }
+//    EXPECT_EQ(1, serverCount);
+//  }
 
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   //        CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
@@ -89,6 +90,6 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
 
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
-*/
+
   //	CLogConsole::SetDisplayOmittable( false );
 }
