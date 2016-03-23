@@ -22,8 +22,22 @@ std::ostream& Core::Color::operator<<(std::ostream& os,
 }
 
 namespace Core {
+
+spdlog::level::level_enum CLog::level_ = spdlog::level::notice;
+
+void CLog::SetLevel(spdlog::level::level_enum _level) {
+  level_ = _level;
+
+  std::ostringstream format;
+  format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L]";
+
+  if (level_ <= spdlog::level::debug) format << " [thread %t]";
+  format << " [%n]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
+  spdlog::set_pattern(format.str());
+}
+
 std::weak_ptr<spdlog::logger> CLog::GetLogger(
-    log_type _type, spdlog::level::level_enum _level) {
+    log_type _type) {
   std::weak_ptr<spdlog::logger> logger;
   try
   {
@@ -46,7 +60,7 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       std::ostringstream format;
       format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L]";
 
-      if (_level <= spdlog::level::debug) format << " [thread %t]";
+      if (level_ <= spdlog::level::debug) format << " [thread %t]";
       format << " [%n]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
 
       size_t q_size = 1048576;
@@ -83,7 +97,7 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
       auto net_logger = std::make_shared<spdlog::logger>(
           name.c_str(), begin(net_sink), end(net_sink));
-      net_logger->set_level(_level);
+      net_logger->set_level(level_);
       net_logger->set_pattern(format.str());
 
       spdlog::register_logger(net_logger);

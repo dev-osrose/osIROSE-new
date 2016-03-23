@@ -48,7 +48,7 @@ CMySQL_Database::CMySQL_Database()
       username_(""),
       password_(""),
       connected_(false) {
-  logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
+  logger_ = CLog::GetLogger(log_type::DATABASE);
 }
 
 CMySQL_Database::~CMySQL_Database() {
@@ -65,7 +65,7 @@ CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
       password_(_password),
       connected_(false) {
   try {
-    logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
+    logger_ = CLog::GetLogger(log_type::DATABASE);
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                   password_.c_str());
     if (auto log = logger_.lock()) log->notice() << "Connected to database";

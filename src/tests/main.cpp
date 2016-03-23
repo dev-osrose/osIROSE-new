@@ -14,22 +14,12 @@ int main(int argc, char *argv[]) {
 
   UnitTest &unit_test = *UnitTest::GetInstance();
 
-  std::ostringstream format;
-  format << Core::Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Core::Color::FG_WHITE << " %v " << Core::Color::CL_RESET;
-  spdlog::set_pattern(format.str());
+//  std::ostringstream format;
+//  format << Core::Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Core::Color::FG_WHITE << " %v " << Core::Color::CL_RESET;
+//  spdlog::set_pattern(format.str());
+  Core::CLog::SetLevel(spdlog::level::trace);
 
-//  size_t q_size = 1048576;
-//  spdlog::set_async_mode( q_size );
-
-//  std::vector<spdlog::sink_ptr> sinks;
-//  sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_mt>());
-//  sinks.push_back(std::make_shared<spdlog::sinks::daily_file_sink_mt>("tests", "txt", 23, 59));
-//  auto combined_logger = std::make_shared<spdlog::logger>("console", begin(sinks), end(sinks));
-//  spdlog::register_logger(combined_logger);
-
-//  combined_logger->set_level(spdlog::level::warn);
-
-  spdlog::set_pattern( "\033[1;32m" "[%H:%M:%S.%e %z] [%L] [thread %t]" "\033[1;37m" "%v" "\033[0m" );
+//  spdlog::set_pattern( "\033[1;32m" "[%H:%M:%S.%e %z] [%L] [thread %t]" "\033[1;37m" "%v" "\033[0m" );
 
   Core::NetworkThreadPool::GetInstance();
   int ret_val = RUN_ALL_TESTS();

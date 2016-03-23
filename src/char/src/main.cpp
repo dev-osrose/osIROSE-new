@@ -12,6 +12,13 @@ int main(int argc, char* argv[]) {
     log->notice("Starting up server...");
 
   Core::Config& config = Core::Config::getInstance();
+  Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
+  if(auto log = console.lock()) {
+    log->set_level((spdlog::level::level_enum)config.char_server().log_level());
+    log->trace("Trace logs are enabled.");
+    log->debug("Debug logs are enabled.");
+    log->info("Info logs are enabled.");
+  }
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
   CCharServer clientServer;

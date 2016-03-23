@@ -74,6 +74,7 @@ class CNetwork_Asio : public INetwork {
 
  protected:
   void AcceptConnection();
+  void ProcessSend();
 
   // Callback functions
   virtual bool OnConnect() override;

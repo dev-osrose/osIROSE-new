@@ -23,7 +23,7 @@ CNetwork_Asio::CNetwork_Asio()
       packet_size_(6),
       active_(true),
       last_update_time_( Core::Time::GetTickCount() ) {
-    logger_ = CLog::GetLogger(log_type::NETWORK, spdlog::level::debug).lock();
+    logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
@@ -33,7 +33,10 @@ CNetwork_Asio::~CNetwork_Asio() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   } while (!discard_queue_.empty());
 
-  logger_->debug() << "net shared_ptr used by " << logger_.use_count()-1;
+  while( send_queue_.empty() == false )
+    send_queue_.pop();
+
+//  logger_->debug() << "net shared_ptr used by " << logger_.use_count()-1;
   logger_.reset();
 }
 
@@ -109,36 +112,109 @@ bool CNetwork_Asio::Disconnect() {
   return true;
 }
 
-bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
-  std::lock_guard<std::mutex> lock(send_mutex_);
-  uint8_t* raw_ptr = _buffer.get();
-  uint16_t _size = (uint16_t)raw_ptr[0];
-  uint16_t _command = (uint16_t)raw_ptr[2];
+void CNetwork_Asio::ProcessSend()
+{
+  if(true == active_)
+  {
+    discard_mutex_.lock();
+    bool discard_empty = discard_queue_.empty();
+    discard_mutex_.unlock();
 
-  discard_mutex_.lock();
-  discard_queue_.push(std::move(_buffer));
-  raw_ptr = discard_queue_.back().get();
-  discard_mutex_.unlock();
+    send_mutex_.lock();
+    bool send_empty = send_queue_.empty();
+    send_mutex_.unlock();
 
-  if (OnSend(raw_ptr))
-    asio::async_write(socket_, asio::buffer(raw_ptr, _size),
-                      [this](const asio::error_code& error,
-                             std::size_t bytes_transferred) {
-      (void)bytes_transferred;
-      if (!error) {
-        OnSent();
-      }
+    if( send_empty != true && discard_empty == true )
+    {
+      send_mutex_.lock();
+      std::unique_ptr<uint8_t> _buffer = std::move(send_queue_.front());
+      send_queue_.pop();
+      send_mutex_.unlock();
+
+      uint8_t* raw_ptr = _buffer.get();
+      uint16_t _size = (uint16_t)raw_ptr[0];
+      uint16_t _command = (uint16_t)raw_ptr[2];
+
       discard_mutex_.lock();
-      {
-        std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
-        discard_queue_.pop();
-        _buffer.reset(nullptr);
-      }
+      discard_queue_.push(std::move(_buffer));
+      raw_ptr = discard_queue_.back().get();
       discard_mutex_.unlock();
 
-    });
-  else
-    logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
+      if (OnSend(raw_ptr))
+        asio::async_write(socket_, asio::buffer(raw_ptr, _size),
+                          [this](const asio::error_code& error,
+                                 std::size_t bytes_transferred) {
+          (void)bytes_transferred;
+          if (!error) {
+            OnSent();
+          }
+
+          discard_mutex_.lock();
+          {
+            std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
+            discard_queue_.pop();
+            _buffer.reset(nullptr);
+          }
+          discard_mutex_.unlock();
+
+          ProcessSend();
+
+        });
+      else
+        logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
+    }
+  }
+}
+
+bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
+  //std::lock_guard<std::mutex> lock(send_mutex_);
+  send_mutex_.lock();
+  send_queue_.push(std::move(_buffer));
+  send_mutex_.unlock();
+
+  ProcessSend();
+
+//  discard_mutex_.lock();
+//  uint16_t discard_size = discard_queue_.size();
+//  discard_mutex_.unlock();
+
+//  if( discard_size == 0 )
+//  {
+//  send_mutex_.lock();
+//  _buffer = send_queue_.front();
+//  send_queue_.pop();
+//  send_mutex.unlock();
+
+//  uint8_t* raw_ptr = _buffer.get();
+//  uint16_t _size = (uint16_t)raw_ptr[0];
+//  uint16_t _command = (uint16_t)raw_ptr[2];
+
+//  discard_mutex_.lock();
+//  discard_queue_.push(std::move(_buffer));
+//  raw_ptr = discard_queue_.back().get();
+//  discard_mutex_.unlock();
+
+//  if (OnSend(raw_ptr))
+//    asio::async_write(socket_, asio::buffer(raw_ptr, _size),
+//                      [this](const asio::error_code& error,
+//                             std::size_t bytes_transferred) {
+//      (void)bytes_transferred;
+//      if (!error) {
+//        OnSent();
+//      }
+
+//      discard_mutex_.lock();
+//      {
+//        std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
+//        discard_queue_.pop();
+//        _buffer.reset(nullptr);
+//      }
+//      discard_mutex_.unlock();
+
+//    });
+//  else
+//    logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
+//  }
   return true;
 }
 

@@ -86,7 +86,11 @@ enum class log_type {
 
 class CLog {
 public:
-  static std::weak_ptr<spdlog::logger> GetLogger(log_type _type, spdlog::level::level_enum _level = spdlog::level::notice);
+  static std::weak_ptr<spdlog::logger> GetLogger(log_type _type);
+  static void SetLevel(spdlog::level::level_enum _level = spdlog::level::notice);
+
+private:
+  static spdlog::level::level_enum level_;
 };
 }
 
