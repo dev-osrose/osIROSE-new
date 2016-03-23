@@ -89,7 +89,7 @@ class CNetwork_Asio : public INetwork {
   virtual void OnSent() override;
   virtual bool OnAccept();
   virtual void OnAccepted(tcp::socket _sock);
-  virtual bool OnShutdown();
+  virtual bool OnShutdown() override;
   virtual bool HandlePacket(uint8_t* _buffer);
 
   void SetSocket(tcp::socket _sock) { socket_ = std::move(_sock); }

@@ -13,13 +13,7 @@ int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
 
   UnitTest &unit_test = *UnitTest::GetInstance();
-
-//  std::ostringstream format;
-//  format << Core::Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L] [thread %t]" << Core::Color::FG_WHITE << " %v " << Core::Color::CL_RESET;
-//  spdlog::set_pattern(format.str());
-  Core::CLog::SetLevel(spdlog::level::trace);
-
-//  spdlog::set_pattern( "\033[1;32m" "[%H:%M:%S.%e %z] [%L] [thread %t]" "\033[1;37m" "%v" "\033[0m" );
+  Core::CLog::SetLevel(spdlog::level::debug);
 
   Core::NetworkThreadPool::GetInstance();
   int ret_val = RUN_ALL_TESTS();
