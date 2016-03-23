@@ -12,7 +12,6 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-  CLoginISC* iscServ = new CLoginISC();
   CLoginClient_Mock netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
@@ -22,10 +21,10 @@ TEST(TestLoginServer, TestClientPacketPath) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
+  auto pak = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ));
   netConnect.Send(pak);
 
-  CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  auto pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
   pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak2->AddString("test2", true);
   netConnect.Send(pak2);
@@ -40,40 +39,40 @@ TEST(TestLoginServer, TestClientPacketPath) {
   // We aren't logged in yet
   // We should get a warning
   //-----------------------------------------
-  pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
+  pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
   pak2->pChannelListReq.lServerID = 1;
   netConnect.Send(pak2);
 
-  pak2 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
+  pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ));
   pak2->Add<uint32_t>(0);
   pak2->Add<uint8_t>(0);
   netConnect.Send(pak2);
   //-----------------------------------------
 
   //Incorrect Password
-  CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  auto pak3 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
   pak3->AddString("cc03e747a6afbbcbf8be7668acfebee6", false);
   pak3->AddString("test", true);
   netConnect.Send(pak3);
 
   //Correct password
-  pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  pak3 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
   pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak3->AddString("test", true);
   netConnect.Send(pak3);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
+  auto pak4 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
   pak4->pChannelListReq.lServerID = 1;
   netConnect.Send(pak4);
 
-  CRosePacket* pak5 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
+  auto pak5 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ));
   pak5->Add<uint32_t>(0);
   pak5->Add<uint8_t>(0);
   netConnect.Send(pak5);
 
-  CRosePacket* pak6 = new CRosePacket(ePacketType::PAKCS_ALIVE);
+  auto pak6 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE);
   netConnect.Send(pak6);
 
   std::this_thread::sleep_for(

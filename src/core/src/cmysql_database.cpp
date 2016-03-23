@@ -65,35 +65,19 @@ CMySQL_Database::~CMySQL_Database() {
   logger_.reset();
 }
 
-CMySQL_Database::CMySQL_Database(std::string _host, std::string _database,
-                                 std::string _user, std::string _password)
-    : hostname_(_host),
-      database_(_database),
-      username_(_user),
-      password_(_password),
-      connected_(false) {
-  try {
-    logger_ = CLog::GetLogger(log_type::DATABASE);
-    conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
-                  password_.c_str());
-    if (auto log = logger_.lock()) log->notice() << "Connected to database";
-  } catch (const std::exception &e) {
-    if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while connecting to the database: "
-                      << conn_.error() << Color::CL_RESET;
-    throw e;
-  }
-  connected_ = true;
+CMySQL_Database::CMySQL_Database(const std::string &_host, const std::string &_database,
+                                 const std::string &_user, const std::string &_password) {
+	Connect(_host, _database, _user, _password);
 }
 
-void CMySQL_Database::Connect(std::string _host, std::string _database,
-                              std::string _user, std::string _password) {
+void CMySQL_Database::Connect(const std::string &_host, const std::string &_database,
+                              const std::string &_user, const std::string &_password) {
   hostname_ = (_host);
   database_ = (_database);
   username_ = (_user);
   password_ = (_password);
   connected_ = false;
+  logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
 
   try {
     conn_.set_option(new mysqlpp::MultiStatementsOption(true));
@@ -109,7 +93,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
   connected_ = true;
 }
 
-std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
+std::unique_ptr<IResult> CMySQL_Database::QStore(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
       log->critical() << Color::FG_RED
@@ -130,7 +114,7 @@ std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
   return result;
 }
 
-void CMySQL_Database::QExecute(std::string _query) {
+void CMySQL_Database::QExecute(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
       log->critical() << Color::FG_RED

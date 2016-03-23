@@ -80,15 +80,15 @@ class CMySQL_Result : public IResult {
 class CMySQL_Database : public IDatabase {
  public:
   CMySQL_Database();
-  CMySQL_Database(std::string _host, std::string _database, std::string _user,
-                  std::string _password);
+  CMySQL_Database(const std::string &_host, const std::string &_database,
+				  const std::string &_user, const std::string &_password);
   virtual ~CMySQL_Database();
 
-  virtual void Connect(std::string _host, std::string _database,
-                       std::string _user, std::string _password);
+  virtual void Connect(const std::string &_host, const std::string &_database,
+                       const std::string &_user, const std::string &_password);
 
-  virtual void QExecute(std::string _query);
-  virtual std::unique_ptr<IResult> QStore(std::string _query);
+  virtual void QExecute(const std::string &_query);
+  virtual std::unique_ptr<IResult> QStore(const std::string &_query);
 
  private:
   std::string hostname_;

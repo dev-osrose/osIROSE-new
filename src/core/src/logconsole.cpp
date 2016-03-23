@@ -102,9 +102,6 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
       spdlog::register_logger(net_logger);
 
-      net_sink.clear();
-      console_sink.reset();
-      daily_sink.reset();
       return net_logger;
     }
   } catch (const spdlog::spdlog_ex& ex) {

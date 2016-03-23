@@ -13,8 +13,7 @@ class CRoseClient : public Core::CNetwork_Asio {
   CRoseClient(tcp::socket &&_sock);
   virtual ~CRoseClient();
 
-  virtual bool Send(std::unique_ptr<CRosePacket> _buffer);
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
+  virtual bool Send(const CRosePacket &_buffer);
 
  protected:
   // Callback functions

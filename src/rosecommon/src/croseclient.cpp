@@ -18,13 +18,8 @@ CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
 
 CRoseClient::~CRoseClient() { Shutdown(); }
 
-bool CRoseClient::Send(CRosePacket* _buffer) {
-  //  std::unique_ptr<uint8_t*> buf( ((uint8_t*)_buffer) );
-  return CNetwork_Asio::Send(std::unique_ptr<uint8_t>((uint8_t*)_buffer));
-}
-
-bool CRoseClient::Send(std::unique_ptr<uint8_t> _buffer) {
-  return CNetwork_Asio::Send(std::move(_buffer));
+bool CRoseClient::Send(const CRosePacket &_buffer) {
+  return CNetwork_Asio::Send(_buffer.createBuffer());
 }
 
 // Callback functions
