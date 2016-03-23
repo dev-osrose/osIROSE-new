@@ -53,6 +53,7 @@ matrix:
 
 before_install:
 - export PROOT=$TRAVIS_BUILD_DIR
+- pip install codecov
 - if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
 - if [ "$CXX" = "clang++" ]; then export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh; fi
 - export LCOV_PATH=$HOME/usr/bin/lcov
@@ -73,6 +74,9 @@ before_script:
 
 script: 
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ../ci/script.sh; fi
+
+after_success:
+- codecov
 
 notifications:
   slack:
