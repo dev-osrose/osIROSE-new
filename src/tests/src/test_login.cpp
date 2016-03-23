@@ -12,38 +12,37 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-  CLoginISC* iscServ = new CLoginISC();
   CLoginClient_Mock netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
   iscServ->SetId(0);
   iscServ->SetType(1);
-  CLoginServer::GetISCList().push_front(iscServ);
+  CLoginServer::GetISCList().push_front(new CLoginISC());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
+  auto pak = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ));
   netConnect.Send(pak);
 
-  CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  auto pak4 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
   pak4->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak4->AddString("test", false);
   netConnect.Send(pak4);
 
-  CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
+  auto pak2 = std::uniaue_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
   pak2->pChannelListReq.lServerID = 1;
   netConnect.Send(pak2);
 
-  CRosePacket* pak5 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
+  auto pak5 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ));
   pak5->Add<uint32_t>(0);
   pak5->Add<uint8_t>(0);
   netConnect.Send(pak5);
 
-  CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_ALIVE);
+  auto pak3 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE));
   netConnect.Send(pak3);
 
   std::this_thread::sleep_for(

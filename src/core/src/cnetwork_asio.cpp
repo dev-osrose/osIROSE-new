@@ -33,7 +33,6 @@ CNetwork_Asio::~CNetwork_Asio() {
   } while (!discard_queue_.empty());
 
   logger_->debug() << "net shared_ptr used by " << logger_.use_count()-1;
-  logger_.reset();
 }
 
 bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
@@ -110,8 +109,8 @@ bool CNetwork_Asio::Disconnect() {
 bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
   std::lock_guard<std::mutex> lock(send_mutex_);
   uint8_t* raw_ptr = _buffer.get();
-  uint16_t _size = (uint16_t)raw_ptr[0];
-  uint16_t _command = (uint16_t)raw_ptr[2];
+  uint16_t _size = *reinterpret_cast<uint16_t*>(raw_ptr);
+  uint16_t _command = *reinterpret_cast<uint16_t*>(&raw_ptr[2]);
 
   discard_mutex_.lock();
   discard_queue_.push(std::move(_buffer));
@@ -127,11 +126,7 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
         OnSent();
       }
       discard_mutex_.lock();
-      {
-        std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
-        discard_queue_.pop();
-        _buffer.reset(nullptr);
-      }
+	  discard_queue_.pop();
       discard_mutex_.unlock();
 
     });

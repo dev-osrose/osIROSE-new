@@ -29,7 +29,7 @@ namespace RoseCommon {
 // LC = Login -> server
 // CC = Char -> Client
 // WC = World -> client
-enum class struct ePacketType : uint16_t {
+enum class ePacketType : uint16_t {
   ISCSTART = 0x300,
   ISC_ALIVE,
   ISC_SERVER_AUTH,
@@ -99,8 +99,8 @@ enum class struct ePacketType : uint16_t {
 inline bool operator!(const ePacketType& rhs) {
   return static_cast<int16_t>(rhs) == 0;
 }
-inline bool operator!=(const uint16_t& lhs, const ePacketType& rhs) {
-  return (lhs != static_cast<uint16_t>(rhs));
+inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs) {
+  return (lhs != static_cast<uint32_t>(rhs));
 }
 
 struct tChannelInfo {

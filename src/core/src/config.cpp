@@ -45,7 +45,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
   if (!in.is_open()) {
     logger_->debug() << "file " << filename << " not found. Creating one";
 	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);
-    if (!out.is_open()) throw std::exception();
+    if (!out.is_open()) throw std::runtime_error("file not found");
 	std::string json;
 	pbjson::pb2json(this, json);
     out << prettify(json);
@@ -54,7 +54,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
 	std::getline(in, json, static_cast<char>(in.eof()));
     if (pbjson::json2pb(json, this, err) < 0) {
       logger_->error() << "Error while parsing the file: " << err;
-      throw std::exception();
+      throw std::runtime_error("Error while parsing the file");
     }
   }
 }
