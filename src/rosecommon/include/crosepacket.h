@@ -4,86 +4,93 @@
  *  This file contains CRosePacket
  *
  */
-#ifndef _CROSEPACKET_H_
-#define _CROSEPACKET_H_
+#ifndef __CROSEPACKET_H__
+#define __CROSEPACKET_H__
 
+#define MAX_PACKET_SIZE 111
+#include <array>
+#include <cstring>
+#include <type_traits>
+#include <assert.h>
 #include "epackettype.h"
-#include "iscpackets.pb.h"
-#include <string>
-#include <vector>
 
-using namespace iscPacket;
-
-namespace RoseCommon {
-
-class CRosePacket {
-	public:
-		union {
-			struct {
-				sPacketHeader Header;
-				uint8_t Data[MAX_PACKET_SIZE - 6];
-    			};
-			uint8_t Buffer[MAX_PACKET_SIZE];
-
-			pakEncryptionRequest pEncryptReq;
-			pakLoginReply pLoginReply;
-			pakChannelList_Req pChannelListReq;
-			pakChannel_List pChannelList;
-		};
-
-		CRosePacket(ePacketType mycommand, unsigned short mysize = 6,
- 				unsigned short myunused = 0);
-
-		~CRosePacket() {}
-
-		void AddString(const std::string &value, bool NullTerminate = true);
-		void AddBytes(const std::vector<uint8_t> &value);
-
-		template <size_t size>
-		void AddBytes(const uint8_t (&value)[size]) {
-			AddBytes(value, size);
-		}
-
-		void AddBytes(const uint8_t *value, size_t size);
-
-		std::string GetString(uint16_t pos, uint16_t size);
-		template <size_t size>
-		std::vector<uint8_t> GetBytes(uint16_t pos) {
-			uint8_t buffer[size];
-			memcpy(buffer, &Data[pos], size);
-			return std::vector<uint8_t>(std::begin(buffer), std::end(buffer));
-		}
-
-		// Functions added by Drakia
-		template <class T>
-		void Add(const T &value) {
-			*((T*)&Buffer[Header.Size]) = value;
-			Header.Size += sizeof(T);
-		}
-
-		template <class T>
-		void AddString(const std::string &value) {
-			Add<T>(value.size());
-			AddString(value, false);
-		}
-
-		// Functions added by Raven
-		template <class T>
-		T Get(uint16_t pos) {
-			return Data[pos];
-		}
-
-	private:
-		// This is only here until g++ adds c++11 std::strcpy_s
-		template <size_t charCount>
-		void strcpy_safe(char (&output)[charCount], const char* pSrc) {
-			strncpy(output, pSrc, charCount);
-			output[charCount - 1] = 0;
-		}
-
-		void strcpy_safe(char* output, size_t charCount, const char* pSrc);
+template <typename T>
+struct HasConstIterator {
+private:
+  template <typename C> static char test(typename C::const_iterator*);
+  template <typename C> static int test(...);
+public:
+  enum {value = sizeof(test<T>(0)) == sizeof char};
 };
 
-}
+class CRosePacket {
+public:
+  CRosePacket(const std::array<uint8_t, MAX_PACKET_SIZE> &data) : payload_(data),
+              current_(payload_.begin()), size_(readNext<uint16_t>()),
+              type_(readNext<ePacketType>()) {
+                current_ += sizeof uint16_t; // uint8_t reserved, uint8_t CRC
+  }
+
+  CRosePacket(ePacketType type) : current_(payload_.begin()), type_(type), size_(0) {}
+
+  ePacketType getType() const { return type_; }
+  uint16_t    getSize() const { return size_; }
+
+  std::array<uint8_t, MAX_PACKET_SIZE> getPacked() const { return payload_; }
+
+  template <typename T>
+  CRosePacket &operator<<(const T &data) {
+    static_assert(std::is_trivially_copyable<T>::value ||
+                  HasConstIterator<T>::value &&
+                  "CRosePacket doesn't know how to copy this type yet !");
+    if (std::is_trivially_copyable<T>::value)
+      writeNext<T>(data);
+    else
+      for (const auto &it : data)
+        writeNext<T>(it);
+  }
+
+  template <typename T>
+  CRosePacket &operator>>(T &data) {
+    static_assert(std::is_trivially_copyable<T>::value &&
+                  "CRosePacket doesn't know how to copy this type yet !");
+    readNext<T>(data);
+  }
+
+private:
+  template <typename T>
+  T cast(uint8_t *data) {
+    return *reinterpret_cast<T*>(data);
+  }
+
+  template <typename T>
+  T readNext() {
+    auto tmp = current_;
+    current_ += sizeof T;
+      if (current_ >= payload_.end())
+        return T();
+    return cast<T>(tmp);
+  }
+
+  template <typename T>
+  void cast(uint8_t *data, const T &data) {
+    T *tmp = reinterpret_cast<T*>(data);
+    *tmp = data;
+  }
+
+  template <typename T>
+  void writeNext(const T &data) {
+    auto tmp = current_;
+    current_ += sizeof T;
+    if (current_ >= payload_.end())
+      return;
+    cast<T>(tmp, data);
+  }
+ 
+  std::array<uint8_t, MAX_PACKET_SIZE> payload_;
+  std::array<uint8_t, MAX_PACKET_SIZE>::iterator current_;
+  uint16_t size_;
+  ePacketType type_;
+};
 
 #endif
