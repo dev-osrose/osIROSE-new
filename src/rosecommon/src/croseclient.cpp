@@ -87,12 +87,12 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
   CRosePacket* pak = (CRosePacket*)_buffer;
   switch ((ePacketType)pak->Header.Command) {
     case ePacketType::PAKCS_ALIVE: {
-//      log_.icprintf("Got keep alive packet\n");
 #ifdef STRESS_TEST
       CRosePacket* pak =
           new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader));
       Send(pak);
 #endif
+      return CNetwork_Asio::HandlePacket(_buffer);
       break;
     }
 #ifdef STRESS_TEST

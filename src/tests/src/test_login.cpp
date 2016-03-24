@@ -12,20 +12,20 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-//  CLoginISC* iscServ = new CLoginISC();
+  CLoginISC* iscServ = new CLoginISC();
   CLoginClient_Mock netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-//  iscServ->SetId(0);
-//  iscServ->SetType(1);
-//  CLoginServer::GetISCList().push_front(iscServ);
+  iscServ->SetId(0);
+  iscServ->SetType(1);
+  CLoginServer::GetISCList().push_front(iscServ);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
   netConnect.Send(pak);
 
@@ -54,7 +54,6 @@ TEST(TestLoginServer, TestClientPacketPath) {
 }
 
 TEST(TestLoginServer, TestISCRosePacketPath) {
-  //	CLogConsole::SetDisplayOmittable( true );
 
   CLoginServer network(true);
   CCharISC netConnect;
@@ -65,24 +64,22 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  Core::NetworkThreadPool::GetInstance().Get_IO_Service()->poll();
-
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
   CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
   netConnect.Send( pak );
-//  {
-//    uint8_t serverCount = 0;
-//    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-//    for (auto& server : CLoginServer::GetISCList()) {
-//      if (server->GetType() == 1) serverCount++;
-//    }
+  {
+    uint8_t serverCount = 0;
+    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
+    for (auto& server : CLoginServer::GetISCList()) {
+      if (server->GetType() == 1) serverCount++;
+    }
 
-//    EXPECT_EQ(1, serverCount);
-//  }
+    EXPECT_EQ(1, serverCount);
+  }
 
-  // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  //        CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
-  //        netConnect.Send( pak );
+  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  CRosePacket* pak2 = new CRosePacket( ePacketType::ISC_ALIVE );
+  netConnect.Send( pak2 );
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
@@ -90,6 +87,4 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
 
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
-
-  //	CLogConsole::SetDisplayOmittable( false );
 }
