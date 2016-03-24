@@ -2,8 +2,13 @@
 #include "cmysql_database.h"
 #include <exception>
 #include <stdexcept>
+#include "database.h"
 
 namespace Core {
+
+#ifdef USE_MYSQL_ONE_INSTANCE
+IDatabasePool &databasePool = databasePoolFilename<Config::Filename>::getInstance();
+#endif
 
 bool CMySQL_Row::getString(std::string const &name, std::string &data) {
   return getData<std::string>(name, data);

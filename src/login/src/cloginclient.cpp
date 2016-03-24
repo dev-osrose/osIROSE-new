@@ -67,7 +67,7 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
   std::string query = "CALL UserLogin(";
   query.append( (char*)username_ ).append(");");
 
-  Core::IDatabase &database = Core::databasePool::getInstance().getDatabase();
+  Core::IDatabase &database = Core::databasePool.getDatabase();
   res = database.QStore(query);
 
   if (res != nullptr) {  // Query the DB
