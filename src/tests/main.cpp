@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
 
   UnitTest &unit_test = *UnitTest::GetInstance();
-  Core::CLog::SetLevel(spdlog::level::debug);
+  Core::CLog::SetLevel(spdlog::level::trace);
 
   Core::NetworkThreadPool::GetInstance();
   int ret_val = RUN_ALL_TESTS();
