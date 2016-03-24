@@ -28,6 +28,8 @@ public:
       *this << it;
   }
 
+  virtual ~ChannelInfoList() {}
+
   template <typename T>
   CRosePacket &operator<<(const T &data) {
     return CRosePacket::operator<<<T>(data);
