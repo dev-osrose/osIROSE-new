@@ -31,7 +31,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
   pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak2->AddString("test", false);
+  pak2->AddString("test", true);
   netConnect.Send(pak2);
 
   iscServ->SetId(0);
@@ -40,7 +40,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
   pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak3->AddString("test", false);
+  pak3->AddString("test", true);
   netConnect.Send(pak3);
 
   CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
