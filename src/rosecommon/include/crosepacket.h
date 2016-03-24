@@ -13,6 +13,12 @@
 #include <assert.h>
 #include "epackettype.h"
 
+template <class T, typename... Args>
+std::unique_ptr<CRosePacket> makeCRosePacket(Args... args) {
+	 std::unique_ptr<CRosePacket> packet(new T(&args...));
+	  return packet;
+}
+
 template <typename T>
 struct HasConstIterator {
 private:
@@ -31,6 +37,8 @@ public:
   }
 
   CRosePacket(ePacketType type) : current_(payload_.begin()), type_(type), size_(0) {}
+
+  virtual ~CRosePacket() {}
 
   ePacketType getType() const { return type_; }
   uint16_t    getSize() const { return size_; }
@@ -89,7 +97,7 @@ private:
       return;
     cast<T>(tmp, data);
   }
-  
+
   std::array<uint8_t, MAX_PACKET_SIZE> payload_;
   std::array<uint8_t, MAX_PACKET_SIZE>::iterator current_;
   uint16_t size_;
