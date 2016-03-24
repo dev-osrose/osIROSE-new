@@ -54,6 +54,8 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
     if (server->GetType() == 1) serverCount++;
   }
 
+  logger_->debug("Found {} type 1 servers", serverCount);
+
   if (serverCount < 1)
   {
     // Servers are under inspection
