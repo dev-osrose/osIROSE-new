@@ -7,7 +7,6 @@
 #ifndef __CROSEPACKET_H__
 #define __CROSEPACKET_H__
 
-#define MAX_PACKET_SIZE 111
 #include <array>
 #include <cstring>
 #include <type_traits>
@@ -36,25 +35,29 @@ public:
   ePacketType getType() const { return type_; }
   uint16_t    getSize() const { return size_; }
 
-  std::array<uint8_t, MAX_PACKET_SIZE> getPacked() const { return payload_; }
+  std::unique_ptr<uint8_t> getPacked() const {
+    return std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
+  }
 
   template <typename T>
   CRosePacket &operator<<(const T &data) {
     static_assert(std::is_trivially_copyable<T>::value ||
                   HasConstIterator<T>::value &&
-                  "CRosePacket doesn't know how to copy this type yet !");
+                  "CRosePacket doesn't know how to deal with this type yet !");
     if (std::is_trivially_copyable<T>::value)
       writeNext<T>(data);
     else
       for (const auto &it : data)
         writeNext<T>(it);
+    return *this;
   }
 
   template <typename T>
   CRosePacket &operator>>(T &data) {
     static_assert(std::is_trivially_copyable<T>::value &&
-                  "CRosePacket doesn't know how to copy this type yet !");
+                  "CRosePacket doesn't know how to deal with this type yet !");
     readNext<T>(data);
+    return *this;
   }
 
 private:
@@ -86,7 +89,7 @@ private:
       return;
     cast<T>(tmp, data);
   }
- 
+  
   std::array<uint8_t, MAX_PACKET_SIZE> payload_;
   std::array<uint8_t, MAX_PACKET_SIZE>::iterator current_;
   uint16_t size_;
