@@ -17,6 +17,11 @@ class CRosePacket {
 		CRosePacket(ePacketType type, uint8_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
 			*this << size_ << type_ << reserved << CRC;
 		}
+
+		CRosePacket(uint16_t type, uint8_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
+			*this << size_ << type_ << reserved << CRC;
+		}
+
 		CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
 			std::memcpy(buffer_, buffer, sizeof(buffer_));
 			uint8_t tmp;

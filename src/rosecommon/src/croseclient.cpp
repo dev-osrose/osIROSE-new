@@ -19,7 +19,9 @@ CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
 CRoseClient::~CRoseClient() { Shutdown(); }
 
 bool CRoseClient::Send(const CRosePacket &_buffer) {
-  return CNetwork_Asio::Send(_buffer.createBuffer());
+  /* return CNetwork_Asio::Send(_buffer.createBuffer()); */
+	(void)_buffer;
+	return true;
 }
 
 // Callback functions
@@ -61,8 +63,8 @@ bool CRoseClient::OnReceived() {
   }
 #endif
 
-  CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
+  /* CRosePacket* pak = (CRosePacket*)&buffer_; */
+  /* logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command); */
   rtnVal = HandlePacket(buffer_);
   ResetBuffer();
 
@@ -79,38 +81,39 @@ bool CRoseClient::OnSend(uint8_t* _buffer) {
 void CRoseClient::OnSent() {}
 
 bool CRoseClient::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch ((ePacketType)pak->Header.Command) {
-    case ePacketType::PAKCS_ALIVE: {
+//  CRosePacket* pak = (CRosePacket*)_buffer;
+//  switch ((ePacketType)pak->Header.Command) {
+//    case ePacketType::PAKCS_ALIVE: {
+	(void)_buffer;
 #ifdef STRESS_TEST
-      CRosePacket* pak =
-          new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader));
-      Send(pak);
+      /* CRosePacket* pak = */
+      /*     new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader)); */
+      /* Send(pak); */
 #endif
-      return CNetwork_Asio::HandlePacket(_buffer);
-      break;
-    }
+//      return CNetwork_Asio::HandlePacket(_buffer);
+//      break;
+//    }
 #ifdef STRESS_TEST
-    case (ePacketType)0x6F6D: {
-      CRosePacket* pak = new CRosePacket(0x6F6D, 8);
-      memcpy(pak->Buffer, _buffer, 8);
-      Send(pak);
-      break;
-    }
+    /* case (ePacketType)0x6F6D: { */
+      /* CRosePacket* pak = new CRosePacket(0x6F6D, 8); */
+      /* memcpy(pak->Buffer, _buffer, 8); */
+      /* Send(pak); */
+      /* break; */
+    /* } */
 #endif
-    case ePacketType::PAKCS_ACCEPT_REQ: {
-      // Encryption stuff
-      CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest));
-      pak->pEncryptReq.Unknown = 0x02;
-      pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr));
-      Send(pak);
-      break;
-    }
-    default: {
-      logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)pak->Header.Command);
-      return false;
-    }
-  }
+    /* case ePacketType::PAKCS_ACCEPT_REQ: { */
+    /*   // Encryption stuff */
+      /* CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest)); */
+      /* pak->pEncryptReq.Unknown = 0x02; */
+      /* pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr)); */
+      /* Send(pak); */
+      /* break; */
+    /* } */
+    /* default: { */
+    /*   logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)pak->Header.Command); */
+      /* return false; */
+    /* } */
+  /* } */
   return true;
 }
 

@@ -64,7 +64,7 @@ class CNetwork_Asio : public INetwork {
   virtual bool Reconnect() override;
   virtual bool Disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
   bool IsActive() {
     return active_;
@@ -104,8 +104,8 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
-  std::queue<std::unique_ptr<uint8_t>> send_queue_;
-  std::queue<std::unique_ptr<uint8_t>> discard_queue_;
+  std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
+  std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
   std::mutex recv_mutex_;
   std::mutex discard_mutex_;

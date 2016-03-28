@@ -13,15 +13,16 @@ CMapClient::CMapClient(tcp::socket _sock)
 }
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+	(void)_buffer;
+  /* CRosePacket* pak = (CRosePacket*)_buffer; */
+  /* switch (pak->Header.Command) { */
     //		case ePacketType::PAKCS_JOIN_SERVER_REQ: return JoinServerReply( pak
     //); // Allow client to connect
     //		case ePacketType::PAKCS_CHAR_LIST_REQ: return SendCharListReply( pak
     //); // SendCharList( pak );
-    default:
-      return CRoseClient::HandlePacket(_buffer);
-  }
+    /* default: */
+    /*   return CRoseClient::HandlePacket(_buffer); */
+  /* } */
   return true;
 }
 

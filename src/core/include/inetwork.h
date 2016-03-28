@@ -100,7 +100,7 @@ class INetwork {
   virtual std::string GetIpAddress() { return network_ip_address; }
 
  protected:
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) = 0;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
   virtual bool Recv(uint16_t _size = 6) = 0;
 
   // Callback functions

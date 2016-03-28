@@ -112,6 +112,7 @@ bool CNetwork_Asio::Disconnect() {
   return true;
 }
 
+<<<<<<< e02ff60e42f0d538692c52e359cc88f8c1061d0a
 void CNetwork_Asio::ProcessSend()
 {
   if(true == active_)
@@ -134,7 +135,6 @@ void CNetwork_Asio::ProcessSend()
       uint8_t* raw_ptr = _buffer.get();
       uint16_t _size = (uint16_t)raw_ptr[0];
       uint16_t _command = (uint16_t)raw_ptr[2];
-
       discard_mutex_.lock();
       discard_queue_.push(std::move(_buffer));
       raw_ptr = discard_queue_.back().get();

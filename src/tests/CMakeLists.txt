@@ -88,6 +88,7 @@ SET(SOURCES_BASE
 	src/test_login
 	src/test_char
 	src/test_servers
+	src/test_crosepacket
 )
 
 SET(SOURCES
