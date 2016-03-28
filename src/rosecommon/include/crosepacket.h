@@ -1,107 +1,114 @@
-/*!
- *  \file crosepacket.h
- *
- *  This file contains CRosePacket
- *
- */
-#ifndef __CROSEPACKET_H__
-#define __CROSEPACKET_H__
+#ifndef _CROSEPACKET_H_
+#define _CROSEPACKET_H_
 
-#include <array>
+#include <memory>
 #include <cstring>
+#include <cassert>
 #include <type_traits>
-#include <assert.h>
 #include "epackettype.h"
+#include "iscontainer.h"
 
-template <class T, typename... Args>
-std::unique_ptr<CRosePacket> makeCRosePacket(Args... args) {
-	 std::unique_ptr<CRosePacket> packet(new T(&args...));
-	  return packet;
-}
+#define MAX_PACKET_SIZE 0x7FF
 
-template <typename T>
-struct HasConstIterator {
-private:
-  template <typename C> static char test(typename C::const_iterator*);
-  template <typename C> static int test(...);
-public:
-  enum {value = sizeof(test<T>(0)) == sizeof char};
-};
+namespace RoseCommon {
 
 class CRosePacket {
-public:
-  CRosePacket(const std::array<uint8_t, MAX_PACKET_SIZE> &data) : payload_(data),
-              current_(payload_.begin()), size_(readNext<uint16_t>()),
-              type_(readNext<ePacketType>()) {
-                current_ += sizeof uint16_t; // uint8_t reserved, uint8_t CRC
-  }
+	public:
+		CRosePacket(ePacketType type) : current_(buffer_), size_(0), type_(type) {
+			*this << size_ << type_;
+		}
+		CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
+			std::memcpy(buffer_, buffer, sizeof(buffer_));
+			*this >> size_ >> type_;
+		}
+		virtual ~CRosePacket() {}
 
-  CRosePacket(ePacketType type) : current_(payload_.begin()), type_(type), size_(0) {}
+		ePacketType type() const {return type_;}
+		uint16_t size() const {return size_;}
+		void resetCurrent() {current_ = buffer_;}
 
-  virtual ~CRosePacket() {}
+		std::unique_ptr<uint8_t[]> getPacked() {
+			pack();
+			auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
+			std::memcpy(res.get(), buffer_, size_);
+			return res;
+		}
 
-  ePacketType getType() const { return type_; }
-  uint16_t    getSize() const { return size_; }
+		static uint16_t size(const uint8_t buffer[MAX_PACKET_SIZE]) {
+			return read<uint16_t>(const_cast<uint8_t*>(buffer));
+		}
 
-  std::unique_ptr<uint8_t> getPacked() const {
-    return std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
-  }
+		static ePacketType type(const uint8_t buffer[MAX_PACKET_SIZE]) {
+			return read<ePacketType>(const_cast<uint8_t*>(buffer));
+		}
 
-  template <typename T>
-  CRosePacket &operator<<(const T &data) {
-    static_assert(std::is_trivially_copyable<T>::value ||
-                  HasConstIterator<T>::value &&
-                  "CRosePacket doesn't know how to deal with this type yet !");
-    if (std::is_trivially_copyable<T>::value)
-      writeNext<T>(data);
-    else
-      for (const auto &it : data)
-        writeNext<T>(it);
-    return *this;
-  }
+	protected:
+		virtual void pack() {}
 
-  template <typename T>
-  CRosePacket &operator>>(T &data) {
-    static_assert(std::is_trivially_copyable<T>::value &&
-                  "CRosePacket doesn't know how to deal with this type yet !");
-    readNext<T>(data);
-    return *this;
-  }
+		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+		CRosePacket &operator<<(const T &data) {
+			writeNext<T>(data);
+			return *this;
+		}
 
-private:
-  template <typename T>
-  T cast(uint8_t *data) {
-    return *reinterpret_cast<T*>(data);
-  }
+		template <typename T>
+		typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(const T &data) {
+			for (const auto &it : data)
+				writeNext<typename T::value_type>(it);
+			return *this;
+		}
 
-  template <typename T>
-  T readNext() {
-    auto tmp = current_;
-    current_ += sizeof T;
-      if (current_ >= payload_.end())
-        return T();
-    return cast<T>(tmp);
-  }
+		CRosePacket &operator<<(const char *data) {
+			while (*data)
+				writeNext<char>(*(data++));
+			return *this;
+		}
 
-  template <typename T>
-  void cast(uint8_t *data, const T &data) {
-    T *tmp = reinterpret_cast<T*>(data);
-    *tmp = data;
-  }
+		template <typename T>
+		CRosePacket &operator>>(T &data) {
+			data = readNext<T>();
+			return *this;
+		}
 
-  template <typename T>
-  void writeNext(const T &data) {
-    auto tmp = current_;
-    current_ += sizeof T;
-    if (current_ >= payload_.end())
-      return;
-    cast<T>(tmp, data);
-  }
+	private:
+		template <typename T>
+		static T read(uint8_t *data) {
+			static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
+			return *reinterpret_cast<T*>(data);
+		}
 
-  std::array<uint8_t, MAX_PACKET_SIZE> payload_;
-  std::array<uint8_t, MAX_PACKET_SIZE>::iterator current_;
-  uint16_t size_;
-  ePacketType type_;
+		template <typename T>
+		static void write(uint8_t *data, const T &payload) {
+			static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
+			*reinterpret_cast<T*>(data) = payload;
+		}
+
+		template <typename T>
+		T readNext() {
+			if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
+				return T();
+			auto tmp = current_;
+			current_ += sizeof(T);
+			return read<T>(tmp);
+		}
+
+		template <typename T>
+		void writeNext(const T &payload) {
+			if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
+				return;
+			auto tmp = current_;
+			current_ += sizeof(T);
+			size_ += sizeof(T);
+			write<T>(tmp, payload);
+			write<uint16_t>(buffer_, size_);
+		}
+
+		uint8_t buffer_[MAX_PACKET_SIZE];
+		uint8_t *current_;
+		uint16_t size_;
+		ePacketType type_;
 };
 
-#endif
+}
+
+#endif /* !_CROSEPACKET_H_ */
