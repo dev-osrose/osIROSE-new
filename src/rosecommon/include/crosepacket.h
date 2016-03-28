@@ -14,17 +14,19 @@ namespace RoseCommon {
 
 class CRosePacket {
 	public:
-		CRosePacket(ePacketType type) : current_(buffer_), size_(0), type_(type) {
-			*this << size_ << type_;
+		CRosePacket(ePacketType type, uint8_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
+			*this << size_ << type_ << reserved << CRC;
 		}
 		CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
 			std::memcpy(buffer_, buffer, sizeof(buffer_));
-			*this >> size_ >> type_;
+			uint8_t tmp;
+			*this >> size_ >> type_ >> tmp >> CRC_;
 		}
 		virtual ~CRosePacket() {}
 
 		ePacketType type() const {return type_;}
 		uint16_t size() const {return size_;}
+		uint8_t CRC() const {return CRC_;}
 		void resetCurrent() {current_ = buffer_;}
 
 		std::unique_ptr<uint8_t[]> getPacked() {
@@ -107,6 +109,7 @@ class CRosePacket {
 		uint8_t *current_;
 		uint16_t size_;
 		ePacketType type_;
+		uint8_t CRC_;
 };
 
 }
