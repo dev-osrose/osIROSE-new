@@ -48,7 +48,7 @@ SET( SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
-  src/crosepacket)
+)
 
 add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 

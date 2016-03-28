@@ -42,7 +42,7 @@ class INetwork {
 	 * \param[in] _port The port that the network with either listen on or connect to.
 	 */
   virtual bool Init(std::string _ip, uint16_t _port) = 0;
-  
+
   /*!
 	 * \brief Used to shutdown networking operations
 	 *
@@ -58,7 +58,7 @@ class INetwork {
    * \sa Init OnConnect OnConnected
 	 */
   virtual bool Connect() = 0;
-  
+
   /*!
 	 * \brief Used to open a listen socket on the ip and port stored by Init
 	 *
@@ -67,7 +67,7 @@ class INetwork {
    * \sa Init OnListen OnListening
 	 */
   virtual bool Listen() = 0;
-  
+
   /*!
 	 * \brief Used to reconnect to the currently connected ip and port.
 	 *
@@ -76,11 +76,11 @@ class INetwork {
    * \sa Init Connect Disconnect
 	 */
   virtual bool Reconnect() = 0;
-  
+
   /*!
 	 * \brief Used to close the current socket connection.
 	 *
-	 * This function disconnects the currect socket connection. 
+	 * This function disconnects the currect socket connection.
    *
    * \sa Connect OnDisconnect OnDisconnected
 	 */
@@ -95,7 +95,7 @@ class INetwork {
   virtual std::string GetIpAddress() { return network_ip_address; }
 
  protected:
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) = 0;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
   virtual bool Recv(uint16_t _size = 6) = 0;
 
   // Callback functions

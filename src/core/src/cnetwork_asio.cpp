@@ -106,7 +106,7 @@ bool CNetwork_Asio::Disconnect() {
   return true;
 }
 
-bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
+bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
   std::lock_guard<std::mutex> lock(send_mutex_);
   uint8_t* raw_ptr = _buffer.get();
   uint16_t _size = *reinterpret_cast<uint16_t*>(raw_ptr);
