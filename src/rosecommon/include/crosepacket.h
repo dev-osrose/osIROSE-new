@@ -41,7 +41,12 @@ class CRosePacket {
 		}
 
 		static ePacketType type(const uint8_t buffer[MAX_PACKET_SIZE]) {
-			return read<ePacketType>(const_cast<uint8_t*>(buffer));
+			return read<ePacketType>(const_cast<uint8_t*>(buffer + sizeof(uint16_t)));
+		}
+
+		static uint8_t CRC(const uint8_t buffer[MAX_PACKET_SIZE]) {
+			return read<uint8_t>(const_cast<uint8_t*>(buffer +
+						sizeof(uint16_t) + sizeof(ePacketType) + sizeof(uint8_t)));
 		}
 
 	protected:
