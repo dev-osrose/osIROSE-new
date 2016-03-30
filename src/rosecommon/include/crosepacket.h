@@ -76,9 +76,30 @@ class CRosePacket {
 			return *this;
 		}
 
-		template <typename T>
+		template <size_t count>
+		CRosePacket &operator<<(const char (&data)[count]) {
+			for (size_t i = 0; i < count; ++i)
+				writeNext<char>(data[i]);
+			return *this;
+		}
+
+		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
 		CRosePacket &operator>>(T &data) {
 			data = readNext<T>();
+			return *this;
+		}
+
+		template <typename T>
+		typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(T &data) {
+			for (auto &it : data)
+				readNext<typename T::value_type>(it);
+			return *this;
+		}
+
+		template <size_t count>
+		CRosePacket &operator>>(char (&data)[count]) {
+			for (size_t i = 0; i < count; ++i)
+				data[i] = readNext<char>();
 			return *this;
 		}
 
