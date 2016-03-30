@@ -22,6 +22,8 @@ class CliLoginReq : public CRosePacket {
 			username_ = std::string(login.begin(), login.end());
 		}
 
+		virtual ~CLiLoginReq() {}
+
 		std::string password() const {return password_;}
 		std::string username() const {return username_;}
 
@@ -30,6 +32,28 @@ class CliLoginReq : public CRosePacket {
 		std::string username_;
 };
 
+class SrvLoginReply : public CRosePacket {
+	public:
+		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLS_LOGIN_REPLY),
+		result_(result), right_(right), type_(type) {
+			*this << result_ << right_ << type_;
+		}
+
+		virtual ~SrvLoginReply() {}
+
+		uint8_t		result() const {return result_;}
+		uint16_t	right() const {return right_;}
+		uint16_t	type() const {return type_;}
+
+		void	addServer(const std::string &name, uint32_t id, bool isTest = false) {
+			*this << (isTest ? '@' : ' ') << name << id;
+		}
+
+	private:
+		uint8_t result_;
+		uint16_t right_;
+		uint16_t type_;
+};
 
 }
 

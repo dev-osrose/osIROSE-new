@@ -70,6 +70,13 @@ class CRosePacket {
 			return *this;
 		}
 
+		CRosePacket &operator<<(const std::string &data) {
+			for (const auto &it : data)
+				writeNext<char>(it);
+			writeNext<char>(0);
+			return *this;
+		}
+
 		CRosePacket &operator<<(const char *data) {
 			while (*data)
 				writeNext<char>(*(data++));
