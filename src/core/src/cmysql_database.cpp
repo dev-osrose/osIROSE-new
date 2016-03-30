@@ -2,8 +2,13 @@
 #include "cmysql_database.h"
 #include <exception>
 #include <stdexcept>
+#include "database.h"
 
 namespace Core {
+
+#ifdef USE_MYSQL_ONE_INSTANCE
+IDatabasePool &databasePool = databasePoolFilename<Config::Filename>::getInstance();
+#endif
 
 bool CMySQL_Row::getString(std::string const &name, std::string &data) {
   return getData<std::string>(name, data);
@@ -53,7 +58,10 @@ CMySQL_Database::CMySQL_Database()
 
 CMySQL_Database::~CMySQL_Database() {
   if (auto log = logger_.lock())
+  {
+    log->trace("CMySQL_Database destructor called!");
     log->debug() << "db shared_ptr used by " << log.use_count() - 1;
+  }
   logger_.reset();
 }
 

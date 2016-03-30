@@ -48,6 +48,14 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 
   //todo(raven): check server count
   uint32_t serverCount = 0;
+
+  std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
+  for (auto& server : CLoginServer::GetISCList()) {
+    if (server->GetType() == 1) serverCount++;
+  }
+
+  logger_->debug("Found {} type 1 servers", serverCount);
+
   if (serverCount < 1)
   {
     // Servers are under inspection
@@ -64,10 +72,10 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 
   //todo(raven): make sure the username is safe to exec
   std::unique_ptr<Core::IResult> res;
-  std::string query = "CALL UserLogin(";
-  query.append( (char*)username_ ).append(");");
+  std::string query = "CALL UserLogin('";
+  query.append( (char*)username_ ).append("');");
 
-  Core::IDatabase &database = Core::databasePool::getInstance().getDatabase();
+  Core::IDatabase &database = Core::databasePool.getDatabase();
   res = database.QStore(query);
 
   if (res != nullptr) {  // Query the DB
