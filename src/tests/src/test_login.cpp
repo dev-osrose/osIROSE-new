@@ -17,10 +17,6 @@ TEST(TestLoginServer, TestClientPacketPath) {
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-//  iscServ->SetId(0);
-//  iscServ->SetType(1);
-//  CLoginServer::GetISCList().push_front(iscServ);
-
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
@@ -33,6 +29,8 @@ TEST(TestLoginServer, TestClientPacketPath) {
   pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak2->AddString("test", true);
   netConnect.Send(pak2);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   iscServ->SetId(0);
   iscServ->SetType(1);
@@ -50,7 +48,6 @@ TEST(TestLoginServer, TestClientPacketPath) {
   pak2->Add<uint32_t>(0);
   pak2->Add<uint8_t>(0);
   netConnect.Send(pak2);
-
   //-----------------------------------------
 
   CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
