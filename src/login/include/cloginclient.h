@@ -20,8 +20,15 @@ class CLoginClient : public RoseCommon::CRoseClient {
 
   void SendLoginReply(uint8_t Result);
 
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+    TRANSFERING,
+  };
+
   uint16_t access_rights_;
   uint8_t username_[17];
+  eSTATE login_state_;
 };
 
 #endif

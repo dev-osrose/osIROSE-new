@@ -38,6 +38,21 @@ TEST(TestLoginServer, TestClientPacketPath) {
   iscServ->SetType(1);
   CLoginServer::GetISCList().push_front(iscServ);
 
+  //-----------------------------------------
+  // We aren't logged in yet
+  // We should get a warning
+  //-----------------------------------------
+  pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
+  pak2->pChannelListReq.lServerID = 1;
+  netConnect.Send(pak2);
+
+  pak2 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
+  pak2->Add<uint32_t>(0);
+  pak2->Add<uint8_t>(0);
+  netConnect.Send(pak2);
+
+  //-----------------------------------------
+
   CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
   pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak3->AddString("test", true);

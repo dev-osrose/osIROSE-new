@@ -6,11 +6,11 @@
 
 using namespace RoseCommon;
 
-CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0) {
+CLoginClient::CLoginClient() : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 CLoginClient::CLoginClient(tcp::socket _sock)
-    : CRoseClient(std::move(_sock)), access_rights_(0) {
+    : CRoseClient(std::move(_sock)), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 void CLoginClient::SendLoginReply(uint8_t Result) {
@@ -21,6 +21,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
   pak->pLoginReply.Type = 0;
 
   if (Result == 0) {
+    login_state_ = eSTATE::LOGGEDIN;
     pak->pLoginReply.Right = access_rights_;
 
     // loop the server list here
@@ -45,8 +46,12 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
 }
 
 bool CLoginClient::UserLogin(CRosePacket* P) {
+  if(login_state_ != eSTATE::DEFAULT)
+  {
+    logger_->warn("Client {} is attempting to login when already logged in.", GetId());
+    return true;
+  }
 
-  //todo(raven): check server count
   uint32_t serverCount = 0;
 
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
@@ -54,7 +59,7 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
     if (server->GetType() == 1) serverCount++;
   }
 
-  logger_->debug("Found {} type 1 servers", serverCount);
+  logger_->debug("Found {} type 1 (CHAR) servers", serverCount);
 
   if (serverCount < 1)
   {
@@ -129,6 +134,12 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 }
 
 bool CLoginClient::ChannelList(CRosePacket* P) {
+  if(login_state_ != eSTATE::LOGGEDIN)
+  {
+    logger_->warn("Client {} is attempting to get channel list before logging in.", GetId());
+    return true;
+  }
+
   uint32_t ServerID = P->pChannelListReq.lServerID;
 
   CRosePacket* pak = new CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY,
@@ -163,11 +174,18 @@ bool CLoginClient::ChannelList(CRosePacket* P) {
 }
 
 bool CLoginClient::ServerSelect(CRosePacket* P) {
+  if(login_state_ != eSTATE::LOGGEDIN)
+  {
+    logger_->warn("Client {} is attempting to select a server before logging in.", GetId());
+    return true;
+  }
+
   uint32_t serverID = P->Get<uint32_t>(0);
   //uint8_t channelID = P->Get<uint8_t>( 4 );
+  login_state_ = eSTATE::TRANSFERING;
 
   CRosePacket* pak = new CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY);
-  
+
   // 0 = Good to go
   // 1 = Failed
   // 2 = Full
