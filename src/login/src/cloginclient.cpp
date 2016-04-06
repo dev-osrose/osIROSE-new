@@ -169,7 +169,7 @@ bool CLoginClient::ChannelList(CRosePacket* P) {
   }
 
   this->Send(pak);
-
+  logger_->trace("Client {}: Channel List end.", GetId());
   return true;
 }
 
@@ -207,7 +207,7 @@ bool CLoginClient::ServerSelect(CRosePacket* P) {
     }
   }
   this->Send(pak);
-
+  logger_->trace("Client {}: Server Select end.", GetId());
   return true;
 }
 

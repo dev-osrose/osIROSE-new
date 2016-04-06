@@ -27,7 +27,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
   pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak2->AddString("test", true);
+  pak2->AddString("test2", true);
   netConnect.Send(pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -50,10 +50,19 @@ TEST(TestLoginServer, TestClientPacketPath) {
   netConnect.Send(pak2);
   //-----------------------------------------
 
+  //Incorrect Password
   CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee6", false);
+  pak3->AddString("test", true);
+  netConnect.Send(pak3);
+
+  //Correct password
+  pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
   pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
   pak3->AddString("test", true);
   netConnect.Send(pak3);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
   pak4->pChannelListReq.lServerID = 1;
@@ -68,7 +77,9 @@ TEST(TestLoginServer, TestClientPacketPath) {
   netConnect.Send(pak6);
 
   std::this_thread::sleep_for(
-      std::chrono::milliseconds(500));  // Change this to condition variables
+      std::chrono::milliseconds(100));  // Change this to condition variables
+
+//  CLoginServer::GetISCList().clear();
 
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
@@ -78,11 +89,11 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 
   CLoginServer network(true);
   CCharISC netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
+  EXPECT_EQ(true, network.Init("127.0.0.1", 29111));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29111));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );

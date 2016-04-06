@@ -58,6 +58,8 @@ TEST(TestMySQL_Database, TestQStore)
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), fl FLOAT, data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(0, 12, 'plop', 3.14, '\x08\x12\x24');");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(1, NULL, 'null values', NULL, NULL);");
+        database.QExecute("DELETE FROM accounts WHERE username='test';");
+        database.QExecute("INSERT INTO accounts (username, password, access) VALUES ('test', 'cc03e747a6afbbcbf8be7668acfebee5', 1);");
 	std::unique_ptr<Core::IResult>	res;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 	uint32_t	id;
