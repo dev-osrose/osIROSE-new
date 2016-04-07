@@ -23,17 +23,17 @@ int main(int argc, char* argv[]) {
 
   CMapServer clientServer;
   CMapServer iscServer(true);
-  CMapISC iscClient;
-  iscClient.Init(config.map_server().charip(), config.map_server().chariscport());
-  iscClient.SetChar(true);
+  CMapISC* iscClient = new CMapISC();
+  iscClient->Init(config.map_server().charip(), config.map_server().chariscport());
+  iscClient->SetChar(true);
 
   clientServer.Init(config.serverdata().ip(), config.map_server().clientport());
   clientServer.Listen();
-  clientServer.GetISCList().push_front((CMapISC*)&iscClient);
+  clientServer.GetISCList().push_front(iscClient);
 
   iscServer.Init(config.serverdata().ip(), config.map_server().iscport());
   iscServer.Listen();
-  iscClient.Connect();
+  iscClient->Connect();
 
   while (clientServer.IsActive()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
