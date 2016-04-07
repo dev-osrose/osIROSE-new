@@ -6,17 +6,18 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
+#include "cmapisc.h"
 
 using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
   CCharClient netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
+  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
+  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -40,5 +41,26 @@ TEST(TestCharServer, TestClientPacketPath) {
   // EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+}
+
+TEST(TestCharServer, TestISCMap) {
+  CCharServer network;
+  CMapISC mapISC;
+  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(network.Listen());
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  EXPECT_EQ(true, mapISC.Init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(mapISC.Connect());
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // Create a map connection here
+
+  std::this_thread::sleep_for(
+      std::chrono::milliseconds(500));  // Change this to condition variables
+
+  EXPECT_NO_FATAL_FAILURE(mapISC.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }
