@@ -93,7 +93,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
   connected_ = false;
 
   try {
-    conn_.set_option(new MultiStatementsOption(true));
+    conn_.set_option(new mysqlpp::MultiStatementsOption(true));
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                   password_.c_str());
   } catch (const std::exception &e) {
