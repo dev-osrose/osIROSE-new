@@ -57,10 +57,10 @@ TEST(TestLoginServer, TestClientPacketPath) {
   netConnect.Send(pak3);
 
   //Correct password
-//  pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
-//  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-//  pak3->AddString("test", true);
-//  netConnect.Send(pak3);
+  pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
+  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
+  pak3->AddString("test", true);
+  netConnect.Send(pak3);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
