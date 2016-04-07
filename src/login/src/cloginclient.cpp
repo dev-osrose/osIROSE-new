@@ -54,10 +54,11 @@ bool CLoginClient::UserLogin(CRosePacket* P) {
 
   uint32_t serverCount = 0;
 
-  std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
+  CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
     if (server->GetType() == 1) serverCount++;
   }
+  CLoginServer::GetISCListMutex().unlock();
 
   logger_->debug("Found {} type 1 (CHAR) servers", serverCount);
 
