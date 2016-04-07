@@ -93,6 +93,7 @@ void CMySQL_Database::Connect(std::string _host, std::string _database,
   connected_ = false;
 
   try {
+    conn_.set_option(new MultiStatementsOption(true));
     conn_.connect(database_.c_str(), hostname_.c_str(), username_.c_str(),
                   password_.c_str());
   } catch (const std::exception &e) {
@@ -119,7 +120,11 @@ std::unique_ptr<IResult> CMySQL_Database::QStore(std::string _query) {
   if (auto log = logger_.lock())
     log->debug() << "Executing query: " << _query.c_str();
   mysqlpp::Query query = conn_.query(_query.c_str());
-  return std::unique_ptr<IResult>(new CMySQL_Result(query.store()));
+  std::unique_ptr<IResult> result(new CMySQL_Result(query.store()));
+  while (query.more_results()) {
+    auto tmp = query.store_next();
+  }
+  return result;
 }
 
 void CMySQL_Database::QExecute(std::string _query) {
