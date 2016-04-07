@@ -38,7 +38,7 @@ bool CRoseISC::OnReceived() {
   }
 
   CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug("Received a packet on CRoseISC: Header[{0}, {1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
+  logger_->debug("Received a packet on CRoseISC: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
   rtnVal = HandlePacket( buffer_ );
   ResetBuffer();
   return rtnVal;
