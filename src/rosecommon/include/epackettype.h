@@ -157,6 +157,23 @@ PACK(struct pakEncryptionRequest
   uint32_t RandValue;
 });
 
+struct basicCharInfo {
+  uint8_t  race;  // This should be moved to the end of the struct for byte alignment reasons
+  uint16_t level;
+  uint16_t job;
+  uint32_t time_until_delete;
+};
+
+PACK(struct pakCharList
+     : public sPacketHeader {
+  uint8_t count;
+//  for( i < count ){
+//    basicCharinfo
+//    equipItem [max_body_items]
+//    char name[]
+//  }
+});
+
 }
 
 #endif /* EPACKETTYPE_H_ */
