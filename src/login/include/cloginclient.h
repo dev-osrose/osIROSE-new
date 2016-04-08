@@ -2,7 +2,7 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-#include "crosepacket.h"
+#include "rosepackets.h"
 
 class CLoginClient : public RoseCommon::CRoseClient {
  public:

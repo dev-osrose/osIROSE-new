@@ -2,6 +2,7 @@
 #include "cloginisc.h"
 #include "cloginclient.h"
 #include "epackettype.h"
+#include "rosepackets.h"
 #include "database.h"
 
 using namespace RoseCommon;
@@ -214,19 +215,17 @@ bool CLoginClient::ServerSelect(CRosePacket* P) {
 }
 
 bool CLoginClient::HandlePacket(uint8_t* _buffer) {
-	(void)_buffer;
-  /* CRosePacket* pak = (CRosePacket*)_buffer; */
-  /* switch (pak->Header.Command) { */
-    /* case ePacketType::PAKCS_CHANNEL_LIST_REQ: */
-    /*   return ChannelList(pak); */
-    /* case ePacketType::PAKCS_SRV_SELECT_REQ: */
-    /*   return ServerSelect(pak); */
-    /* case ePacketType::PAKCS_LOGIN_REQ: */
-    /*   return UserLogin(pak); */
+  switch (CRosePacket::type(_buffer)) {
+//    case ePacketType::PAKCS_CHANNEL_LIST_REQ:
+//      return ChannelList( getPacket<ePacketType::PAKCS_CHANNEL_LIST_REQ>(_buffer) );
+//    case ePacketType::PAKCS_SRV_SELECT_REQ:
+//      return ServerSelect( getPacket<ePacketType::PAKCS_SRV_SELECT_REQ>(_buffer) );
+//    case ePacketType::PAKCS_LOGIN_REQ:
+//      return UserLogin( getPacket<ePacketType::PAKCS_LOGIN_REQ>(_buffer) );
 
-    /* default: */
-    /*   return CRoseClient::HandlePacket(_buffer); */
-  /* } */
+    default:
+      return CRoseClient::HandlePacket(_buffer);
+  }
   return true;
 }
 
