@@ -161,7 +161,7 @@ void CNetwork_Asio::ProcessSend()
 
         });
       else
-        logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
+        logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}", _size, _command, GetId());
     }
   }
 }
@@ -173,48 +173,6 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
   send_mutex_.unlock();
 
   ProcessSend();
-
-//  discard_mutex_.lock();
-//  uint16_t discard_size = discard_queue_.size();
-//  discard_mutex_.unlock();
-
-//  if( discard_size == 0 )
-//  {
-//  send_mutex_.lock();
-//  _buffer = send_queue_.front();
-//  send_queue_.pop();
-//  send_mutex.unlock();
-
-//  uint8_t* raw_ptr = _buffer.get();
-//  uint16_t _size = (uint16_t)raw_ptr[0];
-//  uint16_t _command = (uint16_t)raw_ptr[2];
-
-//  discard_mutex_.lock();
-//  discard_queue_.push(std::move(_buffer));
-//  raw_ptr = discard_queue_.back().get();
-//  discard_mutex_.unlock();
-
-//  if (OnSend(raw_ptr))
-//    asio::async_write(socket_, asio::buffer(raw_ptr, _size),
-//                      [this](const asio::error_code& error,
-//                             std::size_t bytes_transferred) {
-//      (void)bytes_transferred;
-//      if (!error) {
-//        OnSent();
-//      }
-
-//      discard_mutex_.lock();
-//      {
-//        std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
-//        discard_queue_.pop();
-//        _buffer.reset(nullptr);
-//      }
-//      discard_mutex_.unlock();
-
-//    });
-//  else
-//    logger_->debug("Not sending packet: [{0}, {1:x}] to client {2}", _size, _command, GetId());
-//  }
   return true;
 }
 
@@ -248,14 +206,6 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           return;
         }
       }
-//      std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-//      int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - last_update_time_ ).count();
-//      if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
-//      {
-//        logger_->notice() << "Client " << GetId() << " timed out. " << dt;
-//        Shutdown();
-//        return;
-//      }
       last_update_time_ = Core::Time::GetTickCount();
       recv_condition_.notify_all();
       if (active_) Recv();
