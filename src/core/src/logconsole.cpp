@@ -58,10 +58,10 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
     if (logger.expired()) {
       std::ostringstream format;
-      format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L]";
+      format << "[%H:%M:%S.%e %z] [%L]";
 
       if (level_ <= spdlog::level::debug) format << " [thread %t]";
-      format << " [%n]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
+      format << " [%n]" << " %v ";
 
       size_t q_size = 1048576;
       spdlog::set_async_mode(q_size, spdlog::async_overflow_policy::discard_log_msg,
