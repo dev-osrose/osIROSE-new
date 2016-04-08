@@ -77,7 +77,7 @@ void CMySQL_Database::Connect(const std::string &_host, const std::string &_data
   username_ = (_user);
   password_ = (_password);
   connected_ = false;
-  logger_ = CLog::GetLogger(log_type::DATABASE, spdlog::level::debug);
+  logger_ = CLog::GetLogger(log_type::DATABASE);
 
   try {
     conn_.set_option(new mysqlpp::MultiStatementsOption(true));

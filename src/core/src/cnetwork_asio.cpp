@@ -112,7 +112,6 @@ bool CNetwork_Asio::Disconnect() {
   return true;
 }
 
-<<<<<<< e02ff60e42f0d538692c52e359cc88f8c1061d0a
 void CNetwork_Asio::ProcessSend()
 {
   if(true == active_)
@@ -128,7 +127,7 @@ void CNetwork_Asio::ProcessSend()
     if( send_empty != true && discard_empty == true )
     {
       send_mutex_.lock();
-      std::unique_ptr<uint8_t> _buffer = std::move(send_queue_.front());
+      std::unique_ptr<uint8_t[]> _buffer = std::move(send_queue_.front());
       send_queue_.pop();
       send_mutex_.unlock();
 
@@ -151,7 +150,7 @@ void CNetwork_Asio::ProcessSend()
 
           discard_mutex_.lock();
           {
-            std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
+            std::unique_ptr<uint8_t[]> _buffer = std::move(discard_queue_.front());
             discard_queue_.pop();
             _buffer.reset(nullptr);
           }
@@ -166,7 +165,7 @@ void CNetwork_Asio::ProcessSend()
   }
 }
 
-bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
+bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
   //std::lock_guard<std::mutex> lock(send_mutex_);
   send_mutex_.lock();
   send_queue_.push(std::move(_buffer));
