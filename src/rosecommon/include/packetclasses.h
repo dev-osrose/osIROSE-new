@@ -22,7 +22,7 @@ class CliLoginReq : public CRosePacket {
 			username_ = std::string(login.begin(), login.end());
 		}
 
-		virtual ~CLiLoginReq() {}
+		virtual ~CliLoginReq() {}
 
 		std::string password() const {return password_;}
 		std::string username() const {return username_;}

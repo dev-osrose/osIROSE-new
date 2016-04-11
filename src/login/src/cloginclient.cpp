@@ -149,7 +149,6 @@ bool CLoginClient::ChannelList(CRosePacket* P) {
                                      /* sizeof(pakChannel_List)); */
   /* pak->pChannelList.lServerID = ServerID; */
   /* pak->pChannelList.bServerCount = 0; */
-
   /* pakChannelInfo channel; */
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   /* for (auto& obj : CLoginServer::GetISCList()) { */
