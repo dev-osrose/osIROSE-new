@@ -35,7 +35,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
         CLoginISC* svr = (CLoginISC*)server;
 
         // This if check is needed since the client actually looks for this.
-	packet->addServer(srv->GetName(), srv->GetId(), srv->IsTestServer());
+	packet->addServer(svr->GetName(), svr->GetId(), svr->IsTestServer());
 
       }
   }
