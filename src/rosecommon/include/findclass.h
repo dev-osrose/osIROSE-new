@@ -7,7 +7,7 @@
 
 namespace RoseCommon {
 
-template <ePacketType T>
+template <uint16_t T>
 struct find_class {};
 
 template <>

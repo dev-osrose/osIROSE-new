@@ -99,7 +99,7 @@ class CRosePacket {
 		template <typename T>
 		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
 			for (auto &it : data)
-				os.readNext<typename T::value_type>(it);
+				it = os.readNext<typename T::value_type>();
 			return os;
 		}
 
