@@ -16,7 +16,7 @@ class CliLoginReq : public CRosePacket {
 				throw std::runtime_error("Not the right packet!");
 			std::vector<char> password(32);
 			std::vector<char> login(16);
-			*this >> password;// >> login;
+			*this >> password >> login;
 			password_ = std::string(password.begin(), password.end());
 			username_ = std::string(login.begin(), login.end());
 		}
@@ -35,7 +35,7 @@ class SrvLoginReply : public CRosePacket {
 	public:
 		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLS_LOGIN_REPLY),
 		result_(result), right_(right), type_(type) {
-			*this << result_;// << right_ << type_;
+			*this << result_ << right_ << type_;
 		}
 
 		virtual ~SrvLoginReply() {}
@@ -45,7 +45,7 @@ class SrvLoginReply : public CRosePacket {
 		uint16_t	type() const {return type_;}
 
 		void	addServer(const std::string &name, uint32_t id, bool isTest = false) {
-			*this << (isTest ? '@' : ' ');// << name << id;
+			*this << (isTest ? '@' : ' ') << name << id;
 		}
 
 	private:
