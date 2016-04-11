@@ -8,13 +8,16 @@
 namespace RoseCommon {
 
 template <ePacketType T>
-struct find_class {};
+struct find_recv_class {};
 
 template <>
-struct find_class<ePacketType::PAKCS_LOGIN_REQ> { CliLoginReq type; };
+struct find_recv_class<ePacketType::PAKCS_LOGIN_REQ> { CliLoginReq type; };
+
+template <ePacketType T>
+struct find_send_class {};
 
 template <>
-struct find_class<ePacketType::PAKLC_LOGIN_REPLY> { SrvLoginReply type; };
+struct find_send_class<ePacketType::PAKLC_LOGIN_REPLY> { SrvLoginReply type; };
 }
 
 #endif /* !_FINDCLASS_H_ */

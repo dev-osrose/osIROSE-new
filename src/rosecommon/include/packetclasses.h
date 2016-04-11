@@ -1,4 +1,3 @@
-
 #ifndef _PACKETCLASSES_H_
 #define _PACKETCLASSES_H_
 
@@ -34,7 +33,7 @@ class CliLoginReq : public CRosePacket {
 
 class SrvLoginReply : public CRosePacket {
 	public:
-		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLS_LOGIN_REPLY),
+		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY),
 		result_(result), right_(right), type_(type) {
 			*this << result_ << right_ << type_;
 		}

@@ -4,6 +4,8 @@
 #include "epackettype.h"
 #include "rosepackets.h"
 #include "database.h"
+#include "packetclasses.h"
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 
