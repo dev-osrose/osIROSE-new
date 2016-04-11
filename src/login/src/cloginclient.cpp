@@ -3,6 +3,8 @@
 #include "cloginclient.h"
 #include "epackettype.h"
 #include "database.h"
+#include "packetclasses.h"
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 

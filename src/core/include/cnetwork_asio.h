@@ -63,7 +63,7 @@ class CNetwork_Asio : public INetwork {
   virtual bool Reconnect() override;
   virtual bool Disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer);
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
   bool IsActive() { return active_; }
 
