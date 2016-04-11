@@ -13,6 +13,7 @@ struct find_class {};
 template <>
 struct find_class<ePacketType::PAKCS_LOGIN_REQ> { CliLoginReq type; };
 
+template <>
 struct find_class<ePacketType::PAKLC_LOGIN_REPLY> { SrvLoginReply type; };
 }
 
