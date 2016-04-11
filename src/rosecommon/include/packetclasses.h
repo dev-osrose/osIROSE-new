@@ -38,9 +38,9 @@ class SrvLoginReply : public CRosePacket {
 
 		virtual ~SrvLoginReply() {}
 
-		uint8_t		&result() const {return result_;}
-		uint16_t	&right() const {return right_;}
-		uint16_t	&type() const {return type_;}
+		uint8_t		&result() {return result_;}
+		uint16_t	&right() {return right_;}
+		uint16_t	&type() {return type_;}
 
 		void	addServer(const std::string &name, uint32_t id, bool isTest = false) {
 			*this << (isTest ? '@' : ' ') << name << id;
