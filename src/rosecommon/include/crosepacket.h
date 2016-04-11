@@ -58,53 +58,53 @@ class CRosePacket {
 		virtual void pack() {}
 
 		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		CRosePacket &operator<<(const T &data) {
+		friend CRosePacket &operator<<(const T &data) {
 			writeNext<T>(data);
 			return *this;
 		}
 
 		template <typename T>
-		typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(const T &data) {
+		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(const T &data) {
 			for (const auto &it : data)
 				writeNext<typename T::value_type>(it);
 			return *this;
 		}
 
-		CRosePacket &operator<<(const std::string &data) {
+		friend CRosePacket &operator<<(const std::string &data) {
 			for (const auto &it : data)
 				writeNext<char>(it);
 			writeNext<char>(0);
 			return *this;
 		}
 
-		CRosePacket &operator<<(const char *data) {
+		friend CRosePacket &operator<<(const char *data) {
 			while (*data)
 				writeNext<char>(*(data++));
 			return *this;
 		}
 
 		template <size_t count>
-		CRosePacket &operator<<(const char (&data)[count]) {
+		friend CRosePacket &operator<<(const char (&data)[count]) {
 			for (size_t i = 0; i < count; ++i)
 				writeNext<char>(data[i]);
 			return *this;
 		}
 
 		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		CRosePacket &operator>>(T &data) {
+		friend CRosePacket &operator>>(T &data) {
 			data = readNext<T>();
 			return *this;
 		}
 
 		template <typename T>
-		typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(T &data) {
+		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(T &data) {
 			for (auto &it : data)
 				readNext<typename T::value_type>(it);
 			return *this;
 		}
 
 		template <size_t count>
-		CRosePacket &operator>>(char (&data)[count]) {
+		friend CRosePacket &operator>>(char (&data)[count]) {
 			for (size_t i = 0; i < count; ++i)
 				data[i] = readNext<char>();
 			return *this;
