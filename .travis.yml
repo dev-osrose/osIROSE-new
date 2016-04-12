@@ -34,8 +34,8 @@ addons:
     project:
       name: $TRAVIS_REPO_SLUG
     notification_email: RavenX8@users.noreply.github.com
-    build_command_prepend: "mkdir build; cd build; cmake ..;"
-    build_command:   "make"
+    build_command_prepend: "cov-configure --comptype gcc --compiler $(which cmake); mkdir build; cd build; cmake ..;"
+    build_command:   "cmake --build ."
     branch_pattern: coverity_scan
 
 cache:
@@ -103,4 +103,4 @@ env:
     - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$GCC_VERSION" = 5 -a "$BUILD_TYPE" = Release'
     # Coverity script test mode (if true no uploading, avoid reaching the quota)
     # usual processing: false.
-    - coverity_scan_script_test_mode=false
+    - coverity_scan_script_test_mode=true
