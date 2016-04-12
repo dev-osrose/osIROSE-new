@@ -34,7 +34,7 @@ addons:
     project:
       name: $TRAVIS_REPO_SLUG
     notification_email: RavenX8@users.noreply.github.com
-    build_command_prepend: "cmake ..;"
+    build_command_prepend: "cd build; cmake ..;"
     build_command:   "make"
     branch_pattern: coverity_scan
 
