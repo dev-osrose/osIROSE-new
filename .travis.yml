@@ -103,4 +103,4 @@ env:
     - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$GCC_VERSION" = 5 -a "$BUILD_TYPE" = Release'
     # Coverity script test mode (if true no uploading, avoid reaching the quota)
     # usual processing: false.
-    - coverity_scan_script_test_mode=true
+    - coverity_scan_script_test_mode=false
