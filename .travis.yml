@@ -34,7 +34,7 @@ addons:
     project:
       name: $TRAVIS_REPO_SLUG
     notification_email: RavenX8@users.noreply.github.com
-    build_command_prepend: "cov-configure --gcc --compiler $(which cmake); mkdir build; cd build; cmake ..;"
+    build_command_prepend: "cov-configure --gcc --compiler cmake --template; mkdir build; cd build; cmake ..;"
     build_command:   "cmake --build ."
     branch_pattern: coverity_scan
 
