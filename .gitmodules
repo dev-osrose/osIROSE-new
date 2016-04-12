@@ -10,3 +10,6 @@
 [submodule "tools/spdlog"]
 	path = tools/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "tools/pbjson"]
+	path = tools/pbjson
+	url = https://github.com/yinqiwen/pbjson.git

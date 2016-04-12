@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(
 	SYSTEM ${EXTERNAL_INCLUDE_DIR}
 	SYSTEM ${MYSQL_INCLUDE_DIRS}
 	SYSTEM ${MYSQLpp_INCLUDE_DIR}
+	SYSTEM ${PBJSON_ROOT}
 )
 
 LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR} ${PROTOBUF_BINARY_DIR} ${MYSQL_BINARY_DIR})
@@ -45,7 +46,7 @@ SET( SOURCES_HEADER
   include/logconsole
   include/cnetwork_asio
   include/config 
-  include/pbjson
+  ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
   include/cmysql_database
   include/network_thread_pool
@@ -62,7 +63,7 @@ SET( SOURCES_BASE
   src/logconsole
   src/cnetwork_asio
   src/config
-  src/pbjson.cpp
+  ${PBJSON_ROOT}/pbjson.cpp
   src/cmysql_database
 )
 
