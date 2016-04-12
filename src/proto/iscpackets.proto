@@ -30,3 +30,10 @@ message ServerStatus
 	Status status = 1;
 	int32 userPercent = 2;
 }
+
+message ClientTransfer
+{
+	int32 userid = 1;
+	int32 charid = 2;
+	int32 serverid = 3;
+}
