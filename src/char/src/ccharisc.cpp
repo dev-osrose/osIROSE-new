@@ -63,25 +63,25 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
     pServerReg.set_accright(pMapServer.accright());
   }
 
-  CRosePacket* pakToLS = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
+  std::unique_ptr<CRosePacket> pakToLS(new CRosePacket(ePacketType::ISC_SERVER_REGISTER));
   int _size = pServerReg.ByteSize();
-  uint8_t* data = new uint8_t[_size];
-  memset(data, 0, _size);
-  if (pServerReg.SerializeToArray(data, _size) == false)
+  std::unique_ptr<uint8_t> data( new uint8_t[_size] );
+  memset(data.get(), 0, _size);
+  if (pServerReg.SerializeToArray(data.get(), _size) == false)
     logger_->error("Couldn't serialize the data");
-  pakToLS->AddBytes(data, _size);
+  pakToLS->AddBytes(data.get(), _size);
 
   // todo: get the ISC connection to the login server and send the packet to it
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = (CCharISC*)server;
     if (svr->IsLogin()) {
-      svr->Send((CRosePacket*)pakToLS);
-      delete[] data;
+      svr->Send((CRosePacket*)pakToLS.release());
+//      delete[] data;
       return true;
     }
   }
-  delete[] data;
+//  delete[] data;
   return false;
 }
 
