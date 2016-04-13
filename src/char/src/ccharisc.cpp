@@ -36,11 +36,15 @@ bool CCharISC::HandlePacket(uint8_t* _buffer) {
 }
 
 bool CCharISC::ServerRegister(CRosePacket* P) {
+  logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
   CRosePacket* pak = (CRosePacket*)P;
   uint16_t _insize = pak->Header.Size - 6;
 
   ServerReg pMapServer;
-  if (pMapServer.ParseFromArray(pak->Data, _insize) == false) return false;
+  if (pMapServer.ParseFromArray(pak->Data, _insize) == false){
+    logger_->debug("pMapServer.ParseFromArray Failed!");
+    return false;
+  }
 
   int16_t _type = 0;
   _type = pMapServer.type();
@@ -62,6 +66,11 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
     pServerReg.set_type(pMapServer.type());
     pServerReg.set_accright(pMapServer.accright());
   }
+
+  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+                ServerReg_ServerType_Name(pServerReg.type()).c_str(),
+                pServerReg.name().c_str(), pServerReg.addr().c_str(),
+                pServerReg.port());
 
   std::unique_ptr<CRosePacket> pakToLS(new CRosePacket(ePacketType::ISC_SERVER_REGISTER));
   int _size = pServerReg.ByteSize();
@@ -86,6 +95,7 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
 }
 
 void CCharISC::OnConnected() {
+  logger_->trace("CCharISC::OnConnected()");
   CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
   Core::Config& config = Core::Config::getInstance();
