@@ -89,8 +89,14 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       }
 
       std::vector<spdlog::sink_ptr> net_sink;
-      auto console_out = spdlog::sinks::stderr_sink_mt::instance();
+//      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
+#ifdef _WIN32
+      auto console_out = spdlog::sinks::stdout_sink_st::instance();
+      auto console_sink = std::make_shared<spdlog::sinks::wincolor_sink_mt>(console_out);
+#else
+      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
       auto console_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(console_out);
+#endif
       auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
           path.c_str(), "txt", 23, 59);
       net_sink.push_back(console_sink);
