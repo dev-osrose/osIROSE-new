@@ -60,7 +60,7 @@ CMySQL_Database::~CMySQL_Database() {
   if (auto log = logger_.lock())
   {
     log->trace("CMySQL_Database destructor called!");
-    log->debug() << "db shared_ptr used by " << log.use_count() - 1;
+    log->debug( "db shared_ptr used by {}", log.use_count() - 1);
   }
   logger_.reset();
 }

@@ -97,10 +97,10 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       auto console_out = spdlog::sinks::stdout_sink_mt::instance();
       auto console_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(console_out);
 #endif
-      auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
-          path.c_str(), "txt", 23, 59);
+//       auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
+//           path.c_str(), "txt", 23, 59);
       net_sink.push_back(console_sink);
-      net_sink.push_back(daily_sink);
+//      net_sink.push_back(daily_sink);
 
       auto net_logger = std::make_shared<spdlog::logger>(
           name.c_str(), begin(net_sink), end(net_sink));
@@ -111,7 +111,7 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
       net_sink.clear();
       console_sink.reset();
-      daily_sink.reset();
+//      daily_sink.reset();
       return net_logger;
     }
   } catch (const spdlog::spdlog_ex& ex) {
