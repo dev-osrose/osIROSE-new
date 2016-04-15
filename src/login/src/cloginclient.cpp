@@ -40,7 +40,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
       }
   }
 
-  this->Send(packet);
+  this->Send(*packet);
 }
 
 bool CLoginClient::UserLogin(CRosePacket* P) {
