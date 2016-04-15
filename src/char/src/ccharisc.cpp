@@ -37,58 +37,65 @@ bool CCharISC::HandlePacket(uint8_t* _buffer) {
 }
 
 bool CCharISC::ServerRegister(CRosePacket* P) {
-	(void)P;
-  /* CRosePacket* pak = (CRosePacket*)P; */
-  /* uint16_t _insize = pak->Header.Size - 6; */
+  logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
+  (void)P;
+  //CRosePacket* pak = P;
+//  uint16_t _insize = pak->Header.Size - 6;
 
-  /* ServerReg pMapServer; */
-  /* if (pMapServer.ParseFromArray(pak->Data, _insize) == false) return false; */
-
-  /* int16_t _type = 0; */
-  /* _type = pMapServer.type(); */
-
-  // 1 == char server
-  // 2 == node server
-  // 3 == map master server (This is the only type the login server will care
-  // about)
-  // 4 == map workers/threads
-
-  /* ServerReg pServerReg; */
-
-  /* if (_type == 2) { */
-    // This is a node and we need to figure out something to do with this
-  /* } else if (_type == 3) { */
-  /*   pServerReg.set_name(pMapServer.name()); */
-    /* pServerReg.set_addr(pMapServer.addr()); */
-    /* pServerReg.set_port(pMapServer.port()); */
-    /* pServerReg.set_type(pMapServer.type()); */
-    /* pServerReg.set_accright(pMapServer.accright()); */
-  /* } */
-
-  /* CRosePacket* pakToLS = new CRosePacket(ePacketType::ISC_SERVER_REGISTER); */
-  /* int _size = pServerReg.ByteSize(); */
-  /* uint8_t* data = new uint8_t[_size]; */
-  /* memset(data, 0, _size); */
-  /* if (pServerReg.SerializeToArray(data, _size) == false) */
-  /*   logger_->error("Couldn't serialize the data"); */
-  /* pakToLS->AddBytes(data, _size); */
-
-  // todo: get the ISC connection to the login server and send the packet to it
-  /* std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex()); */
-  /* for (auto& server : CCharServer::GetISCList()) { */
-    /* CCharISC* svr = (CCharISC*)server; */
-    /* if (svr->IsLogin()) { */
-      /* svr->Send((CRosePacket*)pakToLS); */
-      /* delete[] data; */
-      /* return true; */
-    /* } */
-  /* } */
-  /* delete[] data; */
+//  ServerReg pMapServer;
+//  if (pMapServer.ParseFromArray(pak->Data, _insize) == false){
+//    logger_->debug("pMapServer.ParseFromArray Failed!");
+//    return false;
+//  }
+//  int16_t _type = 0;
+//  _type = pMapServer.type();
+//
+//  // 1 == char server
+//  // 2 == node server
+//  // 3 == map master server (This is the only type the login server will care
+//  // about)
+//  // 4 == map workers/threads
+//
+//  ServerReg pServerReg;
+//
+//  if (_type == 2) {
+//    // This is a node and we need to figure out something to do with this
+//  } else if (_type == 3) {
+//    pServerReg.set_name(pMapServer.name());
+//    pServerReg.set_addr(pMapServer.addr());
+//    pServerReg.set_port(pMapServer.port());
+//    pServerReg.set_type(pMapServer.type());
+//    pServerReg.set_accright(pMapServer.accright());
+//  }
+//
+//  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+//                ServerReg_ServerType_Name(pServerReg.type()).c_str(),
+//                pServerReg.name().c_str(), pServerReg.addr().c_str(),
+//                pServerReg.port());
+//
+//  std::unique_ptr<CRosePacket> pakToLS(new CRosePacket(ePacketType::ISC_SERVER_REGISTER));
+//  int _size = pServerReg.ByteSize();
+//  std::unique_ptr<uint8_t> data( new uint8_t[_size] );
+//  memset(data.get(), 0, _size);
+//  if (pServerReg.SerializeToArray(data.get(), _size) == false)
+//    logger_->error("Couldn't serialize the data");
+//  pakToLS->AddBytes(data.get(), _size);
+//
+//  // todo: get the ISC connection to the login server and send the packet to it
+//  std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
+//  for (auto& server : CCharServer::GetISCList()) {
+//    CCharISC* svr = (CCharISC*)server;
+//    if (svr->IsLogin()) {
+//      svr->Send((CRosePacket*)pakToLS.release());
+//      return true;
+//    }
+//  }
   return false;
 }
 
 void CCharISC::OnConnected() {
-  /* CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER); */
+  logger_->trace("CCharISC::OnConnected()");
+//  CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
   /* Core::Config& config = Core::Config::getInstance(); */
 

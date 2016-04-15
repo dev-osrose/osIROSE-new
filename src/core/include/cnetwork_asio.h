@@ -100,7 +100,6 @@ class CNetwork_Asio : public INetwork {
   std::shared_ptr<spdlog::logger> logger_;
 
  protected:
-  asio::io_service* io_service_;
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;

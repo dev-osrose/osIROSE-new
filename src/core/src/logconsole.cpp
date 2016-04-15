@@ -29,10 +29,10 @@ void CLog::SetLevel(spdlog::level::level_enum _level) {
   level_ = _level;
 
   std::ostringstream format;
-  format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L]";
+  format << "[%H:%M:%S.%e %z] [%L]";
 
   if (level_ <= spdlog::level::debug) format << " [thread %t]";
-  format << " [%n]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
+  format << " [%n]" << " %v ";
   spdlog::set_pattern(format.str());
 }
 
@@ -58,13 +58,13 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
     if (logger.expired()) {
       std::ostringstream format;
-      format << Color::FG_GREEN << "[%H:%M:%S.%e %z] [%L]";
+      format << "[%H:%M:%S.%e %z] [%L]";
 
       if (level_ <= spdlog::level::debug) format << " [thread %t]";
-      format << " [%n]" << Color::FG_WHITE << " %v " << Color::CL_RESET;
+      format << " [%n]" << " %v ";
 
       size_t q_size = 1048576;
-      spdlog::set_async_mode(q_size, spdlog::async_overflow_policy::block_retry,
+      spdlog::set_async_mode(q_size, spdlog::async_overflow_policy::discard_log_msg,
                              nullptr, std::chrono::seconds(30));
 
       std::string path, name;
@@ -89,11 +89,18 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       }
 
       std::vector<spdlog::sink_ptr> net_sink;
-      auto console_sink = std::make_shared<spdlog::sinks::stdout_sink_mt>();
-      auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
-          path.c_str(), "txt", 23, 59);
+//      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
+#ifdef _WIN32
+      auto console_out = spdlog::sinks::stdout_sink_st::instance();
+      auto console_sink = std::make_shared<spdlog::sinks::wincolor_sink_mt>(console_out);
+#else
+      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
+      auto console_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(console_out);
+#endif
+//       auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
+//           path.c_str(), "txt", 23, 59);
       net_sink.push_back(console_sink);
-      net_sink.push_back(daily_sink);
+//      net_sink.push_back(daily_sink);
 
       auto net_logger = std::make_shared<spdlog::logger>(
           name.c_str(), begin(net_sink), end(net_sink));

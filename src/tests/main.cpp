@@ -15,7 +15,10 @@ int main(int argc, char *argv[]) {
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);
 
-  Core::NetworkThreadPool::GetInstance();
+  // Some tests run all 3 servers and they do not like it when they have too many threads.
+  // Use the max concurrent count that way each server has the same amount of time.
+  Core::NetworkThreadPool::GetInstance( std::thread::hardware_concurrency() );
+
   int ret_val = RUN_ALL_TESTS();
   spdlog::drop_all();
   Core::NetworkThreadPool::DeleteInstance();

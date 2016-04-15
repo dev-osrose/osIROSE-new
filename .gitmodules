@@ -9,4 +9,7 @@
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "tools/spdlog"]
 	path = tools/spdlog
-	url = https://github.com/gabime/spdlog.git
+	url = https://github.com/RavenX8/spdlog.git
+[submodule "tools/pbjson"]
+	path = tools/pbjson
+	url = https://github.com/RavenX8/pbjson.git
