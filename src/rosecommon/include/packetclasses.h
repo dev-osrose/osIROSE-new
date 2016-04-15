@@ -34,18 +34,21 @@ class CliLoginReq : public CRosePacket {
 class SrvLoginReply : public CRosePacket {
 	public:
 		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY),
-		result_(result), right_(right), type_(type) {
-			*this << result_ << right_ << type_;
-		}
+		result_(result), right_(right), type_(type) {}
 
 		virtual ~SrvLoginReply() {}
 
-		uint8_t		result() const {return result_;}
-		uint16_t	right() const {return right_;}
-		uint16_t	type() const {return type_;}
+		uint8_t		&result() {return result_;}
+		uint16_t	&right() {return right_;}
+		uint16_t	&type() {return type_;}
 
 		void	addServer(const std::string &name, uint32_t id, bool isTest = false) {
 			*this << (isTest ? '@' : ' ') << name << id;
+		}
+
+	protected:
+		void pack() {
+			*this << result_ << right_ << type_;
 		}
 
 	private:

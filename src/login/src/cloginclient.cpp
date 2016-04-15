@@ -23,29 +23,25 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
   /* pak->pLoginReply.Right = 0; */
   /* pak->pLoginReply.Type = 0; */
 
+  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>(Result, 0, 0);
+
   if (Result == 0) {
     login_state_ = eSTATE::LOGGEDIN;
 //    pak->pLoginReply.Right = access_rights_;
 
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-    /* for (auto& server : CLoginServer::GetISCList()) { */
-      /* if (server->GetType() == 1) { */
-        /* CLoginISC* svr = (CLoginISC*)server; */
+    for (auto &server : CLoginServer::GetISCList())
+      if (server->GetType() == 1) {
+//        CLoginISC* svr = (CLoginISC*)server;
 
         // This if check is needed since the client actually looks for this.
-        /* if (svr->IsTestServer()) */
-        /*   pak->Add<uint8_t>('@'); */
-        /* else */
-        /*   pak->Add<uint8_t>(' '); */
+//	packet->addServer(svr->GetName(), svr->GetId(), svr->IsTestServer());
 
-        /* pak->AddString(svr->GetName().c_str(), true); */
-        /* pak->Add<uint32_t>(svr->GetId()); */
-      /* } */
-    /* } */
+      }
   }
 
-  /* this->Send(pak); */
+//  this->Send(*packet);
 }
 
 bool CLoginClient::UserLogin(CRosePacket* P) {

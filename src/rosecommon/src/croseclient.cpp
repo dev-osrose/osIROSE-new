@@ -20,8 +20,13 @@ CRoseClient::~CRoseClient() { Shutdown(); }
 
 bool CRoseClient::Send(const CRosePacket &_buffer) {
   /* return CNetwork_Asio::Send(_buffer.createBuffer()); */
-	(void)_buffer;
-	return true;
+  (void)_buffer;
+  return true;
+}
+
+bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
+  (void)_buffer;
+  return true;
 }
 
 // Callback functions

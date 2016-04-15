@@ -18,8 +18,8 @@ std::unique_ptr<typename find_recv_class<T>::type>	getPacket(uint8_t buffer[MAX_
 }
 
 template <ePacketType T, typename... Args>
-std::unique_ptr<typename find_send_class<T>::type>	makePacket(Args... args) {
-	return new typename find_send_class<T>::type(args...);
+std::unique_ptr<decltype(find_send_class<T>::type)>	makePacket(Args... args) {
+	return std::unique_ptr<decltype(find_send_class<T>::type)>(new decltype(find_send_class<T>::type)(args...));
 }
 
 }
