@@ -41,6 +41,12 @@ SET( SOURCES_HEADER
   include/croseserver
   include/croseclient 
   include/croseisc
+  include/crosepacket
+  include/epackettype
+  include/findclass
+  include/iscontainer
+  include/packetclasses
+  include/rosepackets
 )
 
 SET( SOURCES_BASE
