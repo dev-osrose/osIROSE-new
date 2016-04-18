@@ -18,15 +18,12 @@ CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
 
 CRoseClient::~CRoseClient() { Shutdown(); }
 
-bool CRoseClient::Send(const CRosePacket &_buffer) {
-  /* return CNetwork_Asio::Send(_buffer.createBuffer()); */
-  (void)_buffer;
-  return true;
+bool CRoseClient::Send(CRosePacket &_buffer) {
+  return CNetwork_Asio::Send(_buffer.getPacked());
 }
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
-  (void)_buffer;
-  return true;
+  return CNetwork_Asio::Send(std::move(_buffer));
 }
 
 // Callback functions
@@ -87,17 +84,15 @@ void CRoseClient::OnSent() {}
 
 bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 //  CRosePacket* pak = (CRosePacket*)_buffer;
-//  switch ((ePacketType)pak->Header.Command) {
-//    case ePacketType::PAKCS_ALIVE: {
-	(void)_buffer;
+  switch ((ePacketType)CRosePacket::type(_buffer)) {
+    case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
       /* CRosePacket* pak = */
       /*     new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader)); */
       /* Send(pak); */
 #endif
-//      return CNetwork_Asio::HandlePacket(_buffer);
-//      break;
-//    }
+      return CNetwork_Asio::HandlePacket(_buffer);
+    }
 #ifdef STRESS_TEST
     /* case (ePacketType)0x6F6D: { */
       /* CRosePacket* pak = new CRosePacket(0x6F6D, 8); */
@@ -114,11 +109,11 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       /* Send(pak); */
       /* break; */
     /* } */
-    /* default: { */
-    /*   logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)pak->Header.Command); */
-      /* return false; */
-    /* } */
-  /* } */
+    default: {
+      logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)CRosePacket::type(_buffer));
+      return false;
+    }
+  }
   return true;
 }
 
