@@ -65,8 +65,7 @@ bool CRoseClient::OnReceived() {
   }
 #endif
 
-  /* CRosePacket* pak = (CRosePacket*)&buffer_; */
-  /* logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command); */
+  logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
   rtnVal = HandlePacket(buffer_);
   ResetBuffer();
 
@@ -101,14 +100,14 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       /* break; */
     /* } */
 #endif
-    /* case ePacketType::PAKCS_ACCEPT_REQ: { */
-    /*   // Encryption stuff */
-      /* CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest)); */
-      /* pak->pEncryptReq.Unknown = 0x02; */
-      /* pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr)); */
-      /* Send(pak); */
-      /* break; */
-    /* } */
+    case ePacketType::PAKCS_ACCEPT_REQ: {
+      // Encryption stuff
+//      CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest));
+//      pak->pEncryptReq.Unknown = 0x02;
+//      pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr));
+//      Send(pak);
+      break;
+    }
     default: {
       logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)CRosePacket::type(_buffer));
       return false;

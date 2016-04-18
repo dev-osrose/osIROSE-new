@@ -14,7 +14,7 @@ class CLoginClient : public RoseCommon::CRoseClient {
   virtual bool OnReceived();
 
   // Packet Helper Functions
-  bool UserLogin(RoseCommon::CRosePacket* P);
+  bool UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P);
   bool ChannelList(RoseCommon::CRosePacket* P);
   bool ServerSelect(RoseCommon::CRosePacket* P);
 

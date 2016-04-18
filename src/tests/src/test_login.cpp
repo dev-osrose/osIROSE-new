@@ -20,22 +20,23 @@ TEST(TestLoginServer, TestClientPacketPath) {
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-/*
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  auto pak = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ));
-  netConnect.Send(pak);
 
-  auto pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
-  pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak2->AddString("test2", true);
-  netConnect.Send(pak2);
+  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+//  auto pak = makePacket<ePacketType::PAKCS_ACCEPT_REQ>();
+//  netConnect.Send(pak);
+
+  //TODO(raven): Move this into a static function so we can just call the function
+  //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
+  auto pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.Send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  iscServ->SetId(0);
-  iscServ->SetType(1);
-  CLoginServer::GetISCList().push_front(iscServ);
+//  iscServ->SetId(0);
+//  iscServ->SetType(1);
+//  CLoginServer::GetISCList().push_front(iscServ);
 
+/*
   //-----------------------------------------
   // We aren't logged in yet
   // We should get a warning

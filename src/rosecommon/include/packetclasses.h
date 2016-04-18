@@ -9,6 +9,9 @@
 
 namespace RoseCommon {
 
+//---------------------------------------------------
+// Server Recv packets
+//---------------------------------------------------
 class CliLoginReq : public CRosePacket {
 	public:
 		CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
@@ -20,11 +23,18 @@ class CliLoginReq : public CRosePacket {
 			password_ = std::string(password.begin(), password.end());
 			username_ = std::string(login.begin(), login.end());
 		}
+		CliLoginReq(const std::string &user, const std::string &pass) : CRosePacket(ePacketType::PAKCS_LOGIN_REQ),
+			password_(pass), username_(user) {}
 
 		virtual ~CliLoginReq() {}
 
 		std::string password() const {return password_;}
 		std::string username() const {return username_;}
+
+	protected:
+                void pack() {
+                        *this << password_ << username_;
+                }
 
 	private:
 		std::string password_;

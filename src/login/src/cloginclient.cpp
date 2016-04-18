@@ -41,10 +41,10 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
       }
   }
 
-//  this->Send(*packet);
+  this->Send(*packet);
 }
 
-bool CLoginClient::UserLogin(CRosePacket* P) {
+bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   if(login_state_ != eSTATE::DEFAULT)
   {
     logger_->warn("Client {} is attempting to login when already logged in.", GetId());
@@ -217,8 +217,8 @@ bool CLoginClient::HandlePacket(uint8_t* _buffer) {
 //      return ChannelList( getPacket<ePacketType::PAKCS_CHANNEL_LIST_REQ>(_buffer) );
 //    case ePacketType::PAKCS_SRV_SELECT_REQ:
 //      return ServerSelect( getPacket<ePacketType::PAKCS_SRV_SELECT_REQ>(_buffer) );
-//    case ePacketType::PAKCS_LOGIN_REQ:
-//      return UserLogin( getPacket<ePacketType::PAKCS_LOGIN_REQ>(_buffer) );
+    case ePacketType::PAKCS_LOGIN_REQ:
+      return UserLogin( getPacket<ePacketType::PAKCS_LOGIN_REQ>(_buffer) );
 
     default:
       return CRoseClient::HandlePacket(_buffer);
