@@ -9,9 +9,9 @@
 namespace RoseCommon {
 
 template <ePacketType T>
-std::unique_ptr<typename find_recv_class<T>::type>	getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
+std::unique_ptr<decltype(find_recv_class<T>::type)>	getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
 	try {
-		return new typename find_recv_class<T>::type(buffer);
+		return std::unique_ptr<decltype(find_recv_class<T>::type)>(new decltype(find_recv_class<T>::type)(buffer));
 	} catch (std::runtime_error &e) {
 		return nullptr;
 	}
