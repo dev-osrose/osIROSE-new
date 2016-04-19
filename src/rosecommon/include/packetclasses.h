@@ -62,7 +62,7 @@ class CliServerSelectReq : public CRosePacket {
   CliServerSelectReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_SRV_SELECT_REQ)
       throw std::runtime_error("Not the right packet!");
-    *this >> server_id_, channel_id_;
+    *this >> server_id_ >> channel_id_;
   }
 
   virtual ~CliServerSelectReq() {}
@@ -200,7 +200,7 @@ class SrvServerSelectReply : public CRosePacket {
                        uint32_t crypt_val, uint16_t port)
       : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY),
         client_id_(client_id),
-        crypt_val_(crypt_val_),
+        crypt_val_(crypt_val),
         port_(port),
         result_(0),
         ip_(ip) {}

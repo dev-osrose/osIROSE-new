@@ -150,7 +150,7 @@ bool CLoginClient::ServerSelect(
     return true;
   }
   uint32_t serverID = P->server_id();
-  uint8_t channelID = P->channel_id();
+  //uint8_t channelID = P->channel_id();
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
