@@ -17,10 +17,9 @@ class CliLoginReq : public CRosePacket {
   CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_LOGIN_REQ)
       throw std::runtime_error("Not the right packet!");
-    std::vector<char> password(32), login(16);
-    *this >> password >> login;
-    password_ = std::string(password.begin(), password.end());
-    username_ = std::string(login.begin(), login.end());
+    char pass[32];
+    *this >> pass >> username_;
+    password_ = std::string(pass, 32);
   }
   CliLoginReq(const std::string &user, const std::string &pass)
       : CRosePacket(ePacketType::PAKCS_LOGIN_REQ),
