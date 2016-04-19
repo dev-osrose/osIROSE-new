@@ -118,17 +118,15 @@ class CRosePacket {
 		}
 
 	private:
-		template <typename T>
+		template <typename T, typename = std::enable_if<!is_container<T>::value>>
 		static T read(uint8_t *data) {
-			static_assert(std::is_copy_constructible<T>::value &&
-				!is_container<T>::value, "CRosePacket doesn't know how to copy construct this type!");
+			static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
 			return *reinterpret_cast<T*>(data);
 		}
 
-		template <typename T>
+		template <typename T, typename = std::enable_if<!is_container<T>::value>>
 		static void write(uint8_t *data, const T &payload) {
-			static_assert(std::is_copy_assignable<T>::value &&
-				!is_container<T>::value, "CRosePacket doesn't know how to copy assign this type!");
+			static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
 			*reinterpret_cast<T*>(data) = payload;
 		}
 
