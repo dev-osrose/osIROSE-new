@@ -20,7 +20,6 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
 CMapServer::~CMapServer() {}
 
 void CMapServer::OnAccepted(tcp::socket _sock) {
-  //      CRoseServer::OnAccepted( std::move(_sock) );
   if (_sock.is_open()) {
     // Do Something?
     std::string _address = _sock.remote_endpoint().address().to_string();
