@@ -58,7 +58,7 @@ TEST(TestCharServer, TestISCMap) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  // Create a map connection here
+  //todo(raven): Create a map connection here by crafting a isc packet
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables

@@ -12,6 +12,28 @@ namespace RoseCommon {
 //---------------------------------------------------
 // Server Recv packets
 //---------------------------------------------------
+class CliAlive : public CRosePacket {
+public:
+  CliAlive(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_ALIVE)
+      throw std::runtime_error("Not the right packet!");
+  }
+  CliAlive() : CRosePacket(ePacketType::PAKCS_ALIVE) {}
+
+  virtual ~CliAlive() {}
+};
+
+class CliAcceptReq : public CRosePacket {
+public:
+  CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_ACCEPT_REQ)
+      throw std::runtime_error("Not the right packet!");
+  }
+  CliAcceptReq() : CRosePacket(ePacketType::PAKCS_ACCEPT_REQ) {}
+
+  virtual ~CliAcceptReq() {}
+};
+
 class CliLoginReq : public CRosePacket {
  public:
   CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {

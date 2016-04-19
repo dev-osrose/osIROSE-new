@@ -23,8 +23,8 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-//  auto pak = makePacket<ePacketType::PAKCS_ACCEPT_REQ>();
-//  netConnect.Send(pak);
+  auto pak = std::unique_ptr<CliAcceptReq>(new CliAcceptReq());
+  netConnect.Send(*pak);
 
   //TODO(raven): Move this into a static function so we can just call the function
   //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
@@ -64,10 +64,10 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0,0));
   netConnect.Send(*pak4);
-/*
-  pak = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE);
-  netConnect.Send(*pak);
-*/
+
+  auto pak5 = std::unique_ptr<CRosePacket>(new CliAlive());
+  netConnect.Send(*pak5);
+
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(100));  // Change this to condition variables
