@@ -32,7 +32,7 @@ class CliLoginReq : public CRosePacket {
   std::string username() const { return username_; }
 
  protected:
-  void pack() { *this << password_ << username_; }
+  void pack() { *this << password_.c_str() << username_; }
 
  private:
   std::string password_;
