@@ -70,15 +70,24 @@ bool CNetwork_Asio::Connect() {
       resolver.resolve(network_ip_address, std::to_string(network_port_));
 
   OnConnect();
-  asio::async_connect(
-      socket_, endpoint_iterator,
-      [this](std::error_code errorCode, const asio::ip::tcp::endpoint) {
-        if (!errorCode) {
-          OnConnected();
-        }
-      });
-  active_ = true;
-  return true;
+  //asio::async_connect(
+  //    socket_, endpoint_iterator,
+  //    [this](std::error_code errorCode, const asio::ip::tcp::endpoint) {
+  //      if (!errorCode) {
+  //        OnConnected();
+  //      }
+  //    });
+  send_mutex_.lock();
+  std::error_code errorCode;
+  asio::connect(socket_, endpoint_iterator, errorCode);
+  send_mutex_.unlock();
+  if (!errorCode) {
+    OnConnected();
+    active_ = true;
+  } else {
+    active_ = false;
+  }
+  return active_;
 }
 
 bool CNetwork_Asio::Listen() {
@@ -166,7 +175,6 @@ void CNetwork_Asio::ProcessSend()
 }
 
 bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
-  //std::lock_guard<std::mutex> lock(send_mutex_);
   send_mutex_.lock();
   send_queue_.push(std::move(_buffer));
   send_mutex_.unlock();

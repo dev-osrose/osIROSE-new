@@ -124,7 +124,6 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
   uint32_t ServerID = P->server_id();
 
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID);
-  /* pakChannelInfo channel; */
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
@@ -151,7 +150,7 @@ bool CLoginClient::ServerSelect(
     return true;
   }
   uint32_t serverID = P->server_id();
-  //uint8_t channelID = P->channel_id();
+// uint8_t channelID = P->channel_id();
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go

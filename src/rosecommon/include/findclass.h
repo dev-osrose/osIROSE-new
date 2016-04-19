@@ -33,6 +33,15 @@ struct find_send_class<ePacketType::PAKLC_CHANNEL_LIST_REPLY> { SrvChannelReply 
 
 template <>
 struct find_send_class<ePacketType::PAKLC_SRV_SELECT_REPLY> { SrvServerSelectReply type; };
+
+//-----------------------------------------------
+// ISC Packets
+//-----------------------------------------------
+template <>
+struct find_recv_class<ePacketType::ISC_SERVER_REGISTER> { IscServerRegister type; };
+
+template <>
+struct find_send_class<ePacketType::ISC_SERVER_REGISTER> { IscServerRegister type; };
 }
 
 #endif /* !_FINDCLASS_H_ */

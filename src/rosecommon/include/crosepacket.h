@@ -55,12 +55,6 @@ class CRosePacket {
 						sizeof(uint16_t) + sizeof(ePacketType) + sizeof(uint8_t)));
 		}
 
-//		static std::unique_ptr<uint8_t[]> data(const uint8_t buffer[MAX_PACKET_SIZE]) {
-//                        auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size(buffer)]);
-//                         std::memcpy(res.get(), buffer + 6, size(buffer));
-//			return res;
-//		}
-
 	protected:
 		virtual void pack() {}
 

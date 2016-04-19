@@ -6,6 +6,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include "iscpackets.pb.h"
 
 namespace RoseCommon {
 
@@ -129,8 +130,7 @@ class SrvLoginReply : public CRosePacket {
       : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY),
         right_(right),
         type_(type),
-        result_(result),
-        channel_count_(0) {}
+        result_(result) {}
 
   virtual ~SrvLoginReply() {}
 
@@ -140,7 +140,6 @@ class SrvLoginReply : public CRosePacket {
 
   void setRight(uint16_t right) { result_ = right; }
   void addServer(const std::string &name, uint32_t id, bool isTest = false) {
-    ++channel_count_;
     info channel(name, id, isTest);
     channel_list_.push_back(channel);
   }
@@ -157,7 +156,6 @@ class SrvLoginReply : public CRosePacket {
   uint16_t right_;
   uint16_t type_;
   uint8_t result_;
-  uint8_t channel_count_;
 
   struct info {
     std::string name_;
@@ -165,7 +163,7 @@ class SrvLoginReply : public CRosePacket {
     bool test_;
 
     info(const std::string &name, uint8_t id, bool isTest = false)
-        : name_(name), channel_id_(id), test_(isTest) {}
+        : name_(name), channel_id_(id+1), test_(isTest) {}
   };
 
   std::vector<info> channel_list_;
@@ -252,6 +250,53 @@ class SrvServerSelectReply : public CRosePacket {
   uint8_t result_;
   std::string ip_;
 };
+
+//-----------------------------------------------
+// ISC Packets
+//-----------------------------------------------
+class IscServerRegister : public CRosePacket {
+ public:
+   IscServerRegister( uint8_t buffer[MAX_PACKET_SIZE] ) : CRosePacket( buffer )
+   {
+     if (type() != ePacketType::ISC_SERVER_REGISTER)
+       throw std::runtime_error( "Not the right packet!" );
+     uint32_t _size = size();
+     auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
+     memset( data.get(), 0, _size );
+     for(int i = 0; i < _size; ++i)
+       *this >> data[i];
+
+     if (server_reg_.SerializeToArray(data.get(), _size) == false)
+       throw std::runtime_error("Couldn't serialize the data");
+   }
+
+  IscServerRegister(const std::string &name, const std::string &ip, int32_t port, int32_t type, int32_t right)
+      : CRosePacket(ePacketType::ISC_SERVER_REGISTER) {
+    server_reg_.set_name( name );
+    server_reg_.set_addr( ip );
+    server_reg_.set_port( port );
+    server_reg_.set_type( (iscPacket::ServerReg_ServerType)type );
+    server_reg_.set_accright( right );
+  }
+
+  iscPacket::ServerReg server_reg() const { return server_reg_; }
+
+ protected:
+  void pack() { 
+    int _size = server_reg_.ByteSize();
+    auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
+    memset( data.get(), 0, _size );
+    if (server_reg_.SerializeToArray( data.get(), _size ) == false)
+      throw std::runtime_error("Couldn't serialize the data");
+
+    for(int i = 0; i < _size; ++i)
+    *this << data[i];
+  }
+
+ private:
+   iscPacket::ServerReg server_reg_;
+};
+
 }
 
 #endif /* !_PACKETCLASSES_H_ */
