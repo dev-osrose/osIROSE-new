@@ -37,48 +37,42 @@ TEST(TestLoginServer, TestClientPacketPath) {
   iscServ->SetType(1);
   CLoginServer::GetISCList().push_front(iscServ);
 
-/*
+
   //-----------------------------------------
   // We aren't logged in yet
   // We should get a warning
   //-----------------------------------------
-  pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
-  pak2->pChannelListReq.lServerID = 1;
-  netConnect.Send(pak2);
-
-  pak2 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ));
-  pak2->Add<uint32_t>(0);
-  pak2->Add<uint8_t>(0);
-  netConnect.Send(pak2);
-  //-----------------------------------------
-*/
-  //Incorrect Password
-  auto pak3 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
+  auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
   netConnect.Send(*pak3);
+
+  auto pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0, 0));
+  netConnect.Send(*pak4);
+  //-----------------------------------------
+
+  //Incorrect Password
+  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
+  netConnect.Send(*pak2);
 
   //Correct password
-  pak3 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
-  netConnect.Send(*pak3);
+  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.Send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
+  netConnect.Send(*pak3);
+
+  pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0,0));
+  netConnect.Send(*pak4);
 /*
-  auto pak4 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
-  pak4->pChannelListReq.lServerID = 1;
-  netConnect.Send(pak4);
-
-  auto pak5 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ));
-  pak5->Add<uint32_t>(0);
-  pak5->Add<uint8_t>(0);
-  netConnect.Send(pak5);
-
-  auto pak6 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE);
-  netConnect.Send(pak6);
+  pak = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE);
+  netConnect.Send(*pak);
 */
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(100));  // Change this to condition variables
 
-//  CLoginServer::GetISCList().clear();
+  CLoginServer::GetISCList().clear();
 
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());

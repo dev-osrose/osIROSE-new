@@ -47,10 +47,14 @@ class CliChannelReq : public CRosePacket {
       throw std::runtime_error("Not the right packet!");
     *this >> server_id_;
   }
+  CliChannelReq(uint32_t server_id) : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ), server_id_(server_id) {}
 
   virtual ~CliChannelReq() {}
 
   uint32_t server_id() const { return server_id_; }
+
+protected:
+  void pack() { *this << server_id_; }
 
  private:
   uint32_t server_id_;
@@ -64,10 +68,15 @@ class CliServerSelectReq : public CRosePacket {
     *this >> server_id_ >> channel_id_;
   }
 
+  CliServerSelectReq(uint32_t server_id, uint8_t channel_id) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), server_id_(server_id), channel_id_(channel_id) {}
+
   virtual ~CliServerSelectReq() {}
 
   uint32_t server_id() const { return server_id_; }
   uint8_t channel_id() const { return channel_id_; }
+
+protected:
+  void pack() { *this << server_id_ << channel_id_; }
 
  private:
   uint32_t server_id_;

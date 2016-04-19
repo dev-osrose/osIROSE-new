@@ -67,7 +67,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   // todo(raven): make sure the username is safe to exec
   std::unique_ptr<Core::IResult> res;
   std::string query = "CALL UserLogin('";
-  query = query + username_ + "');";
+  query = query + username_.c_str() + "');";
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
