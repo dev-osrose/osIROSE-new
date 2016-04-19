@@ -1,6 +1,7 @@
 #include <ctime>
 #include "croseclient.h"
 #include "epackettype.h"
+#include "rosepackets.h"
 
 
 namespace RoseCommon {
@@ -82,8 +83,7 @@ bool CRoseClient::OnSend(uint8_t* _buffer) {
 void CRoseClient::OnSent() {}
 
 bool CRoseClient::HandlePacket(uint8_t* _buffer) {
-//  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch ((ePacketType)CRosePacket::type(_buffer)) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
       /* CRosePacket* pak = */
@@ -102,10 +102,8 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-//      CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest));
-//      pak->pEncryptReq.Unknown = 0x02;
-//      pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr));
-//      Send(pak);
+      auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(std::time(nullptr));
+      Send(*packet);
       break;
     }
     default: {

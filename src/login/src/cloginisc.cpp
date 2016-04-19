@@ -1,5 +1,6 @@
 #include "cloginisc.h"
 #include "crosepacket.h"
+#include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 
@@ -15,40 +16,35 @@ CLoginISC::CLoginISC(tcp::socket _sock)
 }
 
 bool CLoginISC::HandlePacket(uint8_t* _buffer) {
-	(void)_buffer;
-  /* CRosePacket* pak = (CRosePacket*)_buffer; */
-  /* switch (pak->Header.Command) { */
-    /* case ePacketType::ISC_ALIVE: */
-    /*   return true; */
-    /* case ePacketType::ISC_SERVER_AUTH: */
-    /*   return true; */
-    /* case ePacketType::ISC_SERVER_REGISTER: */
-    /*   return ServerRegister(pak); */
-    /* case ePacketType::ISC_TRANSFER: */
-    /*   return true; */
-    /* case ePacketType::ISC_SHUTDOWN: */
-    /*   return ServerShutdown(pak); */
-    /* default: { */
-    /*   CRoseISC::HandlePacket(_buffer); */
-      /* return false; */
-    /* } */
-  /* } */
+  switch (CRosePacket::type(_buffer)) {
+    case ePacketType::ISC_ALIVE:
+      return true;
+    case ePacketType::ISC_SERVER_AUTH:
+      return true;
+    case ePacketType::ISC_SERVER_REGISTER:
+      return ServerRegister(CRosePacket(_buffer));
+    case ePacketType::ISC_TRANSFER:
+      return true;
+    case ePacketType::ISC_SHUTDOWN:
+      return ServerShutdown(CRosePacket(_buffer));
+    default: {
+      CRoseISC::HandlePacket(_buffer);
+      return false;
+    }
+  }
   return true;
 }
 
-bool CLoginISC::ServerRegister(CRosePacket* P) {
-	(void)P;
-  /* CRosePacket* pak = (CRosePacket*)P; */
+bool CLoginISC::ServerRegister(CRosePacket& P) {
+  uint16_t _size = P.size() - 6;
 
-  /* uint16_t _size = pak->Header.Size - 6; */
+  iscPacket::ServerReg pServerReg; 
+  if (pServerReg.ParseFromArray((P.getPacked().get()+6), _size) == false) 
+    return false;  // m_Log.eicprintf( "Couldn't decode proto msg\n" ); 
 
-  /* ServerReg pServerReg; */
-  /* if (pServerReg.ParseFromArray(pak->Data, _size) == false) */
-  /*   return false;  // m_Log.eicprintf( "Couldn't decode proto msg\n" ); */
+  int16_t _type = 0; 
 
-  /* int16_t _type = 0; */
-
-  /* _type = pServerReg.type(); */
+  _type = pServerReg.type(); 
 
   // 1 == char server
   // 2 == node server
@@ -57,29 +53,29 @@ bool CLoginISC::ServerRegister(CRosePacket* P) {
   // 4 == map workers/threads
 
   // todo: replace these numbers with the actual enum name
-  /* if (_type == 1) { */
-  /*   server_name_ = pServerReg.name(); */
-    /* network_ip_address = pServerReg.addr(); */
-    /* network_port_ = pServerReg.port(); */
-    /* min_right_ = pServerReg.accright(); */
-    /* network_type_ = _type; */
-  /* } else if (_type == 3) { */
-  /*   // todo: add channel connections here (_type == 3) */
-    /* tChannelInfo channel; */
-    /* channel.channelName = pServerReg.name(); */
-    /* channel.ChannelID = channel_count_++; */
-    /* channel.MinRight = pServerReg.accright(); */
-    /* channel_list_.push_front(channel); */
-  /* } */
+  if (_type == 1) { 
+    server_name_ = pServerReg.name(); 
+    network_ip_address = pServerReg.addr(); 
+    network_port_ = pServerReg.port(); 
+    min_right_ = pServerReg.accright(); 
+    network_type_ = _type; 
+  } else if (_type == 3) { 
+    // todo: add channel connections here (_type == 3) 
+    tChannelInfo channel; 
+    channel.channelName = pServerReg.name(); 
+    channel.ChannelID = channel_count_++; 
+    channel.MinRight = pServerReg.accright(); 
+    channel_list_.push_front(channel); 
+  } 
 
-  /* logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n", */
-  /*               ServerReg_ServerType_Name(pServerReg.type()).c_str(), */
-                /* server_name_.c_str(), network_ip_address.c_str(), */
-                /* network_port_); */
+  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n", 
+                ServerReg_ServerType_Name(pServerReg.type()).c_str(), 
+                server_name_.c_str(), network_ip_address.c_str(), 
+                network_port_); 
   return true;
 }
 
-bool CLoginISC::ServerShutdown(CRosePacket* P) {
+bool CLoginISC::ServerShutdown(CRosePacket& P) {
   (void)P;
   return true;
 }

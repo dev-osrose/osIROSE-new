@@ -22,8 +22,8 @@ class CLoginISC : public RoseCommon::CRoseISC {
 
  protected:
   bool HandlePacket(uint8_t* _buffer);
-  bool ServerRegister(RoseCommon::CRosePacket* P);
-  bool ServerShutdown(RoseCommon::CRosePacket* P);
+  bool ServerRegister(RoseCommon::CRosePacket& P);
+  bool ServerShutdown(RoseCommon::CRosePacket& P);
 
   std::string server_name_;
   uint32_t channel_count_;

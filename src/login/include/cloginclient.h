@@ -15,8 +15,8 @@ class CLoginClient : public RoseCommon::CRoseClient {
 
   // Packet Helper Functions
   bool UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P);
-  bool ChannelList(RoseCommon::CRosePacket* P);
-  bool ServerSelect(RoseCommon::CRosePacket* P);
+  bool ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P);
+  bool ServerSelect(std::unique_ptr<RoseCommon::CliServerSelectReq> P);
 
   void SendLoginReply(uint8_t Result);
 
@@ -27,7 +27,7 @@ class CLoginClient : public RoseCommon::CRoseClient {
   };
 
   uint16_t access_rights_;
-  uint8_t username_[17];
+  std::string username_;
   eSTATE login_state_;
 };
 
