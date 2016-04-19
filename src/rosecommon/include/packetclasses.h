@@ -263,7 +263,7 @@ class IscServerRegister : public CRosePacket {
      uint32_t _size = size();
      auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
      memset( data.get(), 0, _size );
-     for(int i = 0; i < _size; ++i)
+     for(uint32_t i = 0; i < _size; ++i)
        *this >> data[i];
 
      if (server_reg_.SerializeToArray(data.get(), _size) == false)
@@ -282,7 +282,7 @@ class IscServerRegister : public CRosePacket {
   iscPacket::ServerReg server_reg() const { return server_reg_; }
 
  protected:
-  void pack() { 
+  void pack() {
     int _size = server_reg_.ByteSize();
     auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
     memset( data.get(), 0, _size );
@@ -290,7 +290,7 @@ class IscServerRegister : public CRosePacket {
       throw std::runtime_error("Couldn't serialize the data");
 
     for(int i = 0; i < _size; ++i)
-    *this << data[i];
+      *this << data[i];
   }
 
  private:
