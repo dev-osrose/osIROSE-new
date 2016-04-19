@@ -62,6 +62,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   username_ = P->username();
   std::string clientpass = P->password();
+  logger_->debug("Username: \"{}\"", username_);
 
   // todo(raven): make sure the username is safe to exec
   std::unique_ptr<Core::IResult> res;

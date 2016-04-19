@@ -12,6 +12,7 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
+  CLoginISC* iscServ = new CLoginISC();
   CLoginClient_Mock netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
@@ -32,9 +33,9 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-//  iscServ->SetId(0);
-//  iscServ->SetType(1);
-//  CLoginServer::GetISCList().push_front(iscServ);
+  iscServ->SetId(0);
+  iscServ->SetType(1);
+  CLoginServer::GetISCList().push_front(iscServ);
 
 /*
   //-----------------------------------------
@@ -50,21 +51,17 @@ TEST(TestLoginServer, TestClientPacketPath) {
   pak2->Add<uint8_t>(0);
   netConnect.Send(pak2);
   //-----------------------------------------
-
+*/
   //Incorrect Password
-  auto pak3 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
-  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee6", false);
-  pak3->AddString("test", true);
-  netConnect.Send(pak3);
+  auto pak3 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
+  netConnect.Send(*pak3);
 
   //Correct password
-  pak3 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_LOGIN_REQ));
-  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak3->AddString("test", true);
-  netConnect.Send(pak3);
+  pak3 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.Send(*pak3);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
+/*
   auto pak4 = std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ));
   pak4->pChannelListReq.lServerID = 1;
   netConnect.Send(pak4);
@@ -101,15 +98,15 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 //  CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
 //  netConnect.Send( pak );
-////  {
-////    uint8_t serverCount = 0;
-////    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-////    for (auto& server : CLoginServer::GetISCList()) {
-////      if (server->GetType() == 1) serverCount++;
-////    }
-////
-////    EXPECT_EQ(1, serverCount);
-////  }
+//  {
+//    uint8_t serverCount = 0;
+//    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
+//    for (auto& server : CLoginServer::GetISCList()) {
+//      if (server->GetType() == 1) serverCount++;
+//    }
+//
+//    EXPECT_EQ(1, serverCount);
+//  }
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 //  CRosePacket* pak2 = new CRosePacket( ePacketType::ISC_ALIVE );
