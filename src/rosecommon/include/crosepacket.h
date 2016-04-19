@@ -117,6 +117,13 @@ class CRosePacket {
 			return os;
 		}
 
+		friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
+			do {
+				data.push_back(os.readNext<char>());
+			} while (data.back());
+			return os;
+		}
+
 	private:
 		template <typename T, typename = std::enable_if<!is_container<T>::value>>
 		static T read(uint8_t *data) {
