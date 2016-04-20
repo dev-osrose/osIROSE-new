@@ -19,12 +19,12 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHAR_LIST_REQ:
       return SendCharListReply();
-//    case ePacketType::PAKCS_CREATE_CHAR_REQ:
-//      return SendCharCreateReply(pak);
-//    case ePacketType::PAKCS_DELETE_CHAR_REQ:
-//      return SendCharDeleteReply(pak);
-//    case ePacketType::PAKCS_SELECT_CHAR_REQ:
-//      return SendCharSelectReply(pak);
+    case ePacketType::PAKCS_CREATE_CHAR_REQ:
+      return SendCharCreateReply(getPacket<ePacketType::PAKCS_CREATE_CHAR_REQ>(_buffer));
+    case ePacketType::PAKCS_DELETE_CHAR_REQ:
+      return SendCharDeleteReply(getPacket<ePacketType::PAKCS_DELETE_CHAR_REQ>(_buffer));
+    case ePacketType::PAKCS_SELECT_CHAR_REQ:
+      return SendCharSelectReply(getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
     default:
       return CRoseClient::HandlePacket(_buffer);
   }
@@ -59,14 +59,14 @@ bool CCharClient::SendCharListReply() {
   return true;
 }
 
-bool CCharClient::SendCharCreateReply(CRosePacket* P) {
+bool CCharClient::SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   (void)P;
   logger_->trace("CharCreateReply\n");
 
   return true;
 }
 
-bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
+bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
 	(void)P;
   logger_->trace("CharDeleteReply\n");
 //  uint8_t charid = P->Get<uint8_t>( 0 );
@@ -86,7 +86,7 @@ bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
   return true;
 }
 
-bool CCharClient::SendCharSelectReply(CRosePacket* P) {
+bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   (void)P;
   logger_->trace("CharSelectReply\n");
 

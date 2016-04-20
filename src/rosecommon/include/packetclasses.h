@@ -116,14 +116,14 @@ protected:
 class CliJoinServerReq : public CRosePacket {
  public:
   CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_LOGIN_REQ)
+    if (type() != ePacketType::PAKCS_JOIN_SERVER_REQ)
       throw std::runtime_error("Not the right packet!");
     char pass[32];
     *this >> channel_id_ >> pass;
     password_ = std::string(pass, 32);
   }
   CliJoinServerReq(uint32_t id, const std::string &pass)
-      : CRosePacket(ePacketType::PAKCS_LOGIN_REQ),
+      : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ),
         channel_id_(id),
         password_(pass) {}
 
@@ -139,6 +139,103 @@ class CliJoinServerReq : public CRosePacket {
   uint32_t channel_id_;
   std::string password_;
 };
+
+class CliCreateCharReq : public CRosePacket {
+ public:
+  CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_CREATE_CHAR_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> race_ >> stone_ >> hair_ >> face_ >> weapon_ >> zone_ >> name_;
+  }
+  CliCreateCharReq(const std::string &name, uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint8_t zone)
+      : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ),
+        race_(race),
+        stone_(stone),
+        hair_(hair),
+        face_(face),
+        weapon_(weapon),
+        zone_(zone),
+        name_(name) {}
+
+  virtual ~CliCreateCharReq() {}
+
+  std::string name() const { return name_; }
+  uint8_t race() const { return race_; }
+  uint8_t stone() const { return stone_; }
+  uint8_t hair() const { return hair_; }
+  uint8_t face() const { return face_; }
+  uint8_t weapon() const { return weapon_; }
+  uint8_t zone() const { return zone_; }
+
+ protected:
+  void pack() { *this << race_ << stone_ << hair_ << face_ << weapon_ << zone_ << name_; }
+
+ private:
+  uint8_t race_;
+  uint8_t stone_;
+  uint8_t hair_;
+  uint8_t face_;
+  uint8_t weapon_;
+  uint8_t zone_;
+  std::string name_;
+};
+
+class CliDeleteCharReq : public CRosePacket {
+ public:
+  CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_DELETE_CHAR_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> char_id_ >> delete_;
+  }
+  CliDeleteCharReq(uint8_t id, uint8_t del)
+      : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ),
+        char_id_(id),
+        delete_(del) {}
+
+  virtual ~CliDeleteCharReq() {}
+
+  uint8_t char_id() const { return char_id_; }
+  bool isDelete() const { return (delete_ != 0) ? true : false; }
+
+ protected:
+  void pack() { *this << char_id_ << delete_; }
+
+ private:
+  uint8_t char_id_;
+  uint8_t delete_;
+};
+
+class CliSelectCharReq : public CRosePacket {
+ public:
+  CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_SELECT_CHAR_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> char_id_ >> run_mode_ >> ride_mode_ >> name_;
+  }
+  CliSelectCharReq(const std::string &name, uint8_t id, uint8_t run, uint8_t ride)
+      : CRosePacket(ePacketType::PAKCS_SELECT_CHAR_REQ),
+        char_id_(id),
+        run_mode_(run),
+        ride_mode_(ride),
+        name_(name) {}
+
+  virtual ~CliSelectCharReq() {}
+
+  uint8_t char_id() const { return char_id_; }
+  uint8_t run_mode() const { return run_mode_; }
+  uint8_t ride_mode() const { return ride_mode_; }
+  std::string name() const { return name_; }
+
+ protected:
+  void pack() { *this << char_id_ << run_mode_ << ride_mode_ << name_; }
+
+ private:
+  uint8_t char_id_;
+  uint8_t run_mode_;
+  uint8_t ride_mode_;
+  std::string name_;
+};
+
 
 //-----------------------------------------------
 // Send Packets

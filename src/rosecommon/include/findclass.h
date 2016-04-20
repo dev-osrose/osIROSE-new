@@ -29,6 +29,15 @@ struct find_recv_class<ePacketType::PAKCS_SRV_SELECT_REQ> { CliServerSelectReq t
 template <>
 struct find_recv_class<ePacketType::PAKCS_JOIN_SERVER_REQ> { CliJoinServerReq type; };
 
+template <>
+struct find_recv_class<ePacketType::PAKCS_CREATE_CHAR_REQ> { CliCreateCharReq type; };
+
+template <>
+struct find_recv_class<ePacketType::PAKCS_DELETE_CHAR_REQ> { CliDeleteCharReq type; };
+
+template <>
+struct find_recv_class<ePacketType::PAKCS_SELECT_CHAR_REQ> { CliSelectCharReq type; };
+
 template <ePacketType T>
 struct find_send_class {};
 
@@ -49,6 +58,9 @@ struct find_send_class<ePacketType::PAKSC_JOIN_SERVER_REPLY> { SrvJoinServerRepl
 
 template <>
 struct find_send_class<ePacketType::PAKCC_CHAR_LIST_REPLY> { SrvCharacterListReply type; };
+
+//template <>
+//struct find_recv_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { CliDeleteCharReply type; };
 
 //-----------------------------------------------
 // ISC Packets
