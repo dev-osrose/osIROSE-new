@@ -130,4 +130,17 @@ void CMySQL_Database::QExecute(const std::string &_query) {
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }
+
+std::string CMySQL_Database::escapeData(const std::string &data) {
+  std::string result(data);
+  conn.escape_string(&result);
+  return result;
+}
+
+std::string CMySQL_Database::escapeDataNoConnection(const std::string &data) {
+  std::string result(data);
+  mysqlpp::DBDriver::escape_string_no_conn(&result);
+  return data;
+}
+
 }
