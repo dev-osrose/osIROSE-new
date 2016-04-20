@@ -1,4 +1,11 @@
-
+/*!
+ * \file rosepackets.h
+ *
+ * \author L3nn0x
+ * \date april 2016
+ *
+ * This file contains two helper functions to find and construct the correct subclass from a ePacketType value
+ */
 #ifndef _ROSEPACKETS_H_
 #define _ROSEPACKETS_H_
 

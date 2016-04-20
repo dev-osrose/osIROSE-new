@@ -1,4 +1,12 @@
-
+/*!
+ * \file iscontainer.h
+ *
+ * \author L3nn0x
+ * \date april 2016
+ *
+ * This file contains a type trait to properly estimate if the templated type is iterable (is a container)
+ * Use like this: is_container<T>::value. Contains template type if need be: is_container<T>::type
+ */
 #ifndef _ISCONTAINER_H_
 #define _ISCONTAINER_H_
 
