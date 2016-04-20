@@ -159,7 +159,7 @@ class SrvLoginReply : public CRosePacket {
 
   struct info {
     std::string name_;
-    uint16_t channel_id_;
+    uint32_t channel_id_;
     bool test_;
 
     info(const std::string &name, uint8_t id, bool isTest = false)
