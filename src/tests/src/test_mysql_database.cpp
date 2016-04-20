@@ -191,12 +191,12 @@ TEST(TestMySQL_Database, TestSQLEscape) {
 		constexpr static const char *str() { return "test.ini"; }
 	};
 	auto &pool = Core::databasePoolFilename<Filename>::getInstance();
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("test"), "test");
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("1test1"), "1test1");
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("\\test1"), "\\\\test1");
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("'test1"), "\\'test1");
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("\"test1"), "\\\"test1");
-	EXPECT_EQ(Core::MySQL_Database::escapeDataNoConnection("\%test1"), "\\\%test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("test"), "test");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("1test1"), "1test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("\\test1"), "\\\\test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("'test1"), "\\'test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("\"test1"), "\\\"test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeDataNoConnection("\%test1"), "\\\%test1");
 	EXPECT_EQ(pool.escapeData("test"), "test");
 	EXPECT_EQ(pool.escapeData("1test1"), "1test1");
 	EXPECT_EQ(pool.escapeData("\\test1"), "\\\\test1");
