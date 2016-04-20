@@ -134,13 +134,13 @@ void CMySQL_Database::QExecute(const std::string &_query) {
 
 std::string CMySQL_Database::escapeData(const std::string &data) {
   std::string result(data);
-  conn_.driver()->escape_string(&result, 0, 0);
+  conn_.driver()->escape_string(&result, nullptr, 0);
   return result;
 }
 
 std::string CMySQL_Database::escapeDataNoConnection(const std::string &data) {
   std::string result(data);
-  mysqlpp::DBDriver::escape_string_no_conn(&result, 0, 0);
+  mysqlpp::DBDriver::escape_string_no_conn(&result, nullptr, 0);
   return data;
 }
 
