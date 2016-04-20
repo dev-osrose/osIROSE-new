@@ -346,6 +346,55 @@ class SrvJoinServerReply : public CRosePacket {
    uint32_t pay_flag_;
 };
 
+class SrvCharacterListReply : public CRosePacket {
+ public:
+  SrvCharacterListReply()
+      : CRosePacket(ePacketType::PAKCC_CHAR_LIST_REPLY),
+        character_count_(0) {}
+
+  virtual ~SrvCharacterListReply() {}
+
+  void addCharacter(const std::string &name, uint8_t race,
+                  uint16_t level, uint16_t job,
+                  uint32_t delete_time = 0) {
+    ++character_count_;
+    char_info character(name, race, level, job, delete_time);
+    character_list_.push_back(character);
+  }
+
+ protected:
+  void pack() {
+    *this << character_count_;
+
+    for (auto &character : character_list_) {
+      *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_;
+      //todo(raven): add equiped items right here
+    }
+  }
+
+ private:
+  uint8_t character_count_;
+
+  struct char_info {
+    std::string name_;
+    uint32_t remain_sec_unitl_delete_;
+    uint16_t level_;
+    uint16_t job_;
+    uint8_t race_;
+    //item_equipped_;
+
+    char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
+         uint16_t job = 0, uint32_t delete_time = 0)
+        : name_(name),
+          remain_sec_unitl_delete_(delete_time),
+          level_(level),
+          job_(job),
+          race_(race) {}
+  };
+
+  std::vector<char_info> character_list_;
+};
+
 //-----------------------------------------------
 // ISC Packets
 //-----------------------------------------------

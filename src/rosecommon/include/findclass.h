@@ -47,6 +47,9 @@ struct find_send_class<ePacketType::PAKLC_SRV_SELECT_REPLY> { SrvServerSelectRep
 template <>
 struct find_send_class<ePacketType::PAKSC_JOIN_SERVER_REPLY> { SrvJoinServerReply type; };
 
+template <>
+struct find_send_class<ePacketType::PAKCC_CHAR_LIST_REPLY> { SrvCharacterListReply type; };
+
 //-----------------------------------------------
 // ISC Packets
 //-----------------------------------------------

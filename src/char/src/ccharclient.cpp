@@ -17,8 +17,8 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
-//    case ePacketType::PAKCS_CHAR_LIST_REQ:
-//      return SendCharListReply(pak);  // SendCharList( pak );
+    case ePacketType::PAKCS_CHAR_LIST_REQ:
+      return SendCharListReply();
 //    case ePacketType::PAKCS_CREATE_CHAR_REQ:
 //      return SendCharCreateReply(pak);
 //    case ePacketType::PAKCS_DELETE_CHAR_REQ:
@@ -37,7 +37,7 @@ bool CCharClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> 
   (void)P;
   logger_->trace("JoinServerReply\n");
 
-  //uint32_t channelID = P->id(); 
+  //uint32_t channelID = P->id();
 
   //ask the login server if this client actually logged in successfully and selected that channel
 
@@ -47,9 +47,14 @@ bool CCharClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> 
   return true;
 }
 
-bool CCharClient::SendCharListReply(CRosePacket* P) {
-  (void)P;
+bool CCharClient::SendCharListReply() {
   logger_->trace("CharListReply\n");
+
+  //mysql query to get the characters created.
+
+  auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
+  packet->addCharacter("Raven", 0, 0, 0, 0);
+  Send(*packet);
 
   return true;
 }

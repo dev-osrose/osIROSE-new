@@ -15,7 +15,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   virtual bool OnReceived();
 
   bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
-  bool SendCharListReply(RoseCommon::CRosePacket* P);
+  bool SendCharListReply();
   bool SendCharCreateReply(RoseCommon::CRosePacket* P);
   bool SendCharDeleteReply(RoseCommon::CRosePacket* P);
   bool SendCharSelectReply(RoseCommon::CRosePacket* P);
