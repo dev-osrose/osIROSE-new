@@ -226,6 +226,8 @@ public:
 	 * \note This function is blocking
 	 */
 	virtual std::unique_ptr<IResult>	QStore(const std::string &_query) = 0;
+
+	virtual std::string			escapeData(const std::string &data) = 0;
 };
 }
 
