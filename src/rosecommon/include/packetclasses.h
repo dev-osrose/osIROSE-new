@@ -105,6 +105,33 @@ protected:
   uint8_t channel_id_;
 };
 
+class CliJoinServerReq : public CRosePacket {
+ public:
+  CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_LOGIN_REQ)
+      throw std::runtime_error("Not the right packet!");
+    char pass[32];
+    *this >> channel_id_ >> pass;
+    password_ = std::string(pass, 32);
+  }
+  CliJoinServerReq(uint32_t id, const std::string &pass)
+      : CRosePacket(ePacketType::PAKCS_LOGIN_REQ),
+        channel_id_(id),
+        password_(pass) {}
+
+  virtual ~CliJoinServerReq() {}
+
+  std::string password() const { return password_; }
+  uint32_t channel_id() const { return channel_id_; }
+
+ protected:
+  void pack() { *this << channel_id_ << password_.c_str(); }
+
+ private:
+  uint32_t channel_id_;
+  std::string password_;
+};
+
 //-----------------------------------------------
 // Send Packets
 //-----------------------------------------------
@@ -143,6 +170,21 @@ class SrvLoginReply : public CRosePacket {
     info channel(name, id, isTest);
     channel_list_.push_back(channel);
   }
+
+  enum eResult : uint8_t {
+    OK = 0,
+    FAILED,
+    UNKNOWN_ACCOUNT,
+    INVALID_PASSWORD,
+    ALREADY_LOGGEDIN,
+    REFUSED_ACCOUNT,
+    NEED_CHARGE,
+    NO_RIGHT_TO_CONNECT,
+    TOO_MANY_USERS,
+    NO_NAME,
+    INVALID_VERSION,
+    OUTSIDE_REGION
+  };
 
  protected:
   void pack() {
@@ -245,6 +287,15 @@ class SrvServerSelectReply : public CRosePacket {
   uint8_t result() const { return result_; }
   std::string ip() const { return ip_; }
 
+  enum eResult : uint8_t {
+    OK = 0,
+    FAILED,
+    FULL,
+    INVALID_CHANNEL,
+    CHANNEL_NOT_ACTIVE,
+    INVALID_AGE
+  };
+
  protected:
   void pack() { *this << result_ << client_id_ << crypt_val_ << ip_ << port_; }
 
@@ -254,6 +305,37 @@ class SrvServerSelectReply : public CRosePacket {
   uint16_t port_;
   uint8_t result_;
   std::string ip_;
+};
+
+class SrvJoinServerReply : public CRosePacket {
+ public:
+  SrvJoinServerReply(uint8_t result, uint32_t id, uint32_t pay_flag = 0)
+      : CRosePacket(ePacketType::PAKSC_JOIN_SERVER_REPLY),
+        result_(result),
+        id_(id),
+        pay_flag_(pay_flag) {}
+
+  virtual ~SrvJoinServerReply() {}
+
+  uint8_t result() const { return result_; }
+  uint32_t id() const { return id_; }
+  uint32_t payflag() const { return pay_flag_; }
+
+  enum eResult : uint8_t {
+    OK = 0,
+    FAILED,
+    TIME_OUT,
+    INVALID_PASSWORD,
+    ALREADY_LOGGEDIN
+  };
+
+ protected:
+  void pack() { *this << result_ << id_ << pay_flag_; }
+
+ private:
+   uint8_t result_;
+   uint32_t id_;
+   uint32_t pay_flag_;
 };
 
 //-----------------------------------------------

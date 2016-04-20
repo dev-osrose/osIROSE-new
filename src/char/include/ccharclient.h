@@ -3,6 +3,7 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
+#include "packetclasses.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
  public:
@@ -13,7 +14,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   virtual bool HandlePacket(uint8_t* _buffer);
   virtual bool OnReceived();
 
-  bool JoinServerReply(RoseCommon::CRosePacket* P);
+  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
   bool SendCharListReply(RoseCommon::CRosePacket* P);
   bool SendCharCreateReply(RoseCommon::CRosePacket* P);
   bool SendCharDeleteReply(RoseCommon::CRosePacket* P);
