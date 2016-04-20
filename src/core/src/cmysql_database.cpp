@@ -3,6 +3,7 @@
 #include <exception>
 #include <stdexcept>
 #include "database.h"
+#include <dbdriver.h>
 
 namespace Core {
 
