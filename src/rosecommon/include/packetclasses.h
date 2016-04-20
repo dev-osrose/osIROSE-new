@@ -43,6 +43,23 @@ public:
   virtual ~CliAcceptReq() {}
 };
 
+class CliScreenShotReq : public CRosePacket {
+public:
+  CliScreenShotReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> count_;
+  }
+  CliScreenShotReq(uint16_t count = 1) 
+      : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ),
+        count_(count) {}
+
+  virtual ~CliScreenShotReq() {}
+
+private:
+  uint16_t count_;
+};
+
 class CliLoginReq : public CRosePacket {
  public:
   CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
@@ -256,6 +273,27 @@ class SrvAcceptClient : public CRosePacket {
   uint32_t rand_value_;
 };
 
+class SrvScreenShotReply : public CRosePacket {
+ public:
+  SrvScreenShotReply()
+      : CRosePacket(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY),
+        year_(2016),
+        month_(4),
+        day_(20),
+        hour_(5),
+        min_(52) {}
+
+ protected:
+  void pack() { *this << year_ << month_ << day_ << hour_ << min_; }
+
+ private:
+   uint16_t year_;
+   uint8_t month_;
+   uint8_t day_;
+   uint8_t hour_;
+   uint8_t min_;
+};
+
 class SrvLoginReply : public CRosePacket {
  public:
   SrvLoginReply(uint8_t result, uint16_t right, uint16_t type)
@@ -456,7 +494,23 @@ class SrvCharacterListReply : public CRosePacket {
                   uint32_t delete_time = 0) {
     ++character_count_;
     char_info character(name, race, level, job, delete_time);
-    character_list_.push_back(character);
+    character_list_.push_back( character );
+
+    for (int idx = 0; idx < MAX_EQUIPPED_ITEMS; ++idx)
+      addEquipItem(character_count_-1, idx);
+  }
+
+  void addEquipItem(uint8_t char_id, uint8_t slot, uint16_t item_id = 0,
+                  uint16_t gem = 0, uint8_t socket = 0,
+                  uint8_t grade = 0) {
+
+    if(char_id < character_count_ && slot < MAX_EQUIPPED_ITEMS) {
+      equip_item item = character_list_[char_id].items_[slot];
+      item.id_ = item_id;
+      item.gem_op_ = gem;
+      item.socket_ = socket;
+      item.grade_ = grade;
+    }
   }
 
  protected:
@@ -465,12 +519,43 @@ class SrvCharacterListReply : public CRosePacket {
 
     for (auto &character : character_list_) {
       *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_;
-      //todo(raven): add equiped items right here
+
+      for(int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
+        *this << character.items_[i].id_ << character.items_[i].gem_op_ << character.items_[i].socket_ << character.items_[i].grade_;
+      }
     }
   }
 
  private:
   uint8_t character_count_;
+
+  enum equipped_position {
+    EQUIP_FACE = 0,
+    EQUIP_HAIR = 1,
+    EQUIP_HELMET = 2,
+    EQUIP_ARMOR = 3,
+    EQUIP_GAUNTLET = 4,
+    EQUIP_BOOTS = 5,
+    EQUIP_GOGGLES = 6,
+    EQUIP_FACE_ITEM = EQUIP_GOGGLES,
+    EQUIP_BACKPACK = 7,
+    EQUIP_WEAPON_R = 8,
+    EQUIP_WEAPON_L = 9,
+    MAX_EQUIPPED_ITEMS
+  };
+
+  struct equip_item {
+    uint16_t id_     : 10; // 0~1023
+    uint16_t gem_op_ : 9; // 0~512
+    uint8_t socket_  : 1; // 0~1
+    uint8_t grade_; // 0~15
+
+    equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) :
+      id_(id),
+      gem_op_(gem),
+      socket_(socket),
+      grade_(grade) {}
+  };
 
   struct char_info {
     std::string name_;
@@ -478,17 +563,18 @@ class SrvCharacterListReply : public CRosePacket {
     uint16_t level_;
     uint16_t job_;
     uint8_t race_;
-    //item_equipped_;
+    uint8_t platinum_;
+    equip_item items_[MAX_EQUIPPED_ITEMS];
 
     char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
-         uint16_t job = 0, uint32_t delete_time = 0)
+         uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0)
         : name_(name),
           remain_sec_unitl_delete_(delete_time),
           level_(level),
           job_(job),
-          race_(race) {}
+          race_(race),
+          platinum_(platinum) {}
   };
-
   std::vector<char_info> character_list_;
 };
 

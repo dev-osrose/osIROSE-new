@@ -21,6 +21,9 @@ template <>
 struct find_recv_class<ePacketType::PAKCS_LOGIN_REQ> { CliLoginReq type; };
 
 template <>
+struct find_recv_class<ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ> { CliScreenShotReq type; };
+
+template <>
 struct find_recv_class<ePacketType::PAKCS_CHANNEL_LIST_REQ> { CliChannelReq type; };
 
 template <>
@@ -45,6 +48,9 @@ template <>
 struct find_send_class<ePacketType::PAKSS_ACCEPT_REPLY> { SrvAcceptClient type; };
 
 template <>
+struct find_send_class<ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY> { SrvScreenShotReply type; };
+
+template <>
 struct find_send_class<ePacketType::PAKLC_LOGIN_REPLY> { SrvLoginReply type; };
 
 template <>
@@ -60,7 +66,7 @@ template <>
 struct find_send_class<ePacketType::PAKCC_CHAR_LIST_REPLY> { SrvCharacterListReply type; };
 
 //template <>
-//struct find_recv_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { CliDeleteCharReply type; };
+//struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { CliDeleteCharReply type; };
 
 //-----------------------------------------------
 // ISC Packets

@@ -119,6 +119,11 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       Send(*packet);
       break;
     }
+    case ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ: {
+      auto packet = makePacket<ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY>();
+      Send(*packet);
+      break;
+    }
     default: {
       logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)CRosePacket::type(_buffer));
       return false;

@@ -20,7 +20,14 @@ class CCharClient : public RoseCommon::CRoseClient {
   bool SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P);
   bool SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P);
 
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+    TRANSFERING,
+  };
+
   uint16_t access_rights_;
+  eSTATE login_state_;
 };
 
 #endif

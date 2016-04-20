@@ -6,11 +6,11 @@
 
 using namespace RoseCommon;
 
-CCharClient::CCharClient() : CRoseClient(), access_rights_(0) {
+CCharClient::CCharClient() : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 CCharClient::CCharClient(tcp::socket _sock)
-    : CRoseClient(std::move(_sock)), access_rights_(0) {
+    : CRoseClient(std::move(_sock)), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
@@ -53,7 +53,8 @@ bool CCharClient::SendCharListReply() {
   //mysql query to get the characters created.
 
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
-  packet->addCharacter("Raven", 0, 0, 0, 0);
+  packet->addCharacter("Raven", 1, 1, 100, 0);
+  packet->addEquipItem(0, 0, 0, 0, 0, 0);
   Send(*packet);
 
   return true;
