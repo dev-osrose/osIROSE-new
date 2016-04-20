@@ -1,3 +1,11 @@
+/*!
+ * \file packetclasses.h
+ *
+ * \author L3nn0x RavenX8
+ * \date april 2016
+ *
+ * This file contains all packet subclasses and the logic needed
+ */
 #ifndef _PACKETCLASSES_H_
 #define _PACKETCLASSES_H_
 

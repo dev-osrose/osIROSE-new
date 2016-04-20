@@ -1,4 +1,11 @@
-
+/*!
+ * \file findclass.h
+ *
+ * \author L3nn0x
+ * \date april 2016
+ *
+ * This header contains two structs to properly deduce the subclass type of a packet from the ePacketType value
+ */
 #ifndef _FINDCLASS_H_
 #define _FINDCLASS_H_
 
