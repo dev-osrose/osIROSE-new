@@ -133,7 +133,7 @@ void CMySQL_Database::QExecute(const std::string &_query) {
 
 std::string CMySQL_Database::escapeData(const std::string &data) {
   std::string result(data);
-  conn.escape_string(&result);
+  conn_.escape_string(&result);
   return result;
 }
 
