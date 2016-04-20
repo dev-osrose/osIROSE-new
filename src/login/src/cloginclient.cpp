@@ -18,7 +18,8 @@ CLoginClient::CLoginClient(tcp::socket _sock)
       login_state_(eSTATE::DEFAULT) {}
 
 void CLoginClient::SendLoginReply(uint8_t Result) {
-  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>(Result, 0, 0);
+  logger_->debug( "SendLoginReply({})", Result );
+  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>( Result, 0, 0 );
 
   if (Result == 0) {
     login_state_ = eSTATE::LOGGEDIN;
@@ -31,7 +32,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
         CLoginISC* svr = (CLoginISC*)server;
 
         // This if check is needed since the client actually looks for this.
-        packet->addServer(svr->GetName(), svr->GetId(), svr->IsTestServer());
+        packet->addServer(svr->GetName(), svr->GetId()+1, svr->IsTestServer());
       }
   }
 
@@ -128,7 +129,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
     if (server->GetType() == iscPacket::ServerReg_ServerType_CHAR &&
-        server->GetId() == ServerID) {
+        server->GetId()+1 == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
         { packet->addChannel(info.channelName, info.ChannelID, 0); }
@@ -161,9 +162,9 @@ bool CLoginClient::ServerSelect(
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
-    if (server->GetType() == 1 && server->GetId() == serverID) {
+    if (server->GetType() == 1 && server->GetId()+1 == serverID) {
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          server->GetIP(), GetId(), 0, server->GetPort());
+          server->GetIP(), GetId()+1, 0, server->GetPort());
       this->Send(*packet);
       // TODO: send char server the channel id we are connecting to (the client
       // may already do this)

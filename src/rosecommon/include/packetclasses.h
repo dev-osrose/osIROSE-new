@@ -138,7 +138,7 @@ class SrvLoginReply : public CRosePacket {
   uint16_t &right() { return right_; }
   uint16_t &type() { return type_; }
 
-  void setRight(uint16_t right) { result_ = right; }
+  void setRight(uint16_t right) { right_ = right; }
   void addServer(const std::string &name, uint32_t id, bool isTest = false) {
     info channel(name, id, isTest);
     channel_list_.push_back(channel);
@@ -149,7 +149,12 @@ class SrvLoginReply : public CRosePacket {
     *this << result_ << right_ << type_;
 
     for (auto &server : channel_list_)
-      *this << (server.test_ ? '@' : ' ') << server.name_ << server.channel_id_;
+    {
+      char pad = ' ';
+      if(server.test_ == true)
+        pad = '@';
+      *this << pad << server.name_ << server.channel_id_;
+    }
   }
 
  private:
@@ -159,11 +164,11 @@ class SrvLoginReply : public CRosePacket {
 
   struct info {
     std::string name_;
-    uint16_t channel_id_;
+    uint32_t channel_id_;
     bool test_;
 
-    info(const std::string &name, uint8_t id, bool isTest = false)
-        : name_(name), channel_id_(id+1), test_(isTest) {}
+    info(const std::string &name, uint32_t id, bool isTest = false)
+        : name_(name), channel_id_(id), test_(isTest) {}
   };
 
   std::vector<info> channel_list_;
@@ -204,7 +209,7 @@ class SrvChannelReply : public CRosePacket {
 
   struct info {
     std::string name_;
-    uint16_t channel_id_;
+    uint8_t channel_id_;
     uint8_t low_age_;
     uint8_t high_age_;
     uint16_t capacity_;
