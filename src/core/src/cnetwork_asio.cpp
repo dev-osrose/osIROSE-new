@@ -54,6 +54,7 @@ bool CNetwork_Asio::Shutdown() {
 
   if(OnShutdown() == true) {
     Disconnect();
+    ResetBuffer();
 
     if (listener_.is_open()) {
       std::error_code ignored;
