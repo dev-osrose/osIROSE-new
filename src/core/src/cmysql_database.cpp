@@ -3,6 +3,7 @@
 #include <exception>
 #include <stdexcept>
 #include "database.h"
+#include <dbdriver.h>
 
 namespace Core {
 
@@ -130,4 +131,26 @@ void CMySQL_Database::QExecute(const std::string &_query) {
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }
+
+static bool replaceAll(std::string &str, const std::string &from, const std::string &to) {
+	size_t pos = 0;
+	bool isFound = false;
+	while ((pos = str.find(from, pos)) != std::string::npos) {
+		str.replace(pos, from.length(), to);
+		pos += to.length();
+		isFound = true;
+	}
+	return isFound;
+}
+
+std::string CMySQL_Database::escapeData(const std::string &data) {
+  std::string result(data);
+  replaceAll(result, "'", "\\'");
+  replaceAll(result, "\"", "\\\"");
+  replaceAll(result, "%", "\\%");
+  replaceAll(result, "_", "\\_");
+  replaceAll(result, ";", "");
+  return result;
+}
+
 }

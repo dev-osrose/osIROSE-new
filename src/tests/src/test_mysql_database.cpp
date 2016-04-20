@@ -185,3 +185,14 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 			EXPECT_EQ(s, "plop");
 		}());
 }
+
+TEST(TestMySQL_Database, TestSQLEscape) {
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("test"), "test");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("1test1"), "1test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("\\test1"), "\\test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("'test1"), "\\'test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("\"test1"), "\\\"test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("%test1"), "\\%test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("_test1"), "\\_test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData(";test1"), "test1");
+}

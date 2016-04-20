@@ -90,6 +90,14 @@ class CMySQL_Database : public IDatabase {
   virtual void QExecute(const std::string &_query);
   virtual std::unique_ptr<IResult> QStore(const std::string &_query);
 
+  /*!
+   * \brief This function escapes a string to make it MySQL safe.
+   *
+   * \param[in] data The data to escape
+   * \return a safe escaped copy of the input
+   */
+  static std::string escapeData(const std::string &data);
+
  private:
   std::string hostname_;
   std::string database_;
