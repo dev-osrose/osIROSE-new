@@ -96,7 +96,7 @@ class CMySQL_Database : public IDatabase {
    * \param[in] data The data to escape
    * \return a safe escaped copy of the input
    */
-  static std::string escapeDataNoConnection(const std::string &data);
+  static std::string escapeData(const std::string &data);
 
  private:
   std::string hostname_;
