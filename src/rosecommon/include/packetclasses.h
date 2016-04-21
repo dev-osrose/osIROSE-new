@@ -579,12 +579,12 @@ class SrvCharacterListReply : public CRosePacket {
 
     char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
          uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0)
-        : name_(name),
-          remain_sec_unitl_delete_(delete_time),
+        : remain_sec_unitl_delete_(delete_time),
           level_(level),
           job_(job),
           race_(race),
-          platinum_(platinum) {}
+          platinum_(platinum),
+          name_(name) {}
   };
   std::vector<char_info> character_list_;
 };
