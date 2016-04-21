@@ -202,17 +202,19 @@ class CliDeleteCharReq : public CRosePacket {
   CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_DELETE_CHAR_REQ)
       throw std::runtime_error("Not the right packet!");
-    *this >> char_id_ >> delete_;
+    *this >> char_id_ >> delete_ >> name_;
   }
-  CliDeleteCharReq(uint8_t id, uint8_t del)
+  CliDeleteCharReq(const std::string &name, uint8_t id, uint8_t del)
       : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ),
         char_id_(id),
-        delete_(del) {}
+        delete_(del),
+        name_(name) {}
 
   virtual ~CliDeleteCharReq() {}
 
   uint8_t char_id() const { return char_id_; }
   bool isDelete() const { return (delete_ != 0) ? true : false; }
+  std::string name() const { return name_; }
 
  protected:
   void pack() { *this << char_id_ << delete_; }
@@ -220,6 +222,7 @@ class CliDeleteCharReq : public CRosePacket {
  private:
   uint8_t char_id_;
   uint8_t delete_;
+  std::string name_;
 };
 
 class CliSelectCharReq : public CRosePacket {
@@ -510,6 +513,7 @@ class SrvCharacterListReply : public CRosePacket {
       item.gem_op_ = gem;
       item.socket_ = socket;
       item.grade_ = grade;
+      character_list_[char_id].items_[slot] = item;
     }
   }
 
@@ -518,11 +522,13 @@ class SrvCharacterListReply : public CRosePacket {
     *this << character_count_;
 
     for (auto &character : character_list_) {
-      *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_;
+      *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_ << character.platinum_;
 
       for(int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-        *this << character.items_[i].id_ << character.items_[i].gem_op_ << character.items_[i].socket_ << character.items_[i].grade_;
+        for(int j = 0; j < 4; ++j)
+          *this << character.items_[i].data[j];
       }
+      *this << character.name_;
     }
   }
 
@@ -545,10 +551,15 @@ class SrvCharacterListReply : public CRosePacket {
   };
 
   struct equip_item {
-    uint16_t id_     : 10; // 0~1023
-    uint16_t gem_op_ : 9; // 0~512
-    uint8_t socket_  : 1; // 0~1
-    uint8_t grade_; // 0~15
+    union {
+      struct {
+        uint16_t id_ : 10; // 0~1023
+        uint16_t gem_op_ : 9; // 0~512
+        uint8_t socket_ : 1; // 0~1
+        uint8_t grade_ : 4; // 0~15
+      };
+      uint8_t data[4];
+    };
 
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) :
       id_(id),
@@ -558,13 +569,13 @@ class SrvCharacterListReply : public CRosePacket {
   };
 
   struct char_info {
-    std::string name_;
     uint32_t remain_sec_unitl_delete_;
     uint16_t level_;
     uint16_t job_;
     uint8_t race_;
     uint8_t platinum_;
     equip_item items_[MAX_EQUIPPED_ITEMS];
+    std::string name_;
 
     char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
          uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0)
@@ -576,6 +587,26 @@ class SrvCharacterListReply : public CRosePacket {
           platinum_(platinum) {}
   };
   std::vector<char_info> character_list_;
+};
+
+class SrvDeleteCharReply : public CRosePacket {
+ public:
+  SrvDeleteCharReply(const std::string &name, uint32_t remaining_time)
+      : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY),
+        remaining_time_(remaining_time),
+        name_(name) {}
+
+  virtual ~SrvDeleteCharReply() {}
+
+  uint32_t remaining_time() const { return remaining_time_; }
+  std::string name() const { return name_; }
+
+ protected:
+  void pack() { *this << remaining_time_ << name_; }
+
+ private:
+   uint32_t remaining_time_;
+   std::string name_;
 };
 
 //-----------------------------------------------

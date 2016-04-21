@@ -24,11 +24,11 @@ bool CRoseClient::Send(CRosePacket &_buffer) {
 }
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
-  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
+  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
 #ifdef SPDLOG_TRACE_ON
   fmt::MemoryWriter out;
   for(int i = 0; i < CRosePacket::size(_buffer.get()); i++)
-    out.write("0x{0:x} ", _buffer[i]);
+    out.write("0x{0:02x} ", _buffer[i]);
   logger_->trace("{}", out.c_str());
 #endif
   return CNetwork_Asio::Send(std::move(_buffer));
@@ -73,11 +73,11 @@ bool CRoseClient::OnReceived() {
   }
 #endif
 
-  logger_->trace("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
+  logger_->trace("Received a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
 #ifdef SPDLOG_TRACE_ON
   fmt::MemoryWriter out;
   for(int i = 0; i < CRosePacket::size(buffer_); i++)
-    out.write("0x{0:x} ", buffer_[i]);
+    out.write("0x{0:02x} ", buffer_[i]);
   logger_->trace("{}", out.c_str());
 #endif
   rtnVal = HandlePacket(buffer_);
@@ -106,12 +106,11 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       return CNetwork_Asio::HandlePacket(_buffer);
     }
 #ifdef STRESS_TEST
-//    case (ePacketType)0x6F6D: {
-//      CRosePacket* pak = new CRosePacket(0x6F6D, 8);
-//      memcpy(pak->Buffer, _buffer, 8);
-//      Send(pak);
-//      break;
-//    }
+    case (ePacketType)0x6F6D: {
+      std::unique_ptr<CRosePacket> packet( new CRosePacket(_buffer) );
+      Send(*packet);
+      break;
+    }
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
@@ -125,7 +124,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       break;
     }
     default: {
-      logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)CRosePacket::type(_buffer));
+               logger_->warn("Unknown Packet Type: 0x{0:04x}", (uint16_t)CRosePacket::type(_buffer));
       return false;
     }
   }

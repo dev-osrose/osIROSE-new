@@ -94,6 +94,7 @@ class CNetwork_Asio : public INetwork {
 
   void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
+    //memset(buffer_, 0, packet_size_);
     packet_offset_ = 0;
     packet_size_ = 6;
   }

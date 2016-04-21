@@ -65,8 +65,8 @@ struct find_send_class<ePacketType::PAKSC_JOIN_SERVER_REPLY> { SrvJoinServerRepl
 template <>
 struct find_send_class<ePacketType::PAKCC_CHAR_LIST_REPLY> { SrvCharacterListReply type; };
 
-//template <>
-//struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { CliDeleteCharReply type; };
+template <>
+struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { SrvDeleteCharReply type; };
 
 //-----------------------------------------------
 // ISC Packets
