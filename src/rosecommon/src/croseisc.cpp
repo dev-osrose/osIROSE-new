@@ -3,9 +3,7 @@
 
 namespace RoseCommon {
 
-CRoseISC::CRoseISC() : CRoseClient() {
-  ResetBuffer();
-}
+CRoseISC::CRoseISC() : CRoseClient() { ResetBuffer(); }
 
 CRoseISC::CRoseISC(tcp::socket _sock) : CRoseClient(std::move(_sock)) {
   ResetBuffer();
@@ -37,9 +35,10 @@ bool CRoseISC::OnReceived() {
     if (packet_size_ > 6) return true;
   }
 
-  CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug("Received a packet on CRoseISC: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
-  rtnVal = HandlePacket( buffer_ );
+  logger_->debug("Received a packet on CRoseISC: Header[{0}, 0x{1:x}]",
+                 CRosePacket::size(buffer_),
+                 (uint16_t)CRosePacket::type(buffer_));
+  rtnVal = HandlePacket(buffer_);
   ResetBuffer();
   return rtnVal;
 }
@@ -53,12 +52,12 @@ bool CRoseISC::OnSend(uint8_t* _buffer) {
 void CRoseISC::OnSent() {}
 
 bool CRoseISC::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
     default: {
-      logger_->warn("Unknown Packet Type: {0:x}", (uint16_t)pak->Header.Command);
+      logger_->warn("Unknown Packet Type: 0x{0:x}",
+                    (uint16_t)CRosePacket::type(_buffer));
       return false;
     }
   }

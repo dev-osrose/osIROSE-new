@@ -5,20 +5,17 @@
 
 using namespace RoseCommon;
 
-CMapClient::CMapClient() : CRoseClient(), access_rights_(0) {
-}
+CMapClient::CMapClient() : CRoseClient(), access_rights_(0) {}
 
 CMapClient::CMapClient(tcp::socket _sock)
-    : CRoseClient(std::move(_sock)), access_rights_(0) {
-}
+    : CRoseClient(std::move(_sock)), access_rights_(0) {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
-    //		case ePacketType::PAKCS_JOIN_SERVER_REQ: return JoinServerReply( pak
-    //); // Allow client to connect
-    //		case ePacketType::PAKCS_CHAR_LIST_REQ: return SendCharListReply( pak
-    //); // SendCharList( pak );
+  switch (CRosePacket::type(_buffer)) {
+//    case ePacketType::PAKCS_JOIN_SERVER_REQ:
+//      return JoinServerReply(pak);  // Allow client to connect
+//    case ePacketType::PAKCS_CHAR_LIST_REQ:
+//      return SendCharListReply(pak);
     default:
       return CRoseClient::HandlePacket(_buffer);
   }

@@ -205,7 +205,7 @@ public:
 	 * \note The connection should be initiated in the constructor as much as possible, this function is provided for convenience only.
 	 * \warning If the database object was already connected when calling this function, the connection will be dropped and a new one will be made with the new parameters.
 	 */
-	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
+	virtual void	Connect(const std::string &_host, const std::string &_database, const std::string &_user, const std::string &_password) = 0;
 
 	/*!
 	 * \brief Used to make a query without result
@@ -215,7 +215,7 @@ public:
 	 * \param[in] _query The query to run against the database
 	 * \note This function is blocking
 	 */
-	virtual void				QExecute(std::string _query) = 0;
+	virtual void				QExecute(const std::string &_query) = 0;
 	/*!
 	 * \brief Used to make a query with results
 	 *
@@ -225,7 +225,7 @@ public:
 	 * \param[out] std::unique_ptr<IResult> The result of the query
 	 * \note This function is blocking
 	 */
-	virtual std::unique_ptr<IResult>	QStore(std::string _query) = 0;
+	virtual std::unique_ptr<IResult>	QStore(const std::string &_query) = 0;
 };
 }
 

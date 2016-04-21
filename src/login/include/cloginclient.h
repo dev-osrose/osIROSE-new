@@ -2,7 +2,7 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-#include "crosepacket.h"
+#include "rosepackets.h"
 
 class CLoginClient : public RoseCommon::CRoseClient {
  public:
@@ -14,9 +14,9 @@ class CLoginClient : public RoseCommon::CRoseClient {
   virtual bool OnReceived();
 
   // Packet Helper Functions
-  bool UserLogin(RoseCommon::CRosePacket* P);
-  bool ChannelList(RoseCommon::CRosePacket* P);
-  bool ServerSelect(RoseCommon::CRosePacket* P);
+  bool UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P);
+  bool ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P);
+  bool ServerSelect(std::unique_ptr<RoseCommon::CliServerSelectReq> P);
 
   void SendLoginReply(uint8_t Result);
 
@@ -27,7 +27,7 @@ class CLoginClient : public RoseCommon::CRoseClient {
   };
 
   uint16_t access_rights_;
-  uint8_t username_[17];
+  std::string username_;
   eSTATE login_state_;
 };
 

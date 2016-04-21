@@ -29,7 +29,7 @@ namespace RoseCommon {
 // LC = Login -> server
 // CC = Char -> Client
 // WC = World -> client
-enum struct ePacketType : uint16_t {
+enum class ePacketType : uint16_t {
   ISCSTART = 0x300,
   ISC_ALIVE,
   ISC_SERVER_AUTH,
@@ -54,7 +54,7 @@ enum struct ePacketType : uint16_t {
   PAKLC_LOGIN_REPLY = PAKCS_LOGIN_REQ,
   PAKGC_LOGIN_REPLY,
   PAKCS_SRV_SELECT_REQ = 0x70a,
-  PAKLC_SRV_SELECT_REQ = PAKCS_SRV_SELECT_REQ,
+  PAKLC_SRV_SELECT_REPLY = PAKCS_SRV_SELECT_REQ,
 
   PAKCS_JOIN_SERVER_REQ,
   PAKSC_JOIN_SERVER_REPLY,
@@ -91,13 +91,16 @@ enum struct ePacketType : uint16_t {
   PAKCS_CHANGE_MAP_REQ = 0x753,
   PAKWC_CHANGE_MAP_REPLY = PAKCS_CHANGE_MAP_REQ,
 
+  PAKCS_SCREEN_SHOT_TIME_REQ = 0x7eb,
+  PAKSC_SCREEN_SHOT_TIME_REPLY = PAKCS_SCREEN_SHOT_TIME_REQ,
+  PAKSS_ACCEPT_REPLY = 0x7ff,
   EPACKETMAX,
 
   STRESS = 0x6F6D
 };
 
 inline bool operator!(const ePacketType& rhs) {
-  return static_cast<int32_t>(rhs) == 0;
+  return static_cast<int16_t>(rhs) == 0;
 }
 inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs) {
   return (lhs != static_cast<uint32_t>(rhs));
@@ -119,13 +122,14 @@ struct tChannelInfo {
 //-------------------------------------------
 PACK(
     // Packet information
-    struct sPacketHeader {
-      uint16_t Size;        // Packet size
-      ePacketType Command;  // Packet command
-      uint16_t Unused;      // unused?
-    });
+struct sPacketHeader {
+  uint16_t Size;        // Packet size
+  ePacketType Command;  // Packet command
+  uint16_t Unused;      // unused?
+});
 
-PACK(struct pakChannelInfo {
+PACK(
+struct pakChannelInfo {
   uint8_t ChannelID;
   uint16_t
       pad;  // This was used to tell the client the AGE of the server. 2 bytes.
@@ -134,25 +138,28 @@ PACK(struct pakChannelInfo {
                     // Channel Name as string
 });
 
-PACK(struct pakChannel_List
-     : public sPacketHeader {
+PACK(
+struct pakChannel_List : public sPacketHeader {
   uint32_t lServerID;
   uint8_t bServerCount;
   // channelInfo sServers[]; // There is a better way to do this, just can't
   // think of one ATM. -Raven
 });
 
-PACK(struct pakChannelList_Req : public sPacketHeader { uint32_t lServerID; });
+PACK(
+struct pakChannelList_Req : public sPacketHeader {
+  uint32_t lServerID;
+});
 
-PACK(struct pakLoginReply
-     : public sPacketHeader {
+PACK(
+struct pakLoginReply : public sPacketHeader {
   uint8_t Result;
   uint16_t Right;
   uint16_t Type;
 });
 
-PACK(struct pakEncryptionRequest
-     : public sPacketHeader {
+PACK(
+struct pakEncryptionRequest : public sPacketHeader {
   uint8_t Unknown;
   uint32_t RandValue;
 });

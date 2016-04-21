@@ -58,7 +58,7 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
     if (logger.expired()) {
       std::ostringstream format;
-      format << "[%H:%M:%S.%e %z] [%L]";
+      format << "[%H:%M:%S.%e.%f %z] [%L]";
 
       if (level_ <= spdlog::level::debug) format << " [thread %t]";
       format << " [%n]" << " %v ";
@@ -109,9 +109,6 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
 
       spdlog::register_logger(net_logger);
 
-      net_sink.clear();
-      console_sink.reset();
-//      daily_sink.reset();
       return net_logger;
     }
   } catch (const spdlog::spdlog_ex& ex) {

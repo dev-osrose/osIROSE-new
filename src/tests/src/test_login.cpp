@@ -21,14 +21,15 @@ TEST(TestLoginServer, TestClientPacketPath) {
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
-  netConnect.Send(pak);
 
-  CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
-  pak2->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak2->AddString("test2", true);
-  netConnect.Send(pak2);
+  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  auto pak = std::unique_ptr<CliAcceptReq>(new CliAcceptReq());
+  netConnect.Send(*pak);
+
+  //TODO(raven): Move this into a static function so we can just call the function
+  //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
+  auto pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.Send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -36,50 +37,42 @@ TEST(TestLoginServer, TestClientPacketPath) {
   iscServ->SetType(1);
   CLoginServer::GetISCList().push_front(iscServ);
 
+
   //-----------------------------------------
   // We aren't logged in yet
   // We should get a warning
   //-----------------------------------------
-  pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
-  pak2->pChannelListReq.lServerID = 1;
-  netConnect.Send(pak2);
+  auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
+  netConnect.Send(*pak3);
 
-  pak2 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
-  pak2->Add<uint32_t>(0);
-  pak2->Add<uint8_t>(0);
-  netConnect.Send(pak2);
+  auto pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0, 0));
+  netConnect.Send(*pak4);
   //-----------------------------------------
 
   //Incorrect Password
-  CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
-  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee6", false);
-  pak3->AddString("test", true);
-  netConnect.Send(pak3);
+  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
+  netConnect.Send(*pak2);
 
   //Correct password
-  pak3 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
-  pak3->AddString("cc03e747a6afbbcbf8be7668acfebee5", false);
-  pak3->AddString("test", true);
-  netConnect.Send(pak3);
+  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.Send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
-  pak4->pChannelListReq.lServerID = 1;
-  netConnect.Send(pak4);
+  pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
+  netConnect.Send(*pak3);
 
-  CRosePacket* pak5 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
-  pak5->Add<uint32_t>(0);
-  pak5->Add<uint8_t>(0);
-  netConnect.Send(pak5);
+  pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0,0));
+  netConnect.Send(*pak4);
 
-  CRosePacket* pak6 = new CRosePacket(ePacketType::PAKCS_ALIVE);
-  netConnect.Send(pak6);
+  auto pak5 = std::unique_ptr<CRosePacket>(new CliAlive());
+  netConnect.Send(*pak5);
+
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(100));  // Change this to condition variables
 
-//  CLoginServer::GetISCList().clear();
+  CLoginServer::GetISCList().clear();
 
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
@@ -97,8 +90,8 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
-  CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
-  netConnect.Send( pak );
+//  CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
+//  netConnect.Send( pak );
 //  {
 //    uint8_t serverCount = 0;
 //    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
@@ -110,8 +103,8 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 //  }
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak2 = new CRosePacket( ePacketType::ISC_ALIVE );
-  netConnect.Send( pak2 );
+//  CRosePacket* pak2 = new CRosePacket( ePacketType::ISC_ALIVE );
+//  netConnect.Send( pak2 );
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables

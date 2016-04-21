@@ -1,7 +1,7 @@
 #include <ctime>
 #include "croseclient.h"
 #include "epackettype.h"
-
+#include "rosepackets.h"
 
 namespace RoseCommon {
 //#define STRESS_TEST
@@ -10,7 +10,7 @@ CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   ResetBuffer();
 }
 
-CRoseClient::CRoseClient(tcp::socket _sock) : CNetwork_Asio(), crypt_() {
+CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
   SetSocket(std::move(_sock));
   Recv();
   ResetBuffer();
@@ -18,12 +18,18 @@ CRoseClient::CRoseClient(tcp::socket _sock) : CNetwork_Asio(), crypt_() {
 
 CRoseClient::~CRoseClient() { Shutdown(); }
 
-bool CRoseClient::Send(CRosePacket* _buffer) {
-  //  std::unique_ptr<uint8_t*> buf( ((uint8_t*)_buffer) );
-  return CNetwork_Asio::Send(std::unique_ptr<uint8_t>((uint8_t*)_buffer));
+bool CRoseClient::Send(CRosePacket &_buffer) {
+  return CRoseClient::Send(_buffer.getPacked());
 }
 
-bool CRoseClient::Send(std::unique_ptr<uint8_t> _buffer) {
+bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
+  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
+#ifdef SPDLOG_TRACE_ON
+  fmt::MemoryWriter out;
+  for(int i = 0; i < CRosePacket::size(_buffer.get()); i++)
+    out.write("0x{0:02x} ", _buffer[i]);
+  logger_->trace("{}", out.c_str());
+#endif
   return CNetwork_Asio::Send(std::move(_buffer));
 }
 
@@ -66,8 +72,13 @@ bool CRoseClient::OnReceived() {
   }
 #endif
 
-  CRosePacket* pak = (CRosePacket*)&buffer_;
-  logger_->debug("Received a packet on CRoseClient: Header[{0}, 0x{1:x}]", pak->Header.Size, (uint16_t)pak->Header.Command);
+  logger_->trace("Received a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
+#ifdef SPDLOG_TRACE_ON
+  fmt::MemoryWriter out;
+  for(int i = 0; i < CRosePacket::size(buffer_); i++)
+    out.write("0x{0:02x} ", buffer_[i]);
+  logger_->trace("{}", out.c_str());
+#endif
   rtnVal = HandlePacket(buffer_);
   ResetBuffer();
 
@@ -84,35 +95,35 @@ bool CRoseClient::OnSend(uint8_t* _buffer) {
 void CRoseClient::OnSent() {}
 
 bool CRoseClient::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch ((ePacketType)pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
-      CRosePacket* pak =
-          new CRosePacket(ePacketType::PAKCS_ALIVE, sizeof(sPacketHeader));
-      Send(pak);
+      auto packet =
+          std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE));
+      Send(*packet);
 #endif
       return CNetwork_Asio::HandlePacket(_buffer);
-      break;
     }
 #ifdef STRESS_TEST
     case (ePacketType)0x6F6D: {
-      CRosePacket* pak = new CRosePacket(0x6F6D, 8);
-      memcpy(pak->Buffer, _buffer, 8);
-      Send(pak);
+      std::unique_ptr<CRosePacket> packet( new CRosePacket(_buffer) );
+      Send(*packet);
       break;
     }
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-      CRosePacket* pak = new CRosePacket(0x7ff, sizeof(pakEncryptionRequest));
-      pak->pEncryptReq.Unknown = 0x02;
-      pak->pEncryptReq.RandValue = static_cast<uint32_t>(std::time(nullptr));
-      Send(pak);
+      auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(std::time(nullptr));
+      Send(*packet);
+      break;
+    }
+    case ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ: {
+      auto packet = makePacket<ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY>();
+      Send(*packet);
       break;
     }
     default: {
-      logger_->warn("Unknown Packet Type: 0x{0:x}", (uint16_t)pak->Header.Command);
+               logger_->warn("Unknown Packet Type: 0x{0:04x}", (uint16_t)CRosePacket::type(_buffer));
       return false;
     }
   }

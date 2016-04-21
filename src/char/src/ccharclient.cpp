@@ -2,29 +2,29 @@
 #include "ccharisc.h"
 #include "ccharclient.h"
 #include "epackettype.h"
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 
-CCharClient::CCharClient() : CRoseClient(), access_rights_(0) {
+CCharClient::CCharClient() : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 CCharClient::CCharClient(tcp::socket _sock)
-    : CRoseClient(std::move(_sock)), access_rights_(0) {
+    : CRoseClient(std::move(_sock)), access_rights_(0), login_state_(eSTATE::DEFAULT) {
 }
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
-      return JoinServerReply(pak);  // Allow client to connect
+      return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHAR_LIST_REQ:
-      return SendCharListReply(pak);  // SendCharList( pak );
+      return SendCharListReply();
     case ePacketType::PAKCS_CREATE_CHAR_REQ:
-      return SendCharCreateReply(pak);
+      return SendCharCreateReply(getPacket<ePacketType::PAKCS_CREATE_CHAR_REQ>(_buffer));
     case ePacketType::PAKCS_DELETE_CHAR_REQ:
-      return SendCharDeleteReply(pak);
+      return SendCharDeleteReply(getPacket<ePacketType::PAKCS_DELETE_CHAR_REQ>(_buffer));
     case ePacketType::PAKCS_SELECT_CHAR_REQ:
-      return SendCharSelectReply(pak);
+      return SendCharSelectReply(getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
     default:
       return CRoseClient::HandlePacket(_buffer);
   }
@@ -33,51 +33,56 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
 
 bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 
-bool CCharClient::JoinServerReply(CRosePacket* P) {
+bool CCharClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
+  (void)P;
   logger_->trace("JoinServerReply\n");
 
-  SetId(P->Get<uint32_t>(0));
-  uint8_t _pass[33];
-  P->GetBytes(4, 32, _pass);
-  _pass[32] = 0;
+  //uint32_t channelID = P->id();
+
+  //ask the login server if this client actually logged in successfully and selected that channel
+
+  auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));
+  Send(*packet);
 
   return true;
 }
 
-bool CCharClient::SendCharListReply(CRosePacket* P) {
-  (void)P;
+bool CCharClient::SendCharListReply() {
   logger_->trace("CharListReply\n");
 
+  //mysql query to get the characters created.
+
+  auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
+  packet->addCharacter("Raven", 1, 1, 0, 0);
+  Send(*packet);
+
   return true;
 }
 
-bool CCharClient::SendCharCreateReply(CRosePacket* P) {
+bool CCharClient::SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   (void)P;
   logger_->trace("CharCreateReply\n");
 
   return true;
 }
 
-bool CCharClient::SendCharDeleteReply(CRosePacket* P) {
+bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
   logger_->trace("CharDeleteReply\n");
-  uint8_t charid = P->Get<uint8_t>( 0 );
-  bool _delete = P->Get<uint8_t>( 1 );
 
-  if( charid > 6 )
+  if( P->char_id() > 6 )
     return false;
 
-  char name[17];
-  memset(name, 0, 17);
-  P->GetString(0, 16, name);
-  if(_delete)
-  {
+  uint32_t time = 0;
+  if(P->isDelete()) {
     // we need to delete the char
   }
 
+  auto packet = makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>( P->name(), time );
+  Send( *packet );
   return true;
 }
 
-bool CCharClient::SendCharSelectReply(CRosePacket* P) {
+bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   (void)P;
   logger_->trace("CharSelectReply\n");
 

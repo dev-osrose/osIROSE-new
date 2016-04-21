@@ -64,7 +64,7 @@ class CNetwork_Asio : public INetwork {
   virtual bool Reconnect() override;
   virtual bool Disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
   bool IsActive() {
     return active_;
@@ -92,8 +92,9 @@ class CNetwork_Asio : public INetwork {
   virtual bool OnShutdown() override;
   virtual bool HandlePacket(uint8_t* _buffer);
 
-  void SetSocket(tcp::socket _sock) { socket_ = std::move(_sock); }
+  void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
+    //memset(buffer_, 0, packet_size_);
     packet_offset_ = 0;
     packet_size_ = 6;
   }
@@ -103,8 +104,8 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
-  std::queue<std::unique_ptr<uint8_t>> send_queue_;
-  std::queue<std::unique_ptr<uint8_t>> discard_queue_;
+  std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
+  std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
   std::mutex recv_mutex_;
   std::mutex discard_mutex_;

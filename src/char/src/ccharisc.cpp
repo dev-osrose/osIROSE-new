@@ -2,27 +2,26 @@
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
+#include "iscpackets.pb.h"
+#include <memory>
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 
-CCharISC::CCharISC() : CRoseISC(), login_connection_(false) {
-
-}
+CCharISC::CCharISC() : CRoseISC(), login_connection_(false) {}
 
 CCharISC::CCharISC(tcp::socket _sock)
-    : CRoseISC(std::move(_sock)), login_connection_(false) {
-
-}
+    : CRoseISC(std::move(_sock)), login_connection_(false) {}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return ServerRegister(pak);
+      return ServerRegister(
+          getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
@@ -35,17 +34,17 @@ bool CCharISC::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CCharISC::ServerRegister(CRosePacket* P) {
+bool CCharISC::ServerRegister(
+    std::unique_ptr<RoseCommon::IscServerRegister> P) {
   logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
-  CRosePacket* pak = (CRosePacket*)P;
-  uint16_t _insize = pak->Header.Size - 6;
 
-  ServerReg pMapServer;
-  if (pMapServer.ParseFromArray(pak->Data, _insize) == false){
+  uint16_t _size = P->size() - 6;
+
+  iscPacket::ServerReg pMapServer;
+  if (pMapServer.ParseFromArray(P->data(), _size) == false) {
     logger_->debug("pMapServer.ParseFromArray Failed!");
     return false;
   }
-
   int16_t _type = 0;
   _type = pMapServer.type();
 
@@ -55,68 +54,51 @@ bool CCharISC::ServerRegister(CRosePacket* P) {
   // about)
   // 4 == map workers/threads
 
-  ServerReg pServerReg;
+  iscPacket::ServerReg pServerReg;
+  std::string name, ip;
+  int32_t port = 0, type = 0, right = 0;
 
   if (_type == 2) {
     // This is a node and we need to figure out something to do with this
   } else if (_type == 3) {
-    pServerReg.set_name(pMapServer.name());
-    pServerReg.set_addr(pMapServer.addr());
-    pServerReg.set_port(pMapServer.port());
-    pServerReg.set_type(pMapServer.type());
-    pServerReg.set_accright(pMapServer.accright());
+    name = pMapServer.name();
+    ip = pMapServer.addr();
+    port = pMapServer.port();
+    type = pMapServer.type();
+    right = pMapServer.accright();
   }
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
-                ServerReg_ServerType_Name(pServerReg.type()).c_str(),
-                pServerReg.name().c_str(), pServerReg.addr().c_str(),
-                pServerReg.port());
+                  ServerReg_ServerType_Name(pMapServer.type()).c_str(),
+                  pMapServer.name().c_str(), pMapServer.addr().c_str(),
+                  pMapServer.port());
 
-  std::unique_ptr<CRosePacket> pakToLS(new CRosePacket(ePacketType::ISC_SERVER_REGISTER));
-  int _size = pServerReg.ByteSize();
-  std::unique_ptr<uint8_t> data( new uint8_t[_size] );
-  memset(data.get(), 0, _size);
-  if (pServerReg.SerializeToArray(data.get(), _size) == false)
-    logger_->error("Couldn't serialize the data");
-  pakToLS->AddBytes(data.get(), _size);
+  auto packet =
+      makePacket<ePacketType::ISC_SERVER_REGISTER>(name, ip, port, type, right);
 
   // todo: get the ISC connection to the login server and send the packet to it
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = (CCharISC*)server;
     if (svr->IsLogin()) {
-      svr->Send((CRosePacket*)pakToLS.release());
-//      delete[] data;
+      svr->Send(*packet);
       return true;
     }
   }
-//  delete[] data;
   return false;
 }
 
 void CCharISC::OnConnected() {
   logger_->trace("CCharISC::OnConnected()");
-  CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
 
   Core::Config& config = Core::Config::getInstance();
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+      config.char_server().worldname(), config.serverdata().ip(),
+      config.char_server().clientport(),
+      iscPacket::ServerReg_ServerType::ServerReg_ServerType_CHAR,
+      config.char_server().accesslevel());
 
-  ServerReg pServerReg;
-  pServerReg.set_name(config.char_server().worldname());
-  pServerReg.set_addr(config.serverdata().ip());
-  pServerReg.set_port(config.char_server().clientport());
-  pServerReg.set_type(ServerReg_ServerType_CHAR);
-  pServerReg.set_accright(config.char_server().accesslevel());
-
-  int _size = pServerReg.ByteSize();
-  uint8_t* data = new uint8_t[_size];
-  memset(data, 0, _size);
-  if (pServerReg.SerializeToArray(data, _size) == false)
-    logger_->error("Couldn't serialize the data");
-  pak->AddBytes(data, _size);
-
-  logger_->trace("Sent a packet on CRoseISC: Header[{0}, 0x{1:x}]",
-                 pak->Header.Size, (uint16_t)pak->Header.Command);
-
-  Send((CRosePacket*)pak);
-  delete[] data;
+  logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
+                 packet->size(), (uint16_t)packet->type());
+  Send(*packet);
 }

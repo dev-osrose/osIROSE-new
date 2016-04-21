@@ -3,6 +3,7 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
+#include "packetclasses.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
  public:
@@ -13,13 +14,20 @@ class CCharClient : public RoseCommon::CRoseClient {
   virtual bool HandlePacket(uint8_t* _buffer);
   virtual bool OnReceived();
 
-  bool JoinServerReply(RoseCommon::CRosePacket* P);
-  bool SendCharListReply(RoseCommon::CRosePacket* P);
-  bool SendCharCreateReply(RoseCommon::CRosePacket* P);
-  bool SendCharDeleteReply(RoseCommon::CRosePacket* P);
-  bool SendCharSelectReply(RoseCommon::CRosePacket* P);
+  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
+  bool SendCharListReply();
+  bool SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P);
+  bool SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P);
+  bool SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P);
+
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+    TRANSFERING,
+  };
 
   uint16_t access_rights_;
+  eSTATE login_state_;
 };
 
 #endif

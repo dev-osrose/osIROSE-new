@@ -1,6 +1,8 @@
 #include "cmapisc.h"
 #include "crosepacket.h"
 #include "config.h"
+#include "iscpackets.pb.h"
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 
@@ -12,48 +14,34 @@ CMapISC::CMapISC(tcp::socket _sock)
 }
 
 bool CMapISC::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
-    case ePacketType::ISC_ALIVE:
-      return true;
-    case ePacketType::ISC_SERVER_AUTH:
-      return true;
-    case ePacketType::ISC_SERVER_REGISTER:
-      return true;
-    case ePacketType::ISC_TRANSFER:
-      return true;
-    case ePacketType::ISC_SHUTDOWN:
-      return true;
-    default: {
-      CRoseISC::HandlePacket(_buffer);
-      return false;
-    }
-  }
+  switch (CRosePacket::type(_buffer)) { 
+    case ePacketType::ISC_ALIVE: 
+      return true; 
+    case ePacketType::ISC_SERVER_AUTH: 
+      return true; 
+    case ePacketType::ISC_SERVER_REGISTER: 
+      return true; 
+    case ePacketType::ISC_TRANSFER: 
+      return true; 
+    case ePacketType::ISC_SHUTDOWN: 
+      return true; 
+    default: { 
+      CRoseISC::HandlePacket(_buffer); 
+      return false; 
+    } 
+  } 
   return true;
 }
 
 void CMapISC::OnConnected() {
-  CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
+  Core::Config& config = Core::Config::getInstance(); 
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+    config.map_server().channelname(), config.serverdata().ip(),
+    config.map_server().clientport(),
+    iscPacket::ServerReg_ServerType::ServerReg_ServerType_MAP_MASTER,
+    config.map_server().accesslevel() );
 
-  Core::Config& config = Core::Config::getInstance();
-
-  ServerReg pServerReg;
-  pServerReg.set_name(config.map_server().channelname());
-  pServerReg.set_addr(config.serverdata().ip());
-  pServerReg.set_port(config.map_server().clientport());
-  pServerReg.set_type(ServerReg_ServerType_MAP_MASTER);
-  pServerReg.set_accright(config.map_server().accesslevel());
-
-  int _size = pServerReg.ByteSize();
-  uint8_t* data = new uint8_t[_size];
-  memset(data, 0, _size);
-  if (pServerReg.SerializeToArray(data, _size) == false)
-    logger_->error("Couldn't serialize the data\n");
-  pak->AddBytes(data, _size);
-
-  logger_->trace("Sent a packet on CRoseISC: Header[{0}, 0x{1:x}]\n",
-                 pak->Header.Size, (uint16_t)pak->Header.Command);
-
-  Send((CRosePacket*)pak);
-  delete[] data;
+  logger_->trace( "Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
+                  packet->size(), (uint16_t)packet->type() );
+  Send(*packet); 
 }

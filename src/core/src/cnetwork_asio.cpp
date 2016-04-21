@@ -70,15 +70,24 @@ bool CNetwork_Asio::Connect() {
       resolver.resolve(network_ip_address, std::to_string(network_port_));
 
   OnConnect();
-  asio::async_connect(
-      socket_, endpoint_iterator,
-      [this](std::error_code errorCode, const asio::ip::tcp::endpoint) {
-        if (!errorCode) {
-          OnConnected();
-        }
-      });
-  active_ = true;
-  return true;
+  //asio::async_connect(
+  //    socket_, endpoint_iterator,
+  //    [this](std::error_code errorCode, const asio::ip::tcp::endpoint) {
+  //      if (!errorCode) {
+  //        OnConnected();
+  //      }
+  //    });
+  send_mutex_.lock();
+  std::error_code errorCode;
+  asio::connect(socket_, endpoint_iterator, errorCode);
+  send_mutex_.unlock();
+  if (!errorCode) {
+    OnConnected();
+    active_ = true;
+  } else {
+    active_ = false;
+  }
+  return active_;
 }
 
 bool CNetwork_Asio::Listen() {
@@ -127,14 +136,13 @@ void CNetwork_Asio::ProcessSend()
     if( send_empty != true && discard_empty == true )
     {
       send_mutex_.lock();
-      std::unique_ptr<uint8_t> _buffer = std::move(send_queue_.front());
+      std::unique_ptr<uint8_t[]> _buffer = std::move(send_queue_.front());
       send_queue_.pop();
       send_mutex_.unlock();
 
       uint8_t* raw_ptr = _buffer.get();
       uint16_t _size = (uint16_t)raw_ptr[0];
       uint16_t _command = (uint16_t)raw_ptr[2];
-
       discard_mutex_.lock();
       discard_queue_.push(std::move(_buffer));
       raw_ptr = discard_queue_.back().get();
@@ -151,7 +159,7 @@ void CNetwork_Asio::ProcessSend()
 
           discard_mutex_.lock();
           {
-            std::unique_ptr<uint8_t> _buffer = std::move(discard_queue_.front());
+            std::unique_ptr<uint8_t[]> _buffer = std::move(discard_queue_.front());
             discard_queue_.pop();
             _buffer.reset(nullptr);
           }
@@ -166,8 +174,7 @@ void CNetwork_Asio::ProcessSend()
   }
 }
 
-bool CNetwork_Asio::Send(std::unique_ptr<uint8_t> _buffer) {
-  //std::lock_guard<std::mutex> lock(send_mutex_);
+bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
   send_mutex_.lock();
   send_queue_.push(std::move(_buffer));
   send_mutex_.unlock();

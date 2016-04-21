@@ -93,10 +93,17 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 23456));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ,
-                                     sizeof(pakChannelList_Req));
-  pak->pChannelListReq.lServerID = 0x77;
-  netConnect.Send(std::unique_ptr<uint8_t>((uint8_t*)&pak->Buffer));
+  struct Test : public CRosePacket {
+	  Test(ePacketType type) : CRosePacket(type) {}
+	  virtual ~Test() {}
+	  protected:
+		  void pack() {
+			  *this << 0x77;
+		  }
+  };
+
+  CRosePacket* pak = new Test(ePacketType::PAKCS_CHAR_LIST_REQ);
+  netConnect.Send(pak->getPacked());
   EXPECT_NO_FATAL_FAILURE(netConnect.Disconnect());
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());

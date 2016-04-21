@@ -1,5 +1,6 @@
 #include "cloginisc.h"
 #include "crosepacket.h"
+#include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 
@@ -15,18 +16,17 @@ CLoginISC::CLoginISC(tcp::socket _sock)
 }
 
 bool CLoginISC::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return ServerRegister(pak);
+      return ServerRegister(CRosePacket(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
-      return ServerShutdown(pak);
+      return ServerShutdown(CRosePacket(_buffer));
     default: {
       CRoseISC::HandlePacket(_buffer);
       return false;
@@ -35,13 +35,11 @@ bool CLoginISC::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CLoginISC::ServerRegister(CRosePacket* P) {
-  CRosePacket* pak = (CRosePacket*)P;
+bool CLoginISC::ServerRegister(const CRosePacket& P) {
+  uint16_t _size = P.size() - 6;
 
-  uint16_t _size = pak->Header.Size - 6;
-
-  ServerReg pServerReg;
-  if (pServerReg.ParseFromArray(pak->Data, _size) == false)
+  iscPacket::ServerReg pServerReg;
+  if (pServerReg.ParseFromArray(const_cast<CRosePacket&>(P).data(), _size) == false)
     return false;  // m_Log.eicprintf( "Couldn't decode proto msg\n" );
 
   int16_t _type = 0;
@@ -72,12 +70,12 @@ bool CLoginISC::ServerRegister(CRosePacket* P) {
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
                 ServerReg_ServerType_Name(pServerReg.type()).c_str(),
-                server_name_.c_str(), network_ip_address.c_str(),
-                network_port_);
+                pServerReg.name().c_str(), pServerReg.addr().c_str(),
+                pServerReg.port());
   return true;
 }
 
-bool CLoginISC::ServerShutdown(CRosePacket* P) {
+bool CLoginISC::ServerShutdown(const CRosePacket& P) {
   (void)P;
   return true;
 }

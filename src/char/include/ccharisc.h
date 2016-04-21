@@ -3,6 +3,7 @@
 
 #include "croseisc.h"
 #include "crosepacket.h"
+#include "packetclasses.h"
 
 class CCharISC : public RoseCommon::CRoseISC {
  public:
@@ -13,7 +14,7 @@ class CCharISC : public RoseCommon::CRoseISC {
   void SetLogin(bool val) { login_connection_ = val; }
 
  protected:
-  bool ServerRegister(RoseCommon::CRosePacket* P);
+  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer);
   virtual void OnConnected();
 

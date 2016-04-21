@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-INCLUDE_DIRECTORIES(
-	SYSTEM ${PROTOBUF_INCLUDE_DIR}
-	SYSTEM ${ASIO_INCLUDE_DIR}
-	SYSTEM ${EXTERNAL_INCLUDE_DIR}
-	SYSTEM ${MYSQL_INCLUDE_DIRS}
-	SYSTEM ${MYSQLpp_INCLUDE_DIR}
-)
-
 LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -41,6 +33,12 @@ SET( SOURCES_HEADER
   include/croseserver
   include/croseclient 
   include/croseisc
+  include/crosepacket
+  include/epackettype
+  include/findclass
+  include/iscontainer
+  include/packetclasses
+  include/rosepackets
 )
 
 SET( SOURCES_BASE
@@ -48,7 +46,7 @@ SET( SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
-  src/crosepacket)
+)
 
 add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 

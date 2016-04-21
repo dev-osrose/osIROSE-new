@@ -96,6 +96,7 @@ void CRoseServer::OnDisconnected() {}
 bool CRoseServer::OnAccept() { return true; }
 
 void CRoseServer::OnAccepted(tcp::socket _sock) {
+  logger_->warn("CRoseServer::OnAccepted called! You should really overload this function.");
   if (_sock.is_open()) {
     // Do Something?
     // std::lock_guard<std::mutex> lock(m_ClientListMutex);
