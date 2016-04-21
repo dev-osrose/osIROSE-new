@@ -525,7 +525,7 @@ class SrvCharacterListReply : public CRosePacket {
       *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_ << character.platinum_;
 
       for(int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-        for(int j = 0; j < 4; ++j)
+        for(int j = 0; j < 3; ++j)
           *this << character.items_[i].data[j];
       }
       *this << character.name_;
