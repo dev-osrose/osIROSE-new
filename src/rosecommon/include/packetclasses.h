@@ -50,7 +50,7 @@ public:
       throw std::runtime_error("Not the right packet!");
     *this >> count_;
   }
-  CliScreenShotReq(uint16_t count = 1) 
+  CliScreenShotReq(uint16_t count = 1)
       : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ),
         count_(count) {}
 
@@ -552,13 +552,13 @@ class SrvCharacterListReply : public CRosePacket {
 
   struct equip_item {
     union {
-      struct {
+      PACK(struct {
         uint16_t id_ : 10; // 0~1023
         uint16_t gem_op_ : 9; // 0~512
         uint8_t socket_ : 1; // 0~1
         uint8_t grade_ : 4; // 0~15
-      };
-      uint8_t data[4];
+      });
+      uint8_t data[3];
     };
 
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) :

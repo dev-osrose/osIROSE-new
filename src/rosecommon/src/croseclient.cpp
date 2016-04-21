@@ -3,7 +3,6 @@
 #include "epackettype.h"
 #include "rosepackets.h"
 
-
 namespace RoseCommon {
 //#define STRESS_TEST
 
