@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `osirose` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `osirose`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: osirose
@@ -16,137 +18,51 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `accounts`
+-- Dumping data for table `accounts`
 --
 
-DROP TABLE IF EXISTS `accounts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `accounts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(64) DEFAULT NULL,
-  `password` varchar(32) DEFAULT NULL,
-  `access` int(11) DEFAULT '100',
-  `active` int(11) DEFAULT '1',
-  `platinum` tinyint(1) DEFAULT '0',
-  `online` tinyint(1) DEFAULT '0',
-  `login_count` int(11) DEFAULT '0',
-  `lastip` varchar(15) DEFAULT '0.0.0.0',
-  `lasttime` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=ascii;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `accounts` WRITE;
+/*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
+INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(4,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
+/*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `characters`
+-- Dumping data for table `characters`
 --
 
-DROP TABLE IF EXISTS `characters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `characters` (
-  `account` varchar(64) CHARACTER SET ascii NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) CHARACTER SET ascii NOT NULL,
-  `basicData` blob NOT NULL COMMENT 'Look, stats, money',
-  `clanid` decimal(11,0) NOT NULL DEFAULT '0',
-  `unionid` decimal(11,0) NOT NULL DEFAULT '0',
-  `UnionPoints` int(11) NOT NULL DEFAULT '0',
-  `classid` decimal(11,0) NOT NULL DEFAULT '0',
-  `deletetime` decimal(20,0) NOT NULL DEFAULT '0',
-  `clan_rank` int(11) NOT NULL DEFAULT '0',
-  `quests` blob,
-  `questflags` blob,
-  `quickbar` blob NOT NULL,
-  `bskills` blob NOT NULL COMMENT 'Basic Skills',
-  `askill` blob NOT NULL COMMENT 'Active Skills',
-  `pskill` blob NOT NULL COMMENT 'Passive Skills',
-  `respawnid` int(11) NOT NULL DEFAULT '51',
-  `townid` int(11) NOT NULL DEFAULT '20',
-  `cskills` blob NOT NULL COMMENT 'Class Skills',
-  `inv` blob NOT NULL COMMENT 'Inventory',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `characters` WRITE;
+/*!40000 ALTER TABLE `characters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `characters` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `list_clan`
+-- Dumping data for table `list_clan`
 --
 
-DROP TABLE IF EXISTS `list_clan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `list_clan` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `logo` int(11) DEFAULT NULL,
-  `back` int(11) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
-  `cp` int(11) DEFAULT NULL,
-  `grade` int(11) DEFAULT NULL,
-  `slogan` varchar(100) DEFAULT NULL,
-  `news` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `list_clan` WRITE;
+/*!40000 ALTER TABLE `list_clan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `list_clan` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `list_friend`
+-- Dumping data for table `sessions`
 --
 
-DROP TABLE IF EXISTS `list_friend`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `list_friend` (
-  `id` int(11) NOT NULL,
-  `idfriend` int(11) NOT NULL,
-  `namefriend` varchar(50) NOT NULL,
-  KEY `id` (`id`),
-  KEY `idfriend` (`idfriend`),
-  CONSTRAINT `list_friend_ibfk_3` FOREIGN KEY (`id`) REFERENCES `characters` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `list_friend_ibfk_4` FOREIGN KEY (`idfriend`) REFERENCES `characters` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `sessions` WRITE;
+/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES (1,2,'2016-04-21 04:00:00',0,0,'0'),(23123,2,'2016-04-22 03:19:46',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `sessions`
+-- Dumping data for table `storage`
 --
 
-DROP TABLE IF EXISTS `sessions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sessions` (
-  `userid` int(10) NOT NULL,
-  `time` time NOT NULL,
-  `charid` int(10) NOT NULL,
-  `worldip` int(20) NOT NULL,
-  `worldport` varchar(20) NOT NULL,
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `storage`
---
-
-DROP TABLE IF EXISTS `storage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `storage` (
-  `owner` int(11) NOT NULL,
-  `itemnum` int(11) NOT NULL,
-  `itemtype` int(11) NOT NULL,
-  `refine` int(11) NOT NULL,
-  `durability` int(11) NOT NULL DEFAULT '40',
-  `lifespan` int(11) NOT NULL DEFAULT '100',
-  `slotnum` int(11) NOT NULL,
-  `count` int(11) NOT NULL DEFAULT '1',
-  `stats` int(11) NOT NULL DEFAULT '0',
-  `socketed` int(11) NOT NULL DEFAULT '0',
-  `appraised` int(11) NOT NULL DEFAULT '0',
-  `gem` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `storage` WRITE;
+/*!40000 ALTER TABLE `storage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `storage` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping events for database 'osirose'
@@ -155,7 +71,7 @@ CREATE TABLE `storage` (
 --
 -- Dumping routines for database 'osirose'
 --
-/*!50003 DROP PROCEDURE IF EXISTS `GetChar` */;
+/*!50003 DROP PROCEDURE IF EXISTS `CreateSession` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -163,11 +79,52 @@ CREATE TABLE `storage` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetChar`(IN `_user` VARCHAR(16))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateSession`(IN `_sessionid` INT, IN `_userid` INT)
+BEGIN
+  INSERT into sessions(id, userid, time) values(_sessionid, _userid, now());
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetCharList` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCharList`(IN `_user` VARCHAR(16))
     NO SQL
 SELECT * FROM characters WHERE account = _user ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetSession` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSession`(IN `_sessionid` INT)
+BEGIN
+  SELECT sessions.userid, accounts.password 
+  FROM `sessions`
+  LEFT JOIN `accounts` on sessions.userid = accounts.id 
+  WHERE sessions.id = _sessionid;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -201,4 +158,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-13 23:55:32
+-- Dump completed on 2016-04-21 23:22:33
