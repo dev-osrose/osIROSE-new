@@ -18,51 +18,110 @@ USE `osirose`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `accounts`
+-- Table structure for table `accounts`
 --
 
-LOCK TABLES `accounts` WRITE;
-/*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(7,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
-/*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `accounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `access` int(11) DEFAULT '100',
+  `active` int(11) DEFAULT '1',
+  `platinum` tinyint(1) DEFAULT '0',
+  `online` tinyint(1) DEFAULT '0',
+  `login_count` int(11) DEFAULT '0',
+  `lastip` varchar(15) DEFAULT '0.0.0.0',
+  `lasttime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=ascii;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `characters`
+-- Table structure for table `characters`
 --
 
-LOCK TABLES `characters` WRITE;
-/*!40000 ALTER TABLE `characters` DISABLE KEYS */;
-/*!40000 ALTER TABLE `characters` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `characters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `characters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL,
+  `name` varchar(24) NOT NULL,
+  `race` int(10) unsigned NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '1',
+  `job` int(11) DEFAULT '0',
+  `delete_time` decimal(20,0) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
+  `clanid` int(11) NOT NULL DEFAULT '0',
+  `clan_rank` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `list_clan`
+-- Table structure for table `list_clan`
 --
 
-LOCK TABLES `list_clan` WRITE;
-/*!40000 ALTER TABLE `list_clan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `list_clan` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `list_clan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `list_clan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logo` int(11) DEFAULT NULL,
+  `back` int(11) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `cp` int(11) DEFAULT NULL,
+  `grade` int(11) DEFAULT NULL,
+  `slogan` varchar(100) DEFAULT NULL,
+  `news` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `sessions`
+-- Table structure for table `sessions`
 --
 
-LOCK TABLES `sessions` WRITE;
-/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES (1461297322,2,'2016-04-22 03:55:22',NULL,NULL,NULL),(1461297419,2,'2016-04-22 03:57:00',NULL,NULL,NULL),(1461297666,2,'2016-04-22 04:01:06',NULL,NULL,NULL),(1461297702,2,'2016-04-22 04:01:43',NULL,NULL,NULL),(1461297919,2,'2016-04-22 04:05:20',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `id` int(10) NOT NULL,
+  `userid` int(10) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `charid` int(10) DEFAULT NULL,
+  `worldip` int(20) DEFAULT NULL,
+  `worldport` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `storage`
+-- Table structure for table `storage`
 --
 
-LOCK TABLES `storage` WRITE;
-/*!40000 ALTER TABLE `storage` DISABLE KEYS */;
-/*!40000 ALTER TABLE `storage` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `storage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `storage` (
+  `owner` int(11) NOT NULL,
+  `itemnum` int(11) NOT NULL,
+  `itemtype` int(11) NOT NULL,
+  `refine` int(11) NOT NULL,
+  `durability` int(11) NOT NULL DEFAULT '40',
+  `lifespan` int(11) NOT NULL DEFAULT '100',
+  `slotnum` int(11) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT '1',
+  `stats` int(11) NOT NULL DEFAULT '0',
+  `socketed` int(11) NOT NULL DEFAULT '0',
+  `appraised` int(11) NOT NULL DEFAULT '0',
+  `gem` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping events for database 'osirose'
@@ -158,4 +217,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-22  0:06:06
+-- Dump completed on 2016-04-22  0:17:10
