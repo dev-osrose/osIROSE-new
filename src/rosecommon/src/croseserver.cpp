@@ -10,8 +10,6 @@ std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
-  //  process_thread_ = std::thread([this]() { Run(); });
-
   process_thread_ = std::thread([this]() {
     do {
       if (IsISCServer() == false) {
@@ -28,7 +26,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - client->GetLastUpdateTime() ).count();
           if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
           {
-            logger_->notice() << "Client " << client->GetId() << " timed out. " << dt;
+            logger_->notice( "Client {} timed out.", client->GetId() );
             client->Shutdown();
             // Do not delete them now. Do it next time.
           }
@@ -47,7 +45,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>( update - client->GetLastUpdateTime() ).count();
           if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
           {
-            logger_->notice() << "Server " << client->GetId() << " timed out. " << dt;
+            logger_->notice("Server {} timed out.", client->GetId());
             client->Shutdown();
             // Do not delete them now. Do it next time.
           }
@@ -98,14 +96,11 @@ bool CRoseServer::OnAccept() { return true; }
 void CRoseServer::OnAccepted(tcp::socket _sock) {
   logger_->warn("CRoseServer::OnAccepted called! You should really overload this function.");
   if (_sock.is_open()) {
-    // Do Something?
-    // std::lock_guard<std::mutex> lock(m_ClientListMutex);
     std::string _address = _sock.remote_endpoint().address().to_string();
-    // CRoseClient* nClient = nullptr;
+    
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CRoseClient* nClient = new CRoseClient(std::move(_sock));
-      // std::distance(std::begin(client_list_), std::end(client_list_));
       nClient->SetId(
           std::distance(std::begin(client_list_), std::end(client_list_)));
       logger_->notice("[{}] Client connected from: {}", nClient->GetId(),
@@ -119,9 +114,6 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
                     _address.c_str());
       isc_list_.push_front(nClient);
     }
-
-    // m_Log.icprintf( "Client connected from: %s\n", _address.c_str( ) );
-    // m_ClientList.push_back( nClient );
   }
 }
 

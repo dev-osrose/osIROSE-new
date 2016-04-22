@@ -28,6 +28,8 @@ class CCharClient : public RoseCommon::CRoseClient {
 
   uint16_t access_rights_;
   eSTATE login_state_;
+  uint32_t session_id_;
+  uint32_t userid_;
 };
 
 #endif

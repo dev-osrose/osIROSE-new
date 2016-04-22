@@ -10,16 +10,22 @@
 using namespace RoseCommon;
 
 CLoginClient::CLoginClient()
-    : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT) {}
+    : CRoseClient(),
+      access_rights_(0),
+      login_state_(eSTATE::DEFAULT),
+      userid_(0),
+      session_id_(0) {}
 
 CLoginClient::CLoginClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
-      login_state_(eSTATE::DEFAULT) {}
+      login_state_(eSTATE::DEFAULT),
+      userid_(0),
+      session_id_(0) {}
 
 void CLoginClient::SendLoginReply(uint8_t Result) {
-  logger_->debug( "SendLoginReply({})", Result );
-  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>( Result, 0, 0 );
+  logger_->debug("SendLoginReply({})", Result);
+  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>(Result, 0, 0);
 
   if (Result == 0) {
     login_state_ = eSTATE::LOGGEDIN;
@@ -32,7 +38,8 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
         CLoginISC* svr = (CLoginISC*)server;
 
         // This if check is needed since the client actually looks for this.
-        packet->addServer(svr->GetName(), svr->GetId()+1, svr->IsTestServer());
+        packet->addServer(svr->GetName(), svr->GetId() + 1,
+                          svr->IsTestServer());
       }
   }
 
@@ -61,14 +68,13 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
     return true;
   }
 
-  username_ = P->username();
+  username_ = Core::CMySQL_Database::escapeData(P->username());
   std::string clientpass = P->password();
-  logger_->debug("Username: \"{}\"", username_);
+  //  logger_->debug("Username: \"{}\"", username_);
 
-  // todo(raven): make sure the username is safe to exec
   std::unique_ptr<Core::IResult> res;
-  std::string query = "CALL UserLogin('";
-  query = query + username_.c_str() + "');";
+  std::string query = fmt::format(
+      "CALL UserLogin('{0}');", username_.c_str());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -93,6 +99,8 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
         if (onlineStatus == 0) {
           // Okay to login!!
+          res->getInt("id", userid_);
+          session_id_ = std::time(nullptr);
           SendLoginReply(0);
         } else {
           // incorrect password
@@ -129,7 +137,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
     if (server->GetType() == iscPacket::ServerReg_ServerType_CHAR &&
-        server->GetId()+1 == ServerID) {
+        server->GetId() + 1 == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
         { packet->addChannel(info.channelName, info.ChannelID, 0); }
@@ -151,7 +159,7 @@ bool CLoginClient::ServerSelect(
     return true;
   }
   uint32_t serverID = P->server_id();
-// uint8_t channelID = P->channel_id();
+  // uint8_t channelID = P->channel_id();
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
@@ -162,12 +170,16 @@ bool CLoginClient::ServerSelect(
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
-    if (server->GetType() == 1 && server->GetId()+1 == serverID) {
+    if (server->GetType() == 1 && server->GetId() + 1 == serverID) {
+      std::string query =
+          fmt::format("CALL CreateSession({}, {});", session_id_, userid_);
+
+      Core::IDatabase& database = Core::databasePool.getDatabase();
+      database.QExecute(query);
+
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          server->GetIP(), GetId()+1, 0, server->GetPort());
+          server->GetIP(), session_id_, 0, server->GetPort());
       this->Send(*packet);
-      // TODO: send char server the channel id we are connecting to (the client
-      // may already do this)
       break;
     }
   }

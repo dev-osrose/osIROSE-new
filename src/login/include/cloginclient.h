@@ -29,6 +29,8 @@ class CLoginClient : public RoseCommon::CRoseClient {
   uint16_t access_rights_;
   std::string username_;
   eSTATE login_state_;
+  uint32_t userid_;
+  uint32_t session_id_;
 };
 
 #endif

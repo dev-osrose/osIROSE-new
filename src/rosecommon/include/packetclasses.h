@@ -136,24 +136,24 @@ class CliJoinServerReq : public CRosePacket {
     if (type() != ePacketType::PAKCS_JOIN_SERVER_REQ)
       throw std::runtime_error("Not the right packet!");
     char pass[32];
-    *this >> channel_id_ >> pass;
+    *this >> session_id_ >> pass;
     password_ = std::string(pass, 32);
   }
   CliJoinServerReq(uint32_t id, const std::string &pass)
       : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ),
-        channel_id_(id),
+        session_id_(id),
         password_(pass) {}
 
   virtual ~CliJoinServerReq() {}
 
   std::string password() const { return password_; }
-  uint32_t channel_id() const { return channel_id_; }
+  uint32_t session_id() const { return session_id_; }
 
  protected:
-  void pack() { *this << channel_id_ << password_.c_str(); }
+  void pack() { *this << session_id_ << password_.c_str(); }
 
  private:
-  uint32_t channel_id_;
+  uint32_t session_id_;
   std::string password_;
 };
 
@@ -416,10 +416,10 @@ class SrvChannelReply : public CRosePacket {
 
 class SrvServerSelectReply : public CRosePacket {
  public:
-  SrvServerSelectReply(const std::string &ip, uint32_t client_id,
+  SrvServerSelectReply(const std::string &ip, uint32_t session_id,
                        uint32_t crypt_val, uint16_t port)
       : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY),
-        client_id_(client_id),
+        session_id_(session_id),
         crypt_val_(crypt_val),
         port_(port),
         result_(0),
@@ -427,7 +427,7 @@ class SrvServerSelectReply : public CRosePacket {
 
   virtual ~SrvServerSelectReply() {}
 
-  uint32_t client_id() const { return client_id_; }
+  uint32_t session_id() const { return session_id_; }
   uint32_t crypt_val() const { return crypt_val_; }
   uint16_t port() const { return port_; }
   uint8_t result() const { return result_; }
@@ -443,10 +443,10 @@ class SrvServerSelectReply : public CRosePacket {
   };
 
  protected:
-  void pack() { *this << result_ << client_id_ << crypt_val_ << ip_ << port_; }
+  void pack() { *this << result_ << session_id_ << crypt_val_ << ip_ << port_; }
 
  private:
-  uint32_t client_id_;
+  uint32_t session_id_;
   uint32_t crypt_val_;
   uint16_t port_;
   uint8_t result_;
@@ -517,6 +517,22 @@ class SrvCharacterListReply : public CRosePacket {
     }
   }
 
+  enum equipped_position
+  {
+    EQUIP_FACE = 0,
+    EQUIP_HAIR = 1,
+    EQUIP_HELMET = 2,
+    EQUIP_ARMOR = 3,
+    EQUIP_GAUNTLET = 4,
+    EQUIP_BOOTS = 5,
+    EQUIP_GOGGLES = 6,
+    EQUIP_FACE_ITEM = EQUIP_GOGGLES,
+    EQUIP_BACKPACK = 7,
+    EQUIP_WEAPON_R = 8,
+    EQUIP_WEAPON_L = 9,
+    MAX_EQUIPPED_ITEMS
+  };
+
  protected:
   void pack() {
     *this << character_count_;
@@ -534,21 +550,6 @@ class SrvCharacterListReply : public CRosePacket {
 
  private:
   uint8_t character_count_;
-
-  enum equipped_position {
-    EQUIP_FACE = 0,
-    EQUIP_HAIR = 1,
-    EQUIP_HELMET = 2,
-    EQUIP_ARMOR = 3,
-    EQUIP_GAUNTLET = 4,
-    EQUIP_BOOTS = 5,
-    EQUIP_GOGGLES = 6,
-    EQUIP_FACE_ITEM = EQUIP_GOGGLES,
-    EQUIP_BACKPACK = 7,
-    EQUIP_WEAPON_R = 8,
-    EQUIP_WEAPON_L = 9,
-    MAX_EQUIPPED_ITEMS
-  };
 
   struct equip_item {
     union {
@@ -587,6 +588,35 @@ class SrvCharacterListReply : public CRosePacket {
           name_(name) {}
   };
   std::vector<char_info> character_list_;
+};
+
+class SrvCreateCharReply : public CRosePacket {
+ public:
+  SrvCreateCharReply(uint8_t result, uint8_t platinum = 0)
+      : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY),
+        result_(result),
+        platinum_(platinum) {}
+
+  virtual ~SrvCreateCharReply() {}
+
+  uint8_t result() const { return result_; }
+  uint8_t platinum() const { return platinum_; }
+
+  enum eResult : uint8_t {
+    OK = 0,
+    FAILED,
+    NAME_TAKEN,
+    INVALID_VALUE,
+    TOO_MANY_CHARS,
+    BLOCKED
+  };
+
+ protected:
+  void pack() { *this << result_ << platinum_; }
+
+ private:
+   uint8_t result_;
+   uint8_t platinum_;
 };
 
 class SrvDeleteCharReply : public CRosePacket {

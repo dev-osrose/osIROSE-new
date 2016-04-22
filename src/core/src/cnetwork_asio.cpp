@@ -41,7 +41,7 @@ CNetwork_Asio::~CNetwork_Asio() {
 }
 
 bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
-  if (_ip.length() < 2)  // We can actually use hostnames instead of IP
+  if (_ip.length() < 2)  // We can actually use host names instead of IP
     // addresses. Ex. google.com
     return false;
 
@@ -198,7 +198,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
       packet_offset_ += length;
       if (!errorCode || errorCode.value() == 11) {
         if (OnReceived() == false) {
-          logger_->debug() << "Something bad happened in OnReceived... Shutting down -> client " << GetId();
+          logger_->debug("OnReceived aborted the connection... Shutting down");
           Shutdown();
         }
       } else {
@@ -207,7 +207,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           OnDisconnected();
           Shutdown();
         } else {
-          logger_->debug() << GetId() << "-> Error " << errorCode.value() << " occurred: " << errorCode.message();
+          logger_->debug("{}: Error {}: {}", GetId(), errorCode.value(), errorCode.message());
 
           Shutdown();
           return;
