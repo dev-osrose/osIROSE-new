@@ -54,6 +54,7 @@ bool CCharClient::SendCharListReply() {
 
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   packet->addCharacter("Raven", 1, 1, 0, 0);
+  packet->addEquipItem(0, 0, 1);
   Send(*packet);
 
   return true;

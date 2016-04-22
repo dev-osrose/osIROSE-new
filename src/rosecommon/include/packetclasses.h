@@ -522,13 +522,13 @@ class SrvCharacterListReply : public CRosePacket {
     *this << character_count_;
 
     for (auto &character : character_list_) {
+      *this << character.name_;
       *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_ << character.platinum_;
 
       for(int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-        for(int j = 0; j < 3; ++j)
+        for(int j = 0; j < 4; ++j)
           *this << character.items_[i].data[j];
       }
-      *this << character.name_;
     }
   }
 
@@ -552,13 +552,13 @@ class SrvCharacterListReply : public CRosePacket {
 
   struct equip_item {
     union {
-      PACK(struct {
-        uint16_t id_ : 10; // 0~1023
-        uint16_t gem_op_ : 9; // 0~512
-        uint8_t socket_ : 1; // 0~1
-        uint8_t grade_ : 4; // 0~15
-      });
-      uint8_t data[3];
+      struct {
+        unsigned int id_ : 10; // 0~1023
+        unsigned int gem_op_ : 9; // 0~512
+        unsigned int socket_ : 1; // 0~1
+        unsigned int grade_ : 4; // 0~15
+      };
+      uint8_t data[4];
     };
 
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) :
