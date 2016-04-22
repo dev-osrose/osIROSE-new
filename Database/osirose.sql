@@ -23,7 +23,7 @@ USE `osirose`;
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(4,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
+INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(6,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +51,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES (1,2,'2016-04-21 04:00:00',0,0,'0'),(23123,2,'2016-04-22 03:19:46',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +141,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `UserLogin`(IN `_user` VARCHAR(16))
     READS SQL DATA
-SELECT password, access, active, `online` FROM accounts WHERE username = _user ;;
+SELECT id, password, access, active, `online` FROM accounts WHERE username = _user ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -158,4 +157,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-21 23:22:33
+-- Dump completed on 2016-04-21 23:53:11
