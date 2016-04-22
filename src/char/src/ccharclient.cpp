@@ -112,7 +112,7 @@ bool CCharClient::SendCharListReply() {
 bool CCharClient::SendCharCreateReply(
     std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   logger_->trace("CharCreateReply\n");
-
+  (void)P;
 //   std::string query =
 //       fmt::format("CALL CreateChar('{}', {}, {}, {}, {}, {}, {});",
 //                    Core::CMySQL_Database::escapeData(P->name()), P->race(),
