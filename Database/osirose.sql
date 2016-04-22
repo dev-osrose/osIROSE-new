@@ -23,7 +23,7 @@ USE `osirose`;
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(6,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
+INSERT INTO `accounts` VALUES (2,'raven','cc03e747a6afbbcbf8be7668acfebee5',100,1,0,0,0,'0.0.0.0',0),(7,'test','cc03e747a6afbbcbf8be7668acfebee5',1,1,0,0,0,'0.0.0.0',0);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,6 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES (1461297322,2,'2016-04-22 03:55:22',NULL,NULL,NULL),(1461297419,2,'2016-04-22 03:57:00',NULL,NULL,NULL),(1461297666,2,'2016-04-22 04:01:06',NULL,NULL,NULL),(1461297702,2,'2016-04-22 04:01:43',NULL,NULL,NULL),(1461297919,2,'2016-04-22 04:05:20',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,9 +100,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCharList`(IN `_user` VARCHAR(16))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCharList`(IN `_userid` INT)
     NO SQL
-SELECT * FROM characters WHERE account = _user ;;
+SELECT * FROM characters WHERE userid = _userid ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -157,4 +158,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-21 23:53:11
+-- Dump completed on 2016-04-22  0:06:06
