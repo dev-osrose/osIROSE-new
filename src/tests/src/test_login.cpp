@@ -28,6 +28,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   //TODO(raven): Move this into a static function so we can just call the function
   //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
+  // cc03e747a6afbbcbf8be7668acfebee5 == test123
   auto pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
   netConnect.Send(*pak2);
 

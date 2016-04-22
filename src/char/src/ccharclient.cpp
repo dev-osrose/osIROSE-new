@@ -8,7 +8,7 @@
 using namespace RoseCommon;
 
 CCharClient::CCharClient()
-    : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT) {}
+    : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT), session_id_(0), userid_(0) {}
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
@@ -42,6 +42,12 @@ bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
   logger_->trace("JoinServerReply\n");
+  
+  if(login_state_ != eSTATE::DEFAULT) {
+    logger_->warn("Client {} is attempting to login when already logged in.",
+                  GetId());
+    return true;
+  }
 
   uint32_t sessionID = P->session_id();
   std::string password = P->password();
@@ -56,6 +62,7 @@ bool CCharClient::JoinServerReply(
       std::string pwd = "";
       res->getString("password", pwd);
       if (pwd == password) {
+        login_state_ = eSTATE::LOGGEDIN;
         res->getInt( "userid", userid_ );
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
@@ -77,6 +84,12 @@ bool CCharClient::JoinServerReply(
 
 bool CCharClient::SendCharListReply() {
   logger_->trace("CharListReply\n");
+  
+  if(login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to get the char list before logging in.",
+                  GetId());
+    return true;
+  }
 
   // mysql query to get the characters created.
   std::unique_ptr<Core::IResult> res;
@@ -112,6 +125,12 @@ bool CCharClient::SendCharListReply() {
 bool CCharClient::SendCharCreateReply(
     std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   logger_->trace("CharCreateReply\n");
+
+  if(login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to get the create a char before logging in.",
+                  GetId());
+    return true;
+  }
   (void)P;
 //   std::string query =
 //       fmt::format("CALL CreateChar('{}', {}, {}, {}, {}, {}, {});",
@@ -131,6 +150,12 @@ bool CCharClient::SendCharCreateReply(
 bool CCharClient::SendCharDeleteReply(
     std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
   logger_->trace("CharDeleteReply\n");
+  
+  if(login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to delete a char before logging in.",
+                  GetId());
+    return true;
+  }
 
   if (P->char_id() > 6) return false;
 
@@ -149,6 +174,14 @@ bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   (void)P;
   logger_->trace("CharSelectReply\n");
+  
+  if(login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to select a char before logging in.",
+                  GetId());
+    return true;
+  }
+  
+  login_state_ = eSTATE::TRANSFERING;
 
   return true;
 }
