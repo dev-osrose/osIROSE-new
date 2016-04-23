@@ -86,9 +86,7 @@ void CMySQL_Database::Connect(const std::string &_host, const std::string &_data
                   password_.c_str());
   } catch (const std::exception &e) {
     if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while connecting to the database: "
-                      << conn_.error() << Color::CL_RESET;
+      log->critical( "Error while connecting to the database: {}", conn_.error());
     throw e;
   }
   connected_ = true;

@@ -8,7 +8,11 @@
 using namespace RoseCommon;
 
 CCharClient::CCharClient()
-    : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT), session_id_(0), userid_(0) {}
+    : CRoseClient(),
+      access_rights_(0),
+      login_state_(eSTATE::DEFAULT),
+      session_id_(0),
+      userid_(0) {}
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
@@ -42,8 +46,8 @@ bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
   logger_->trace("JoinServerReply\n");
-  
-  if(login_state_ != eSTATE::DEFAULT) {
+
+  if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
                   GetId());
     return true;
@@ -63,7 +67,7 @@ bool CCharClient::JoinServerReply(
       res->getString("password", pwd);
       if (pwd == password) {
         login_state_ = eSTATE::LOGGEDIN;
-        res->getInt( "userid", userid_ );
+        res->getInt("userid", userid_);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -84,17 +88,17 @@ bool CCharClient::JoinServerReply(
 
 bool CCharClient::SendCharListReply() {
   logger_->trace("CharListReply\n");
-  
-  if(login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to get the char list before logging in.",
-                  GetId());
+
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn(
+        "Client {} is attempting to get the char list before logging in.",
+        GetId());
     return true;
   }
 
   // mysql query to get the characters created.
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format(
-      "CALL GetCharList({});", userid_);
+  std::string query = fmt::format("CALL GetCharList({});", userid_);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -102,19 +106,25 @@ bool CCharClient::SendCharListReply() {
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   if (res != nullptr) {
     if (res->size() != 0) {
-      std::string _name;
-      uint32_t race, level, job, delete_time;
-      res->getString("name", _name);
-      res->getInt("race", race);
-      res->getInt("level", level);
-      res->getInt("job", job);
-      res->getInt("delete_time", delete_time);
 
-      packet->addCharacter(_name, race, level, job, delete_time);
-      packet->addEquipItem(
-          0, SrvCharacterListReply::equipped_position::EQUIP_FACE, 1);
-      packet->addEquipItem(
-          0, SrvCharacterListReply::equipped_position::EQUIP_HAIR, 1);
+      for(uint32_t idx = 0; idx < res->size(); ++idx) {
+        std::string _name;
+        uint32_t race, level, job, delete_time, face, hair;
+        res->getString( "name", _name );
+        res->getInt( "race", race );
+        res->getInt( "level", level );
+        res->getInt( "job", job );
+        res->getInt( "delete_time", delete_time );
+        res->getInt( "face", face );
+        res->getInt( "hair", hair );
+
+        packet->addCharacter( _name, race, level, job, delete_time );
+        packet->addEquipItem(
+          idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face );
+        packet->addEquipItem(
+          idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair );
+        res->incrementRow();
+      }
     }
   }
   Send(*packet);
@@ -126,23 +136,23 @@ bool CCharClient::SendCharCreateReply(
     std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   logger_->trace("CharCreateReply\n");
 
-  if(login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to get the create a char before logging in.",
-                  GetId());
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn(
+        "Client {} is attempting to get the create a char before logging in.",
+        GetId());
     return true;
   }
-  (void)P;
-//   std::string query =
-//       fmt::format("CALL CreateChar('{}', {}, {}, {}, {}, {}, {});",
-//                    Core::CMySQL_Database::escapeData(P->name()), P->race(),
-//                    P->stone(), P->hair(), P->face(), P->weapon(), P->zone());
-// 
-//   Core::IDatabase& database = Core::databasePool.getDatabase();
-//   database.QExecute(query);
-// 
-//   auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
-//       0, 0);  // result, isplatinum
-//   Send(*packet);
+  std::string query =
+      fmt::format("CALL CreateChar('{}', {}, {}, {}, {}, {});",
+                  Core::CMySQL_Database::escapeData(P->name().c_str()), userid_,
+                  P->race(), P->face(), P->hair(), P->stone());
+
+  Core::IDatabase& database = Core::databasePool.getDatabase();
+  database.QExecute(query);
+
+  auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
+      0, 0);  // result, isplatinum
+  Send(*packet);
 
   return true;
 }
@@ -150,8 +160,8 @@ bool CCharClient::SendCharCreateReply(
 bool CCharClient::SendCharDeleteReply(
     std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
   logger_->trace("CharDeleteReply\n");
-  
-  if(login_state_ != eSTATE::LOGGEDIN) {
+
+  if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to delete a char before logging in.",
                   GetId());
     return true;
@@ -174,13 +184,13 @@ bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   (void)P;
   logger_->trace("CharSelectReply\n");
-  
-  if(login_state_ != eSTATE::LOGGEDIN) {
+
+  if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to select a char before logging in.",
                   GetId());
     return true;
   }
-  
+
   login_state_ = eSTATE::TRANSFERING;
 
   return true;
