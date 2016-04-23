@@ -22,7 +22,7 @@ namespace RoseCommon {
 // Server Recv packets
 //---------------------------------------------------
 class CliAlive : public CRosePacket {
-public:
+ public:
   CliAlive(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_ALIVE)
       throw std::runtime_error("Not the right packet!");
@@ -33,7 +33,7 @@ public:
 };
 
 class CliAcceptReq : public CRosePacket {
-public:
+ public:
   CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_ACCEPT_REQ)
       throw std::runtime_error("Not the right packet!");
@@ -44,19 +44,18 @@ public:
 };
 
 class CliScreenShotReq : public CRosePacket {
-public:
+ public:
   CliScreenShotReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ)
       throw std::runtime_error("Not the right packet!");
     *this >> count_;
   }
   CliScreenShotReq(uint16_t count = 1)
-      : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ),
-        count_(count) {}
+      : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ), count_(count) {}
 
   virtual ~CliScreenShotReq() {}
 
-private:
+ private:
   uint16_t count_;
 };
 
@@ -94,13 +93,15 @@ class CliChannelReq : public CRosePacket {
       throw std::runtime_error("Not the right packet!");
     *this >> server_id_;
   }
-  CliChannelReq(uint32_t server_id) : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ), server_id_(server_id) {}
+  CliChannelReq(uint32_t server_id)
+      : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ),
+        server_id_(server_id) {}
 
   virtual ~CliChannelReq() {}
 
   uint32_t server_id() const { return server_id_; }
 
-protected:
+ protected:
   void pack() { *this << server_id_; }
 
  private:
@@ -115,14 +116,17 @@ class CliServerSelectReq : public CRosePacket {
     *this >> server_id_ >> channel_id_;
   }
 
-  CliServerSelectReq(uint32_t server_id, uint8_t channel_id) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), server_id_(server_id), channel_id_(channel_id) {}
+  CliServerSelectReq(uint32_t server_id, uint8_t channel_id)
+      : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ),
+        server_id_(server_id),
+        channel_id_(channel_id) {}
 
   virtual ~CliServerSelectReq() {}
 
   uint32_t server_id() const { return server_id_; }
   uint8_t channel_id() const { return channel_id_; }
 
-protected:
+ protected:
   void pack() { *this << server_id_ << channel_id_; }
 
  private:
@@ -164,7 +168,8 @@ class CliCreateCharReq : public CRosePacket {
       throw std::runtime_error("Not the right packet!");
     *this >> race_ >> stone_ >> hair_ >> face_ >> weapon_ >> zone_ >> name_;
   }
-  CliCreateCharReq(const std::string &name, uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint8_t zone)
+  CliCreateCharReq(const std::string &name, uint8_t race, uint8_t stone,
+                   uint8_t hair, uint8_t face, uint8_t weapon, uint16_t zone)
       : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ),
         race_(race),
         stone_(stone),
@@ -182,10 +187,12 @@ class CliCreateCharReq : public CRosePacket {
   uint8_t hair() const { return hair_; }
   uint8_t face() const { return face_; }
   uint8_t weapon() const { return weapon_; }
-  uint8_t zone() const { return zone_; }
+  uint16_t zone() const { return zone_; }
 
  protected:
-  void pack() { *this << race_ << stone_ << hair_ << face_ << weapon_ << zone_ << name_; }
+  void pack() {
+    *this << race_ << stone_ << hair_ << face_ << weapon_ << zone_ << name_;
+  }
 
  private:
   uint8_t race_;
@@ -193,7 +200,7 @@ class CliCreateCharReq : public CRosePacket {
   uint8_t hair_;
   uint8_t face_;
   uint8_t weapon_;
-  uint8_t zone_;
+  uint16_t zone_;
   std::string name_;
 };
 
@@ -232,7 +239,8 @@ class CliSelectCharReq : public CRosePacket {
       throw std::runtime_error("Not the right packet!");
     *this >> char_id_ >> run_mode_ >> ride_mode_ >> name_;
   }
-  CliSelectCharReq(const std::string &name, uint8_t id, uint8_t run, uint8_t ride)
+  CliSelectCharReq(const std::string &name, uint8_t id, uint8_t run,
+                   uint8_t ride)
       : CRosePacket(ePacketType::PAKCS_SELECT_CHAR_REQ),
         char_id_(id),
         run_mode_(run),
@@ -255,7 +263,6 @@ class CliSelectCharReq : public CRosePacket {
   uint8_t ride_mode_;
   std::string name_;
 };
-
 
 //-----------------------------------------------
 // Send Packets
@@ -290,11 +297,11 @@ class SrvScreenShotReply : public CRosePacket {
   void pack() { *this << year_ << month_ << day_ << hour_ << min_; }
 
  private:
-   uint16_t year_;
-   uint8_t month_;
-   uint8_t day_;
-   uint8_t hour_;
-   uint8_t min_;
+  uint16_t year_;
+  uint8_t month_;
+  uint8_t day_;
+  uint8_t hour_;
+  uint8_t min_;
 };
 
 class SrvLoginReply : public CRosePacket {
@@ -336,11 +343,9 @@ class SrvLoginReply : public CRosePacket {
   void pack() {
     *this << result_ << right_ << type_;
 
-    for (auto &server : channel_list_)
-    {
+    for (auto &server : channel_list_) {
       char pad = ' ';
-      if(server.test_ == true)
-        pad = '@';
+      if (server.test_ == true) pad = '@';
       *this << pad << server.name_ << server.channel_id_;
     }
   }
@@ -479,35 +484,31 @@ class SrvJoinServerReply : public CRosePacket {
   void pack() { *this << result_ << id_ << pay_flag_; }
 
  private:
-   uint8_t result_;
-   uint32_t id_;
-   uint32_t pay_flag_;
+  uint8_t result_;
+  uint32_t id_;
+  uint32_t pay_flag_;
 };
 
 class SrvCharacterListReply : public CRosePacket {
  public:
   SrvCharacterListReply()
-      : CRosePacket(ePacketType::PAKCC_CHAR_LIST_REPLY),
-        character_count_(0) {}
+      : CRosePacket(ePacketType::PAKCC_CHAR_LIST_REPLY), character_count_(0) {}
 
   virtual ~SrvCharacterListReply() {}
 
-  void addCharacter(const std::string &name, uint8_t race,
-                  uint16_t level, uint16_t job,
-                  uint32_t delete_time = 0) {
+  void addCharacter(const std::string &name, uint8_t race, uint16_t level,
+                    uint16_t job, uint32_t delete_time = 0) {
     ++character_count_;
     char_info character(name, race, level, job, delete_time);
-    character_list_.push_back( character );
+    character_list_.push_back(character);
 
     for (int idx = 0; idx < MAX_EQUIPPED_ITEMS; ++idx)
-      addEquipItem(character_count_-1, idx);
+      addEquipItem(character_count_ - 1, idx);
   }
 
   void addEquipItem(uint8_t char_id, uint8_t slot, uint16_t item_id = 0,
-                  uint16_t gem = 0, uint8_t socket = 0,
-                  uint8_t grade = 0) {
-
-    if(char_id < character_count_ && slot < MAX_EQUIPPED_ITEMS) {
+                    uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) {
+    if (char_id < character_count_ && slot < MAX_EQUIPPED_ITEMS) {
       equip_item item = character_list_[char_id].items_[slot];
       item.id_ = item_id;
       item.gem_op_ = gem;
@@ -517,8 +518,7 @@ class SrvCharacterListReply : public CRosePacket {
     }
   }
 
-  enum equipped_position
-  {
+  enum equipped_position {
     EQUIP_FACE = 0,
     EQUIP_HAIR = 1,
     EQUIP_HELMET = 2,
@@ -539,11 +539,11 @@ class SrvCharacterListReply : public CRosePacket {
 
     for (auto &character : character_list_) {
       *this << character.name_;
-      *this << character.race_ << character.level_ << character.job_ << character.remain_sec_unitl_delete_ << character.platinum_;
+      *this << character.race_ << character.level_ << character.job_
+            << character.remain_sec_unitl_delete_ << character.platinum_;
 
-      for(int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-        for(int j = 0; j < 4; ++j)
-          *this << character.items_[i].data[j];
+      for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
+        for (int j = 0; j < 4; ++j) *this << character.items_[i].data[j];
       }
     }
   }
@@ -554,19 +554,17 @@ class SrvCharacterListReply : public CRosePacket {
   struct equip_item {
     union {
       struct {
-        unsigned int id_ : 10; // 0~1023
-        unsigned int gem_op_ : 9; // 0~512
-        unsigned int socket_ : 1; // 0~1
-        unsigned int grade_ : 4; // 0~15
+        unsigned int id_ : 10;     // 0~1023
+        unsigned int gem_op_ : 9;  // 0~512
+        unsigned int socket_ : 1;  // 0~1
+        unsigned int grade_ : 4;   // 0~15
       };
       uint8_t data[4];
     };
 
-    equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0) :
-      id_(id),
-      gem_op_(gem),
-      socket_(socket),
-      grade_(grade) {}
+    equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
+               uint8_t grade = 0)
+        : id_(id), gem_op_(gem), socket_(socket), grade_(grade) {}
   };
 
   struct char_info {
@@ -579,7 +577,7 @@ class SrvCharacterListReply : public CRosePacket {
     std::string name_;
 
     char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
-         uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0)
+              uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0)
         : remain_sec_unitl_delete_(delete_time),
           level_(level),
           job_(job),
@@ -593,7 +591,7 @@ class SrvCharacterListReply : public CRosePacket {
 class SrvCreateCharReply : public CRosePacket {
  public:
   SrvCreateCharReply(uint8_t result, uint8_t platinum = 0)
-      : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY),
+      : CRosePacket(ePacketType::PAKCC_CREATE_CHAR_REPLY),
         result_(result),
         platinum_(platinum) {}
 
@@ -615,8 +613,8 @@ class SrvCreateCharReply : public CRosePacket {
   void pack() { *this << result_ << platinum_; }
 
  private:
-   uint8_t result_;
-   uint8_t platinum_;
+  uint8_t result_;
+  uint8_t platinum_;
 };
 
 class SrvDeleteCharReply : public CRosePacket {
@@ -635,8 +633,8 @@ class SrvDeleteCharReply : public CRosePacket {
   void pack() { *this << remaining_time_ << name_; }
 
  private:
-   uint32_t remaining_time_;
-   std::string name_;
+  uint32_t remaining_time_;
+  std::string name_;
 };
 
 //-----------------------------------------------
@@ -644,27 +642,26 @@ class SrvDeleteCharReply : public CRosePacket {
 //-----------------------------------------------
 class IscServerRegister : public CRosePacket {
  public:
-   IscServerRegister( uint8_t buffer[MAX_PACKET_SIZE] ) : CRosePacket( buffer )
-   {
-     if (type() != ePacketType::ISC_SERVER_REGISTER)
-       throw std::runtime_error( "Not the right packet!" );
-     uint32_t _size = size();
-     auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
-     memset( data.get(), 0, _size );
-     for(uint32_t i = 0; i < _size; ++i)
-       *this >> data[i];
+  IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::ISC_SERVER_REGISTER)
+      throw std::runtime_error("Not the right packet!");
+    uint32_t _size = size();
+    auto data = std::unique_ptr<uint8_t[]>(new uint8_t[_size]);
+    memset(data.get(), 0, _size);
+    for (uint32_t i = 0; i < _size; ++i) *this >> data[i];
 
-     if (server_reg_.SerializeToArray(data.get(), _size) == false)
-       throw std::runtime_error("Couldn't serialize the data");
-   }
+    if (server_reg_.SerializeToArray(data.get(), _size) == false)
+      throw std::runtime_error("Couldn't serialize the data");
+  }
 
-  IscServerRegister(const std::string &name, const std::string &ip, int32_t port, int32_t type, int32_t right)
+  IscServerRegister(const std::string &name, const std::string &ip,
+                    int32_t port, int32_t type, int32_t right)
       : CRosePacket(ePacketType::ISC_SERVER_REGISTER) {
-    server_reg_.set_name( name );
-    server_reg_.set_addr( ip );
-    server_reg_.set_port( port );
-    server_reg_.set_type( (iscPacket::ServerReg_ServerType)type );
-    server_reg_.set_accright( right );
+    server_reg_.set_name(name);
+    server_reg_.set_addr(ip);
+    server_reg_.set_port(port);
+    server_reg_.set_type((iscPacket::ServerReg_ServerType)type);
+    server_reg_.set_accright(right);
   }
 
   iscPacket::ServerReg server_reg() const { return server_reg_; }
@@ -672,19 +669,17 @@ class IscServerRegister : public CRosePacket {
  protected:
   void pack() {
     int _size = server_reg_.ByteSize();
-    auto data = std::unique_ptr<uint8_t[]>( new uint8_t[_size] );
-    memset( data.get(), 0, _size );
-    if (server_reg_.SerializeToArray( data.get(), _size ) == false)
+    auto data = std::unique_ptr<uint8_t[]>(new uint8_t[_size]);
+    memset(data.get(), 0, _size);
+    if (server_reg_.SerializeToArray(data.get(), _size) == false)
       throw std::runtime_error("Couldn't serialize the data");
 
-    for(int i = 0; i < _size; ++i)
-      *this << data[i];
+    for (int i = 0; i < _size; ++i) *this << data[i];
   }
 
  private:
-   iscPacket::ServerReg server_reg_;
+  iscPacket::ServerReg server_reg_;
 };
-
 }
 
 #endif /* !_PACKETCLASSES_H_ */

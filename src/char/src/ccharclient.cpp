@@ -106,23 +106,22 @@ bool CCharClient::SendCharListReply() {
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   if (res != nullptr) {
     if (res->size() != 0) {
-
-      for(uint32_t idx = 0; idx < res->size(); ++idx) {
+      for (uint32_t idx = 0; idx < res->size(); ++idx) {
         std::string _name;
         uint32_t race, level, job, delete_time, face, hair;
-        res->getString( "name", _name );
-        res->getInt( "race", race );
-        res->getInt( "level", level );
-        res->getInt( "job", job );
-        res->getInt( "delete_time", delete_time );
-        res->getInt( "face", face );
-        res->getInt( "hair", hair );
+        res->getString("name", _name);
+        res->getInt("race", race);
+        res->getInt("level", level);
+        res->getInt("job", job);
+        res->getInt("delete_time", delete_time);
+        res->getInt("face", face);
+        res->getInt("hair", hair);
 
-        packet->addCharacter( _name, race, level, job, delete_time );
+        packet->addCharacter(_name, race, level, job, delete_time);
         packet->addEquipItem(
-          idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face );
+            idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
         packet->addEquipItem(
-          idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair );
+            idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
         res->incrementRow();
       }
     }
