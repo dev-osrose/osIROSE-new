@@ -58,6 +58,7 @@ enum class ePacketType : uint16_t {
 
   PAKCS_JOIN_SERVER_REQ,
   PAKSC_JOIN_SERVER_REPLY,
+  PAKWC_GM_COMMAND,
 
   PAKCC_SWITCH_SERVER = 0x711,
   PAKCS_CHAR_LIST_REQ,
@@ -66,7 +67,7 @@ enum class ePacketType : uint16_t {
   PAKCC_CREATE_CHAR_REPLY = PAKCS_CREATE_CHAR_REQ,  // 0x713
   PAKCS_DELETE_CHAR_REQ,
   PAKCC_DELETE_CHAR_REPLY = PAKCS_DELETE_CHAR_REQ,
-  PAKCS_SELECT_CHAR_REQ,
+  PAKCS_SELECT_CHAR_REQ, // 0x715
   PAKWC_SELECT_CHAR_REPLY = PAKCS_SELECT_CHAR_REQ,
 
   PAKWC_INVENTORY_DATA,
@@ -77,19 +78,41 @@ enum class ePacketType : uint16_t {
   PAKWC_QUEST_DATA = 0x71b,
   PAKCS_CHANGE_CHAR_REQ,
   PAKCC_CHAN_CHAR_REPLY = PAKCS_CHANGE_CHAR_REQ,
-  PAKWC_SET_MONEY,
+  PAKWC_SET_MONEY, // 0x71d
   PAKWC_QUEST_REWARD_MONEY,
   PAKWC_QUEST_REWARD_ITEM,
   PAKWC_QUEST_REWARD_ADD_STAT,
   PAKWC_QUEST_REWARD_SET_STAT,
   PAKCS_CANCEL_LOGOUT,
   PAKWC_QUEST_UPDATE,
+  PAKWC_WISH_LIST, // 0x724
 
   PAKCS_QUEST_DATA_REQ = 0x730,
   PAKWC_QUEST_DATA_REPLY = PAKCS_QUEST_DATA_REQ,
+  PAKWC_NPC_EVENT,
 
+  PAKWC_GM_COMMAND_CODE = 0x751, // This is for updating client side varibles
   PAKCS_CHANGE_MAP_REQ = 0x753,
   PAKWC_CHANGE_MAP_REPLY = PAKCS_CHANGE_MAP_REQ,
+  PAKWC_INIT_DATA,
+  PAKCS_REVIVE_REQ,
+  PAKWC_REVIVE_REPLY = PAKCS_REVIVE_REQ,
+  PAKWC_SET_REVIVE_POS_REPLY,
+  PAKCS_SET_SERVER_VAR_REQ, // 0x757
+  PAKWC_SET_SERVER_VAR_REPLY = PAKCS_SET_SERVER_VAR_REQ,
+
+  PAKCS_CHAR_INFO_REQ,
+  PAKWC_CHAR_INFO_REPLY = PAKCS_CHAR_INFO_REQ,
+  PAKCS_SET_WEIGHT_REQ,
+  PAKWC_SET_WEIGHT_REPLY = PAKCS_SET_WEIGHT_REQ,
+
+  PAKWC_ADJUST_POSITION = 0x770,
+  PAKCS_STOP_MOVING = 0x771,
+  PAKWC_STOP_MOVING = PAKCS_STOP_MOVING, // This needs to be Impl in the client
+
+  PAKCS_UPDATE_NPC = 0x774,
+  PAKCS_SUMMON_CMD,
+  PAKWC_SUMMON_CMD = PAKCS_SUMMON_CMD,
 
   PAKCS_SCREEN_SHOT_TIME_REQ = 0x7eb,
   PAKSC_SCREEN_SHOT_TIME_REPLY = PAKCS_SCREEN_SHOT_TIME_REQ,
@@ -116,70 +139,6 @@ struct tChannelInfo {
   tChannelInfo()
       : ChannelID(0), Port(0), MinRight(0), channelName(""), IPAddress("") {}
 };
-
-//-------------------------------------------
-// GAME PACKETS!!!!!!
-//-------------------------------------------
-PACK(
-    // Packet information
-struct sPacketHeader {
-  uint16_t Size;        // Packet size
-  ePacketType Command;  // Packet command
-  uint16_t Unused;      // unused?
-});
-
-PACK(
-struct pakChannelInfo {
-  uint8_t ChannelID;
-  uint16_t
-      pad;  // This was used to tell the client the AGE of the server. 2 bytes.
-  uint16_t Status;  // This is actually the fill percentage of the server.
-                    // uint32_t Right;
-                    // Channel Name as string
-});
-
-PACK(
-struct pakChannel_List : public sPacketHeader {
-  uint32_t lServerID;
-  uint8_t bServerCount;
-  // channelInfo sServers[]; // There is a better way to do this, just can't
-  // think of one ATM. -Raven
-});
-
-PACK(
-struct pakChannelList_Req : public sPacketHeader {
-  uint32_t lServerID;
-});
-
-PACK(
-struct pakLoginReply : public sPacketHeader {
-  uint8_t Result;
-  uint16_t Right;
-  uint16_t Type;
-});
-
-PACK(
-struct pakEncryptionRequest : public sPacketHeader {
-  uint8_t Unknown;
-  uint32_t RandValue;
-});
-
-struct basicCharInfo {
-  uint8_t  race;  // This should be moved to the end of the struct for byte alignment reasons
-  uint16_t level;
-  uint16_t job;
-  uint32_t time_until_delete;
-};
-
-PACK(struct pakCharList
-     : public sPacketHeader {
-  uint8_t count;
-//  for( i < count ){
-//    basicCharinfo
-//    equipItem [max_body_items]
-//    char name[]
-//  }
-});
 
 }
 

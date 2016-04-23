@@ -67,7 +67,8 @@ bool CCharClient::JoinServerReply(
       res->getString("password", pwd);
       if (pwd == password) {
         login_state_ = eSTATE::LOGGEDIN;
-        res->getInt("userid", userid_);
+        res->getInt( "userid", userid_ );
+        res->getInt( "channelid", channelid_ );
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -191,6 +192,15 @@ bool CCharClient::SendCharSelectReply(
   }
 
   login_state_ = eSTATE::TRANSFERING;
+
+  std::lock_guard<std::mutex> lock( CCharServer::GetISCListMutex() );
+  for (auto& server : CCharServer::GetISCList()) {
+    if (server->GetType() == iscPacket::ServerReg_ServerType_MAP_MASTER && server->GetId() == channelid_) {
+      auto packet =
+        makePacket<ePacketType::PAKCC_SWITCH_SERVER>( server->GetIpAddress(), server->GetPort(), session_id_, std::time( nullptr ) );
+      Send( *packet );
+    }
+  }
 
   return true;
 }

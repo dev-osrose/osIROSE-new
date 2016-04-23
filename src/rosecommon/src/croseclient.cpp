@@ -105,7 +105,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       return CNetwork_Asio::HandlePacket(_buffer);
     }
 #ifdef STRESS_TEST
-    case (ePacketType)0x6F6D: {
+    case ePacketType::STRESS: {
       std::unique_ptr<CRosePacket> packet( new CRosePacket(_buffer) );
       Send(*packet);
       break;

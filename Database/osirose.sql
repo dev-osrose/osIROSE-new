@@ -62,7 +62,7 @@ CREATE TABLE `characters` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,6 +95,7 @@ DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id` int(10) NOT NULL,
   `userid` int(10) NOT NULL,
+  `channelid` int(11) DEFAULT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `charid` int(10) DEFAULT NULL,
   `worldip` int(20) DEFAULT NULL,
@@ -162,9 +163,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateSession`(IN `_sessionid` INT, IN `_userid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateSession`(IN `_sessionid` INT, IN `_userid` INT, IN `_channelid` INT)
 BEGIN
-  INSERT into sessions(id, userid, time) values(_sessionid, _userid, now());
+  INSERT into sessions(id, userid, channelid, time) values(_sessionid, _userid, _channelid, now());
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -201,7 +202,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSession`(IN `_sessionid` INT)
 BEGIN
-  SELECT sessions.userid, accounts.password 
+  SELECT sessions.userid, sessions.channelid, accounts.password 
   FROM `sessions`
   LEFT JOIN `accounts` on sessions.userid = accounts.id 
   WHERE sessions.id = _sessionid;
@@ -239,4 +240,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-23 10:12:57
+-- Dump completed on 2016-04-23 14:32:56

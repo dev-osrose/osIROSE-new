@@ -34,7 +34,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList())
-      if (server->GetType() == 1) {
+      if (server->GetType() == iscPacket::ServerReg_ServerType_CHAR) {
         CLoginISC* svr = (CLoginISC*)server;
 
         // This if check is needed since the client actually looks for this.
@@ -64,17 +64,15 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   if (serverCount < 1) {
     // Servers are under inspection
-    SendLoginReply(1);
+    SendLoginReply(SrvLoginReply::FAILED);
     return true;
   }
 
   username_ = Core::CMySQL_Database::escapeData(P->username());
   std::string clientpass = P->password();
-  //  logger_->debug("Username: \"{}\"", username_);
 
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format(
-      "CALL UserLogin('{0}');", username_.c_str());
+  std::string query = fmt::format("CALL UserLogin('{0}');", username_.c_str());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -93,7 +91,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
         if (access_rights_ < 1) {
           // Banned
-          SendLoginReply(5);
+          SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
           return false;
         }
 
@@ -101,24 +99,21 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
           // Okay to login!!
           res->getInt("id", userid_);
           session_id_ = std::time(nullptr);
-          SendLoginReply(0);
+          SendLoginReply(SrvLoginReply::OK);
         } else {
-          // incorrect password
-          SendLoginReply(4);
+          // Online already
+          SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
       } else {
-        // The user doesn't exist or server is down.
-        SendLoginReply(3);
+        // incorrect password.
+        SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
       }
-
-      // 	{
-      // 		// Server Full
-      // 		SendLoginReply( 8 );
-      //	}
     } else {
       // The user doesn't exist or server is down.
-      SendLoginReply(1);
+      SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
     }
+  } else {
+    SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
 }
@@ -130,14 +125,14 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
         GetId());
     return true;
   }
-  uint32_t ServerID = P->server_id();
+  uint32_t ServerID = P->server_id()-1;
 
-  auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID);
+  auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
     if (server->GetType() == iscPacket::ServerReg_ServerType_CHAR &&
-        server->GetId() + 1 == ServerID) {
+        server->GetId() == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
         { packet->addChannel(info.channelName, info.ChannelID, 0); }
@@ -158,8 +153,8 @@ bool CLoginClient::ServerSelect(
         GetId());
     return true;
   }
-  uint32_t serverID = P->server_id();
-  // uint8_t channelID = P->channel_id();
+  uint32_t serverID = P->server_id()-1;
+  uint8_t channelID = P->channel_id()-1;
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
@@ -170,9 +165,10 @@ bool CLoginClient::ServerSelect(
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = (CLoginISC*)obj;
-    if (server->GetType() == 1 && server->GetId() + 1 == serverID) {
-      std::string query =
-          fmt::format("CALL CreateSession({}, {});", session_id_, userid_);
+    if (server->GetType() == iscPacket::ServerReg_ServerType_CHAR &&
+        server->GetId() == serverID) {
+      std::string query = fmt::format("CALL CreateSession({}, {}, {});",
+                                      session_id_, userid_, channelID);
 
       Core::IDatabase& database = Core::databasePool.getDatabase();
       database.QExecute(query);

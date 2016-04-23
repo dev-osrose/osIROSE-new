@@ -30,6 +30,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   eSTATE login_state_;
   uint32_t session_id_;
   uint32_t userid_;
+  uint32_t channelid_;
 };
 
 #endif

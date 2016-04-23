@@ -264,6 +264,39 @@ class CliSelectCharReq : public CRosePacket {
   std::string name_;
 };
 
+class CliLogoutReq : public CRosePacket {
+ public:
+  CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_LOGOUT_REQ)
+      throw std::runtime_error("Not the right packet!");
+  }
+  CliLogoutReq() : CRosePacket(ePacketType::PAKCS_LOGOUT_REQ) {}
+
+  virtual ~CliLogoutReq() {}
+};
+
+class CliChangeMapReq : public CRosePacket {
+ public:
+  CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_CHANGE_MAP_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> weight_rate_ >> position_z_;
+  }
+  CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
+
+  virtual ~CliChangeMapReq() {}
+
+  uint8_t weight_rate() const { return weight_rate_; }
+  uint16_t position_z() const { return position_z_; }
+
+ protected:
+  void pack() { *this << weight_rate_ << position_z_; }
+
+ private:
+  uint8_t weight_rate_;
+  uint16_t position_z_;  // this is not actually sent
+};
+
 //-----------------------------------------------
 // Send Packets
 //-----------------------------------------------
@@ -635,6 +668,202 @@ class SrvDeleteCharReply : public CRosePacket {
  private:
   uint32_t remaining_time_;
   std::string name_;
+};
+
+class SrvSwitchServerReply : public CRosePacket {
+ public:
+  SrvSwitchServerReply(const std::string &ip, uint16_t port, uint32_t session_id, uint32_t random_seed)
+      : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER),
+        port_(port),
+        ip_(ip) {
+    session_ids_[0] = session_id;
+    session_ids_[1] = random_seed;
+  }
+
+  virtual ~SrvSwitchServerReply() {}
+
+  uint32_t port() const { return port_; }
+  uint32_t session_id() const { return session_ids_[0]; }
+  uint32_t random_seed() const { return session_ids_[1]; }
+  std::string ip() const { return ip_; }
+
+ protected:
+  void pack() { *this << port_ << session_ids_[0] << session_ids_[1] << ip_; }
+
+ private:
+  uint16_t port_;
+  std::string ip_;
+  uint32_t session_ids_[2];
+};
+
+class SrvSelectCharReply : public CRosePacket {
+ public:
+  SrvSelectCharReply(const std::string &name, uint32_t remaining_time)
+      : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY),
+        remaining_time_(remaining_time),
+        name_(name) {}
+
+  virtual ~SrvSelectCharReply() {}
+
+  uint32_t remaining_time() const { return remaining_time_; }
+  std::string name() const { return name_; }
+
+ protected:
+  void pack() { *this << remaining_time_ << name_; }
+
+ private:
+  uint32_t remaining_time_;
+  std::string name_;
+};
+
+class SrvLogoutReply : public CRosePacket {
+ public:
+  SrvLogoutReply(uint16_t wait_time)
+      : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY), wait_time_(wait_time) {}
+
+  virtual ~SrvLogoutReply() {}
+
+  uint16_t wait_time() const { return wait_time_; }
+
+ protected:
+  void pack() { *this << wait_time_; }
+
+ private:
+  uint16_t wait_time_;
+};
+
+class SrvInitDataReply : public CRosePacket {
+ public:
+  SrvInitDataReply(uint32_t rand_seed, uint16_t rand_index)
+      : CRosePacket(ePacketType::PAKWC_INIT_DATA),
+        rand_seed_(rand_seed),
+        rand_index_(rand_index) {}
+
+  virtual ~SrvInitDataReply() {}
+
+  uint32_t rand_seed() const { return rand_seed_; }
+  uint16_t rand_index() const { return rand_index_; }
+
+ protected:
+  void pack() { *this << rand_seed_ << rand_index_; }
+
+ private:
+  uint32_t rand_seed_;
+  uint16_t rand_index_;
+};
+
+#define MIN_SELL_TYPE 1
+#define MAX_SELL_TYPE 11
+class SrvServerData : public CRosePacket {
+ public:
+  SrvServerData(uint8_t type)
+      : CRosePacket(ePacketType::PAKWC_INIT_DATA), type_(type) {}
+
+  virtual ~SrvServerData() {}
+
+  uint8_t type() const { return type_; }
+
+  enum data_type : uint8_t { ECONOMY = 0, NPC };
+
+ protected:
+  void pack() {
+    *this << type_;
+
+    switch (type_) {
+      case data_type::ECONOMY: {
+        *this << enconmy_data_.counter_ << enconmy_data_.pop_base_
+              << enconmy_data_.dev_base_;
+        for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
+          *this << enconmy_data_.consume_[idx];
+        }
+        *this << enconmy_data_.dev_ << enconmy_data_.pop_;
+        for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
+          *this << enconmy_data_.item_[idx];
+        }
+        break;
+      }
+      case data_type::NPC:
+      default:
+        break;
+    }
+  }
+
+ private:
+  struct Enconmy_Data {
+    uint32_t counter_;
+    uint16_t pop_base_;
+    uint16_t dev_base_;
+    uint16_t consume_[MAX_SELL_TYPE];
+    uint16_t dev_;
+    uint32_t pop_;
+    uint32_t item_[MAX_SELL_TYPE];
+  };
+  uint8_t type_;
+  Enconmy_Data enconmy_data_;
+};
+
+class SrvChangeMapReply : public CRosePacket {
+ public:
+  SrvChangeMapReply(uint16_t object_index, uint16_t current_hp,
+                    uint16_t current_mp, uint16_t current_exp,
+                    uint16_t penalize_exp, uint16_t world_time,
+                    uint16_t team_number)
+      : CRosePacket(ePacketType::PAKWC_CHANGE_MAP_REPLY),
+        object_index_(object_index),
+        current_hp_(current_hp),
+        current_mp_(current_mp),
+        current_exp_(current_exp),
+        penalize_exp_(penalize_exp),
+        world_time_(world_time),
+        team_number_(team_number) {
+    for (int idx = 0; idx < MAX_SELL_TYPE; ++idx) {
+      zone_vars_.item_rate_[idx] = 0;
+    }
+  }
+
+  virtual ~SrvChangeMapReply() {}
+
+  uint16_t object_index() const { return object_index_; }
+  uint16_t current_hp() const { return current_hp_; }
+  uint16_t current_mp() const { return current_mp_; }
+
+  void setItemRate(uint8_t type, uint8_t rate) {
+    zone_vars_.item_rate_[type] = rate;
+  }
+
+ protected:
+  void pack() {
+    *this << object_index_ << current_hp_ << current_mp_ << current_exp_
+          << penalize_exp_;
+    {  // global_var
+      *this << zone_vars_.craft_rate_ << zone_vars_.update_time_
+            << zone_vars_.world_rate_ << zone_vars_.town_rate_;
+      for (int idx = 0; idx < MAX_SELL_TYPE; ++idx) {
+        *this << zone_vars_.item_rate_[idx];
+      }
+      *this << zone_vars_.flags_;
+    }  // global_var
+    *this << world_time_ << team_number_;
+  }
+
+ private:
+  struct global_var {
+    uint16_t craft_rate_;
+    uint32_t update_time_;
+    uint16_t world_rate_;
+    uint8_t town_rate_;
+    uint8_t item_rate_[MAX_SELL_TYPE];
+    uint32_t flags_;
+  };
+
+  uint16_t object_index_;
+  uint16_t current_hp_;
+  uint16_t current_mp_;
+  uint64_t current_exp_;
+  uint64_t penalize_exp_;
+  uint32_t world_time_;
+  uint32_t team_number_;
+  global_var zone_vars_;
 };
 
 //-----------------------------------------------

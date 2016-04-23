@@ -41,6 +41,9 @@ struct find_recv_class<ePacketType::PAKCS_DELETE_CHAR_REQ> { CliDeleteCharReq ty
 template <>
 struct find_recv_class<ePacketType::PAKCS_SELECT_CHAR_REQ> { CliSelectCharReq type; };
 
+template <>
+struct find_recv_class<ePacketType::PAKCS_LOGOUT_REQ> { CliLogoutReq type; };
+
 template <ePacketType T>
 struct find_send_class {};
 
@@ -59,9 +62,11 @@ struct find_send_class<ePacketType::PAKLC_CHANNEL_LIST_REPLY> { SrvChannelReply 
 template <>
 struct find_send_class<ePacketType::PAKLC_SRV_SELECT_REPLY> { SrvServerSelectReply type; };
 
+// CHAR/MAP SERVER
 template <>
 struct find_send_class<ePacketType::PAKSC_JOIN_SERVER_REPLY> { SrvJoinServerReply type; };
 
+// CHAR SERVER
 template <>
 struct find_send_class<ePacketType::PAKCC_CHAR_LIST_REPLY> { SrvCharacterListReply type; };
 
@@ -70,6 +75,22 @@ struct find_send_class<ePacketType::PAKCC_CREATE_CHAR_REPLY> { SrvCreateCharRepl
 
 template <>
 struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { SrvDeleteCharReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKCC_SWITCH_SERVER> { SrvSwitchServerReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_SELECT_CHAR_REPLY> { SrvDeleteCharReply type; };
+
+// MAP SERVER
+template <>
+struct find_send_class<ePacketType::PAKWC_LOGOUT_REPLY> { SrvLogoutReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_INIT_DATA> { SrvInitDataReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_CHANGE_MAP_REPLY> { SrvChangeMapReply type; };
 
 //-----------------------------------------------
 // ISC Packets
