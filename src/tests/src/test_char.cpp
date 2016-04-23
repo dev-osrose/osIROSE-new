@@ -23,10 +23,9 @@ TEST(TestCharServer, TestClientPacketPath) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
-  
+
   {
-    std::string query =
-            fmt::format("CALL CreateSession({}, {});", 1, 1);
+    std::string query = fmt::format("CALL CreateSession({}, {}, {});", 1, 1, 0);
 
     Core::IDatabase& database = Core::databasePool.getDatabase();
     database.QExecute(query);
@@ -34,24 +33,27 @@ TEST(TestCharServer, TestClientPacketPath) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
-    auto pak = std::unique_ptr<CliJoinServerReq>(new CliJoinServerReq(1, "cc03e747a6afbbcbf8be7668acfebee5"));
+    auto pak = std::unique_ptr<CliJoinServerReq>(
+        new CliJoinServerReq(1, "cc03e747a6afbbcbf8be7668acfebee5"));
     netConnect.Send(*pak);
   }
   {
-    auto pak = std::unique_ptr<CliCreateCharReq>(new CliCreateCharReq("Raven", 1, 1, 1, 1, 1, 10));
+    auto pak = std::unique_ptr<CliCreateCharReq>(
+        new CliCreateCharReq("Raven", 1, 1, 1, 1, 1, 10));
     netConnect.Send(*pak);
   }
   {
-    auto pak = std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq("Raven", 1, 0));
+    auto pak =
+        std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq("Raven", 1, 0));
     netConnect.Send(*pak);
   }
   {
-    auto pak = std::unique_ptr<CliSelectCharReq>(new CliSelectCharReq("Raven", 1, 0, 0));
+    auto pak = std::unique_ptr<CliSelectCharReq>(
+        new CliSelectCharReq("Raven", 1, 0, 0));
     netConnect.Send(*pak);
   }
-  
-  std::string query =
-          fmt::format("DELETE FROM sessions WHERE id = {}", 1, 1);
+
+  std::string query = fmt::format("DELETE FROM sessions WHERE id = {}", 1, 1);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);
@@ -78,7 +80,7 @@ TEST(TestCharServer, TestISCMap) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  //todo(raven): Create a map connection here by crafting a isc packet
+  // todo(raven): Create a map connection here by crafting a isc packet
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
