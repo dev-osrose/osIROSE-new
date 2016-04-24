@@ -22,12 +22,16 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true),
+      remote_connection_(false),
       last_update_time_( Core::Time::GetTickCount() ) {
     logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
   Shutdown();
+
+  if (process_thread_.joinable())
+    process_thread_.join();
 
   do {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -36,7 +40,6 @@ CNetwork_Asio::~CNetwork_Asio() {
   while( send_queue_.empty() == false )
     send_queue_.pop();
 
-//  logger_->debug() << "net shared_ptr used by " << logger_.use_count()-1;
   logger_.reset();
 }
 
@@ -70,17 +73,11 @@ bool CNetwork_Asio::Connect() {
       resolver.resolve(network_ip_address, std::to_string(network_port_));
 
   OnConnect();
-  //asio::async_connect(
-  //    socket_, endpoint_iterator,
-  //    [this](std::error_code errorCode, const asio::ip::tcp::endpoint) {
-  //      if (!errorCode) {
-  //        OnConnected();
-  //      }
-  //    });
   send_mutex_.lock();
   std::error_code errorCode;
   asio::connect(socket_, endpoint_iterator, errorCode);
   send_mutex_.unlock();
+  remote_connection_ = true;
   if (!errorCode) {
     OnConnected();
     active_ = true;
@@ -106,18 +103,18 @@ bool CNetwork_Asio::Listen() {
 }
 
 bool CNetwork_Asio::Reconnect() {
+  if(remote_connection_ == false)
+    return false;
+
   Disconnect();
-  Connect();
-  return true;
+  return Connect();
 }
 
 bool CNetwork_Asio::Disconnect() {
   OnDisconnect();
-  //  networkService_->Get_IO_Service()->post([this]() {
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
   OnDisconnected();
-  //  });
   return true;
 }
 
@@ -155,6 +152,7 @@ void CNetwork_Asio::ProcessSend()
           (void)bytes_transferred;
           if (!error) {
             OnSent();
+            last_update_time_.store( Core::Time::GetTickCount() );
           }
 
           discard_mutex_.lock();
@@ -196,7 +194,9 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
                          BytesToRead),  // We want at least 6 bytes of data
                      [this](std::error_code errorCode, std::size_t length) {
       packet_offset_ += length;
-      if (!errorCode || errorCode.value() == 11) {
+      last_update_time_.store(Core::Time::GetTickCount());
+      if (!errorCode || errorCode.value() == 11)
+      {
         if (OnReceived() == false) {
           logger_->debug("OnReceived aborted the connection... Shutting down");
           Shutdown();
@@ -208,12 +208,11 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           Shutdown();
         } else {
           logger_->debug("{}: Error {}: {}", GetId(), errorCode.value(), errorCode.message());
-
+          OnDisconnected();
           Shutdown();
           return;
         }
       }
-      last_update_time_ = Core::Time::GetTickCount();
       recv_condition_.notify_all();
       if (active_) Recv();
     });

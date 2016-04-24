@@ -46,7 +46,10 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           if( dt > (1000 * 60) * 5 ) // wait 5 minutes before time out
           {
             logger_->notice("Server {} timed out.", client->GetId());
-            client->Shutdown();
+//            if(client->Reconnect() == false)
+              client->Shutdown();
+//            else
+//              logger_->notice( "Server {} reconnected.", client->GetId() );
             // Do not delete them now. Do it next time.
           }
         }

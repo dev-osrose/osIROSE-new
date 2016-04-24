@@ -100,6 +100,12 @@ struct find_recv_class<ePacketType::ISC_SERVER_REGISTER> { IscServerRegister typ
 
 template <>
 struct find_send_class<ePacketType::ISC_SERVER_REGISTER> { IscServerRegister type; };
+
+template <>
+struct find_recv_class<ePacketType::ISC_SHUTDOWN> { IscServerShutdown type; };
+
+template <>
+struct find_send_class<ePacketType::ISC_SHUTDOWN> { IscServerShutdown type; };
 }
 
 #endif /* !_FINDCLASS_H_ */

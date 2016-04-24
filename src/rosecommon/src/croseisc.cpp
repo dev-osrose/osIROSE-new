@@ -22,10 +22,8 @@ void CRoseISC::OnDisconnected() {}
 
 bool CRoseISC::OnReceived() {
   bool rtnVal = true;
-  // m_Log.oicprintf( CL_WHITE "Size: %i\n", PacketSize );
   if (packet_size_ == 6) {
     packet_size_ = (uint16_t)buffer_[0];
-    // m_Log.oicprintf( CL_WHITE "Size From buffer: %i\n", PacketSize );
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug() << "Client sent incorrect block header";
       ResetBuffer();

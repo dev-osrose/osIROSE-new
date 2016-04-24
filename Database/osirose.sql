@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(64) DEFAULT NULL,
   `password` varchar(32) DEFAULT NULL,
   `access` int(11) DEFAULT '100',
@@ -47,22 +47,63 @@ DROP TABLE IF EXISTS `characters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `characters` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userid` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` int(11) unsigned NOT NULL DEFAULT '0',
   `name` varchar(24) NOT NULL,
   `race` int(10) unsigned NOT NULL DEFAULT '0',
   `level` int(10) unsigned NOT NULL DEFAULT '1',
-  `job` int(11) DEFAULT '0',
-  `delete_time` decimal(20,0) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
-  `clanid` int(11) NOT NULL DEFAULT '0',
-  `clan_rank` int(11) NOT NULL DEFAULT '0',
-  `face` int(11) NOT NULL DEFAULT '0',
-  `hair` int(11) NOT NULL DEFAULT '0',
-  `stone` int(11) NOT NULL DEFAULT '0',
+  `job` int(11) unsigned DEFAULT '0',
+  `clanid` int(11) unsigned NOT NULL DEFAULT '0',
+  `clan_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `face` int(11) unsigned NOT NULL DEFAULT '0',
+  `hair` int(11) unsigned NOT NULL DEFAULT '0',
+  `stone` int(11) unsigned NOT NULL DEFAULT '0',
+  `exp` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `zuly` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_hp` int(10) unsigned NOT NULL DEFAULT '0',
+  `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+  UNIQUE KEY `name_UNIQUE` (`name`),
+  KEY `user_idx` (`userid`),
+  CONSTRAINT `user` FOREIGN KEY (`userid`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `friends`
+--
+
+DROP TABLE IF EXISTS `friends`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `friends` (
+  `char_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `friend_account_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `friend_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`),
+  KEY `char_id_idx` (`char_id`,`friend_id`),
+  CONSTRAINT `charid` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `inventory`
+--
+
+DROP TABLE IF EXISTS `inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inventory` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `char_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemid` int(10) unsigned NOT NULL DEFAULT '0',
+  `amount` int(10) unsigned NOT NULL DEFAULT '0',
+  `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `char_id_idx` (`char_id`),
+  CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,6 +143,21 @@ CREATE TABLE `sessions` (
   `worldport` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `skill`
+--
+
+DROP TABLE IF EXISTS `skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `skill` (
+  `char_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,4 +296,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-23 14:32:56
+-- Dump completed on 2016-04-24  1:05:51

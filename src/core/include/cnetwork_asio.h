@@ -70,7 +70,9 @@ class CNetwork_Asio : public INetwork {
     return active_;
   }
 
-  std::chrono::steady_clock::time_point GetLastUpdateTime() { return last_update_time_; }
+  bool isRemoteConnection() const { return remote_connection_; }
+  std::chrono::steady_clock::time_point GetLastUpdateTime() { return last_update_time_.load(); }
+  void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_.store(time); }
 
  protected:
   void AcceptConnection();
@@ -94,7 +96,6 @@ class CNetwork_Asio : public INetwork {
 
   void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
-    //memset(buffer_, 0, packet_size_);
     packet_offset_ = 0;
     packet_size_ = 6;
   }
@@ -116,7 +117,8 @@ class CNetwork_Asio : public INetwork {
   uint16_t packet_offset_;
   uint16_t packet_size_;
   bool active_;
-  std::chrono::steady_clock::time_point last_update_time_;
+  bool remote_connection_;
+  std::atomic<std::chrono::steady_clock::time_point> last_update_time_;
 };
 }
 

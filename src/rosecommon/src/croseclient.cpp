@@ -102,7 +102,8 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
           std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE));
       Send(*packet);
 #endif
-      return CNetwork_Asio::HandlePacket(_buffer);
+      //return CNetwork_Asio::HandlePacket(_buffer);
+      break;
     }
 #ifdef STRESS_TEST
     case ePacketType::STRESS: {

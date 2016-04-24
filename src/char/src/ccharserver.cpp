@@ -18,14 +18,16 @@ void CCharServer::OnAccepted(tcp::socket _sock) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CCharClient* nClient = new CCharClient(std::move(_sock));
       nClient->SetId(client_count_++);
-      logger_->notice("[{}] Client connected from: {}", nClient->GetId(),
+      nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
+      logger_->notice( "[{}] Client connected from: {}", nClient->GetId(),
                        _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CCharISC* nClient = new CCharISC(std::move(_sock));
       nClient->SetId(server_count_++);
-      logger_->notice("Server connected from: {}", _address.c_str());
+      nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
+      logger_->notice( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(nClient);
     }
   }

@@ -10,15 +10,17 @@ class CCharISC : public RoseCommon::CRoseISC {
   CCharISC();
   CCharISC(tcp::socket _sock);
 
-  bool IsLogin() const { return login_connection_; }
-  void SetLogin(bool val) { login_connection_ = val; }
+  bool IsLogin() const;
+  void SetLogin(bool val);
 
  protected:
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer);
-  virtual void OnConnected();
 
-  bool login_connection_;
+  virtual void OnConnected();
+  virtual bool OnShutdown() override;
+
+  int32_t type_;
 };
 
 #endif

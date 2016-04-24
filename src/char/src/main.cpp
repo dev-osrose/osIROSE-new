@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
   CCharISC* iscClient = new CCharISC();
   iscClient->Init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient->SetLogin(true);
+  iscClient->Connect();
 
   clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
   clientServer.Listen();
@@ -33,7 +34,6 @@ int main(int argc, char* argv[]) {
 
   iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
   iscServer.Listen();
-  iscClient->Connect();
 
   while (clientServer.IsActive()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

@@ -67,8 +67,8 @@ bool CCharClient::JoinServerReply(
       res->getString("password", pwd);
       if (pwd == password) {
         login_state_ = eSTATE::LOGGEDIN;
-        res->getInt( "userid", userid_ );
-        res->getInt( "channelid", channelid_ );
+        res->getInt("userid", userid_);
+        res->getInt("channelid", channelid_);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -114,7 +114,7 @@ bool CCharClient::SendCharListReply() {
         res->getInt("race", race);
         res->getInt("level", level);
         res->getInt("job", job);
-        res->getInt("delete_time", delete_time);
+        res->getInt("delete_date", delete_time);
         res->getInt("face", face);
         res->getInt("hair", hair);
 
@@ -172,6 +172,14 @@ bool CCharClient::SendCharDeleteReply(
   uint32_t time = 0;
   if (P->isDelete()) {
     // we need to delete the char
+    time = std::time(nullptr);
+
+    std::string query =
+        fmt::format("CALL DeleteChar({}, '{}');", userid_,
+                    Core::CMySQL_Database::escapeData(P->name().c_str()));
+
+    Core::IDatabase& database = Core::databasePool.getDatabase();
+    database.QExecute(query);
   }
 
   auto packet =
@@ -193,12 +201,14 @@ bool CCharClient::SendCharSelectReply(
 
   login_state_ = eSTATE::TRANSFERING;
 
-  std::lock_guard<std::mutex> lock( CCharServer::GetISCListMutex() );
+  std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
-    if (server->GetType() == iscPacket::ServerReg_ServerType_MAP_MASTER && server->GetId() == channelid_) {
-      auto packet =
-        makePacket<ePacketType::PAKCC_SWITCH_SERVER>( server->GetIpAddress(), server->GetPort(), session_id_, std::time( nullptr ) );
-      Send( *packet );
+    if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
+        server->GetId() == channelid_) {
+      auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
+          server->GetIpAddress(), server->GetPort(), session_id_,
+          std::time(nullptr));
+      Send(*packet);
     }
   }
 
