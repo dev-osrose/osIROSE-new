@@ -39,17 +39,18 @@ TEST(TestFinalServers, TestISCConnections) {
   CMapServer::GetISCList().push_front(mapIscClient);
 
   charIscClient->Connect();
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   mapIscClient->Connect();
+
+  std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+
+  mapIscClient->Shutdown(true);
+  charIscClient->Shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  mapIscClient->Shutdown();
-  charIscClient->Shutdown();
-
-  mapIsc.Shutdown();
-  charIsc.Shutdown();
-  loginIsc.Shutdown();
+  mapIsc.Shutdown(true);
+  charIsc.Shutdown(true);
+  loginIsc.Shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }

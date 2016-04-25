@@ -109,8 +109,8 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
-  EXPECT_NO_FATAL_FAILURE(netConnect.Disconnect());
-  EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
+  //EXPECT_NO_FATAL_FAILURE(netConnect.Disconnect());
+  //EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
 
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }

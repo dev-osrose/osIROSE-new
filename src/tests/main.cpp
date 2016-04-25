@@ -42,6 +42,5 @@ int main(int argc, char *argv[]) {
   if (unexpectedly_failed_tests == 0) ret_val = 0;
 
   // Core::NetworkThreadPool::DeleteInstance();
-
   return ret_val;
 }
