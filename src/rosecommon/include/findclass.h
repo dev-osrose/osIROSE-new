@@ -58,6 +58,9 @@ struct find_recv_class<ePacketType::PAKCS_SELECT_CHAR_REQ> { CliSelectCharReq ty
 template <>
 struct find_recv_class<ePacketType::PAKCS_LOGOUT_REQ> { CliLogoutReq type; };
 
+template <>
+struct find_recv_class<ePacketType::PAKCS_NORMAL_CHAT> { CliChat type; };
+
 template <ePacketType T>
 struct find_send_class {};
 
@@ -105,6 +108,9 @@ struct find_send_class<ePacketType::PAKWC_INIT_DATA> { SrvInitDataReply type; };
 
 template <>
 struct find_send_class<ePacketType::PAKWC_CHANGE_MAP_REPLY> { SrvChangeMapReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_NORMAL_CHAT> { SrvChat type; };
 
 //-----------------------------------------------
 // ISC Packets

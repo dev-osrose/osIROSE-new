@@ -311,15 +311,33 @@ class CliChangeMapReq : public CRosePacket {
   uint16_t position_z_;  // this is not actually set
 };
 
+class CliChat : public CRosePacket {
+ public:
+ CliChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_NORMAL_CHAT)
+      throw std::runtime_error("Not the right packet!");
+    *this >> chat_;
+  }
+  CliChat(const std::string &chat = "")
+      : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT),
+        chat_(chat) {}
+
+ protected:
+  void pack() { *this << chat_; }
+
+ private:
+  std::string chat_;
+};
+
 //-----------------------------------------------
 // Send Packets
 //-----------------------------------------------
 
 class SrvAcceptClient : public CRosePacket {
  public:
-  SrvAcceptClient(uint32_t rand_value, uint8_t result_ = 0x02)
+  SrvAcceptClient(uint32_t rand_value, uint8_t result = 0x02)
       : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY),
-        result_(result_),
+        result_(result),
         rand_value_(rand_value) {}
 
  protected:
@@ -878,6 +896,21 @@ class SrvChangeMapReply : public CRosePacket {
   uint32_t world_time_;
   uint32_t team_number_;
   global_var zone_vars_;
+};
+
+class SrvChat : public CRosePacket {
+ public:
+  SrvChat(const std::string &chat = "", uint16_t charuid = 0)
+      : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT),
+        chat_(chat),
+        charuid_(charuid) {}
+
+ protected:
+  void pack() { *this << charuid_ << chat_; }
+
+ private:
+  std::string chat_;
+  uint16_t charuid_;
 };
 
 //-----------------------------------------------

@@ -17,6 +17,7 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
+#include "rosepackets.h"
 
 class CMapClient : public RoseCommon::CRoseClient {
  public:
@@ -26,8 +27,19 @@ class CMapClient : public RoseCommon::CRoseClient {
  protected:
   virtual bool HandlePacket(uint8_t* _buffer);
   virtual bool OnReceived();
+  
+  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
+  
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+  };
 
   uint16_t access_rights_;
+  eSTATE login_state_;
+  uint32_t session_id_;
+  uint32_t userid_;
+  uint32_t charid_;
 };
 
 #endif
