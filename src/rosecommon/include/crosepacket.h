@@ -30,10 +30,13 @@
 #include <type_traits>
 #include "epackettype.h"
 #include "iscontainer.h"
+#include "iserialize.h"
 
 #define MAX_PACKET_SIZE 0x7FF
 
 namespace RoseCommon {
+
+class ISerialize;
 
 /*!
  * \class CRosePacket
@@ -171,6 +174,16 @@ class CRosePacket {
 			do {
 				data.push_back(os.readNext<char>());
 			} while (data.back());
+			return os;
+		}
+
+		friend CRosePacket &operator<<(CRosePacket &os, const ISerialize &data) {
+			data.serialize(os);
+			return os;
+		}
+
+		friend CRosePacket &operator>>(CRosePacket &os, ISerialize &data) {
+			data.deserialize(os);
 			return os;
 		}
 
