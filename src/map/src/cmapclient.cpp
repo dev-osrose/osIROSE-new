@@ -41,8 +41,12 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
-//    case ePacketType::PAKCS_CHAR_LIST_REQ:
-//      return SendCharListReply(pak);
+//    case ePacketType::PAKCS_CHANGE_MAP_REQ:
+//      return ChangeMapReply(getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
+//    case ePacketType::PAKCS_LOGOUT_REQ:
+//      return LogoutReply();
+//    case ePacketType::PAKCS_NORMAL_CHAT:
+//      return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
     default:
       return CRoseClient::HandlePacket(_buffer);
   }
