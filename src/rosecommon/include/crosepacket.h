@@ -114,66 +114,6 @@ class CRosePacket {
 		 */
 		virtual void pack() {}
 
-		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
-			os.writeNext<T>(data);
-			return os;
-		}
-
-		template <typename T>
-		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
-			for (const auto &it : data)
-				os.writeNext<typename T::value_type>(it);
-			return os;
-		}
-
-		friend CRosePacket &operator<<(CRosePacket &os, const std::string &data) {
-			for (const auto &it : data)
-				os.writeNext<char>(it);
-			os.writeNext<char>(0);
-			return os;
-		}
-
-		friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
-			while (*data)
-				os.writeNext<char>(*(data++));
-			return os;
-		}
-
-		template <size_t count>
-		friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
-			for (size_t i = 0; i < count; ++i)
-				os.writeNext<char>(data[i]);
-			return os;
-		}
-
-		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		friend CRosePacket &operator>>(CRosePacket &os, T &data) {
-			data = os.readNext<T>();
-			return os;
-		}
-
-		template <typename T>
-		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
-			for (auto &it : data)
-				it = os.readNext<typename T::value_type>();
-			return os;
-		}
-
-		template <size_t count>
-		friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
-			for (size_t i = 0; i < count; ++i)
-				data[i] = os.readNext<char>();
-			return os;
-		}
-
-		friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
-			do {
-				data.push_back(os.readNext<char>());
-			} while (data.back());
-			return os;
-		}
-
 	private:
 		template <typename T, typename = std::enable_if<!is_container<T>::value>>
 		static T read(uint8_t *data) {
@@ -214,6 +154,78 @@ class CRosePacket {
 		uint16_t CRC_;
 };
 
+//===========================Helper functions to set and get data to/from a packet============================================================
+
+template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
+	os.writeNext<T>(data);
+	return os;
+}
+
+template <typename T>
+friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
+	for (const auto &it : data)
+		os.writeNext<typename T::value_type>(it);
+	return os;
+}
+
+friend CRosePacket &operator<<(CRosePacket &os, const std::string &data) {
+	for (const auto &it : data)
+		os.writeNext<char>(it);
+	os.writeNext<char>(0);
+	return os;
+}
+
+friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
+	while (*data)
+		os.writeNext<char>(*(data++));
+	return os;
+}
+
+template <size_t count>
+friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
+	for (size_t i = 0; i < count; ++i)
+		os.writeNext<char>(data[i]);
+	return os;
+}
+
+template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+friend CRosePacket &operator>>(CRosePacket &os, T &data) {
+	data = os.readNext<T>();
+	return os;
+}
+
+template <typename T>
+friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
+	for (auto &it : data)
+		it = os.readNext<typename T::value_type>();
+	return os;
+}
+
+template <size_t count>
+friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
+	for (size_t i = 0; i < count; ++i)
+		data[i] = os.readNext<char>();
+	return os;
+}
+
+friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
+	do {
+		data.push_back(os.readNext<char>());
+	} while (data.back());
+	return os;
+}
+
+class ISerialize;
+
+friend CRosePacket &operator<<(CRosePacket &os, const ISerialize &data) {
+	data.serialize(os);
+	return os;
+}
+
+friend CRosePacket &operator>>(CRosePacket &os, ISerialize &data) {
+	data.deserialize(os);
+	return os;
 }
 
 #endif /* !_CROSEPACKET_H_ */
