@@ -39,6 +39,8 @@ SET( SOURCES_HEADER
   include/iscontainer
   include/packetclasses
   include/rosepackets
+  include/loginpackets
+  include/charpackets
 )
 
 SET( SOURCES_BASE
