@@ -16,7 +16,9 @@
 //
 #include <sstream>
 #include "logconsole.h"
-#include <spdlog\sinks\wincolor_sink.h>
+#ifdef _WIN32
+#include <spdlog/sinks/wincolor_sink.h>
+#endif
 
 std::ostream& Core::Color::operator<<(std::ostream& os,
                                       Core::Color::CodeFG code) {
