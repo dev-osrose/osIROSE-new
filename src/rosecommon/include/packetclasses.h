@@ -313,7 +313,7 @@ class CliChangeMapReq : public CRosePacket {
 
 class CliChat : public CRosePacket {
  public:
- CliChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+  CliChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_NORMAL_CHAT)
       throw std::runtime_error("Not the right packet!");
     *this >> chat_;
@@ -321,12 +321,41 @@ class CliChat : public CRosePacket {
   CliChat(const std::string &chat = "")
       : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT),
         chat_(chat) {}
+        
+  std::string getMessage() const { return chat_; }
 
  protected:
   void pack() { *this << chat_; }
 
  private:
   std::string chat_;
+};
+
+class CliReviveReq : public CRosePacket {
+ public:
+  CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_REVIVE_REQ)
+      throw std::runtime_error("Not the right packet!");
+    *this >> type_;
+  }
+  CliReviveReq(uint8_t type = 0)
+      : CRosePacket(ePacketType::PAKCS_REVIVE_REQ),
+       type_(type) {}
+       
+  enum eType : uint8_t {
+    REVIVE_POS,
+    SAVE_POS,
+    START_POS,
+    CURRENT_POS
+  };
+  
+  eType getType() const { return (eType)type_; }
+
+ protected:
+  void pack() { *this << type_; }
+
+ private:
+  uint8_t type_;
 };
 
 //-----------------------------------------------
@@ -896,6 +925,19 @@ class SrvChangeMapReply : public CRosePacket {
   uint32_t world_time_;
   uint32_t team_number_;
   global_var zone_vars_;
+};
+
+class SrvReviveReply : public CRosePacket {
+ public:
+  SrvReviveReply(uint16_t mapid = 0)
+      : CRosePacket(ePacketType::PAKWC_REVIVE_REPLY),
+       mapid_(mapid) {}
+
+ protected:
+  void pack() { *this << mapid_; }
+
+ private:
+  uint16_t mapid_;
 };
 
 class SrvChat : public CRosePacket {
