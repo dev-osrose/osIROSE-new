@@ -41,6 +41,7 @@ SET( SOURCES_HEADER
   include/rosepackets
   include/loginpackets
   include/charpackets
+  include/mappackets
 )
 
 SET( SOURCES_BASE
