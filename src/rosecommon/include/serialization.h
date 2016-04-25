@@ -11,8 +11,8 @@ class ISerialization {
 	protected:
 		friend CRosePacket;
 
-		void serialize(CRosePacket &os) const = 0;
-		void deserialize(CRosePacket &os) = 0;
+		virtual void serialize(CRosePacket &os) const = 0;
+		virtual void deserialize(CRosePacket &os) = 0;
 };
 
 #endif
