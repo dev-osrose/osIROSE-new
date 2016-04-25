@@ -161,7 +161,7 @@ void CNetwork_Asio::ProcessSend() {
               (void)bytes_transferred;
               if (!error) {
                 OnSent();
-                last_update_time_.store(Core::Time::GetTickCount());
+                last_update_time_ = (Core::Time::GetTickCount());
               }
 
               discard_mutex_.lock();
@@ -204,7 +204,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
             BytesToRead),  // We want at least 6 bytes of data
         [this](std::error_code errorCode, std::size_t length) {
           packet_offset_ += length;
-          last_update_time_.store(Core::Time::GetTickCount());
+          last_update_time_ = (Core::Time::GetTickCount());
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(
