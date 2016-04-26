@@ -9,19 +9,13 @@ coverage:
   precision: 2
   round: down
   range: "70...100"
-
-  notify:
-    slack:
-      default:
-        threshold: 1
-        attachments: "sunburst, diff"
         
   status:
     project:
       default:
         target: auto
         threshold: 1
-        branches: null
+        branches: trunk
 
     patch:
       default:
@@ -29,9 +23,8 @@ coverage:
 
     changes:
       default:
-        branches: null
+        branches: trunk
 
 comment:
   layout: "header, diff, changes, sunburst, uncovered"
-  branches: null
   behavior: new
