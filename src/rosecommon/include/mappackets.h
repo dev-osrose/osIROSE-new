@@ -30,23 +30,17 @@ namespace RoseCommon {
   
 class SrvSwitchServerReply : public CRosePacket {
  public:
-  SrvSwitchServerReply(const std::string &ip, uint16_t port, uint32_t session_id, uint32_t random_seed)
-      : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER),
-        port_(port),
-        ip_(ip) {
-    session_ids_[0] = session_id;
-    session_ids_[1] = random_seed;
-  }
+  SrvSwitchServerReply(const std::string &ip, uint16_t port, uint32_t session_id, uint32_t random_seed);
 
-  virtual ~SrvSwitchServerReply() {}
+  virtual ~SrvSwitchServerReply();
 
-  uint32_t port() const { return port_; }
-  uint32_t session_id() const { return session_ids_[0]; }
-  uint32_t random_seed() const { return session_ids_[1]; }
-  std::string ip() const { return ip_; }
+  uint32_t port() const;
+  uint32_t session_id() const;
+  uint32_t random_seed() const;
+  std::string ip() const;
 
  protected:
-  void pack() { *this << port_ << session_ids_[0] << session_ids_[1] << ip_; }
+  void pack();
 
  private:
   uint16_t port_;
@@ -59,28 +53,24 @@ class SrvSwitchServerReply : public CRosePacket {
 
 class CliLogoutReq : public CRosePacket {
  public:
-  CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_LOGOUT_REQ)
-      throw std::runtime_error("Not the right packet!");
-  }
-  CliLogoutReq() : CRosePacket(ePacketType::PAKCS_LOGOUT_REQ) {}
+  CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]);
+  CliLogoutReq();
 
-  virtual ~CliLogoutReq() {}
+  virtual ~CliLogoutReq();
 };
 
 //------------------------------------------------
 
 class SrvLogoutReply : public CRosePacket {
  public:
-  SrvLogoutReply(uint16_t wait_time)
-      : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY), wait_time_(wait_time) {}
+  SrvLogoutReply(uint16_t wait_time);
 
-  virtual ~SrvLogoutReply() {}
+  virtual ~SrvLogoutReply();
 
-  uint16_t wait_time() const { return wait_time_; }
+  uint16_t wait_time() const;
 
  protected:
-  void pack() { *this << wait_time_; }
+  void pack();
 
  private:
   uint16_t wait_time_;
@@ -91,20 +81,16 @@ class SrvLogoutReply : public CRosePacket {
 
 class CliChangeMapReq : public CRosePacket {
  public:
-  CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_CHANGE_MAP_REQ)
-      throw std::runtime_error("Not the right packet!");
-    *this >> weight_rate_ >> position_z_;
-  }
-  CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
+  CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
+  CliChangeMapReq();
 
-  virtual ~CliChangeMapReq() {}
+  virtual ~CliChangeMapReq();
 
-  uint8_t weight_rate() const { return weight_rate_; }
-  uint16_t position_z() const { return position_z_; }
+  uint8_t weight_rate() const;
+  uint16_t position_z() const;
 
  protected:
-  void pack() { *this << weight_rate_ << position_z_; }
+  void pack();
 
  private:
   uint8_t weight_rate_;
@@ -118,44 +104,18 @@ class SrvChangeMapReply : public CRosePacket {
   SrvChangeMapReply(uint16_t object_index, uint16_t current_hp,
                     uint16_t current_mp, uint16_t current_exp,
                     uint16_t penalize_exp, uint16_t world_time,
-                    uint16_t team_number)
-      : CRosePacket(ePacketType::PAKWC_CHANGE_MAP_REPLY),
-        object_index_(object_index),
-        current_hp_(current_hp),
-        current_mp_(current_mp),
-        current_exp_(current_exp),
-        penalize_exp_(penalize_exp),
-        world_time_(world_time),
-        team_number_(team_number) {
-    for (int idx = 0; idx < MAX_SELL_TYPE; ++idx) {
-      zone_vars_.item_rate_[idx] = 0;
-    }
-  }
+                    uint16_t team_number);
 
-  virtual ~SrvChangeMapReply() {}
+  virtual ~SrvChangeMapReply();
 
-  uint16_t object_index() const { return object_index_; }
-  uint16_t current_hp() const { return current_hp_; }
-  uint16_t current_mp() const { return current_mp_; }
+  uint16_t object_index() const;
+  uint16_t current_hp() const;
+  uint16_t current_mp() const;
 
-  void setItemRate(uint8_t type, uint8_t rate) {
-    zone_vars_.item_rate_[type] = rate;
-  }
+  void setItemRate(uint8_t type, uint8_t rate);
 
  protected:
-  void pack() {
-    *this << object_index_ << current_hp_ << current_mp_ << current_exp_
-          << penalize_exp_;
-    {  // global_var
-      *this << zone_vars_.craft_rate_ << zone_vars_.update_time_
-            << zone_vars_.world_rate_ << zone_vars_.town_rate_;
-      for (int idx = 0; idx < MAX_SELL_TYPE; ++idx) {
-        *this << zone_vars_.item_rate_[idx];
-      }
-      *this << zone_vars_.flags_;
-    }  // global_var
-    *this << world_time_ << team_number_;
-  }
+  void pack();
 
  private:
   struct global_var {
@@ -182,19 +142,13 @@ class SrvChangeMapReply : public CRosePacket {
 
 class CliChat : public CRosePacket {
  public:
-  CliChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_NORMAL_CHAT)
-      throw std::runtime_error("Not the right packet!");
-    *this >> chat_;
-  }
-  CliChat(const std::string &chat = "")
-      : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT),
-        chat_(chat) {}
+  CliChat(uint8_t buffer[MAX_PACKET_SIZE]);
+  CliChat(const std::string &chat = "");
         
-  std::string getMessage() const { return chat_; }
+  std::string getMessage() const;
 
  protected:
-  void pack() { *this << chat_; }
+  void pack();
 
  private:
   std::string chat_;
@@ -222,14 +176,8 @@ class SrvChat : public CRosePacket {
 
 class CliReviveReq : public CRosePacket {
  public:
-  CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_REVIVE_REQ)
-      throw std::runtime_error("Not the right packet!");
-    *this >> type_;
-  }
-  CliReviveReq(uint8_t type = 0)
-      : CRosePacket(ePacketType::PAKCS_REVIVE_REQ),
-       type_(type) {}
+  CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
+  CliReviveReq(uint8_t type = 0);
        
   enum eType : uint8_t {
     REVIVE_POS,
@@ -238,10 +186,10 @@ class CliReviveReq : public CRosePacket {
     CURRENT_POS
   };
   
-  eType getType() const { return (eType)type_; }
+  eType getType() const;
 
  protected:
-  void pack() { *this << type_; }
+  void pack();
 
  private:
   uint8_t type_;
@@ -251,12 +199,10 @@ class CliReviveReq : public CRosePacket {
 
 class SrvReviveReply : public CRosePacket {
  public:
-  SrvReviveReply(uint16_t mapid = 0)
-      : CRosePacket(ePacketType::PAKWC_REVIVE_REPLY),
-       mapid_(mapid) {}
+  SrvReviveReply(uint16_t mapid = 0);
 
  protected:
-  void pack() { *this << mapid_; }
+  void pack();
 
  private:
   uint16_t mapid_;
@@ -267,18 +213,15 @@ class SrvReviveReply : public CRosePacket {
 
 class SrvInitDataReply : public CRosePacket {
  public:
-  SrvInitDataReply(uint32_t rand_seed, uint16_t rand_index)
-      : CRosePacket(ePacketType::PAKWC_INIT_DATA),
-        rand_seed_(rand_seed),
-        rand_index_(rand_index) {}
+  SrvInitDataReply(uint32_t rand_seed, uint16_t rand_index);
 
-  virtual ~SrvInitDataReply() {}
+  virtual ~SrvInitDataReply();
 
-  uint32_t rand_seed() const { return rand_seed_; }
-  uint16_t rand_index() const { return rand_index_; }
+  uint32_t rand_seed() const;
+  uint16_t rand_index() const;
 
  protected:
-  void pack() { *this << rand_seed_ << rand_index_; }
+  void pack();
 
  private:
   uint32_t rand_seed_;
@@ -290,37 +233,16 @@ class SrvInitDataReply : public CRosePacket {
 
 class SrvServerData : public CRosePacket {
  public:
-  SrvServerData(uint8_t type)
-      : CRosePacket(ePacketType::PAKWC_INIT_DATA), type_(type) {}
+  SrvServerData(uint8_t type);
 
-  virtual ~SrvServerData() {}
+  virtual ~SrvServerData();
 
-  uint8_t type() const { return type_; }
+  uint8_t type() const;
 
   enum data_type : uint8_t { ECONOMY = 0, NPC };
 
  protected:
-  void pack() {
-    *this << type_;
-
-    switch (type_) {
-      case data_type::ECONOMY: {
-        *this << enconmy_data_.counter_ << enconmy_data_.pop_base_
-              << enconmy_data_.dev_base_;
-        for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
-          *this << enconmy_data_.consume_[idx];
-        }
-        *this << enconmy_data_.dev_ << enconmy_data_.pop_;
-        for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
-          *this << enconmy_data_.item_[idx];
-        }
-        break;
-      }
-      case data_type::NPC:
-      default:
-        break;
-    }
-  }
+  void pack();
 
  private:
   struct Enconmy_Data {

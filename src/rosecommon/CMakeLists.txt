@@ -49,6 +49,9 @@ SET( SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
+  src/loginpackets
+  src/charpackets
+  src/mappackets
 )
 
 add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
