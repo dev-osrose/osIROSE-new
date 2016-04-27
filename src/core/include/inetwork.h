@@ -108,10 +108,10 @@ class INetwork {
   virtual void SetId(uint32_t _val) { network_id_ = _val; }
   virtual void SetType(uint32_t _val) { network_type_ = _val; }
 
-  virtual uint32_t GetId() { return network_id_; }
-  virtual uint32_t GetType() { return network_type_; }
-  virtual uint16_t GetPort() { return network_port_; }
-  virtual std::string GetIpAddress() { return network_ip_address; }
+  virtual uint32_t GetId() const { return network_id_; }
+  virtual uint32_t GetType() const { return network_type_; }
+  virtual uint16_t GetPort() const { return network_port_; }
+  virtual std::string GetIpAddress() const { return network_ip_address; }
 
  protected:
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;

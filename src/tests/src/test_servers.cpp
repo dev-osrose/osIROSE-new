@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <stdint.h>
+#include "iscpackets.pb.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "cloginserver.h"
@@ -27,7 +28,7 @@ TEST(TestFinalServers, TestISCConnections) {
 
   mapIsc.Init("127.0.0.1", 29210);
   mapIscClient->Init("127.0.0.1", 29110);
-  mapIscClient->SetChar(true);
+  mapIscClient->SetType(iscPacket::ServerType::CHAR);
 
   loginIsc.Listen();
   charIsc.Listen();

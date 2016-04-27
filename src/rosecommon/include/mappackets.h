@@ -260,6 +260,17 @@ class SrvServerData : public CRosePacket {
 
 //------------------------------------------------
 //------------------------------------------------
+
+class SrvRemoveObject : public CRosePacket {
+ public:
+  SrvRemoveObject(uint16_t obj_id);
+  
+ protected:
+  void pack();
+  
+ private:
+  uint16_t obj_id_;
+};
 }
 
 #endif

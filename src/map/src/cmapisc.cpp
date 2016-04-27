@@ -20,10 +20,12 @@
 
 using namespace RoseCommon;
 
-CMapISC::CMapISC() : CRoseISC(), char_server_(false) {}
+CMapISC::CMapISC() : CRoseISC() {}
 
 CMapISC::CMapISC(tcp::socket _sock)
-    : CRoseISC(std::move(_sock)), char_server_(false) {}
+    : CRoseISC(std::move(_sock)) {}
+
+bool CMapISC::IsChar() const { return GetType() == iscPacket::ServerType::CHAR; }
 
 bool CMapISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -32,7 +34,8 @@ bool CMapISC::HandlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return true;
+      return ServerRegister(
+          getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
@@ -43,6 +46,53 @@ bool CMapISC::HandlePacket(uint8_t* _buffer) {
     }
   }
   return true;
+}
+
+bool CMapISC::ServerRegister(
+    std::unique_ptr<RoseCommon::IscServerRegister> P) {
+  logger_->trace("CMapISC::ServerRegister(CRosePacket* P)");
+
+  uint16_t _size = P->size() - 6;
+
+  iscPacket::ServerReg pMapServer;
+  if (pMapServer.ParseFromArray(P->data(), _size) == false) {
+    logger_->debug("pMapServer.ParseFromArray Failed!");
+    return false;
+  }
+//  int16_t _type = 0;
+//  _type = pMapServer.type();
+
+  // 1 == char server
+  // 2 == node server
+  // 3 == map master server (This is the only type the login server will care
+  // about)
+  // 4 == map workers/threads
+
+//  iscPacket::ServerReg pServerReg;
+//  std::string name, ip;
+//  int32_t port = 0, type = 0, right = 0;
+
+//  if (_type == iscPacket::ServerType::NODE) {
+//    // This is a node and we need to figure out something to do with this
+//  } else if (_type == iscPacket::ServerType::MAP_MASTER) {
+//    name = pMapServer.name();
+//    ip = pMapServer.addr();
+//    port = pMapServer.port();
+//    type = pMapServer.type();
+//    right = pMapServer.accright();
+//  } else if (_type == iscPacket::ServerType::MAP_WORKER) {
+//    name = pMapServer.name();
+//    ip = pMapServer.addr();
+//    port = pMapServer.port();
+//    type = pMapServer.type();
+//    right = pMapServer.accright();
+//  }
+
+  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+                  ServerType_Name(pMapServer.type()).c_str(),
+                  pMapServer.name().c_str(), pMapServer.addr().c_str(),
+                  pMapServer.port());
+  return false;
 }
 
 void CMapISC::OnConnected() {
@@ -57,7 +107,7 @@ void CMapISC::OnConnected() {
   Send(*packet);
 
   process_thread_ = std::thread([this]() {
-    while (active_ == true && char_server_ == true) {
+    while (active_ == true && IsChar() == true) {
       std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
       int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
                        update - GetLastUpdateTime())

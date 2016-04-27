@@ -14,6 +14,8 @@
 
 #include "mappackets.h"
 
+namespace RoseCommon {
+
 RoseCommon::SrvSwitchServerReply::SrvSwitchServerReply(const std::string &ip,
                                                        uint16_t port,
                                                        uint32_t session_id,
@@ -40,7 +42,9 @@ std::string RoseCommon::SrvSwitchServerReply::ip() const { return ip_; }
 void RoseCommon::SrvSwitchServerReply::pack() {
   *this << port_ << session_ids_[0] << session_ids_[1] << ip_;
 }
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::CliLogoutReq::CliLogoutReq()
     : CRosePacket(ePacketType::PAKCS_LOGOUT_REQ) {}
 
@@ -52,6 +56,8 @@ RoseCommon::CliLogoutReq::CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE])
 
 RoseCommon::CliLogoutReq::~CliLogoutReq() {}
 
+//---------------------------------------------
+
 RoseCommon::SrvLogoutReply::SrvLogoutReply(uint16_t wait_time)
     : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY), wait_time_(wait_time) {}
 
@@ -60,7 +66,9 @@ RoseCommon::SrvLogoutReply::~SrvLogoutReply() {}
 uint16_t RoseCommon::SrvLogoutReply::wait_time() const { return wait_time_; }
 
 void RoseCommon::SrvLogoutReply::pack() { *this << wait_time_; }
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::CliChangeMapReq::CliChangeMapReq()
     : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
 
@@ -82,7 +90,7 @@ uint16_t RoseCommon::CliChangeMapReq::position_z() const { return position_z_; }
 void RoseCommon::CliChangeMapReq::pack() {
   *this << weight_rate_ << position_z_;
 }
-
+//---------------------------------------------
 RoseCommon::SrvChangeMapReply::SrvChangeMapReply(
     uint16_t object_index, uint16_t current_hp, uint16_t current_mp,
     uint16_t current_exp, uint16_t penalize_exp, uint16_t world_time,
@@ -131,7 +139,9 @@ void RoseCommon::SrvChangeMapReply::pack() {
   }  // global_var
   *this << world_time_ << team_number_;
 }
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::CliChat::CliChat(const std::string &chat /*= ""*/)
     : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT), chat_(chat) {}
 
@@ -145,7 +155,9 @@ RoseCommon::CliChat::CliChat(uint8_t buffer[MAX_PACKET_SIZE])
 std::string RoseCommon::CliChat::getMessage() const { return chat_; }
 
 void RoseCommon::CliChat::pack() { *this << chat_; }
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::CliReviveReq::CliReviveReq(uint8_t type /*= 0*/)
     : CRosePacket(ePacketType::PAKCS_REVIVE_REQ), type_(type) {}
 
@@ -161,7 +173,7 @@ RoseCommon::CliReviveReq::eType RoseCommon::CliReviveReq::getType() const {
 }
 
 void RoseCommon::CliReviveReq::pack() { *this << type_; }
-
+//---------------------------------------------
 RoseCommon::SrvReviveReply::SrvReviveReply(uint16_t mapid /*= 0*/)
     : CRosePacket(ePacketType::PAKWC_REVIVE_REPLY), mapid_(mapid) {}
 
@@ -172,7 +184,9 @@ RoseCommon::SrvInitDataReply::SrvInitDataReply(uint32_t rand_seed,
     : CRosePacket(ePacketType::PAKWC_INIT_DATA),
       rand_seed_(rand_seed),
       rand_index_(rand_index) {}
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::SrvInitDataReply::~SrvInitDataReply() {}
 
 uint32_t RoseCommon::SrvInitDataReply::rand_seed() const { return rand_seed_; }
@@ -184,7 +198,9 @@ uint16_t RoseCommon::SrvInitDataReply::rand_index() const {
 void RoseCommon::SrvInitDataReply::pack() {
   *this << rand_seed_ << rand_index_;
 }
-
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::SrvServerData::SrvServerData(uint8_t type)
     : CRosePacket(ePacketType::PAKWC_INIT_DATA), type_(type) {}
 
@@ -212,4 +228,16 @@ void RoseCommon::SrvServerData::pack() {
     default:
       break;
   }
+}
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
+
+SrvRemoveObject::SrvRemoveObject(uint16_t obj_id) 
+    : CRosePacket(ePacketType::PAKWC_INIT_DATA), 
+      obj_id_(obj_id) {}
+
+void SrvRemoveObject::pack() {
+  *this << obj_id_;
+}
 }

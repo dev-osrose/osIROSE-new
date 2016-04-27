@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
 #include "ccharisc.h"
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
 #include "iscpackets.pb.h"
-#include <memory>
 #include "rosepackets.h"
 
 using namespace RoseCommon;
