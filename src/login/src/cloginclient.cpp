@@ -188,7 +188,7 @@ bool CLoginClient::ServerSelect(
       database.QExecute(query);
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          server->GetIP(), session_id_, 0, server->GetPort());
+          server->GetIpAddress(), session_id_, 0, server->GetPort());
       this->Send(*packet);
       break;
     }

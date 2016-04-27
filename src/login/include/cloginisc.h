@@ -26,9 +26,6 @@ class CLoginISC : public RoseCommon::CRoseISC {
   CLoginISC(tcp::socket _sock);
 
   std::string GetName() { return server_name_; }
-  std::string GetIP() { return network_ip_address; }
-  uint16_t GetPort() { return network_port_; }
-  uint8_t GetServerType() { return network_type_; }
   bool IsTestServer() { return test_server_; }
   std::forward_list<RoseCommon::tChannelInfo> GetChannelList() const {
     return channel_list_;
