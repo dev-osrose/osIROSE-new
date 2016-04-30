@@ -56,7 +56,7 @@ bool CRoseISC::OnReceived() {
 }
 
 bool CRoseISC::OnSend(uint8_t* _buffer) {
-  // TODO: Encrypt the buffer here!
+  // TODO: Encrypt the isc buffer.
   (void)_buffer;
   return true;
 }

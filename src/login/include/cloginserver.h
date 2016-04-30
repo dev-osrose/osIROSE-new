@@ -23,6 +23,7 @@ class CLoginServer : public RoseCommon::CRoseServer {
   CLoginServer(bool _isc = false);
   virtual ~CLoginServer();
 
+  // This will give you the count of the clients in the list
   uint32_t GetClientCount() {
     return (client_list_.empty() ? 0 : std::distance(std::begin(client_list_),
                                                      std::end(client_list_)));
