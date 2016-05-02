@@ -86,6 +86,8 @@ bool CCharISC::ServerRegister(
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
 
+  this->SetType(_type);
+
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, ip, GetId(),
                                                              port, type, right);
 

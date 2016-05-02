@@ -79,6 +79,8 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
     channel_count_++;
   }
 
+  this->SetType(_type);
+
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pServerReg.type()).c_str(),
                   pServerReg.name().c_str(), pServerReg.addr().c_str(),
