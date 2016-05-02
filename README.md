@@ -12,8 +12,8 @@ osIROSE - Open Source International R.O.S.E Online Server
 [win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "AppVeyor build status"
 [cov-badge]: https://coveralls.io/repos/RavenX8/osIROSE-new/badge.svg?branch=trunk&service=github
 [cov-link]:  https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk
-[ccov-badge]: https://codecov.io/github/RavenX8/osIROSE-new/coverage.svg?branch=trunk
-[ccov-link]: https://codecov.io/github/RavenX8/osIROSE-new?branch=trunk
+[ccov-badge]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk/graph/badge.svg
+[ccov-link]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk
 
 [Official website](http://forum.dev-osrose.com/index.php)
 
