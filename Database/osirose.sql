@@ -95,12 +95,15 @@ DROP TABLE IF EXISTS `inventory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `inventory` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `char_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `itemid` int(10) unsigned NOT NULL DEFAULT '0',
-  `amount` int(10) unsigned NOT NULL DEFAULT '0',
+  `itemid` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
+  `amount` int(11) unsigned NOT NULL DEFAULT '0',
   `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `slot` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
   CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -202,7 +205,18 @@ CREATE TABLE `storage` (
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateChar`(IN `_name` VARCHAR(24), IN `_userid` INT, IN `_race` INT, IN `_face` INT, IN `_hair` INT, IN `_stone` INT)
 BEGIN
+  DECLARE charid INT(10);
+  DECLARE hatuid INT(10);
 	insert into characters(userid, name, race, face, hair, stone) values(_userid, _name, _race, _face, _hair, _stone);
+	SET charid = LAST_INSERT_ID();
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 30, 3, 1, 3);
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 1, 8, 1, 7);
+	
+	if _race = 0 then SET hatuid = 222;
+	else SET hatuid = 221;
+	end if;
+	
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, hatuid, 2, 1, 12);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
