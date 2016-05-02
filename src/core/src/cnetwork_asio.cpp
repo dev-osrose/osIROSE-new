@@ -60,7 +60,7 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
     // addresses. Ex. google.com
     return false;
 
-  network_ip_address = _ip;
+  network_ip_address_ = _ip;
   network_port_ = _port;
   return true;
 }
@@ -81,7 +81,7 @@ bool CNetwork_Asio::Shutdown(bool _final) {
 bool CNetwork_Asio::Connect() {
   tcp::resolver resolver(*networkService_->Get_IO_Service());
   auto endpoint_iterator =
-      resolver.resolve(network_ip_address, std::to_string(network_port_));
+      resolver.resolve(network_ip_address_, std::to_string(network_port_));
 
   OnConnect();
   send_mutex_.lock();

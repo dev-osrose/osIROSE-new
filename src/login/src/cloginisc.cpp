@@ -65,7 +65,7 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   // todo: replace these numbers with the actual enum name
   if (_type == iscPacket::ServerType::CHAR) {
     server_name_ = pServerReg.name();
-    network_ip_address = pServerReg.addr();
+    network_ip_address_ = pServerReg.addr();
     network_port_ = pServerReg.port();
     min_right_ = pServerReg.accright();
     network_type_ = _type;

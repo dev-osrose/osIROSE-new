@@ -149,7 +149,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
         server->GetId() == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
-        { packet->addChannel(info.channelName, info.ChannelID, 0); }
+        { packet->addChannel(info.channelName, info.ChannelID+1, 0); }
       }
     }
   }

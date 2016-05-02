@@ -44,7 +44,7 @@ class INetwork {
       : network_id_(0),
         network_type_(0),
         network_port_(0),
-        network_ip_address("") {}
+        network_ip_address_("") {}
   virtual ~INetwork() {}
 
   /*!
@@ -111,7 +111,7 @@ class INetwork {
   virtual uint32_t GetId() const { return network_id_; }
   virtual uint32_t GetType() const { return network_type_; }
   virtual uint16_t GetPort() const { return network_port_; }
-  virtual std::string GetIpAddress() const { return network_ip_address; }
+  virtual std::string GetIpAddress() const { return network_ip_address_; }
 
  protected:
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
@@ -135,7 +135,7 @@ class INetwork {
   uint32_t network_type_;
   uint16_t network_port_;
 
-  std::string network_ip_address;
+  std::string network_ip_address_;
 };
 }
 
