@@ -86,9 +86,8 @@ bool CMapISC::ServerRegister(
 //    port = pMapServer.port();
 //    type = pMapServer.type();
 //    right = pMapServer.accright();
+//    this->SetType(_type);
 //  }
-
-//  this->SetType(_type);
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pMapServer.type()).c_str(),

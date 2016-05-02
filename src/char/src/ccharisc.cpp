@@ -79,14 +79,14 @@ bool CCharISC::ServerRegister(
     port = pMapServer.port();
     type = pMapServer.type();
     right = pMapServer.accright();
+
+    this->SetType(_type);
   }
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pMapServer.type()).c_str(),
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
-
-  this->SetType(_type);
 
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, ip, GetId(),
                                                              port, type, right);

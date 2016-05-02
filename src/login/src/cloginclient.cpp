@@ -70,7 +70,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
-    if (server->GetType() == 1) serverCount++;
+    if (server->GetType() == iscPacket::ServerType::CHAR) serverCount++;
   }
   CLoginServer::GetISCListMutex().unlock();
 
