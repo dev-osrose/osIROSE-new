@@ -114,7 +114,7 @@ bool CCharClient::SendCharListReply() {
   }
 
   // mysql query to get the characters created.
-  std::unique_ptr<Core::IResult> res;
+  std::unique_ptr<Core::IResult> res, itemres;
   std::string query = fmt::format("CALL GetCharList({});", userid_);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -125,7 +125,7 @@ bool CCharClient::SendCharListReply() {
     if (res->size() != 0) {
       for (uint32_t idx = 0; idx < res->size(); ++idx) {
         std::string _name;
-        uint32_t race, level, job, delete_time, face, hair;
+        uint32_t race, level, job, delete_time, face, hair, id;
         res->getString("name", _name);
         res->getInt("race", race);
         res->getInt("level", level);
@@ -139,6 +139,26 @@ bool CCharClient::SendCharListReply() {
             idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
         packet->addEquipItem(
             idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
+        
+        {
+          res->getInt("id", id);
+          query = fmt::format("CALL GetEquipped({});", id);
+          itemres = database.QStore(query);
+          if (itemres != nullptr) {
+            if(itemres->size() != 0) {
+              for (uint32_t j = 0; j < itemres->size(); ++j) {
+                uint32_t slot, itemid;
+                itemres->getInt("slot", slot);
+                itemres->getInt("itemid", itemid);
+                
+                packet->addEquipItem(
+                  idx, (SrvCharacterListReply::equipped_position)slot, itemid);
+                itemres->incrementRow();
+              }
+            }
+          }
+        }
+        
         res->incrementRow();
       }
     }
