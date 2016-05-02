@@ -22,9 +22,9 @@
 
 using namespace RoseCommon;
 
-CCharISC::CCharISC() : CRoseISC(), type_(-1) {}
+CCharISC::CCharISC() : CRoseISC() {}
 
-CCharISC::CCharISC(tcp::socket _sock) : CRoseISC(std::move(_sock)), type_(-1) {}
+CCharISC::CCharISC(tcp::socket _sock) : CRoseISC(std::move(_sock)) {}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -94,7 +94,7 @@ bool CCharISC::ServerRegister(
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = (CCharISC*)server;
-    if (svr->IsLogin()) {
+    if (svr->IsLogin() == true) {
       svr->Send(*packet);
       return true;
     }
@@ -115,7 +115,7 @@ void CCharISC::OnConnected() {
                  packet->size(), (uint16_t)packet->type());
   Send(*packet);
 
-  type_ = iscPacket::ServerType::LOGIN;
+  SetType(iscPacket::ServerType::LOGIN);
 
   process_thread_ = std::thread([this]() {
     while (active_ == true && IsLogin() == true) {
@@ -142,7 +142,7 @@ bool CCharISC::OnShutdown() {
   bool result = true;
 
   if (active_ == true) {
-    if (type_ == iscPacket::ServerType::LOGIN) {
+    if (GetType() == iscPacket::ServerType::LOGIN) {
       if (Reconnect() == true) {
         logger_->notice("Reconnected to login server.");
         result = false;
@@ -163,9 +163,9 @@ bool CCharISC::OnShutdown() {
 }
 
 bool CCharISC::IsLogin() const {
-  return (type_ == iscPacket::ServerType::LOGIN);
+  return (GetType() == iscPacket::ServerType::LOGIN);
 }
 
 void CCharISC::SetLogin(bool val) {
-  if (val == true) type_ = iscPacket::ServerType::LOGIN;
+  if (val == true) SetType(iscPacket::ServerType::LOGIN);
 }

@@ -33,8 +33,6 @@ class CCharISC : public RoseCommon::CRoseISC {
 
   virtual void OnConnected() override;
   virtual bool OnShutdown() override;
-
-  int32_t type_;
 };
 
 #endif
