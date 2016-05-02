@@ -1,0 +1,22 @@
+codecov:
+  branch: trunk
+  notify:
+    after_n_builds: 3
+    require_ci_to_pass: yes
+                              
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+  notify:
+    slack:
+      default:
+        url: "secret:hSBZU7HD1ipDx+qg6QP1NIJrr1RLV2eXri45+8fqXCvx+DgmiN8TmkUIQLdkz58au8Vi/pG/ola5iRU0fBOXxGLVjsBHRD5lXW0mPPWB4mO2Q1KT4e2shhBn29+In+BnDa9HxAs7D8KHgHtXJip12woYfaleNtqHBbtZE+JYLok="
+        threshold: 1
+        attachments: "sunburst, diff"
+        
+comment:
+  layout: "header, diff, changes, sunburst, uncovered"
+  behavior: new
