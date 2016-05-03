@@ -1,6 +1,8 @@
 osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
+[![Join the chat at https://gitter.im/RavenX8/osIROSE-new](https://badges.gitter.im/RavenX8/osIROSE-new.svg)](https://gitter.im/RavenX8/osIROSE-new?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Build status
 | [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] |
 | :---------------: | :-----------------: | :-------------------: |
