@@ -81,16 +81,23 @@ bool CMapClient::JoinServerReply(
         login_state_ = eSTATE::LOGGEDIN;
         res->getInt("userid", userid_);
         res->getInt("charid", charid_);
+        
+        logger_->debug("Client {} auth OK.",
+                GetId());
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
       } else {
+        logger_->debug("Client {} auth INVALUD_PASS.",
+                GetId());
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::INVALID_PASSWORD, std::time(nullptr));
         Send(*packet);
       }
     } else {
+      logger_->debug("Client {} auth FAILED.",
+                GetId());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::FAILED, std::time(nullptr));
       Send(*packet);

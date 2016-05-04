@@ -179,14 +179,15 @@ RoseCommon::SrvReviveReply::SrvReviveReply(uint16_t mapid /*= 0*/)
 
 void RoseCommon::SrvReviveReply::pack() { *this << mapid_; }
 
+//---------------------------------------------
+//---------------------------------------------
+//---------------------------------------------
 RoseCommon::SrvInitDataReply::SrvInitDataReply(uint32_t rand_seed,
                                                uint16_t rand_index)
     : CRosePacket(ePacketType::PAKWC_INIT_DATA),
       rand_seed_(rand_seed),
       rand_index_(rand_index) {}
-//---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
+      
 RoseCommon::SrvInitDataReply::~SrvInitDataReply() {}
 
 uint32_t RoseCommon::SrvInitDataReply::rand_seed() const { return rand_seed_; }
@@ -202,7 +203,7 @@ void RoseCommon::SrvInitDataReply::pack() {
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::SrvServerData::SrvServerData(uint8_t type)
-    : CRosePacket(ePacketType::PAKWC_INIT_DATA), type_(type) {}
+    : CRosePacket(ePacketType::PAKWC_GLOBAL_VARS), type_(type) {}
 
 RoseCommon::SrvServerData::~SrvServerData() {}
 
@@ -234,7 +235,7 @@ void RoseCommon::SrvServerData::pack() {
 //---------------------------------------------
 
 SrvRemoveObject::SrvRemoveObject(uint16_t obj_id) 
-    : CRosePacket(ePacketType::PAKWC_INIT_DATA), 
+    : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), 
       obj_id_(obj_id) {}
 
 void SrvRemoveObject::pack() {
