@@ -33,7 +33,10 @@ class NetworkThreadPool {
   }
 
   static void DeleteInstance() {
-    if (instance_ != nullptr) delete instance_;
+    if (instance_ != nullptr) {
+      delete instance_;
+      instance_ = nullptr;
+    }
   }
 
   asio::io_service* Get_IO_Service() { return &io_service_; }
