@@ -360,7 +360,7 @@ class SrvSelectCharReply : public CRosePacket {
   struct skills : public ISerialize {
     uint16_t skill_id_[MAX_SKILL_COUNT];
 
-    skills() { memset(&skill_id_, 0, MAX_SKILL_COUNT * sizeof(uint16_t)); }
+    skills() { memset(skill_id_, 0, MAX_SKILL_COUNT * sizeof(uint16_t)); }
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -393,7 +393,7 @@ class SrvSelectCharReply : public CRosePacket {
   struct hotbar : public ISerialize {
     hotbar_item list_[MAX_HOTBAR_ITEMS];
 
-    hotbar() { memset(&list_, 0, MAX_HOTBAR_ITEMS * sizeof(uint16_t)); }
+    hotbar() { memset(list_, 0, MAX_HOTBAR_ITEMS * sizeof(uint16_t)); }
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
