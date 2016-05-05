@@ -292,7 +292,7 @@ class SrvQuestData : public CRosePacket {
   SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA){};
 
  protected:
-  void pack() { *this; };
+  void pack() {  };
 
   //Quest data
   //Wish List

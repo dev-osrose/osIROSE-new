@@ -154,18 +154,25 @@ void RoseCommon::SrvSelectCharReply::setCharacter(const std::string &name,
                                                   uint32_t utag) {
   name_ = name;
   race_ = race;
-  zone = zone_;
+  zone_ = zone;
   position_start_[0] = x;
   position_start_[1] = y;
   revive_zone_ = revive_zone;
   unique_tag_ = utag;
 }
 
-void RoseCommon::SrvSelectCharReply::addEquipItem(uint8_t char_id, uint8_t slot,
+void RoseCommon::SrvSelectCharReply::addEquipItem(uint8_t slot,
                                                   uint16_t item_id /*= 0*/,
                                                   uint16_t gem /*= 0*/,
                                                   uint8_t socket /*= 0*/,
-                                                  uint8_t grade /*= 0*/) {}
+                                                  uint8_t grade /*= 0*/) {
+    equip_item item = items_[slot];
+    item.id_ = item_id;
+    item.gem_op_ = gem;
+    item.socket_ = socket;
+    item.grade_ = grade;
+    items_[slot] = item;
+}
 
 void RoseCommon::SrvSelectCharReply::pack()
 {
@@ -243,6 +250,7 @@ void RoseCommon::SrvSelectCharReply::base_info::serialize(
 }
 
 void RoseCommon::SrvSelectCharReply::base_info::deserialize(CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::character_stats::serialize(
@@ -252,6 +260,7 @@ void RoseCommon::SrvSelectCharReply::character_stats::serialize(
 
 void RoseCommon::SrvSelectCharReply::character_stats::deserialize(
     CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::status_effects::serialize(
@@ -261,6 +270,7 @@ void RoseCommon::SrvSelectCharReply::status_effects::serialize(
 
 void RoseCommon::SrvSelectCharReply::status_effects::deserialize(
     CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::extended_stats::serialize(
@@ -283,6 +293,7 @@ void RoseCommon::SrvSelectCharReply::extended_stats::serialize(
 
 void RoseCommon::SrvSelectCharReply::extended_stats::deserialize(
     CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::skills::serialize(CRosePacket &os) const {
@@ -293,6 +304,7 @@ void RoseCommon::SrvSelectCharReply::skills::serialize(CRosePacket &os) const {
 }
 
 void RoseCommon::SrvSelectCharReply::skills::deserialize(CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::hotbar_item::serialize(
@@ -301,6 +313,7 @@ void RoseCommon::SrvSelectCharReply::hotbar_item::serialize(
 }
 
 void RoseCommon::SrvSelectCharReply::hotbar_item::deserialize(CRosePacket &os) {
+  (void)os;
 }
 
 void RoseCommon::SrvSelectCharReply::hotbar::serialize(CRosePacket &os) const {
@@ -311,4 +324,5 @@ void RoseCommon::SrvSelectCharReply::hotbar::serialize(CRosePacket &os) const {
 }
 
 void RoseCommon::SrvSelectCharReply::hotbar::deserialize(CRosePacket &os) {
+  (void)os;
 }

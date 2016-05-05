@@ -230,7 +230,7 @@ class SrvSelectCharReply : public CRosePacket {
   void setCharacter(const std::string &name, uint8_t race, uint16_t zone,
                     float x, float y, uint16_t revive_zone, uint32_t utag);
 
-  void addEquipItem(uint8_t char_id, uint8_t slot, uint16_t item_id = 0,
+  void addEquipItem(uint8_t slot, uint16_t item_id = 0,
                     uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0);
 
  protected:
@@ -264,7 +264,8 @@ class SrvSelectCharReply : public CRosePacket {
     };
 
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
-               uint8_t grade = 0) {}
+               uint8_t grade = 0)
+               : id_(id), gem_op_(gem), socket_(socket), grade_(grade) {}
   };
 
   struct base_info : public ISerialize {
@@ -278,10 +279,10 @@ class SrvSelectCharReply : public CRosePacket {
     uint8_t fame_;
 
     base_info(uint8_t stone = 0, uint8_t face = 0, uint8_t hair = 0, uint16_t job = 0, uint8_t _union = 0, uint8_t rank = 0, uint8_t fame = 0)
-        : stone_(stone),
+        : job_(job),
+          stone_(stone),
           face_(face),
           hair_(hair),
-          job_(job),
           union_(_union),
           rank_(rank),
           fame_(fame) {}
