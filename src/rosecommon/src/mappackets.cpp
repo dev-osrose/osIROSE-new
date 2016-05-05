@@ -27,7 +27,7 @@ RoseCommon::SrvSwitchServerReply::SrvSwitchServerReply(const std::string &ip,
 
 RoseCommon::SrvSwitchServerReply::~SrvSwitchServerReply() {}
 
-uint32_t RoseCommon::SrvSwitchServerReply::port() const { return port_; }
+uint16_t RoseCommon::SrvSwitchServerReply::port() const { return port_; }
 
 uint32_t RoseCommon::SrvSwitchServerReply::session_id() const {
   return session_ids_[0];

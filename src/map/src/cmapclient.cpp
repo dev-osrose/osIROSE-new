@@ -88,8 +88,22 @@ bool CMapClient::JoinServerReply(
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
+
+        //SEND PLAYER DATA HERE!!!!!!
+        auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>( );
+        packet2->setCharacter("test", 1, 20, 5200, 5200, 20, sessionID);
+        Send( *packet2 );
+
+        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(1000000);
+        Send( *packet3 );
+        
+        auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
+        Send( *packet4 );
+
+        auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
+        Send( *packet5 );
       } else {
-        logger_->debug("Client {} auth INVALUD_PASS.",
+        logger_->debug("Client {} auth INVALID_PASS.",
                 GetId());
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::INVALID_PASSWORD, std::time(nullptr));

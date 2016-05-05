@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,14 +27,15 @@ namespace RoseCommon {
 
 //------------------------------------------------
 //------------------------------------------------
-  
+
 class SrvSwitchServerReply : public CRosePacket {
  public:
-  SrvSwitchServerReply(const std::string &ip, uint16_t port, uint32_t session_id, uint32_t random_seed);
+  SrvSwitchServerReply(const std::string &ip, uint16_t port,
+                       uint32_t session_id, uint32_t random_seed);
 
   virtual ~SrvSwitchServerReply();
 
-  uint32_t port() const;
+  uint16_t port() const;
   uint32_t session_id() const;
   uint32_t random_seed() const;
   std::string ip() const;
@@ -144,7 +145,7 @@ class CliChat : public CRosePacket {
  public:
   CliChat(uint8_t buffer[MAX_PACKET_SIZE]);
   CliChat(const std::string &chat = "");
-        
+
   std::string getMessage() const;
 
  protected:
@@ -178,14 +179,9 @@ class CliReviveReq : public CRosePacket {
  public:
   CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
   CliReviveReq(uint8_t type = 0);
-       
-  enum eType : uint8_t {
-    REVIVE_POS,
-    SAVE_POS,
-    START_POS,
-    CURRENT_POS
-  };
-  
+
+  enum eType : uint8_t { REVIVE_POS, SAVE_POS, START_POS, CURRENT_POS };
+
   eType getType() const;
 
  protected:
@@ -264,12 +260,53 @@ class SrvServerData : public CRosePacket {
 class SrvRemoveObject : public CRosePacket {
  public:
   SrvRemoveObject(uint16_t obj_id);
-  
+
  protected:
   void pack();
-  
+
  private:
   uint16_t obj_id_;
+};
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvInventoryData : public CRosePacket {
+ public:
+  SrvInventoryData(int64_t zuly)
+      : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
+
+ protected:
+  void pack() { *this << zuly_; };
+
+ private:
+  int64_t zuly_;
+  //todo: item list goes here
+};
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvQuestData : public CRosePacket {
+ public:
+  SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA){};
+
+ protected:
+  void pack() { *this; };
+
+  //Quest data
+  //Wish List
+};
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvBillingMsg : public CRosePacket {
+ public:
+  SrvBillingMsg() : CRosePacket(ePacketType::PAKWC_BILLING_MESSAGE){};
+
+ protected:
+  void pack() { *this << (uint16_t)0x1001 << (uint32_t)2; };
 };
 }
 

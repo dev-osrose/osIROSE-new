@@ -106,10 +106,19 @@ struct find_send_class<ePacketType::PAKCC_CREATE_CHAR_REPLY> { SrvCreateCharRepl
 template <>
 struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { SrvDeleteCharReply type; };
 
+// MAP SERVER
 template <>
 struct find_send_class<ePacketType::PAKWC_SELECT_CHAR_REPLY> { SrvSelectCharReply type; };
 
-// MAP SERVER
+template <>
+struct find_send_class<ePacketType::PAKWC_INVENTORY_DATA> { SrvInventoryData type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_QUEST_DATA> { SrvQuestData type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_BILLING_MESSAGE> { SrvBillingMsg type; };
+
 template <>
 struct find_send_class<ePacketType::PAKWC_LOGOUT_REPLY> { SrvLogoutReply type; };
 

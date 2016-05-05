@@ -142,22 +142,40 @@ void RoseCommon::CliSelectCharReq::pack() {
   *this << char_id_ << run_mode_ << ride_mode_ << name_;
 }
 
-RoseCommon::SrvSelectCharReply::SrvSelectCharReply(const std::string &name,
-                                                   uint32_t remaining_time)
-    : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY),
-      remaining_time_(remaining_time),
-      name_(name) {}
+RoseCommon::SrvSelectCharReply::SrvSelectCharReply()
+    : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {}
 
 RoseCommon::SrvSelectCharReply::~SrvSelectCharReply() {}
 
-uint32_t RoseCommon::SrvSelectCharReply::remaining_time() const {
-  return remaining_time_;
+void RoseCommon::SrvSelectCharReply::setCharacter(const std::string &name,
+                                                  uint8_t race, uint16_t zone,
+                                                  float x, float y,
+                                                  uint16_t revive_zone,
+                                                  uint32_t utag) {
+  name_ = name;
+  race_ = race;
+  zone = zone_;
+  position_start_[0] = x;
+  position_start_[1] = y;
+  revive_zone_ = revive_zone;
+  unique_tag_ = utag;
 }
 
-std::string RoseCommon::SrvSelectCharReply::name() const { return name_; }
+void RoseCommon::SrvSelectCharReply::addEquipItem(uint8_t char_id, uint8_t slot,
+                                                  uint16_t item_id /*= 0*/,
+                                                  uint16_t gem /*= 0*/,
+                                                  uint8_t socket /*= 0*/,
+                                                  uint8_t grade /*= 0*/) {}
 
-void RoseCommon::SrvSelectCharReply::pack() {
-  *this << remaining_time_ << name_;
+void RoseCommon::SrvSelectCharReply::pack()
+{
+  *this << race_ << zone_ << position_start_[0] << position_start_[1]
+    << revive_zone_;
+  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
+  {
+    for (int j = 0; j < 4; ++j) *this << items_[i].data[j];
+  }
+  *this << base_character_info_ << stats_ << ext_stats_ << learned_skills_ << hotbar_ << unique_tag_ << name_;
 }
 
 RoseCommon::SrvCharacterListReply::char_info::char_info(
@@ -217,4 +235,80 @@ void RoseCommon::SrvCharacterListReply::pack() {
       for (int j = 0; j < 4; ++j) *this << character.items_[i].data[j];
     }
   }
+}
+
+void RoseCommon::SrvSelectCharReply::base_info::serialize(
+    CRosePacket &os) const {
+  os << stone_ << face_ << hair_ << job_ << union_ << rank_ << fame_;
+}
+
+void RoseCommon::SrvSelectCharReply::base_info::deserialize(CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::character_stats::serialize(
+    CRosePacket &os) const {
+  os << str_ << dex_ << int_ << con_ << charm_ << sense_;
+}
+
+void RoseCommon::SrvSelectCharReply::character_stats::deserialize(
+    CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::status_effects::serialize(
+    CRosePacket &os) const {
+  os << expired_seconds_ << value_ << unknown_;
+}
+
+void RoseCommon::SrvSelectCharReply::status_effects::deserialize(
+    CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::extended_stats::serialize(
+    CRosePacket &os) const {
+  os << hp_ << mp_ << exp_ << level_ << stat_points_ << skill_points_ << body_size_ << head_size_ << penalty_exp_ << fame1_ << fame2_;
+  for (int i = 0; i < MAX_UNION_COUNT; ++i)
+  {
+    os << union_points_[i];
+  }
+  
+  os << guild_id_ << guild_contribution_ << guild_position_ << pk_flags_ << stamina_;
+  
+  for (int i = 0; i < MAX_BUFF_STATUS; ++i)
+  {
+    os << status_[i];
+  }
+
+  os << pat_hp_ << pat_cooldown_time_;
+}
+
+void RoseCommon::SrvSelectCharReply::extended_stats::deserialize(
+    CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::skills::serialize(CRosePacket &os) const {
+  for (int i = 0; i < MAX_SKILL_COUNT; ++i)
+  {
+    os << skill_id_[i];
+  }
+}
+
+void RoseCommon::SrvSelectCharReply::skills::deserialize(CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::hotbar_item::serialize(
+    CRosePacket &os) const {
+  os << item_;
+}
+
+void RoseCommon::SrvSelectCharReply::hotbar_item::deserialize(CRosePacket &os) {
+}
+
+void RoseCommon::SrvSelectCharReply::hotbar::serialize(CRosePacket &os) const {
+  for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i)
+  {
+    os << list_[i];
+  }
+}
+
+void RoseCommon::SrvSelectCharReply::hotbar::deserialize(CRosePacket &os) {
 }
