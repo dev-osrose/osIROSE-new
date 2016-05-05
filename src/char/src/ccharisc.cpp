@@ -68,15 +68,15 @@ bool CCharISC::ServerRegister(
   // 4 == map workers/threads
 
   iscPacket::ServerReg pServerReg;
-  std::string name, ip;
-  int32_t port = 0, type = 0, right = 0;
+  std::string name;
+  int32_t type = 0, right = 0;
 
   if (_type == iscPacket::ServerType::NODE) {
     // This is a node and we need to figure out something to do with this
   } else if (_type == iscPacket::ServerType::MAP_MASTER) {
     name = pMapServer.name();
-    ip = pMapServer.addr();
-    port = pMapServer.port();
+    network_ip_address_ = pMapServer.addr();
+    network_port_ = pMapServer.port();
     type = pMapServer.type();
     right = pMapServer.accright();
 
@@ -88,8 +88,8 @@ bool CCharISC::ServerRegister(
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
 
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, ip, GetId(),
-                                                             port, type, right);
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, network_ip_address_, GetId(),
+                                                             network_port_, type, right);
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
