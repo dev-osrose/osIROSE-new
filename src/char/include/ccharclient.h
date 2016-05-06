@@ -16,8 +16,9 @@
 #define __CCHARCLIENT_H__
 
 #include "croseclient.h"
-#include "crosepacket.h"
 #include "packetclasses.h"
+#include "charpackets.h"
+#include "crosepacket.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
  public:

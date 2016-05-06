@@ -16,6 +16,8 @@
 #define __CMAPCLIENT_H__
 
 #include "croseclient.h"
+#include "packetclasses.h"
+#include "mappackets.h"
 #include "crosepacket.h"
 #include "rosepackets.h"
 

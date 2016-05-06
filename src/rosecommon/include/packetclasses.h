@@ -30,9 +30,9 @@
 #include <vector>
 #include "iscpackets.pb.h"
 
-#include "loginpackets.h"
-#include "charpackets.h"
-#include "mappackets.h"
+//#include "loginpackets.h"
+//#include "charpackets.h"
+//#include "mappackets.h"
 
 namespace RoseCommon {
 
@@ -183,6 +183,41 @@ class SrvJoinServerReply : public CRosePacket {
   uint8_t result_;
   uint32_t id_;
   uint32_t pay_flag_;
+};
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvSwitchServerReply : public CRosePacket {
+ public:
+  SrvSwitchServerReply(const std::string &ip, uint16_t port,
+                       uint32_t session_id, uint32_t server_seed)
+    : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), ip_(ip) {
+  session_ids_[0] = session_id;
+  session_ids_[1] = server_seed;
+}
+
+  virtual ~SrvSwitchServerReply() {}
+
+  uint16_t port() const { return port_; }
+  
+  uint32_t session_id() const {
+    return session_ids_[0];
+  }
+  uint32_t server_seed() const {
+    return session_ids_[1];
+  };
+  std::string ip() const { return ip_; }
+
+ protected:
+  void pack() {
+    *this << port_ << session_ids_[0] << session_ids_[1] << ip_;
+  }
+
+ private:
+  uint16_t port_;
+  std::string ip_;
+  uint32_t session_ids_[2];
 };
 
 //-----------------------------------------------
