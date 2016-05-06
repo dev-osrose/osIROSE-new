@@ -1,3 +1,6 @@
+#ifndef MOCK_NETWORK_ASIO_
+#define MOCK_NETWORK_ASIO_
+
 #include "gmock/gmock.h"  // Brings in Google Mock.
 
 using ::testing::_;
@@ -50,3 +53,5 @@ class CNetwork_Asio_Mock : public Core::CNetwork_Asio {
  private:
 //  Core::CNetwork_Asio real_;
 };
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef __MOCK_CROSECLIENT_H__
-#define __MOCK_CROSECLIENT_H__
+#ifndef MOCK_CROSECLIENT_H_
+#define MOCK_CROSECLIENT_H_
 
 #include "gmock/gmock.h"  // Brings in Google Mock.
 

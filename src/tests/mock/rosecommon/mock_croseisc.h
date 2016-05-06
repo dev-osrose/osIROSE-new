@@ -1,5 +1,5 @@
-#ifndef __MOCK_CROSEISC_H__
-#define __MOCK_CROSEISC_H__
+#ifndef MOCK_CROSEISC_H_
+#define MOCK_CROSEISC_H_
 
 #include "gmock/gmock.h"  // Brings in Google Mock.
 
