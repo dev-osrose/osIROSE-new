@@ -19,10 +19,10 @@ namespace RoseCommon {
 RoseCommon::SrvSwitchServerReply::SrvSwitchServerReply(const std::string &ip,
                                                        uint16_t port,
                                                        uint32_t session_id,
-                                                       uint32_t random_seed)
+                                                       uint32_t server_seed)
     : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), ip_(ip) {
   session_ids_[0] = session_id;
-  session_ids_[1] = random_seed;
+  session_ids_[1] = server_seed;
 }
 
 RoseCommon::SrvSwitchServerReply::~SrvSwitchServerReply() {}
@@ -33,7 +33,7 @@ uint32_t RoseCommon::SrvSwitchServerReply::session_id() const {
   return session_ids_[0];
 }
 
-uint32_t RoseCommon::SrvSwitchServerReply::random_seed() const {
+uint32_t RoseCommon::SrvSwitchServerReply::server_seed() const {
   return session_ids_[1];
 }
 

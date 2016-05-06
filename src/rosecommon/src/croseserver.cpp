@@ -31,6 +31,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
         for (auto& client : client_list_) {
           if (client->IsActive() == false) {
             client->Shutdown();
+            std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
             delete client;
             client_list_.remove(client);
             break;
@@ -53,6 +54,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
         for (auto& client : isc_list_) {
           if (client->IsActive() == false) {
             client->Shutdown();
+            std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
             delete client;
             isc_list_.remove(client);
             break;

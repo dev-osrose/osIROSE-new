@@ -61,6 +61,16 @@ CREATE TABLE `characters` (
   `exp` bigint(20) unsigned NOT NULL DEFAULT '0',
   `zuly` int(10) unsigned NOT NULL DEFAULT '0',
   `max_hp` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_mp` int(10) unsigned NOT NULL DEFAULT '0',
+  `str` int(10) unsigned NOT NULL DEFAULT '10',
+  `dex` int(10) unsigned NOT NULL DEFAULT '10',
+  `int_` int(10) unsigned NOT NULL DEFAULT '10',
+  `con` int(10) unsigned NOT NULL DEFAULT '10',
+  `charm` int(10) unsigned NOT NULL DEFAULT '10',
+  `sense` int(10) unsigned NOT NULL DEFAULT '10',
+  `stat_points` int(10) unsigned NOT NULL DEFAULT '0',
+  `skill_points` int(10) unsigned NOT NULL DEFAULT '0',
+  `penalty_exp` bigint(20) unsigned DEFAULT '0',
   `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -329,9 +339,30 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSession`(IN `_sessionid` INT)
 BEGIN
-  SELECT sessions.userid, sessions.channelid, accounts.password 
+  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.password
   FROM `sessions`
   LEFT JOIN `accounts` on sessions.userid = accounts.id 
+  WHERE sessions.id = _sessionid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `UpdateSessionWithCharacter` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateSessionWithCharacter`(IN `_sessionid` INT, IN `_charid` INT)
+BEGIN
+  UPDATE `sessions` 
+  SET charid = _charid
   WHERE sessions.id = _sessionid;
 END ;;
 DELIMITER ;
@@ -367,4 +398,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-02 19:33:54
+-- Dump completed on 2016-05-06  0:42:57

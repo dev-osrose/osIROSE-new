@@ -358,9 +358,9 @@ class SrvSelectCharReply : public CRosePacket {
   };
 
   struct skills : public ISerialize {
-    uint16_t skill_id_[MAX_SKILL_COUNT] {};
+    uint16_t skill_id_[MAX_SKILL_COUNT];
 
-    skills() {}
+    skills() : skill_id_() {}
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -393,9 +393,9 @@ class SrvSelectCharReply : public CRosePacket {
   };
 
   struct hotbar : public ISerialize {
-    hotbar_item list_[MAX_HOTBAR_ITEMS] {};
+    hotbar_item list_[MAX_HOTBAR_ITEMS];
 
-    hotbar() { }
+    hotbar() : list_() {}
 
    protected:
     virtual void serialize(CRosePacket &os) const override;

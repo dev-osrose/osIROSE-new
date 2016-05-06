@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
-  logger_->trace("JoinServerReply\n");
+  logger_->trace("CCharClient::JoinServerReply");
 
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
@@ -85,6 +85,8 @@ bool CCharClient::JoinServerReply(
         login_state_ = eSTATE::LOGGEDIN;
         res->getInt("userid", userid_);
         res->getInt("channelid", channelid_);
+
+        session_id_ = sessionID;
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -139,26 +141,27 @@ bool CCharClient::SendCharListReply() {
             idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
         packet->addEquipItem(
             idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
-        
+
         {
           res->getInt("id", id);
           query = fmt::format("CALL GetEquipped({});", id);
           itemres = database.QStore(query);
           if (itemres != nullptr) {
-            if(itemres->size() != 0) {
+            if (itemres->size() != 0) {
               for (uint32_t j = 0; j < itemres->size(); ++j) {
                 uint32_t slot, itemid;
                 itemres->getInt("slot", slot);
                 itemres->getInt("itemid", itemid);
-                
+
                 packet->addEquipItem(
-                  idx, (SrvCharacterListReply::equipped_position)slot, itemid);
+                    idx, (SrvCharacterListReply::equipped_position)slot,
+                    itemid);
                 itemres->incrementRow();
               }
             }
           }
         }
-        
+
         res->incrementRow();
       }
     }
@@ -226,7 +229,6 @@ bool CCharClient::SendCharDeleteReply(
 
 bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
-  (void)P;
   logger_->trace("CharSelectReply\n");
 
   if (login_state_ != eSTATE::LOGGEDIN) {
@@ -237,13 +239,19 @@ bool CCharClient::SendCharSelectReply(
 
   login_state_ = eSTATE::TRANSFERING;
 
+  std::string query = fmt::format("CALL UpdateSessionWithCharacter({}, '{}');",
+                                  session_id_, P->char_id());
+
+  Core::IDatabase& database = Core::databasePool.getDatabase();
+  database.QExecute(query);
+
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
         server->GetId() == channelid_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
           server->GetIpAddress(), server->GetPort(), session_id_,
-          std::time(nullptr));
+          0);  // this should be set to the map server's encryption seed
       Send(*packet);
     }
   }

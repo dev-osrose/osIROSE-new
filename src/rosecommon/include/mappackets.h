@@ -31,13 +31,13 @@ namespace RoseCommon {
 class SrvSwitchServerReply : public CRosePacket {
  public:
   SrvSwitchServerReply(const std::string &ip, uint16_t port,
-                       uint32_t session_id, uint32_t random_seed);
+                       uint32_t session_id, uint32_t server_seed);
 
   virtual ~SrvSwitchServerReply();
 
   uint16_t port() const;
   uint32_t session_id() const;
-  uint32_t random_seed() const;
+  uint32_t server_seed() const;
   std::string ip() const;
 
  protected:
