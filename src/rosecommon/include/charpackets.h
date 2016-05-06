@@ -319,6 +319,8 @@ class SrvSelectCharReply : public CRosePacket {
     uint32_t expired_seconds_;
     uint16_t value_;
     uint16_t unknown_;
+    
+    status_effects() : expired_seconds_(0), value_(0), unknown_(0) {}
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -351,6 +353,13 @@ class SrvSelectCharReply : public CRosePacket {
 
     uint16_t pat_hp_;
     uint32_t pat_cooldown_time_;
+    
+    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0), 
+                       skill_points_(0), body_size_(1), head_size_(1),
+                       exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
+                       union_points_(), guild_id_(0), guild_position_(0),
+                       pk_flags_(0), stamina_(1000), status_(), pat_hp_(100),
+                       pat_cooldown_time_(0) {}
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
