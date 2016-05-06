@@ -17,8 +17,6 @@
 
 #include <forward_list>
 #include "croseisc.h"
-#include "crosepacket.h"
-#include "epackettype.h"
 
 class CLoginISC : public RoseCommon::CRoseISC {
  public:

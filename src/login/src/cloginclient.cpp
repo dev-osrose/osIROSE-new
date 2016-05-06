@@ -15,11 +15,11 @@
 #include "cloginserver.h"
 #include "cloginisc.h"
 #include "cloginclient.h"
-#include "epackettype.h"
-#include "rosepackets.h"
+// #include "epackettype.h"
+// #include "rosepackets.h"
 #include "database.h"
-#include "packetclasses.h"
-#include "iscpackets.pb.h"
+// #include "packetclasses.h"
+// #include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "cloginisc.h"
-#include "crosepacket.h"
 #include "iscpackets.pb.h"
 
 using namespace RoseCommon;

@@ -34,6 +34,14 @@ if( WIN32 )
 			  "$ENV{PROGRAMFILES}/MySQL/*/include"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
+			  
+	find_path( MYSQL_LIBRARY_PATH
+		NAMES "libmysql*"
+		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "C:/Program Files/MySQL/*/lib"
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
@@ -49,6 +57,18 @@ else()
 			  "/usr/include/mysql"
 			  "/usr/local/include/mysql"
 			  "/usr/mysql/include/mysql" )
+			  
+	find_path( MYSQL_LIBRARY_PATH
+		NAMES "libmysql*"
+		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "/lib/mysql"
+			  "/lib64/mysql"
+			  "/usr/lib/mysql"
+			  "/usr/lib64/mysql"
+			  "/usr/local/lib/mysql"
+			  "/usr/local/lib64/mysql"
+			  "/usr/mysql/lib/mysql"
+			  "/usr/mysql/lib64/mysql" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
@@ -77,11 +97,11 @@ endif()
 # all listed variables are TRUE
 include( FindPackageHandleStandardArgs )
 find_package_handle_standard_args( MYSQL DEFAULT_MSG
-	MYSQL_LIBRARY MYSQL_INCLUDE_DIR
+	MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
 	MYSQL_VERSION_STRING )
 
 set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
 set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
 
-mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY )
+mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY MYSQL_LIBRARY_PATH )
 
