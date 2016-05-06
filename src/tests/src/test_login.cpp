@@ -5,8 +5,8 @@
 #include "crosepacket.h"
 #include "cloginserver.h"
 #include "ccharisc.h"
-#include "mock/mock_cloginclient.h"
-#include "mock/mock_cloginisc.h"
+#include "mock/login/mock_cloginclient.h"
+#include "mock/login/mock_cloginisc.h"
 
 using namespace RoseCommon;
 

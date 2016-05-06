@@ -139,3 +139,6 @@ ELSE()
 		mysqlclient
 		)
 ENDIF()
+
+add_test(NAME osirose-tests
+         COMMAND osirose-tests)
