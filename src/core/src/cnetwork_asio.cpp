@@ -146,12 +146,20 @@ void CNetwork_Asio::ProcessSend() {
       send_mutex_.unlock();
 
       uint8_t* raw_ptr = _buffer.get();
-      uint16_t _size = (uint16_t)raw_ptr[0];
-      uint16_t _command = (uint16_t)raw_ptr[2];
+      uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
+      uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
       discard_mutex_.lock();
       discard_queue_.push(std::move(_buffer));
       raw_ptr = discard_queue_.back().get();
       discard_mutex_.unlock();
+
+#ifdef SPDLOG_TRACE_ON
+      fmt::MemoryWriter out;
+      logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
+      for (int i = 0; i < _size; i++)
+        out.write( "0x{0:02x} ", raw_ptr[i] );
+      logger_->trace( "{}", out.c_str() );
+#endif
 
       if (OnSend(raw_ptr))
         asio::async_write(
@@ -208,7 +216,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(
-                  "OnReceived aborted the connection... Shutting down");
+                  "OnReceived aborted the connection, disconnecting...");
               Shutdown();
             }
           } else {
