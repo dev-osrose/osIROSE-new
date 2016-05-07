@@ -167,10 +167,12 @@ bool CMapClient::JoinServerReply(
 bool CMapClient::ChangeMapReply(
     std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
   logger_->trace("CMapClient::ChangeMapReply()");
+  (void)P;
   return true;
 }
 
 bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   logger_->trace("CMapClient::ChatReply()");
+  (void)P;
   return true;
 }

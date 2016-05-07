@@ -295,8 +295,8 @@ class SrvSelectCharReply : public CRosePacket {
   private:
     uint16_t	id_;
     uint16_t	gem_op_;
+    bool      socket_;
     uint8_t		grade_;
-    bool		socket_;
   };
 
   struct base_info : public ISerialize {
