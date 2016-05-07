@@ -251,7 +251,7 @@ class SrvRemoveObject : public CRosePacket {
 #define MAX_SKILL_COUNT 120
 #define MAX_HOTBAR_ITEMS 32
 
-class SrvSelectCharReply : public CRosePacket {
+PACK(class SrvSelectCharReply : public CRosePacket {
  public:
   SrvSelectCharReply();
 
@@ -282,7 +282,7 @@ class SrvSelectCharReply : public CRosePacket {
     MAX_EQUIPPED_ITEMS
   };
 
-  struct equip_item {
+  struct equip_item : public ISerialize {
     union {
       struct {
         unsigned int id_ : 10;     // 0~1023
@@ -290,12 +290,15 @@ class SrvSelectCharReply : public CRosePacket {
         unsigned int socket_ : 1;  // 0~1
         unsigned int grade_ : 4;   // 0~15
       };
-      uint8_t data[4];
+      unsigned char data[4];
     };
 
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
                uint8_t grade = 0)
                : id_(id), gem_op_(gem), socket_(socket), grade_(grade) {}
+  protected:
+    virtual void serialize( CRosePacket &os ) const override;
+    virtual void deserialize( CRosePacket &os ) override;
   };
 
   struct base_info : public ISerialize {
@@ -389,7 +392,16 @@ class SrvSelectCharReply : public CRosePacket {
                        exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
                        union_points_(), guild_id_(0), guild_position_(0),
                        pk_flags_(0), stamina_(1000), status_(), pat_hp_(100),
-                       pat_cooldown_time_(0) {}
+                       pat_cooldown_time_(0) {
+      for (int i = 0; i < MAX_UNION_COUNT; ++i)
+      {
+        union_points_[i] = 0;
+      }
+      for (int i = 0; i < MAX_BUFF_STATUS; ++i)
+      {
+        status_[i] = status_effects();
+      }
+    }
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -399,7 +411,12 @@ class SrvSelectCharReply : public CRosePacket {
   struct skills : public ISerialize {
     uint16_t skill_id_[MAX_SKILL_COUNT];
 
-    skills() : skill_id_() {}
+    skills() {
+      for (int i = 0; i < MAX_SKILL_COUNT; ++i)
+      {
+        skill_id_[i] = 0;
+      }
+    }
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -421,7 +438,7 @@ class SrvSelectCharReply : public CRosePacket {
         unsigned short type_ : 5;
         unsigned short slot_id_ : 11;
       };
-      uint16_t item_;
+      unsigned short item_;
     };
     
     hotbar_item() : item_(0) {}
@@ -434,7 +451,12 @@ class SrvSelectCharReply : public CRosePacket {
   struct hotbar : public ISerialize {
     hotbar_item list_[MAX_HOTBAR_ITEMS];
 
-    hotbar() : list_() {}
+    hotbar() {
+      for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i)
+      {
+        list_[i] = hotbar_item();
+      }
+    }
 
    protected:
     virtual void serialize(CRosePacket &os) const override;
@@ -466,7 +488,12 @@ class SrvInventoryData : public CRosePacket {
       : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
 
  protected:
-  void pack() { *this << zuly_; };
+  void pack() { 
+    *this << zuly_; 
+    for (int i = 0; i < 140; ++i) {
+      *this << (uint16_t)0 << (uint32_t)0;
+    }
+  };
 
  private:
   int64_t zuly_;
@@ -481,11 +508,56 @@ class SrvQuestData : public CRosePacket {
   SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA){};
 
  protected:
-  void pack() {  };
+  void pack() {
+    //Quest data
+    for (int i = 0; i < 5; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 3; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 7; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 10; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+      *this << (uint16_t)0 << (uint32_t)0;
+
+      for (int i = 0; i < 10; ++i)
+      {
+        *this << (uint16_t)0;
+      }
+      *this << (uint32_t)0;
+
+      for (int i = 0; i < 6; ++i)
+      {
+        *this << (uint16_t)0 << (uint32_t)0;
+      }
+    }
+
+    for (int i = 0; i < 16; ++i)
+    {
+      *this << (uint32_t)0;
+    }
+
+    // Wish list
+    for (int i = 0; i < 30; ++i)
+    {
+      *this << (uint16_t)0 << (uint32_t)0;
+    }
+  };
 
   //Quest data
   //Wish List
-};
+};)
 
 //------------------------------------------------
 //------------------------------------------------

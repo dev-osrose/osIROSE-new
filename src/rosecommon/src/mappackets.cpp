@@ -220,7 +220,21 @@ void SrvRemoveObject::pack() {
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::SrvSelectCharReply::SrvSelectCharReply()
-    : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {}
+    : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {
+  race_ = zone_ = revive_zone_ = position_start_[0] = position_start_[1] = unique_tag_ = 0;
+  name_ = "";
+
+  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
+  {
+    items_[i] = equip_item();
+  }
+
+  base_character_info_ = base_info();
+  stats_ = character_stats();
+  ext_stats_ = extended_stats();
+  learned_skills_ = skills();
+  hotbar_ = hotbar();
+}
 
 RoseCommon::SrvSelectCharReply::~SrvSelectCharReply() {}
 
@@ -257,7 +271,7 @@ void RoseCommon::SrvSelectCharReply::pack()
     << revive_zone_;
   for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
   {
-    for (int j = 0; j < 4; ++j) *this << items_[i].data[j];
+    *this << items_[i];
   }
   *this << base_character_info_ << stats_ << ext_stats_ << learned_skills_ << hotbar_ << unique_tag_ << name_;
 }
@@ -347,4 +361,16 @@ void RoseCommon::SrvSelectCharReply::hotbar::deserialize(CRosePacket &os) {
 //---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
+
+void SrvSelectCharReply::equip_item::serialize( CRosePacket &os ) const
+{
+    for (int j = 0; j < 4; ++j) 
+      os << data[j];
+}
+
+void SrvSelectCharReply::equip_item::deserialize( CRosePacket &os )
+{
+  (void)os;
+}
+
 }

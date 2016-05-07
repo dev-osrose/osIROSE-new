@@ -50,7 +50,10 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     //      return
     //      ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
     default:
+    {
+      logger_->debug( "cmapclient default handle: 0x{1:04x}", (uint16_t)CRosePacket::type(_buffer) );
       return CRoseClient::HandlePacket(_buffer);
+    }
   }
   return true;
 }
@@ -89,20 +92,20 @@ bool CMapClient::JoinServerReply(
 
         //todo(raven): find out why the client doesn't seem to like this packet
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::OK, session_id_);
+            SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
 
         // SEND PLAYER DATA HERE!!!!!!
         auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
-        packet2->setCharacter("test", 1, 20, 520, 520, 20, sessionID);
+        packet2->setCharacter("test", 1, 1, 5300, 5300, 1, sessionID);
         Send(*packet2);
 
         auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(1000000);
         Send(*packet3);
-
+        
         auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
         Send(*packet4);
-
+        
         auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
         Send(*packet5);
       } else {

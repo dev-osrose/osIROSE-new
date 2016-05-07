@@ -93,12 +93,12 @@ bool CCharClient::JoinServerReply(
         Send(*packet);
       } else {
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::INVALID_PASSWORD, std::time(nullptr));
+            SrvJoinServerReply::INVALID_PASSWORD, 0);
         Send(*packet);
       }
     } else {
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::FAILED, std::time(nullptr));
+          SrvJoinServerReply::FAILED, 0);
       Send(*packet);
     }
   }
