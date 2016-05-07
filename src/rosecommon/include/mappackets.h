@@ -251,7 +251,7 @@ class SrvRemoveObject : public CRosePacket {
 #define MAX_SKILL_COUNT 120
 #define MAX_HOTBAR_ITEMS 32
 
-PACK(class SrvSelectCharReply : public CRosePacket {
+class SrvSelectCharReply : public CRosePacket {
  public:
   SrvSelectCharReply();
 
@@ -263,11 +263,8 @@ PACK(class SrvSelectCharReply : public CRosePacket {
   void addEquipItem(uint8_t slot, uint16_t item_id = 0,
                     uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0);
 
- protected:
-  void pack();
-
- private:
-  enum equipped_position {
+  enum equipped_position
+  {
     EQUIP_FACE = 0,
     EQUIP_HAIR = 1,
     EQUIP_HELMET = 2,
@@ -282,23 +279,24 @@ PACK(class SrvSelectCharReply : public CRosePacket {
     MAX_EQUIPPED_ITEMS
   };
 
-  struct equip_item : public ISerialize {
-    union {
-      struct {
-        unsigned int id_ : 10;     // 0~1023
-        unsigned int gem_op_ : 9;  // 0~512
-        unsigned int socket_ : 1;  // 0~1
-        unsigned int grade_ : 4;   // 0~15
-      };
-      unsigned char data[4];
-    };
+ protected:
+  void pack();
 
+ private:
+
+  struct equip_item : public ISerialize {
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
                uint8_t grade = 0)
                : id_(id), gem_op_(gem), socket_(socket), grade_(grade) {}
-  protected:
+  //protected:
     virtual void serialize( CRosePacket &os ) const override;
     virtual void deserialize( CRosePacket &os ) override;
+
+  private:
+    uint16_t	id_;
+    uint16_t	gem_op_;
+    uint8_t		grade_;
+    bool		socket_;
   };
 
   struct base_info : public ISerialize {
@@ -320,7 +318,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
           rank_(rank),
           fame_(fame) {}
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -342,9 +340,8 @@ PACK(class SrvSelectCharReply : public CRosePacket {
           charm_(charm),
           sense_(sense) {}
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
-
     virtual void deserialize(CRosePacket &os) override;
   };
 
@@ -355,7 +352,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
     
     status_effects() : expired_seconds_(0), value_(0), unknown_(0) {}
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -390,8 +387,8 @@ PACK(class SrvSelectCharReply : public CRosePacket {
     extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0), 
                        skill_points_(0), body_size_(1), head_size_(1),
                        exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
-                       union_points_(), guild_id_(0), guild_position_(0),
-                       pk_flags_(0), stamina_(1000), status_(), pat_hp_(100),
+                       guild_id_(0), guild_position_(0),
+                       pk_flags_(0), stamina_(1000), pat_hp_(100),
                        pat_cooldown_time_(0) {
       for (int i = 0; i < MAX_UNION_COUNT; ++i)
       {
@@ -403,7 +400,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
       }
     }
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -418,7 +415,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
       }
     }
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -443,7 +440,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
     
     hotbar_item() : item_(0) {}
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -458,7 +455,7 @@ PACK(class SrvSelectCharReply : public CRosePacket {
       }
     }
 
-   protected:
+//   protected:
     virtual void serialize(CRosePacket &os) const override;
     virtual void deserialize(CRosePacket &os) override;
   };
@@ -557,7 +554,7 @@ class SrvQuestData : public CRosePacket {
 
   //Quest data
   //Wish List
-};)
+};
 
 //------------------------------------------------
 //------------------------------------------------
@@ -569,6 +566,19 @@ class SrvBillingMsg : public CRosePacket {
  protected:
   void pack() { *this << (uint16_t)0x1001 << (uint32_t)2; };
 };
+
+class CliStopReq : public CRosePacket {
+ public:
+  CliStopReq(uint8_t buffer[MAX_PACKET_SIZE]);
+  virtual ~CliStopReq() {};
+
+  float getX() const { return x; }
+  float getY() const { return y; }
+
+private:
+  float x, y;
+};
+
 }
 
 #endif

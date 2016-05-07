@@ -46,6 +46,8 @@ class CCharClient : public RoseCommon::CRoseClient {
   uint32_t session_id_;
   uint32_t userid_;
   uint32_t channelid_;
+
+  std::vector<uint32_t> character_real_id_;
 };
 
 #endif

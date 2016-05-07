@@ -144,6 +144,7 @@ bool CCharClient::SendCharListReply() {
 
         {
           res->getInt("id", id);
+          character_real_id_.push_back(id);
           query = fmt::format("CALL GetEquipped({});", id);
           itemres = database.QStore(query);
           if (itemres != nullptr) {
@@ -240,7 +241,7 @@ bool CCharClient::SendCharSelectReply(
   login_state_ = eSTATE::TRANSFERING;
 
   std::string query = fmt::format("CALL UpdateSessionWithCharacter({}, '{}');",
-                                  session_id_, P->char_id());
+                                  session_id_, character_real_id_[P->char_id()]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);

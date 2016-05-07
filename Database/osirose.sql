@@ -71,6 +71,10 @@ CREATE TABLE `characters` (
   `stat_points` int(10) unsigned NOT NULL DEFAULT '0',
   `skill_points` int(10) unsigned NOT NULL DEFAULT '0',
   `penalty_exp` bigint(20) unsigned DEFAULT '0',
+  `revive_map` int(11) NOT NULL DEFAULT '1',
+  `map` int(11) NOT NULL DEFAULT '1',
+  `x` float NOT NULL DEFAULT '520000',
+  `y` float NOT NULL DEFAULT '520000',
   `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -271,6 +275,25 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetCharacter` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCharacter`(IN `_charid` INT)
+BEGIN
+  SELECT * FROM `characters` WHERE characters.id = _charid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `GetCharList` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -398,4 +421,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-06  0:42:57
+-- Dump completed on 2016-05-07 18:18:15

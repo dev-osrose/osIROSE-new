@@ -41,17 +41,16 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
-                      //    case ePacketType::PAKCS_CHANGE_MAP_REQ:
-                      //      return
-    //      ChangeMapReply(getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
+    case ePacketType::PAKCS_CHANGE_MAP_REQ:
+      return ChangeMapReply(
+          getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
     //    case ePacketType::PAKCS_LOGOUT_REQ:
     //      return LogoutReply();
-    //    case ePacketType::PAKCS_NORMAL_CHAT:
-    //      return
-    //      ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
-    default:
-    {
-      logger_->debug( "cmapclient default handle: 0x{1:04x}", (uint16_t)CRosePacket::type(_buffer) );
+    case ePacketType::PAKCS_NORMAL_CHAT:
+      return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
+    default: {
+      // logger_->debug( "cmapclient default handle: 0x{1:04x}",
+      // (uint16_t)CRosePacket::type(_buffer) );
       return CRoseClient::HandlePacket(_buffer);
     }
   }
@@ -73,7 +72,7 @@ bool CMapClient::JoinServerReply(
   uint32_t sessionID = P->session_id();
   std::string password = P->password();
 
-  std::unique_ptr<Core::IResult> res;
+  std::unique_ptr<Core::IResult> res, itemres;
   std::string query = fmt::format("CALL GetSession({});", sessionID);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -83,31 +82,72 @@ bool CMapClient::JoinServerReply(
       std::string pwd = "";
       res->getString("password", pwd);
       if (pwd == password) {
+        logger_->debug("Client {} auth OK.", GetId());
         login_state_ = eSTATE::LOGGEDIN;
         res->getInt("userid", userid_);
         res->getInt("charid", charid_);
         session_id_ = sessionID;
 
-        logger_->debug("Client {} auth OK.", GetId());
+        query = fmt::format("CALL GetCharacter({});", charid_);
+        res = database.QStore(query);
+        if (res != nullptr && res->size() == 1) {
+          auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+              SrvJoinServerReply::OK, std::time(nullptr));
+          Send(*packet);
 
-        //todo(raven): find out why the client doesn't seem to like this packet
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::OK, std::time(nullptr));
-        Send(*packet);
+          uint32_t race = 0, face, hair;
+          uint32_t zone = 1, revive_zone = 1;
+          float pos[2] = {530000, 530000};
+          uint64_t zuly = 0;
+          std::string name;
 
-        // SEND PLAYER DATA HERE!!!!!!
-        auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
-        packet2->setCharacter("test", 1, 1, 5300, 5300, 1, sessionID);
-        Send(*packet2);
+          res->getString("name", name);
+          res->getInt("race", race);
+          res->getInt("map", zone);
+          res->getInt("revive_map", revive_zone);
+          res->getFloat("x", pos[0]);
+          res->getFloat("y", pos[1]);
+          res->getInt("face", face);
+          res->getInt("hair", hair);
+          // res->getInt( "zuly", zuly );
 
-        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(1000000);
-        Send(*packet3);
-        
-        auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
-        Send(*packet4);
-        
-        auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-        Send(*packet5);
+          // SEND PLAYER DATA HERE!!!!!!
+          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
+          packet2->setCharacter(name, race, zone, pos[0], pos[1], revive_zone,
+                                sessionID);
+          packet2->addEquipItem(
+              SrvSelectCharReply::equipped_position::EQUIP_FACE, face);
+          packet2->addEquipItem(
+              SrvSelectCharReply::equipped_position::EQUIP_HAIR, hair);
+
+          query = fmt::format("CALL GetEquipped({});", charid_);
+          itemres = database.QStore(query);
+          if (itemres != nullptr) {
+            if (itemres->size() != 0) {
+              for (uint32_t j = 0; j < itemres->size(); ++j) {
+                uint32_t slot, itemid;  //, itemtype, amount;
+                itemres->getInt("slot", slot);
+                itemres->getInt("itemid", itemid);
+                // itemres->getInt( "itemtype", itemtype );
+                // itemres->getInt( "amount", amount );
+
+                packet2->addEquipItem(slot, itemid);
+                itemres->incrementRow();
+              }
+            }
+          }
+
+          Send(*packet2);
+
+          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(zuly);
+          Send(*packet3);
+
+          auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
+          Send(*packet4);
+
+          auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
+          Send(*packet5);
+        }
       } else {
         logger_->debug("Client {} auth INVALID_PASS.", GetId());
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
@@ -123,3 +163,14 @@ bool CMapClient::JoinServerReply(
   }
   return true;
 };
+
+bool CMapClient::ChangeMapReply(
+    std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
+  logger_->trace("CMapClient::ChangeMapReply()");
+  return true;
+}
+
+bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
+  logger_->trace("CMapClient::ChatReply()");
+  return true;
+}

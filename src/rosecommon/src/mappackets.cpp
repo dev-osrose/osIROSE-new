@@ -161,7 +161,7 @@ RoseCommon::SrvInitDataReply::SrvInitDataReply(uint32_t rand_seed,
     : CRosePacket(ePacketType::PAKWC_INIT_DATA),
       rand_seed_(rand_seed),
       rand_index_(rand_index) {}
-      
+
 RoseCommon::SrvInitDataReply::~SrvInitDataReply() {}
 
 uint32_t RoseCommon::SrvInitDataReply::rand_seed() const { return rand_seed_; }
@@ -208,24 +208,21 @@ void RoseCommon::SrvServerData::pack() {
 //---------------------------------------------
 //---------------------------------------------
 
-SrvRemoveObject::SrvRemoveObject(uint16_t obj_id) 
-    : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), 
-      obj_id_(obj_id) {}
+SrvRemoveObject::SrvRemoveObject(uint16_t obj_id)
+    : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), obj_id_(obj_id) {}
 
-void SrvRemoveObject::pack() {
-  *this << obj_id_;
-}
+void SrvRemoveObject::pack() { *this << obj_id_; }
 
 //---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::SrvSelectCharReply::SrvSelectCharReply()
     : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {
-  race_ = zone_ = revive_zone_ = position_start_[0] = position_start_[1] = unique_tag_ = 0;
+  race_ = zone_ = revive_zone_ = position_start_[0] = position_start_[1] =
+      unique_tag_ = 0;
   name_ = "";
 
-  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-  {
+  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
     items_[i] = equip_item();
   }
 
@@ -257,23 +254,28 @@ void RoseCommon::SrvSelectCharReply::addEquipItem(uint8_t slot,
                                                   uint16_t gem /*= 0*/,
                                                   uint8_t socket /*= 0*/,
                                                   uint8_t grade /*= 0*/) {
-    equip_item item = items_[slot];
-    item.id_ = item_id;
-    item.gem_op_ = gem;
-    item.socket_ = socket;
-    item.grade_ = grade;
-    items_[slot] = item;
+  equip_item item = equip_item(item_id, gem, socket, grade);
+  items_[slot] = item;
 }
 
-void RoseCommon::SrvSelectCharReply::pack()
-{
+void RoseCommon::SrvSelectCharReply::pack() {
   *this << race_ << zone_ << position_start_[0] << position_start_[1]
-    << revive_zone_;
-  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-  {
-    *this << items_[i];
-  }
-  *this << base_character_info_ << stats_ << ext_stats_ << learned_skills_ << hotbar_ << unique_tag_ << name_;
+        << revive_zone_;
+
+    for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
+      items_[i].serialize(*this);
+    }
+
+    base_character_info_.serialize( *this );
+    stats_.serialize( *this );
+    ext_stats_.serialize( *this );
+    learned_skills_.serialize( *this );
+    hotbar_.serialize( *this );
+
+    *this << unique_tag_ << name_;
+
+//    *this << base_character_info_ << stats_ << ext_stats_ << learned_skills_
+//          << hotbar_ << unique_tag_ << name_;
 }
 
 void RoseCommon::SrvSelectCharReply::base_info::serialize(
@@ -307,17 +309,17 @@ void RoseCommon::SrvSelectCharReply::status_effects::deserialize(
 
 void RoseCommon::SrvSelectCharReply::extended_stats::serialize(
     CRosePacket &os) const {
-  os << hp_ << mp_ << exp_ << level_ << stat_points_ << skill_points_ << body_size_ << head_size_ << penalty_exp_ << fame1_ << fame2_;
-  for (int i = 0; i < MAX_UNION_COUNT; ++i)
-  {
+  os << hp_ << mp_ << exp_ << level_ << stat_points_ << skill_points_
+     << body_size_ << head_size_ << penalty_exp_ << fame1_ << fame2_;
+  for (int i = 0; i < MAX_UNION_COUNT; ++i) {
     os << union_points_[i];
   }
-  
-  os << guild_id_ << guild_contribution_ << guild_position_ << pk_flags_ << stamina_;
-  
-  for (int i = 0; i < MAX_BUFF_STATUS; ++i)
-  {
-    os << status_[i];
+
+  os << guild_id_ << guild_contribution_ << guild_position_ << pk_flags_
+     << stamina_;
+
+  for (int i = 0; i < MAX_BUFF_STATUS; ++i) {
+    status_[i].serialize( os );
   }
 
   os << pat_hp_ << pat_cooldown_time_;
@@ -329,8 +331,7 @@ void RoseCommon::SrvSelectCharReply::extended_stats::deserialize(
 }
 
 void RoseCommon::SrvSelectCharReply::skills::serialize(CRosePacket &os) const {
-  for (int i = 0; i < MAX_SKILL_COUNT; ++i)
-  {
+  for (int i = 0; i < MAX_SKILL_COUNT; ++i) {
     os << skill_id_[i];
   }
 }
@@ -349,9 +350,8 @@ void RoseCommon::SrvSelectCharReply::hotbar_item::deserialize(CRosePacket &os) {
 }
 
 void RoseCommon::SrvSelectCharReply::hotbar::serialize(CRosePacket &os) const {
-  for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i)
-  {
-    os << list_[i];
+  for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i) {
+    list_[i].serialize(os);
   }
 }
 
@@ -362,15 +362,17 @@ void RoseCommon::SrvSelectCharReply::hotbar::deserialize(CRosePacket &os) {
 //---------------------------------------------
 //---------------------------------------------
 
-void SrvSelectCharReply::equip_item::serialize( CRosePacket &os ) const
-{
-    for (int j = 0; j < 4; ++j) 
-      os << data[j];
+void SrvSelectCharReply::equip_item::serialize(CRosePacket &os) const {
+  uint32_t data = ((grade_ & 0xF) << 20) | ((socket_ & 0x1) << 19) |
+                  ((gem_op_ & 0x1FF) << 10) | (id_ & 0x3FF);
+  os << data;
 }
 
-void SrvSelectCharReply::equip_item::deserialize( CRosePacket &os )
-{
-  (void)os;
-}
+void SrvSelectCharReply::equip_item::deserialize(CRosePacket &os) { (void)os; }
 
+CliStopReq::CliStopReq( uint8_t buffer[MAX_PACKET_SIZE] )     : CRosePacket(buffer) {
+  if (type() != ePacketType::PAKCS_STOP)
+    throw std::runtime_error("Not the right packet!");
+  //*this >> x >> y;
+}
 }
