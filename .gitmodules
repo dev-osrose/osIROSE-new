@@ -16,3 +16,6 @@
 [submodule "tools/Selene"]
 	path = tools/Selene
 	url = https://github.com/RavenX8/Selene.git
+[submodule "tools/lua"]
+	path = tools/lua
+	url = https://github.com/RavenX8/lua.git

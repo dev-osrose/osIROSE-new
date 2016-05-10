@@ -75,6 +75,7 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                 ${MYSQL_LIBRARIES} 
                 wsock32.lib
                 mysqlpp
+				${LUA_LIBRARIES}
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
