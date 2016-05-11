@@ -30,7 +30,10 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdparty/include
 	mkdir 3rdparty/lib
 	
-	cp -r ./tools/spdlog/include ./3rdparty
+	cd tools/mysqlpp/lib
+	py querydef.pl
+	py ssqls.pl
+	cd ../../..
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
