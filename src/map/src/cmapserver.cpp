@@ -13,6 +13,7 @@
 // limitations under the License.
 
 //#include <selene.h>
+//#include <sol.hpp>
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "cmapisc.h"
@@ -22,11 +23,15 @@ using namespace RoseCommon;
 
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
     : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0) {
+
+//	sol::state lua;
+//	lua.open_libraries(sol::lib::base);
+//	lua.set_function("log", [this](std::string str) { logger_->notice(str.c_str()); });
+//	lua.script_file("./scripts/main.lua");
+
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
-//     sel::State state{true};
-//     state.Load("./scripts/main.lua");
   } else {
     // We are a master/node process
     // We accept player connections and redirect their packet data to the
