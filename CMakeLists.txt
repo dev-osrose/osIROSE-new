@@ -70,7 +70,7 @@ OPTION(ENABLE_EXPERMENTAL
 OPTION(DISABLE_CRYPT
   "Enable this to not use encryption functions" OFF)
   
-SET(BUILD_TYPE "Debug" CACHE STRING "Debug;Release" FORCE)
+SET(BUILD_TYPE "Debug" CACHE STRING "Debug")
 
 IF (BUILD_API_DOC)
   FIND_PACKAGE(Doxygen)
