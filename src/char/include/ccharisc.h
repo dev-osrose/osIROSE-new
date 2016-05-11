@@ -1,23 +1,38 @@
+// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http ://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #ifndef __CCHARISC_H__
 #define __CCHARISC_H__
 
 #include "croseisc.h"
 #include "crosepacket.h"
+#include "packetclasses.h"
 
 class CCharISC : public RoseCommon::CRoseISC {
  public:
   CCharISC();
   CCharISC(tcp::socket _sock);
 
-  bool IsLogin() const { return login_connection_; }
-  void SetLogin(bool val) { login_connection_ = val; }
+  bool IsLogin() const;
+  void SetLogin(bool val);
 
  protected:
-  bool ServerRegister(RoseCommon::CRosePacket* P);
-  bool HandlePacket(uint8_t* _buffer);
-  virtual void OnConnected();
+  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
+  bool HandlePacket(uint8_t* _buffer) override;
 
-  bool login_connection_;
+  virtual void OnConnected() override;
+  virtual bool OnShutdown() override;
 };
 
 #endif

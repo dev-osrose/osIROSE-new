@@ -1,27 +1,45 @@
+// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http ://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "cmapisc.h"
 #include "crosepacket.h"
 #include "config.h"
+#include "iscpackets.pb.h"
+#include "rosepackets.h"
 
 using namespace RoseCommon;
 
-CMapISC::CMapISC() : CRoseISC(), char_server_(false) {
-  log_.SetIdentity("CMapISC");
+CMapISC::CMapISC() : CRoseISC() {
+  SetType(iscPacket::ServerType::MAP_MASTER);
 }
 
 CMapISC::CMapISC(tcp::socket _sock)
-    : CRoseISC(std::move(_sock)), char_server_(false) {
-  log_.SetIdentity("CMapISC");
+    : CRoseISC(std::move(_sock)) {
+  SetType(iscPacket::ServerType::MAP_MASTER);
 }
 
+bool CMapISC::IsChar() const { return GetType() == iscPacket::ServerType::CHAR; }
+
 bool CMapISC::HandlePacket(uint8_t* _buffer) {
-  CRosePacket* pak = (CRosePacket*)_buffer;
-  switch (pak->Header.Command) {
+  switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return true;
+      return ServerRegister(
+          getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
@@ -34,35 +52,81 @@ bool CMapISC::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
+bool CMapISC::ServerRegister(
+    std::unique_ptr<RoseCommon::IscServerRegister> P) {
+  logger_->trace("CMapISC::ServerRegister(CRosePacket* P)");
+
+  uint16_t _size = P->size() - 6;
+
+  iscPacket::ServerReg pMapServer;
+  if (pMapServer.ParseFromArray(P->data(), _size) == false) {
+    logger_->debug("pMapServer.ParseFromArray Failed!");
+    return false;
+  }
+//  int16_t _type = 0;
+//  _type = pMapServer.type();
+
+  // 1 == char server
+  // 2 == node server
+  // 3 == map master server (This is the only type the login server will care
+  // about)
+  // 4 == map workers/threads
+
+//  iscPacket::ServerReg pServerReg;
+//  std::string name, ip;
+//  int32_t port = 0, type = 0, right = 0;
+
+//  if (_type == iscPacket::ServerType::NODE) {
+//    // This is a node and we need to figure out something to do with this
+//  } else if (_type == iscPacket::ServerType::MAP_MASTER) {
+//    name = pMapServer.name();
+//    ip = pMapServer.addr();
+//    port = pMapServer.port();
+//    type = pMapServer.type();
+//    right = pMapServer.accright();
+//  } else if (_type == iscPacket::ServerType::MAP_WORKER) {
+//    name = pMapServer.name();
+//    ip = pMapServer.addr();
+//    port = pMapServer.port();
+//    type = pMapServer.type();
+//    right = pMapServer.accright();
+//    this->SetType(_type);
+//  }
+
+  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+                  ServerType_Name(pMapServer.type()).c_str(),
+                  pMapServer.name().c_str(), pMapServer.addr().c_str(),
+                  pMapServer.port());
+  return false;
+}
+
 void CMapISC::OnConnected() {
-  CRosePacket* pak = new CRosePacket(ePacketType::ISC_SERVER_REGISTER);
-
   Core::Config& config = Core::Config::getInstance();
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+      config.map_server().channelname(), config.serverdata().ip(), GetId(),
+      config.map_server().clientport(), iscPacket::ServerType::MAP_MASTER,
+      config.map_server().accesslevel());
 
-  ServerReg pServerReg;
-  pServerReg.set_name(config.map_server().channelname());
-  pServerReg.set_addr(config.serverdata().ip());
-  pServerReg.set_port(config.map_server().clientport());
-  pServerReg.set_type(ServerReg_ServerType_MAP_MASTER);
-  pServerReg.set_accright(config.map_server().accesslevel());
+  logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
+                 packet->size(), (uint16_t)packet->type());
+  Send(*packet);
 
-  int _size = pServerReg.ByteSize();
-  uint8_t* data = new uint8_t[_size];
-  memset(data, 0, _size);
-  if (pServerReg.SerializeToArray(data, _size) == false)
-    log_.eicprintf("Couldn't serialize the data\n");
-  pak->AddBytes(data, _size);
-
-  //	m_Log.icprintf( "IN 0x%X ", pak->Header.Command );
-  //	for (int i = 0; i < _size; i++)
-  //		m_Log.dcprintf( "%02X ", pak->Data[i] );
-  //	m_Log.dcprintf( "\n" );
-  //	m_Log.icprintf("Header[%i, 0x%X] Size: %i\n", pak->Header.Size,
-  //pak->Header.Command, _size);
-
-  log_.oicprintf("Sent a packet on CRoseISC: Header[%i, 0x%X]\n",
-                 pak->Header.Size, pak->Header.Command);
-
-  Send((CRosePacket*)pak);
-  delete[] data;
+  process_thread_ = std::thread([this]() {
+    while (active_ == true && IsChar() == true) {
+      std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+      int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       update - GetLastUpdateTime())
+                       .count();
+      if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+      {
+        logger_->trace("Sending ISC_ALIVE");
+        auto packet = std::unique_ptr<CRosePacket>(
+            new CRosePacket(ePacketType::ISC_ALIVE));
+        Send(*packet);
+      }
+      std::this_thread::sleep_for(
+          std::chrono::milliseconds(500));  // sleep for 30 seconds
+    }
+    return 0;
+  });
 }

@@ -1,11 +1,12 @@
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 //#define STRESS_TEST
 
 #include <stdint.h>
 #include "croseserver.h"
-#include "mock/mock_croseclient.h"
-#include "mock/mock_croseisc.h"
+//#include "mock/rosecommon/mock_croseclient.h"
+//#include "mock/rosecommon/mock_croseisc.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"
@@ -170,10 +171,10 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ,
-                                     sizeof(pakChannelList_Req));
-  pak->pChannelListReq.lServerID = 0x77;
-  netConnect.Send(pak);
+  /* CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, */
+                                     /* sizeof(pakChannelList_Req)); */
+  /* pak->pChannelListReq.lServerID = 0x77; */
+  /* netConnect.Send(pak); */
 
   //	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); //
   //Change this to condition variables
@@ -187,7 +188,7 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
 
 TEST(TestRoseNetwork, TestListenAndConnect2) {
   CRoseServer network;
-  CRoseClient_Mock netConnect;
+  CRoseClient netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
@@ -196,16 +197,16 @@ TEST(TestRoseNetwork, TestListenAndConnect2) {
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
-  netConnect.Send(pak);
+  /* CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ); */
+  /* netConnect.Send(pak); */
 
-  CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ,
-                                      sizeof(pakChannelList_Req));
-  pak2->pChannelListReq.lServerID = 0x77;
-  netConnect.Send(pak2);
+  /* CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ, */
+                                      /* sizeof(pakChannelList_Req)); */
+  /* pak2->pChannelListReq.lServerID = 0x77; */
+  /* netConnect.Send(pak2); */
 
-  CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_ALIVE);
-  netConnect.Send(pak3);
+  /* CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_ALIVE); */
+  /* netConnect.Send(pak3); */
 
   //        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); //
   //        Change this to condition variables
@@ -230,8 +231,8 @@ TEST(TestRoseNetwork, TestISCListenAndConnect) {
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-  CRosePacket* pak = new CRosePacket(ePacketType::ISC_ALIVE);
-  netConnect.Send(pak);
+  /* CRosePacket* pak = new CRosePacket(ePacketType::ISC_ALIVE); */
+  /* netConnect.Send(pak); */
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
@@ -275,8 +276,8 @@ TEST(TestRoseNetwork, TestNetworkStress) {
       EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29111));
       EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
-      CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ALIVE);
-      netConnect.Send(pak);
+      /* CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ALIVE); */
+      /* netConnect.Send(pak); */
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
       netConnect.Disconnect();
       auto diff = GetTickCount() - starttime;

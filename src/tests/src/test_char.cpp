@@ -6,39 +6,85 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
+#include "cmapisc.h"
+
+#include "cmysql_database.h"
+#include "cmysql_databasepool.h"
+#include "database.h"
 
 using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
   CCharClient netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
+  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
+  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
 
+  {
+    std::string query = fmt::format("CALL CreateSession({}, {}, {});", 1, 1, 0);
+
+    Core::IDatabase& database = Core::databasePool.getDatabase();
+    database.QExecute(query);
+  }
+
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_ACCEPT_REQ);
-  netConnect.Send(pak);
+  {
+    auto pak = std::unique_ptr<CliJoinServerReq>(
+        new CliJoinServerReq(1, "cc03e747a6afbbcbf8be7668acfebee5"));
+    netConnect.Send(*pak);
+  }
+  {
+    auto pak = std::unique_ptr<CliCreateCharReq>(
+        new CliCreateCharReq("Raven", 1, 1, 1, 1, 1, 10));
+    netConnect.Send(*pak);
+  }
+  {
+    auto pak =
+        std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq("Raven", 1, 0));
+    netConnect.Send(*pak);
+  }
+  {
+    auto pak = std::unique_ptr<CliSelectCharReq>(
+        new CliSelectCharReq("Raven", 1, 0, 0));
+    netConnect.Send(*pak);
+  }
 
-  CRosePacket* pak4 = new CRosePacket(ePacketType::PAKCS_LOGIN_REQ);
-  netConnect.Send(pak4);
+  std::string query = fmt::format("DELETE FROM sessions WHERE id = {}", 1, 1);
 
-  CRosePacket* pak2 = new CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ);
-  netConnect.Send(pak2);
-
-  CRosePacket* pak5 = new CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ);
-  netConnect.Send(pak5);
-
-  CRosePacket* pak3 = new CRosePacket(ePacketType::PAKCS_ALIVE);
-  netConnect.Send(pak3);
+  Core::IDatabase& database = Core::databasePool.getDatabase();
+  database.QExecute(query);
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
   // EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+}
+
+TEST(TestCharServer, TestISCMap) {
+  CCharServer network;
+  CMapISC mapISC;
+  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(network.Listen());
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  mapISC.SetId(0);
+  mapISC.SetType(3);
+  EXPECT_EQ(true, mapISC.Init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(mapISC.Connect());
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // todo(raven): Create a map connection here by crafting a isc packet
+
+  std::this_thread::sleep_for(
+      std::chrono::milliseconds(500));  // Change this to condition variables
+
+  EXPECT_NO_FATAL_FAILURE(mapISC.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
 }
