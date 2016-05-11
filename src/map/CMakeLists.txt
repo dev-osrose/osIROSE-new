@@ -15,13 +15,6 @@ set(Clang_LINK_FLAGS "")
 set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#foreach(flag_var
-#        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-#        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-#   if(${flag_var} MATCHES "/MD")
-#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#   endif(${flag_var} MATCHES "/MD")
-#endforeach(flag_var)
 ELSE()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
 ENDIF()
@@ -54,11 +47,12 @@ SET( SOURCES_MAIN
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
-	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
-	ADD_DEPENDENCIES(${PROJECT} protoGen)
-ENDIF()
+#IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+ADD_DEPENDENCIES(${PROJECT} lua)
+ADD_DEPENDENCIES(${PROJECT} protoGen)
+ADD_DEPENDENCIES(${PROJECT} mysqlpp)
+ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+#ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
@@ -68,19 +62,18 @@ target_link_libraries(${PROJECT}
 	RoseCommon
 	protoGen
 	lua
+	libprotobuf
+	mysqlpp
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-        TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
+        TARGET_LINK_LIBRARIES(${PROJECT}
                 ${MYSQL_LIBRARIES} 
                 wsock32.lib
-                mysqlpp
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
-                ${PROTOBUF_BINARY_DIR}/libprotobuf.a
-                mysqlpp
                 mysqlclient
                 )
 ENDIF()
