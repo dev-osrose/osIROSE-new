@@ -1,8 +1,9 @@
 version: '{branch}-ci-{build}'
 os:
-- Visual Studio 2013
-- Windows Server 2012 R2
-- MinGW
+#- Visual Studio 2013
+- Visual Studio 2015 # VS2015 doesn't work due to mysqlpp
+#- Windows Server 2012 R2
+#- MinGW
 configuration:
 - Debug
 - Release
@@ -10,18 +11,19 @@ platform:
 - Win32
 environment:
   ASIO_STANDALONE: 1
-  INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;
+  INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
 matrix:
-#  fast_finish: true
-  allow_failures:
-    - os: Windows Server 2012 R2
-    - os: MinGW
+  fast_finish: true
+#  allow_failures:
+#    - os: Visual Studio 2015
+#    - os: Windows Server 2012 R2
+#    - os: MinGW
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
-services: mysql56
+#services: mysql56
 install:
-- ps: Start-FileDownload http://tangentsoft.net/mysql++/releases/mysql++-3.2.2.tar.gz -FileName C:\projects\mysqlpp.tar.gz
-- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-winx64.msi -FileName C:\projects\mysql-connector-c-6.1.6-winx64.msi
+#- ps: Start-FileDownload http://tangentsoft.net/mysql++/releases/mysql++-3.2.2.tar.gz -FileName C:\projects\mysqlpp.tar.gz
+- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-winx64.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx64.msi
 - cmd: "./ci/msvc_mysqlpp_install.bat"
 - ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
 - ps: >-
@@ -40,17 +42,15 @@ install:
 - cmd: "./ci/msvc_install.bat"
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt
-- C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
-#build: off
-#  project: osIROSE.sln
-#  parallel: true
-#  verbosity: minimal
+#- C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
+build:
+  parallel: true
 build_script:
 - cd 3rdParty/build
 - cmake -DBUILD_PROTOBUF=ON ../../tools/
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cd ../../build
-- cmake -DENABLE_TESTING=ON ..
+- cmake ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: build/bin
@@ -66,8 +66,8 @@ notifications:
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: false
-test:
-  assemblies: 'build\bin\$(configuration)\osirose-tests.exe'
+#test:
+#  assemblies: 'build\bin\$(configuration)\osirose-tests.exe'
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
