@@ -22,6 +22,7 @@ addons:
     - libstdc++5
     - libmysqlclient-dev
     - libmysqld-dev
+	- python3.5
 #    - libmysql++-dev
 #    - libmysql++-dev
 #    - libmysql++3
