@@ -23,7 +23,7 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #   endif(${flag_var} MATCHES "/MD")
 #endforeach(flag_var)
 ELSE()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -67,6 +67,7 @@ target_link_libraries(${PROJECT}
 	Core 
 	RoseCommon
 	protoGen
+	lua
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
@@ -75,7 +76,6 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                 ${MYSQL_LIBRARIES} 
                 wsock32.lib
                 mysqlpp
-				${LUA_LIBRARIES}
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}

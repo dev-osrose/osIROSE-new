@@ -1,7 +1,7 @@
 version: '{branch}-ci-{build}'
 os:
-#- Visual Studio 2013
-- Visual Studio 2015 # VS2015 doesn't work due to mysqlpp
+#- Visual Studio 2013 # VS2013 doesn't work due to lack of c++14 support
+- Visual Studio 2015 
 #- Windows Server 2012 R2
 #- MinGW
 configuration:
@@ -24,21 +24,21 @@ clone_folder: C:\projects\osIROSE
 install:
 #- ps: Start-FileDownload http://tangentsoft.net/mysql++/releases/mysql++-3.2.2.tar.gz -FileName C:\projects\mysqlpp.tar.gz
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-winx64.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx64.msi
-- cmd: "./ci/msvc_mysqlpp_install.bat"
-- ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
-- ps: >-
-    If ( Test-Path C:\projects\osIROSE\3rdParty )
-
-    {
-    	echo "Using Cache 3rdParty Directory..."
-    }
-
-    Else
-
-    {
-    	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > C:\projects\3rdparty_install.txt"
-    }
+#- ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
+#- ps: >-
+#    If ( Test-Path C:\projects\osIROSE\3rdParty )
+#
+#    {
+#    	echo "Using Cache 3rdParty Directory..."
+#    }
+#
+#    Else
+#
+#    {
+#    	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > C:\projects\3rdparty_install.txt"
+#    }
 - cmd: git submodule update --init --recursive
+- cmd: "./ci/msvc_mysqlpp_install.bat"
 - cmd: "./ci/msvc_install.bat"
 cache: 
 - C:\projects\osIROSE\3rdParty -> clear_cache.txt

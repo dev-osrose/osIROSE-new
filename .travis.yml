@@ -21,12 +21,12 @@ addons:
     - clang-3.7
     - libstdc++5
     - libmysqlclient-dev
-    - libmysql++-dev
     - libmysqld-dev
-    - libmysql++-dev
-    - libmysql++3
-    - liblua5.2-0
-    - liblua5.2-dev
+#    - libmysql++-dev
+#    - libmysql++-dev
+#    - libmysql++3
+#    - liblua5.2-0
+#    - liblua5.2-dev
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
