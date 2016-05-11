@@ -31,8 +31,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdparty/lib
 	
 	cd tools/mysqlpp/lib
-	py querydef.pl
-	py ssqls.pl
+	python3.5 querydef.pl
+	python3.5 ssqls.pl
 	cd ../../..
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."

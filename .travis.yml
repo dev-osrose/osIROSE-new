@@ -24,7 +24,6 @@ addons:
     - libmysqld-dev
 	- python3.5
 #    - libmysql++-dev
-#    - libmysql++-dev
 #    - libmysql++3
 #    - liblua5.2-0
 #    - liblua5.2-dev

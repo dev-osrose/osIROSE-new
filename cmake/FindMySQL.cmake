@@ -36,7 +36,7 @@ if( WIN32 )
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql"
+		NAMES "libmysql.lib" "mysqlclient.lib" "mysqlclient_r.lib"
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "C:/Program Files/MySQL/*/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
@@ -59,7 +59,7 @@ else()
 			  "/usr/mysql/include/mysql" )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql"
+		NAMES "libmysql.a" "mysqlclient.a" "mysqlclient_r.a"
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "/lib/mysql"
 			  "/lib64/mysql"
