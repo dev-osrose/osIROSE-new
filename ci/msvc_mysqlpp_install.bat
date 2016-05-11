@@ -1,4 +1,4 @@
-msiexec /i c:\projects\mysql-connector-c-6.1.6-winx64.msi /quiet /qn /norestart /log c:\projects\mysql-connector-c-6.1.6.log
+msiexec /i mysql-connector-c-6.1.6-winx64.msi /quiet /qn /norestart /log mysql-connector-c-6.1.6.log
 
 REM 7z e mysqlpp.tar.gz && 7z x mysqlpp.tar -pC:\projects\mysqlpp -y > C:\projects\mysqlpp_install.txt
 REM mkdir C:/projects/osIROSE/mysqlpp
