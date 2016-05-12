@@ -8,6 +8,11 @@ foreach(flag_var
    endif(${flag_var} MATCHES "/MD")
 endforeach(flag_var)
 
+set(CMAKE_USER_MAKE_RULES_OVERRIDE
+   ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
+   ${CMAKE_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+
 PROJECT("osIROSE")
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
