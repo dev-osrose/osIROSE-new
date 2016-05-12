@@ -122,6 +122,7 @@ TARGET_LINK_LIBRARIES(${PROJECT}
     Core
     RoseCommon
     protoGen
+    mysqlpp
     lua
     gtest
     gmock
@@ -129,15 +130,13 @@ TARGET_LINK_LIBRARIES(${PROJECT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
+	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
 		${MYSQL_LIBRARIES} 
 		wsock32.lib 
-		mysqlpp
 	)
 ELSE()
 	TARGET_LINK_LIBRARIES(${PROJECT} 
-		${PROTOBUF_BINARY_DIR}/libprotobuf.a
-		mysqlpp
+		protobuf
 		mysqlclient
 		)
 ENDIF()

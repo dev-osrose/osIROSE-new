@@ -71,7 +71,6 @@ target_link_libraries(${PROJECT}
 	RoseCommon
 	protoGen
 	lua
-	libprotobuf
 	mysqlpp
 	${CMAKE_THREAD_LIBS_INIT}
 )
@@ -80,10 +79,12 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         TARGET_LINK_LIBRARIES(${PROJECT}
                 ${MYSQL_LIBRARIES} 
                 wsock32.lib
+                libprotobuf
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
                 mysqlclient
+                protobuf
                 )
 ENDIF()
 
