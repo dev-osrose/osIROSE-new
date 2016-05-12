@@ -48,7 +48,7 @@ To compile the servers run the following commands:
 
     ./ci/msvc_install.bat
     cd build
-    cmake ..
+    cmake -DBUILD_PROTOBUF=ON ..
     cmake --build .
     
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in.
