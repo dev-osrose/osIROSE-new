@@ -3,6 +3,8 @@ PROJECT(src)
 
 IF(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+	
+find_package(ProtocolBuffer REQUIRED)
 
 INCLUDE_DIRECTORIES(
     SYSTEM ${GTEST_INCLUDE_DIR}
