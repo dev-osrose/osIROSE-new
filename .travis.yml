@@ -38,6 +38,9 @@ addons:
       cmake ..;
     build_command: make
     branch_pattern: coverity_scan
+cache:
+  directories:
+  - "./protobuf"
 services:
 - mysql
 matrix:
