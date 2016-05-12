@@ -68,7 +68,8 @@ else()
 			  "/usr/local/lib/mysql"
 			  "/usr/local/lib64/mysql"
 			  "/usr/mysql/lib/mysql"
-			  "/usr/mysql/lib64/mysql" )
+			  "/usr/mysql/lib64/mysql"
+              "/usr/lib/x86_64-linux-gnu" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"

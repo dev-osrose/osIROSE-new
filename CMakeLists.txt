@@ -140,8 +140,6 @@ ELSE()
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
-find_package(ProtocolBuffer REQUIRED)
-
 #IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #find_package(Lua REQUIRED)
 #ENDIF()
@@ -154,4 +152,6 @@ include_directories(${CMAKE_BINARY_DIR}/generated)
 
 SET(BUILD_LUA ON CACHE BOOL "" FORCE)
 ADD_SUBDIRECTORY(tools)
+
+find_package(ProtocolBuffer REQUIRED)
 ADD_SUBDIRECTORY(src)
