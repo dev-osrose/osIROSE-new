@@ -21,8 +21,10 @@ addons:
     - clang-3.7
     - libstdc++5
     - libmysqlclient-dev
+    - libmysqlclient18
     - libmysqld-dev
     - python
+    - python2.7
 #    - libmysql++-dev
 #    - libmysql++3
 #    - liblua5.2-0
@@ -37,9 +39,6 @@ addons:
       cmake ..;
     build_command: make
     branch_pattern: coverity_scan
-cache:
-  directories:
-  - "./protobuf"
 services:
 - mysql
 matrix:
