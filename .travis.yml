@@ -23,8 +23,7 @@ addons:
     - libmysqlclient-dev
     - libmysqlclient18
     - libmysqld-dev
-    - python
-    - python2.7
+    - perl
 #    - libmysql++-dev
 #    - libmysql++3
 #    - liblua5.2-0
