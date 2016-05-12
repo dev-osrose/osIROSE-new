@@ -1,5 +1,4 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
-PROJECT("osIROSE")
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -91,6 +90,8 @@ foreach(flag_var
    endif(${flag_var} MATCHES "/MD")
 endforeach(flag_var)
 
+PROJECT("osIROSE")
+
 IF(ENABLE_TESTING)
   enable_testing() #enable ctest
 
@@ -152,6 +153,4 @@ include_directories(${CMAKE_BINARY_DIR}/generated)
 
 SET(BUILD_LUA ON CACHE BOOL "" FORCE)
 ADD_SUBDIRECTORY(tools)
-
-find_package(ProtocolBuffer REQUIRED)
 ADD_SUBDIRECTORY(src)
