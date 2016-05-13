@@ -51,7 +51,7 @@ build_script:
 #- cmake -DBUILD_PROTOBUF=ON ../../tools/
 #- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cd build
-- cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
+- cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: build/bin
