@@ -38,4 +38,4 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
-ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+ADD_DEPENDENCIES(${PROJECT} protoc)

@@ -224,7 +224,7 @@ FUNCTION(PROTOBUF_GENERATE_CPP SRCS HDRS)
             COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
             COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
             ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
-            DEPENDS ${ABS_FILE}
+            DEPENDS ${ABS_FILE} protoc
             COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
             VERBATIM)
             
