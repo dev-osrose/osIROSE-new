@@ -65,6 +65,12 @@ ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
+				
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT}
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
 
 target_link_libraries(${PROJECT} 
 	Core 
@@ -77,7 +83,6 @@ target_link_libraries(${PROJECT}
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         TARGET_LINK_LIBRARIES(${PROJECT}
-                ${MYSQL_LIBRARIES} 
                 wsock32.lib
                 libprotobuf
         )
