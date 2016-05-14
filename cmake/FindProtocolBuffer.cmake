@@ -219,7 +219,17 @@ FUNCTION(PROTOBUF_GENERATE_CPP SRCS HDRS)
         LIST(APPEND ${SRCS} "${CPP_FILE}")
         LIST(APPEND ${HDRS} "${H_FILE}")
 
+		IF (BUILD_PROTOBUF)
         ADD_CUSTOM_COMMAND(
+            OUTPUT "${CPP_FILE}" "${H_FILE}"
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
+            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+            ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
+            DEPENDS ${ABS_FILE} protoc
+            COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
+            VERBATIM)
+		ELSE()
+		ADD_CUSTOM_COMMAND(
             OUTPUT "${CPP_FILE}" "${H_FILE}"
             COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
             COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
@@ -227,6 +237,7 @@ FUNCTION(PROTOBUF_GENERATE_CPP SRCS HDRS)
             DEPENDS ${ABS_FILE} ${PROTOBUF_LIBRARY} ${PROTOBUF_PROTOC_EXECUTABLE}
             COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
             VERBATIM)
+		ENDIF()
             
     ENDFOREACH()
 
