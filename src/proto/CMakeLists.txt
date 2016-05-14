@@ -38,7 +38,8 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
+
 IF (BUILD_PROTOBUF)
-ADD_DEPENDENCIES(${PROJECT} protoc)
+  ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 ENDIF()
 
