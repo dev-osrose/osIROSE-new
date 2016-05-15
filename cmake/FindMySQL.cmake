@@ -30,26 +30,38 @@ if( WIN32 )
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${EXTERNAL_INCLUDE_DIR}"
-			  "C:/Program Files/MySQL/*/include"
-			  "$ENV{PROGRAMFILES}/MySQL/*/include"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
+			  "C:/Program Files/MySQL/MySQL Connector C 6.1/include"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/include"
+#			  "C:/Program Files/MySQL/*/include"
+#			  "$ENV{PROGRAMFILES}/MySQL/*/include"
+#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
+#			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" 
+			  )
 			  
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient.lib" "mysqlclient_r.lib"
 		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/*/lib"
-			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
+			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
+#			  "C:/Program Files/MySQL/*/lib"
+#			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+#			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
 		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/*/lib"
-			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
+			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
+#			  "C:/Program Files/MySQL/*/lib"
+#			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+#			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  )
 else()
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
@@ -59,7 +71,7 @@ else()
 			  "/usr/mysql/include/mysql" )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql.a" "mysqlclient.a" "mysqlclient_r.a" "libmysql.so" "mysqlclient.so" "mysqlclient_r.so"
+		NAMES "libmysql.a" "libmysqlclient.a" "libmysqlclient_r.a" "libmysql.so" "libmysqlclient.so" "libmysqlclient_r.so"
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "/lib/mysql"
 			  "/lib64/mysql"
@@ -68,7 +80,8 @@ else()
 			  "/usr/local/lib/mysql"
 			  "/usr/local/lib64/mysql"
 			  "/usr/mysql/lib/mysql"
-			  "/usr/mysql/lib64/mysql" )
+			  "/usr/mysql/lib64/mysql"
+              "/usr/lib/x86_64-linux-gnu" )
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
@@ -83,7 +96,9 @@ else()
 			  "/usr/mysql/lib64/mysql" )
 endif()
 
-
+MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
 
 if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
 	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"

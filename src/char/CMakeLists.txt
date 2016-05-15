@@ -52,13 +52,28 @@ SET( SOURCES_BASE
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
-ADD_DEPENDENCIES(${PROJECT} lua)
 ADD_DEPENDENCIES(${PROJECT} protoGen)
-ADD_DEPENDENCIES(${PROJECT} mysqlpp)
-ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+
+IF(BUILD_LUA)
+  ADD_DEPENDENCIES(${PROJECT} lua)
+ENDIF()
+
+IF(BUILD_MYSQLPP) 
+  ADD_DEPENDENCIES(${PROJECT} mysqlpp)
+ENDIF()
+
+IF(BUILD_PROTOBUF)
+  ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
+				
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT}
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
 
 
 target_link_libraries(${PROJECT}
@@ -66,20 +81,20 @@ target_link_libraries(${PROJECT}
     RoseCommon
 	protoGen
 	lua
-	libprotobuf
 	mysqlpp
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         TARGET_LINK_LIBRARIES(${PROJECT}
-                ${MYSQL_LIBRARIES} 
                 wsock32.lib
+                libprotobuf
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
                 mysqlclient
-                )
+                protobuf
+        )
 ENDIF()
 
 INSTALL(

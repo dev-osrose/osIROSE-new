@@ -9,7 +9,7 @@ goto :eof
 
 :build
 cd ./tools/mysqlpp/lib/
-python querydef.pl
-python ssqls.pl
+perl querydef.pl
+perl ssqls.pl
 cd ../../..
 exit 0
