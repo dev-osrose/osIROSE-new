@@ -41,7 +41,7 @@ install:
 - cmd: git submodule update --init --recursive
 - cmd: "./ci/msvc_mysqlpp_install.bat"
 - cmd: "./ci/msvc_install.bat"
-cache: 
+#cache: 
 #- C:\projects\osIROSE\3rdParty -> clear_cache.txt
 #- C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
 build:
@@ -71,5 +71,5 @@ notifications:
 #  assemblies: 'build\bin\$(configuration)\osirose-tests.exe'
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
