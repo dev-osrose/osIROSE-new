@@ -117,11 +117,18 @@ IF(ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT}
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
+
 TARGET_LINK_LIBRARIES(${PROJECT}
     ${CMAKE_THREAD_LIBS_INIT}
     Core
     RoseCommon
     protoGen
+    mysqlpp
     lua
     gtest
     gmock
@@ -129,15 +136,12 @@ TARGET_LINK_LIBRARIES(${PROJECT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
-		${MYSQL_LIBRARIES} 
+	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
 		wsock32.lib 
-		mysqlpp
 	)
 ELSE()
 	TARGET_LINK_LIBRARIES(${PROJECT} 
-		${PROTOBUF_BINARY_DIR}/libprotobuf.a
-		mysqlpp
+		protobuf
 		mysqlclient
 		)
 ENDIF()

@@ -21,8 +21,9 @@ addons:
     - clang-3.7
     - libstdc++5
     - libmysqlclient-dev
+    - libmysqlclient18
     - libmysqld-dev
-    - python
+    - perl
 #    - libmysql++-dev
 #    - libmysql++3
 #    - liblua5.2-0

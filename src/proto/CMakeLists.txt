@@ -38,4 +38,12 @@ SET(args
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
-ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+
+IF (BUILD_PROTOBUF)
+  IF (MSVC)
+    ADD_DEPENDENCIES(${PROJECT} protoc)
+  ELSE()
+    ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+  ENDIF()
+ENDIF()
+
