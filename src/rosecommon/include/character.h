@@ -124,6 +124,9 @@ class Character : public ISerialize {
 		uint32_t						guildId_;
 		uint16_t						guildContribution_;
 		uint8_t							guildPosition_;
+		uint16_t						patHp_;
+		uint32_t						patCooldownTime_;
+		uint64_t						zuly_;
 
 		Position						currentPos_;
 		Position						savedPos_;
