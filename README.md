@@ -14,8 +14,15 @@ osIROSE - Open Source International R.O.S.E Online Server
 [cov-link]:  https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk
 [ccov-badge]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk/graph/badge.svg
 [ccov-link]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk
+[site]: https://img.shields.io/badge/Official%20website-http%3A%2F%2Fforum.dev--osrose.com-green.svg "Official Site"
 
-[Official website](http://forum.dev-osrose.com/index.php)
+## Links
+[![site]](http://forum.dev-osrose.com/index.php)
+
+[![Join the chat at https://gitter.im/RavenX8/osIROSE-new](https://badges.gitter.im/RavenX8/osIROSE-new.svg)](https://gitter.im/RavenX8/osIROSE-new?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Confirmed issues](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:confirmed&title=Confirmed%20Issues)](http://waffle.io/RavenX8/osIROSE-new) [![In-Progress](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:in-progress&title=In%20Progress)](http://waffle.io/RavenX8/osIROSE-new)
+
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)
 
 C++ Installation - Unix
 -----------------------
