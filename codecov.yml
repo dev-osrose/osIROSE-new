@@ -1,6 +1,5 @@
 codecov:
   branch: trunk
-                              
 
 coverage:
   precision: 2
