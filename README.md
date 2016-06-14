@@ -2,14 +2,14 @@ osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
 ##### Build status
-| [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] | [Codecov][ccov-link]  | [Coverity Scan][coverity-scan-link] |
-| :---------------: | :-----------------: | :-------------------: | :-------------------: | :-------------------: |
-| ![lin-badge]      | ![win-badge]        | ![cov-badge]          | ![ccov-badge]         | ![coverity-scan]      |
+[![lin-badge]][lin-link] [![win-badge]][win-link]  
+[![cov-badge]][cov-link] [![ccov-badge]][ccov-link]
+[![coverity-scan]][coverity-scan-link]
 
-[lin-badge]: https://travis-ci.org/RavenX8/osIROSE-new.svg?branch=trunk "Travis build status"
-[lin-link]:  https://travis-ci.org/RavenX8/osIROSE-new "Travis build status"
-[win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "AppVeyor build status"
-[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "AppVeyor build status"
+[lin-badge]: https://travis-ci.org/RavenX8/osIROSE-new.svg?branch=trunk "Linux build status"
+[lin-link]:  https://travis-ci.org/RavenX8/osIROSE-new "Linux build status"
+[win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "Windows build status"
+[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "Windows build status"
 [cov-badge]: https://coveralls.io/repos/RavenX8/osIROSE-new/badge.svg?branch=trunk&service=github
 [cov-link]:  https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk
 [ccov-badge]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk/graph/badge.svg
