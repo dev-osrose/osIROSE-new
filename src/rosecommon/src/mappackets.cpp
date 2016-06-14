@@ -44,7 +44,9 @@ void RoseCommon::SrvLogoutReply::pack() { *this << wait_time_; }
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::CliChangeMapReq::CliChangeMapReq()
-    : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
+    : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), 
+      weight_rate_(0),
+      position_z_(0) {}
 
 RoseCommon::CliChangeMapReq::CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE])
     : CRosePacket(buffer) {
@@ -373,6 +375,6 @@ void SrvSelectCharReply::equip_item::deserialize(CRosePacket &os) { (void)os; }
 CliStopReq::CliStopReq( uint8_t buffer[MAX_PACKET_SIZE] )     : CRosePacket(buffer) {
   if (type() != ePacketType::PAKCS_STOP)
     throw std::runtime_error("Not the right packet!");
-  //*this >> x >> y;
+  *this >> x >> y;
 }
 }

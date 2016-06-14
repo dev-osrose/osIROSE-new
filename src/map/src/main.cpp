@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
 
+  try {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
   if(auto log = console.lock())
     log->info( "Starting up server..." );
@@ -92,5 +93,9 @@ int main(int argc, char* argv[]) {
     log->info( "Server shutting down..." );
   Core::NetworkThreadPool::DeleteInstance();
   spdlog::drop_all();
+  }
+  catch (const spdlog::spdlog_ex& ex) {
+     std::cout << "Log failed: " << ex.what() << std::endl;
+  }
   return 0;
 }

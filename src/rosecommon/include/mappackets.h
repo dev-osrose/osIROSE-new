@@ -102,6 +102,16 @@ class SrvChangeMapReply : public CRosePacket {
     uint8_t town_rate_;
     uint8_t item_rate_[MAX_SELL_TYPE];
     uint32_t flags_;
+    
+    global_var() : craft_rate_(0),
+    update_time_(0),
+    world_rate_(0),
+    town_rate_(0),
+    flags_(0) {
+      for (int i = 0; i < MAX_SELL_TYPE; ++i) {
+        item_rate_[i] = 0; 
+      }
+    }
   };
 
   uint16_t object_index_;
@@ -225,6 +235,16 @@ class SrvServerData : public CRosePacket {
     uint16_t dev_;
     uint32_t pop_;
     uint32_t item_[MAX_SELL_TYPE];
+    
+    Enconmy_Data() : counter_(0),
+    pop_base_(0),
+    dev_base_(0),
+    dev_(0),
+    pop_(0) {
+      for(int i =0; i < MAX_SELL_TYPE; ++i) {
+        item_[i] = consume_[i] = 0;
+      }
+    }
   };
   uint8_t type_;
   Enconmy_Data enconmy_data_;
@@ -387,7 +407,7 @@ class SrvSelectCharReply : public CRosePacket {
     extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0), 
                        skill_points_(0), body_size_(1), head_size_(1),
                        exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
-                       guild_id_(0), guild_position_(0),
+                       guild_id_(0), guild_contribution_(0), guild_position_(0),
                        pk_flags_(0), stamina_(1000), pat_hp_(100),
                        pat_cooldown_time_(0) {
       for (int i = 0; i < MAX_UNION_COUNT; ++i)

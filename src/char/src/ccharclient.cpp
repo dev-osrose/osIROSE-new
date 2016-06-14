@@ -26,14 +26,16 @@ CCharClient::CCharClient()
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       session_id_(0),
-      userid_(0) {}
+      userid_(0),
+      channelid_(0) {}
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       session_id_(0),
-      userid_(0) {}
+      userid_(0),
+      channelid_(0) {}
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
