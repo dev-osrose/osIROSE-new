@@ -48,14 +48,31 @@ To run the servers execute the following:
     $ CharServer&
     $ MapServer&
 
-C++ Installation - Windows (OUTDATED)
+C++ Installation - Windows
 -----------------------
 
-To compile the servers run the following commands:
+##### Programs required:
+[vis-studio]: https://img.shields.io/badge/Visual%20Studio-Download-blue.svg "Download Visual Stuido"
+[vis-studio-link]: https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx "Download Visual Stuido"
+[cmake]: https://img.shields.io/badge/CMake-Download-blue.svg "Download CMake"
+[cmake-link]: https://cmake.org/download/ "Download CMake"
+[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20v6.1.6-Download-blue.svg "Download MySQL Connector:C"
+[mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C"
+[perl]: https://img.shields.io/badge/Perl-Download-blue.svg "Download Perl"
+[perl-link]: https://www.perl.org/get.html "Download Perl"
 
+[![vis-studio]][vis-studio-link]
+[![cmake]][cmake-link]
+[![mysql]][mysql-link]
+[![perl]][perl-link]
+
+After downloading and installing the above applications, to compile the servers run the following commands:
+
+    git submodule update --init --recursive
+    ./ci/msvc_mysqlpp_install.bat
     ./ci/msvc_install.bat
     cd build
-    cmake -DBUILD_PROTOBUF=ON ..
-    cmake --build .
+    cmake -DBUILD_TYPE=Release -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
+    cmake --build . --config Release
     
-This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in.
+This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).
