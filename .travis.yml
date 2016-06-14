@@ -4,30 +4,21 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.7
     - extras-precise
     - boost-latest
     packages:
     - cmake
     - lcov
     - libboost-dev
-    - llvm-3.7
-    - llvm-3.7-dev
-    - llvm-runtime
     - gcc-4.9
     - gcc-5
     - g++-4.9
     - g++-5
-    - clang-3.7
     - libstdc++5
     - libmysqlclient-dev
     - libmysqlclient18
     - libmysqld-dev
     - perl
-#    - libmysql++-dev
-#    - libmysql++3
-#    - liblua5.2-0
-#    - liblua5.2-dev
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
@@ -41,6 +32,7 @@ addons:
 cache:
   directories:
   - "./protobuf"
+  - llvm-3.8.0
 services:
 - mysql
 matrix:
@@ -54,11 +46,12 @@ matrix:
   - compiler: gcc
     env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
   - compiler: clang
-    env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+    env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.8.0
   - compiler: clang
-    env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
+    env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.8.0
   allow_failures:
-  - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
+  - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.8.0
+  - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.8.0
 before_install:
 - export PROOT=$TRAVIS_BUILD_DIR
 - if [ "$TRAVIS_BRANCH" = "coverity_scan" ]; then export COVERITY_SCAN_BRANCH=1; fi
@@ -69,7 +62,15 @@ before_install:
 - export PREFIX=$HOME
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
   fi
-- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+-
+  if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
+    wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
+    mkdir llvm-$LLVM_VERSION;
+    xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
+    llvm-$LLVM_VERSION/bin/llvm-config --version;
+    export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
+  fi;
+- if [ "$CXX" = "clang++" ]; then export CXX="llvm-$LLVM_VERSION/bin/clang++-3.8" CC="llvm-$LLVM_VERSION/bin/clang-3.8";
   fi
 - "./ci/before_install.sh"
 install:
