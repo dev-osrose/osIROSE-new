@@ -61,8 +61,7 @@ C++ Installation - Windows
 
 ##### Programs required:
 [![vis-studio]][vis-studio-link]
-[![cmake]][cmake-link]
-
+[![cmake]][cmake-link]  
 [![mysql]][mysql-link]
 [![perl]][perl-link]
 
