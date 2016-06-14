@@ -56,8 +56,8 @@ C++ Installation - Windows
 [vis-studio-link]: https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx "Download Visual Stuido"
 [cmake]: https://img.shields.io/badge/CMake-Download-blue.svg "Download CMake"
 [cmake-link]: https://cmake.org/download/ "Download CMake"
-[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20v6.1.6-Download-blue.svg "Download MySQL Connector:C"
-[mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C"
+[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20v6.1.6%2032--bit-Download-blue.svg "Download MySQL Connector:C 32-bit"
+[mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 32-bit"
 [perl]: https://img.shields.io/badge/Perl-Download-blue.svg "Download Perl"
 [perl-link]: https://www.perl.org/get.html "Download Perl"
 
