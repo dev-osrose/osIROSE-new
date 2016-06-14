@@ -1,7 +1,7 @@
 osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
-## Build status
+##### Build status
 | [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] | [Codecov][ccov-link]  |
 | :---------------: | :-----------------: | :-------------------: | :-------------------: |
 | ![lin-badge]      | ![win-badge]        | ![cov-badge]          | ![ccov-badge]         |
@@ -16,13 +16,18 @@ osIROSE - Open Source International R.O.S.E Online Server
 [ccov-link]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk
 [site]: https://img.shields.io/badge/Official%20website-http%3A%2F%2Fforum.dev--osrose.com-green.svg "Official Site"
 
-## Links
-[![site]](http://forum.dev-osrose.com/index.php)
+##### Development and Community:  
 
-[![Join the chat at https://gitter.im/RavenX8/osIROSE-new](https://badges.gitter.im/RavenX8/osIROSE-new.svg)](https://gitter.im/RavenX8/osIROSE-new?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![site]](http://forum.dev-osrose.com/index.php)    
+[![Join the chat at https://gitter.im/RavenX8/osIROSE-new](https://badges.gitter.im/RavenX8/osIROSE-new.svg)](https://gitter.im/RavenX8/osIROSE-new?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
+
+##### Issues and Status
+[![GitHub issues](https://img.shields.io/github/issues/RavenX8/osIROSE-new.svg)](https://github.com/RavenX8/osIROSE-new/issues)
 [![Confirmed issues](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:confirmed&title=Confirmed%20Issues)](http://waffle.io/RavenX8/osIROSE-new) [![In-Progress](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:in-progress&title=In%20Progress)](http://waffle.io/RavenX8/osIROSE-new)
 
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)
+##### Project Info:  
+![Language](https://img.shields.io/badge/language-C++-yellow.svg)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)   
 
 C++ Installation - Unix
 -----------------------
