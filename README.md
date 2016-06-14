@@ -2,7 +2,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
 ##### Build status
-| [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] | [Codecov][ccov-link]  | [Coverity Scan Build Status][coverity-scan-link] |
+| [Linux][lin-link] | [Windows][win-link] | [Coveralls][cov-link] | [Codecov][ccov-link]  | [Coverity Scan][coverity-scan-link] |
 | :---------------: | :-----------------: | :-------------------: | :-------------------: | :-------------------: |
 | ![lin-badge]      | ![win-badge]        | ![cov-badge]          | ![ccov-badge]         | ![coverity-scan]      |
 
