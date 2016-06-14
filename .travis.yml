@@ -69,8 +69,9 @@ before_install:
     xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
     llvm-$LLVM_VERSION/bin/llvm-config --version;
     export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
+    export PATH=$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin:$PATH
   fi;
-- if [ "$CXX" = "clang++" ]; then export CXX="$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin/clang++-3.8" CC="$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin/clang-3.8";
+- if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8";
   fi
 - "./ci/before_install.sh"
 install:
