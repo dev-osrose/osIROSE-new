@@ -6,6 +6,7 @@ addons:
     - ubuntu-toolchain-r-test
     - extras-precise
     - boost-latest
+    - kalakris-cmake
     packages:
     - cmake
     - lcov
@@ -14,6 +15,7 @@ addons:
     - gcc-5
     - g++-4.9
     - g++-5
+    - gcc-6
     - libstdc++5
     - libmysqlclient-dev
     - libmysqlclient18
@@ -45,11 +47,17 @@ matrix:
     env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
   - compiler: gcc
     env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
+  - compiler: gcc
+    env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Debug SUITE=tests
+  - compiler: gcc
+    env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Release
   - compiler: clang
     env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.8.0
   - compiler: clang
     env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.8.0
   allow_failures:
+  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Debug SUITE=tests
+  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Release
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.8.0
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.8.0
 before_install:
