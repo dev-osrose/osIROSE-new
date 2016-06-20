@@ -13,9 +13,10 @@ addons:
     - libboost-dev
     - gcc-4.9
     - gcc-5
+    - gcc-6
     - g++-4.9
     - g++-5
-    - gcc-6
+    - g++-6
     - libstdc++5
     - libmysqlclient-dev
     - libmysqlclient18
