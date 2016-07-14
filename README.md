@@ -95,3 +95,5 @@ After downloading and installing the above applications, to compile the servers 
     cmake --build . --config Release
     
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).
+
+After running for the first time, the servers will create a config file in the current directory that can be modified.
