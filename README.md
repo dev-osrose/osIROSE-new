@@ -43,18 +43,29 @@ This will install all of the tools and sources required to build the project.
 
 "./unix_env_setup.sh" will require superuser privileges, as it calls apt-get install.
 
-To build and install the servers, execute the following:
+To build the servers, execute the following:
 
     $ make
+    
+To install the servers to the system (not recommended), execute the following commands:
+
     $ make install
 
 "make install" may require superuser privileges.
 
-To run the servers execute the following:
+If you installed the servers, to run the servers execute the following:
 
     $ LoginServer&
     $ CharServer&
     $ MapServer&
+    
+If you opted to keep them in place, the server binaries are located in the bin folder inside the build directory. So from where you ran the command make, you will want to run the following:
+
+    $ ./bin/LoginServer&
+    $ ./bin/CharServer&
+    $ ./bin/MapServer&
+    
+After running for the first time, the servers will create a config file in the current directory.
 
 C++ Installation - Windows
 -----------------------
