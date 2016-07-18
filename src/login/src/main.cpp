@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cxxopts.hpp>
 #include "cloginserver.h"
 #include "config.h"
 #include "logconsole.h"
@@ -48,21 +49,42 @@ void CheckUser()
 }
 
 int main(int argc, char* argv[]) {
-  (void)argc;
-  (void)argv;
 
+  cxxopts::Options options("LoginServer", "OsIROSE Login Server");
+  
+  options.add_options()
+  ("d,debug", "Enable extra debugging info")
+  ("f,file",  "Config file path", cxxopts::value<std::string>(), "server.ini")
+  ("l,level", "Logging level", cxxopts::value<int>())
+  ("h,help",  "Print this help text")
+  ;
+  
   try {
+  options.parse(argc, argv);
+  
+  if (options.count("help"))
+  {
+    std::cout << options.help({"", "Group"}) << std::endl;
+    exit(0);
+  }
+    
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
   if(auto log = console.lock())
     log->notice( "Starting up server..." );
 
   Core::Config& config = Core::Config::getInstance();
-  Core::CLog::SetLevel((spdlog::level::level_enum)config.login_server().log_level());
+  if( options.count("level") != 0 )
+    Core::CLog::SetLevel((spdlog::level::level_enum)options["level"].as<int>());
+  else
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.login_server().log_level());
   DisplayTitle();
   CheckUser();
   
   if(auto log = console.lock()) {
-    log->set_level((spdlog::level::level_enum)config.login_server().log_level());
+    if( options.count("level") != 0 )
+      log->set_level((spdlog::level::level_enum)options["level"].as<int>());
+    else
+      log->set_level((spdlog::level::level_enum)config.login_server().log_level());
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
     log->info("Info logs are enabled.");
@@ -87,6 +109,11 @@ int main(int argc, char* argv[]) {
     log->notice( "Server shutting down..." );
   Core::NetworkThreadPool::DeleteInstance();
   spdlog::drop_all();
+  
+  }
+  catch (const cxxopts::option_not_exists_exception& ex) {
+    std::cout << options.help({"", "Group"}) << std::endl;
+    return 1;
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;
