@@ -46,74 +46,101 @@ void CheckUser()
   }
 #endif
 }
+
+void ParseCommandLine(int argc, char** argv)
+{
+  cxxopts::Options options(argv[0], "osIROSE login server");
+  
+  try {
+    std::string config_file_path = "";
+    options.add_options()
+    ("f,file",  "Config file path", cxxopts::value<std::string>(config_file_path)
+      ->default_value("server.ini"), "FILE_PATH")
+    ("l,level", "Logging level (0-9)", cxxopts::value<int>()
+      ->default_value("3"), "LEVEL")
+    ("ip", "Client listen IP Address", cxxopts::value<std::string>()
+      ->default_value("0.0.0.0"), "IP")
+    ("port", "Client listen port", cxxopts::value<int>()
+      ->default_value("29000"), "PORT")
+    ("iscip", "ISC listen IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
+    ("iscport", "ISC listen port", cxxopts::value<int>()
+      ->default_value("29010"), "PORT")
+    ("t,maxthreads", "Max thread count", cxxopts::value<int>()
+      ->default_value("512"), "COUNT")
+    ("h,help",  "Print this help text")
+    ;
+  
+    options.parse(argc, argv);
+    
+    // Check to see if the user wants to see the help text
+    if (options.count("help"))
+    {
+      std::cout << options.help({"", "Group"}) << std::endl;
+      exit(0);
+    }
+    
+    Core::Config& config = Core::Config::getInstance(config_file_path);
+    
+    // We are using if checks here because we only want to override the config file if the option was supplied
+    // Since this is a login server startup function we can get away with a little bit of overhead
+    if( options.count("level") )
+      config.mutable_login_server()->set_log_level( options["level"].as<int>() );
+      
+    if( options.count("ip") )
+      config.mutable_serverdata()->set_ip( options["ip"].as<std::string>() );
+    
+    if( options.count("maxthreads") )
+      config.mutable_serverdata()->set_maxthreads( options["maxthreads"].as<int>() );
+  }
+  catch (const cxxopts::OptionException& ex) {
+    std::cout << ex.what() << std::endl;
+    std::cout << options.help({"", "Group"}) << std::endl;
+    exit(1);
+  }
+}
 }
 
 int main(int argc, char* argv[]) {
-
-  cxxopts::Options options("LoginServer", "OsIROSE Login Server");
-  
-  options.add_options()
-  ("d,debug", "Enable extra debugging info")
-  ("f,file",  "Config file path", cxxopts::value<std::string>(), "server.ini")
-  ("l,level", "Logging level", cxxopts::value<int>())
-  ("h,help",  "Print this help text")
-  ;
-  
   try {
-  options.parse(argc, argv);
-  
-  if (options.count("help"))
-  {
-    std::cout << options.help({"", "Group"}) << std::endl;
-    exit(0);
-  }
-    
-  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  if(auto log = console.lock())
-    log->notice( "Starting up server..." );
+    ParseCommandLine(argc, argv);
 
-  Core::Config& config = Core::Config::getInstance();
-  if( options.count("level") != 0 )
-    Core::CLog::SetLevel((spdlog::level::level_enum)options["level"].as<int>());
-  else
+    auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+    if(auto log = console.lock())
+      log->notice( "Starting up server..." );
+
+    Core::Config& config = Core::Config::getInstance();
     Core::CLog::SetLevel((spdlog::level::level_enum)config.login_server().log_level());
-  DisplayTitle();
-  CheckUser();
+    DisplayTitle();
+    CheckUser();
   
-  if(auto log = console.lock()) {
-    if( options.count("level") != 0 )
-      log->set_level((spdlog::level::level_enum)options["level"].as<int>());
-    else
+    if(auto log = console.lock()) {
       log->set_level((spdlog::level::level_enum)config.login_server().log_level());
-    log->trace("Trace logs are enabled.");
-    log->debug("Debug logs are enabled.");
-    log->info("Info logs are enabled.");
-  }
+      log->trace("Trace logs are enabled.");
+      log->debug("Debug logs are enabled.");
+      log->info("Info logs are enabled.");
+    }
 
-  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+    Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
-  CLoginServer clientServer;
-  CLoginServer iscServer(true);
+    CLoginServer clientServer;
+    CLoginServer iscServer(true);
 
-  clientServer.Init(config.serverdata().ip(), config.login_server().clientport());
-  clientServer.Listen();
+    clientServer.Init(config.serverdata().ip(), config.login_server().clientport());
+    clientServer.Listen();
 
-  iscServer.Init(config.serverdata().ip(), config.login_server().iscport());
-  iscServer.Listen();
+    iscServer.Init(config.serverdata().ip(), config.login_server().iscport());
+    iscServer.Listen();
 
-  while (clientServer.IsActive()) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+    while (clientServer.IsActive()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
-  if(auto log = console.lock())
-    log->notice( "Server shutting down..." );
-  Core::NetworkThreadPool::DeleteInstance();
-  spdlog::drop_all();
+    if(auto log = console.lock())
+      log->notice( "Server shutting down..." );
+    Core::NetworkThreadPool::DeleteInstance();
+    spdlog::drop_all();
   
-  }
-  catch (const cxxopts::option_not_exists_exception& ex) {
-    std::cout << options.help({"", "Group"}) << std::endl;
-    return 1;
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;
