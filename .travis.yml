@@ -4,6 +4,7 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
     - extras-precise
     - boost-latest
     - kalakris-cmake
@@ -11,12 +12,16 @@ addons:
     - cmake
     - lcov
     - libboost-dev
+    - llvm-3.7		
+    - llvm-3.7-dev		
+    - llvm-runtime
     - gcc-4.9
     - gcc-5
     - gcc-6
     - g++-4.9
     - g++-5
     - g++-6
+    - clang-3.7
     - libstdc++5
     - libmysqlclient-dev
     - libmysqlclient18
@@ -35,7 +40,7 @@ addons:
 cache:
   directories:
   - "./protobuf"
-  - llvm-3.8.0
+  - llvm-3.7.0
 services:
 - mysql
 matrix:
@@ -71,17 +76,17 @@ before_install:
 - export PREFIX=$HOME
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
   fi
--
-  if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
-    wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
-    mkdir llvm-$LLVM_VERSION;
-    xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
-    ls llvm-$LLVM_VERSION/bin/;
-    llvm-$LLVM_VERSION/bin/llvm-config --version;
-    export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
-    export PATH=$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin:$PATH;
-  fi;
-- if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7";
+#-
+#  if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
+#    wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
+#    mkdir llvm-$LLVM_VERSION;
+#    xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
+#    ls llvm-$LLVM_VERSION/bin/;
+#    llvm-$LLVM_VERSION/bin/llvm-config --version;
+#    export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
+#    export PATH=$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin:$PATH;
+#  fi;
+- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
   fi
 - "./ci/before_install.sh"
 install:
