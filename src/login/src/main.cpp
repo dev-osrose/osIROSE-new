@@ -89,6 +89,15 @@ void ParseCommandLine(int argc, char** argv)
       
     if( options.count("ip") )
       config.mutable_serverdata()->set_ip( options["ip"].as<std::string>() );
+      
+    if( options.count("port") )
+      config.mutable_login_server()->set_clientport( options["port"].as<int>() );
+    
+    if( options.count("iscip") )
+      config.mutable_serverdata()->set_isclistenip( options["iscip"].as<std::string>() );  
+      
+    if( options.count("iscport") )
+      config.mutable_login_server()->set_iscport( options["iscport"].as<int>() );
     
     if( options.count("maxthreads") )
       config.mutable_serverdata()->set_maxthreads( options["maxthreads"].as<int>() );
@@ -99,7 +108,7 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
-}
+} // end namespace
 
 int main(int argc, char* argv[]) {
   try {
@@ -129,7 +138,7 @@ int main(int argc, char* argv[]) {
     clientServer.Init(config.serverdata().ip(), config.login_server().clientport());
     clientServer.Listen();
 
-    iscServer.Init(config.serverdata().ip(), config.login_server().iscport());
+    iscServer.Init(config.serverdata().isclistenip(), config.login_server().iscport());
     iscServer.Listen();
 
     while (clientServer.IsActive()) {

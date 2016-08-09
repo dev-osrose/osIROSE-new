@@ -12,12 +12,13 @@ message	Database {
 message	Server {
 	required int32	id 			= 1 [default = 0];
 	required string	ip 			= 2 [default = "127.0.0.1"];
-	required int32	accessLevel		= 3 [default = 1];
-	required int32	parentId		= 4 [default = 0]; // Might not be used
-	required int32	maxConnections		= 5 [default = 0]; // 0 = unlimited
-	required bool	useThreads 		= 6 [default = true];
-	required int32	maxThreads 		= 7 [default = 512];
-	required int32	mode 			= 8 [default = 0]; // Fixed threading, dynamic threading
+	required string iscListenIP 	= 3 [default = "127.0.0.1"];
+	required int32	accessLevel		= 4 [default = 1];
+	required int32	parentId		= 5 [default = 0]; // Might not be used
+	required int32	maxConnections		= 6 [default = 0]; // 0 = unlimited
+	required bool	useThreads 		= 7 [default = true];
+	required int32	maxThreads 		= 8 [default = 512];
+	required int32	mode 			= 9 [default = 0]; // Fixed threading, dynamic threading
 }
 
 message LoginServer {
