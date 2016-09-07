@@ -147,6 +147,11 @@ bool CMapClient::JoinServerReply(
 
           auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
           Send(*packet5);
+          
+          //TODO: Send other clients the AVT join packet
+          //TODO: Actually make the packet structure
+          //auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(*packet2);
+          //CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet6);
         }
       } else {
         logger_->debug("Client {} auth INVALID_PASS.", GetId());
@@ -167,12 +172,37 @@ bool CMapClient::JoinServerReply(
 bool CMapClient::ChangeMapReply(
     std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
   logger_->trace("CMapClient::ChangeMapReply()");
+  
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to change map before logging in.",
+                  GetId());
+    return true;
+  }
   (void)P;
+  
   return true;
 }
 
 bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   logger_->trace("CMapClient::ChatReply()");
-  (void)P;
+  
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to chat before logging in.",
+                  GetId());
+    return true;
+  }
+  
+  uint16_t _charID = GetId();
+  std::string _message = P->getMessage();
+  
+  auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
+          _message, _charID);
+  CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet);
   return true;
+}
+
+bool CMapClient::IsNearby(const IObject* _otherClient) const { 
+  (void)_otherClient;
+  //TODO: Call the entity distance calc here
+  return true; 
 }

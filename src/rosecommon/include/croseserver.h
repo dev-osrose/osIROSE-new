@@ -36,6 +36,15 @@ class CRoseServer : public Core::CNetwork_Asio {
   static std::forward_list<CRoseISC*>& GetISCList() { return isc_list_; }
   static std::mutex& GetClientListMutex() { return client_list_mutex_; }
   static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
+  
+  enum class eSendType : uint8_t {
+    EVERYONE,
+    EVERYONE_BUT_ME,
+    NEARBY,
+    NEARBY_BUT_ME,
+  };
+  
+  static void SendPacket(const IObject* sender, eSendType type, CRosePacket &_buffer);
 
  protected:
   // Callback functions

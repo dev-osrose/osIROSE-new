@@ -140,4 +140,45 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
     }
   }
 }
+
+void CRoseServer::SendPacket(const IObject* sender, eSendType type, CRosePacket &_buffer) {
+  std::lock_guard<std::mutex> lock(client_list_mutex_);
+  switch(type)
+  {
+    case eSendType::EVERYONE:
+    {
+      for (auto& client : client_list_) {
+        client->Send(_buffer);
+      }
+      break;
+    }
+    case eSendType::EVERYONE_BUT_ME:
+    {
+      for (auto& client : client_list_) {
+        if( client != sender )
+          client->Send(_buffer);
+      }
+      break;
+    }
+    case eSendType::NEARBY:
+    {
+      for (auto& client : client_list_) {
+        if( client->IsNearby(sender) == true )
+          client->Send(_buffer);
+      }
+      break;
+    }
+    case eSendType::NEARBY_BUT_ME:
+    {
+      for (auto& client : client_list_) {
+        if( client != sender && client->IsNearby(sender) == true )
+          client->Send(_buffer);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
 }

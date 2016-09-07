@@ -24,6 +24,8 @@ class CCharClient : public RoseCommon::CRoseClient {
  public:
   CCharClient();
   CCharClient(tcp::socket _sock);
+  
+  bool IsNearby(const IObject* _otherClient) const override { (void)_otherClient; return true; }
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer);

@@ -25,6 +25,8 @@ class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
   CMapClient(tcp::socket _sock);
+  
+  bool IsNearby(const IObject* _otherClient) const override;
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer);

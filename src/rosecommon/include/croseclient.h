@@ -18,10 +18,11 @@
 #include "crosecrypt.h"
 #include "cnetwork_asio.h"
 #include "crosepacket.h"
+#include "iobject.h"
 
 namespace RoseCommon {
 
-class CRoseClient : public Core::CNetwork_Asio {
+class CRoseClient : public Core::CNetwork_Asio, public IObject {
  public:
   CRoseClient();
   CRoseClient(tcp::socket &&_sock);
@@ -29,6 +30,12 @@ class CRoseClient : public Core::CNetwork_Asio {
 
   virtual bool Send(CRosePacket &_buffer);
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
+  
+  virtual bool IsNearby(const IObject* _otherClient) const override;
+  
+  virtual uint32_t GetObjId() const override { 
+    return CRoseClient::GetId(); 
+  }
 
  protected:
   // Callback functions
