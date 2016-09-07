@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "$TRAVIS_OS_NAME" ]; then
     TRAVIS_OS_NAME=linux
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	if [ ! -d "./protobuf/lib" ]; then
+	if [[ ! -d "./protobuf/lib" || ! -f "./protobuf/bin/protoc" ]]; then
 		echo 'Setting up protobuf...';
 		cd tools/protobuf
 		./autogen.sh
