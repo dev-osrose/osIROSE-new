@@ -12,6 +12,9 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE
    ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
 set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
    ${CMAKE_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+   
+SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
+message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 PROJECT("osIROSE")
 
