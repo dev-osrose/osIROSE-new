@@ -69,11 +69,11 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 before_test:
-  - cmd:"C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" -e 'create database osirose;' --user=root
-  - cmd:"C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" --user="root" --database="osirose" < "./Database/osirose.sql"
+  - cmd:mysql -e 'create database osirose;' --user=root
+  - cmd:mysql --user="root" --database="osirose" < "./Database/osirose.sql"
 test_script:
   - ctest -C %CONFIGURATION%
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-#on_finish:
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
