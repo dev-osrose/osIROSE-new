@@ -69,8 +69,8 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 before_test:
-  - "C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" -e 'create database osirose;' --user=root
-  - "C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" --user="root" --database="osirose" < "./Database/osirose.sql"
+  - cmd:"C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" -e 'create database osirose;' --user=root
+  - cmd:"C:\\Program Files\\MySql\\MySQL Server 5.7\\bin\\mysql" --user="root" --database="osirose" < "./Database/osirose.sql"
 test_script:
   - ctest -C %CONFIGURATION%
 #init:
