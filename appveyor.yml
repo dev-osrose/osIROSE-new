@@ -28,10 +28,6 @@ clone_folder: C:\projects\osIROSE
 services: mysql
 
 install:
-- cmd: echo %PROJECT_PATH%
-- cmd: echo %CONFIGURATION%
-- cmd: echo %configuration%
-- cmd: echo $(configuration)
 - cmd: cd %PROJECT_PATH%
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx32.msi
 - cmd: git submodule update --init --recursive
@@ -72,8 +68,10 @@ before_test:
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   
 test_script:
+  - ctest -R SetupConfig
+  - ps: $a = Get-Content 'server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq %MYSQL_USER%){$_.password=%MYSQL_PWD%}}; $a | ConvertTo-Json  | set-content 'server.ini';
   - ctest -C %CONFIGURATION% --no-compress-output -T Test || verify > NUL
-  - ps: iex ((new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\Testing\**\Test.xml))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\Testing\**\Test.xml))
   
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
