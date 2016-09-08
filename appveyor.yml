@@ -72,7 +72,12 @@ before_test:
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   
 test_script:
-  - ctest -C %CONFIGURATION%
+  - ctest -C %CONFIGURATION% --no-compress-output -T Test || verify > NUL
+  - ps: >-
+  {
+    $wc = New-Object 'System.Net.WebClient'
+    $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path Testing\*\Test.xml))
+  }
   
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
