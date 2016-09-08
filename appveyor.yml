@@ -18,7 +18,7 @@ environment:
   MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
   MYSQL_CONNECTOR_PATH: C:\Program Files (x86)\MySQL\MySQL Connector C 6.1
   PROJECT_PATH: C:\projects\osIROSE
-  INCLUDE: %PROJECT_PATH%\tools\googletest\googlemock\include;%PROJECT_PATH%\tools\googletest\googletest\include;%PROJECT_PATH%\tools\spdlog\include;%PROJECT_PATH%\tools\pbjson\src;
+  INCLUDE: $(PROJECT_PATH)\tools\googletest\googlemock\include;$(PROJECT_PATH)\tools\googletest\googletest\include;$(PROJECT_PATH)\tools\spdlog\include;$(PROJECT_PATH)\tools\pbjson\src;
   
 matrix:
   fast_finish: true
