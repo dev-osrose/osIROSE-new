@@ -18,6 +18,7 @@ environment:
   MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
   MYSQL_CONNECTOR_PATH: C:\Program Files (x86)\MySQL\MySQL Connector C 6.1
   PROJECT_PATH: C:\projects\osIROSE
+  GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
   
 matrix:
@@ -68,10 +69,10 @@ before_test:
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   
 test_script:
-  - ctest -C %CONFIGURATION% -R SetupTesting
-  - ps: $a = Get-Content 'server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'server.ini';
+  - ./bin/osirose-tests --gtest_filter=SetupTesting.*
+  - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.ini';
   - ctest -C %CONFIGURATION% --no-compress-output -T Test || verify > NUL
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Get-ChildItem "C:\projects\osIROSE\build\Testing" Test.xml -Recurse | Select-Object -ExpandProperty FullName))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", "C:\projects\osIROSE\build\Test.xml")
   
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
