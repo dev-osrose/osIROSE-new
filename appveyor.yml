@@ -68,7 +68,7 @@ before_test:
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   
 test_script:
-  - ctest -C %CONFIGURATION% -R SetupConfig
+  - ctest -C %CONFIGURATION% -R SetupTesting
   - ps: $a = Get-Content 'server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'server.ini';
   - ctest -C %CONFIGURATION% --no-compress-output -T Test || verify > NUL
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Get-ChildItem "C:\projects\osIROSE\build\Testing" Test.xml -Recurse | Select-Object -ExpandProperty FullName))
