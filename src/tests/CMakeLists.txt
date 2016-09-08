@@ -146,5 +146,11 @@ ELSE()
 		)
 ENDIF()
 
-add_test(NAME osirose-tests
-         COMMAND osirose-tests)
+add_test(NAME TestConfig
+         COMMAND osirose-tests --gtest_filter=Config.*)
+add_test(NAME TestNetworking
+         COMMAND osirose-tests --gtest_filter=Test*Network*.*)
+add_test(NAME TestDatabases
+         COMMAND osirose-tests --gtest_filter=Test*Database.*)
+add_test(NAME TestServers
+         COMMAND osirose-tests --gtest_filter=Test*Server*.*)
