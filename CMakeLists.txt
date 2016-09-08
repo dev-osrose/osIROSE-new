@@ -104,7 +104,8 @@ ENDIF()
 IF(ENABLE_TESTING)
   enable_testing() #enable ctest
   
-  INCLUDE(Dart)
+  include( CTest )
+  INCLUDE( Dart )
 
 	SET(CMAKE_RULE_MESSAGES OFF)	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
