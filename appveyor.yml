@@ -67,12 +67,12 @@ notifications:
   
 before_test:
   - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PATH%
-  - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\$(configuration)"
+  - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   
 test_script:
-  - ctest -C $(configuration)
+  - ctest -C %CONFIGURATION%
   
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
