@@ -11,7 +11,11 @@ platform:
 - Win32
 environment:
   ASIO_STANDALONE: 1
+  MYSQL_DATABASE: osirose
+  MYSQL_HOST: localhost
+  MYSQL_USER: root
   MYSQL_PWD: "Password12!"
+  MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
   INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
 matrix:
   fast_finish: true
@@ -69,8 +73,9 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 before_test:
-  - cmd:mysql -e 'create database osirose;' --user=root
-  - cmd:mysql --user="root" --database="osirose" < "./Database/osirose.sql"
+  - SET PATH=%MYSQL_PATH%\bin;%PATH%
+  - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PASSWORD% create %MYSQL_DATABASE%
+  - mysql --user=%MYSQL_USER% --password=%MYSQL_PASSWORD% --database=%MYSQL_DATABASE% < "./Database/osirose.sql"
 test_script:
   - ctest -C %CONFIGURATION%
 #init:
