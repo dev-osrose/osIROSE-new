@@ -1,14 +1,14 @@
 version: '{branch}-ci-{build}'
 os:
-#- Visual Studio 2013 # VS2013 doesn't work due to lack of c++14 support
 - Visual Studio 2015 
-#- Windows Server 2012 R2
-#- MinGW
+
 configuration:
 - Debug
 - Release
+
 platform:
 - Win32
+
 environment:
   ASIO_STANDALONE: 1
   MYSQL_DATABASE: osirose
@@ -16,53 +16,41 @@ environment:
   MYSQL_USER: root
   MYSQL_PWD: "Password12!"
   MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
-  INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
+  MYSQL_CONNECTOR_PATH: C:\Program Files (x86)\MySQL\MySQL Connector C 6.1
+  PROJECT_PATH: C:\projects\osIROSE
+  INCLUDE: %PROJECT_PATH%\tools\googletest\googlemock\include;%PROJECT_PATH%\tools\googletest\googletest\include;%PROJECT_PATH%\tools\spdlog\include;%PROJECT_PATH%\tools\pbjson\src;
+  
 matrix:
   fast_finish: true
-#  allow_failures:
-#    - os: Visual Studio 2015
-#    - os: Windows Server 2012 R2
-#    - os: MinGW
+  
 clone_depth: 50
-clone_folder: C:\projects\osIROSE
+clone_folder: %PROJECT_PATH%
 services: mysql
+
 install:
-#- ps: Start-FileDownload http://tangentsoft.net/mysql++/releases/mysql++-3.2.2.tar.gz -FileName C:\projects\mysqlpp.tar.gz
-- cmd: cd C:\projects\osIROSE
-- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx32.msi
-#- ps: If( (Test-Path C:\projects\osIROSE\3rdParty) -eq $false ) { Start-FileDownload https://www.dropbox.com/s/6if9vlf54xy7lqg/3rdParty.zip?raw=1 -FileName C:\projects\3rdParty.zip }
-#- ps: >-
-#    If ( Test-Path C:\projects\osIROSE\3rdParty )
-#
-#    {
-#    	echo "Using Cache 3rdParty Directory..."
-#    }
-#
-#    Else
-#
-#    {
-#    	Invoke-Expression -Command:"7z x C:\projects\3rdParty.zip -oC:\projects\osIROSE\ -y > C:\projects\3rdparty_install.txt"
-#    }
+- cmd: cd %PROJECT_PATH%
+- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-win32.msi -FileName %PROJECT_PATH%\mysql-connector-c-6.1.6-winx32.msi
 - cmd: git submodule update --init --recursive
 - cmd: "./ci/msvc_mysqlpp_install.bat"
 - cmd: "./ci/msvc_install.bat"
+
 #cache: 
-#- C:\projects\osIROSE\3rdParty -> clear_cache.txt
-#- C:\projects\osIROSE\build\tools\protobuf -> clear_cache.txt
+#- %PROJECT_PATH%\3rdParty -> clear_cache.txt
+#- %PROJECT_PATH%\build\tools\protobuf -> clear_cache.txt
 build:
   parallel: true
+  
 build_script:
-#- cd 3rdParty/build
-#- cmake -DBUILD_PROTOBUF=ON ../../tools/
-#- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cd build
 - cmake -DBUILD_TYPE=$(configuration) -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=ON ..
 - cmake --build . --config $(configuration) -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+
 artifacts:
 - path: build/bin
   name: build-bin
 - path: build/lib
   name: build-lib
+  
 notifications:
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
@@ -72,13 +60,17 @@ notifications:
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: false
+  
 before_test:
-  - SET PATH=%MYSQL_PATH%\bin;%PATH%
+  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PATH%
+  - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\$(configuration)"
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
-  - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "./Database/osirose.sql"
+  - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
+  
 test_script:
   - ctest -C $(configuration)
+  
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
