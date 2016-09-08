@@ -74,8 +74,8 @@ notifications:
   on_build_status_changed: false
 before_test:
   - SET PATH=%MYSQL_PATH%\bin;%PATH%
-  - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PASSWORD% create %MYSQL_DATABASE%
-  - mysql --user=%MYSQL_USER% --password=%MYSQL_PASSWORD% --database=%MYSQL_DATABASE% < "./Database/osirose.sql"
+  - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
+  - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "./Database/osirose.sql"
 test_script:
   - ctest -C %CONFIGURATION%
 #init:
