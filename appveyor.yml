@@ -71,7 +71,7 @@ before_test:
   - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
   
 test_script:
-  - ctest -C %CONFIGURATION% --no-compress-output -T Test || verify > NUL
+  - ctest -C %CONFIGURATION% --no-compress-output -T Test -E TestConfig -E SetupTesting || verify > NUL
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", "C:\projects\osIROSE\build\Test.xml")
   
 #init:
