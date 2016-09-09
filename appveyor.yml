@@ -19,6 +19,7 @@ environment:
   MYSQL_CONNECTOR_PATH: C:\Program Files (x86)\MySQL\MySQL Connector C 6.1
   PROJECT_PATH: C:\projects\osIROSE
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
+  PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
   
 matrix:
@@ -63,7 +64,9 @@ notifications:
   on_build_status_changed: false
   
 before_test:
-  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PATH%
+  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
+  - SET STATIC_DEPS=true
+  - pip.exe install lxml
   - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
@@ -72,7 +75,12 @@ before_test:
   
 test_script:
   - ctest -C %CONFIGURATION% --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Get-ChildItem -path "C:\projects\osIROSE\build\Testing\" -Include Test.xml -Recurse).FullName)
+#  - ps: |
+#  $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1
+#  $xml | Out-File C:/projects/osIROSE/build/results.xml
+#  $wc = New-Object 'System.Net.WebClient'
+#  $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml))
+
   
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
