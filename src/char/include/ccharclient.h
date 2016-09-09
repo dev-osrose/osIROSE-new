@@ -28,8 +28,8 @@ class CCharClient : public RoseCommon::CRoseClient {
   bool IsNearby(const IObject* _otherClient) const override { (void)_otherClient; return true; }
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer);
-  virtual bool OnReceived();
+  virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual bool OnReceived() override;
 
   bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
   bool SendCharListReply();
