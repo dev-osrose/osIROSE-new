@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 SET(PROJECT protoGen)
 project(${PROJECT})
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+IF (MSVC)
 #foreach(flag_var
 #        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
 #        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
@@ -11,6 +11,7 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
 #   endif(${flag_var} MATCHES "/MD")
 #endforeach(flag_var)
+  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 ELSE()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
