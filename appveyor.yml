@@ -75,11 +75,11 @@ before_test:
   
 test_script:
   - ctest -C %CONFIGURATION% --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
-#  - ps: |
-#  $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1
-#  $xml | Out-File C:/projects/osIROSE/build/results.xml
-#  $wc = New-Object 'System.Net.WebClient'
-#  $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml))
+  - ps: |
+  $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1
+  $xml | Out-File C:/projects/osIROSE/build/results.xml
+  $wc = New-Object 'System.Net.WebClient'
+  $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml))
 
   
 #init:
