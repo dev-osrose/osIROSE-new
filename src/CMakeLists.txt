@@ -47,6 +47,10 @@ IF(ENABLE_MYSQL)
 	  ${MYSQL_LIBRARY_PATH}
 	  ${MYSQLpp_LIBRARY_PATH}
   )
+  
+  IF (MSVC)
+    add_definitions(-DMYSQLPP_NO_DLL)
+  ENDIF()
 ENDIF()
 
 #this is a temp fix for windows builds
