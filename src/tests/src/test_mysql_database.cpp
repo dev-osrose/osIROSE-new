@@ -70,7 +70,7 @@ TEST(TestMySQL_Database, TestQStore)
 	EXPECT_EQ(str, "plop");
 	float dec;
 	EXPECT_EQ(res->getFloat("fl", dec), true);
-	EXPECT_FLOAT_EQ(dec, 3.14);
+	EXPECT_FLOAT_EQ(dec, 3.14f);
 	res->useRow(1);
 	EXPECT_EQ(res->getInt("value", id), false);
 	EXPECT_EQ(id, 0);

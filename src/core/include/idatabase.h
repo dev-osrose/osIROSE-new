@@ -134,7 +134,7 @@ class	IResult
 		 * \param[out] bool Return false if outside boundaries
 		 * \note Checks only the lower bound
 		 */
-		virtual bool		decrementRow() {uint32_t tmp = current_row_; current_row_ = current_row_ <= 0 ? 0 : current_row_ - 1; return tmp;}
+		virtual bool		decrementRow() {uint32_t tmp = current_row_; current_row_ = current_row_ <= 0 ? 0 : current_row_ - 1; return tmp != 0;}
 
 		/*!
 		 * \brief Convenience function to get the total number of rows in this result

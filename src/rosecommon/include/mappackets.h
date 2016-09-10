@@ -307,7 +307,7 @@ class SrvSelectCharReply : public CRosePacket {
   struct equip_item : public ISerialize {
     equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
                uint8_t grade = 0)
-               : id_(id), gem_op_(gem), socket_(socket), grade_(grade) {}
+               : id_(id), gem_op_(gem), socket_(socket != 0), grade_(grade) {}
   //protected:
     virtual void serialize( CRosePacket &os ) const override;
     virtual void deserialize( CRosePacket &os ) override;
