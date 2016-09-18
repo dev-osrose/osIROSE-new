@@ -1,16 +1,10 @@
-cd C:/projects/
-msiexec /i c:\projects\mysql-connector-c-6.1.6-winx64.msi /quiet /qn /norestart /log c:\projects\mysql-connector-c-6.1.6.log
-
-7z e mysqlpp.tar.gz && 7z x mysqlpp.tar -pC:\projects\mysqlpp -y > C:\projects\mysqlpp_install.txt
-mkdir C:/projects/osIROSE/mysqlpp
-Robocopy "C:/projects/mysql++-3.2.2/lib" "C:/projects/osIROSE/mysqlpp" /E /MT:2 /R:0 /DCOPY:T
-copy "C:\projects\osIROSE\cmake\mysqlpp_CMakeFile.txt" "C:\projects\osIROSE\mysqlpp\CMakeLists.txt" /Y
+msiexec /i mysql-connector-c-6.1.6-winx32.msi /quiet /qn /norestart /log mysql-connector-c-6.1.6.log
 IF %ERRORLEVEL% LSS 8 goto build
 goto :eof
 
 :build
-cd C:/projects/osIROSE/mysqlpp/
-py querydef.pl
-py ssqls.pl
-cd ../..
+cd ./tools/mysqlpp/lib/
+perl querydef.pl
+perl ssqls.pl
+cd ../../..
 exit 0

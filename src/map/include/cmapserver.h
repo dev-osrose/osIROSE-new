@@ -29,6 +29,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   enum class ServerType : int8_t { MASTER_NODE = -1, WORKER_THREAD };
   int32_t map_idx_;
+  uint32_t client_count_;
+  uint32_t server_count_;
 };
 
 #endif

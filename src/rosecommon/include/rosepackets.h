@@ -34,6 +34,7 @@ std::unique_ptr<decltype(find_recv_class<T>::type)>	getPacket(uint8_t buffer[MAX
 	try {
 		return std::unique_ptr<decltype(find_recv_class<T>::type)>(new decltype(find_recv_class<T>::type)(buffer));
 	} catch (std::runtime_error &e) {
+      (void)e;
 		return nullptr;
 	}
 }

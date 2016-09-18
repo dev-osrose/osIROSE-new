@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
 #include "ccharisc.h"
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
 #include "iscpackets.pb.h"
-#include <memory>
 #include "rosepackets.h"
 
 using namespace RoseCommon;
 
-CCharISC::CCharISC() : CRoseISC(), type_(-1) {}
+CCharISC::CCharISC() : CRoseISC() {}
 
-CCharISC::CCharISC(tcp::socket _sock) : CRoseISC(std::move(_sock)), type_(-1) {}
+CCharISC::CCharISC(tcp::socket _sock) : CRoseISC(std::move(_sock)) {}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -68,17 +68,19 @@ bool CCharISC::ServerRegister(
   // 4 == map workers/threads
 
   iscPacket::ServerReg pServerReg;
-  std::string name, ip;
-  int32_t port = 0, type = 0, right = 0;
+  std::string name;
+  int32_t type = 0, right = 0;
 
   if (_type == iscPacket::ServerType::NODE) {
     // This is a node and we need to figure out something to do with this
   } else if (_type == iscPacket::ServerType::MAP_MASTER) {
     name = pMapServer.name();
-    ip = pMapServer.addr();
-    port = pMapServer.port();
+    network_ip_address_ = pMapServer.addr();
+    network_port_ = pMapServer.port();
     type = pMapServer.type();
     right = pMapServer.accright();
+
+    this->SetType(_type);
   }
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
@@ -86,15 +88,15 @@ bool CCharISC::ServerRegister(
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
 
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, ip, GetId(),
-                                                             port, type, right);
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, network_ip_address_, GetId(),
+                                                             network_port_, type, right);
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = (CCharISC*)server;
-    if (svr->IsLogin()) {
+    if (svr->IsLogin() == true) {
       svr->Send(*packet);
       return true;
     }
@@ -115,7 +117,7 @@ void CCharISC::OnConnected() {
                  packet->size(), (uint16_t)packet->type());
   Send(*packet);
 
-  type_ = iscPacket::ServerType::LOGIN;
+  SetType(iscPacket::ServerType::LOGIN);
 
   process_thread_ = std::thread([this]() {
     while (active_ == true && IsLogin() == true) {
@@ -142,7 +144,7 @@ bool CCharISC::OnShutdown() {
   bool result = true;
 
   if (active_ == true) {
-    if (type_ == iscPacket::ServerType::LOGIN) {
+    if (GetType() == iscPacket::ServerType::LOGIN) {
       if (Reconnect() == true) {
         logger_->notice("Reconnected to login server.");
         result = false;
@@ -163,9 +165,9 @@ bool CCharISC::OnShutdown() {
 }
 
 bool CCharISC::IsLogin() const {
-  return (type_ == iscPacket::ServerType::LOGIN);
+  return (GetType() == iscPacket::ServerType::LOGIN);
 }
 
 void CCharISC::SetLogin(bool val) {
-  if (val == true) type_ = iscPacket::ServerType::LOGIN;
+  if (val == true) SetType(iscPacket::ServerType::LOGIN);
 }

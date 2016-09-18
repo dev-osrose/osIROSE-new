@@ -1,5 +1,5 @@
-#ifndef __MOCK_CLOGINCLIENT_H__
-#define __MOCK_CLOGINCLIENT_H__
+#ifndef MOCK_CLOGINCLIENT_H_
+#define MOCK_CLOGINCLIENT_H_
 
 #include "gmock/gmock.h"  // Brings in Google Mock.
 

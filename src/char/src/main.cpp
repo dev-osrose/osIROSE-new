@@ -15,11 +15,43 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "config.h"
+#include "version.h"
+
+namespace {
+void DisplayTitle()
+{
+  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+  if(auto log = console.lock())
+  {
+    log->notice( "--------------------------------" );
+    log->notice( "        osIROSE 2 Alpha         " );
+    log->notice( "  http://forum.dev-osrose.com/  " );
+    log->notice( "--------------------------------" );
+    log->notice( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+  }
+}
+
+void CheckUser()
+{
+#ifndef _WIN32
+  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+  if(auto log = console.lock())
+  {
+    if ((getuid() == 0) && (getgid() == 0)) {
+      log->warn( "You are running as the root superuser." );
+      log->warn( "It is unnecessary and unsafe to run with root privileges." );
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  }
+#endif
+}
+}
 
 int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
 
+  try {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
 
   if(auto log = console.lock())
@@ -27,6 +59,9 @@ int main(int argc, char* argv[]) {
 
   Core::Config& config = Core::Config::getInstance();
   Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
+  DisplayTitle();
+  CheckUser();
+  
   if(auto log = console.lock()) {
     log->set_level((spdlog::level::level_enum)config.char_server().log_level());
     log->trace("Trace logs are enabled.");
@@ -56,5 +91,9 @@ int main(int argc, char* argv[]) {
     log->notice( "Server shutting down..." );
   Core::NetworkThreadPool::DeleteInstance();
   spdlog::drop_all();
+  }
+  catch (const spdlog::spdlog_ex& ex) {
+     std::cout << "Log failed: " << ex.what() << std::endl;
+  }
   return 0;
 }

@@ -3,7 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <stdint.h>
-#include "mock/mock_network_asio.h"
+#include "mock/core/mock_network_asio.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"

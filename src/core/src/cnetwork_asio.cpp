@@ -60,7 +60,7 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
     // addresses. Ex. google.com
     return false;
 
-  network_ip_address = _ip;
+  network_ip_address_ = _ip;
   network_port_ = _port;
   return true;
 }
@@ -81,7 +81,7 @@ bool CNetwork_Asio::Shutdown(bool _final) {
 bool CNetwork_Asio::Connect() {
   tcp::resolver resolver(*networkService_->Get_IO_Service());
   auto endpoint_iterator =
-      resolver.resolve(network_ip_address, std::to_string(network_port_));
+      resolver.resolve(network_ip_address_, std::to_string(network_port_));
 
   OnConnect();
   send_mutex_.lock();
@@ -146,12 +146,20 @@ void CNetwork_Asio::ProcessSend() {
       send_mutex_.unlock();
 
       uint8_t* raw_ptr = _buffer.get();
-      uint16_t _size = (uint16_t)raw_ptr[0];
-      uint16_t _command = (uint16_t)raw_ptr[2];
+      uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
+      uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
       discard_mutex_.lock();
       discard_queue_.push(std::move(_buffer));
       raw_ptr = discard_queue_.back().get();
       discard_mutex_.unlock();
+
+#ifdef SPDLOG_TRACE_ON
+      fmt::MemoryWriter out;
+      logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
+      for (int i = 0; i < _size; i++)
+        out.write( "0x{0:02x} ", raw_ptr[i] );
+      logger_->trace( "{}", out.c_str() );
+#endif
 
       if (OnSend(raw_ptr))
         asio::async_write(
@@ -203,12 +211,12 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
         asio::transfer_exactly(
             BytesToRead),  // We want at least 6 bytes of data
         [this](std::error_code errorCode, std::size_t length) {
-          packet_offset_ += length;
+          packet_offset_ += (uint16_t)length;
           last_update_time_ = (Core::Time::GetTickCount());
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(
-                  "OnReceived aborted the connection... Shutting down");
+                  "OnReceived aborted the connection, disconnecting...");
               Shutdown();
             }
           } else {

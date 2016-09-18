@@ -13,3 +13,18 @@
 [submodule "tools/pbjson"]
 	path = tools/pbjson
 	url = https://github.com/RavenX8/pbjson.git
+[submodule "tools/Selene"]
+	path = tools/Selene
+	url = https://github.com/RavenX8/Selene.git
+[submodule "tools/lua"]
+	path = tools/lua
+	url = https://github.com/RavenX8/lua.git
+[submodule "tools/sol2"]
+	path = tools/sol2
+	url = https://github.com/RavenX8/sol2.git
+[submodule "tools/mysqlpp"]
+	path = tools/mysqlpp
+	url = https://github.com/RavenX8/mysqlpp.git
+[submodule "tools/cxxopts"]
+	path = tools/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git

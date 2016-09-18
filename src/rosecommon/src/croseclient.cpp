@@ -38,12 +38,6 @@ bool CRoseClient::Send(CRosePacket &_buffer) {
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
   logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
-#ifdef SPDLOG_TRACE_ON
-  fmt::MemoryWriter out;
-  for(int i = 0; i < CRosePacket::size(_buffer.get()); i++)
-    out.write("0x{0:02x} ", _buffer[i]);
-  logger_->trace("{}", out.c_str());
-#endif
   return CNetwork_Asio::Send(std::move(_buffer));
 }
 
@@ -68,7 +62,7 @@ bool CRoseClient::OnReceived() {
 #endif
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
-      logger_->debug() << "Client sent incorrect block header";
+      logger_->debug("Client sent incorrect block header");
       ResetBuffer();
       return false;
     }
@@ -80,7 +74,7 @@ bool CRoseClient::OnReceived() {
 #ifndef DISABLE_CRYPT
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
-    logger_->debug() << "Client sent illegal block";
+    logger_->debug( "Client sent illegal block" );
     ResetBuffer();
     return false;
   }
@@ -143,6 +137,11 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
     }
   }
   return true;
+}
+
+bool CRoseClient::IsNearby(const IObject* _otherClient) const { 
+  (void)_otherClient; 
+  return false; 
 }
 
 }

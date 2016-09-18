@@ -15,11 +15,11 @@
 #include "cloginserver.h"
 #include "cloginisc.h"
 #include "cloginclient.h"
-#include "epackettype.h"
-#include "rosepackets.h"
+// #include "epackettype.h"
+// #include "rosepackets.h"
 #include "database.h"
-#include "packetclasses.h"
-#include "iscpackets.pb.h"
+// #include "packetclasses.h"
+// #include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 
@@ -70,7 +70,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
-    if (server->GetType() == 1) serverCount++;
+    if (server->GetType() == iscPacket::ServerType::CHAR) serverCount++;
   }
   CLoginServer::GetISCListMutex().unlock();
 
@@ -149,7 +149,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
         server->GetId() == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
-        { packet->addChannel(info.channelName, info.ChannelID, 0); }
+        { packet->addChannel(info.channelName, info.ChannelID+1, 0); }
       }
     }
   }
@@ -188,7 +188,7 @@ bool CLoginClient::ServerSelect(
       database.QExecute(query);
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          server->GetIP(), session_id_, 0, server->GetPort());
+          server->GetIpAddress(), session_id_, 0, server->GetPort());
       this->Send(*packet);
       break;
     }

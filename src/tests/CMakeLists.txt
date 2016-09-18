@@ -19,7 +19,7 @@ set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
 ELSE()
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -102,6 +102,7 @@ ADD_DEPENDENCIES(${PROJECT} gmock)
 ADD_DEPENDENCIES(${PROJECT} Core)
 ADD_DEPENDENCIES(${PROJECT} RoseCommon)
 ADD_DEPENDENCIES(${PROJECT} protoGen)
+ADD_DEPENDENCIES(${PROJECT} lua)
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
@@ -116,26 +117,42 @@ IF(ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT}
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
+
 TARGET_LINK_LIBRARIES(${PROJECT}
     ${CMAKE_THREAD_LIBS_INIT}
     Core
     RoseCommon
     protoGen
+    mysqlpp
+    lua
     gtest
     gmock
     ${COVERAGE_LIBRARIES}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
-		${MYSQL_LIBRARIES} 
+	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
 		wsock32.lib 
-		mysqlpp
 	)
 ELSE()
 	TARGET_LINK_LIBRARIES(${PROJECT} 
-		${PROTOBUF_BINARY_DIR}/libprotobuf.a
-		mysqlpp
+		protobuf
 		mysqlclient
 		)
 ENDIF()
+
+add_test(NAME SetupTesting
+         COMMAND osirose-tests --gtest_filter=SetupTesting.*)
+add_test(NAME TestConfig
+         COMMAND osirose-tests --gtest_filter=Config.*)
+add_test(NAME TestNetworking
+         COMMAND osirose-tests --gtest_filter=Test*Network*.*)
+add_test(NAME TestDatabases
+         COMMAND osirose-tests --gtest_filter=Test*Database.*)
+add_test(NAME TestServers
+         COMMAND osirose-tests --gtest_filter=Test*Server*.*)

@@ -13,17 +13,16 @@
 // limitations under the License.
 
 #include "cloginisc.h"
-#include "crosepacket.h"
 #include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 
 CLoginISC::CLoginISC()
-    : CRoseISC(), channel_count_(1), min_right_(0), test_server_(false) {}
+    : CRoseISC(), channel_count_(0), min_right_(0), test_server_(false) {}
 
 CLoginISC::CLoginISC(tcp::socket _sock)
     : CRoseISC(std::move(_sock)),
-      channel_count_(1),
+      channel_count_(0),
       min_right_(0),
       test_server_(false) {}
 
@@ -65,10 +64,12 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   // todo: replace these numbers with the actual enum name
   if (_type == iscPacket::ServerType::CHAR) {
     server_name_ = pServerReg.name();
-    network_ip_address = pServerReg.addr();
+    network_ip_address_ = pServerReg.addr();
     network_port_ = pServerReg.port();
     min_right_ = pServerReg.accright();
     network_type_ = _type;
+
+    this->SetType( _type );
   } else if (_type == iscPacket::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
@@ -78,6 +79,9 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
     channel_list_.push_front(channel);
     channel_count_++;
   }
+
+  logger_->debug( "ISC Server Type: [{}]\n",
+                   GetType() );
 
   logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pServerReg.type()).c_str(),

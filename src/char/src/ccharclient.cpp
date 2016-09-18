@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,12 +26,16 @@ CCharClient::CCharClient()
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       session_id_(0),
-      userid_(0) {}
+      userid_(0),
+      channelid_(0) {}
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
-      login_state_(eSTATE::DEFAULT) {}
+      login_state_(eSTATE::DEFAULT),
+      session_id_(0),
+      userid_(0),
+      channelid_(0) {}
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -59,7 +63,7 @@ bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
-  logger_->trace("JoinServerReply\n");
+  logger_->trace("CCharClient::JoinServerReply");
 
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
@@ -84,17 +88,19 @@ bool CCharClient::JoinServerReply(
         res->getInt("userid", userid_);
         res->getInt("channelid", channelid_);
 
+        session_id_ = sessionID;
+
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
       } else {
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::INVALID_PASSWORD, std::time(nullptr));
+            SrvJoinServerReply::INVALID_PASSWORD, 0);
         Send(*packet);
       }
     } else {
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::FAILED, std::time(nullptr));
+          SrvJoinServerReply::FAILED, 0);
       Send(*packet);
     }
   }
@@ -112,7 +118,7 @@ bool CCharClient::SendCharListReply() {
   }
 
   // mysql query to get the characters created.
-  std::unique_ptr<Core::IResult> res;
+  std::unique_ptr<Core::IResult> res, itemres;
   std::string query = fmt::format("CALL GetCharList({});", userid_);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -123,7 +129,7 @@ bool CCharClient::SendCharListReply() {
     if (res->size() != 0) {
       for (uint32_t idx = 0; idx < res->size(); ++idx) {
         std::string _name;
-        uint32_t race, level, job, delete_time, face, hair;
+        uint32_t race, level, job, delete_time, face, hair, id;
         res->getString("name", _name);
         res->getInt("race", race);
         res->getInt("level", level);
@@ -137,6 +143,28 @@ bool CCharClient::SendCharListReply() {
             idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
         packet->addEquipItem(
             idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
+
+        {
+          res->getInt("id", id);
+          character_real_id_.push_back(id);
+          query = fmt::format("CALL GetEquipped({});", id);
+          itemres = database.QStore(query);
+          if (itemres != nullptr) {
+            if (itemres->size() != 0) {
+              for (uint32_t j = 0; j < itemres->size(); ++j) {
+                uint32_t slot, itemid;
+                itemres->getInt("slot", slot);
+                itemres->getInt("itemid", itemid);
+
+                packet->addEquipItem(
+                    idx, (SrvCharacterListReply::equipped_position)slot,
+                    itemid);
+                itemres->incrementRow();
+              }
+            }
+          }
+        }
+
         res->incrementRow();
       }
     }
@@ -204,7 +232,6 @@ bool CCharClient::SendCharDeleteReply(
 
 bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
-  (void)P;
   logger_->trace("CharSelectReply\n");
 
   if (login_state_ != eSTATE::LOGGEDIN) {
@@ -215,13 +242,19 @@ bool CCharClient::SendCharSelectReply(
 
   login_state_ = eSTATE::TRANSFERING;
 
+  std::string query = fmt::format("CALL UpdateSessionWithCharacter({}, '{}');",
+                                  session_id_, character_real_id_[P->char_id()]);
+
+  Core::IDatabase& database = Core::databasePool.getDatabase();
+  database.QExecute(query);
+
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
         server->GetId() == channelid_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
           server->GetIpAddress(), server->GetPort(), session_id_,
-          std::time(nullptr));
+          0);  // this should be set to the map server's encryption seed
       Send(*packet);
     }
   }

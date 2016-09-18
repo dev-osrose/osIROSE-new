@@ -1,11 +1,12 @@
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 //#define STRESS_TEST
 
 #include <stdint.h>
 #include "croseserver.h"
-//#include "mock/mock_croseclient.h"
-//#include "mock/mock_croseisc.h"
+//#include "mock/rosecommon/mock_croseclient.h"
+//#include "mock/rosecommon/mock_croseisc.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "logconsole.h"
