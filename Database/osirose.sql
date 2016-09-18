@@ -60,6 +60,8 @@ CREATE TABLE `characters` (
   `stone` int(11) unsigned NOT NULL DEFAULT '0',
   `exp` bigint(20) unsigned NOT NULL DEFAULT '0',
   `zuly` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_hp` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_mp` int(10) unsigned NOT NULL DEFAULT '0',
   `max_hp` int(10) unsigned NOT NULL DEFAULT '0',
   `max_mp` int(10) unsigned NOT NULL DEFAULT '0',
   `str` int(10) unsigned NOT NULL DEFAULT '10',
@@ -93,7 +95,6 @@ DROP TABLE IF EXISTS `friends`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `friends` (
   `char_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `friend_account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `friend_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`),
   KEY `char_id_idx` (`char_id`,`friend_id`),
@@ -199,6 +200,36 @@ CREATE TABLE `storage` (
   `gem` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `item_db`
+--
+
+DROP TABLE IF EXISTS `item_db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_db` (
+    `id` smallint(5) unsigned NOT NULL default '0',
+    `name` varchar(50) NOT NULL default '',
+    `type` tinyint(2) NOT NULL default '0',
+    `price_buy` mediumint(10) unsigned default NULL,
+    `price_sell` mediumint(10) unsigned default NULL,
+    `weight` smallint(5) unsigned NOT NULL default '0',
+    `attack` smallint(3) unsigned default NULL,
+    `defense` smallint(3) unsigned default NULL,
+    `range` tinyint(2) unsigned default NULL,
+    `slots` tinyint(2) unsigned default NULL,
+    `equip_jobs` int(12) unsigned default NULL,
+    `equip_genders` tinyint(2) unsigned default NULL,
+    `equip_level` tinyint(3) unsigned default NULL,
+    `refineable` tinyint(1) unsigned default NULL,
+    `view_id` smallint(3) unsigned default NULL,
+    `script` text,
+    PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 
 --
 -- Dumping events for database 'osirose'
