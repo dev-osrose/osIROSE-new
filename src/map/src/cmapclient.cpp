@@ -179,6 +179,8 @@ bool CMapClient::ChangeMapReply(
     return true;
   }
   (void)P;
+  Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), 81, 55, 0, 0, std::time(nullptr), 0));
+  //TODO : send PAKWC_PLAYER_CHAR to EVERYONE_BUT_ME
   
   return true;
 }
@@ -197,7 +199,8 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   
   auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
           _message, _charID);
-  CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet);
+  logger_->trace("client {} is sending '{}'", _charID, _message);
+  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
   return true;
 }
 

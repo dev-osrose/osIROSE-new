@@ -49,7 +49,7 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CMapClient* nClient = new CMapClient(std::move(_sock));
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
-      nClient->SetId(client_count_++);
+      nClient->SetId(++client_count_);
       logger_->notice("Client connected from: {}", _address.c_str());
       client_list_.push_front(nClient);
     } else {
