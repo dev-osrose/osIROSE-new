@@ -28,3 +28,6 @@
 [submodule "tools/cxxopts"]
 	path = tools/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git
+[submodule "tools/entityx"]
+	path = tools/entityx
+	url = https://github.com/alecthomas/entityx.git
