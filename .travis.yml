@@ -26,6 +26,7 @@ addons:
     - libmysqlclient-dev
     - libmysqlclient18
     - libmysqld-dev
+    - mysql-server-5.6
     - perl
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
