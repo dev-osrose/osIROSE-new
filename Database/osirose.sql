@@ -268,7 +268,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateAccount`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(24))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateAccount`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(32))
 BEGIN
 SET @salt = SHA2( SHA2(RAND(), 256), 256 );
 INSERT INTO accounts(username, password, salt) VALUES(_user, SHA2( CONCAT(_pass,@salt), 256), @salt);
