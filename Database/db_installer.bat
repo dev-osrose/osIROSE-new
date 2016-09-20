@@ -4,7 +4,7 @@ REM - Default values
 set bin=-1
 set user=root
 set pass=-1
-set db=prose
+set db=osirose
 set host=localhost
 echo.
 echo                  ===== OSpRose Online Database Installer ======
@@ -27,7 +27,7 @@ if %pass%==-1 goto getpass
 
 REM - Get database name
 :getdb
-set /p db="Enter database name (default: prose): "
+set /p db="Enter database name (default: osirose): "
 
 REM - Get database host
 :gethost
@@ -62,8 +62,8 @@ goto menuoptions
 REM - Install
 :install
 echo.
-echo Installing prose.sql to %db% on %host%
-%bin%\mysql.exe -h %host% -u %user% --password=%pass% -D %db% < prose.sql
+echo Installing osirose.sql to %db% on %host%
+%bin%\mysql.exe -h %host% -u %user% --password=%pass% -D %db% < osirose.sql
 echo Database Installed
 echo.
 goto menuoptions
