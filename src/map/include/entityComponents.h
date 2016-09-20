@@ -42,7 +42,7 @@ struct AdvancedInfo {
 struct Graphics {
     Graphics(uint16_t view) : view_(view) {}
 
-    uint16_t view;
+    uint16_t view_;
 };
 
 struct CharacterGraphics {
@@ -55,7 +55,7 @@ struct CharacterGraphics {
 };
 
 struct CharacterInfo {
-    CharacterInfo(uint16_t job, uint8_t stone_, uint32_t statPoints,
+    CharacterInfo(uint16_t job, uint8_t stone, uint32_t statPoints,
                     uint32_t skillPoints, uint32_t penaltyXp, uint32_t deleteDate, bool platinium) :
         job_(job), stone_(stone), statPoints_(statPoints), skillPoints_(skillPoints),
         penaltyXp_(penaltyXp), deleteDate_(deleteDate), platinium_(platinium) {}

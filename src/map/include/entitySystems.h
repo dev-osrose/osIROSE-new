@@ -23,22 +23,25 @@ class MovementSystem : public System {
             Component<Destination> destination;
             for (Entity entity : es.entities_with_components(position, destination)) {
                 int dx = 0, dy = 0;
-                if (!equals(position->x, destination->x, 0.1) && position->x < destination->x)
+                if (!equals(position->x_, destination->x_, 0.1) && position->x_ < destination->x_)
                     dx = -1;
-                else if (!equals(position->x, destination->x, 0.1) && position->x > destination->x)
+                else if (!equals(position->x_, destination->x_, 0.1) && position->x_ > destination->x_)
                     dx = 1;
-                if (!equals(position->y, destination->y, 0.1) && position->y < destination->y)
+                if (!equals(position->y_, destination->y_, 0.1) && position->y_ < destination->y_)
                     dy = -1;
-                else if (!equals(position->y, destination->y, 0.1) && position->y > destination->y)
+                else if (!equals(position->y_, destination->y_, 0.1) && position->y_ > destination->y_)
                     dy = 1;
-                position->x += dx * 1 * dt; // TODO : compute speed
-                position->y += dy * 1 * dt; // TODO : compute speed
-                if (equals(position->x, destination->x, 0.1) && equals(position->y, destination->y))
+                position->x_ += dx * 1 * dt; // TODO : compute speed
+                position->y_ += dy * 1 * dt; // TODO : compute speed
+                if (equals(position->x_, destination->x_, 0.1) && equals(position->y_, destination->y_, 0.1))
                     entity.remove<Destination>();
             }
         }
 
-        void move(entity, float x, float y) {
+        void move(Entity entity, float x, float y) {
+            (void)entity;
+            (void)x;
+            (void)y;
             // TODO
         }
 };

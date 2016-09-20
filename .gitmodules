@@ -31,3 +31,6 @@
 [submodule "tools/entityx"]
 	path = tools/entityx
 	url = https://github.com/alecthomas/entityx.git
+[submodule "tools/SimpleSignal"]
+	path = tools/SimpleSignal
+	url = https://github.com/larspensjo/SimpleSignal.git
