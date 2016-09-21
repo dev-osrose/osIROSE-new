@@ -49,7 +49,7 @@ matrix:
       - curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
       - sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
       - sudo apt-get update -qq
-      - sudo apt-get install -qq mysql-community-server mysql-community-client libmysqlclient-dev
+      - sudo apt-get install -yqq mysql-community-server mysql-community-client libmysqlclient-dev libmysqld-dev
       - sudo service mysql start
       ###
       - "./ci/before_install.sh"
