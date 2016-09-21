@@ -11,7 +11,9 @@ sudo dpkg --install mysql-apt-config_0.7.3-1_all.deb
 sudo apt-get update -q
 sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
 sudo mysql_upgrade
-sudo service mysql restart
+sudo service mysql stop
 
-TEMP_PASSWORD=`sudo cat /var/log/mysql/error.log | grep "A temporary password is generated for" | awk '{print $NF}'`
-sudo mysql -u root -p $TEMP_PASSWORD -e "SET PASSWORD = PASSWORD('');"
+sudo mysqld --skip-grant-tables &
+mysql -uroot -e "use mysql; SET PASSWORD = PASSWORD(''); flush privileges;"
+sudo /etc/init.d/mysql stop
+sudo /etc/init.d/mysql start
