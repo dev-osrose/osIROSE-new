@@ -30,8 +30,8 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
+#        - libmysqlclient-dev
+#        - libmysqlclient18
         - gcc-5
         - g++-5
     branches:
@@ -45,8 +45,7 @@ matrix:
       - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
       
       ### Remove this when Travis decides to actually add this repo to their white list
-      - sudo service mysql stop
-      - curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
+      - curl -sSL "https://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
       - sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
       - sudo apt-get update -qq
       - sudo apt-get install -yqq mysql-community-server mysql-community-client libmysqlclient-dev libmysqld-dev
