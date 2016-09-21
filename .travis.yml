@@ -30,8 +30,6 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-#        - libmysqlclient-dev
-#        - libmysqlclient18
         - gcc-5
         - g++-5
     branches:
@@ -45,12 +43,6 @@ matrix:
       - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
       
       ### Remove this when Travis decides to actually add this repo to their white list
-#      - gpg --recv-keys 5072E1F5
-#      - gpg --export --armor 5072E1F5 | sudo apt-key add - 
-#      - sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
-#      - sudo apt-get update -qq
-#      - sudo apt-get install -yqq mysql-community-server mysql-community-client libmysqlclient-dev libmysqld-dev
-#      - sudo service mysql start
       - bash ./ci/.travis.install-mysql-5.7.sh
       ###
       - "./ci/before_install.sh"
@@ -70,7 +62,7 @@ matrix:
       
   #G++-6
   - env: g++-6 BUILD_TYPE=Debug
-    sudo: false
+    sudo: required
     language: cpp
     addons:
       apt:
@@ -84,20 +76,18 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
         - gcc-6
         - g++-6
     branches:
       except:
       - coverity_scan
     before_install:
-      - export SUITE=none
       - export GCOV_PATH=/usr/bin/gcov-6;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+      - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
       - "./ci/install.sh"
@@ -114,7 +104,7 @@ matrix:
       
   # G++-6 Release with tests. Allow coverity scan.
   - env: g++-6 BUILD_TYPE=Release
-    sudo: false
+    sudo: required
     language: cpp
     addons:
       apt:
@@ -128,8 +118,6 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
         - gcc-6
         - g++-6
     before_install:
@@ -139,6 +127,7 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+      - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
       - "./ci/install.sh"
@@ -154,7 +143,7 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
     
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
-    sudo: false
+    sudo: required
     language: cpp
     addons:
       apt:
@@ -169,8 +158,6 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
         - llvm-3.7		
         - llvm-3.7-dev		
         - llvm-runtime
@@ -184,12 +171,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export SUITE=none
       - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+      - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
       - "./ci/install.sh"
@@ -205,7 +192,7 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
         
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
-    sudo: false
+    sudo: required
     language: cpp
     addons:
       apt:
@@ -220,8 +207,6 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
         - llvm-3.7		
         - llvm-3.7-dev		
         - llvm-runtime
@@ -235,12 +220,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export SUITE=none
       - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+      - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
       - "./ci/install.sh"
@@ -255,9 +240,9 @@ matrix:
     after_success:
       - bash <(curl -s https://codecov.io/bash)
         
-  allow_failures:
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
+#  allow_failures:
+#  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
+#  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
   
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
