@@ -10,21 +10,6 @@ env:
   - secure: tvFQn4BjO/DG0yE5NEdZsmY73qsxhN5CsXl+C4GkCzz8KgtOGyVFij5R18+IP3X44CKOz54dLy9pE3lCY2v9wvvLnnv1hV3kH2EvV5Ccv2zw8jozz7OpxK2GMSoqPvHK/FAEo3mbuwhnOS2fEV3+hWSF9/piwSAmFhnjH7VHZnnx8yVfpzEl0Oq4JLM1fEx400Z+Glvn9uDfjY8cvzRVp8HqHTuPNNRLmNvGPAYqstpKAxEh6Tml6eUrCxbndbcvtTt7vlshW9OuU5LVh2Y63ftZpsKCWfpu5K4MfgD4oLineo+2zz3jfv/Hs8vTVLzRQph6OkxLiZBqUgUyoZzZ/r4bMQbbS6wmbWwZOaIQyjFRr68FZ/yW4JJ/KkUhMB3LA7it2rNhhI6+jTQqvLO+VAucuUmFJ0xIsbULBTo7cyL7X40rDLFxhXNLTjcqPT1nUzKCrmFxrDh7utegggN0UtXVAWl6KN8f003TVlunM+BrB8r08kX/JU0modFzXS0sMDF/tuzMd9dd/R4CtoHAuP20J7LZ81EA8IbKJ5j6dsc8l+Ti5/LwLrEtxXnD6MSSNDoSZszeyLA78+zGzKLNNvHGdnHTFgFd3Q/gVYJgH6AWAVCJeSnwXbI78azIFohPwsT/JsJS092Ck6rgRKpbZNNmOVfpn6WsXoQBrLpcg0A=
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  addons:
-    apt:
-      sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.7
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
-      packages:
-        - cmake
-        - lcov
-        - libboost-dev
-        - perl
-        - libmysqlclient-dev
-        - libmysqlclient18
 
 services:
 - mysql
@@ -39,7 +24,18 @@ matrix:
   - env: g++-5 BUILD_TYPE=Release
     addons:
       apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
         packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
         - gcc-5
         - g++-5
     branches:
@@ -69,7 +65,18 @@ matrix:
   - env: g++-6 BUILD_TYPE=Debug
     addons:
       apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
         packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
         - gcc-6
         - g++-6
     branches:
@@ -99,7 +106,18 @@ matrix:
   - env: g++-6 BUILD_TYPE=Release
     addons:
       apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
         packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
         - gcc-6
         - g++-6
     before_install:
@@ -125,7 +143,19 @@ matrix:
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     addons:
       apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        - llvm-toolchain-precise-3.7
         packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
         - llvm-3.7		
         - llvm-3.7-dev		
         - llvm-runtime
@@ -160,7 +190,19 @@ matrix:
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
     addons:
       apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        - llvm-toolchain-precise-3.7
         packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
         - llvm-3.7		
         - llvm-3.7-dev		
         - llvm-runtime
