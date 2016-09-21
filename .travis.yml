@@ -1,4 +1,4 @@
-sudo: false
+sudo: true # change this back to false when travis adds the MYSQL repo to their whitelist
 language: cpp
 addons:
   apt:
@@ -8,8 +8,8 @@ addons:
     - extras-precise
     - boost-latest
     - kalakris-cmake
-    - sourceline: 'deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6'
-      key_url: 'http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5'
+#    - sourceline: 'deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6'
+#      key_url: 'http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5'
     packages:
     - cmake
     - lcov
@@ -70,6 +70,10 @@ matrix:
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.7.0
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.7.0
 before_install:
+### Remove this when Travis decides to actually add this repo to their white list
+- curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
+- echo "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6" | sudo tee -a /etc/apt/sources.list > /dev/null
+###
 - export PROOT=$TRAVIS_BUILD_DIR
 - if [ "$TRAVIS_BRANCH" = "coverity_scan" ]; then export COVERITY_SCAN_BRANCH=1; fi
 - if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
