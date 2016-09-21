@@ -14,6 +14,7 @@ sudo mysql_upgrade
 sudo service mysql stop
 
 sudo mysqld --skip-grant-tables &
-mysql -uroot -e "use mysql; SET PASSWORD = PASSWORD(''); flush privileges;"
+sleep 5
+sudo mysql -uroot -e "use mysql; SET PASSWORD = PASSWORD(''); flush privileges;"
 sudo /etc/init.d/mysql stop
 sudo /etc/init.d/mysql start
