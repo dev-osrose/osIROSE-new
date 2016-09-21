@@ -1,21 +1,5 @@
 sudo: false
 language: cpp
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.7
-    - extras-precise
-    - boost-latest
-    - kalakris-cmake
-    packages:
-    - cmake
-    - lcov
-    - libboost-dev
-    - perl
-    - libmysqlclient-dev
-    - libmysqlclient18
-    
 env:
   global:
   - secure: s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs=
@@ -26,10 +10,21 @@ env:
   - secure: tvFQn4BjO/DG0yE5NEdZsmY73qsxhN5CsXl+C4GkCzz8KgtOGyVFij5R18+IP3X44CKOz54dLy9pE3lCY2v9wvvLnnv1hV3kH2EvV5Ccv2zw8jozz7OpxK2GMSoqPvHK/FAEo3mbuwhnOS2fEV3+hWSF9/piwSAmFhnjH7VHZnnx8yVfpzEl0Oq4JLM1fEx400Z+Glvn9uDfjY8cvzRVp8HqHTuPNNRLmNvGPAYqstpKAxEh6Tml6eUrCxbndbcvtTt7vlshW9OuU5LVh2Y63ftZpsKCWfpu5K4MfgD4oLineo+2zz3jfv/Hs8vTVLzRQph6OkxLiZBqUgUyoZzZ/r4bMQbbS6wmbWwZOaIQyjFRr68FZ/yW4JJ/KkUhMB3LA7it2rNhhI6+jTQqvLO+VAucuUmFJ0xIsbULBTo7cyL7X40rDLFxhXNLTjcqPT1nUzKCrmFxrDh7utegggN0UtXVAWl6KN8f003TVlunM+BrB8r08kX/JU0modFzXS0sMDF/tuzMd9dd/R4CtoHAuP20J7LZ81EA8IbKJ5j6dsc8l+Ti5/LwLrEtxXnD6MSSNDoSZszeyLA78+zGzKLNNvHGdnHTFgFd3Q/gVYJgH6AWAVCJeSnwXbI78azIFohPwsT/JsJS092Ck6rgRKpbZNNmOVfpn6WsXoQBrLpcg0A=
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-
-notifications:
-  slack:
-    secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=  
+  addons:
+    apt:
+      sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.7
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+      packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - libmysqlclient-dev
+        - libmysqlclient18
 
 services:
 - mysql
@@ -212,3 +207,6 @@ matrix:
     build_command: make
     branch_pattern: coverity_scan
     
+notifications:
+  slack:
+    secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=  
