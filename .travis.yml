@@ -1,5 +1,4 @@
-sudo: required # change this back to false when travis adds the MYSQL repo to their whitelist
-dist: trusty
+sudo: false
 language: cpp
 addons:
   apt:
@@ -9,8 +8,6 @@ addons:
     - extras-precise
     - boost-latest
     - kalakris-cmake
-#    - sourceline: 'deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6'
-#      key_url: 'http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5'
     packages:
     - cmake
     - lcov
@@ -30,9 +27,6 @@ addons:
     - libmysqlclient18
     - libmysqld-dev
     - perl
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
@@ -47,14 +41,10 @@ cache:
   directories:
   - "./protobuf"
   - llvm-3.7.0
-#services:
-#- mysql
+services:
+- mysql
 matrix:
   include:
-#  - compiler: gcc
-#    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
-#  - compiler: gcc
-#    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
   - compiler: gcc
     env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
   - compiler: gcc
@@ -68,19 +58,9 @@ matrix:
   - compiler: clang
     env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.7.0
   allow_failures:
-#  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Debug SUITE=tests
-#  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Release
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.7.0
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.7.0
 before_install:
-### Remove this when Travis decides to actually add this repo to their white list
-#- sudo service mysql stop
-#- curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
-#- sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"# | sudo tee -a /etc/apt/sources.list > /dev/null
-#- sudo apt-get update -qq
-#- sudo apt-get install -qq mysql-server-5.6 mysql-client-5.6 mysql-client-core-5.6
-- sudo service mysql restart
-###
 - export PROOT=$TRAVIS_BUILD_DIR
 - if [ "$TRAVIS_BRANCH" = "coverity_scan" ]; then export COVERITY_SCAN_BRANCH=1; fi
 - if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
@@ -90,23 +70,13 @@ before_install:
 - export PREFIX=$HOME
 - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
   fi
-#-
-#  if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
-#    wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
-#    mkdir llvm-$LLVM_VERSION;
-#    xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
-#    ls llvm-$LLVM_VERSION/bin/;
-#    llvm-$LLVM_VERSION/bin/llvm-config --version;
-#    export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
-#    export PATH=$TRAVIS_BUILD_DIR/llvm-$LLVM_VERSION/bin:$PATH;
-#  fi;
 - if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
   fi
 - "./ci/before_install.sh"
 install:
 - "./ci/install.sh"
 before_script:
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql -u root -e 'create database osirose;';
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql -e 'create database osirose;';
   fi
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql --user="root" --database="osirose"
   --password="" < "./Database/osirose.sql"; fi
