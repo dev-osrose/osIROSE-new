@@ -72,7 +72,7 @@ matrix:
 before_install:
 ### Remove this when Travis decides to actually add this repo to their white list
 - curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
-- echo "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7" | sudo tee -a /etc/apt/sources.list > /dev/null
+- deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7 | sudo tee -a /etc/apt/sources.list > /dev/null
 - sudo service mysql stop
 - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install mysql-server-5.7
 - sudo service mysql start
