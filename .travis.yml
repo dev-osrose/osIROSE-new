@@ -18,10 +18,10 @@ addons:
     - llvm-3.7		
     - llvm-3.7-dev		
     - llvm-runtime
-    - gcc-4.9
+#    - gcc-4.9
     - gcc-5
     - gcc-6
-    - g++-4.9
+#    - g++-4.9
     - g++-5
     - g++-6
     - clang-3.7
@@ -29,8 +29,10 @@ addons:
     - libmysqlclient-dev
     - libmysqlclient18
     - libmysqld-dev
-#    - mysql-server-5.6
     - perl
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
@@ -49,10 +51,10 @@ cache:
 #- mysql
 matrix:
   include:
-  - compiler: gcc
-    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
-  - compiler: gcc
-    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
+#  - compiler: gcc
+#    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
+#  - compiler: gcc
+#    env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
   - compiler: gcc
     env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
   - compiler: gcc
@@ -66,18 +68,18 @@ matrix:
   - compiler: clang
     env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.7.0
   allow_failures:
-  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Debug SUITE=tests
-  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Release
+#  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Debug SUITE=tests
+#  - env: GCC_VERSION="6" GCOV_VERSION="6" BUILD_TYPE=Release
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests LLVM_VERSION=3.7.0
   - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release LLVM_VERSION=3.7.0
 before_install:
 ### Remove this when Travis decides to actually add this repo to their white list
-- sudo service mysql stop
+#- sudo service mysql stop
 #- curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
 #- sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"# | sudo tee -a /etc/apt/sources.list > /dev/null
-- sudo apt-get update -qq
-- sudo apt-get install -qq mysql-server-5.6 mysql-client-5.6 mysql-client-core-5.6
-- sudo service mysql start
+#- sudo apt-get update -qq
+#- sudo apt-get install -qq mysql-server-5.6 mysql-client-5.6 mysql-client-core-5.6
+- sudo service mysql restart
 ###
 - export PROOT=$TRAVIS_BUILD_DIR
 - if [ "$TRAVIS_BRANCH" = "coverity_scan" ]; then export COVERITY_SCAN_BRANCH=1; fi
