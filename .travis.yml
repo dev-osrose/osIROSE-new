@@ -75,7 +75,7 @@ before_install:
 - sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"# | sudo tee -a /etc/apt/sources.list > /dev/null
 - sudo -E apt-get -yq update &>> ~/apt-get-update.log
 - sudo service mysql stop
-- sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install mysql-server-5.7
+- sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install mysql-community-server
 - sudo service mysql start
 ###
 - export PROOT=$TRAVIS_BUILD_DIR
