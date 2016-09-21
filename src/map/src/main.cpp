@@ -85,7 +85,10 @@ int main(int argc, char* argv[]) {
   iscServer.Listen();
   iscClient->Connect();
 
+  auto start = Core::Time::GetTickCount();
   while (clientServer.IsActive()) {
+    clientServer.update((Core::Time::GetTickCount() - start).count());
+    start = Core::Time::GetTickCount();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 

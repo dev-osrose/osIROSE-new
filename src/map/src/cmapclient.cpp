@@ -28,13 +28,14 @@ CMapClient::CMapClient()
       userid_(0),
       charid_(0) {}
 
-CMapClient::CMapClient(tcp::socket _sock)
+CMapClient::CMapClient(tcp::socket _sock, Entity entity)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       session_id_(0),
       userid_(0),
-      charid_(0) {}
+      charid_(0),
+      entity_(entity) {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {

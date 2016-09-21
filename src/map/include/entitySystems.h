@@ -13,12 +13,16 @@ using Entity = EntityManager::Entity;
 
 class System {
     public:
-        virtual void update(EntityManager&, float dt) = 0;
+        virtual ~System() {}
+
+        virtual void update(EntityManager&, double dt) = 0;
 };
 
 class MovementSystem : public System {
     public:
-        virtual void update(EntityManager &es, float dt) {
+        virtual ~MovementSystem() {}
+
+        virtual void update(EntityManager &es, double dt) {
             Component<Position> position;
             Component<Destination> destination;
             for (Entity entity : es.entities_with_components(position, destination)) {
@@ -44,6 +48,45 @@ class MovementSystem : public System {
             (void)y;
             // TODO
         }
+};
+
+class SystemManager {
+    public:
+        SystemManager(EntityManager &es) : entityManager_(es) {}
+
+        template <typename T, typename... Args>
+        T& add(Args&&... args) {
+            systems_.emplace_back(new T(std::forward<Args>(args)...));
+            return *dynamic_cast<T*>(systems_.back().get());
+        }
+
+        template <typename T>
+        void remove() {
+            for (auto it = systems_.begin(); it != systems_.end(); ++it) {
+                if (dynamic_cast<T*>(it->get())) {
+                    systems_.erase(it);
+                    return;
+                }
+            }
+        }
+
+        template <typename T>
+        T& get() {
+            for (auto &it : systems_) {
+                T *tmp;
+                if ((tmp = dynamic_cast<T*>(it.get())))
+                    return *tmp;
+            }
+        }
+
+        void update(double dt) {
+            for (auto &it : systems_)
+                it->update(entityManager_, dt);
+        }
+
+    private:
+        EntityManager &entityManager_;
+        std::vector<std::unique_ptr<System>> systems_;
 };
 
 #endif /* !_ENTITYSYSTEMS_H_ */

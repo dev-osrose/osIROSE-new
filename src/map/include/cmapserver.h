@@ -16,7 +16,7 @@
 #define _CMAPSERVER_H_
 
 #include "croseserver.h"
-#include "entitySystems.h"
+#include "entitySystem.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
@@ -25,6 +25,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   int32_t GetMapIDX() { return map_idx_; }
 
+  void update(double dt);
+
  protected:
   virtual void OnAccepted(tcp::socket _sock);
 
@@ -32,7 +34,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   int32_t map_idx_;
   uint32_t client_count_;
   uint32_t server_count_;
-  EntityManager entityManager_;;
+  EntitySystem entitySystem_;
 };
 
 #endif
