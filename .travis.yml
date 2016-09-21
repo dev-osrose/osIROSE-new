@@ -163,6 +163,7 @@ matrix:
         - libstdc++5
     cache:
       directories:
+        - "./protobuf"
         - llvm-3.7.0
     branches:
       except:
@@ -210,6 +211,7 @@ matrix:
         - libstdc++5
     cache:
       directories:
+        - "./protobuf"
         - llvm-3.7.0
     branches:
       except:
