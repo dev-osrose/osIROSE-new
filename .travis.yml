@@ -13,16 +13,13 @@ env:
 
 services:
 - mysql
-  
-cache:
-  directories:
-  - "./protobuf"
 
 matrix:
   include:
     # Each entry here creates another sub-job.
   - env: g++-5 BUILD_TYPE=Release
     addons:
+      mysql: 5.6
       apt:
         sources:
         - ubuntu-toolchain-r-test
