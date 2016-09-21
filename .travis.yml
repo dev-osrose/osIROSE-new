@@ -1,5 +1,3 @@
-sudo: false
-language: cpp
 env:
   global:
   - secure: s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs=
@@ -18,8 +16,9 @@ matrix:
   include:
     # Each entry here creates another sub-job.
   - env: g++-5 BUILD_TYPE=Release
+    sudo: required
+    language: cpp
     addons:
-      mysql: 5.6
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -44,7 +43,17 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
+      
+      ### Remove this when Travis decides to actually add this repo to their white list
+      - sudo service mysql stop
+      - curl -sSL "http://pgp.mit.edu/pks/lookup?op=get&search=0x8C718D3B5072E1F5" | sudo -E apt-key add -
+      - sudo -E apt-add-repository -y "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.7"
+      - sudo apt-get update -qq
+      - sudo apt-get install -qq mysql-community-server mysql-community-client libmysqlclient-dev
+      - sudo service mysql start
+      ###
       - "./ci/before_install.sh"
+      
     install:
       - "./ci/install.sh"
       
@@ -60,6 +69,8 @@ matrix:
       
   #G++-6
   - env: g++-6 BUILD_TYPE=Debug
+    sudo: false
+    language: cpp
     addons:
       apt:
         sources:
@@ -80,6 +91,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
+      - export SUITE=none
       - export GCOV_PATH=/usr/bin/gcov-6;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
@@ -101,6 +113,8 @@ matrix:
       
   # G++-6 Release with tests. Allow coverity scan.
   - env: g++-6 BUILD_TYPE=Release
+    sudo: false
+    language: cpp
     addons:
       apt:
         sources:
@@ -118,6 +132,7 @@ matrix:
         - gcc-6
         - g++-6
     before_install:
+      - export SUITE=none
       - export GCOV_PATH=/usr/bin/gcov-6;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
@@ -138,6 +153,8 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
     
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
+    sudo: false
+    language: cpp
     addons:
       apt:
         sources:
@@ -166,6 +183,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
+      - export SUITE=none
       - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
@@ -186,6 +204,8 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
         
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
+    sudo: false
+    language: cpp
     addons:
       apt:
         sources:
@@ -214,6 +234,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
+      - export SUITE=none
       - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
