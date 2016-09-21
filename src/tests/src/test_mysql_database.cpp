@@ -60,7 +60,7 @@ TEST(TestMySQL_Database, TestQStore)
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(1, NULL, 'null values', NULL, NULL);");
         database.QExecute("DELETE FROM accounts WHERE username='test';");
         
-        std::string query = fmt::format("CALL CreateAccount('{0}', '{1}');", "test", "cc03e747a6afbbcbf8be7668acfebee5");
+        std::string query = fmt::format("CALL create_account('{0}', '{1}');", "test", "cc03e747a6afbbcbf8be7668acfebee5");
         database.QExecute(query);
 	std::unique_ptr<Core::IResult>	res;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));

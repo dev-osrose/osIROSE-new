@@ -73,7 +73,7 @@ bool CMapClient::JoinServerReply(
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL GetSession({});", sessionID);
+  std::string query = fmt::format("CALL get_session({});", sessionID);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -88,7 +88,7 @@ bool CMapClient::JoinServerReply(
         res->getInt("charid", charid_);
         session_id_ = sessionID;
 
-        query = fmt::format("CALL GetCharacter({});", charid_);
+        query = fmt::format("CALL get_character({});", charid_);
         res = database.QStore(query);
         if (res != nullptr && res->size() == 1) {
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
@@ -120,7 +120,7 @@ bool CMapClient::JoinServerReply(
           packet2->addEquipItem(
               SrvSelectCharReply::equipped_position::EQUIP_HAIR, hair);
 
-          query = fmt::format("CALL GetEquipped({});", charid_);
+          query = fmt::format("CALL get_equipped({});", charid_);
           itemres = database.QStore(query);
           if (itemres != nullptr) {
             if (itemres->size() != 0) {

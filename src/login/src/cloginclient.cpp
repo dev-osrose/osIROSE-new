@@ -86,7 +86,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   std::string clientpass = P->password();
 
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL UserLogin('{0}', '{1}');", username_.c_str(), clientpass.c_str());
+  std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -182,7 +182,7 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = (CLoginISC*)obj;
     if (server->GetType() == iscPacket::ServerType::CHAR &&
         server->GetId() == serverID) {
-      std::string query = fmt::format("CALL CreateSession({}, {}, {});",
+      std::string query = fmt::format("CALL create_session({}, {}, {});",
                                       session_id_, userid_, channelID);
 
       Core::IDatabase& database = Core::databasePool.getDatabase();
