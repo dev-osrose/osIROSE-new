@@ -13,7 +13,7 @@ sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
 sudo mysql_upgrade
 sudo service mysql stop
 
-echo "UPDATE mysql.user SET authentication_string = PASSWORD(''), password_expired = 'N' WHERE User = 'root' AND Host = 'localhost';FLUSH PRIVILEGES;" > ~/mysql-init
+echo "UPDATE mysql.user SET authentication_string = PASSWORD('Password12!'), password_expired = 'N' WHERE User = 'root' AND Host = 'localhost';FLUSH PRIVILEGES;" > ~/mysql-init
 cat ~/mysql-init
 sudo mysqld_safe --init-file=~/mysql-init &
 sleep 5
@@ -22,4 +22,4 @@ rm ~/mysql-init
 sudo /etc/init.d/mysql stop
 sudo /etc/init.d/mysql start
 
-mysql -uroot -e 'create database osirose;';
+mysql -u root -p Password12! -e 'create database osirose;';
