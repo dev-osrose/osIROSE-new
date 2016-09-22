@@ -1,5 +1,6 @@
 
-sudo apt-get remove --purge "^mysql.*"
+sudo apt-get remove mysql-server mysql-client mysql-common
+sudo apt-get purge mysql-server mysql-client mysql-common
 sudo apt-get autoremove
 sudo apt-get autoclean
 sudo rm -rf /var/lib/mysql
@@ -22,4 +23,4 @@ rm ~/mysql-init
 sudo /etc/init.d/mysql stop
 sudo /etc/init.d/mysql start
 
-mysql -u root -p Password12! -e 'create database osirose;';
+mysql --user="root" --password="Password12!" -e 'create database osirose;';
