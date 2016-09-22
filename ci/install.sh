@@ -30,10 +30,22 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdparty/include
 	mkdir 3rdparty/lib
 	
-	cd tools/mysqlpp/lib
-	perl querydef.pl
-	perl ssqls.pl
-	cd ../../..
+	# Install bakefile
+	wget https://github.com/vslavik/bakefile/releases/download/v0.2.9/bakefile-0.2.9.tar.gz
+	tar -xvf bakefile-0.2.9.tar.gz
+	cd bakefile-0.2.9/
+	./configure
+	make
+	make install
+	
+	cd ../tools/mysqlpp
+	./bootstrap
+	./configure
+	make
+	make install
+#	perl querydef.pl
+#	perl ssqls.pl
+	cd ../..
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
