@@ -14,10 +14,12 @@ sudo mysql_upgrade
 sudo service mysql stop
 
 echo "UPDATE mysql.user SET authentication_string = PASSWORD(''), password_expired = 'N' WHERE User = 'root' AND Host = 'localhost';FLUSH PRIVILEGES;" > ~/mysql-init
-
+cat ~/mysql-init
 sudo mysqld_safe --init-file=~/mysql-init &
 sleep 5
 rm ~/mysql-init
 
 sudo /etc/init.d/mysql stop
 sudo /etc/init.d/mysql start
+
+mysql -uroot -e 'create database osirose;';
