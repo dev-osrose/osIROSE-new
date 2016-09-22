@@ -14,6 +14,8 @@ services:
 
 matrix:
   include:
+  ##--------------------------------------------------
+  ##--------------------------------------------------
     # Each entry here creates another sub-job.
   - env: g++-5 BUILD_TYPE=Release
     sudo: required
@@ -46,10 +48,10 @@ matrix:
       - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
       - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
-      - "./ci/before_install.sh"
+      - ./ci/before_install.sh
       
     install:
-      - "./ci/install.sh"
+      - ./ci/install.sh
       
     before_script:
       - mysql --user="root" -e 'create database osirose;';
@@ -61,6 +63,8 @@ matrix:
     after_success:
       - bash <(curl -s https://codecov.io/bash)
       
+  ##--------------------------------------------------
+  ##--------------------------------------------------
   #G++-6
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
@@ -93,9 +97,9 @@ matrix:
       - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
       - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
-      - "./ci/before_install.sh"
+      - ./ci/before_install.sh
     install:
-      - "./ci/install.sh"
+      - ./ci/install.sh
       
     before_script:
       - mysql --user="root" -e 'create database osirose;';
@@ -106,7 +110,9 @@ matrix:
       - ../ci/script.sh;
     after_success:
       - bash <(curl -s https://codecov.io/bash)
-      
+  
+  ##--------------------------------------------------
+  ##--------------------------------------------------
   # G++-6 Release with tests. Allow coverity scan.
   - env: g++-6 BUILD_TYPE=Release
     sudo: required
@@ -136,9 +142,9 @@ matrix:
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
       - bash ./ci/.travis.install-mysql-5.7.sh
-      - "./ci/before_install.sh"
+      - ./ci/before_install.sh
     install:
-      - "./ci/install.sh"
+      - ./ci/install.sh
       
     before_script:
       - mysql --user="root" -e 'create database osirose;';
@@ -148,6 +154,8 @@ matrix:
     script:
       - ../ci/script.sh;
     
+  ##--------------------------------------------------
+  ##--------------------------------------------------
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -182,11 +190,10 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
-      - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
-      - "./ci/before_install.sh"
+      - ./ci/before_install.sh
     install:
-      - "./ci/install.sh"
+      - ./ci/install.sh
       
     before_script:
       - mysql --user="root" -e 'create database osirose;';
@@ -195,9 +202,9 @@ matrix:
       - mkdir logs;
     script:
       - ../ci/script.sh;
-    after_success:
-      - bash <(curl -s https://codecov.io/bash)
-        
+  
+  ##--------------------------------------------------
+  ##--------------------------------------------------
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -233,9 +240,9 @@ matrix:
       - export PREFIX=$HOME
       - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
       - bash ./ci/.travis.install-mysql-5.7.sh
-      - "./ci/before_install.sh"
+      - ./ci/before_install.sh
     install:
-      - "./ci/install.sh"
+      - ./ci/install.sh
       
     before_script:
       - mysql --user="root" -e 'create database osirose;';
@@ -244,7 +251,8 @@ matrix:
       - mkdir logs;
     script:
       - ../ci/script.sh;
-  
+  ##--------------------------------------------------
+  ##--------------------------------------------------
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
