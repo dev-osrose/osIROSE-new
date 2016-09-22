@@ -41,7 +41,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export GCOV_PATH=/usr/bin/gcov-5;
+      - export GCOV_PATH=/usr/bin/gcov-5
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
@@ -90,7 +90,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export GCOV_PATH=/usr/bin/gcov-6;
+      - export GCOV_PATH=/usr/bin/gcov-6
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
@@ -136,7 +136,7 @@ matrix:
         - "./protobuf"
     before_install:
       - export SUITE=none
-      - export GCOV_PATH=/usr/bin/gcov-6;
+      - export GCOV_PATH=/usr/bin/gcov-6
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
@@ -185,7 +185,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
+      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
@@ -234,7 +234,7 @@ matrix:
       except:
       - coverity_scan
     before_install:
-      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh;
+      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh
       - export LCOV_PATH=$HOME/usr/bin/lcov
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
