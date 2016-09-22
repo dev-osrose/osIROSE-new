@@ -19,5 +19,3 @@ sudo mysql_upgrade
 
 #sudo /etc/init.d/mysql stop
 #sudo /etc/init.d/mysql start
-
-mysql --user="travis" -e 'create database osirose;';
