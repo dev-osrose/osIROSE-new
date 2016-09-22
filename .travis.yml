@@ -41,10 +41,8 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
-      
-      ### Remove this when Travis decides to actually add this repo to their white list
+      - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
-      ###
       - "./ci/before_install.sh"
       
     install:
@@ -87,6 +85,7 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+      - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
@@ -139,8 +138,6 @@ matrix:
       - mkdir logs;
     script:
       - ../ci/script.sh;
-    after_success:
-      - bash <(curl -s https://codecov.io/bash)
     
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
@@ -176,6 +173,7 @@ matrix:
       - export GENHTML_PATH=$HOME/usr/bin/genhtml
       - export PREFIX=$HOME
       - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+      - export SUITE=coverage
       - bash ./ci/.travis.install-mysql-5.7.sh
       - "./ci/before_install.sh"
     install:
@@ -237,8 +235,6 @@ matrix:
       - mkdir logs;
     script:
       - ../ci/script.sh;
-    after_success:
-      - bash <(curl -s https://codecov.io/bash)
   
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
