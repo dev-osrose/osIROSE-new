@@ -3,7 +3,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
 foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-   message(STATUS "flag_var: ${flag_var}")
    if(${flag_var} MATCHES "/MD")
       string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
    endif(${flag_var} MATCHES "/MD")
@@ -112,7 +111,8 @@ IF(ENABLE_TESTING)
   include( CTest )
   INCLUDE( Dart )
 
-	SET(CMAKE_RULE_MESSAGES OFF)	
+	SET(CMAKE_RULE_MESSAGES OFF)
+	
 	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 		#Build GoogleMock
 		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
@@ -124,6 +124,7 @@ IF(ENABLE_TESTING)
 		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
 		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
 	ENDIF()
+	
 	SET(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
@@ -167,11 +168,14 @@ IF (MSVC)
   ELSE()
     SET(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" FORCE)
   ENDIF()
+
 ELSE()
+	
 	#UNIX ONLY SETTINGS
 	IF(ENABLE_MYSQL)
 		SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
 	ENDIF()
+	
 	IF(BUILD_PROTOBUF)
 	  SET(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/protoc)
 	ELSE()
@@ -181,6 +185,7 @@ ELSE()
 	  SET(MYSQLpp_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/protobuf/lib" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib" FORCE)
 	  SET(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" FORCE)
 	ENDIF()
+	
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 

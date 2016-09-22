@@ -32,6 +32,9 @@ matrix:
         - perl
         - gcc-5
         - g++-5
+    cache:
+      directories:
+        - "./protobuf"
     branches:
       except:
       - coverity_scan
@@ -76,6 +79,9 @@ matrix:
         - perl
         - gcc-6
         - g++-6
+    cache:
+      directories:
+        - "./protobuf"
     branches:
       except:
       - coverity_scan
@@ -119,6 +125,9 @@ matrix:
         - perl
         - gcc-6
         - g++-6
+    cache:
+      directories:
+        - "./protobuf"
     before_install:
       - export SUITE=none
       - export GCOV_PATH=/usr/bin/gcov-6;
