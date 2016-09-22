@@ -1,6 +1,6 @@
 
-sudo apt-get remove mysql-client
-sudo apt-get purge mysql-client
+sudo apt-get remove libmysqlclient-dev libmysqlclient18
+sudo apt-get purge libmysqlclient-dev libmysqlclient18
 
 echo mysql-apt-config mysql-apt-config/select-server select mysql-5.7 | sudo debconf-set-selections
 wget http://dev.mysql.com/get/mysql-apt-config_0.7.3-1_all.deb
