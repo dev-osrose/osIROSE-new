@@ -13,7 +13,7 @@ sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
 sudo mysql_upgrade
 sudo service mysql stop
 
-echo ALTER USER 'root'@'localhost' IDENTIFIED BY ''; > ~/mysql-init
+echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '';" > ~/mysql-init
 
 sudo mysqld_safe --init-file=~/mysql-init &
 sleep 5
