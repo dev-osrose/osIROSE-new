@@ -13,7 +13,7 @@ sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
 sudo mysql_upgrade
 sudo service mysql stop
 
-sudo mysqld --skip-grant-tables &
+sudo mysqld_safe --skip-grant-tables &
 sleep 5
 sudo mysql -uroot -e "use mysql; SET PASSWORD = PASSWORD(''); flush privileges;"
 sudo /etc/init.d/mysql stop
