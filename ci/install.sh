@@ -32,17 +32,17 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	
 	# Install bakefile
 	wget https://github.com/vslavik/bakefile/releases/download/v0.2.9/bakefile-0.2.9.tar.gz
-	tar -xvf bakefile-0.2.9.tar.gz
+	tar -xf bakefile-0.2.9.tar.gz
 	cd bakefile-0.2.9/
 	./configure
 	make
-	make install
+	sudo make install
 	
 	cd ../tools/mysqlpp
 	./bootstrap
 	./configure
 	make
-	make install
+	sudo make install
 #	perl querydef.pl
 #	perl ssqls.pl
 	cd ../..
