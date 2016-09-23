@@ -3,6 +3,7 @@
 #include <iostream>
 #include <asio.hpp>
 #include <thread>
+#include <spdlog/spdlog.h>
 #include "logconsole.h"
 
 using asio::ip::tcp;
@@ -32,9 +33,10 @@ int main( int argc, char* argv[] )
 
   static int stress_index = 0;
   static std::string host_ip = argv[1];
-  static Core::CLogConsole log("StressTest");
+  spdlog::set_pattern( "[%H:%M:%S.%e %z] [%L] [thread %t] %v" );
+  static auto log = spdlog::stdout_logger_mt("StressTest");
 
-  log.icprintf("Setting host to %s\n", host_ip.c_str());
+  log->notice( "Setting host to {}\n", host_ip.c_str() );
 
   std::thread io_thread_[THREAD_COUNT];
   for( int idx = 0; idx < THREAD_COUNT; idx++ )
@@ -57,29 +59,29 @@ int main( int argc, char* argv[] )
       tcp::socket socket(io_service);
       asio::connect(socket, endpoint_iterator, ec);
       if(ec) {
-        log.icprintf("[%d] Failed to connect: [%d] %s\n", thread_id, ec.value(), ec.message().c_str());
+        log->critical("[{}] Failed to connect: [{}] {}\n", thread_id, ec.value(), ec.message().c_str());
         return 1;
       }
 
       asio::write(socket, asio::buffer((char*)&pak, 8), ec);
       if(ec) {
-        log.icprintf("[%d] Failed to send data: [%d] %s\n", thread_id, ec.value(), ec.message().c_str());
+        log->critical("[{}] Failed to send data: [{}] {}\n", thread_id, ec.value(), ec.message().c_str());
         return 1;
       }
 
       asio::read(socket, asio::buffer(buf, 8), ec);
       if(ec) {
-        log.icprintf("[%d] Failed to read data: [%d] %s\n", thread_id, ec.value(), ec.message().c_str());
+        log->critical("[{}] Failed to read data: [{}] {}\n", thread_id, ec.value(), ec.message().c_str());
         return 1;
       }
       pakin = (packet*)&buf;
 
       if (memcmp(&pak, pakin, 8) != 0) {
-        log.icprintf("[%d] Server failed to echo properly\n", thread_id);
+        log->critical("[{}] Server failed to echo properly\n", thread_id);
         return 1;
       }
 
-      log.icprintf("[%d] Completed in %d ms\n", thread_id, GetTickCount()-starttime);
+      log->notice("[{}] Completed in {} ms\n", thread_id, GetTickCount()-starttime);
       std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
       socket.shutdown(asio::socket_base::shutdown_both, ec);
       return 0;
@@ -88,7 +90,7 @@ int main( int argc, char* argv[] )
     std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
   }
   std::this_thread::sleep_for( std::chrono::milliseconds( 400 ) );
-  log.icprintf("Waiting for threads to finish\n");
+  log->notice("Waiting for threads to finish\n");
   for( int idx = 0; idx < THREAD_COUNT; idx++ )
   {
     io_thread_[idx].join();

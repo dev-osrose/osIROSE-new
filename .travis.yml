@@ -1,82 +1,267 @@
-sudo: false
-language: cpp
-
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.7
-    - extras-precise
-    - boost-latest
-    packages:
-    - cmake
-    - lcov
-    - libboost-dev
-    - llvm-3.7
-    - llvm-3.7-dev
-    - llvm-runtime
-    - gcc-4.9
-    - gcc-5
-    - g++-4.9
-    - g++-5
-    - clang-3.7
-    - libstdc++5
-    - libmysqlclient-dev
-    - libmysql++-dev
-    - libmysqld-dev 
-    - libmysql++-dev
-    - libmysql++3
-
-cache:
-  directories:
-  - ./protobuf
-
-services: 
-    - mysql
-  
-matrix:
-  include:
-    - compiler: gcc
-      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Debug SUITE=tests
-    - compiler: gcc
-      env: GCC_VERSION="4.9" GCOV_VERSION="4.9" BUILD_TYPE=Release
-    - compiler: gcc
-      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Debug SUITE=tests
-    - compiler: gcc
-      env: GCC_VERSION="5" GCOV_VERSION="5" BUILD_TYPE=Release
-    - compiler: clang
-      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-    - compiler: clang
-      env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Release
-  allow_failures:
-    - env: GCOV_VERSION="5" LIBCXX=1 BUILD_TYPE=Debug SUITE=tests
-
-before_install:
-- export PROOT=$TRAVIS_BUILD_DIR
-- if [ "$CXX" = "g++" ]; then export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}; fi
-- if [ "$CXX" = "clang++" ]; then export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh; fi
-- export LCOV_PATH=$HOME/usr/bin/lcov
-- export GENHTML_PATH=$HOME/usr/bin/genhtml
-- export PREFIX=$HOME
-- if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"; fi
-- if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7"; fi
-- ./ci/before_install.sh
-
-install:
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ./ci/install.sh; fi
-
-before_script:
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql -e 'create database osirose;'; fi
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql"; fi
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build && cd build; fi
-
-script: 
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then ../ci/script.sh; fi
-
-notifications:
-  slack:
-    secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
-
 env:
   global:
-    secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="
+  - secure: s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs=
+  - secure: JuSus/BqBJ2RTj7oJ3tn6dfFqnNWmWdM6/+PBId8YT52fUJTQp0eLmYbqZhq04OFvCKLgzeiObggfFZk5VOXAB/bfhlQEKSprso6C0WxKzFnftr085rcr5mW2ux+RSWTeE9KT1bpsjtpSrQTOniQhPGD6u704DdIzKuOnSngU8TXRAHFujXtUA0SHU8Oft8OpysaTDVWbFehBemg6BeOssklw2LrScGT3AWm8+qNdyAV+ynko4s8CzdOJqueCNWnkYFQyNtWN67uasveg3j+zgOfstjgyYSEoYh6deCNy8BjmWzX2tUkpzxh7h4w/VlyVjvyMG524UdMDmFZNNo7CMn1/qla6zjli3xDV/kk2Dfzj1JCn2WsesOY8+p4bdYoUU4lR0PuYraEuBAOCiVb3V7VLzU5FyV3clY8+MwifVHvNLxUbyD2ygZfPrS8LQJ/7jJSPeEARUIngvNkY9L8Jr6olw3Xg7DoDHLWAFBMtBi/sZG3CvXDyeIUX8rkh4hY6QlnO/xrql5KxDupsAwqj+rMdhzYeCnyRY6HvqBIoIrpi47uPGutxiIFgjrzwr28eL+XrrkwHfbM+pFDUITdWjm79/EyEPgGsEMM8IxXcpSGNmMDDhpHu1oZE4L3gdKli6hdS5fo6CEDV3x1nvk/SsY52WhEWIT/RwQPl4qL3YQ=
+  - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a
+    "$BUILD_TYPE" = Release'
+  - coverity_scan_script_test_mode=false
+  - secure: tvFQn4BjO/DG0yE5NEdZsmY73qsxhN5CsXl+C4GkCzz8KgtOGyVFij5R18+IP3X44CKOz54dLy9pE3lCY2v9wvvLnnv1hV3kH2EvV5Ccv2zw8jozz7OpxK2GMSoqPvHK/FAEo3mbuwhnOS2fEV3+hWSF9/piwSAmFhnjH7VHZnnx8yVfpzEl0Oq4JLM1fEx400Z+Glvn9uDfjY8cvzRVp8HqHTuPNNRLmNvGPAYqstpKAxEh6Tml6eUrCxbndbcvtTt7vlshW9OuU5LVh2Y63ftZpsKCWfpu5K4MfgD4oLineo+2zz3jfv/Hs8vTVLzRQph6OkxLiZBqUgUyoZzZ/r4bMQbbS6wmbWwZOaIQyjFRr68FZ/yW4JJ/KkUhMB3LA7it2rNhhI6+jTQqvLO+VAucuUmFJ0xIsbULBTo7cyL7X40rDLFxhXNLTjcqPT1nUzKCrmFxrDh7utegggN0UtXVAWl6KN8f003TVlunM+BrB8r08kX/JU0modFzXS0sMDF/tuzMd9dd/R4CtoHAuP20J7LZ81EA8IbKJ5j6dsc8l+Ti5/LwLrEtxXnD6MSSNDoSZszeyLA78+zGzKLNNvHGdnHTFgFd3Q/gVYJgH6AWAVCJeSnwXbI78azIFohPwsT/JsJS092Ck6rgRKpbZNNmOVfpn6WsXoQBrLpcg0A=
+  - PROOT=$TRAVIS_BUILD_DIR
+  - SUITE=tests
+
+services:
+- mysql
+
+matrix:
+  include:
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+    # Each entry here creates another sub-job.
+  - env: g++-5 BUILD_TYPE=Release
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-5
+        - g++-5
+    cache:
+      directories:
+        - "./protobuf"
+    branches:
+      except:
+      - coverity_scan
+    before_install:
+      - export GCOV_PATH=/usr/bin/gcov-5
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
+      - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
+      - bash ./ci/.travis.install-mysql-5.7.sh
+      - ./ci/before_install.sh
+      
+    install:
+      - ./ci/install.sh
+      
+    before_script:
+      - mysql --user="root" -e 'create database osirose;';
+      - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
+      - mkdir build && cd build;
+      - mkdir logs;
+    script:
+      - ../ci/script.sh;
+#    after_success:
+#      - bash <(curl -s https://codecov.io/bash)
+      
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+  #G++-6
+  - env: g++-6 BUILD_TYPE=Debug
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
+        - g++-6
+    cache:
+      directories:
+        - "./protobuf"
+    branches:
+      except:
+      - coverity_scan
+    before_install:
+      - export GCOV_PATH=/usr/bin/gcov-6
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
+      - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+      - bash ./ci/.travis.install-mysql-5.7.sh
+      - ./ci/before_install.sh
+    install:
+      - ./ci/install.sh
+      
+    before_script:
+      - mysql --user="root" -e 'create database osirose;';
+      - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
+      - mkdir build && cd build;
+      - mkdir logs;
+    script:
+      - ../ci/script.sh;
+#    after_success:
+#      - bash <(curl -s https://codecov.io/bash)
+  
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+  # G++-6 Release with tests. Allow coverity scan.
+  - env: g++-6 BUILD_TYPE=Release
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
+        - g++-6
+    cache:
+      directories:
+        - "./protobuf"
+    before_install:
+      - export SUITE=none
+      - export GCOV_PATH=/usr/bin/gcov-6
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
+      - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+      - bash ./ci/.travis.install-mysql-5.7.sh
+      - ./ci/before_install.sh
+    install:
+      - ./ci/install.sh
+      
+    before_script:
+      - mysql --user="root" -e 'create database osirose;';
+      - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
+      - mkdir build && cd build;
+      - mkdir logs;
+    script:
+      - ../ci/script.sh;
+    
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        - llvm-toolchain-precise-3.7
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - llvm-3.7		
+        - llvm-3.7-dev		
+        - llvm-runtime
+        - clang-3.7
+        - libstdc++5
+    cache:
+      directories:
+        - "./protobuf"
+        - llvm-3.7.0
+    branches:
+      except:
+      - coverity_scan
+    before_install:
+      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
+      - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+      - bash ./ci/.travis.install-mysql-5.7.sh
+      - ./ci/before_install.sh
+    install:
+      - ./ci/install.sh
+      
+    before_script:
+      - mysql --user="root" -e 'create database osirose;';
+      - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
+      - mkdir build && cd build;
+      - mkdir logs;
+    script:
+      - ../ci/script.sh;
+  
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        - llvm-toolchain-precise-3.7
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - llvm-3.7		
+        - llvm-3.7-dev		
+        - llvm-runtime
+        - clang-3.7
+        - libstdc++5
+    cache:
+      directories:
+        - "./protobuf"
+        - llvm-3.7.0
+    branches:
+      except:
+      - coverity_scan
+    before_install:
+      - export GCOV_PATH=${PROOT}/ci/llvm-gcov.sh
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
+      - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+      - bash ./ci/.travis.install-mysql-5.7.sh
+      - ./ci/before_install.sh
+    install:
+      - ./ci/install.sh
+      
+    before_script:
+      - mysql --user="root" -e 'create database osirose;';
+      - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
+      - mkdir build && cd build;
+      - mkdir logs;
+    script:
+      - ../ci/script.sh;
+  ##--------------------------------------------------
+  ##--------------------------------------------------
+  coverity_scan:
+    build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
+    project:
+      name: "$TRAVIS_REPO_SLUG"
+    notification_email: RavenX8@users.noreply.github.com
+    build_command_prepend: cov-configure --comptype gcc --compiler gcc-6 --template;
+      cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
+      cmake ..;
+    build_command: make
+    branch_pattern: coverity_scan
+    
+notifications:
+  slack:
+    secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=  

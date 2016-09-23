@@ -58,6 +58,10 @@ TEST(TestMySQL_Database, TestQStore)
 	database.QExecute("CREATE TABLE test_table(id INT, value INT, str VARCHAR(64), fl FLOAT, data BLOB);");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(0, 12, 'plop', 3.14, '\x08\x12\x24');");
 	database.QExecute("insert into test_table(id, value, str, fl, data) values(1, NULL, 'null values', NULL, NULL);");
+        database.QExecute("DELETE FROM accounts WHERE username='test';");
+        
+        std::string query = fmt::format("CALL create_account('{0}', '{1}');", "test", "cc03e747a6afbbcbf8be7668acfebee5");
+        database.QExecute(query);
 	std::unique_ptr<Core::IResult>	res;
 	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
 	uint32_t	id;
@@ -68,7 +72,7 @@ TEST(TestMySQL_Database, TestQStore)
 	EXPECT_EQ(str, "plop");
 	float dec;
 	EXPECT_EQ(res->getFloat("fl", dec), true);
-	EXPECT_FLOAT_EQ(dec, 3.14);
+	EXPECT_FLOAT_EQ(dec, 3.14f);
 	res->useRow(1);
 	EXPECT_EQ(res->getInt("value", id), false);
 	EXPECT_EQ(id, 0);
@@ -164,7 +168,6 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 	struct Filename {
 		constexpr static const char *str() { return "test.ini"; }
 	};
-	Core::CLogConsole::SetDisplayOmittable(true);
 	EXPECT_NO_FATAL_FAILURE(Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance());
 	EXPECT_NO_FATAL_FAILURE([] () {
 			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
@@ -183,5 +186,15 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 			res->getString("str", s);
 			EXPECT_EQ(s, "plop");
 		}());
-	Core::CLogConsole::SetDisplayOmittable(true);
+}
+
+TEST(TestMySQL_Database, TestSQLEscape) {
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("test"), "test");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("1test1"), "1test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("\\test1"), "\\test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("'test1"), "\\'test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("\"test1"), "\\\"test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("%test1"), "\\%test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData("_test1"), "\\_test1");
+	EXPECT_EQ(Core::CMySQL_Database::escapeData(";test1"), "test1");
 }

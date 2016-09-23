@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-INCLUDE_DIRECTORIES(
-    SYSTEM ${PROTOBUF_INCLUDE_DIR}
-	SYSTEM ${ASIO_INCLUDE_DIR}
-	SYSTEM ${EXTERNAL_INCLUDE_DIR}
-	SYSTEM ${MYSQL_INCLUDE_DIRS}
-	SYSTEM ${MYSQLpp_INCLUDE_DIR}
-)
-
 LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR})
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -19,13 +11,7 @@ project("RoseCommon")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#foreach(flag_var
-#        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-#        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-#   if(${flag_var} MATCHES "/MD")
-#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#   endif(${flag_var} MATCHES "/MD")
-#endforeach(flag_var)
+
 ELSE()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
 ENDIF()
@@ -47,6 +33,15 @@ SET( SOURCES_HEADER
   include/croseserver
   include/croseclient 
   include/croseisc
+  include/crosepacket
+  include/epackettype
+  include/findclass
+  include/iscontainer
+  include/packetclasses
+  include/rosepackets
+  include/loginpackets
+  include/charpackets
+  include/mappackets
 )
 
 SET( SOURCES_BASE
@@ -54,7 +49,10 @@ SET( SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
-  src/crosepacket)
+  src/loginpackets
+  src/charpackets
+  src/mappackets
+)
 
 add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 

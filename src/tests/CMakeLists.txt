@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # Prepare testing infrastructure.
-
-INCLUDE_DIRECTORIES(
-    SYSTEM ${GTEST_INCLUDE_DIR}
-    SYSTEM ${GMOCK_INCLUDE_DIR}
-    SYSTEM ${PROTOBUF_INCLUDE_DIR}
-    SYSTEM ${ASIO_INCLUDE_DIR}
-	SYSTEM ${EXTERNAL_INCLUDE_DIR}
-    SYSTEM ${MYSQL_INCLUDE_DIRS}
-    SYSTEM ${MYSQLpp_INCLUDE_DIR}
-)
-
 LINK_DIRECTORIES(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
@@ -23,24 +12,18 @@ IF(ENABLE_MYSQL_ONE_INSTANCE)
 ENDIF()
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
-set(GCC_LINK_FLAGS "")
+set(GCC_LINK_FLAGS "${GCC_LINK_FLAGS}")
 set(Clang_LINK_FLAGS "")
 set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#foreach(flag_var
-#        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-#        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-#   if(${flag_var} MATCHES "/MD")
-#      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#   endif(${flag_var} MATCHES "/MD")
-#endforeach(flag_var)
+
 ELSE()
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat -Wl,-Map=${PROJECT}.map")
 ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
@@ -87,6 +70,8 @@ SET(SOURCES_BASE
 	src/test_crose_network
 	src/test_login
 	src/test_char
+	src/test_servers
+	src/test_crosepacket
 )
 
 SET(SOURCES
@@ -117,6 +102,7 @@ ADD_DEPENDENCIES(${PROJECT} gmock)
 ADD_DEPENDENCIES(${PROJECT} Core)
 ADD_DEPENDENCIES(${PROJECT} RoseCommon)
 ADD_DEPENDENCIES(${PROJECT} protoGen)
+ADD_DEPENDENCIES(${PROJECT} lua)
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
@@ -127,30 +113,56 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
 
 IF(ENABLE_TESTING_COVERAGE)
     INCLUDE(CodeCoverage)
-    SETUP_TARGET_FOR_COVERAGE(coverage ${PROJECT} coverage)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    
+    SET(COVERAGE_IGNORE_LIST 
+      'tools/*'
+      '3rdparty/*'
+      'protobuf/*'
+      '*.pb.*'
+      'rapidjson/*'
+      'pbjson.*'
+      'bin2ascii.h'
+    )
+      
+    SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage)
 ENDIF() # ENABLE_TESTING_COVERAGE
+
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT}
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
 
 TARGET_LINK_LIBRARIES(${PROJECT}
     ${CMAKE_THREAD_LIBS_INIT}
     Core
     RoseCommon
     protoGen
+    mysqlpp
+    lua
     gtest
     gmock
     ${COVERAGE_LIBRARIES}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	TARGET_LINK_LIBRARIES(${PROJECT} ${PROTOBUF_LIBRARY}
-		${MYSQL_LIBRARIES} 
+	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
 		wsock32.lib 
-		mysqlpp
 	)
 ELSE()
 	TARGET_LINK_LIBRARIES(${PROJECT} 
-		${PROTOBUF_BINARY_DIR}/libprotobuf.a
-		mysqlpp
+		protobuf
 		mysqlclient
 		)
 ENDIF()
+
+add_test(NAME SetupTesting
+         COMMAND osirose-tests --gtest_filter=SetupTesting.*)
+add_test(NAME TestConfig
+         COMMAND osirose-tests --gtest_filter=Config.*)
+add_test(NAME TestNetworking
+         COMMAND osirose-tests --gtest_filter=Test*Network*.*)
+add_test(NAME TestDatabases
+         COMMAND osirose-tests --gtest_filter=Test*Database.*)
+add_test(NAME TestServers
+         COMMAND osirose-tests --gtest_filter=Test*Server*.*)

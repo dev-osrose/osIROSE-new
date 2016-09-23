@@ -1,6 +1,10 @@
 #include "gtest/gtest.h"
 #include "config.h"
 
+TEST(SetupTesting, TestDefault) {
+  EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("server.ini"));
+}
+
 TEST(Config, TestDefault) {
   EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("test.ini"));
 }
@@ -20,7 +24,7 @@ TEST(Config, TestServer) {
   const ::configFile::Server &sd = config.serverdata();
   EXPECT_EQ(0, sd.id());
   EXPECT_EQ("127.0.0.1", sd.ip());
-  EXPECT_EQ(100, sd.accesslevel());
+  EXPECT_EQ(1, sd.accesslevel());
   EXPECT_EQ(0, sd.parentid());
   EXPECT_EQ(0, sd.maxconnections());
   EXPECT_EQ(true, sd.usethreads());

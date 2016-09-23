@@ -1,7 +1,5 @@
 codecov:
   branch: trunk
-  notify:
-    after_n_builds: 3
                               
 
 coverage:
