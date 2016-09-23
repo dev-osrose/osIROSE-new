@@ -34,7 +34,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   int32_t map_idx_;
   uint32_t client_count_;
   uint32_t server_count_;
-  EntitySystem entitySystem_;
+  std::shared_ptr<EntitySystem> entitySystem_;
 };
 
 #endif

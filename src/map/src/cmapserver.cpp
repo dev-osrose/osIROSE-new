@@ -47,7 +47,7 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
     std::string _address = _sock.remote_endpoint().address().to_string();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      CMapClient* nClient = new CMapClient(std::move(_sock), entitySystem_.create());
+      CMapClient* nClient = new CMapClient(std::move(_sock), entitySystem_);
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId(++client_count_);
       logger_->notice("Client connected from: {}", _address.c_str());
@@ -64,5 +64,5 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
 }
 
 void CMapServer::update(double dt) {
-    entitySystem_.update(dt);
+    entitySystem_->update(dt);
 }

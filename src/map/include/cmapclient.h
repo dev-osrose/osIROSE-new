@@ -20,12 +20,12 @@
 #include "mappackets.h"
 #include "crosepacket.h"
 #include "rosepackets.h"
-#include "entitySystems.h"
+#include "entitySystem.h"
 
 class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
-  CMapClient(tcp::socket _sock, Entity entity);
+  CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySystem);
 
   virtual bool IsNearby(const IObject* _otherClient) const override;
 
@@ -48,6 +48,7 @@ class CMapClient : public RoseCommon::CRoseClient {
   uint32_t session_id_;
   uint32_t userid_;
   uint32_t charid_;
+  std::shared_ptr<EntitySystem> entitySystem_;
   Entity entity_;
 };
 

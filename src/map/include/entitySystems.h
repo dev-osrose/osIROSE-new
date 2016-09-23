@@ -11,6 +11,8 @@ template <typename T>
 using Component = EntityManager::Component<T>;
 using Entity = EntityManager::Entity;
 
+class EntitySystem;
+
 class System {
     public:
         virtual ~System() {}
@@ -43,10 +45,7 @@ class MovementSystem : public System {
         }
 
         void move(Entity entity, float x, float y) {
-            (void)entity;
-            (void)x;
-            (void)y;
-            // TODO
+            entity.assign<Destination>(x, y);
         }
 };
 
@@ -71,12 +70,13 @@ class SystemManager {
         }
 
         template <typename T>
-        T& get() {
+        T* get() {
             for (auto &it : systems_) {
                 T *tmp;
                 if ((tmp = dynamic_cast<T*>(it.get())))
-                    return *tmp;
+                    return tmp;
             }
+            return nullptr;
         }
 
         void update(double dt) {

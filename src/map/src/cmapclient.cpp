@@ -28,14 +28,15 @@ CMapClient::CMapClient()
       userid_(0),
       charid_(0) {}
 
-CMapClient::CMapClient(tcp::socket _sock, Entity entity)
+CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       session_id_(0),
       userid_(0),
       charid_(0),
-      entity_(entity) {}
+      entitySystem_(entitySystem),
+      entity_(entitySystem_->create()) {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -112,6 +113,7 @@ bool CMapClient::JoinServerReply(
           res->getInt("hair", hair);
           // res->getInt( "zuly", zuly );
 
+          entity_.assign<Position>(pos[0], pos[1], zone);
           // SEND PLAYER DATA HERE!!!!!!
           auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
           packet2->setCharacter(name, race, zone, pos[0], pos[1], revive_zone,
