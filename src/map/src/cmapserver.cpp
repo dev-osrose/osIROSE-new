@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//#include <selene.h>
 #include <sol.hpp>
 #include "cmapserver.h"
 #include "cmapclient.h"

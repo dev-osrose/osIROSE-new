@@ -27,7 +27,7 @@ TEST(TestCharServer, TestClientPacketPath) {
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
   {
-    std::string query = fmt::format("CALL CreateSession({}, {}, {});", 1, 1, 0);
+    std::string query = fmt::format("CALL create_session({}, {}, {});", 1, 1, 0);
 
     Core::IDatabase& database = Core::databasePool.getDatabase();
     database.QExecute(query);

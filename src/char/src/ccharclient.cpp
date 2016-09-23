@@ -75,7 +75,7 @@ bool CCharClient::JoinServerReply(
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL GetSession({});", sessionID);
+  std::string query = fmt::format("CALL get_session({});", sessionID);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -119,7 +119,7 @@ bool CCharClient::SendCharListReply() {
 
   // mysql query to get the characters created.
   std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL GetCharList({});", userid_);
+  std::string query = fmt::format("CALL get_character_list({});", userid_);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -147,7 +147,7 @@ bool CCharClient::SendCharListReply() {
         {
           res->getInt("id", id);
           character_real_id_.push_back(id);
-          query = fmt::format("CALL GetEquipped({});", id);
+          query = fmt::format("CALL get_equipped({});", id);
           itemres = database.QStore(query);
           if (itemres != nullptr) {
             if (itemres->size() != 0) {
@@ -185,7 +185,7 @@ bool CCharClient::SendCharCreateReply(
     return true;
   }
   std::string query =
-      fmt::format("CALL CreateChar('{}', {}, {}, {}, {}, {});",
+      fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});",
                   Core::CMySQL_Database::escapeData(P->name().c_str()), userid_,
                   P->race(), P->face(), P->hair(), P->stone());
 
@@ -217,7 +217,7 @@ bool CCharClient::SendCharDeleteReply(
     time = std::time(nullptr);
 
     std::string query =
-        fmt::format("CALL DeleteChar({}, '{}');", userid_,
+        fmt::format("CALL delete_character({}, '{}');", userid_,
                     Core::CMySQL_Database::escapeData(P->name().c_str()));
 
     Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -242,7 +242,7 @@ bool CCharClient::SendCharSelectReply(
 
   login_state_ = eSTATE::TRANSFERING;
 
-  std::string query = fmt::format("CALL UpdateSessionWithCharacter({}, '{}');",
+  std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
                                   session_id_, character_real_id_[P->char_id()]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();

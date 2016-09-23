@@ -29,8 +29,20 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	mkdir 3rdparty
 	mkdir 3rdparty/include
 	mkdir 3rdparty/lib
+
+# Install bakefile
+	wget https://github.com/vslavik/bakefile/releases/download/v0.2.9/bakefile-0.2.9.tar.gz
+	tar -xf bakefile-0.2.9.tar.gz
+	cd bakefile-0.2.9/
+	./configure
+	make
+	sudo make install
 	
-	cd tools/mysqlpp/lib
+	cd ../tools/mysqlpp
+	./bootstrap
+./configure
+
+	cd lib
 	perl querydef.pl
 	perl ssqls.pl
 	cd ../../..

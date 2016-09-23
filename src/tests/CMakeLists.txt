@@ -113,8 +113,18 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
 
 IF(ENABLE_TESTING_COVERAGE)
     INCLUDE(CodeCoverage)
-    SETUP_TARGET_FOR_COVERAGE(coverage ${PROJECT} coverage)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    
+    SET(COVERAGE_IGNORE_LIST 
+      'tools/*'
+      '3rdparty/*'
+      'protobuf/*'
+      '*.pb.*'
+      'rapidjson/*'
+      'pbjson.*'
+      'bin2ascii.h'
+    )
+      
+    SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage)
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_MYSQL)
