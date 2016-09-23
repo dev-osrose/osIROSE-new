@@ -59,6 +59,10 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
+CMapClient::~CMapClient() {
+    entity_.destroy();
+}
+
 bool CMapClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 bool CMapClient::JoinServerReply(
@@ -114,6 +118,7 @@ bool CMapClient::JoinServerReply(
           // res->getInt( "zuly", zuly );
 
           entity_.assign<Position>(pos[0], pos[1], zone);
+          entity_.assign<SocketConnector>(this);
           // SEND PLAYER DATA HERE!!!!!!
           auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
           packet2->setCharacter(name, race, zone, pos[0], pos[1], revive_zone,

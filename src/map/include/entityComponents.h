@@ -5,6 +5,14 @@
 #include <string>
 #include "entityx.hh"
 
+class CMapClient;
+
+struct SocketConnector {
+    SocketConnector(CMapClient *client) : client_(client) {}
+
+    CMapClient *client_;
+};
+
 struct BasicInfo {
     BasicInfo(std::string name, uint16_t level, uint32_t xp, uint32_t charOwner) :
         name_(name), level_(level), xp_(xp), charOwner_(charOwner) {}
@@ -84,7 +92,7 @@ struct Destination {
     float y_;
 };
 
-using GameComponents = entityx::Components<BasicInfo, Stats, AdvancedInfo,
+using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, AdvancedInfo,
       CharacterInfo, Graphics, CharacterGraphics, Position, Destination>;
 
 #endif /* !_ENTITYCOMPONENTS_H_ */
