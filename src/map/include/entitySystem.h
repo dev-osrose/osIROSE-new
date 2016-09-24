@@ -28,9 +28,4 @@ class EntitySystem {
         SystemManager systemManager_;
 };
 
-namespace EntitySystemManipulators {
-
-void move(std::shared_ptr<EntitySystem> es, Entity e, float x, float y) ;
-}
-
 #endif /* !_ENTITYSYSTEM_H_ */
