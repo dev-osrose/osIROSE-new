@@ -50,6 +50,8 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     //      return LogoutReply();
     case ePacketType::PAKCS_NORMAL_CHAT:
       return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
+    case ePacketType::PAKCS_MOUSE_CMD:
+      return MouseCmdRcv(getPacket<ePacketType::PAKCS_MOUSE_CMD>(_buffer));
     default: {
       // logger_->debug( "cmapclient default handle: 0x{1:04x}",
       // (uint16_t)CRosePacket::type(_buffer) );
@@ -216,4 +218,18 @@ bool CMapClient::IsNearby(const IObject* _otherClient) const {
   (void)_otherClient;
   //TODO: Call the entity distance calc here
   return true; 
+}
+
+bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
+    logger_->trace("CMapClient::MouseReply()");
+    if (login_state_ != eSTATE::LOGGEDIN) {
+        logger_->warn("Client {} is attempting to issue mouse commands before logging in.", GetId());
+        return true;
+    }
+    logger_->notice("position : {}, {}", P->x(), P->y());
+    // TODO : set target
+    //entitySystem_->get<MovementSystem>.move(entity_, P->x(), P->y());
+    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
+            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
+    return true;
 }

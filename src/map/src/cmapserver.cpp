@@ -22,7 +22,7 @@
 using namespace RoseCommon;
 
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
-    : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0) {
+    : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0), entitySystem_(std::make_shared<EntitySystem>()) {
 
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);

@@ -36,6 +36,47 @@ class CliLogoutReq : public CRosePacket {
   virtual ~CliLogoutReq();
 };
 
+//-------------------------------------------------
+
+class CliMouseCmd : public CRosePacket {
+    public:
+        CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliMouseCmd();
+
+        virtual ~CliMouseCmd();
+
+        uint16_t targetId() const { return targetObjId_; }
+        int32_t x() const { return destX_; }
+        int32_t y() const { return destY_; }
+        int16_t z() const { return posZ_; }
+
+    private:
+        uint16_t targetObjId_;
+        int32_t destX_;
+        int32_t destY_;
+        int16_t posZ_;
+};
+
+class SrvMouseCmd : public CRosePacket {
+    public:
+        SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId, uint16_t srvDist,
+                int32_t destX, int32_t destY, int16_t posZ);
+        SrvMouseCmd();
+
+        virtual ~SrvMouseCmd();
+
+    protected:
+        void pack();
+
+    private:
+        uint16_t sourceObjId_;
+        uint16_t destObjId_;
+        uint16_t srvDist_;
+        int32_t destX_;
+        int32_t destY_;
+        int16_t posZ_;
+};
+
 //------------------------------------------------
 
 class SrvLogoutReply : public CRosePacket {
@@ -102,14 +143,14 @@ class SrvChangeMapReply : public CRosePacket {
     uint8_t town_rate_;
     uint8_t item_rate_[MAX_SELL_TYPE];
     uint32_t flags_;
-    
+
     global_var() : craft_rate_(0),
     update_time_(0),
     world_rate_(0),
     town_rate_(0),
     flags_(0) {
       for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-        item_rate_[i] = 0; 
+        item_rate_[i] = 0;
       }
     }
   };
@@ -235,7 +276,7 @@ class SrvServerData : public CRosePacket {
     uint16_t dev_;
     uint32_t pop_;
     uint32_t item_[MAX_SELL_TYPE];
-    
+
     Enconmy_Data() : counter_(0),
     pop_base_(0),
     dev_base_(0),
@@ -369,7 +410,7 @@ class SrvSelectCharReply : public CRosePacket {
     uint32_t expired_seconds_;
     uint16_t value_;
     uint16_t unknown_;
-    
+
     status_effects() : expired_seconds_(0), value_(0), unknown_(0) {}
 
 //   protected:
@@ -403,8 +444,8 @@ class SrvSelectCharReply : public CRosePacket {
 
     uint16_t pat_hp_;
     uint32_t pat_cooldown_time_;
-    
-    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0), 
+
+    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0),
                        skill_points_(0), body_size_(1), head_size_(1),
                        exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
                        guild_id_(0), guild_contribution_(0), guild_position_(0),
@@ -457,7 +498,7 @@ class SrvSelectCharReply : public CRosePacket {
       };
       unsigned short item_;
     };
-    
+
     hotbar_item() : item_(0) {}
 
 //   protected:
@@ -505,8 +546,8 @@ class SrvInventoryData : public CRosePacket {
       : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
 
  protected:
-  void pack() { 
-    *this << zuly_; 
+  void pack() {
+    *this << zuly_;
     for (int i = 0; i < 140; ++i) {
       *this << (uint16_t)0 << (uint32_t)0;
     }

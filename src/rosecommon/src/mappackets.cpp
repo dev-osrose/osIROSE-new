@@ -30,6 +30,34 @@ RoseCommon::CliLogoutReq::CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE])
 
 RoseCommon::CliLogoutReq::~CliLogoutReq() {}
 
+//--------------------------------------------
+
+RoseCommon::CliMouseCmd::CliMouseCmd() : CRosePacket(ePacketType::PAKCS_MOUSE_CMD) {}
+
+RoseCommon::CliMouseCmd::CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    if (type() != ePacketType::PAKCS_MOUSE_CMD)
+        throw std::runtime_error("Not the right packet!");
+    *this >> targetObjId_ >> destX_ >> destY_ >> posZ_;
+}
+
+RoseCommon::CliMouseCmd::~CliMouseCmd() {}
+
+//---------------------------------------------
+
+RoseCommon::SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CMD) {}
+
+RoseCommon::SrvMouseCmd::SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId,
+        uint16_t srvDist, int32_t destX, int32_t destY, int16_t posZ)
+    : CRosePacket(ePacketType::PAKWC_MOUSE_CMD),
+    sourceObjId_(sourceObjId), destObjId_(destObjId), srvDist_(srvDist),
+    destX_(destX), destY_(destY), posZ_(posZ) {}
+
+void RoseCommon::SrvMouseCmd::pack() {
+    *this << sourceObjId_ << destObjId_ << srvDist_ << destX_ << destY_ << posZ_;
+}
+
+RoseCommon::SrvMouseCmd::~SrvMouseCmd() {}
+
 //---------------------------------------------
 
 RoseCommon::SrvLogoutReply::SrvLogoutReply(uint16_t wait_time)
