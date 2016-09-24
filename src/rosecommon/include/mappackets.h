@@ -20,6 +20,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <array>
 
 namespace RoseCommon {
 #define MIN_SELL_TYPE 1
@@ -102,14 +103,14 @@ class SrvChangeMapReply : public CRosePacket {
     uint8_t town_rate_;
     uint8_t item_rate_[MAX_SELL_TYPE];
     uint32_t flags_;
-    
+
     global_var() : craft_rate_(0),
     update_time_(0),
     world_rate_(0),
     town_rate_(0),
     flags_(0) {
       for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-        item_rate_[i] = 0; 
+        item_rate_[i] = 0;
       }
     }
   };
@@ -235,7 +236,7 @@ class SrvServerData : public CRosePacket {
     uint16_t dev_;
     uint32_t pop_;
     uint32_t item_[MAX_SELL_TYPE];
-    
+
     Enconmy_Data() : counter_(0),
     pop_base_(0),
     dev_base_(0),
@@ -299,25 +300,25 @@ class SrvSelectCharReply : public CRosePacket {
     MAX_EQUIPPED_ITEMS
   };
 
+    struct equip_item : public ISerialize {
+        equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
+                   uint8_t grade = 0)
+            : id_(id), gem_op_(gem), socket_(socket != 0), grade_(grade) {}
+        //protected:
+        virtual void serialize( CRosePacket &os ) const override;
+        virtual void deserialize( CRosePacket &os ) override;
+
+    private:
+        uint16_t	id_;
+        uint16_t	gem_op_;
+        bool      socket_;
+        uint8_t		grade_;
+    };
+
  protected:
   void pack();
 
  private:
-
-  struct equip_item : public ISerialize {
-    equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
-               uint8_t grade = 0)
-               : id_(id), gem_op_(gem), socket_(socket != 0), grade_(grade) {}
-  //protected:
-    virtual void serialize( CRosePacket &os ) const override;
-    virtual void deserialize( CRosePacket &os ) override;
-
-  private:
-    uint16_t	id_;
-    uint16_t	gem_op_;
-    bool      socket_;
-    uint8_t		grade_;
-  };
 
   struct base_info : public ISerialize {
     uint16_t job_;
@@ -369,7 +370,7 @@ class SrvSelectCharReply : public CRosePacket {
     uint32_t expired_seconds_;
     uint16_t value_;
     uint16_t unknown_;
-    
+
     status_effects() : expired_seconds_(0), value_(0), unknown_(0) {}
 
 //   protected:
@@ -403,8 +404,8 @@ class SrvSelectCharReply : public CRosePacket {
 
     uint16_t pat_hp_;
     uint32_t pat_cooldown_time_;
-    
-    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0), 
+
+    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0),
                        skill_points_(0), body_size_(1), head_size_(1),
                        exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
                        guild_id_(0), guild_contribution_(0), guild_position_(0),
@@ -457,7 +458,7 @@ class SrvSelectCharReply : public CRosePacket {
       };
       unsigned short item_;
     };
-    
+
     hotbar_item() : item_(0) {}
 
 //   protected:
@@ -505,8 +506,8 @@ class SrvInventoryData : public CRosePacket {
       : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
 
  protected:
-  void pack() { 
-    *this << zuly_; 
+  void pack() {
+    *this << zuly_;
     for (int i = 0; i < 140; ++i) {
       *this << (uint16_t)0 << (uint32_t)0;
     }
@@ -597,6 +598,91 @@ class CliStopReq : public CRosePacket {
 
 private:
   float x, y;
+};
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvPlayerChar : public CRosePacket {
+public:
+    SrvPlayerChar()
+        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR) {}
+
+    SrvPlayerChar(uint32_t objectId, float posX, float posY, float destX, float destY, int32_t hp, uint8_t charRace, uint16_t runSpeed)
+        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR),
+          objectId_(objectId),
+          posX_(posX), posY_(posY), destX_(destX), destY_(destY),
+          command_(0), targetId_(0), moveMode_(0), hp_(hp),
+          teamId_(0), statusFlag_(0), charRace_(charRace),
+          runSpeed_(runSpeed), attackSpeed_(0), weightRate_(0),
+          equipItems_({}), shootData_({}), job_(0), level_(0),
+          ridingItems_({}), posZ_(0), subFlag_(0) {}
+
+    virtual ~SrvPlayerChar() {}
+
+protected:
+    void pack() override
+    {
+        *this << objectId_
+              << posX_ << posY_ << destX_ << destY_
+              << command_
+              << targetId_
+              << moveMode_
+              << hp_
+              << teamId_
+              << statusFlag_
+              << charRace_
+              << runSpeed_
+              << attackSpeed_
+              << weightRate_
+              << equipItems_
+              << shootData_
+              << job_
+              << level_
+              << ridingItems_
+              << posZ_
+              << subFlag_;
+    }
+
+private:
+    struct ShootData : public ISerialize {
+        union Whatever {
+            struct {
+                uint8_t type : 5;
+                uint16_t itemId : 10;
+            };
+            uint32_t shotItem;
+        };
+
+        Whatever whatever_;
+
+        virtual void serialize(CRosePacket &os) const override { os << whatever_; }
+        virtual void deserialize(CRosePacket &os) override { os >> whatever_; }
+    };
+
+    template<size_t N>
+    using equip_item_array = std::array<SrvSelectCharReply::equip_item, N>;
+    using shoot_data_array = std::array<ShootData, 3>;
+
+    uint32_t objectId_;
+    float posX_, posY_, destX_, destY_;
+    uint32_t command_;
+    uint32_t targetId_;
+    uint8_t moveMode_;
+    int32_t hp_;
+    int32_t teamId_;
+    uint64_t statusFlag_;
+    uint8_t charRace_;
+    uint16_t runSpeed_;
+    uint16_t attackSpeed_;
+    uint8_t weightRate_;
+    equip_item_array<SrvSelectCharReply::MAX_EQUIPPED_ITEMS> equipItems_;
+    shoot_data_array shootData_;
+    uint16_t job_;
+    uint8_t level_;
+    equip_item_array<6> ridingItems_;
+    uint16_t posZ_;
+    uint64_t subFlag_;
 };
 
 }
