@@ -65,6 +65,9 @@ template <>
 struct find_recv_class<ePacketType::PAKCS_LOGOUT_REQ> { CliLogoutReq type; };
 
 template <>
+struct find_recv_class<ePacketType::PAKCS_STOP_MOVING> { CliStopMoving type; };
+
+template <>
 struct find_recv_class<ePacketType::PAKCS_MOUSE_CMD> { CliMouseCmd type; };
 
 template <>

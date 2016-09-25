@@ -41,6 +41,7 @@ class CMapClient : public RoseCommon::CRoseClient {
   bool ChatReply(std::unique_ptr<RoseCommon::CliChat> P);
 
   bool MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P);
+  bool StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P);
 
   enum class eSTATE {
     DEFAULT,

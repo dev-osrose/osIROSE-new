@@ -60,6 +60,16 @@ RoseCommon::SrvMouseCmd::~SrvMouseCmd() {}
 
 //---------------------------------------------
 
+RoseCommon::CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
+
+RoseCommon::CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    *this >> posX_ >> posY_ >> posZ_;
+}
+
+RoseCommon::CliStopMoving::~CliStopMoving() {}
+
+//---------------------------------------------
+
 RoseCommon::SrvLogoutReply::SrvLogoutReply(uint16_t wait_time)
     : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY), wait_time_(wait_time) {}
 

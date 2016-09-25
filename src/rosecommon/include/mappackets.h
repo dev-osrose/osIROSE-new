@@ -77,6 +77,25 @@ class SrvMouseCmd : public CRosePacket {
         int16_t posZ_;
 };
 
+//-----------------------------------------------
+
+class CliStopMoving : public CRosePacket {
+    public:
+        CliStopMoving();
+        CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
+
+        virtual ~CliStopMoving();
+
+        int32_t x() const { return posX_; }
+        int32_t y() const { return posY_; }
+        int16_t z() const { return posZ_; }
+
+    private:
+        int32_t posX_;
+        int32_t posY_;
+        int16_t posZ_;
+};
+
 //------------------------------------------------
 
 class SrvLogoutReply : public CRosePacket {
