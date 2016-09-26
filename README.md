@@ -22,7 +22,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 [![GitHub Repository](https://img.shields.io/badge/github-RavenX8/osIROSE--new-green.svg)](https://github.com/RavenX8/osIROSE-new)
 [![Waffle Board](https://img.shields.io/badge/waffle-RavenX8/osIROSE--new-6699dd.svg)](https://waffle.io/RavenX8/osIROSE-new)  
 [![Community Forum](https://img.shields.io/badge/forum-http%3A%2F%2Fforum.dev--osrose.com-green.svg)](http://forum.dev-osrose.com/index.php)
-[![Join the chat at https://gitter.im/RavenX8/osIROSE-new](https://badges.gitter.im/RavenX8/osIROSE-new.svg)](https://gitter.im/RavenX8/osIROSE-new?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
+[![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
 
 ##### Issues and Status
 [![GitHub issues](https://img.shields.io/github/issues/RavenX8/osIROSE-new.svg)](https://github.com/RavenX8/osIROSE-new/issues)
