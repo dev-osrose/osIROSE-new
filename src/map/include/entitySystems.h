@@ -4,8 +4,6 @@
 
 #include "entityComponents.h"
 
-#define equals(a, b, precision) (((a + precision) > (b - precision)) && ((a - precision) < (b + precision)))
-
 using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
 template <typename T>
 using Component = EntityManager::Component<T>;
@@ -29,23 +27,32 @@ class MovementSystem : public System {
             Component<Destination> destination;
             for (Entity entity : es.entities_with_components(position, destination)) {
                 int dx = 0, dy = 0;
-                if (!equals(position->x_, destination->x_, 0.1) && position->x_ < destination->x_)
+                if (position->x_ < destination->x_)
                     dx = -1;
-                else if (!equals(position->x_, destination->x_, 0.1) && position->x_ > destination->x_)
+                else if (position->x_ > destination->x_)
                     dx = 1;
-                if (!equals(position->y_, destination->y_, 0.1) && position->y_ < destination->y_)
+                if (position->y_ < destination->y_)
                     dy = -1;
-                else if (!equals(position->y_, destination->y_, 0.1) && position->y_ > destination->y_)
+                else if (position->y_ > destination->y_)
                     dy = 1;
                 position->x_ += dx * 1 * dt; // TODO : compute speed
                 position->y_ += dy * 1 * dt; // TODO : compute speed
-                if (equals(position->x_, destination->x_, 0.1) && equals(position->y_, destination->y_, 0.1))
+                if (position->x_ == destination->x_ && position->y_ == destination->y_)
                     entity.remove<Destination>();
             }
         }
 
-        void move(Entity entity, float x, float y) {
+        void move(Entity entity, int32_t x, int32_t y) {
             entity.assign<Destination>(x, y);
+        }
+
+        void stop(Entity entity, int32_t x, int32_t y) {
+            entity.remove<Destination>();
+            auto position = entity.component<Position>();
+            if (position) {
+                position->x_ = x;
+                position->y_ = y;
+            }
         }
 };
 

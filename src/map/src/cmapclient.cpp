@@ -229,7 +229,7 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
-    //entitySystem_->get<MovementSystem>.move(entity_, P->x(), P->y());
+    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
     return true;
@@ -241,7 +241,6 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
         logger_->warn("Client {} is attempting to stop moving before logging in.", GetId());
         return true;
     }
-    (void)P;
-    // TODO : stop moving in the entity system
+    entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
     return true;
 }

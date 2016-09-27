@@ -78,10 +78,10 @@ struct CharacterInfo {
 };
 
 struct Position {
-    Position(float x, float y, uint16_t map) : x_(x), y_(y), map_(map) {}
+    Position(int32_t x, int32_t y, uint16_t map) : x_(x), y_(y), map_(map) {}
 
-    float x_;
-    float y_;
+    int32_t x_;
+    int32_t y_;
     uint16_t map_;
 };
 
