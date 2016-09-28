@@ -17,6 +17,7 @@ struct SocketConnector {
 };
 
 struct BasicInfo {
+    BasicInfo() : level_(0), xp_(0), id_(0) {}
     BasicInfo(std::string name, uint16_t level, uint32_t xp, uint32_t id) :
         name_(name), level_(level), xp_(xp), id_(id) {}
 
@@ -27,10 +28,11 @@ struct BasicInfo {
 };
 
 struct Stats {
+    Stats() : maxHp_(0), maxMp_(0), str_(0), dex_(0), int_(0), con_(0), charm_(0), sense_(0), bodySize_(0), headSize_(0) {}
     Stats(uint32_t maxHp, uint32_t maxMp, uint16_t str, uint16_t dex,
-            uint16_t intel, uint16_t con, uint16_t charm, uint16_t sense) :
+            uint16_t intel, uint16_t con, uint16_t charm, uint16_t sense, uint8_t bodySize, uint8_t headSize) :
         maxHp_(maxHp), maxMp_(maxMp), str_(str), dex_(dex), int_(intel), con_(con),
-        charm_(charm), sense_(sense) {}
+        charm_(charm), sense_(sense), bodySize_(bodySize), headSize_(headSize) {}
 
     uint32_t maxHp_;
     uint32_t maxMp_;
@@ -45,6 +47,7 @@ struct Stats {
 };
 
 struct AdvancedInfo {
+    AdvancedInfo() : zuly_(0), hp_(0), mp_(0) {}
     AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp) : zuly_(zuly), hp_(hp), mp_(mp) {}
 
     uint32_t zuly_;
@@ -59,6 +62,7 @@ struct Graphics {
 };
 
 struct CharacterGraphics {
+    CharacterGraphics() : face_(0), hair_(0), race_(0) {}
     CharacterGraphics(uint8_t face, uint8_t hair, uint8_t race) : face_(face),
         hair_(hair), race_(race) {}
 
@@ -68,12 +72,33 @@ struct CharacterGraphics {
 };
 
 struct CharacterInfo {
+    CharacterInfo() :
+        job_(0),
+        stone_(0),
+        statPoints_(0),
+        skillPoints_(0),
+        penaltyXp_(0),
+        deleteDate_(0),
+        platinium_(false),
+        factionId_(0),
+        factionRank_(0),
+        factionFame_{0},
+        factionPoints_{0},
+        guildId_(0),
+        guildContribution_(0),
+        guildRank_(0),
+        pkFlag_(0),
+        stamina_(0),
+        patHp_(0),
+        patCooldownTime_(0),
+        dt_(0)
+    {}
     CharacterInfo(uint16_t job, uint8_t stone, uint32_t statPoints,
                     uint32_t skillPoints, uint32_t penaltyXp, uint32_t deleteDate, bool platinium,
-                    uint8_t un) :
+                    uint8_t faction) :
         job_(job), stone_(stone), statPoints_(statPoints), skillPoints_(skillPoints),
         penaltyXp_(penaltyXp), deleteDate_(deleteDate), platinium_(platinium),
-        union_(un) {}
+        factionId_(faction) {}
 
     uint16_t job_;
     uint8_t stone_;
@@ -82,24 +107,23 @@ struct CharacterInfo {
     uint32_t penaltyXp_;
     uint32_t deleteDate_;
     bool platinium_;
-    uint8_t union_;
-    uint8_t rank_;
-    uint8_t fame_;
-    uint16_t fame1_;
-    uint16_t fame2_;
-    std::array<uint16_t, 10> unionPoints_; // there are 10 unions in the game
+    uint8_t factionId_;
+    uint8_t factionRank_;
+    std::array<uint16_t, 3> factionFame_; // 3 different factions in the game
+    std::array<uint16_t, 10> factionPoints_; // crappy packet code, only the first 3 are used
     uint32_t guildId_;
     uint16_t guildContribution_;
-    uint8_t guildPosition_;
+    uint8_t guildRank_;
     uint16_t pkFlag_;
     uint16_t stamina_;
     uint16_t patHp_;
-    uint32_t patCooldownTime_;
+    uint32_t patCooldownTime_; // in seconds
     double dt_; // to keep track of seconds for patCoolDownTime_
 };
 
 struct Position {
-    Position(int32_t x, int32_t y, uint16_t map) : x_(x), y_(y), map_(map) {}
+    Position() : x_(0), y_(0), map_(0), spawn_(0) {}
+    Position(int32_t x, int32_t y, uint16_t map, uint16_t spawn) : x_(x), y_(y), map_(map), spawn_(spawn) {}
 
     int32_t x_;
     int32_t y_;
@@ -139,16 +163,25 @@ struct StatusEffects {
     std::vector<StatusEffect> effects_;
 };
 
+// This is not a component!
+struct Skill {
+    Skill() : id_(0), level_(0) {}
+    Skill(uint16_t id, uint8_t level) : id_(id), level_(level) {}
+
+    uint16_t id_;
+    uint8_t level_;
+};
+
 struct Skills {
-    Skills() : skills_{0} {}
-    Skills(const std::initializer_list<uint16_t> &skills) {
+    Skills() {}
+    Skills(const std::initializer_list<Skill> &skills) {
         int64_t diff = 120 - skills.size();
         diff = diff < 0 ? 0 : diff;
         auto last = skills.end() - diff;
         std::copy(skills.begin(), last, skills_.begin());
     }
 
-    std::array<uint16_t, 120> skills_;
+    std::array<Skill, 120> skills_;
 };
 
 // This is not a component!
@@ -179,14 +212,14 @@ struct Hotbar {
 };
 
 struct Item {
-    Item() : id_(0), gemOpt_(0), hasSocket_(0), grade_(0) {}
-    Item(uint16_t id, uint16_t gemOpt, bool hasSocket, uint8_t grade) : id_(id),
-        gemOpt_(gemOpt), hasSocket_(hasSocket), grade_(grade) {}
+    Item() : id_(0), gemOpt_(0), hasSocket_(0), refine_(0) {}
+    Item(uint16_t id, uint16_t gemOpt, bool hasSocket, uint8_t refine) : id_(id),
+        gemOpt_(gemOpt), hasSocket_(hasSocket), refine_(refine) {}
 
     uint16_t id_ : 10;
     uint16_t gemOpt_ : 9;
     bool hasSocket_;
-    uint8_t grade_ : 4;
+    uint8_t refine_ : 4;
 };
 
 struct EquippedItems {

@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    osirose.sql                                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: availlan <availlan@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2016/09/29 00:12:53 by availlan          #+#    #+#              #
+#    Updated: 2016/09/29 00:13:20 by availlan         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CREATE DATABASE  IF NOT EXISTS `osirose` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `osirose`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
@@ -54,7 +66,16 @@ CREATE TABLE `characters` (
   `level` int(10) unsigned NOT NULL DEFAULT '1',
   `job` int(11) unsigned DEFAULT '0',
   `clanid` int(11) unsigned NOT NULL DEFAULT '0',
+  `clan_contribution` int(11) unsigned NOT NULL DEFAULT '0',
   `clan_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `factionid` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame3` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points3` int(11) unsigned NOT NULL DEFAULT '0',
   `face` int(11) unsigned NOT NULL DEFAULT '0',
   `hair` int(11) unsigned NOT NULL DEFAULT '0',
   `stone` int(11) unsigned NOT NULL DEFAULT '0',
@@ -64,6 +85,7 @@ CREATE TABLE `characters` (
   `current_mp` int(10) unsigned NOT NULL DEFAULT '0',
   `max_hp` int(10) unsigned NOT NULL DEFAULT '0',
   `max_mp` int(10) unsigned NOT NULL DEFAULT '0',
+  `stamina` int(11) unsigned NOT NULL DEFAULT '0',
   `str` int(10) unsigned NOT NULL DEFAULT '10',
   `dex` int(10) unsigned NOT NULL DEFAULT '10',
   `int_` int(10) unsigned NOT NULL DEFAULT '10',
@@ -75,9 +97,10 @@ CREATE TABLE `characters` (
   `penalty_exp` bigint(20) unsigned DEFAULT '0',
   `revive_map` int(11) NOT NULL DEFAULT '1',
   `map` int(11) NOT NULL DEFAULT '1',
-  `x` float NOT NULL DEFAULT '520000',
-  `y` float NOT NULL DEFAULT '520000',
+  `x` bigint(32) NOT NULL DEFAULT '0',
+  `y` bigint(32) NOT NULL DEFAULT '0',
   `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
+  `pk_flag` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
@@ -117,6 +140,8 @@ CREATE TABLE `inventory` (
   `amount` int(11) unsigned NOT NULL DEFAULT '0',
   `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `slot` int(11) unsigned NOT NULL DEFAULT '0',
+  `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
+  `socket` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),

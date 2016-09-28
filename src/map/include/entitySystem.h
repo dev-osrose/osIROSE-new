@@ -23,6 +23,8 @@ class EntitySystem {
             return *systemManager_.get<T>();
         }
 
+        Entity loadCharacter(uint32_t charId, bool platinium);
+
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;

@@ -35,8 +35,8 @@ CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySy
       session_id_(0),
       userid_(0),
       charid_(0),
-      entitySystem_(entitySystem),
-      entity_(entitySystem_->create()) {}
+      entitySystem_(entitySystem)
+      {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -97,61 +97,21 @@ bool CMapClient::JoinServerReply(
         res->getInt("userid", userid_);
         res->getInt("charid", charid_);
         session_id_ = sessionID;
+        bool platinium = false;
+        res->getInt("platinium", platinium);
+        entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
-        query = fmt::format("CALL GetCharacter({});", charid_);
-        res = database.QStore(query);
-        if (res != nullptr && res->size() == 1) {
+        if (entity_.component<Position>()) {
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::OK, std::time(nullptr));
           Send(*packet);
 
-          uint32_t race = 0, face, hair;
-          uint32_t zone = 1, revive_zone = 1;
-          float pos[2] = {530000, 530000};
-          uint64_t zuly = 0;
-          std::string name;
-
-          res->getString("name", name);
-          res->getInt("race", race);
-          res->getInt("map", zone);
-          res->getInt("revive_map", revive_zone);
-          res->getFloat("x", pos[0]);
-          res->getFloat("y", pos[1]);
-          res->getInt("face", face);
-          res->getInt("hair", hair);
-          // res->getInt( "zuly", zuly );
-
-          entity_.assign<Position>(pos[0], pos[1], zone);
           entity_.assign<SocketConnector>(this);
           // SEND PLAYER DATA HERE!!!!!!
           auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
-          packet2->setCharacter(name, race, zone, pos[0], pos[1], revive_zone,
-                                sessionID);
-          packet2->addEquipItem(
-              SrvSelectCharReply::equipped_position::EQUIP_FACE, face);
-          packet2->addEquipItem(
-              SrvSelectCharReply::equipped_position::EQUIP_HAIR, hair);
-
-          query = fmt::format("CALL GetEquipped({});", charid_);
-          itemres = database.QStore(query);
-          if (itemres != nullptr) {
-            if (itemres->size() != 0) {
-              for (uint32_t j = 0; j < itemres->size(); ++j) {
-                uint32_t slot, itemid;  //, itemtype, amount;
-                itemres->getInt("slot", slot);
-                itemres->getInt("itemid", itemid);
-                // itemres->getInt( "itemtype", itemtype );
-                // itemres->getInt( "amount", amount );
-
-                packet2->addEquipItem(slot, itemid);
-                itemres->incrementRow();
-              }
-            }
-          }
-
           Send(*packet2);
 
-          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(zuly);
+          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(0); // zuly
           Send(*packet3);
 
           auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();

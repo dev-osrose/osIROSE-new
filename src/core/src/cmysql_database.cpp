@@ -29,12 +29,44 @@ bool CMySQL_Row::getString(std::string const &name, std::string &data) {
   return getData<std::string>(name, data);
 }
 
+bool CMySQL_Row::getInt(std::string const &name, uint64_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int64_t &data) {
+  return getData(name, data);
+}
+
 bool CMySQL_Row::getInt(std::string const &name, uint32_t &data) {
-  return getData<uint32_t>(name, data);
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int32_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, uint16_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int16_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, uint8_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int8_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, bool &data) {
+  return getData(name, data);
 }
 
 bool CMySQL_Row::getFloat(std::string const &name, float &data) {
-  return getData<float>(name, data);
+  return getData(name, data);
 }
 
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
@@ -54,7 +86,39 @@ bool CMySQL_Result::getString(std::string const &name, std::string &data) {
   return rows_[current_row_]->getString(name, data);
 }
 
+bool CMySQL_Result::getInt(std::string const &name, uint64_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int64_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
 bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int32_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, uint16_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int16_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, uint8_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int8_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, bool &data) {
   return rows_[current_row_]->getInt(name, data);
 }
 
