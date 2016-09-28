@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    osirose.sql                                        :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: availlan <availlan@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/09/29 00:12:53 by availlan          #+#    #+#              #
-#    Updated: 2016/09/29 00:13:20 by availlan         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 CREATE DATABASE  IF NOT EXISTS `osirose` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `osirose`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
