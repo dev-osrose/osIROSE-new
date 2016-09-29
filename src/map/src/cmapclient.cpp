@@ -108,7 +108,7 @@ bool CMapClient::JoinServerReply(
 
           entity_.assign<SocketConnector>(this);
           // SEND PLAYER DATA HERE!!!!!!
-          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>();
+          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_, sessionID);
           Send(*packet2);
 
           auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(0); // zuly
@@ -119,7 +119,7 @@ bool CMapClient::JoinServerReply(
 
           auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
           Send(*packet5);
-          
+
           //TODO: Send other clients the AVT join packet
           //TODO: Actually make the packet structure
           //auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(*packet2);
@@ -144,7 +144,7 @@ bool CMapClient::JoinServerReply(
 bool CMapClient::ChangeMapReply(
     std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
   logger_->trace("CMapClient::ChangeMapReply()");
-  
+
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to change map before logging in.",
                   GetId());
@@ -153,22 +153,22 @@ bool CMapClient::ChangeMapReply(
   (void)P;
   Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), 81, 55, 0, 0, std::time(nullptr), 0));
   //TODO : send PAKWC_PLAYER_CHAR to EVERYONE_BUT_ME
-  
+
   return true;
 }
 
 bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   logger_->trace("CMapClient::ChatReply()");
-  
+
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to chat before logging in.",
                   GetId());
     return true;
   }
-  
+
   uint16_t _charID = GetId();
   std::string _message = P->getMessage();
-  
+
   auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
           _message, _charID);
   logger_->trace("client {} is sending '{}'", _charID, _message);
@@ -176,10 +176,10 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   return true;
 }
 
-bool CMapClient::IsNearby(const IObject* _otherClient) const { 
+bool CMapClient::IsNearby(const IObject* _otherClient) const {
   (void)_otherClient;
   //TODO: Call the entity distance calc here
-  return true; 
+  return true;
 }
 
 bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {

@@ -82,7 +82,7 @@ void RoseCommon::SrvLogoutReply::pack() { *this << wait_time_; }
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::CliChangeMapReq::CliChangeMapReq()
-    : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), 
+    : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ),
       weight_rate_(0),
       position_z_(0) {}
 
@@ -256,159 +256,58 @@ void SrvRemoveObject::pack() { *this << obj_id_; }
 //---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
-RoseCommon::SrvSelectCharReply::SrvSelectCharReply()
-    : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {
-  race_ = zone_ = revive_zone_ = position_start_[0] = position_start_[1] =
-      unique_tag_ = 0;
-  name_ = "";
-
-  for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-    items_[i] = equip_item();
-  }
-
-  base_character_info_ = base_info();
-  stats_ = character_stats();
-  ext_stats_ = extended_stats();
-  learned_skills_ = skills();
-  hotbar_ = hotbar();
-}
+RoseCommon::SrvSelectCharReply::SrvSelectCharReply(Entity entity, uint32_t sessionID) : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY), entity_(entity), tag_(sessionID) {}
 
 RoseCommon::SrvSelectCharReply::~SrvSelectCharReply() {}
 
-void RoseCommon::SrvSelectCharReply::setCharacter(const std::string &name,
-                                                  uint8_t race, uint16_t zone,
-                                                  float x, float y,
-                                                  uint16_t revive_zone,
-                                                  uint32_t utag) {
-  name_ = name;
-  race_ = race;
-  zone_ = zone;
-  position_start_[0] = x;
-  position_start_[1] = y;
-  revive_zone_ = revive_zone;
-  unique_tag_ = utag;
-}
-
-void RoseCommon::SrvSelectCharReply::addEquipItem(uint8_t slot,
-                                                  uint16_t item_id /*= 0*/,
-                                                  uint16_t gem /*= 0*/,
-                                                  uint8_t socket /*= 0*/,
-                                                  uint8_t grade /*= 0*/) {
-  equip_item item = equip_item(item_id, gem, socket, grade);
-  items_[slot] = item;
-}
-
 void RoseCommon::SrvSelectCharReply::pack() {
-  *this << race_ << zone_ << position_start_[0] << position_start_[1]
-        << revive_zone_;
+    auto pos = entity_.component<Position>();
+    auto basic = entity_.component<BasicInfo>();
+    auto stats = entity_.component<Stats>();
+    auto advanced = entity_.component<AdvancedInfo>();
+    auto graphics = entity_.component<CharacterGraphics>();
+    auto info = entity_.component<CharacterInfo>();
+    auto skills = entity_.component<Skills>();
+    auto hotbar = entity_.component<Hotbar>();
+    auto equipped = entity_.component<EquippedItems>();
+    auto effects = entity_.component<StatusEffects>();
 
-    for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i) {
-      items_[i].serialize(*this);
-    }
+    *this << graphics->race_ << pos->map_ << pos->x_ << pos->y_ << pos->spawn_;
 
-    base_character_info_.serialize( *this );
-    stats_.serialize( *this );
-    ext_stats_.serialize( *this );
-    learned_skills_.serialize( *this );
-    hotbar_.serialize( *this );
+    for (auto &it : equipped->items_)
+        *this << it;
 
-    *this << unique_tag_ << name_;
+    *this << graphics->face_ << graphics->hair_ << info->job_
+          << info->factionId_ << info->factionRank_ << info->factionFame_[info->factionId_];
 
-//    *this << base_character_info_ << stats_ << ext_stats_ << learned_skills_
-//          << hotbar_ << unique_tag_ << name_;
+    *this << stats->str_ << stats->dex_ << stats->int_ << stats->con_ << stats->charm_
+          << stats->sense_;
+
+    *this << advanced->hp_ << advanced->mp_ << basic->xp_ << basic->level_
+          << info->statPoints_ << info->skillPoints_ << stats->bodySize_
+          << stats->headSize_ << info->penaltyXp_;
+    for (size_t i = 0; i < info->factionFame_.size(); ++i)
+        if (i != info->factionId_)
+            *this << info->factionFame_[i];
+    *this << info->factionPoints_;
+    *this << info->guildId_ << info->guildContribution_ << info->guildRank_ << info->pkFlag_ << info->stamina_;
+    for (auto &it : effects->effects_)
+        *this << it;
+
+    *this << info->patHp_ << info->patCooldownTime_;
+
+    for (auto &it : skills->skills_)
+        *this << it;
+
+    for (auto &it : hotbar->items_)
+        *this << it;
+
+    *this << tag_ << basic->name_;
 }
 
-void RoseCommon::SrvSelectCharReply::base_info::serialize(
-    CRosePacket &os) const {
-  os << stone_ << face_ << hair_ << job_ << union_ << rank_ << fame_;
-}
-
-void RoseCommon::SrvSelectCharReply::base_info::deserialize(CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::character_stats::serialize(
-    CRosePacket &os) const {
-  os << str_ << dex_ << int_ << con_ << charm_ << sense_;
-}
-
-void RoseCommon::SrvSelectCharReply::character_stats::deserialize(
-    CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::status_effects::serialize(
-    CRosePacket &os) const {
-  os << expired_seconds_ << value_ << unknown_;
-}
-
-void RoseCommon::SrvSelectCharReply::status_effects::deserialize(
-    CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::extended_stats::serialize(
-    CRosePacket &os) const {
-  os << hp_ << mp_ << exp_ << level_ << stat_points_ << skill_points_
-     << body_size_ << head_size_ << penalty_exp_ << fame1_ << fame2_;
-  for (int i = 0; i < MAX_UNION_COUNT; ++i) {
-    os << union_points_[i];
-  }
-
-  os << guild_id_ << guild_contribution_ << guild_position_ << pk_flags_
-     << stamina_;
-
-  for (int i = 0; i < MAX_BUFF_STATUS; ++i) {
-    status_[i].serialize( os );
-  }
-
-  os << pat_hp_ << pat_cooldown_time_;
-}
-
-void RoseCommon::SrvSelectCharReply::extended_stats::deserialize(
-    CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::skills::serialize(CRosePacket &os) const {
-  for (int i = 0; i < MAX_SKILL_COUNT; ++i) {
-    os << skill_id_[i];
-  }
-}
-
-void RoseCommon::SrvSelectCharReply::skills::deserialize(CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::hotbar_item::serialize(
-    CRosePacket &os) const {
-  os << item_;
-}
-
-void RoseCommon::SrvSelectCharReply::hotbar_item::deserialize(CRosePacket &os) {
-  (void)os;
-}
-
-void RoseCommon::SrvSelectCharReply::hotbar::serialize(CRosePacket &os) const {
-  for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i) {
-    list_[i].serialize(os);
-  }
-}
-
-void RoseCommon::SrvSelectCharReply::hotbar::deserialize(CRosePacket &os) {
-  (void)os;
-}
 //---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
-
-void SrvSelectCharReply::equip_item::serialize(CRosePacket &os) const {
-  uint32_t data = ((grade_ & 0xF) << 20) | ((socket_ & 0x1) << 19) |
-                  ((gem_op_ & 0x1FF) << 10) | (id_ & 0x3FF);
-  os << data;
-}
-
-void SrvSelectCharReply::equip_item::deserialize(CRosePacket &os) { (void)os; }
 
 CliStopReq::CliStopReq( uint8_t buffer[MAX_PACKET_SIZE] )     : CRosePacket(buffer) {
   if (type() != ePacketType::PAKCS_STOP)

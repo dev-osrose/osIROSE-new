@@ -4,11 +4,6 @@
 
 #include "entityComponents.h"
 
-using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
-template <typename T>
-using Component = EntityManager::Component<T>;
-using Entity = EntityManager::Entity;
-
 class EntitySystem;
 
 class System {

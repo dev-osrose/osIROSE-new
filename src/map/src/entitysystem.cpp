@@ -15,6 +15,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     auto basic = entity.assign<BasicInfo>();
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
+    res->getInt("level", basic->level_);
     basic->id_ = charId;
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);
@@ -41,6 +42,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getInt("penalty_exp", info->penaltyXp_);
     res->getInt("delete_date", info->deleteDate_);
     info->platinium_ = platinium;
+    res->getInt("factionid", info->factionId_);
+    res->getInt("faction_rank", info->factionRank_);
     res->getInt("faction_fame1", info->factionFame_[0]);
     res->getInt("faction_fame2", info->factionFame_[1]);
     res->getInt("faction_fame3", info->factionFame_[2]);
@@ -84,5 +87,6 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
         equipped->items_[slot].gemOpt_ = gemOpt;
         equipped->items_[slot].refine_ = refine;
     }
+    entity.assign<StatusEffects>();
     return entity;
 }
