@@ -101,7 +101,7 @@ bool CMapClient::JoinServerReply(
         res->getInt("platinium", platinium);
         entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
-        if (entity_.component<Position>()) {
+        if (entity_.component<StatusEffects>()) {
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::OK, std::time(nullptr));
           Send(*packet);
@@ -111,7 +111,7 @@ bool CMapClient::JoinServerReply(
           auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_, sessionID);
           Send(*packet2);
 
-          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(0); // zuly
+          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_.component<AdvancedInfo>()->zuly_);
           Send(*packet3);
 
           auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
@@ -151,7 +151,10 @@ bool CMapClient::ChangeMapReply(
     return true;
   }
   (void)P;
-  Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), 81, 55, 0, 0, std::time(nullptr), 0));
+  auto advanced = entity_.component<AdvancedInfo>();
+  auto basic = entity_.component<BasicInfo>();
+  auto info = entity_.component<CharacterInfo>();
+  Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
   //TODO : send PAKWC_PLAYER_CHAR to EVERYONE_BUT_ME
 
   return true;
@@ -189,7 +192,7 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
-    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
+    //entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
     return true;
@@ -201,6 +204,7 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
         logger_->warn("Client {} is attempting to stop moving before logging in.", GetId());
         return true;
     }
-    entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
+    (void)P;
+    //entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
     return true;
 }

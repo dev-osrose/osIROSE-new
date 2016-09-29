@@ -110,7 +110,8 @@ struct CharacterInfo {
     bool platinium_;
     uint8_t factionId_;
     uint8_t factionRank_;
-    std::array<uint16_t, 3> factionFame_; // 3 different factions in the game
+    uint8_t fame_; // no idea what that is
+    std::array<uint16_t, 2> factionFame_; // 2 different factions in the game
     std::array<uint16_t, 10> factionPoints_; // crappy packet code, only the first 3 are used
     uint32_t guildId_;
     uint16_t guildContribution_;
@@ -150,7 +151,7 @@ struct StatusEffect : public RoseCommon::ISerialize {
     uint16_t unkown_;
     double dt_; // to keep track of time (in seconds)
 
-    protected:
+    //protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << expiredSeconds_ << value_ << unkown_;
         }
@@ -178,7 +179,7 @@ struct Skill : public RoseCommon::ISerialize {
     uint16_t id_;
     uint8_t level_;
 
-    protected:
+    //protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << id_;
         }
@@ -212,7 +213,7 @@ struct HotbarItem : public RoseCommon::ISerialize {
         };
     };
 
-    protected:
+    //protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << item_;
         }
@@ -242,7 +243,7 @@ struct Item : public RoseCommon::ISerialize {
     bool hasSocket_;
     uint8_t refine_ : 4;
 
-    protected:
+    //protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             uint32_t data = (refine_ << 20) | (hasSocket_ << 19) |
                             (gemOpt_ << 10) | id_;

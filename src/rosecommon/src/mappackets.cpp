@@ -272,13 +272,13 @@ void RoseCommon::SrvSelectCharReply::pack() {
     auto equipped = entity_.component<EquippedItems>();
     auto effects = entity_.component<StatusEffects>();
 
-    *this << graphics->race_ << pos->map_ << pos->x_ << pos->y_ << pos->spawn_;
+    *this << graphics->race_ << pos->map_ << (float)pos->x_ << (float)pos->y_ << pos->spawn_;
 
     for (auto &it : equipped->items_)
-        *this << it;
+        it.serialize(*this);
 
-    *this << graphics->face_ << graphics->hair_ << info->job_
-          << info->factionId_ << info->factionRank_ << info->factionFame_[info->factionId_];
+    *this << info->stone_ << graphics->face_ << graphics->hair_ << info->job_
+          << info->factionId_ << info->factionRank_ << info->fame_;
 
     *this << stats->str_ << stats->dex_ << stats->int_ << stats->con_ << stats->charm_
           << stats->sense_;
@@ -286,21 +286,19 @@ void RoseCommon::SrvSelectCharReply::pack() {
     *this << advanced->hp_ << advanced->mp_ << basic->xp_ << basic->level_
           << info->statPoints_ << info->skillPoints_ << stats->bodySize_
           << stats->headSize_ << info->penaltyXp_;
-    for (size_t i = 0; i < info->factionFame_.size(); ++i)
-        if (i != info->factionId_)
-            *this << info->factionFame_[i];
+    *this << info->factionFame_;
     *this << info->factionPoints_;
     *this << info->guildId_ << info->guildContribution_ << info->guildRank_ << info->pkFlag_ << info->stamina_;
     for (auto &it : effects->effects_)
-        *this << it;
+        it.serialize(*this);
 
     *this << info->patHp_ << info->patCooldownTime_;
 
     for (auto &it : skills->skills_)
-        *this << it;
+        it.serialize(*this);
 
     for (auto &it : hotbar->items_)
-        *this << it;
+        it.serialize(*this);
 
     *this << tag_ << basic->name_;
 }

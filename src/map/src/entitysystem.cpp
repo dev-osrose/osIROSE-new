@@ -44,9 +44,9 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     info->platinium_ = platinium;
     res->getInt("factionid", info->factionId_);
     res->getInt("faction_rank", info->factionRank_);
+    res->getInt("fame", info->fame_);
     res->getInt("faction_fame1", info->factionFame_[0]);
     res->getInt("faction_fame2", info->factionFame_[1]);
-    res->getInt("faction_fame3", info->factionFame_[2]);
     res->getInt("faction_points1", info->factionPoints_[0]);
     res->getInt("faction_points2", info->factionPoints_[1]);
     res->getInt("faction_points3", info->factionPoints_[2]);
@@ -87,6 +87,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
         equipped->items_[slot].gemOpt_ = gemOpt;
         equipped->items_[slot].refine_ = refine;
     }
+    if (!equipped->items_[EquippedItems::FACE].id_)
+        equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
     entity.assign<StatusEffects>();
     return entity;
 }
