@@ -30,7 +30,7 @@ CREATE TABLE `accounts` (
   `password` varchar(32) DEFAULT NULL,
   `access` int(11) DEFAULT '100',
   `active` int(11) DEFAULT '1',
-  `platinum` tinyint(1) DEFAULT '0',
+  `platinium` tinyint(1) DEFAULT '0',
   `online` tinyint(1) DEFAULT '0',
   `login_count` int(11) DEFAULT '0',
   `lastip` varchar(15) DEFAULT '0.0.0.0',
