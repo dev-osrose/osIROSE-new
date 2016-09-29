@@ -406,7 +406,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSession`(IN `_sessionid` INT)
 BEGIN
-  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.password
+  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.password, accounts.platinium
   FROM `sessions`
   LEFT JOIN `accounts` on sessions.userid = accounts.id 
   WHERE sessions.id = _sessionid;
