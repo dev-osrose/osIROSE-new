@@ -154,6 +154,9 @@ struct find_send_class<ePacketType::PAKWC_REVIVE_REPLY> { SrvReviveReply type; }
 
 template <>
 struct find_send_class<ePacketType::PAKWC_NORMAL_CHAT> { SrvChat type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_PLAYER_CHAR> { SrvPlayerChar type; };
 #endif
 
 //-----------------------------------------------

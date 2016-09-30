@@ -18,7 +18,6 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
     res->getInt("level", basic->level_);
-    basic->id_ = charId;
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);
     res->getInt("max_mp", stats->maxMp_);
@@ -94,6 +93,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     if (!equipped->items_[EquippedItems::FACE].id_)
         equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
     entity.assign<StatusEffects>();
+    entity.assign<RidingItems>();
     return entity;
 }
 

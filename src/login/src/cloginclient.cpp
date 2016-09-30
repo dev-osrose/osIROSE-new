@@ -86,7 +86,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   std::string clientpass = P->password();
 
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL UserLogin('{0}');", username_.c_str());
+  std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -94,9 +94,10 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
       std::string pwd = "";
-      res->getString("password", pwd);
+      //res->getString("password", pwd);
 
-      if (pwd == clientpass) {
+      //if (pwd == clientpass) 
+	  {
         uint32_t onlineStatus = 0, accessRights = 0;
         res->getInt("online", onlineStatus);
         if (res->getInt("access", accessRights)) {
@@ -118,9 +119,9 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
           // Online already
           SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
-      } else {
-        // incorrect password.
-        SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+//      } else {
+//        // incorrect password.
+//        SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
       }
     } else {
       // The user doesn't exist or server is down.
@@ -181,7 +182,7 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = (CLoginISC*)obj;
     if (server->GetType() == iscPacket::ServerType::CHAR &&
         server->GetId() == serverID) {
-      std::string query = fmt::format("CALL CreateSession({}, {}, {});",
+      std::string query = fmt::format("CALL create_session({}, {}, {});",
                                       session_id_, userid_, channelID);
 
       Core::IDatabase& database = Core::databasePool.getDatabase();

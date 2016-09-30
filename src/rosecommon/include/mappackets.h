@@ -17,324 +17,30 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "dataconsts.h"
 #include <string>
 #include <exception>
 #include <vector>
 #include "entityComponents.h"
+#include <array>
+#include "cli_chat.h"
+#include "cli_stop.h"
+#include "cli_logout.h"
+#include "cli_revive.h"
+#include "cli_changemap.h"
+#include "srv_chat.h"
+#include "src_revive.h"
+#include "srv_logout.h"
+#include "srv_initdata.h"
+#include "srv_changemap.h"
+#include "srv_serverdata.h"
+#include "srv_removeobject.h"
 
 namespace RoseCommon {
-#define MIN_SELL_TYPE 1
-#define MAX_SELL_TYPE 11
-
-//------------------------------------------------
-//------------------------------------------------
-
-class CliLogoutReq : public CRosePacket {
- public:
-  CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliLogoutReq();
-
-  virtual ~CliLogoutReq();
-};
-
-//-------------------------------------------------
-
-class CliMouseCmd : public CRosePacket {
-    public:
-        CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
-        CliMouseCmd();
-
-        virtual ~CliMouseCmd();
-
-        uint16_t targetId() const { return targetObjId_; }
-        int32_t x() const { return destX_; }
-        int32_t y() const { return destY_; }
-        int16_t z() const { return posZ_; }
-
-    private:
-        uint16_t targetObjId_;
-        int32_t destX_;
-        int32_t destY_;
-        int16_t posZ_;
-};
-
-class SrvMouseCmd : public CRosePacket {
-    public:
-        SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId, uint16_t srvDist,
-                int32_t destX, int32_t destY, int16_t posZ);
-        SrvMouseCmd();
-
-        virtual ~SrvMouseCmd();
-
-    protected:
-        void pack();
-
-    private:
-        uint16_t sourceObjId_;
-        uint16_t destObjId_;
-        uint16_t srvDist_;
-        int32_t destX_;
-        int32_t destY_;
-        int16_t posZ_;
-};
-
-//-----------------------------------------------
-
-class CliStopMoving : public CRosePacket {
-    public:
-        CliStopMoving();
-        CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
-
-        virtual ~CliStopMoving();
-
-        int32_t x() const { return posX_; }
-        int32_t y() const { return posY_; }
-        int16_t z() const { return posZ_; }
-
-    private:
-        int32_t posX_;
-        int32_t posY_;
-        int16_t posZ_;
-};
-
-//------------------------------------------------
-
-class SrvLogoutReply : public CRosePacket {
- public:
-  SrvLogoutReply(uint16_t wait_time);
-
-  virtual ~SrvLogoutReply();
-
-  uint16_t wait_time() const;
-
- protected:
-  void pack();
-
- private:
-  uint16_t wait_time_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class CliChangeMapReq : public CRosePacket {
- public:
-  CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliChangeMapReq();
-
-  virtual ~CliChangeMapReq();
-
-  uint8_t weight_rate() const;
-  uint16_t position_z() const;
-
- protected:
-  void pack();
-
- private:
-  uint8_t weight_rate_;
-  uint16_t position_z_;  // this is not actually set
-};
-
-//------------------------------------------------
-
-class SrvChangeMapReply : public CRosePacket {
- public:
-  SrvChangeMapReply(uint16_t object_index, uint16_t current_hp,
-                    uint16_t current_mp, uint16_t current_exp,
-                    uint16_t penalize_exp, uint16_t world_time,
-                    uint16_t team_number);
-
-  virtual ~SrvChangeMapReply();
-
-  uint16_t object_index() const;
-  uint16_t current_hp() const;
-  uint16_t current_mp() const;
-
-  void setItemRate(uint8_t type, uint8_t rate);
-
- protected:
-  void pack();
-
- private:
-  struct global_var {
-    uint16_t craft_rate_;
-    uint32_t update_time_;
-    uint16_t world_rate_;
-    uint8_t town_rate_;
-    uint8_t item_rate_[MAX_SELL_TYPE];
-    uint32_t flags_;
-
-    global_var() : craft_rate_(0),
-    update_time_(0),
-    world_rate_(0),
-    town_rate_(0),
-    flags_(0) {
-      for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-        item_rate_[i] = 0;
-      }
-    }
-  };
-
-  uint16_t object_index_;
-  uint16_t current_hp_;
-  uint16_t current_mp_;
-  uint64_t current_exp_;
-  uint64_t penalize_exp_;
-  uint32_t world_time_;
-  uint32_t team_number_;
-  global_var zone_vars_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class CliChat : public CRosePacket {
- public:
-  CliChat(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliChat(const std::string &chat = "");
-
-  std::string getMessage() const;
-
- protected:
-  void pack();
-
- private:
-  std::string chat_;
-};
-
-//------------------------------------------------
-
-class SrvChat : public CRosePacket {
- public:
-  SrvChat(const std::string &chat = "", uint16_t charuid = 0)
-      : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT),
-        chat_(chat),
-        charuid_(charuid) {}
-
- protected:
-  void pack() { *this << charuid_ << chat_; }
-
- private:
-  std::string chat_;
-  uint16_t charuid_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class CliReviveReq : public CRosePacket {
- public:
-  CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliReviveReq(uint8_t type = 0);
-
-  enum eType : uint8_t { REVIVE_POS, SAVE_POS, START_POS, CURRENT_POS };
-
-  eType getType() const;
-
- protected:
-  void pack();
-
- private:
-  uint8_t type_;
-};
-
-//------------------------------------------------
-
-class SrvReviveReply : public CRosePacket {
- public:
-  SrvReviveReply(uint16_t mapid = 0);
-
- protected:
-  void pack();
-
- private:
-  uint16_t mapid_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class SrvInitDataReply : public CRosePacket {
- public:
-  SrvInitDataReply(uint32_t rand_seed, uint16_t rand_index);
-
-  virtual ~SrvInitDataReply();
-
-  uint32_t rand_seed() const;
-  uint16_t rand_index() const;
-
- protected:
-  void pack();
-
- private:
-  uint32_t rand_seed_;
-  uint16_t rand_index_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class SrvServerData : public CRosePacket {
- public:
-  SrvServerData(uint8_t type);
-
-  virtual ~SrvServerData();
-
-  uint8_t type() const;
-
-  enum data_type : uint8_t { ECONOMY = 0, NPC };
-
- protected:
-  void pack();
-
- private:
-  struct Enconmy_Data {
-    uint32_t counter_;
-    uint16_t pop_base_;
-    uint16_t dev_base_;
-    uint16_t consume_[MAX_SELL_TYPE];
-    uint16_t dev_;
-    uint32_t pop_;
-    uint32_t item_[MAX_SELL_TYPE];
-
-    Enconmy_Data() : counter_(0),
-    pop_base_(0),
-    dev_base_(0),
-    dev_(0),
-    pop_(0) {
-      for(int i =0; i < MAX_SELL_TYPE; ++i) {
-        item_[i] = consume_[i] = 0;
-      }
-    }
-  };
-  uint8_t type_;
-  Enconmy_Data enconmy_data_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-
-class SrvRemoveObject : public CRosePacket {
- public:
-  SrvRemoveObject(uint16_t obj_id);
-
- protected:
-  void pack();
-
- private:
-  uint16_t obj_id_;
-};
-
-//------------------------------------------------
-//------------------------------------------------
-#define MAX_UNION_COUNT 10
-#define MAX_BUFF_STATUS 40
-#define MAX_SKILL_COUNT 120
-#define MAX_HOTBAR_ITEMS 32
 
 class SrvSelectCharReply : public CRosePacket {
  public:
-  SrvSelectCharReply(Entity character, uint32_t tag);
+  SrvSelectCharReply(Entity character);
 
   virtual ~SrvSelectCharReply();
 
@@ -345,6 +51,62 @@ class SrvSelectCharReply : public CRosePacket {
 
   Entity entity_;
   uint32_t tag_;
+};
+
+class CliMouseCmd : public CRosePacket {
+    public:
+        CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliMouseCmd();
+
+        virtual ~CliMouseCmd();
+
+        uint16_t targetId() const { return targetId_; }
+        int32_t x() const { return x_; }
+        int32_t y() const { return y_; }
+        uint16_t z() const { return z_; }
+
+    private:
+        uint16_t targetId_;
+        int32_t x_;
+        int32_t y_;
+        uint16_t z_;
+};
+
+class SrvMouseCmd : public CRosePacket {
+    public:
+        SrvMouseCmd(uint16_t sourceId, uint16_t destId, uint16_t dist,
+                int32_t x, int32_t y, int16_t z);
+        SrvMouseCmd();
+
+        virtual ~SrvMouseCmd();
+
+    protected:
+        void pack();
+
+    private:
+        uint16_t sourceId_;
+        uint16_t destId_;
+        uint16_t dist_;
+        int32_t x_;
+        int32_t y_;
+        int16_t z_;
+};
+
+class CliStopMoving : public CRosePacket {
+    public:
+        CliStopMoving();
+        CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
+
+        virtual ~CliStopMoving();
+
+        int32_t x() const { return x_; }
+        int32_t y() const { return y_; }
+        int16_t z() const { return z_; }
+
+    private:
+        int32_t x_;
+        int32_t y_;
+        int16_t z_;
 };
 
 //------------------------------------------------
@@ -438,16 +200,76 @@ class SrvBillingMsg : public CRosePacket {
   void pack() { *this << (uint16_t)0x1001 << (uint32_t)2; };
 };
 
-class CliStopReq : public CRosePacket {
- public:
-  CliStopReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  virtual ~CliStopReq() {};
 
-  float getX() const { return x; }
-  float getY() const { return y; }
+
+//------------------------------------------------
+//------------------------------------------------
+
+class SrvPlayerChar : public CRosePacket {
+public:
+    SrvPlayerChar(Entity entity)
+        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR), entity_(entity) {}
+
+    virtual ~SrvPlayerChar() {}
+
+protected:
+    void pack() override
+    {
+        auto pos = entity_.component<Position>();
+        auto dest = entity_.component<Destination>();
+        auto advanced = entity_.component<AdvancedInfo>();
+        auto basic = entity_.component<BasicInfo>();
+        auto info = entity_.component<CharacterInfo>();
+        auto graphics = entity_.component<CharacterGraphics>();
+        auto items = entity_.component<EquippedItems>();
+        auto riding = entity_.component<RidingItems>();
+        float destX = pos->x_, destY = pos->y_;
+        if (dest) {
+            destX = dest->x_;
+            destY = dest->y_;
+        }
+
+        *this << basic->tag_
+              << (float)pos->x_ << (float)pos->y_ << (float)destX << (float)destY
+              << (uint32_t)0 // command
+              << basic->targetId_
+              << advanced->moveMode_
+              << advanced->hp_
+              << basic->teamId_
+              << info->pkFlag_ // statusFlag ?
+              << graphics->race_
+              << (uint16_t)1 // runSpeed
+              << (uint16_t)1 // attackSpeed
+              << (uint8_t)0; // weightRate
+        for (auto &it : items->items_)
+            *this << (ISerialize&)it;
+        for (auto &it : shootData_)
+            *this << (ISerialize&)it;
+        *this << info->job_
+              << basic->level_;
+        for (auto &it : riding->items_)
+            *this << (ISerialize&)it;
+        *this << pos->z_
+              << (uint64_t)0; //subFlag
+    }
 
 private:
-  float x, y;
+    struct ShootData : public ISerialize {
+        union {
+            struct {
+                uint8_t type : 5;
+                uint16_t itemId : 10;
+            };
+            uint32_t shotItem;
+        };
+
+    protected:
+        virtual void serialize(CRosePacket &os) const override { os << shotItem; }
+        virtual void deserialize(CRosePacket&) override {}
+    };
+
+    Entity entity_;
+    std::array<ShootData, 6> shootData_;
 };
 
 }

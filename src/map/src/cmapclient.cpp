@@ -84,63 +84,59 @@ bool CMapClient::JoinServerReply(
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL GetSession({});", sessionID);
+  std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      std::string pwd = "";
-      res->getString("password", pwd);
-      if (pwd == password) {
-        logger_->debug("Client {} auth OK.", GetId());
-        login_state_ = eSTATE::LOGGEDIN;
-        res->getInt("userid", userid_);
-        res->getInt("charid", charid_);
-        session_id_ = sessionID;
-        bool platinium = false;
-        res->getInt("platinium", platinium);
-        entity_ = entitySystem_->loadCharacter(charid_, platinium);
+      logger_->debug("Client {} auth OK.", GetId());
+      login_state_ = eSTATE::LOGGEDIN;
+      res->getInt("userid", userid_);
+      res->getInt("charid", charid_);
+      session_id_ = sessionID;
+      bool platinium = false;
+      res->getInt("platinium", platinium);
+      entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
-        if (entity_) {
-          auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-              SrvJoinServerReply::OK, std::time(nullptr));
-          Send(*packet);
-
-          entity_.assign<SocketConnector>(this);
-          // SEND PLAYER DATA HERE!!!!!!
-          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_, sessionID);
-          Send(*packet2);
-
-          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_.component<AdvancedInfo>()->zuly_);
-          Send(*packet3);
-
-          auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
-          Send(*packet4);
-
-          auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-          Send(*packet5);
-
-          //TODO: Send other clients the AVT join packet
-          //TODO: Actually make the packet structure
-          //auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(*packet2);
-          //CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet6);
-        } else {
-            logger_->debug("Something wrong happened when creating the entity");
-        }
-      } else {
-        logger_->debug("Client {} auth INVALID_PASS.", GetId());
+      if (entity_) {
+          auto basic =entity_.component<BasicInfo>();
+          basic->tag_ = GetId();
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::INVALID_PASSWORD, 0);
+            SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
+
+        entity_.assign<SocketConnector>(this);
+        // SEND PLAYER DATA HERE!!!!!!
+        auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
+        Send(*packet2);
+
+        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_.component<AdvancedInfo>()->zuly_);
+        Send(*packet3);
+
+        auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
+        Send(*packet4);
+
+        auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
+        Send(*packet5);
+
+        auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_);
+        CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet6);
+      } else {
+          logger_->debug("Something wrong happened when creating the entity");
       }
     } else {
+      logger_->debug("Client {} auth INVALID_PASS.", GetId());
+      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+          SrvJoinServerReply::INVALID_PASSWORD, 0);
+      Send(*packet);
+    }
+   } else {
       logger_->debug("Client {} auth FAILED.", GetId());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::FAILED, 0);
       Send(*packet);
     }
-  }
   return true;
 };
 
@@ -158,7 +154,8 @@ bool CMapClient::ChangeMapReply(
   auto basic = entity_.component<BasicInfo>();
   auto info = entity_.component<CharacterInfo>();
   Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
-  //TODO : send PAKWC_PLAYER_CHAR to EVERYONE_BUT_ME
+  CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
+          *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
 
   return true;
 }

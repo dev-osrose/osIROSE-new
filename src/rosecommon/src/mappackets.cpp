@@ -37,7 +37,7 @@ RoseCommon::CliMouseCmd::CliMouseCmd() : CRosePacket(ePacketType::PAKCS_MOUSE_CM
 RoseCommon::CliMouseCmd::CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::PAKCS_MOUSE_CMD)
         throw std::runtime_error("Not the right packet!");
-    *this >> targetObjId_ >> destX_ >> destY_ >> posZ_;
+    *this >> targetId_ >> x_ >> y_ >> z_;
 }
 
 RoseCommon::CliMouseCmd::~CliMouseCmd() {}
@@ -49,11 +49,11 @@ RoseCommon::SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CM
 RoseCommon::SrvMouseCmd::SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId,
         uint16_t srvDist, int32_t destX, int32_t destY, int16_t posZ)
     : CRosePacket(ePacketType::PAKWC_MOUSE_CMD),
-    sourceObjId_(sourceObjId), destObjId_(destObjId), srvDist_(srvDist),
-    destX_(destX), destY_(destY), posZ_(posZ) {}
+    sourceId_(sourceObjId), destId_(destObjId), dist_(srvDist),
+    x_(destX), y_(destY), z_(posZ) {}
 
 void RoseCommon::SrvMouseCmd::pack() {
-    *this << sourceObjId_ << destObjId_ << srvDist_ << destX_ << destY_ << posZ_;
+    *this << sourceId_ << destId_ << dist_ << x_ << y_ << z_;
 }
 
 RoseCommon::SrvMouseCmd::~SrvMouseCmd() {}
@@ -63,7 +63,7 @@ RoseCommon::SrvMouseCmd::~SrvMouseCmd() {}
 RoseCommon::CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
 
 RoseCommon::CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    *this >> posX_ >> posY_ >> posZ_;
+    *this >> x_ >> y_ >> z_;
 }
 
 RoseCommon::CliStopMoving::~CliStopMoving() {}
@@ -256,7 +256,7 @@ void SrvRemoveObject::pack() { *this << obj_id_; }
 //---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
-RoseCommon::SrvSelectCharReply::SrvSelectCharReply(Entity entity, uint32_t sessionID) : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY), entity_(entity), tag_(sessionID) {}
+RoseCommon::SrvSelectCharReply::SrvSelectCharReply(Entity entity) : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY), entity_(entity) {}
 
 RoseCommon::SrvSelectCharReply::~SrvSelectCharReply() {}
 
@@ -300,7 +300,7 @@ void RoseCommon::SrvSelectCharReply::pack() {
     for (auto &it : hotbar->items_)
         *this << (ISerialize&)it;
 
-    *this << tag_ << basic->name_;
+    *this << basic->tag_ << basic->name_;
 }
 
 //---------------------------------------------

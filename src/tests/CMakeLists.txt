@@ -86,6 +86,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src/proto/include
     ${CMAKE_SOURCE_DIR}/src/core/include
     ${CMAKE_SOURCE_DIR}/src/rosecommon/include
+	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
     ${CMAKE_SOURCE_DIR}/src/login/include
     ${CMAKE_SOURCE_DIR}/src/char/include
     ${CMAKE_SOURCE_DIR}/src/map/include
@@ -104,7 +105,6 @@ ADD_DEPENDENCIES(${PROJECT} RoseCommon)
 ADD_DEPENDENCIES(${PROJECT} protoGen)
 ADD_DEPENDENCIES(${PROJECT} lua)
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
 ENDIF()
 
@@ -113,8 +113,18 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
 
 IF(ENABLE_TESTING_COVERAGE)
     INCLUDE(CodeCoverage)
-    SETUP_TARGET_FOR_COVERAGE(coverage ${PROJECT} coverage)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    
+    SET(COVERAGE_IGNORE_LIST 
+      'tools/*'
+      '3rdparty/*'
+      'protobuf/*'
+      '*.pb.*'
+      'rapidjson/*'
+      'pbjson.*'
+      'bin2ascii.h'
+    )
+      
+    SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage)
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_MYSQL)

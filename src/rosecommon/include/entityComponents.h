@@ -18,14 +18,17 @@ struct SocketConnector {
 };
 
 struct BasicInfo {
-    BasicInfo() : level_(0), xp_(0), id_(0) {}
-    BasicInfo(std::string name, uint16_t level, uint32_t xp, uint32_t id) :
-        name_(name), level_(level), xp_(xp), id_(id) {}
+    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0) {}
+    BasicInfo(std::string name, uint16_t level, uint32_t xp, uint16_t id, uint32_t tag, int32_t teamId, uint16_t targetId) :
+        name_(name), level_(level), xp_(xp), id_(id), tag_(tag), teamId_(teamId), targetId_(targetId) {}
 
     std::string name_;
     uint16_t level_;
     uint32_t xp_;
-    uint32_t id_;
+    uint16_t id_;
+    uint32_t tag_;
+    int32_t teamId_;
+    uint16_t targetId_;
 };
 
 struct Stats {
@@ -48,12 +51,13 @@ struct Stats {
 };
 
 struct AdvancedInfo {
-    AdvancedInfo() : zuly_(0), hp_(0), mp_(0) {}
-    AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp) : zuly_(zuly), hp_(hp), mp_(mp) {}
+    AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(0) {}
+    AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp, uint8_t moveMode) : zuly_(zuly), hp_(hp), mp_(mp), moveMode_(moveMode) {}
 
     uint32_t zuly_;
     uint32_t hp_;
     uint32_t mp_;
+    uint8_t moveMode_;
 };
 
 struct Graphics {
@@ -124,11 +128,12 @@ struct CharacterInfo {
 };
 
 struct Position {
-    Position() : x_(0), y_(0), map_(0), spawn_(0) {}
-    Position(int32_t x, int32_t y, uint16_t map, uint16_t spawn) : x_(x), y_(y), map_(map), spawn_(spawn) {}
+    Position() : x_(0), y_(0), z_(0), map_(0), spawn_(0) {}
+    Position(int32_t x, int32_t y, uint16_t map, uint16_t spawn) : x_(x), y_(y), z_(0), map_(map), spawn_(spawn) {}
 
     int32_t x_;
     int32_t y_;
+    uint16_t z_;
     uint16_t map_;
     uint16_t spawn_;
 };
@@ -279,9 +284,25 @@ struct EquippedItems {
    std::array<Item, MAX_EQUIPPED_ITEMS> items_;
 };
 
+struct RidingItems {
+    enum RidingPosition {
+        MAX_RIDING_ITEMS
+    };
+
+    RidingItems() {}
+    RidingItems(const std::initializer_list<Item> &items) {
+        int64_t diff = MAX_RIDING_ITEMS - items.size();
+        diff = diff < 0 ? 0 : diff;
+        auto last = items.end() - diff;
+        std::copy(items.begin(), last, items_.begin());
+    }
+
+    std::array<Item, MAX_RIDING_ITEMS> items_;
+};
+
 using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, AdvancedInfo,
       CharacterInfo, Graphics, CharacterGraphics, Position, StatusEffects,
-      Skills, Hotbar, EquippedItems, Destination>;
+      Skills, Hotbar, EquippedItems, Destination, RidingItems>;
 
 using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
 template <typename T>
