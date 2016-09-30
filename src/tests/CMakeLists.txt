@@ -86,6 +86,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src/proto/include
     ${CMAKE_SOURCE_DIR}/src/core/include
     ${CMAKE_SOURCE_DIR}/src/rosecommon/include
+	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
     ${CMAKE_SOURCE_DIR}/src/login/include
     ${CMAKE_SOURCE_DIR}/src/char/include
     ${CMAKE_SOURCE_DIR}/src/map/include
@@ -104,7 +105,6 @@ ADD_DEPENDENCIES(${PROJECT} RoseCommon)
 ADD_DEPENDENCIES(${PROJECT} protoGen)
 ADD_DEPENDENCIES(${PROJECT} lua)
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-#	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
 	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
 ENDIF()
 

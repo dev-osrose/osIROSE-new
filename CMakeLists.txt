@@ -1,5 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
 
+# --------------------------
+# Make sure our settings are correct
 foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
@@ -11,6 +13,7 @@ foreach(flag_var
       string(REGEX REPLACE "_DLL" "" ${flag_var} "${${flag_var}}")
    endif(${flag_var} MATCHES "_DLL")
 endforeach(flag_var)
+# --------------------------
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE
    ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
@@ -18,7 +21,7 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
    ${CMAKE_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
    
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
-message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+#message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 PROJECT("osIROSE")
 
@@ -57,12 +60,10 @@ else()
   set(GIT_BRANCH "")
   set(GIT_COMMIT_HASH "")
 endif()
+# --------------------------
 
-message(STATUS "Git current branch: ${GIT_BRANCH}")
-message(STATUS "Git commit hash: ${GIT_COMMIT_HASH}")
-
+#start version file
 message(STATUS "Generating version.h")
-
 configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/version.h.in
   ${CMAKE_BINARY_DIR}/generated/version.h
@@ -91,19 +92,21 @@ OPTION(ENABLE_EXPERMENTAL
   "Enable expermental features" OFF)
 OPTION(DISABLE_CRYPT
   "Enable this to not use encryption functions" OFF)
-  
-SET(BUILD_TYPE "Debug" CACHE STRING "Debug")
 
+#build API doc
 IF (BUILD_API_DOC)
   FIND_PACKAGE(Doxygen)
   IF (DOXYGEN_FOUND)
     ADD_SUBDIRECTORY(doc)
   ENDIF (DOXYGEN_FOUND)
 ENDIF (BUILD_API_DOC)
+#build API doc
 
 IF(ENABLE_MYSQL_ONE_INSTANCE)
   SET(ENABLE_MYSQL ON)
 ENDIF()
+
+SET(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/tools)
 
 IF(ENABLE_TESTING)
   enable_testing() #enable ctest
@@ -111,41 +114,43 @@ IF(ENABLE_TESTING)
   include( CTest )
   INCLUDE( Dart )
 
-	SET(CMAKE_RULE_MESSAGES OFF)
-	
-	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-		#Build GoogleMock
-		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
-	ELSE()
-		#Build GoogleMock
-		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
-		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
-		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
-		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
-	ENDIF()
-	
-	SET(CMAKE_RULE_MESSAGES ON)
+  SET(CMAKE_RULE_MESSAGES OFF)
+  
+  IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    ADD_SUBDIRECTORY(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+    SET(GMOCK_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googlemock/include)
+    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+    SET(GTEST_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googletest/include)
+    SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+  ELSE()
+    ADD_SUBDIRECTORY(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+    SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
+    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+    SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+    SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+  ENDIF()
+  
+  SET(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
-SET(ASIO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/asio/asio/include)
-SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdparty/include)
-SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdparty/lib)
-SET(PBJSON_ROOT ${CMAKE_SOURCE_DIR}/tools/pbjson/src)
-SET(SPDLOG_ROOT ${CMAKE_SOURCE_DIR}/tools/spdlog/include)
-SET(SELENE_ROOT ${CMAKE_SOURCE_DIR}/tools/Selene/include)
-SET(SOL2_ROOT ${CMAKE_SOURCE_DIR}/tools/sol2)
-SET(LUA_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/lua/src)
 SET(PROTOBUF_ROOT ${CMAKE_BINARY_DIR})
-SET(PROTOBUF_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/tools/protobuf/src" CACHE STRING "${CMAKE_SOURCE_DIR}/tools/protobuf/src" FORCE)
-SET(MYSQLpp_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/tools/mysqlpp/lib" CACHE STRING "${CMAKE_SOURCE_DIR}/tools/mysqlpp/lib" FORCE)
-SET(CXXOPT_ROOT ${CMAKE_SOURCE_DIR}/tools/cxxopts/src)
+SET(SOL2_ROOT ${EXTERNAL_DEPS_ROOT}/sol2)
+SET(PBJSON_ROOT ${EXTERNAL_DEPS_ROOT}/pbjson/src)
+SET(LUA_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/lua/src)
+SET(CXXOPT_ROOT ${EXTERNAL_DEPS_ROOT}/cxxopts/src)
+SET(SPDLOG_ROOT ${EXTERNAL_DEPS_ROOT}/spdlog/include)
+SET(SELENE_ROOT ${EXTERNAL_DEPS_ROOT}/Selene/include)
+SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdparty/lib)
+SET(ASIO_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/asio/asio/include)
+SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdparty/include)
+SET(PROTOBUF_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/protobuf/src" CACHE STRING "${EXTERNAL_DEPS_ROOT}/protobuf/src" FORCE)
+SET(MYSQLpp_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" CACHE STRING "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" FORCE)
 
-IF(ENABLE_MYSQL)
+IF(ENABLE_MYSQL)  
+  MESSAGE(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
+  
   find_package(MySQL REQUIRED)
   
-  MESSAGE(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
-
   configure_file(
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h.in
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h
@@ -153,10 +158,6 @@ IF(ENABLE_MYSQL)
 ENDIF()
 
 IF (MSVC)
-  SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
-  SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-  SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
-  SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
   SET(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" CACHE STRING "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" FORCE)
   SET(MYSQLpp_LIBRARY_PATH "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" FORCE)
   
