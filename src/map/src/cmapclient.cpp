@@ -195,7 +195,7 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
-    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
+    entitySystem_->get<MovementSystem>().move(entity_, 0, 0);
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
     return true;

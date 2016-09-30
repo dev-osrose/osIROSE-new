@@ -40,6 +40,12 @@ class MovementSystem : public System {
         void move(Entity entity, int32_t x, int32_t y) {
             if (!entity)
                 return;
+            auto dest = entity.component<Destination>();
+            if (dest) {
+                dest->x_ = x;
+                dest->y_ = y;
+                return;
+            }
             entity.assign<Destination>(x, y);
         }
 
