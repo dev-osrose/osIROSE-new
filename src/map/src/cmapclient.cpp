@@ -181,6 +181,7 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
 
 bool CMapClient::IsNearby(const IObject* _otherClient) const {
   (void)_otherClient;
+  logger_->trace("CMapClient::IsNearby()");
   //TODO: Call the entity distance calc here
   return true;
 }
