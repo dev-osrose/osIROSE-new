@@ -275,7 +275,7 @@ void RoseCommon::SrvSelectCharReply::pack() {
     *this << graphics->race_ << pos->map_ << (float)pos->x_ << (float)pos->y_ << pos->spawn_;
 
     for (auto &it : equipped->items_)
-        it.serialize(*this);
+        *this << (ISerialize&)it;
 
     *this << info->stone_ << graphics->face_ << graphics->hair_ << info->job_
           << info->factionId_ << info->factionRank_ << info->fame_;
@@ -290,15 +290,15 @@ void RoseCommon::SrvSelectCharReply::pack() {
     *this << info->factionPoints_;
     *this << info->guildId_ << info->guildContribution_ << info->guildRank_ << info->pkFlag_ << info->stamina_;
     for (auto &it : effects->effects_)
-        it.serialize(*this);
+        *this << (ISerialize&)it;
 
     *this << info->patHp_ << info->patCooldownTime_;
 
     for (auto &it : skills->skills_)
-        it.serialize(*this);
+        *this << (ISerialize&)it;
 
     for (auto &it : hotbar->items_)
-        it.serialize(*this);
+        *this << (ISerialize&)it;
 
     *this << tag_ << basic->name_;
 }

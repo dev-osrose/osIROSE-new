@@ -151,7 +151,7 @@ struct StatusEffect : public RoseCommon::ISerialize {
     uint16_t unkown_;
     double dt_; // to keep track of time (in seconds)
 
-    //protected:
+    protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << expiredSeconds_ << value_ << unkown_;
         }
@@ -179,7 +179,7 @@ struct Skill : public RoseCommon::ISerialize {
     uint16_t id_;
     uint8_t level_;
 
-    //protected:
+    protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << id_;
         }
@@ -213,7 +213,7 @@ struct HotbarItem : public RoseCommon::ISerialize {
         };
     };
 
-    //protected:
+    protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             os << item_;
         }
@@ -243,7 +243,7 @@ struct Item : public RoseCommon::ISerialize {
     bool hasSocket_;
     uint8_t refine_ : 4;
 
-    //protected:
+    protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
             uint32_t data = (refine_ << 20) | (hasSocket_ << 19) |
                             (gemOpt_ << 10) | id_;
@@ -280,8 +280,8 @@ struct EquippedItems {
 };
 
 using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, AdvancedInfo,
-      CharacterInfo, Graphics, CharacterGraphics, Position, Destination, StatusEffects,
-      Skills, Hotbar, EquippedItems>;
+      CharacterInfo, Graphics, CharacterGraphics, Position, StatusEffects,
+      Skills, Hotbar, EquippedItems, Destination>;
 
 using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
 template <typename T>

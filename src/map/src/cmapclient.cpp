@@ -64,6 +64,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 }
 
 CMapClient::~CMapClient() {
+    entitySystem_->saveCharacter(charid_, entity_);
     entity_.destroy();
 }
 
@@ -101,7 +102,7 @@ bool CMapClient::JoinServerReply(
         res->getInt("platinium", platinium);
         entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
-        if (entity_.component<StatusEffects>()) {
+        if (entity_) {
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::OK, std::time(nullptr));
           Send(*packet);
@@ -124,6 +125,8 @@ bool CMapClient::JoinServerReply(
           //TODO: Actually make the packet structure
           //auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(*packet2);
           //CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet6);
+        } else {
+            logger_->debug("Something wrong happened when creating the entity");
         }
       } else {
         logger_->debug("Client {} auth INVALID_PASS.", GetId());
@@ -192,7 +195,7 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
-    //entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
+    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
     return true;
@@ -204,7 +207,6 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
         logger_->warn("Client {} is attempting to stop moving before logging in.", GetId());
         return true;
     }
-    (void)P;
-    //entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
+    entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
     return true;
 }

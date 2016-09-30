@@ -38,10 +38,14 @@ class MovementSystem : public System {
         }
 
         void move(Entity entity, int32_t x, int32_t y) {
+            if (!entity)
+                return;
             entity.assign<Destination>(x, y);
         }
 
         void stop(Entity entity, int32_t x, int32_t y) {
+            if (!entity)
+                return;
             entity.remove<Destination>();
             auto position = entity.component<Position>();
             if (position) {

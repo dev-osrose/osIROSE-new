@@ -24,6 +24,7 @@ class EntitySystem {
         }
 
         Entity loadCharacter(uint32_t charId, bool platinium);
+        void saveCharacter(uint32_t  charId, Entity entity);
 
     private:
         EntityManager entityManager_;

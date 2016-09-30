@@ -5,8 +5,10 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     auto &database = Core::databasePool.getDatabase();
     auto res = database.QStore(fmt::format("CALL GetCharacter({});", charId));
     auto entity = create();
-    if (!res || res->size() != 1)
-        return entity;
+    if (!res || res->size() != 1) {
+        entity.destroy();
+        return Entity();
+    }
     auto pos = entity.assign<Position>();
     res->getInt("x", pos->x_);
     res->getInt("y", pos->y_);
@@ -72,8 +74,10 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     entity.assign<Hotbar>();
     auto equipped = entity.assign<EquippedItems>();
     res = database.QStore(fmt::format("CALL GetEquipped({});", charId));
-    if (!res || !res->size())
-        return entity;
+    if (!res || !res->size()) {
+        entity.destroy();
+        return Entity();
+    }
     for (auto &it : *res) {
         size_t slot;
         uint16_t id, gemOpt;
@@ -91,4 +95,10 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
         equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
     entity.assign<StatusEffects>();
     return entity;
+}
+
+void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
+    if (!entity)
+        return;
+    (void)charId;
 }
