@@ -148,7 +148,9 @@ SET(MYSQLpp_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" CACHE STRING "${EXTE
 
 IF(ENABLE_MYSQL)  
   MESSAGE(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
-
+  
+  find_package(MySQL REQUIRED)
+  
   configure_file(
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h.in
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h
