@@ -160,7 +160,7 @@ enum class ePacketType : uint16_t {
   PAKWC_STOP = PAKCS_STOP,
   PAKWC_MOVE, // for monsters only, the client doesn't even look at the Z
 
-  PAKCS_MOUSE_CMD = 0x79A, // client has wants to move or click on an object
+  PAKCS_MOUSE_CMD = 0x79A, // client wants to move or click on an object
   PAKWC_MOUSE_CMD = PAKCS_MOUSE_CMD, // answer from the server
 
   PAKWC_BILLING_MESSAGE = 0x7de,

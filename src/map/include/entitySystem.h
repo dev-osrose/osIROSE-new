@@ -3,10 +3,12 @@
 # define _ENTITYSYSTEM_H_
 
 #include "entitySystems.h"
+#include <functional>
 
 class EntitySystem {
     public:
         EntitySystem() : systemManager_(entityManager_) {
+            // TODO : use on_component_removed for Destination
             systemManager_.add<MovementSystem>();
         }
 
@@ -25,6 +27,12 @@ class EntitySystem {
 
         Entity loadCharacter(uint32_t charId, bool platinium);
         void saveCharacter(uint32_t  charId, Entity entity);
+
+        template <typename ...T>
+        void process(std::function<void(Entity)> func) {
+            for (Entity entity : entityManager_.entities_with_components<T...>())
+                func(entity);
+        }
 
     private:
         EntityManager entityManager_;

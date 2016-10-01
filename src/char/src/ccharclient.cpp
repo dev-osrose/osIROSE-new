@@ -186,10 +186,15 @@ bool CCharClient::SendCharCreateReply(
                   P->race(), P->face(), P->hair(), P->stone());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
-  database.QExecute(query);
+  auto res = SrvCreateCharReply::OK;
+  try {
+      database.QExecute(query);
+  } catch (const mysqlpp::BadQuery &e) {
+      res = SrvCreateCharReply::NAME_TAKEN;
+  }
 
   auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
-      0, 0);  // result, isplatinum
+      res);
   Send(*packet);
 
   return true;

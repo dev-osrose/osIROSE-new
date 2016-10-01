@@ -101,6 +101,7 @@ bool CMapClient::JoinServerReply(
 
       if (entity_) {
           auto basic =entity_.component<BasicInfo>();
+          basic->id_ = GetId();
           basic->tag_ = GetId();
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -120,8 +121,6 @@ bool CMapClient::JoinServerReply(
         auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
         Send(*packet5);
 
-        auto packet6 = makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_);
-        CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *packet6);
       } else {
           logger_->debug("Something wrong happened when creating the entity");
       }
@@ -157,6 +156,11 @@ bool CMapClient::ChangeMapReply(
   CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
           *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
 
+  entitySystem_->process<CharacterGraphics>([entity_ = entity_, this](Entity entity) {
+          if (entity != entity_)
+              this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
+        });
+
   return true;
 }
 
@@ -175,7 +179,7 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
           _message, _charID);
   logger_->trace("client {} is sending '{}'", _charID, _message);
-  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
+  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY_BUT_ME, *packet);
   return true;
 }
 
@@ -193,9 +197,9 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
-    entitySystem_->get<MovementSystem>().move(entity_, 0, 0);
+    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 0, P->x(), P->y(), P->z()));
+            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 1, P->x(), P->y(), P->z()));
     return true;
 }
 
@@ -206,5 +210,7 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
         return true;
     }
     entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
+    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
+            *makePacket<ePacketType::PAKWC_STOP>(entity_));
     return true;
 }

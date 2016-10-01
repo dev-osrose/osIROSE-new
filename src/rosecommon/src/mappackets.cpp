@@ -47,7 +47,7 @@ RoseCommon::CliMouseCmd::~CliMouseCmd() {}
 RoseCommon::SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CMD) {}
 
 RoseCommon::SrvMouseCmd::SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId,
-        uint16_t srvDist, int32_t destX, int32_t destY, int16_t posZ)
+        uint16_t srvDist, float destX, float destY, int16_t posZ)
     : CRosePacket(ePacketType::PAKWC_MOUSE_CMD),
     sourceId_(sourceObjId), destId_(destObjId), dist_(srvDist),
     x_(destX), y_(destY), z_(posZ) {}
@@ -272,7 +272,7 @@ void RoseCommon::SrvSelectCharReply::pack() {
     auto equipped = entity_.component<EquippedItems>();
     auto effects = entity_.component<StatusEffects>();
 
-    *this << graphics->race_ << pos->map_ << (float)pos->x_ << (float)pos->y_ << pos->spawn_;
+    *this << graphics->race_ << pos->map_ << pos->x_ << pos->y_ << pos->spawn_;
 
     for (auto &it : equipped->items_)
         it.partialSerialize(*this);

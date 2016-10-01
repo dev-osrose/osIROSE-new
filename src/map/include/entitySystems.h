@@ -3,6 +3,7 @@
 # define _ENTITYSYSTEMS_H_
 
 #include "entityComponents.h"
+#include <cmath>
 
 class EntitySystem;
 
@@ -43,12 +44,12 @@ class MovementSystem : public System {
                     dy = 1;
                 position->x_ += dx * speed * dt;
                 position->y_ += dy * speed * dt;
-                if (position->x_ == destination->x_ && position->y_ == destination->y_)
+                if ((position->x_ == destination->x_ && position->y_ == destination->y_) || (std::abs(position->x_ - destination->x_) < speed || std::abs(position->y_ - destination->y_) < speed))
                     entity.remove<Destination>();
             }
         }
 
-        void move(Entity entity, int32_t x, int32_t y) {
+        void move(Entity entity, float x, float y) {
             if (!entity)
                 return;
             auto dest = entity.component<Destination>();
@@ -60,7 +61,7 @@ class MovementSystem : public System {
             entity.assign<Destination>(x, y);
         }
 
-        void stop(Entity entity, int32_t x, int32_t y) {
+        void stop(Entity entity, float x, float y) {
             if (!entity)
                 return;
             entity.remove<Destination>();

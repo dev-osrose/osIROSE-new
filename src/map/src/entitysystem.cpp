@@ -3,15 +3,15 @@
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     auto &database = Core::databasePool.getDatabase();
-    auto res = database.QStore(fmt::format("CALL GetCharacter({});", charId));
+    auto res = database.QStore(fmt::format("CALL get_character({});", charId));
     auto entity = create();
     if (!res || res->size() != 1) {
         entity.destroy();
         return Entity();
     }
     auto pos = entity.assign<Position>();
-    res->getInt("x", pos->x_);
-    res->getInt("y", pos->y_);
+    res->getFloat("x", pos->x_);
+    res->getFloat("y", pos->y_);
     res->getInt("map", pos->map_);
     res->getInt("revive_map", pos->spawn_);
     auto basic = entity.assign<BasicInfo>();

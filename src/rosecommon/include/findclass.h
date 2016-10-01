@@ -132,6 +132,9 @@ template <>
 struct find_send_class<ePacketType::PAKWC_MOUSE_CMD> { SrvMouseCmd type; };
 
 template <>
+struct find_send_class<ePacketType::PAKWC_STOP> { SrvStopMoving type; };
+
+template <>
 struct find_send_class<ePacketType::PAKWC_INVENTORY_DATA> { SrvInventoryData type; };
 
 template <>

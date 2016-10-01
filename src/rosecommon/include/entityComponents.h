@@ -54,6 +54,13 @@ struct AdvancedInfo {
     AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(0) {}
     AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp, uint8_t moveMode) : zuly_(zuly), hp_(hp), mp_(mp), moveMode_(moveMode) {}
 
+    enum MoveMode {
+        WALK = 0,
+        RUN = 1,
+        DRIVE = 2,
+        RIDEON = 4
+    };
+
     uint32_t zuly_;
     uint32_t hp_;
     uint32_t mp_;
@@ -93,6 +100,7 @@ struct CharacterInfo {
         guildContribution_(0),
         guildRank_(0),
         pkFlag_(0),
+        statusFlag_(0),
         stamina_(0),
         patHp_(0),
         patCooldownTime_(0),
@@ -121,6 +129,7 @@ struct CharacterInfo {
     uint16_t guildContribution_;
     uint8_t guildRank_;
     uint16_t pkFlag_;
+    uint32_t statusFlag_;
     uint16_t stamina_;
     uint16_t patHp_;
     uint32_t patCooldownTime_; // in seconds
@@ -129,20 +138,20 @@ struct CharacterInfo {
 
 struct Position {
     Position() : x_(0), y_(0), z_(0), map_(0), spawn_(0) {}
-    Position(int32_t x, int32_t y, uint16_t map, uint16_t spawn) : x_(x), y_(y), z_(0), map_(map), spawn_(spawn) {}
+    Position(float x, float y, uint16_t map, uint16_t spawn) : x_(x), y_(y), z_(0), map_(map), spawn_(spawn) {}
 
-    int32_t x_;
-    int32_t y_;
+    float x_;
+    float y_;
     uint16_t z_;
     uint16_t map_;
     uint16_t spawn_;
 };
 
 struct Destination {
-    Destination(int32_t x, int32_t y) : x_(x), y_(y) {}
+    Destination(float x, float y) : x_(x), y_(y) {}
 
-    int32_t x_;
-    int32_t y_;
+    float x_;
+    float y_;
 };
 
 // This is not a component!
@@ -243,11 +252,11 @@ struct Hotbar {
 
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
-    Item() : totalPart1_(0), totalPart2_(0), type_(WEAPON) {}
+    Item() : totalPart1_(0), totalPart2_(0), type_(WEARABLE) {}
 
     enum ItemType {
-        WEAPON = 0,
-        USE = 1,
+        WEARABLE = 0,
+        CONSOMABLE = 1,
         ETC = 2,
         RIDING = 3,
         MAX_INV_TYPE
@@ -285,7 +294,7 @@ struct Item : public RoseCommon::ISerialize {
                     uint8_t type_ : 5;
                     uint16_t id_ : 10;
                 };
-                uint32_t item_;
+                uint16_t item_;
             };
         } bullet_;
         struct {

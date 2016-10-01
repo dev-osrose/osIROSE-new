@@ -59,21 +59,21 @@ class CliMouseCmd : public CRosePacket {
         virtual ~CliMouseCmd();
 
         uint16_t targetId() const { return targetId_; }
-        int32_t x() const { return x_; }
-        int32_t y() const { return y_; }
+        float x() const { return x_; }
+        float y() const { return y_; }
         uint16_t z() const { return z_; }
 
     private:
         uint16_t targetId_;
-        int32_t x_;
-        int32_t y_;
+        float x_;
+        float y_;
         uint16_t z_;
 };
 
 class SrvMouseCmd : public CRosePacket {
     public:
         SrvMouseCmd(uint16_t sourceId, uint16_t destId, uint16_t dist,
-                int32_t x, int32_t y, int16_t z);
+                float x, float y, int16_t z);
         SrvMouseCmd();
 
         virtual ~SrvMouseCmd();
@@ -85,8 +85,8 @@ class SrvMouseCmd : public CRosePacket {
         uint16_t sourceId_;
         uint16_t destId_;
         uint16_t dist_;
-        int32_t x_;
-        int32_t y_;
+        float x_;
+        float y_;
         int16_t z_;
 };
 
@@ -97,14 +97,33 @@ class CliStopMoving : public CRosePacket {
 
         virtual ~CliStopMoving();
 
-        int32_t x() const { return x_; }
-        int32_t y() const { return y_; }
+        float x() const { return x_; }
+        float y() const { return y_; }
         int16_t z() const { return z_; }
 
     private:
-        int32_t x_;
-        int32_t y_;
+        float x_;
+        float y_;
         int16_t z_;
+};
+
+class SrvStopMoving : public CRosePacket {
+    public:
+        SrvStopMoving() : CRosePacket(ePacketType::PAKWC_STOP) {}
+        SrvStopMoving(Entity entity) : CRosePacket(ePacketType::PAKWC_STOP), entity_(entity) {}
+
+        virtual ~SrvStopMoving() {}
+
+    protected:
+        void pack() {
+            auto basic = entity_.component<BasicInfo>();
+            auto pos = entity_.component<Position>();
+            *this << basic->id_;
+            *this << pos->x_ << pos->y_ << pos->z_;
+        }
+
+    private:
+        Entity entity_;
 };
 
 //------------------------------------------------
@@ -227,28 +246,37 @@ protected:
             destY = dest->y_;
         }
 
-        *this << basic->tag_
-              << (float)pos->x_ << (float)pos->y_ << (float)destX << (float)destY
-              << (uint32_t)0 // command
+        *this << basic->id_
+              << pos->x_ << pos->y_ << destX << destY
+              << (uint16_t)0 // command
               << basic->targetId_
               << advanced->moveMode_
               << advanced->hp_
               << basic->teamId_
-              << info->pkFlag_ // statusFlag ?
+              << info->statusFlag_
               << graphics->race_
               << (uint16_t)1 // runSpeed
               << (uint16_t)1 // attackSpeed
               << (uint8_t)0; // weightRate
+
         for (auto &it : items->items_)
-            *this << (ISerialize&)it;
+            it.partialSerialize(*this);
+
         for (auto &it : bullets->items_)
             it.bulletPartialSerialize(*this);
+
         *this << info->job_
               << basic->level_;
+
         for (auto &it : riding->items_)
-            *this << (ISerialize&)it;
+            it.partialSerialize(*this);
+
         *this << pos->z_
-              << (uint64_t)0; //subFlag
+              << (uint32_t)0; //subFlag
+
+        *this << basic->name_; //szUserID
+
+        *this << basic->name_; //Avatar name
     }
 
 private:
