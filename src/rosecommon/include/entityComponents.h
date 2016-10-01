@@ -164,11 +164,11 @@ struct StatusEffect : public RoseCommon::ISerialize {
 };
 
 struct StatusEffects {
-    const uint16_t maxEffects = 40;
+    static const uint16_t maxEffects = 40;
 
     StatusEffects() : effects_(maxEffects) {}
     StatusEffects(const std::initializer_list<StatusEffect> effects) : effects_(effects) {
-        while (effects_.size() > 40)
+        while (effects_.size() > maxEffects)
             effects_.pop_back();
         effects_.resize(maxEffects);
     }
@@ -193,15 +193,17 @@ struct Skill : public RoseCommon::ISerialize {
 };
 
 struct Skills {
+    static const uint16_t maxSkills = 120;
+
     Skills() {}
     Skills(const std::initializer_list<Skill> &skills) {
-        int64_t diff = 120 - skills.size();
+        int64_t diff = maxSkills - skills.size();
         diff = diff < 0 ? 0 : diff;
         auto last = skills.end() - diff;
         std::copy(skills.begin(), last, skills_.begin());
     }
 
-    std::array<Skill, 120> skills_;
+    std::array<Skill, maxSkills> skills_;
 };
 
 // This is not a component!
@@ -226,33 +228,83 @@ struct HotbarItem : public RoseCommon::ISerialize {
 };
 
 struct Hotbar {
+    static const uint16_t maxItems = 32;
+
     Hotbar() {}
     Hotbar(const std::initializer_list<HotbarItem> &items) {
-        int64_t diff = 32 - items.size();
+        int64_t diff = maxItems - items.size();
         diff = diff < 0 ? 0 : diff;
         auto last = items.end() - diff;
         std::copy(items.begin(), last, items_.begin());
     }
 
-    std::array<HotbarItem, 32> items_;
+    std::array<HotbarItem, maxItems> items_;
 };
 
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
-    Item() : id_(0), gemOpt_(0), hasSocket_(0), refine_(0) {}
-    Item(uint16_t id, uint16_t gemOpt, bool hasSocket, uint8_t refine) : id_(id),
-        gemOpt_(gemOpt), hasSocket_(hasSocket), refine_(refine) {}
+    Item() : total_(0), type_(WEAPON) {}
 
-    uint16_t id_ : 10;
-    uint16_t gemOpt_ : 9;
-    bool hasSocket_;
-    uint8_t refine_ : 4;
+    enum ItemType {
+        WEAPON = 0,
+        USE = 1,
+        ETC = 2,
+        RIDING = 3,
+        MAX_INV_TYPE
+    };
 
+    union {
+        // Wearable
+        struct {
+            uint8_t type_ : 5;
+            uint16_t id_ : 10;
+            bool isCreated_;
+            uint16_t gemOpt_ : 9;
+            uint8_t durability_ : 7;
+            uint16_t life_ : 10;
+            bool hasSocket_;
+            bool isAppraisal_;
+            uint8_t refine_ : 4;
+        } wearable_;
+        // Consomable
+        struct {
+            uint8_t type_ : 5;
+            uint16_t id_ : 10;
+            uint32_t quantity_;
+        } consomable_;
+        // Money
+        struct {
+            uint8_t type_ : 5;
+            uint16_t reserved_ : 11;
+            uint32_t zuly_;
+        } money_;
+        // Bullet
+        struct {
+            union {
+                struct {
+                    uint8_t type_ : 5;
+                    uint16_t id_ : 10;
+                };
+                uint32_t item_;
+            };
+        } bullet_;
+        uint64_t total_ : 48;
+    };
+
+    ItemType type_;
+
+    public:
+        void partialSerialize(RoseCommon::CRosePacket &os) const {
+            uint32_t data = (wearable_.refine_ << 20) | (wearable_.hasSocket_ << 19) |
+                            (wearable_.gemOpt_ << 10) | wearable_.id_;
+            os << data;
+        }
+        void bulletPartialSerialize(RoseCommon::CRosePacket &os) const {
+            os << bullet_.item_;
+        }
     protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
-            uint32_t data = (refine_ << 20) | (hasSocket_ << 19) |
-                            (gemOpt_ << 10) | id_;
-            os << data;
+            os << total_;
         }
         virtual void deserialize(RoseCommon::CRosePacket&) {}
 };
@@ -286,6 +338,10 @@ struct EquippedItems {
 
 struct RidingItems {
     enum RidingPosition {
+        BODY = 0,
+        ENGINE = 1,
+        LEGS = 2,
+        ARMS = 3,
         MAX_RIDING_ITEMS
     };
 
@@ -300,9 +356,30 @@ struct RidingItems {
     std::array<Item, MAX_RIDING_ITEMS> items_;
 };
 
+struct BulletItems {
+    enum BulletType {
+        ARROW = 0,
+        BULLET = 1,
+        THROW = 2,
+        MAX_BULLET_TYPE
+    };
+
+    BulletItems() {}
+
+    std::array<Item, MAX_BULLET_TYPE> items_;
+};
+
+struct Inventory {
+    static const uint16_t maxItems = 138; // 120 items + equipped + bullets + ride
+
+    Inventory() {}
+
+    std::array<Item, maxItems> items_;
+};
+
 using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, AdvancedInfo,
       CharacterInfo, Graphics, CharacterGraphics, Position, StatusEffects,
-      Skills, Hotbar, EquippedItems, Destination, RidingItems>;
+      Skills, Hotbar, EquippedItems, Destination, RidingItems, BulletItems, Inventory>;
 
 using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
 template <typename T>

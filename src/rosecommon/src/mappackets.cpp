@@ -275,7 +275,7 @@ void RoseCommon::SrvSelectCharReply::pack() {
     *this << graphics->race_ << pos->map_ << (float)pos->x_ << (float)pos->y_ << pos->spawn_;
 
     for (auto &it : equipped->items_)
-        *this << (ISerialize&)it;
+        it.partialSerialize(*this);
 
     *this << info->stone_ << graphics->face_ << graphics->hair_ << info->job_
           << info->factionId_ << info->factionRank_ << info->fame_;

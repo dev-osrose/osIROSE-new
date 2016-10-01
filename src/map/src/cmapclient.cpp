@@ -111,7 +111,7 @@ bool CMapClient::JoinServerReply(
         auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
         Send(*packet2);
 
-        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_.component<AdvancedInfo>()->zuly_);
+        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
         Send(*packet3);
 
         auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();

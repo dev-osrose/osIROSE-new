@@ -84,16 +84,19 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
         it->getInt("slot", slot);
         it->getInt("itemid", id);
         it->getInt("gem_opt", gemOpt);
-        it->getInt("socket", equipped->items_[slot].hasSocket_);
+        it->getInt("socket", equipped->items_[slot].wearable_.hasSocket_);
         it->getInt("refine", refine);
-        equipped->items_[slot].id_ = id;
-        equipped->items_[slot].gemOpt_ = gemOpt;
-        equipped->items_[slot].refine_ = refine;
+        equipped->items_[slot].wearable_.id_ = id;
+        equipped->items_[slot].wearable_.gemOpt_ = gemOpt;
+        equipped->items_[slot].wearable_.refine_ = refine;
     }
-    if (!equipped->items_[EquippedItems::FACE].id_)
-        equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
+    if (!equipped->items_[EquippedItems::FACE].wearable_.id_)
+        equipped->items_[EquippedItems::FACE].wearable_.id_ = graphics->face_;
     entity.assign<StatusEffects>();
     entity.assign<RidingItems>();
+    entity.assign<BulletItems>();
+    // TODO : write the inventory code
+    entity.assign<Inventory>();
     return entity;
 }
 

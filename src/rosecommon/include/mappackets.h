@@ -22,7 +22,6 @@
 #include <exception>
 #include <vector>
 #include "entityComponents.h"
-#include <array>
 #include "cli_chat.h"
 #include "cli_stop.h"
 #include "cli_logout.h"
@@ -114,19 +113,19 @@ class CliStopMoving : public CRosePacket {
 
 class SrvInventoryData : public CRosePacket {
  public:
-  SrvInventoryData(int64_t zuly)
-      : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
+  SrvInventoryData(Entity entity)
+      : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), entity_(entity) {};
 
  protected:
   void pack() {
-    *this << zuly_;
+    *this << entity_.component<AdvancedInfo>()->zuly_;
     for (int i = 0; i < 140; ++i) {
       *this << (uint16_t)0 << (uint32_t)0;
     }
   };
 
  private:
-  int64_t zuly_;
+  Entity entity_;
   //todo: item list goes here
 };
 
@@ -223,6 +222,7 @@ protected:
         auto graphics = entity_.component<CharacterGraphics>();
         auto items = entity_.component<EquippedItems>();
         auto riding = entity_.component<RidingItems>();
+        auto bullets = entity_.component<BulletItems>();
         float destX = pos->x_, destY = pos->y_;
         if (dest) {
             destX = dest->x_;
@@ -243,8 +243,8 @@ protected:
               << (uint8_t)0; // weightRate
         for (auto &it : items->items_)
             *this << (ISerialize&)it;
-        for (auto &it : shootData_)
-            *this << (ISerialize&)it;
+        for (auto &it : bullets->items_)
+            it.bulletPartialSerialize(*this);
         *this << info->job_
               << basic->level_;
         for (auto &it : riding->items_)
@@ -254,22 +254,7 @@ protected:
     }
 
 private:
-    struct ShootData : public ISerialize {
-        union {
-            struct {
-                uint8_t type : 5;
-                uint16_t itemId : 10;
-            };
-            uint32_t shotItem;
-        };
-
-    protected:
-        virtual void serialize(CRosePacket &os) const override { os << shotItem; }
-        virtual void deserialize(CRosePacket&) override {}
-    };
-
     Entity entity_;
-    std::array<ShootData, 6> shootData_;
 };
 
 }
