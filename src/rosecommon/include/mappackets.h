@@ -49,7 +49,6 @@ class SrvSelectCharReply : public CRosePacket {
  private:
 
   Entity entity_;
-  uint32_t tag_;
 };
 
 class CliMouseCmd : public CRosePacket {
