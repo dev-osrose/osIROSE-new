@@ -243,7 +243,7 @@ struct Hotbar {
 
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
-    Item() : total_(0), type_(WEAPON) {}
+    Item() : totalPart1_(0), totalPart2_(0), type_(WEAPON) {}
 
     enum ItemType {
         WEAPON = 0,
@@ -288,7 +288,10 @@ struct Item : public RoseCommon::ISerialize {
                 uint32_t item_;
             };
         } bullet_;
-        uint64_t total_ : 48;
+        struct {
+            uint16_t totalPart1_;
+            uint32_t totalPart2_;
+        };
     };
 
     ItemType type_;
@@ -304,7 +307,7 @@ struct Item : public RoseCommon::ISerialize {
         }
     protected:
         virtual void serialize(RoseCommon::CRosePacket &os) const {
-            os << total_;
+            os << totalPart1_ << totalPart2_;
         }
         virtual void deserialize(RoseCommon::CRosePacket&) {}
 };

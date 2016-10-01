@@ -119,14 +119,13 @@ class SrvInventoryData : public CRosePacket {
  protected:
   void pack() {
     *this << entity_.component<AdvancedInfo>()->zuly_;
-    for (int i = 0; i < 140; ++i) {
-      *this << (uint16_t)0 << (uint32_t)0;
+    auto inventory = entity_.component<Inventory>();
+    for (auto &it : inventory->items_)
+        *this << (ISerialize&)it;
     }
-  };
 
  private:
   Entity entity_;
-  //todo: item list goes here
 };
 
 //------------------------------------------------
