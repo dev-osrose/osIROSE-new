@@ -156,10 +156,13 @@ bool CMapClient::ChangeMapReply(
   CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
           *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
 
-  entitySystem_->process<CharacterGraphics>([entity_ = entity_, this](Entity entity) {
-          if (entity != entity_)
+  entitySystem_->process<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
+          auto basic = entity.component<BasicInfo>();
+          if (entity != entity_ && basic->loggedIn_)
               this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
         });
+
+  basic->loggedIn_ = true;
 
   return true;
 }

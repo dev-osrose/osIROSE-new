@@ -31,7 +31,7 @@ struct BasicInfo {
         SIT = 10
     };
 
-    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP) {}
+    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP), loggedIn_(false) {}
     BasicInfo(std::string name, uint16_t level, uint32_t xp, uint16_t id, uint32_t tag, int32_t teamId, uint16_t targetId) :
         name_(name), level_(level), xp_(xp), id_(id), tag_(tag), teamId_(teamId), targetId_(targetId) {}
 
@@ -43,6 +43,7 @@ struct BasicInfo {
     int32_t teamId_;
     uint16_t targetId_;
     uint16_t command_;
+    bool loggedIn_;
 };
 
 struct Stats {
