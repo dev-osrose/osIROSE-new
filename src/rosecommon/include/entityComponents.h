@@ -18,7 +18,20 @@ struct SocketConnector {
 };
 
 struct BasicInfo {
-    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0) {}
+    enum Cmd {
+        STOP = 0,
+        MOVE = 1,
+        ATTACK = 2,
+        DIE = 3,
+        PICKUP = 4,
+        SKILL2SELF = 6,
+        SKILL2OBJ = 7,
+        SKILL2POS = 8,
+        RUNAWAY = 0x8009,
+        SIT = 10
+    };
+
+    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP) {}
     BasicInfo(std::string name, uint16_t level, uint32_t xp, uint16_t id, uint32_t tag, int32_t teamId, uint16_t targetId) :
         name_(name), level_(level), xp_(xp), id_(id), tag_(tag), teamId_(teamId), targetId_(targetId) {}
 
@@ -29,6 +42,7 @@ struct BasicInfo {
     uint32_t tag_;
     int32_t teamId_;
     uint16_t targetId_;
+    uint16_t command_;
 };
 
 struct Stats {

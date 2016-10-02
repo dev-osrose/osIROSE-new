@@ -34,7 +34,6 @@
 #include "srv_changemap.h"
 #include "srv_serverdata.h"
 #include "srv_removeobject.h"
-#include <iostream>
 
 namespace RoseCommon {
 
@@ -248,10 +247,9 @@ protected:
             destY = dest->y_;
         }
 
-        std::cout << basic->id_ << " " << pos->x_ << " " << pos->y_ << std::endl;
         *this << basic->id_
               << pos->x_ << pos->y_ << destX << destY
-              << (uint16_t)0 // command
+              << basic->command_
               << basic->targetId_
               << advanced->moveMode_
               << advanced->hp_
