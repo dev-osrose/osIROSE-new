@@ -34,6 +34,7 @@
 #include "srv_changemap.h"
 #include "srv_serverdata.h"
 #include "srv_removeobject.h"
+#include <iostream>
 
 namespace RoseCommon {
 
@@ -231,6 +232,7 @@ public:
 protected:
     void pack() override
     {
+
         auto pos = entity_.component<Position>();
         auto dest = entity_.component<Destination>();
         auto advanced = entity_.component<AdvancedInfo>();
@@ -246,6 +248,7 @@ protected:
             destY = dest->y_;
         }
 
+        std::cout << basic->id_ << " " << pos->x_ << " " << pos->y_ << std::endl;
         *this << basic->id_
               << pos->x_ << pos->y_ << destX << destY
               << (uint16_t)0 // command
@@ -255,9 +258,9 @@ protected:
               << basic->teamId_
               << info->statusFlag_
               << graphics->race_
-              << (uint16_t)1 // runSpeed
-              << (uint16_t)1 // attackSpeed
-              << (uint8_t)0; // weightRate
+              << advanced->runSpeed_
+              << advanced->atkSpeed_
+              << advanced->weightRate_;
 
         for (auto &it : items->items_)
             it.partialSerialize(*this);

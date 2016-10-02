@@ -51,9 +51,6 @@ struct Stats {
 };
 
 struct AdvancedInfo {
-    AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(0) {}
-    AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp, uint8_t moveMode) : zuly_(zuly), hp_(hp), mp_(mp), moveMode_(moveMode) {}
-
     enum MoveMode {
         WALK = 0,
         RUN = 1,
@@ -61,10 +58,16 @@ struct AdvancedInfo {
         RIDEON = 4
     };
 
+    AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(AdvancedInfo::RUN), runSpeed_(0), atkSpeed_(0), weightRate_(0) {}
+    AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp, uint8_t moveMode) : zuly_(zuly), hp_(hp), mp_(mp), moveMode_(moveMode) {}
+
     uint32_t zuly_;
     uint32_t hp_;
     uint32_t mp_;
     uint8_t moveMode_;
+    uint16_t runSpeed_;
+    uint16_t atkSpeed_;
+    uint8_t weightRate_;
 };
 
 struct Graphics {
@@ -252,7 +255,7 @@ struct Hotbar {
 
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
-    Item() : totalPart1_(0), totalPart2_(0), type_(WEARABLE) {}
+    Item() : totalPart1_(0), totalPart2_(0), type_(WEARABLE), runSpeed_(0), atkSpeed_(0) {}
 
     enum ItemType {
         WEARABLE = 0,
@@ -304,6 +307,9 @@ struct Item : public RoseCommon::ISerialize {
     };
 
     ItemType type_;
+
+    float runSpeed_;
+    float atkSpeed_;
 
     public:
         void partialSerialize(RoseCommon::CRosePacket &os) const {

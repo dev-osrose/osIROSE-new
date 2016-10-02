@@ -97,6 +97,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     entity.assign<BulletItems>();
     // TODO : write the inventory code
     entity.assign<Inventory>();
+    calculateSpeed(entity);
     return entity;
 }
 

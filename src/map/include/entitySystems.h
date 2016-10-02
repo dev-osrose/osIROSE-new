@@ -21,31 +21,21 @@ class MovementSystem : public System {
         virtual void update(EntityManager &es, double dt) {
             Component<Position> position;
             Component<Destination> destination;
-            for (Entity entity : es.entities_with_components(position, destination)) {
-                auto equipped = entity.component<EquippedItems>();
-                float speed = 0;
-                if (equipped) {
-                    speed = 0; // TODO : getSpeed(equipped->items_[EquippedItems::BOOTS].id_);
-                    speed += 0; // TODO : getSpeed(equipped->items_[EquippedItems::BACKPACK].id_);
-                    speed += 20;
-                }
-                auto stats = entity.component<Stats>();
-                if (stats)
-                    speed = speed * (stats->dex_ + 500) / 100.f + 0; // TODO : replace 0 by passive speed skill
-                speed += 0; // TODO : get passive speed thingy
-                int dx = 0, dy = 0;
-                if (position->x_ < destination->x_)
-                    dx = -1;
-                else if (position->x_ > destination->x_)
-                    dx = 1;
-                if (position->y_ < destination->y_)
-                    dy = -1;
-                else if (position->y_ > destination->y_)
-                    dy = 1;
-                position->x_ += dx * speed * dt;
-                position->y_ += dy * speed * dt;
-                if ((position->x_ == destination->x_ && position->y_ == destination->y_) || (std::abs(position->x_ - destination->x_) < speed || std::abs(position->y_ - destination->y_) < speed))
+            Component<AdvancedInfo> advanced;
+            for (Entity entity : es.entities_with_components(position, destination, advanced)) {
+                float dx = destination->x_ - position->x_;
+                float dy = destination->y_ - position->y_;
+                float distance = std::sqrt(dx * dx + dy * dy);
+                float speed = advanced->runSpeed_;
+                float ntime = distance / speed;
+                if (ntime <= dt || distance == 0) {
+                    position->x_ = destination->x_;
+                    position->y_ = destination->y_;
                     entity.remove<Destination>();
+                } else {
+                    position->x_ += dx * dt / ntime;
+                    position->y_ += dy * dt / ntime;
+                }
             }
         }
 
