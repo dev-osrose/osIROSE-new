@@ -19,16 +19,16 @@
 #include "crosepacket.h"
 
 namespace RoseCommon {
-	
+
 class SrvRemoveObject : public CRosePacket {
  public:
-  SrvRemoveObject(uint16_t obj_id);
+  SrvRemoveObject(Entity entity);;
 
  protected:
   void pack();
 
  private:
-  uint16_t obj_id_;
+  Entity entity_;
 };
 
 }

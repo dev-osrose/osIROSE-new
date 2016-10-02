@@ -129,6 +129,9 @@ template <>
 struct find_send_class<ePacketType::PAKWC_SELECT_CHAR_REPLY> { SrvSelectCharReply type; };
 
 template <>
+struct find_send_class<ePacketType::PAKWC_REMOVE_OBJECT> { SrvRemoveObject type; };
+
+template <>
 struct find_send_class<ePacketType::PAKWC_MOUSE_CMD> { SrvMouseCmd type; };
 
 template <>

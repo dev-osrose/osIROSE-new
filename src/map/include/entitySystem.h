@@ -4,6 +4,7 @@
 
 #include "entitySystems.h"
 #include <functional>
+#include <vector>
 
 class EntitySystem {
     public:
@@ -15,6 +16,16 @@ class EntitySystem {
 
         void update(double dt) {
             systemManager_.update(dt);
+            for (auto it : toDestroy_)
+                if (it)
+                    it.destroy();
+            toDestroy_.clear();
+        }
+
+        void destroy(Entity entity) {
+            if (!entity)
+                return;
+            toDestroy_.push_back(entity);
         }
 
         Entity create() {
@@ -38,6 +49,7 @@ class EntitySystem {
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;
+        std::vector<Entity> toDestroy_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

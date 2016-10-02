@@ -248,10 +248,13 @@ void RoseCommon::SrvServerData::pack() {
 //---------------------------------------------
 //---------------------------------------------
 
-SrvRemoveObject::SrvRemoveObject(uint16_t obj_id)
-    : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), obj_id_(obj_id) {}
+SrvRemoveObject::SrvRemoveObject(Entity entity)
+    : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), entity_(entity) {}
 
-void SrvRemoveObject::pack() { *this << obj_id_; }
+void SrvRemoveObject::pack() {
+    auto basic = entity_.component<BasicInfo>();
+    *this << basic->id_;
+}
 
 //---------------------------------------------
 //---------------------------------------------

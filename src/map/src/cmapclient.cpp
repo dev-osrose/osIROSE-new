@@ -17,6 +17,7 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
+#include <cmath>
 
 using namespace RoseCommon;
 
@@ -64,11 +65,16 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 }
 
 CMapClient::~CMapClient() {
-    entitySystem_->saveCharacter(charid_, entity_);
-    entity_.destroy();
 }
 
 bool CMapClient::OnReceived() { return CRoseClient::OnReceived(); }
+
+bool CMapClient::OnDisconnect() {
+    entitySystem_->saveCharacter(charid_, entity_);
+    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+    entitySystem_->destroy(entity_);
+    return true;
+}
 
 bool CMapClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
@@ -200,9 +206,11 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
         return true;
     }
     // TODO : set target
+    auto pos = entity_.component<Position>();
+    float dx = pos->x_ - P->x(), dy = pos->y_ - P->y();
     entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), 1, P->x(), P->y(), P->z()));
+            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), std::sqrt(dx*dx + dy*dy), P->x(), P->y(), P->z()));
     return true;
 }
 
