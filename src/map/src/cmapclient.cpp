@@ -179,7 +179,7 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
           _message, _charID);
   logger_->trace("client {} is sending '{}'", _charID, _message);
-  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY_BUT_ME, *packet);
+  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
   return true;
 }
 
