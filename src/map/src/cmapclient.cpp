@@ -69,11 +69,10 @@ CMapClient::~CMapClient() {
 
 bool CMapClient::OnReceived() { return CRoseClient::OnReceived(); }
 
-bool CMapClient::OnDisconnect() {
+void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
     entitySystem_->destroy(entity_);
-    return true;
 }
 
 bool CMapClient::JoinServerReply(
