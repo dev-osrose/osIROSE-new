@@ -5,8 +5,16 @@ env:
   - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
   - coverity_scan_script_test_mode=false
   - secure: tvFQn4BjO/DG0yE5NEdZsmY73qsxhN5CsXl+C4GkCzz8KgtOGyVFij5R18+IP3X44CKOz54dLy9pE3lCY2v9wvvLnnv1hV3kH2EvV5Ccv2zw8jozz7OpxK2GMSoqPvHK/FAEo3mbuwhnOS2fEV3+hWSF9/piwSAmFhnjH7VHZnnx8yVfpzEl0Oq4JLM1fEx400Z+Glvn9uDfjY8cvzRVp8HqHTuPNNRLmNvGPAYqstpKAxEh6Tml6eUrCxbndbcvtTt7vlshW9OuU5LVh2Y63ftZpsKCWfpu5K4MfgD4oLineo+2zz3jfv/Hs8vTVLzRQph6OkxLiZBqUgUyoZzZ/r4bMQbbS6wmbWwZOaIQyjFRr68FZ/yW4JJ/KkUhMB3LA7it2rNhhI6+jTQqvLO+VAucuUmFJ0xIsbULBTo7cyL7X40rDLFxhXNLTjcqPT1nUzKCrmFxrDh7utegggN0UtXVAWl6KN8f003TVlunM+BrB8r08kX/JU0modFzXS0sMDF/tuzMd9dd/R4CtoHAuP20J7LZ81EA8IbKJ5j6dsc8l+Ti5/LwLrEtxXnD6MSSNDoSZszeyLA78+zGzKLNNvHGdnHTFgFd3Q/gVYJgH6AWAVCJeSnwXbI78azIFohPwsT/JsJS092Ck6rgRKpbZNNmOVfpn6WsXoQBrLpcg0A=
+  - ARTIFACTS_KEY=AKIAJB7K6W65XUBKB6PA
+  - ARTIFACTS_BUCKET=osirose-builds
+  - ARTIFACTS_DEBUG=1
+  - secure: "kEVp5ySFuQ5tOlsDyX0YPbRDew+tunMS4+eY1jrKOPTmMIk45SmQlHelKPMlpjDLMyqTXySSg+M1p6xZJIkdYhm8uPJFwK/RO/BlZi2QIgy7FL8K2QOzAqhaG0AYB+6AlRu7sN4pTTflGBNzs0trSlZlitCuXVIdoEnmejq5b6OWL0tOl7cCA0Cbi3aK28CKqdtHfakLbxOAPlI4ne6EC3GF9O0SBSeoUZ1xXfKMuYCUUshoabagUBNH1PIbF/086P1vyTm7aka7KZmS3ZioQY/X5OXJoXRi/0KZglU3X5QbQA2mcnCxdderT0uLypezYwJHA/4+/jS23X21DPaD/IkccsQRmTRoTaTG02MBu9zbwnv13jp97SdqXXZ4Yic33UIi/INHyU3Im81gQvw9VSxTaOSCWWhhgmSgUU9ywEzbvYEIjP/CEtVq1NUzLn+ADC83rGdJ/1qccQRWH2S0th9/fv3e9Npwf4zLPaCgqNj3gARjQQ7ivgcdxsoSvywQY2dFZnAreaJE1NiTr5dcgNQ4oHyFtA1b9rEfAmulYIQFawAzWSR9Kdb7SlznRHvzDgRGPkWjNvqajY2RjiMP2Yyys8pLiBX82viITGhYCX5X2gBI92SbcZlfjt0nH123yqL8ws57h6TCCtPD6EVXct9PW/nCeMMQE3ndaoXu8IE="
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
+addons:
+  artifacts: true
+    paths:
+    - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
 services:
 - mysql
 matrix:
@@ -239,20 +247,21 @@ notifications:
   slack:
     secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
 
-before_deploy:
-  - tar -czvf ${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
+after_success:
+  - tar -czvf ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
 
-deploy:
-  provider: s3
-  access_key_id: AKIAJJ7ZXXN5Z6KPDIGQ
-  secret_access_key:
-    secure: ZKT5LcC+gRhL1LpmH2xo1pnWaQSZW1hXMnGnVM3f0Ya3hgDWs6B6iM55OAbRk6mZmYn4GELdgfHe45M8Y8LZ4c0ChMcFuuRY1AXXiqKeKePj/H74ad2IIk2Y1dglEeK0UWQlNBqBD5u3ZiPINiG32/beGe1yI1fQQLRW5aVECn/noCX3Zdmd60SKInIkRAT6sF9VhpR3ypuHcOl+EedwunOJAs8b15t23G52ECC70Pqj8Vw/s0mPesUSAeUNclAwi8xvZuNYZZq2f6H1nHRRxLNoSRQviic/C3Mjqo+kHOIqKNzdrO6JUb9kfPWOytdkILMqFKcdr8ESowWx1MJzHLHdEzaOz9HO+8eP0XZQe3614RaSsXjVcdEAo1XlQZUErvRI+SuPk1m/mwT/+botb6Ssa6utdc2XOOJ1sX7HpnUGsaYwTDS6fEHvcHTfWuvSFw09QIF9bPMPqgvBSxnRqkgYdm8dfgKohHN5yqx15abIEDKB3A2SaGK150/TLGtNw7CrJ+74Pwm6lacZzDCqm0Zffwm7CPgFwH6JEcfrAD2T4YP5VtXeADteXqDdSpMbh0184wLOZPDTe5a3j02r0CZXFkwBEx7Ya4f+sNjx/id2J6lTzUHaGRDQN16KXG5kD8KLyRIfnqdGgrVNZz1DDPVjYmpmxijwymyzL+mPp54=
-  bucket: osirose-builds
-  skip_cleanup: true
-  local-dir: ${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
-  upload-dir: travis-builds/${TRAVIS_OS_NAME}/${TRAVIS_BRANCH}
-  acl: public_read
-  on:
-    repo: RavenX8/osIROSE-new
-    all_branches: true
+
+#deploy:
+#  provider: s3
+#  access_key_id: AKIAJJ7ZXXN5Z6KPDIGQ
+#  secret_access_key:
+#    secure: ZKT5LcC+gRhL1LpmH2xo1pnWaQSZW1hXMnGnVM3f0Ya3hgDWs6B6iM55OAbRk6mZmYn4GELdgfHe45M8Y8LZ4c0ChMcFuuRY1AXXiqKeKePj/H74ad2IIk2Y1dglEeK0UWQlNBqBD5u3ZiPINiG32/beGe1yI1fQQLRW5aVECn/noCX3Zdmd60SKInIkRAT6sF9VhpR3ypuHcOl+EedwunOJAs8b15t23G52ECC70Pqj8Vw/s0mPesUSAeUNclAwi8xvZuNYZZq2f6H1nHRRxLNoSRQviic/C3Mjqo+kHOIqKNzdrO6JUb9kfPWOytdkILMqFKcdr8ESowWx1MJzHLHdEzaOz9HO+8eP0XZQe3614RaSsXjVcdEAo1XlQZUErvRI+SuPk1m/mwT/+botb6Ssa6utdc2XOOJ1sX7HpnUGsaYwTDS6fEHvcHTfWuvSFw09QIF9bPMPqgvBSxnRqkgYdm8dfgKohHN5yqx15abIEDKB3A2SaGK150/TLGtNw7CrJ+74Pwm6lacZzDCqm0Zffwm7CPgFwH6JEcfrAD2T4YP5VtXeADteXqDdSpMbh0184wLOZPDTe5a3j02r0CZXFkwBEx7Ya4f+sNjx/id2J6lTzUHaGRDQN16KXG5kD8KLyRIfnqdGgrVNZz1DDPVjYmpmxijwymyzL+mPp54=
+#  bucket: osirose-builds
+#  skip_cleanup: true
+#  local-dir: ${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#  upload-dir: travis-builds/${TRAVIS_OS_NAME}/${TRAVIS_BRANCH}
+#  acl: public_read
+#  on:
+#    repo: RavenX8/osIROSE-new
+#    all_branches: true
     
