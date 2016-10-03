@@ -84,7 +84,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: g7E2KwFd5bLd1ZiWSFGE9Ek13/uDOmmsOh080SXDBYcIpbL/rXHOU53F7t3ZxpmS # your encrypted token from GitHub
-  artifact: win32-(appveyor_build_version)-$(configuration).zip
+  artifact: osirose-package
   draft: true
   prerelease: true
   force_update: true
