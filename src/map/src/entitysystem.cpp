@@ -72,7 +72,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     // TODO : write the hotbar table and loading code
     entity.assign<Hotbar>();
     auto equipped = entity.assign<EquippedItems>();
-    res = database.QStore(fmt::format("CALL GetEquipped({});", charId));
+    res = database.QStore(fmt::format("CALL get_equipped({});", charId));
     if (!res || !res->size()) {
         entity.destroy();
         return Entity();
