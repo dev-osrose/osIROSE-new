@@ -48,10 +48,11 @@ build_script:
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
-- 7z a %APPVEYOR_BUILD_FOLDER%/%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
+- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
+- 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
 
 artifacts:
-- path: $(appveyor_build_version)-$(configuration).zip
+- path: win32-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
   
 notifications:
@@ -68,7 +69,6 @@ before_test:
   - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
   - SET STATIC_DEPS=true
   - pip.exe install lxml
-  - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   - C:/projects/osIROSE/build/bin/%CONFIGURATION%/osirose-tests.exe --gtest_filter=SetupTesting.**
@@ -79,12 +79,12 @@ test_script:
   - ps: $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1; $xml | Out-File C:/projects/osIROSE/build/results.xml; $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml));
 
 deploy:
-  release: osirose-win-v$(appveyor_build_version)
+#  release: osirose-win-v$(appveyor_build_version)
   description: 'Windows build'
   provider: GitHub
   auth_token:
     secure: g7E2KwFd5bLd1ZiWSFGE9Ek13/uDOmmsOh080SXDBYcIpbL/rXHOU53F7t3ZxpmS # your encrypted token from GitHub
-  artifact: (appveyor_build_version)-$(configuration).zip
+  artifact: win32-(appveyor_build_version)-$(configuration).zip
   draft: true
   prerelease: true
   force_update: true
