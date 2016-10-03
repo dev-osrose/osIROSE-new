@@ -47,13 +47,12 @@ build_script:
 - cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=ON ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
+after_build:
+- 7z a %APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
+
 artifacts:
-- path: build/bin
-  name: build-bin
-- path: build/lib
-  name: build-lib
-- path: Database
-  name: build-database
+- path: %APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+  name: osirose-package
   
 notifications:
 - provider: Slack
@@ -78,6 +77,20 @@ before_test:
 test_script:
   - ctest -C %CONFIGURATION% --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
   - ps: $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1; $xml | Out-File C:/projects/osIROSE/build/results.xml; $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml));
+
+deploy:
+  release: osirose-win-v$(appveyor_build_version)
+  description: 'Windows build'
+  provider: GitHub
+  auth_token:
+    secure: g7E2KwFd5bLd1ZiWSFGE9Ek13/uDOmmsOh080SXDBYcIpbL/rXHOU53F7t3ZxpmS # your encrypted token from GitHub
+  artifact: osirose-package
+  draft: true
+  prerelease: true
+  force_update: true
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
 
   
 #init:
