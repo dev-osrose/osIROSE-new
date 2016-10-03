@@ -19,9 +19,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
-      artifacts:
-        paths:
-        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#      artifacts:
+#        paths:
+#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -62,9 +62,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
-      artifacts:
-        paths:
-        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#      artifacts:
+#        paths:
+#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -105,9 +105,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
-      artifacts:
-        paths:
-        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#      artifacts:
+#        paths:
+#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -146,9 +146,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
-      artifacts:
-        paths:
-        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#      artifacts:
+#        paths:
+#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -194,9 +194,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
-      artifacts:
-        paths:
-        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+#      artifacts:
+#        paths:
+#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -262,17 +262,17 @@ after_success:
   - tar -czvf ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
 
 
-#deploy:
-#  provider: s3
-#  access_key_id: AKIAJJ7ZXXN5Z6KPDIGQ
-#  secret_access_key:
-#    secure: ZKT5LcC+gRhL1LpmH2xo1pnWaQSZW1hXMnGnVM3f0Ya3hgDWs6B6iM55OAbRk6mZmYn4GELdgfHe45M8Y8LZ4c0ChMcFuuRY1AXXiqKeKePj/H74ad2IIk2Y1dglEeK0UWQlNBqBD5u3ZiPINiG32/beGe1yI1fQQLRW5aVECn/noCX3Zdmd60SKInIkRAT6sF9VhpR3ypuHcOl+EedwunOJAs8b15t23G52ECC70Pqj8Vw/s0mPesUSAeUNclAwi8xvZuNYZZq2f6H1nHRRxLNoSRQviic/C3Mjqo+kHOIqKNzdrO6JUb9kfPWOytdkILMqFKcdr8ESowWx1MJzHLHdEzaOz9HO+8eP0XZQe3614RaSsXjVcdEAo1XlQZUErvRI+SuPk1m/mwT/+botb6Ssa6utdc2XOOJ1sX7HpnUGsaYwTDS6fEHvcHTfWuvSFw09QIF9bPMPqgvBSxnRqkgYdm8dfgKohHN5yqx15abIEDKB3A2SaGK150/TLGtNw7CrJ+74Pwm6lacZzDCqm0Zffwm7CPgFwH6JEcfrAD2T4YP5VtXeADteXqDdSpMbh0184wLOZPDTe5a3j02r0CZXFkwBEx7Ya4f+sNjx/id2J6lTzUHaGRDQN16KXG5kD8KLyRIfnqdGgrVNZz1DDPVjYmpmxijwymyzL+mPp54=
-#  bucket: osirose-builds
-#  skip_cleanup: true
-#  local-dir: ${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
-#  upload-dir: travis-builds/${TRAVIS_OS_NAME}/${TRAVIS_BRANCH}
-#  acl: public_read
-#  on:
-#    repo: RavenX8/osIROSE-new
-#    all_branches: true
+deploy:
+  provider: s3
+  access_key_id: AKIAJJ7ZXXN5Z6KPDIGQ
+  secret_access_key:
+    secure: ZKT5LcC+gRhL1LpmH2xo1pnWaQSZW1hXMnGnVM3f0Ya3hgDWs6B6iM55OAbRk6mZmYn4GELdgfHe45M8Y8LZ4c0ChMcFuuRY1AXXiqKeKePj/H74ad2IIk2Y1dglEeK0UWQlNBqBD5u3ZiPINiG32/beGe1yI1fQQLRW5aVECn/noCX3Zdmd60SKInIkRAT6sF9VhpR3ypuHcOl+EedwunOJAs8b15t23G52ECC70Pqj8Vw/s0mPesUSAeUNclAwi8xvZuNYZZq2f6H1nHRRxLNoSRQviic/C3Mjqo+kHOIqKNzdrO6JUb9kfPWOytdkILMqFKcdr8ESowWx1MJzHLHdEzaOz9HO+8eP0XZQe3614RaSsXjVcdEAo1XlQZUErvRI+SuPk1m/mwT/+botb6Ssa6utdc2XOOJ1sX7HpnUGsaYwTDS6fEHvcHTfWuvSFw09QIF9bPMPqgvBSxnRqkgYdm8dfgKohHN5yqx15abIEDKB3A2SaGK150/TLGtNw7CrJ+74Pwm6lacZzDCqm0Zffwm7CPgFwH6JEcfrAD2T4YP5VtXeADteXqDdSpMbh0184wLOZPDTe5a3j02r0CZXFkwBEx7Ya4f+sNjx/id2J6lTzUHaGRDQN16KXG5kD8KLyRIfnqdGgrVNZz1DDPVjYmpmxijwymyzL+mPp54=
+  bucket: osirose-builds
+  skip_cleanup: true
+  file: ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
+  acl: public_read
+  on:
+    repo: RavenX8/osIROSE-new
+    all_branches: true
+    tag: true
     
