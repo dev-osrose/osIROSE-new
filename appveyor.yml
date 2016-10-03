@@ -51,7 +51,7 @@ after_build:
 - 7z a %APPVEYOR_BUILD_FOLDER%/%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
 
 artifacts:
-- path: $(appveyor_build_folder)/$(appveyor_build_version)-$(configuration).zip
+- path: $(appveyor_build_version)-$(configuration).zip
   name: osirose-package
   
 notifications:
@@ -84,7 +84,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: g7E2KwFd5bLd1ZiWSFGE9Ek13/uDOmmsOh080SXDBYcIpbL/rXHOU53F7t3ZxpmS # your encrypted token from GitHub
-  artifact: $(appveyor_build_folder)/$(appveyor_build_version)-$(configuration).zip
+  artifact: (appveyor_build_version)-$(configuration).zip
   draft: true
   prerelease: true
   force_update: true
