@@ -254,3 +254,5 @@ deploy:
   acl: public_read
   on:
     repo: RavenX8/osIROSE-new
+    all_branches: true
+    
