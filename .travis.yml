@@ -12,7 +12,7 @@ env:
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
 addons:
-  artifacts: true
+  artifacts:
     paths:
     - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
 services:
