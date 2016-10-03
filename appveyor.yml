@@ -52,6 +52,8 @@ artifacts:
   name: build-bin
 - path: build/lib
   name: build-lib
+- path: Database
+  name: build-database
   
 notifications:
 - provider: Slack
