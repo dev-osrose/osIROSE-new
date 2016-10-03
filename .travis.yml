@@ -11,10 +11,6 @@ env:
   - secure: "kEVp5ySFuQ5tOlsDyX0YPbRDew+tunMS4+eY1jrKOPTmMIk45SmQlHelKPMlpjDLMyqTXySSg+M1p6xZJIkdYhm8uPJFwK/RO/BlZi2QIgy7FL8K2QOzAqhaG0AYB+6AlRu7sN4pTTflGBNzs0trSlZlitCuXVIdoEnmejq5b6OWL0tOl7cCA0Cbi3aK28CKqdtHfakLbxOAPlI4ne6EC3GF9O0SBSeoUZ1xXfKMuYCUUshoabagUBNH1PIbF/086P1vyTm7aka7KZmS3ZioQY/X5OXJoXRi/0KZglU3X5QbQA2mcnCxdderT0uLypezYwJHA/4+/jS23X21DPaD/IkccsQRmTRoTaTG02MBu9zbwnv13jp97SdqXXZ4Yic33UIi/INHyU3Im81gQvw9VSxTaOSCWWhhgmSgUU9ywEzbvYEIjP/CEtVq1NUzLn+ADC83rGdJ/1qccQRWH2S0th9/fv3e9Npwf4zLPaCgqNj3gARjQQ7ivgcdxsoSvywQY2dFZnAreaJE1NiTr5dcgNQ4oHyFtA1b9rEfAmulYIQFawAzWSR9Kdb7SlznRHvzDgRGPkWjNvqajY2RjiMP2Yyys8pLiBX82viITGhYCX5X2gBI92SbcZlfjt0nH123yqL8ws57h6TCCtPD6EVXct9PW/nCeMMQE3ndaoXu8IE="
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-addons:
-  artifacts:
-    paths:
-    - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
 services:
 - mysql
 matrix:
@@ -23,6 +19,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
+      artifacts:
+        paths:
+        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -63,6 +62,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
+      artifacts:
+        paths:
+        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -103,6 +105,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
+      artifacts:
+        paths:
+        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -141,6 +146,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
+      artifacts:
+        paths:
+        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
@@ -186,6 +194,9 @@ matrix:
     sudo: required
     language: cpp
     addons:
+      artifacts:
+        paths:
+        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
         sources:
         - ubuntu-toolchain-r-test
