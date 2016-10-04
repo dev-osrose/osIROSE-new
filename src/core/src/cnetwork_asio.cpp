@@ -54,7 +54,7 @@ CNetwork_Asio::~CNetwork_Asio() {
   while (send_queue_.empty() == false) send_queue_.pop();
   send_mutex_.unlock();
   
-  recv_mutex_.lock()
+  recv_mutex_.lock();
   while (recv_queue_.empty() == false) recv_queue_.pop();
   recv_mutex_.unlock();
 
