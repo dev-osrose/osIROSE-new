@@ -113,6 +113,7 @@ bool CRoseClient::OnReceived() {
             recv_mutex_.unlock();
             
             rtnVal = HandlePacket(_buffer.get());
+            _buffer.reset(nullptr);
             
             if(rtnVal == false) {
               // Abort connection
