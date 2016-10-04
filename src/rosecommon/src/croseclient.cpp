@@ -66,7 +66,8 @@ bool CRoseClient::OnReceived() {
       ResetBuffer();
       return false;
     }
-
+    
+    //logger_->trace("Received a packet header on CRoseClient: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
     if (packet_size_ > 6) return true;
   }
 

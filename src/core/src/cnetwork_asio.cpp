@@ -50,7 +50,13 @@ CNetwork_Asio::~CNetwork_Asio() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   } while (!discard_queue_.empty());
 
+  send_mutex_.lock();
   while (send_queue_.empty() == false) send_queue_.pop();
+  send_mutex_.unlock();
+  
+  recv_mutex_.lock()
+  while (recv_queue_.empty() == false) recv_queue_.pop();
+  recv_mutex_.unlock();
 
   logger_.reset();
 }
@@ -106,8 +112,7 @@ bool CNetwork_Asio::Listen() {
   listener_.non_blocking(true);
   listener_.bind(endpoint);
   listener_.listen();
-  logger_->notice() << "Listening started on " << GetIpAddress() << ":"
-                    << GetPort();
+  logger_->notice("Listening started on {}:{}", GetIpAddress(), GetPort());
   active_ = true;
   AcceptConnection();
   OnListening();
@@ -170,6 +175,8 @@ void CNetwork_Asio::ProcessSend() {
               if (!error) {
                 OnSent();
                 last_update_time_ = (Core::Time::GetTickCount());
+              } else {
+                logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
               }
 
               discard_mutex_.lock();
@@ -223,7 +230,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
-              logger_->notice() << "Client " << GetId() << " disconnected.";
+              logger_->notice("Client {} disconnected.", GetId());
               OnDisconnected();
               Shutdown();
             } else {
