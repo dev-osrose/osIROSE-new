@@ -211,8 +211,10 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
         asio::transfer_exactly(
             BytesToRead),  // We want at least 6 bytes of data
         [this](std::error_code errorCode, std::size_t length) {
+          
           packet_offset_ += (uint16_t)length;
           last_update_time_ = (Core::Time::GetTickCount());
+          
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(

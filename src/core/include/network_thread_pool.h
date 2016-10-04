@@ -24,7 +24,7 @@ namespace Core {
 #define MAX_NETWORK_THREADS 512
 
 class NetworkThreadPool {
-  typedef std::unique_ptr<asio::io_service::work> asio_worker;
+  typedef std::unique_ptr<asio::io_context::work> asio_worker;
 
  public:
   static NetworkThreadPool& GetInstance(uint16_t maxthreads = 0) {
@@ -39,7 +39,7 @@ class NetworkThreadPool {
     }
   }
 
-  asio::io_service* Get_IO_Service() { return &io_service_; }
+  asio::io_context* Get_IO_Service() { return &io_service_; }
   uint16_t GetThreadCount() { return threads_running_; }
 
  private:
@@ -58,7 +58,7 @@ class NetworkThreadPool {
     else if (core_count == 0)
       core_count = 1;
 
-    threads_running_ = core_count;
+//    threads_running_ = core_count;
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       io_thread_[idx] = std::thread([this]() {
         ++threads_running_;
@@ -82,7 +82,7 @@ class NetworkThreadPool {
 
   std::atomic<int> threads_running_;
   std::thread io_thread_[MAX_NETWORK_THREADS];
-  asio::io_service io_service_;
+  asio::io_context io_service_;
   asio_worker io_work_;
   static NetworkThreadPool* instance_;
 };
