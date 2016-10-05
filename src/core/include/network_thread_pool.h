@@ -64,10 +64,7 @@ class NetworkThreadPool {
       
       io_thread_[idx] = std::thread([this, idx]() {
         int index = idx;
-        while(threads_active_.test(index)) {
-          io_service_.poll();
-          std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
-        }
+        while(threads_active_.test(index)) io_service_.run_one();
       });
     }
   }
