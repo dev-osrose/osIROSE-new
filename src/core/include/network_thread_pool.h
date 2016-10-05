@@ -72,11 +72,11 @@ class NetworkThreadPool {
   ~NetworkThreadPool() { Shutdown(); }
 
   void Shutdown() {
-    int count = threads_active_.count();
     threads_active_.reset();
     io_work_.reset();
-    for (int idx = 0; idx < count; ++idx) {
-      io_thread_[idx].join();
+    for (int idx = 0; idx < MAX_NETWORK_THREADS; ++idx) {
+      if( true == io_thread_[idx].joinable() )
+        io_thread_[idx].join();
     }
     
     io_service_.stop();
