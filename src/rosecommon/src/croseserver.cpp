@@ -19,25 +19,42 @@
 namespace RoseCommon {
 
 std::forward_list<CRoseClient*> CRoseServer::client_list_;
-std::forward_list<CRoseISC*> CRoseServer::isc_list_;
+std::forward_list<CRoseClient*> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
   process_thread_ = std::thread([this]() {
+    
+    std::forward_list<CRoseClient*>* list_ptr = nullptr;
+    std::mutex* mutex_ptr = nullptr;
+    std::string inactive_log = "";
+    std::string timeout_log = "";
+    
+    if (IsISCServer() == false) {
+      list_ptr = &client_list_;
+      mutex_ptr = &client_list_mutex_;
+      inactive_log = "Client {} is inactive, shutting down the socket.";
+      timeout_log = "Client {} timed out.";
+    } else {
+      list_ptr = &isc_list_;
+      mutex_ptr = &isc_list_mutex_;
+      inactive_log = "Server {} is inactive, shutting down the socket.";
+      timeout_log = "Server {} timed out.";
+    }
+    
     do {
-      if (IsISCServer() == false) {
-        std::lock_guard<std::mutex> lock(client_list_mutex_);
-        client_list_.remove_if([this] (CRoseClient* i) {
+      (*mutex_ptr).lock();
+        (*list_ptr).remove_if([this, inactive_log] (CRoseClient* i) {
             if (i->IsActive() == false) {
-              logger_->debug("Client {} is inactive, shutting down the socket.", i->GetId());
+              logger_->debug(inactive_log.c_str(), i->GetId());
               delete i;
               return true;
             }
             return false;
           });
         
-        for (auto& client : client_list_) {
+        for (auto& client : (*list_ptr)) {
           std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -45,36 +62,12 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
                            .count();
           if (dt > (1000 * 60) * 5)  // wait 5 minutes before time out
           {
-            logger_->notice("Client {} timed out.", client->GetId());
+            logger_->notice(timeout_log.c_str(), client->GetId());
             client->Shutdown();
             // Do not delete them now. Do it next time.
           }
         }
-      } else {
-        std::lock_guard<std::mutex> lock(isc_list_mutex_);
-        isc_list_.remove_if([this] (CRoseISC* i) {
-            if (i->IsActive() == false) {
-              logger_->debug("Server {} is inactive, shutting down the socket.", i->GetId());
-              delete i;
-              return true;
-            }
-            return false;
-          });
-          
-        for (auto& client : isc_list_) {
-          std::chrono::steady_clock::time_point update =
-              Core::Time::GetTickCount();
-          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                           update - client->GetLastUpdateTime())
-                           .count();
-          if (dt > (1000 * 60) * 5)  // wait 5 minutes before time out
-          {
-            logger_->notice("Server {} timed out.", client->GetId());
-            client->Shutdown();
-            // Do not delete them now. Do it next time.
-          }
-        }
-      }
+      (*mutex_ptr).unlock();
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
     } while (active_ == true);
 
