@@ -58,7 +58,6 @@ class NetworkThreadPool {
     else if (core_count == 0)
       core_count = 1;
 
-    //threads_running_ = core_count;
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       io_thread_[idx] = std::thread([this]() {
         ++threads_running_;
@@ -72,8 +71,8 @@ class NetworkThreadPool {
 
   void Shutdown() {
     io_work_.reset();
-
-    for (int idx = 0; idx < threads_running_; ++idx) {
+    int count = threads_running_;
+    for (int idx = 0; idx < count; ++idx) {
       io_thread_[idx].join();
     }
     
