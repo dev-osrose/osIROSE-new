@@ -28,15 +28,16 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
     do {
       if (IsISCServer() == false) {
         std::lock_guard<std::mutex> lock(client_list_mutex_);
+        client_list_.remove_if([this] (CRoseClient* i) {
+            if (i->IsActive() == false) {
+              logger_->debug("Client {} is inactive, shutting down the socket.", i->GetId());
+              delete i;
+              return true;
+            }
+            return false;
+          });
+        
         for (auto& client : client_list_) {
-          if (client->IsActive() == false) {
-            client->Shutdown();
-            std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
-            delete client;
-            client_list_.remove(client);
-            break;
-          }
-
           std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -51,15 +52,16 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
         }
       } else {
         std::lock_guard<std::mutex> lock(isc_list_mutex_);
+        isc_list_.remove_if([this] (CRoseISC* i) {
+            if (i->IsActive() == false) {
+              logger_->debug("Server {} is inactive, shutting down the socket.", i->GetId());
+              delete i;
+              return true;
+            }
+            return false;
+          });
+          
         for (auto& client : isc_list_) {
-          if (client->IsActive() == false) {
-            client->Shutdown();
-            std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
-            delete client;
-            isc_list_.remove(client);
-            break;
-          }
-
           std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
