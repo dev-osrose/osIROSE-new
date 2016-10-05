@@ -70,8 +70,8 @@ class NetworkThreadPool {
   ~NetworkThreadPool() { Shutdown(); }
 
   void Shutdown() {
-    io_work_.reset();
     int count = threads_running_;
+    io_work_.reset();
     for (int idx = 0; idx < count; ++idx) {
       io_thread_[idx].join();
     }
