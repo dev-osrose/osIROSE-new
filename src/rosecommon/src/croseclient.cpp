@@ -102,15 +102,12 @@ bool CRoseClient::OnReceived() {
         if (true == active_) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
-          recv_mutex_.unlock();
           
           if(recv_empty == false)
           {
             bool rtnVal = true;
-            recv_mutex_.lock();
             std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
             recv_queue_.pop();
-            recv_mutex_.unlock();
             
             rtnVal = HandlePacket(_buffer.get());
             _buffer.reset(nullptr);
@@ -121,6 +118,7 @@ bool CRoseClient::OnReceived() {
               Shutdown();
             }
           }
+          recv_mutex_.unlock();
         }
       });
 
