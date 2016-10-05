@@ -48,6 +48,7 @@ build_script:
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
+- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
 - 7z a %APPVEYOR_BUILD_FOLDER%/%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
 
 artifacts:
@@ -68,7 +69,6 @@ before_test:
   - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
   - SET STATIC_DEPS=true
   - pip.exe install lxml
-  - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   - C:/projects/osIROSE/build/bin/%CONFIGURATION%/osirose-tests.exe --gtest_filter=SetupTesting.**
