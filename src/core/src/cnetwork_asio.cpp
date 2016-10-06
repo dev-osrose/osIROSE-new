@@ -176,7 +176,17 @@ void CNetwork_Asio::ProcessSend() {
                 OnSent();
                 last_update_time_ = (Core::Time::GetTickCount());
               } else {
-                logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
+                logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
+                
+                switch(error.value()) {
+                  case asio::error::basic_errors::connection_reset:
+                  case asio::error::basic_errors::network_reset:
+                    Shutdown();
+                    break;
+                  default:
+                    logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
+                    break;
+                }
               }
 
               discard_mutex_.lock();
