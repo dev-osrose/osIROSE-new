@@ -119,24 +119,26 @@ void CCharISC::OnConnected() {
 
   SetType(iscPacket::ServerType::LOGIN);
 
-  process_thread_ = std::thread([this]() {
-    while (active_ == true && IsLogin() == true) {
-      std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-      int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       update - GetLastUpdateTime())
-                       .count();
-      if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
-      {
-        logger_->trace("Sending ISC_ALIVE");
-        auto packet = std::unique_ptr<CRosePacket>(
-            new CRosePacket(ePacketType::ISC_ALIVE));
-        Send(*packet);
-      }
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(500));  // sleep for 30 seconds
-    }
-    return 0;
-  });
+  if (process_thread_.joinable() == false) {
+	  process_thread_ = std::thread([this]() {
+		  while (active_ == true && IsLogin() == true) {
+			  std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+			  int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+				  update - GetLastUpdateTime())
+				  .count();
+			  if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+			  {
+				  logger_->trace("Sending ISC_ALIVE");
+				  auto packet = std::unique_ptr<CRosePacket>(
+					  new CRosePacket(ePacketType::ISC_ALIVE));
+				  Send(*packet);
+			  }
+			  std::this_thread::sleep_for(
+				  std::chrono::milliseconds(500));  // sleep for 30 seconds
+		  }
+		  return 0;
+	  });
+  }
 }
 
 bool CCharISC::OnShutdown() {

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "cmapserver.h"
 #include "cmapisc.h"
 #include "crosepacket.h"
 #include "config.h"
@@ -111,22 +112,50 @@ void CMapISC::OnConnected() {
                  packet->size(), (uint16_t)packet->type());
   Send(*packet);
 
-  process_thread_ = std::thread([this]() {
-    while (active_ == true && IsChar() == true) {
-      std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-      int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       update - GetLastUpdateTime())
-                       .count();
-      if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
-      {
-        logger_->trace("Sending ISC_ALIVE");
-        auto packet = std::unique_ptr<CRosePacket>(
-            new CRosePacket(ePacketType::ISC_ALIVE));
-        Send(*packet);
-      }
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(500));  // sleep for 30 seconds
-    }
-    return 0;
-  });
+  if (process_thread_.joinable() == false) {
+	  process_thread_ = std::thread([this]() {
+		  while (active_ == true && IsChar() == true) {
+			  std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+			  int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+				  update - GetLastUpdateTime())
+				  .count();
+			  if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+			  {
+				  logger_->trace("Sending ISC_ALIVE");
+				  auto packet = std::unique_ptr<CRosePacket>(
+					  new CRosePacket(ePacketType::ISC_ALIVE));
+				  Send(*packet);
+			  }
+			  std::this_thread::sleep_for(
+				  std::chrono::milliseconds(500));  // sleep for 30 seconds
+		  }
+		  return 0;
+	  });
+  }
+}
+
+bool CMapISC::OnShutdown() {
+	logger_->trace("CCharISC::OnDisconnected()");
+	bool result = true;
+
+	if (active_ == true) {
+		if (GetType() == iscPacket::ServerType::CHAR) {
+			if (Reconnect() == true) {
+				logger_->notice("Reconnected to character server.");
+				result = false;
+			}
+		}
+		else {
+			auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(GetId());
+			std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
+			for (auto& server : CMapServer::GetISCList()) {
+				CMapISC* svr = (CMapISC*)server;
+				if (svr->GetType() == iscPacket::ServerType::CHAR) {
+					svr->Send(*packet);
+					break;
+				}
+			}
+		}
+	}
+	return result;
 }
