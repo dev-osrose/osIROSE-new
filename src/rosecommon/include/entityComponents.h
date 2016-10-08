@@ -360,7 +360,7 @@ struct EquippedItems {
 
 	EquippedItems() {
 		for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-			std::memset(&items_[i], 0, sizeof(Item));
+			std::memset((void*)&items_[i], 0, sizeof(Item));
 	}
     EquippedItems(const std::initializer_list<Item> &items) {
         int64_t diff = MAX_EQUIPPED_ITEMS - items.size();
