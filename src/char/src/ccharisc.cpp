@@ -152,7 +152,9 @@ bool CCharISC::OnShutdown() {
         result = false;
       }
     } else {
-      auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(GetId());
+		auto packet = std::unique_ptr<CRosePacket>(
+			new CRosePacket(ePacketType::ISC_SHUTDOWN));
+      //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(GetId());
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
         CCharISC* svr = (CCharISC*)server;

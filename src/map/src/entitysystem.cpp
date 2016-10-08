@@ -14,10 +14,12 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getFloat("y", pos->y_);
     res->getInt("map", pos->map_);
     res->getInt("revive_map", pos->spawn_);
+
     auto basic = entity.assign<BasicInfo>();
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
     res->getInt("level", basic->level_);
+
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);
     res->getInt("max_mp", stats->maxMp_);
@@ -27,14 +29,17 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getInt("con", stats->con_);
     res->getInt("charm", stats->charm_);
     res->getInt("sense", stats->sense_);
+
     auto advanced = entity.assign<AdvancedInfo>();
     res->getInt("zuly", advanced->zuly_);
     res->getInt("current_hp", advanced->hp_);
     res->getInt("current_mp", advanced->mp_);
+
     auto graphics = entity.assign<CharacterGraphics>();
     res->getInt("face", graphics->face_);
     res->getInt("hair", graphics->hair_);
     res->getInt("race", graphics->race_);
+
     auto info = entity.assign<CharacterInfo>();
     res->getInt("job", info->job_);
     res->getInt("stone", info->stone_);
@@ -56,6 +61,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getInt("clan_rank", info->guildRank_);
     res->getInt("pk_flag", info->pkFlag_);
     res->getInt("stamina", info->stamina_);
+
     // TODO : write the pat initialization code
     auto skills = entity.assign<Skills>();
     auto sks = database.QStore(fmt::format("SELECT id, level from skill where char_id = {};", charId));
@@ -69,8 +75,10 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
             ++i;
         }
     }
+
     // TODO : write the hotbar table and loading code
     entity.assign<Hotbar>();
+
     auto equipped = entity.assign<EquippedItems>();
     res = database.QStore(fmt::format("CALL get_equipped({});", charId));
     if (!res || !res->size()) {
@@ -95,6 +103,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     entity.assign<StatusEffects>();
     entity.assign<RidingItems>();
     entity.assign<BulletItems>();
+
     // TODO : write the inventory code
     entity.assign<Inventory>();
     get<UpdateComponents>().calculateSpeed(entity);
