@@ -164,6 +164,7 @@ struct StatusEffect : public RoseCommon::ISerialize {
     StatusEffect() : expiredSeconds_(0), value_(0), unkown_(0), dt_(0) {}
     StatusEffect(uint32_t expiredSeconds, uint16_t value, uint16_t unkown = 0) :
         expiredSeconds_(expiredSeconds), value_(value), unkown_(unkown), dt_(0) {}
+    virtual ~StatusEffect() {}
 
     uint32_t expiredSeconds_;
     uint16_t value_;
@@ -194,6 +195,7 @@ struct StatusEffects {
 struct Skill : public RoseCommon::ISerialize {
     Skill() : id_(0), level_(0) {}
     Skill(uint16_t id, uint8_t level) : id_(id), level_(level) {}
+    virtual ~Skill() {}
 
     uint16_t id_;
     uint8_t level_;
@@ -225,6 +227,7 @@ struct HotbarItem : public RoseCommon::ISerialize {
     HotbarItem() : item_(0) {}
     HotbarItem(uint16_t item) : item_(item) {}
     HotbarItem(uint8_t type, uint16_t slotId) : type_(type), slotId_(slotId) {}
+    virtual ~HotbarItem() {}
 
     union {
         uint16_t item_;
@@ -258,6 +261,7 @@ struct Hotbar {
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
     Item() : totalPart1_(0), totalPart2_(0), type_(WEARABLE), runSpeed_(0), atkSpeed_(0) {}
+    virtual ~Item() {}
 
     enum ItemType {
         WEARABLE = 0,
@@ -344,10 +348,7 @@ struct EquippedItems {
         MAX_EQUIPPED_ITEMS
     };
 
-	EquippedItems() {
-		for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-			std::memset((void*)&items_[i], 0, sizeof(Item));
-	}
+    EquippedItems() {}
     EquippedItems(const std::initializer_list<Item> &items) {
         int64_t diff = MAX_EQUIPPED_ITEMS - items.size();
         diff = diff < 0 ? 0 : diff;
