@@ -332,16 +332,15 @@ struct Item : public RoseCommon::ISerialize {
 struct EquippedItems {
     enum EquippedPosition {
         FACE = 0,
-        HELMET = 1,
-        ARMOR = 2,
-        BACKPACK = 3,
-        GAUNTLET = 4,
-        BOOTS = 5,
-        WEAPON_R = 6,
-        WEAPON_L = 7,
-        NECKLACE = 8,
-        RING = 9,
-        //EARRING = 10,
+        HAIR = 1,
+        HELMET,
+        ARMOR,
+        GAUNTLET,
+        BOOTS,
+        GOOGLES,
+        BACKPACK,
+        WEAPON_R,
+        WEAPON_L,
         MAX_EQUIPPED_ITEMS
     };
 
@@ -360,9 +359,9 @@ struct RidingItems {
     enum RidingPosition {
         BODY = 0,
         ENGINE = 1,
-        LEGS = 2,
-        OPTION = 3, // weapon or back seat
-        ARMS = 3,
+        LEGS,
+        //OPTION, // weapon or back seat
+        ARMS,
         MAX_RIDING_ITEMS
     };
 
@@ -397,7 +396,7 @@ struct BulletItems {
 };
 
 struct Inventory {
-    static const uint16_t maxItems = 138; // 120 items + equipped + bullets + ride
+    static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
 
     Inventory() {}
 

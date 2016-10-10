@@ -238,7 +238,7 @@ protected:
         auto basic = entity_.component<BasicInfo>();
         auto info = entity_.component<CharacterInfo>();
         auto graphics = entity_.component<CharacterGraphics>();
-        auto items = entity_.component<EquippedItems>();
+        auto equipped = entity_.component<EquippedItems>();
         auto riding = entity_.component<RidingItems>();
         auto bullets = entity_.component<BulletItems>();
         float destX = pos->x_, destY = pos->y_;
@@ -260,7 +260,7 @@ protected:
               << advanced->atkSpeed_
               << advanced->weightRate_;
 
-        for (auto &it : items->items_)
+        for (auto &it : equipped->items_)
             it.partialSerialize(*this);
 
         for (auto &it : bullets->items_)
