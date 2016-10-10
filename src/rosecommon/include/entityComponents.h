@@ -261,7 +261,7 @@ struct Item : public RoseCommon::ISerialize {
 
     enum ItemType {
         WEARABLE = 0,
-        CONSOMABLE = 1,
+        CONSUMABLE = 1,
         ETC = 2,
         RIDING = 3,
         MAX_INV_TYPE
@@ -280,12 +280,12 @@ struct Item : public RoseCommon::ISerialize {
             bool isAppraisal_;
             uint8_t refine_ : 4;
         } wearable_;
-        // Consomable
+        // CONSUMABLE
         struct {
             uint8_t type_ : 5;
             uint16_t id_ : 10;
             uint32_t quantity_;
-        } consomable_;
+        } consumable_;
         // Money
         struct {
             uint8_t type_ : 5;
@@ -344,7 +344,10 @@ struct EquippedItems {
         MAX_EQUIPPED_ITEMS
     };
 
-    EquippedItems() {}
+	EquippedItems() {
+		for (int i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
+			std::memset((void*)&items_[i], 0, sizeof(Item));
+	}
     EquippedItems(const std::initializer_list<Item> &items) {
         int64_t diff = MAX_EQUIPPED_ITEMS - items.size();
         diff = diff < 0 ? 0 : diff;

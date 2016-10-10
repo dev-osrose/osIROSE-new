@@ -66,7 +66,8 @@ bool CRoseClient::OnReceived() {
       ResetBuffer();
       return false;
     }
-
+    
+    //logger_->trace("Received a packet header on CRoseClient: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
     if (packet_size_ > 6) return true;
   }
 
@@ -87,9 +88,41 @@ bool CRoseClient::OnReceived() {
     out.write("0x{0:02x} ", buffer_[i]);
   logger_->trace("{}", out.c_str());
 #endif
-  rtnVal = HandlePacket(buffer_);
-  ResetBuffer();
 
+
+//  rtnVal = HandlePacket(buffer_);
+  auto res = std::unique_ptr<uint8_t[]>(new uint8_t[CRosePacket::size(buffer_)]);
+	std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
+	
+  recv_mutex_.lock();
+  recv_queue_.push(std::move(res));
+  recv_mutex_.unlock();
+  
+  asio::dispatch([this]() {
+        if (true == active_) {
+          recv_mutex_.lock();
+          bool recv_empty = recv_queue_.empty();
+          
+          if(recv_empty == false)
+          {
+            bool rtnVal = true;
+            std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
+            recv_queue_.pop();
+            
+            rtnVal = HandlePacket(_buffer.get());
+            _buffer.reset(nullptr);
+            
+            if(rtnVal == false) {
+              // Abort connection
+              logger_->debug("HandlePacket returned false, disconnecting client.");
+              Shutdown();
+            }
+          }
+          recv_mutex_.unlock();
+        }
+      });
+
+  ResetBuffer();
   return rtnVal;
 }
 

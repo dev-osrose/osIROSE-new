@@ -64,7 +64,7 @@ namespace Core {
  * \date nov 2015
  */
 class CNetwork_Asio : public INetwork {
-  typedef std::unique_ptr<asio::io_service::work> asio_worker;
+  typedef std::unique_ptr<asio::io_context::work> asio_worker;
 
  public:
   CNetwork_Asio();
@@ -119,6 +119,7 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
+  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
