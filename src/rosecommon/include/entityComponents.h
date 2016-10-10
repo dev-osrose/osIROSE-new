@@ -32,8 +32,6 @@ struct BasicInfo {
     };
 
     BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP), loggedIn_(false) {}
-    BasicInfo(std::string name, uint16_t level, uint32_t xp, uint16_t id, uint32_t tag, int32_t teamId, uint16_t targetId) :
-        name_(name), level_(level), xp_(xp), id_(id), tag_(tag), teamId_(teamId), targetId_(targetId) {}
 
     std::string name_;
     uint16_t level_;
@@ -48,10 +46,6 @@ struct BasicInfo {
 
 struct Stats {
     Stats() : maxHp_(0), maxMp_(0), str_(0), dex_(0), int_(0), con_(0), charm_(0), sense_(0), bodySize_(0), headSize_(0) {}
-    Stats(uint32_t maxHp, uint32_t maxMp, uint16_t str, uint16_t dex,
-            uint16_t intel, uint16_t con, uint16_t charm, uint16_t sense, uint8_t bodySize, uint8_t headSize) :
-        maxHp_(maxHp), maxMp_(maxMp), str_(str), dex_(dex), int_(intel), con_(con),
-        charm_(charm), sense_(sense), bodySize_(bodySize), headSize_(headSize) {}
 
     uint32_t maxHp_;
     uint32_t maxMp_;
@@ -74,7 +68,6 @@ struct AdvancedInfo {
     };
 
     AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(AdvancedInfo::RUN), runSpeed_(0), atkSpeed_(0), weightRate_(0) {}
-    AdvancedInfo(uint32_t zuly, uint32_t hp, uint32_t mp, uint8_t moveMode) : zuly_(zuly), hp_(hp), mp_(mp), moveMode_(moveMode) {}
 
     uint32_t zuly_;
     uint32_t hp_;
@@ -124,12 +117,6 @@ struct CharacterInfo {
         patCooldownTime_(0),
         dt_(0)
     {}
-    CharacterInfo(uint16_t job, uint8_t stone, uint32_t statPoints,
-                    uint32_t skillPoints, uint32_t penaltyXp, uint32_t deleteDate, bool platinium,
-                    uint8_t faction) :
-        job_(job), stone_(stone), statPoints_(statPoints), skillPoints_(skillPoints),
-        penaltyXp_(penaltyXp), deleteDate_(deleteDate), platinium_(platinium),
-        factionId_(faction) {}
 
     uint16_t job_;
     uint8_t stone_;
@@ -175,7 +162,7 @@ struct Destination {
 // This is not a component!
 struct StatusEffect : public RoseCommon::ISerialize {
     StatusEffect() : expiredSeconds_(0), value_(0), unkown_(0), dt_(0) {}
-    StatusEffect(uint32_t expiredSeconds, uint16_t value, uint16_t unkown) :
+    StatusEffect(uint32_t expiredSeconds, uint16_t value, uint16_t unkown = 0) :
         expiredSeconds_(expiredSeconds), value_(value), unkown_(unkown), dt_(0) {}
 
     uint32_t expiredSeconds_;
@@ -345,16 +332,16 @@ struct Item : public RoseCommon::ISerialize {
 struct EquippedItems {
     enum EquippedPosition {
         FACE = 0,
-        HAIR = 1,
-        HELMET = 2,
-        ARMOR = 3,
+        HELMET = 1,
+        ARMOR = 2,
+        BACKPACK = 3,
         GAUNTLET = 4,
         BOOTS = 5,
-        GOGGLES = 6,
-        FACE_ITEM = GOGGLES,
-        BACKPACK = 7,
-        WEAPON_R = 8,
-        WEAPON_L = 9,
+        WEAPON_R = 6,
+        WEAPON_L = 7,
+        NECKLACE = 8,
+        RING = 9,
+        //EARRING = 10,
         MAX_EQUIPPED_ITEMS
     };
 
@@ -374,6 +361,7 @@ struct RidingItems {
         BODY = 0,
         ENGINE = 1,
         LEGS = 2,
+        OPTION = 3, // weapon or back seat
         ARMS = 3,
         MAX_RIDING_ITEMS
     };
@@ -394,12 +382,18 @@ struct BulletItems {
         ARROW = 0,
         BULLET = 1,
         THROW = 2,
-        MAX_BULLET_TYPE
+        MAX_BULLET_TYPES
     };
 
     BulletItems() {}
+    BulletItems(const std::initializer_list<Item> &items) {
+        int64_t diff = MAX_BULLET_TYPES - items.size();
+        diff = diff < 0 ? 0 : diff;
+        auto last = items.end() - diff;
+        std::copy(items.begin(), last, items_.begin());
+    }
 
-    std::array<Item, MAX_BULLET_TYPE> items_;
+    std::array<Item, MAX_BULLET_TYPES> items_;
 };
 
 struct Inventory {
