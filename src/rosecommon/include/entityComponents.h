@@ -283,7 +283,7 @@ struct Item : public RoseCommon::ISerialize {
             bool hasSocket_;
             bool isAppraisal_;
             uint8_t refine_ : 4;
-        }) wearable_;
+        }) wearable_ {};
         // CONSUMABLE
         PACK(struct {
             uint8_t type_ : 5;
