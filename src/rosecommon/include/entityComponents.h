@@ -260,7 +260,7 @@ struct Hotbar {
 
 // This is not a component!
 struct Item : public RoseCommon::ISerialize {
-    Item() : totalPart1_(0), totalPart2_(0), type_(WEARABLE), runSpeed_(0), atkSpeed_(0) {}
+    Item() : type_(WEARABLE), runSpeed_(0), atkSpeed_(0) {}
     virtual ~Item() {}
 
     enum ItemType {
@@ -271,7 +271,7 @@ struct Item : public RoseCommon::ISerialize {
         MAX_INV_TYPE
     };
 
-    union {
+    PACK(union {
         // Wearable
         PACK(struct {
             uint8_t type_ : 5;
@@ -298,19 +298,19 @@ struct Item : public RoseCommon::ISerialize {
         }) money_;
         // Bullet
         PACK(struct {
-            union {
+            PACK(union {
                 PACK(struct {
                     uint8_t type_ : 5;
                     uint16_t id_ : 10;
                 });
                 uint16_t item_;
-            };
+            });
         }) bullet_;
         PACK(struct {
             uint16_t totalPart1_;
             uint32_t totalPart2_;
         });
-    };
+    });
 
     ItemType type_;
 
