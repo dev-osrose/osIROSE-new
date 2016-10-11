@@ -273,7 +273,7 @@ struct Item : public RoseCommon::ISerialize {
 
     union {
         // Wearable
-        struct {
+        PACK(struct {
             uint8_t type_ : 5;
             uint16_t id_ : 10;
             bool isCreated_;
@@ -283,33 +283,33 @@ struct Item : public RoseCommon::ISerialize {
             bool hasSocket_;
             bool isAppraisal_;
             uint8_t refine_ : 4;
-        } wearable_;
+        }) wearable_;
         // CONSUMABLE
-        struct {
+        PACK(struct {
             uint8_t type_ : 5;
             uint16_t id_ : 10;
             uint32_t quantity_;
-        } consumable_;
+        }) consumable_;
         // Money
-        struct {
+        PACK(struct {
             uint8_t type_ : 5;
             uint16_t reserved_ : 11;
             uint32_t zuly_;
-        } money_;
+        }) money_;
         // Bullet
-        struct {
+        PACK(struct {
             union {
-                struct {
+                PACK(struct {
                     uint8_t type_ : 5;
                     uint16_t id_ : 10;
-                };
+                });
                 uint16_t item_;
             };
-        } bullet_;
-        struct {
+        }) bullet_;
+        PACK(struct {
             uint16_t totalPart1_;
             uint32_t totalPart2_;
-        };
+        });
     };
 
     ItemType type_;
