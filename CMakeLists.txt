@@ -1,12 +1,38 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+
+# --------------------------
+# Make sure our settings are correct
+foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+   if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+   endif(${flag_var} MATCHES "/MD")
+   
+   if(${flag_var} MATCHES "_DLL")
+      string(REGEX REPLACE "_DLL" "" ${flag_var} "${${flag_var}}")
+   endif(${flag_var} MATCHES "_DLL")
+endforeach(flag_var)
+# --------------------------
+
+set(CMAKE_USER_MAKE_RULES_OVERRIDE
+   ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
+   ${CMAKE_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+   
+SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
+#message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+
 PROJECT("osIROSE")
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 INCLUDE(OsIROSECMakeTools)
+INCLUDE(FindLua)
+INCLUDE(FindProtocolBuffer)
 
-SET(VERSION_MAJOR 0)
-SET(VERSION_MINOR 1)
+SET(VERSION_MAJOR 1)
+SET(VERSION_MINOR 2)
 SET(VERSION_PATCH 0)
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
@@ -14,6 +40,35 @@ SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 MATH(EXPR PROJECT_ABI_VERSION_SUFFIX "${VERSION_MAJOR} * 10000 + ${VERSION_MINOR} * 100 + ${VERSION_PATCH} * 1")
 
 SET(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
+
+# Create a version file using git data
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BRANCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  execute_process(
+    COMMAND git log -1 --format=%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+else()
+  set(GIT_BRANCH "")
+  set(GIT_COMMIT_HASH "")
+endif()
+# --------------------------
+
+#start version file
+message(STATUS "Generating version.h")
+configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/version.h.in
+  ${CMAKE_BINARY_DIR}/generated/version.h
+)
+#end version file
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -33,85 +88,115 @@ OPTION(BUILD_API_DOC
   "Build doxygen documentation" OFF)
 OPTION(ENABLE_MYSQL_ONE_INSTANCE 
 	"Enable use of the single instance mysql database" ON)
-  
+OPTION(ENABLE_EXPERMENTAL
+  "Enable expermental features" OFF)
+OPTION(DISABLE_CRYPT
+  "Enable this to not use encryption functions" OFF)
+
+#build API doc
 IF (BUILD_API_DOC)
   FIND_PACKAGE(Doxygen)
   IF (DOXYGEN_FOUND)
     ADD_SUBDIRECTORY(doc)
   ENDIF (DOXYGEN_FOUND)
 ENDIF (BUILD_API_DOC)
+#build API doc
 
 IF(ENABLE_MYSQL_ONE_INSTANCE)
   SET(ENABLE_MYSQL ON)
 ENDIF()
 
-IF(ENABLE_MYSQL)
-  find_package(MySQL REQUIRED)
-ENDIF()
-
-foreach(flag_var
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-   if(${flag_var} MATCHES "/MD")
-      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-   endif(${flag_var} MATCHES "/MD")
-endforeach(flag_var)
+SET(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/tools)
 
 IF(ENABLE_TESTING)
-	SET(CMAKE_RULE_MESSAGES OFF)	
-	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-		#Build GoogleMock
-		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)		
-	ELSE()
-		#Build GoogleMock
-		ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tools/googletest/googlemock)
-		SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
-		SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-		SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
-		SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
-	ENDIF()
-	SET(CMAKE_RULE_MESSAGES ON)
+  enable_testing() #enable ctest
+  
+  include( CTest )
+  INCLUDE( Dart )
+
+  SET(CMAKE_RULE_MESSAGES OFF)
+  
+  IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    ADD_SUBDIRECTORY(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+    SET(GMOCK_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googlemock/include)
+    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+    SET(GTEST_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googletest/include)
+    SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+  ELSE()
+    ADD_SUBDIRECTORY(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+    SET(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
+    SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
+    SET(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+    SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+  ENDIF()
+  
+  SET(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
-SET(ASIO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/asio/asio/include)
-SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdParty/include)
-SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdParty/lib)
+SET(PROTOBUF_ROOT ${CMAKE_BINARY_DIR})
+SET(SOL2_ROOT ${EXTERNAL_DEPS_ROOT}/sol2)
+SET(PBJSON_ROOT ${EXTERNAL_DEPS_ROOT}/pbjson/src)
+SET(LUA_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/lua/src)
+SET(CXXOPT_ROOT ${EXTERNAL_DEPS_ROOT}/cxxopts/src)
+SET(SPDLOG_ROOT ${EXTERNAL_DEPS_ROOT}/spdlog/include)
+SET(SELENE_ROOT ${EXTERNAL_DEPS_ROOT}/Selene/include)
+SET(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdparty/lib)
+SET(ASIO_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/asio/asio/include)
+SET(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdparty/include)
+SET(PROTOBUF_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/protobuf/src" CACHE STRING "${EXTERNAL_DEPS_ROOT}/protobuf/src" FORCE)
+SET(MYSQLpp_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" CACHE STRING "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" FORCE)
+SET(ENTITYX_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/entityx/entityx)
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	#------------
-	#WINDOWS ONLY SETTINGS!!!!
-	#------------
-	#Build Protobuf
-	IF(ENABLE_MYSQL)
-	 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/mysqlpp)
-	 SET(MYSQL_LIBRARIES libmysql.lib CACHE STRING "")
-	 SET(MYSQLpp_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/mysqlpp)
-	ENDIF()
-	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/3rdParty CACHE STRING "")
-	SET(PROTOBUF_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/protobuf/src CACHE STRING "")
-  SET(GMOCK_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googlemock/include)
-  SET(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
-  SET(GTEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tools/googletest/googletest/include)
-	SET(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
+IF(ENABLE_MYSQL)  
+  MESSAGE(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
+  
+  find_package(MySQL REQUIRED)
+  
+  configure_file(
+    ${MYSQLpp_INCLUDE_DIR}/mysql++.h.in
+    ${MYSQLpp_INCLUDE_DIR}/mysql++.h
+  )
+ENDIF()
+
+IF (MSVC)
+  SET(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" CACHE STRING "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" FORCE)
+  SET(MYSQLpp_LIBRARY_PATH "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" FORCE)
+  
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4221")
+  set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4221")
+  
+  IF (${BUILD_TYPE} STREQUAL Debug)
+    SET(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobufd.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobufd.lib" FORCE)
+  ELSE()
+    SET(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" FORCE)
+  ENDIF()
+
 ELSE()
+	
 	#UNIX ONLY SETTINGS
-
-	#Set Protobuf Paths
-	SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
-	SET(PROTOBUF_BINARY_DIR ${PROTOBUF_ROOT}/lib)
 	IF(ENABLE_MYSQL)
 		SET(MYSQL_INCLUDE_DIR /usr/include/mysql)
-		SET(MYSQLpp_INCLUDE_DIR /usr/include/mysql++)
-		SET(MYSQL_BINARY_DIR /usr/lib)
 	ENDIF()
+	
+	IF(BUILD_PROTOBUF)
+	  SET(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/protoc)
+	ELSE()
+	  SET(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
+	  SET(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_SOURCE_DIR}/protobuf/bin/protoc)
+	  
+	  SET(MYSQLpp_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/protobuf/lib" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib" FORCE)
+	  SET(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" FORCE)
+	ENDIF()
+	
 	SET(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
-find_package(ProtocolBuffer REQUIRED)
-
-ADD_SUBDIRECTORY(src)
-
-IF(BUILD_TOOLS)
-	ADD_SUBDIRECTORY(tools)
+IF(ENABLE_EXPERMENTAL)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_EXPERMENTAL")
 ENDIF()
 
+include_directories(${CMAKE_BINARY_DIR}/generated)
+
+SET(BUILD_LUA ON CACHE BOOL "" FORCE)
+ADD_SUBDIRECTORY(tools)
+ADD_SUBDIRECTORY(src)

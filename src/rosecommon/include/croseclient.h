@@ -1,20 +1,41 @@
+// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http ://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #ifndef _CROSECLIENT_H_
 #define _CROSECLIENT_H_
 
 #include "crosecrypt.h"
 #include "cnetwork_asio.h"
 #include "crosepacket.h"
+#include "iobject.h"
 
 namespace RoseCommon {
 
-class CRoseClient : public Core::CNetwork_Asio {
+class CRoseClient : public Core::CNetwork_Asio, public IObject {
  public:
   CRoseClient();
-  CRoseClient(tcp::socket _sock);
+  CRoseClient(tcp::socket &&_sock);
   virtual ~CRoseClient();
 
-  virtual bool Send(CRosePacket* _buffer);
-  virtual bool Send(std::unique_ptr<uint8_t> _buffer) override;
+  virtual bool Send(CRosePacket &_buffer);
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
+  
+  virtual bool IsNearby(const IObject* _otherClient) const override;
+  
+  virtual uint32_t GetObjId() const override { 
+    return CRoseClient::GetId(); 
+  }
 
  protected:
   // Callback functions

@@ -42,7 +42,7 @@ using databasePoolFilename = IDatabasePoolAbstractFactory<CMySQL_DatabasePoolFac
  * \sa databasePoolFilename
  *
  */
-using databasePool = databasePoolFilename<Config::Filename>;
+extern IDatabasePool &databasePool;
 #endif
 
 }

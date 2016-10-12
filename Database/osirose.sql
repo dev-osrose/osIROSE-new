@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: osirose
 -- ------------------------------------------------------
--- Server version	5.7.9-log
+-- Server version	5.7.15-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,26 +23,20 @@ DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(64) DEFAULT NULL,
-  `password` varchar(32) DEFAULT NULL,
+  `password` varchar(256) DEFAULT NULL,
+  `salt` varchar(256) DEFAULT NULL,
   `access` int(11) DEFAULT '100',
-  `lastip` varchar(15) DEFAULT '0.0.0.0',
-  `lasttime` int(11) DEFAULT '0',
-  `lastsvr` int(11) DEFAULT '0',
-  `lastchar` varchar(64) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `nb_donation` int(11) DEFAULT '0',
-  `donation` varchar(255) DEFAULT '0',
   `active` int(11) DEFAULT '1',
-  `active_key` varchar(255) DEFAULT NULL,
-  `zulystorage` int(11) DEFAULT '0',
-  `platinum` tinyint(1) DEFAULT '0',
+  `platinium` tinyint(1) DEFAULT '0',
   `online` tinyint(1) DEFAULT '0',
   `login_count` int(11) DEFAULT '0',
-  `isSiteLogged` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=ascii;
+  `lastip` varchar(15) DEFAULT '0.0.0.0',
+  `lasttime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,26 +47,120 @@ DROP TABLE IF EXISTS `characters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `characters` (
-  `account` varchar(64) CHARACTER SET ascii NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) CHARACTER SET ascii NOT NULL,
-  `basicData` blob NOT NULL COMMENT 'Look, stats, money',
-  `clanid` decimal(11,0) NOT NULL DEFAULT '0',
-  `unionid` decimal(11,0) NOT NULL DEFAULT '0',
-  `UnionPoints` int(11) NOT NULL DEFAULT '0',
-  `classid` decimal(11,0) NOT NULL DEFAULT '0',
-  `deletetime` decimal(20,0) NOT NULL DEFAULT '0',
-  `clan_rank` int(11) NOT NULL DEFAULT '0',
-  `quests` blob,
-  `questflags` blob,
-  `quickbar` blob NOT NULL,
-  `bskills` blob NOT NULL COMMENT 'Basic Skills',
-  `askill` blob NOT NULL COMMENT 'Active Skills',
-  `pskill` blob NOT NULL COMMENT 'Passive Skills',
-  `respawnid` int(11) NOT NULL DEFAULT '51',
-  `townid` int(11) NOT NULL DEFAULT '20',
-  `cskills` blob NOT NULL COMMENT 'Class Skills',
-  `inv` blob NOT NULL COMMENT 'Inventory',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` int(11) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(24) NOT NULL,
+  `race` int(10) unsigned NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '1',
+  `job` int(11) unsigned DEFAULT '0',
+  `clanid` int(11) unsigned NOT NULL DEFAULT '0',
+  `clan_contribution` int(11) unsigned NOT NULL DEFAULT '0',
+  `clan_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `factionid` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `fame` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points3` int(11) unsigned NOT NULL DEFAULT '0',
+  `face` int(11) unsigned NOT NULL DEFAULT '0',
+  `hair` int(11) unsigned NOT NULL DEFAULT '0',
+  `stone` int(11) unsigned NOT NULL DEFAULT '0',
+  `exp` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `zuly` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_hp` int(10) unsigned NOT NULL DEFAULT '81',
+  `current_mp` int(10) unsigned NOT NULL DEFAULT '55',
+  `max_hp` int(10) unsigned NOT NULL DEFAULT '81',
+  `max_mp` int(10) unsigned NOT NULL DEFAULT '55',
+  `stamina` int(11) unsigned NOT NULL DEFAULT '0',
+  `str` int(10) unsigned NOT NULL DEFAULT '10',
+  `dex` int(10) unsigned NOT NULL DEFAULT '10',
+  `int_` int(10) unsigned NOT NULL DEFAULT '10',
+  `con` int(10) unsigned NOT NULL DEFAULT '10',
+  `charm` int(10) unsigned NOT NULL DEFAULT '10',
+  `sense` int(10) unsigned NOT NULL DEFAULT '10',
+  `stat_points` int(10) unsigned NOT NULL DEFAULT '0',
+  `skill_points` int(10) unsigned NOT NULL DEFAULT '0',
+  `penalty_exp` bigint(20) unsigned DEFAULT '0',
+  `revive_map` int(11) NOT NULL DEFAULT '1',
+  `map` int(11) NOT NULL DEFAULT '1',
+  `x` bigint(32) NOT NULL DEFAULT '520000',
+  `y` bigint(32) NOT NULL DEFAULT '520000',
+  `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
+  `pk_flag` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`),
+  KEY `user_idx` (`userid`),
+  CONSTRAINT `user` FOREIGN KEY (`userid`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `friends`
+--
+
+DROP TABLE IF EXISTS `friends`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `friends` (
+  `char_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `friend_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`),
+  KEY `char_id_idx` (`char_id`,`friend_id`),
+  CONSTRAINT `charid` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `inventory`
+--
+
+DROP TABLE IF EXISTS `inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inventory` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `char_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemid` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
+  `amount` int(11) unsigned NOT NULL DEFAULT '0',
+  `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `slot` int(11) unsigned NOT NULL DEFAULT '0',
+  `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
+  `socket` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `id_UNIQUE` (`uid`),
+  KEY `char_id_idx` (`char_id`),
+  CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `item_db`
+--
+
+DROP TABLE IF EXISTS `item_db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_db` (
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `price_buy` mediumint(10) unsigned DEFAULT NULL,
+  `price_sell` mediumint(10) unsigned DEFAULT NULL,
+  `weight` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `attack` smallint(3) unsigned DEFAULT NULL,
+  `defense` smallint(3) unsigned DEFAULT NULL,
+  `range` tinyint(2) unsigned DEFAULT NULL,
+  `slots` tinyint(2) unsigned DEFAULT NULL,
+  `equip_jobs` int(12) unsigned DEFAULT NULL,
+  `equip_genders` tinyint(2) unsigned DEFAULT NULL,
+  `equip_level` tinyint(3) unsigned DEFAULT NULL,
+  `refineable` tinyint(1) unsigned DEFAULT NULL,
+  `view_id` smallint(3) unsigned DEFAULT NULL,
+  `script` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,25 +182,23 @@ CREATE TABLE `list_clan` (
   `slogan` varchar(100) DEFAULT NULL,
   `news` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `list_friend`
+-- Table structure for table `party`
 --
 
-DROP TABLE IF EXISTS `list_friend`;
+DROP TABLE IF EXISTS `party`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `list_friend` (
-  `id` int(11) NOT NULL,
-  `idfriend` int(11) NOT NULL,
-  `namefriend` varchar(50) NOT NULL,
-  KEY `id` (`id`),
-  KEY `idfriend` (`idfriend`),
-  CONSTRAINT `list_friend_ibfk_3` FOREIGN KEY (`id`) REFERENCES `characters` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `list_friend_ibfk_4` FOREIGN KEY (`idfriend`) REFERENCES `characters` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `party` (
+  `party_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(24) NOT NULL DEFAULT '',
+  `leader_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Leader''s Account ID',
+  `leader_char` int(11) NOT NULL DEFAULT '0' COMMENT 'Character ID',
+  PRIMARY KEY (`party_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Parties persist until they are disbanded.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,14 +209,52 @@ DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sessions` (
+  `id` int(10) NOT NULL,
   `userid` int(10) NOT NULL,
-  `time` time NOT NULL,
-  `charid` int(10) NOT NULL,
-  `worldip` int(20) NOT NULL,
-  `worldport` varchar(20) NOT NULL,
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `channelid` int(11) DEFAULT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `charid` int(10) DEFAULT NULL,
+  `worldip` int(20) DEFAULT NULL,
+  `worldport` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `skill`
+--
+
+DROP TABLE IF EXISTS `skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `skill` (
+  `char_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `skill_db`
+--
+
+DROP TABLE IF EXISTS `skill_db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `skill_db` (
+  `id` int(10) unsigned NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `desc` varchar(45) DEFAULT '',
+  `level` varchar(45) DEFAULT '0',
+  `type` varchar(45) NOT NULL,
+  `range` int(11) DEFAULT NULL,
+  `class` set('0') DEFAULT '0',
+  `power` int(11) DEFAULT NULL,
+  `script` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +277,7 @@ CREATE TABLE `storage` (
   `socketed` int(11) NOT NULL DEFAULT '0',
   `appraised` int(11) NOT NULL DEFAULT '0',
   `gem` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +287,7 @@ CREATE TABLE `storage` (
 --
 -- Dumping routines for database 'osirose'
 --
-/*!50003 DROP PROCEDURE IF EXISTS `GetChar` */;
+/*!50003 DROP FUNCTION IF EXISTS `character_exists` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -171,17 +295,26 @@ CREATE TABLE `storage` (
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetChar`(IN `_user` VARCHAR(16))
-    NO SQL
-SELECT * FROM characters WHERE account = _user ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `character_exists`(`_char` VARCHAR(24)) RETURNS int(11)
+    READS SQL DATA
+BEGIN
+  
+  if (select * from characters where name = _char) > 0
+  then
+    return 1;
+  end if;
+  
+-- We were unable to find a character with that name
+return 0;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `UserLogin` */;
+/*!50003 DROP FUNCTION IF EXISTS `create_salt` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -189,11 +322,296 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UserLogin`(IN `_user` VARCHAR(16), IN `_pass` VARCHAR(32))
+CREATE DEFINER=`root`@`localhost` FUNCTION `create_salt`() RETURNS varchar(256) CHARSET utf8
     READS SQL DATA
-SELECT access, active, `online` FROM accounts WHERE username = _user AND password = _pass ;;
+BEGIN
+SET @salt = SHA2( SHA2(RAND(), 256), 256 );
+RETURN @salt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `user_exists` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `user_exists`(`_user` VARCHAR(24)) RETURNS int(11)
+    READS SQL DATA
+BEGIN
+  if (select id from accounts where username = _user) > 0
+  then
+    return 1;
+  end if;
+return 0;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `create_account` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_account`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(32))
+    MODIFIES SQL DATA
+BEGIN
+SET @salt = create_salt();
+INSERT INTO accounts(username, password, salt) VALUES(_user, SHA2( CONCAT(_pass,@salt), 256), @salt);
+SET @salt = NULL;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `create_char` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_char`(IN `_name` VARCHAR(24), IN `_userid` INT, IN `_race` INT, IN `_face` INT, IN `_hair` INT, IN `_stone` INT)
+    MODIFIES SQL DATA
+BEGIN
+  DECLARE charid INT(10);
+  DECLARE hatuid INT(10);
+	insert into characters(userid, name, race, face, hair, stone) values(_userid, _name, _race, _face, _hair, _stone);
+	SET charid = LAST_INSERT_ID();
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 30, 3, 1, 3);
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 1, 8, 1, 7);
+	
+	if _race = 0 then SET hatuid = 222;
+	else SET hatuid = 221;
+	end if;
+	
+	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, hatuid, 2, 1, 12);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `create_session` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_session`(IN `_sessionid` INT, IN `_userid` INT, IN `_channelid` INT)
+    MODIFIES SQL DATA
+BEGIN
+  INSERT into sessions(id, userid, channelid, time) values(_sessionid, _userid, _channelid, now());
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_character` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT, IN `_name` VARCHAR(20))
+    MODIFIES SQL DATA
+BEGIN
+	DELETE FROM characters WHERE characters.userid = _charid AND characters.name = _name;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_character` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character`(IN `_charid` INT)
+    READS SQL DATA
+BEGIN
+  SELECT * FROM `characters` WHERE characters.id = _charid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_character_list` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character_list`(IN `_userid` INT)
+    READS SQL DATA
+BEGIN
+  SELECT * FROM characters WHERE userid = _userid ;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_equipped` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_equipped`(IN `_charid` INT(11))
+    READS SQL DATA
+BEGIN
+  SELECT * FROM inventory WHERE char_id = _charid AND slot < 10;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_inventory` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_inventory`(IN `_charid` INT(11))
+    READS SQL DATA
+BEGIN
+  SELECT * FROM inventory WHERE char_id = _charid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_session` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_session`(IN `_sessionid` INT, IN `_pass` VARCHAR(32))
+    READS SQL DATA
+BEGIN
+  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.platinium
+  FROM `sessions`
+  LEFT JOIN `accounts` on sessions.userid = accounts.id 
+  WHERE sessions.id = _sessionid AND password = SHA2( CONCAT(_pass,accounts.salt), 256);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_skills` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_skills`(IN `_charid` INT(11))
+    READS SQL DATA
+BEGIN
+  SELECT * FROM skill WHERE char_id = _charid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_session_with_character` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_session_with_character`(IN `_sessionid` INT, IN `_charid` INT)
+    MODIFIES SQL DATA
+BEGIN
+  UPDATE `sessions` 
+  SET charid = _charid
+  WHERE sessions.id = _sessionid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `user_login` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(IN `_user` VARCHAR(16), IN `_pass` VARCHAR(32))
+    READS SQL DATA
+BEGIN
+  SELECT id, password, access, active, `online` FROM accounts WHERE username = _user AND password = SHA2( CONCAT(_pass,salt), 256) ;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -209,4 +627,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-02 23:49:39
+-- Dump completed on 2016-10-08  0:41:39

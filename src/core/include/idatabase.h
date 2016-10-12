@@ -1,3 +1,17 @@
+// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http ://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 /*!
  * \file idatabase.h
  *
@@ -55,7 +69,15 @@ class	IRow
 		 * \param[out] data The resulting int
 		 * \param[out] bool Return false if the data was NULL
 		 */
+        virtual bool    getInt(std::string const &columnName, uint64_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, int64_t &data) = 0;
 		virtual bool	getInt(std::string const &columnName, uint32_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, int32_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, uint16_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, int16_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, uint8_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, int8_t &data) = 0;
+        virtual bool    getInt(std::string const &columnName, bool &data) = 0;
 
 		/*!
 		 * \brief Function to fetch a float
@@ -120,7 +142,7 @@ class	IResult
 		 * \param[out] bool Return false if outside boundaries
 		 * \note Checks only the lower bound
 		 */
-		virtual bool		decrementRow() {uint32_t tmp = current_row_; current_row_ = current_row_ <= 0 ? 0 : current_row_ - 1; return tmp;}
+		virtual bool		decrementRow() {uint32_t tmp = current_row_; current_row_ = current_row_ <= 0 ? 0 : current_row_ - 1; return tmp != 0;}
 
 		/*!
 		 * \brief Convenience function to get the total number of rows in this result
@@ -152,7 +174,15 @@ class	IResult
 		 * \param[out] data The resulting int
 		 * \param[out] bool Return false if the data was NULL
 		 */
+		virtual bool	getInt(std::string const &columnName, uint64_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, int64_t &data) = 0;
 		virtual bool	getInt(std::string const &columnName, uint32_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, int32_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, uint16_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, int16_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, uint8_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, int8_t &data) = 0;
+		virtual bool	getInt(std::string const &columnName, bool &data) = 0;
 
 		/*!
 		 * \brief Convenience function to fetch a float
@@ -205,7 +235,7 @@ public:
 	 * \note The connection should be initiated in the constructor as much as possible, this function is provided for convenience only.
 	 * \warning If the database object was already connected when calling this function, the connection will be dropped and a new one will be made with the new parameters.
 	 */
-	virtual void	Connect(std::string _host, std::string _database, std::string _user, std::string _password) = 0;
+	virtual void	Connect(const std::string &_host, const std::string &_database, const std::string &_user, const std::string &_password) = 0;
 
 	/*!
 	 * \brief Used to make a query without result
@@ -215,7 +245,7 @@ public:
 	 * \param[in] _query The query to run against the database
 	 * \note This function is blocking
 	 */
-	virtual void				QExecute(std::string _query) = 0;
+	virtual void				QExecute(const std::string &_query) = 0;
 	/*!
 	 * \brief Used to make a query with results
 	 *
@@ -225,7 +255,7 @@ public:
 	 * \param[out] std::unique_ptr<IResult> The result of the query
 	 * \note This function is blocking
 	 */
-	virtual std::unique_ptr<IResult>	QStore(std::string _query) = 0;
+	virtual std::unique_ptr<IResult>	QStore(const std::string &_query) = 0;
 };
 }
 
