@@ -10,7 +10,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 [lin-link]:  https://travis-ci.org/dev-osrose/osIROSE-new "Linux build status"
 [win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "Windows build status"
 [win-link]:  https://ci.appveyor.com/project/dev-osrose/osirose-new/branch/trunk "Windows build status"
-[cov-badge]: https://coveralls.io/repos/dev-osrose/osIROSE-new/badge.svg?branch=trunk&service=github
+[cov-badge]: https://coveralls.io/repos/github/dev-osrose/osIROSE-new/badge.svg?branch=trunk&service=github
 [cov-link]:  https://coveralls.io/github/dev-osrose/osIROSE-new?branch=trunk
 [ccov-badge]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk/graph/badge.svg
 [ccov-link]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk
