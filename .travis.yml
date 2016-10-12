@@ -125,6 +125,9 @@ matrix:
     cache:
       directories:
       - "./protobuf"
+    branches:
+      except:
+      - coverity_scan
     before_install:
     - export SUITE=none
     - export GCOV_PATH=/usr/bin/gcov-6
