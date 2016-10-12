@@ -25,7 +25,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
 
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
-	lua.set_function("log", [this](std::string str) { logger_->notice(str.c_str()); });
+	lua.set_function("log", [this](std::string str) { logger_->info(str.c_str()); });
 	//lua.script_file("./scripts/main.lua");
 
   if (mapidx >= 0) {
@@ -49,14 +49,14 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
       CMapClient* nClient = new CMapClient(std::move(_sock), entitySystem_);
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId(++client_count_);
-      logger_->notice("Client connected from: {}", _address.c_str());
+      logger_->info("Client connected from: {}", _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CMapISC* nClient = new CMapISC(std::move(_sock));
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId( server_count_++ );
-      logger_->notice( "Server connected from: {}", _address.c_str() );
+      logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(nClient);
     }
   }

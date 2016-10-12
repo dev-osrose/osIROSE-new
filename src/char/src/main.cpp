@@ -23,11 +23,11 @@ void DisplayTitle()
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
   if(auto log = console.lock())
   {
-    log->notice( "--------------------------------" );
-    log->notice( "        osIROSE 2 Alpha         " );
-    log->notice( "  http://forum.dev-osrose.com/  " );
-    log->notice( "--------------------------------" );
-    log->notice( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+    log->info( "--------------------------------" );
+    log->info( "        osIROSE 2 Alpha         " );
+    log->info( "  http://forum.dev-osrose.com/  " );
+    log->info( "--------------------------------" );
+    log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
   }
 }
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
 
   if(auto log = console.lock())
-    log->notice("Starting up server...");
+    log->info("Starting up server...");
 
   Core::Config& config = Core::Config::getInstance();
   Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
@@ -66,7 +66,6 @@ int main(int argc, char* argv[]) {
     log->set_level((spdlog::level::level_enum)config.char_server().log_level());
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
-    log->info("Info logs are enabled.");
   }
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 
@@ -88,7 +87,7 @@ int main(int argc, char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   if(auto log = console.lock())
-    log->notice( "Server shutting down..." );
+    log->info( "Server shutting down..." );
   Core::NetworkThreadPool::DeleteInstance();
   spdlog::drop_all();
   }

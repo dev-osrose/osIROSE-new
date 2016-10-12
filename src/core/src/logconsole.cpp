@@ -16,31 +16,10 @@
 //
 #include <sstream>
 #include "logconsole.h"
-#ifdef _WIN32
-#include <spdlog/sinks/wincolor_sink.h>
-#endif
-
-std::ostream& Core::Color::operator<<(std::ostream& os,
-                                      Core::Color::CodeFG code) {
-#ifndef _WIN32
-  return os << "\033[1;" << static_cast<int>(code) << "m";
-#else
-  return os;
-#endif
-}
-
-std::ostream& Core::Color::operator<<(std::ostream& os,
-                                      Core::Color::CodeBG code) {
-#ifndef _WIN32
-  return os << "\033[" << static_cast<int>(code) << "m";
-#else
-  return os;
-#endif
-}
 
 namespace Core {
 
-spdlog::level::level_enum CLog::level_ = spdlog::level::notice;
+spdlog::level::level_enum CLog::level_ = spdlog::level::info;
 
 void CLog::SetLevel(spdlog::level::level_enum _level) {
   level_ = _level;
@@ -106,23 +85,26 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       }
 
       std::vector<spdlog::sink_ptr> net_sink;
-//      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
 #ifdef _WIN32
-      auto console_sink = std::make_shared<spdlog::sinks::wincolor_sink_mt>(std::cout, true);
-#else
-      auto console_out = spdlog::sinks::stdout_sink_mt::instance();
-      auto console_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(console_out);
-#endif
-//       auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
-//           path.c_str(), "txt", 23, 59);
+      auto console_sink = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
       net_sink.push_back(console_sink);
-//      net_sink.push_back(daily_sink);
+#else
+      auto console_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(spdlog::sinks::stdout_sink_mt::instance());
+      //auto daily_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
+        //path.c_str(), "txt", 23, 59);
+      
+      #ifdef SPDLOG_ENABLE_SYSLOG
+        auto syslog_sink = std::make_shared<spdlog::sinks::syslog_sink>(name.c_str());
+        net_sink.push_back(syslog_sink);
+      #endif
+      net_sink.push_back(console_sink);
+      //net_sink.push_back(daily_sink);
+#endif
 
       auto net_logger = std::make_shared<spdlog::logger>(
           name.c_str(), begin(net_sink), end(net_sink));
       net_logger->set_level(level_);
       net_logger->set_pattern(format.str());
-
       spdlog::register_logger(net_logger);
 
       return net_logger;

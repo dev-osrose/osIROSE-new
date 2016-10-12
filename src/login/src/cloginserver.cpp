@@ -33,7 +33,7 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
       CLoginClient* nClient = new CLoginClient(std::move(_sock));
       nClient->SetId(client_count_++);
       nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
-      logger_->notice( "[{}] Client connected from: {}", nClient->GetId(),
+      logger_->info( "[{}] Client connected from: {}", nClient->GetId(),
                     _address.c_str());
       client_list_.push_front(nClient);
     } else {
@@ -41,7 +41,7 @@ void CLoginServer::OnAccepted(tcp::socket _sock) {
       CLoginISC* nClient = new CLoginISC(std::move(_sock));
       nClient->SetId(server_count_++);
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
-      logger_->notice("Server connected from: {}", _address.c_str());
+      logger_->info("Server connected from: {}", _address.c_str());
       isc_list_.push_front(nClient);
     }
   }

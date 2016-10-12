@@ -83,7 +83,7 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   logger_->debug( "ISC Server Type: [{}]\n",
                    GetType() );
 
-  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pServerReg.type()).c_str(),
                   pServerReg.name().c_str(), pServerReg.addr().c_str(),
                   pServerReg.port());

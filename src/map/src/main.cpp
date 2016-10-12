@@ -25,11 +25,11 @@ void DisplayTitle()
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
   if(auto log = console.lock())
   {
-    log->notice( "--------------------------------" );
-    log->notice( "        osIROSE 2 Alpha         " );
-    log->notice( "  http://forum.dev-osrose.com/  " );
-    log->notice( "--------------------------------" );
-    log->notice( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+    log->info( "--------------------------------" );
+    log->info( "        osIROSE 2 Alpha         " );
+    log->info( "  http://forum.dev-osrose.com/  " );
+    log->info( "--------------------------------" );
+    log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
   }
 }
 
@@ -67,7 +67,6 @@ int main(int argc, char* argv[]) {
     log->set_level((spdlog::level::level_enum)config.map_server().log_level());
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
-    log->info("Info logs are enabled.");
   }
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
 

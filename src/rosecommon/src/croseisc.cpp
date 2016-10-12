@@ -39,7 +39,7 @@ bool CRoseISC::OnReceived() {
   if (packet_size_ == 6) {
     packet_size_ = (uint16_t)buffer_[0];
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
-      logger_->debug() << "Client sent incorrect block header";
+      logger_->debug("Client sent incorrect block header");
       ResetBuffer();
       return false;
     }

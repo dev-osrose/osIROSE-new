@@ -94,7 +94,7 @@ bool CMapISC::ServerRegister(
 //    this->SetType(_type);
 //  }
 
-  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pMapServer.type()).c_str(),
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
@@ -141,7 +141,7 @@ bool CMapISC::OnShutdown() {
 	if (active_ == true) {
 		if (GetType() == iscPacket::ServerType::CHAR) {
 			if (Reconnect() == true) {
-				logger_->notice("Reconnected to character server.");
+				logger_->info("Reconnected to character server.");
 				result = false;
 			}
 		}

@@ -62,7 +62,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
                            .count();
           if (dt > (1000 * 60) * 5)  // wait 5 minutes before time out
           {
-            logger_->notice(timeout_log.c_str(), client->GetId());
+            logger_->info(timeout_log.c_str(), client->GetId());
             client->Shutdown();
             // Do not delete them now. Do it next time.
           }
@@ -122,14 +122,14 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
       CRoseClient* nClient = new CRoseClient(std::move(_sock));
       nClient->SetId(
           std::distance(std::begin(client_list_), std::end(client_list_)));
-      logger_->notice("[{}] Client connected from: {}", nClient->GetId(),
+      logger_->info("[{}] Client connected from: {}", nClient->GetId(),
                       _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(std::move(_sock));
       nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-      logger_->notice("[{}] Server connected from: {}", nClient->GetId(),
+      logger_->info("[{}] Server connected from: {}", nClient->GetId(),
                       _address.c_str());
       isc_list_.push_front(nClient);
     }

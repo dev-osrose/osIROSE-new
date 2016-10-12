@@ -112,7 +112,7 @@ bool CNetwork_Asio::Listen() {
   listener_.non_blocking(true);
   listener_.bind(endpoint);
   listener_.listen();
-  logger_->notice("Listening started on {}:{}", GetIpAddress(), GetPort());
+  logger_->info("Listening started on {}:{}", GetIpAddress(), GetPort());
   active_ = true;
   AcceptConnection();
   OnListening();
@@ -240,7 +240,7 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
-              logger_->notice("Client {} disconnected.", GetId());
+              logger_->info("Client {} disconnected.", GetId());
               OnDisconnected();
               Shutdown();
             } else {

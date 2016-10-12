@@ -173,16 +173,14 @@ void CMySQL_Database::Connect(const std::string &_host, const std::string &_data
 std::unique_ptr<IResult> CMySQL_Database::QStore(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while executing the query: " << _query.c_str()
-                      << ": not connected" << Color::CL_RESET;
+      log->critical("Error while executing the query: {}: not connected", _query.c_str());
     throw std::runtime_error("Error not connected");
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start();  // This is if we pass the database around different
                          // threads
   if (auto log = logger_.lock())
-    log->debug() << "Executing query: " << _query.c_str();
+    log->debug("Executing query: {}", _query.c_str());
   mysqlpp::Query query = conn_.query(_query.c_str());
   std::unique_ptr<IResult> result(new CMySQL_Result(query.store()));
   while (query.more_results()) {
@@ -194,16 +192,14 @@ std::unique_ptr<IResult> CMySQL_Database::QStore(const std::string &_query) {
 void CMySQL_Database::QExecute(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while executing the query: " << _query.c_str()
-                      << ": not connected" << Color::CL_RESET;
+      log->critical("Error while executing the query: {}: not connected", _query.c_str());
     throw std::runtime_error("Error not connected");
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start();  // This is if we pass the database around different
                          // threads
   if (auto log = logger_.lock())
-    log->debug() << "Executing query: " << _query.c_str();
+    log->debug("Executing query: {}", _query.c_str());
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }

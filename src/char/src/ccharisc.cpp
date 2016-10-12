@@ -83,7 +83,7 @@ bool CCharISC::ServerRegister(
     this->SetType(_type);
   }
 
-  logger_->notice("ISC Server Connected: [{}, {}, {}:{}]\n",
+  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pMapServer.type()).c_str(),
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
@@ -148,7 +148,7 @@ bool CCharISC::OnShutdown() {
   if (active_ == true) {
     if (GetType() == iscPacket::ServerType::LOGIN) {
       if (Reconnect() == true) {
-        logger_->notice("Reconnected to login server.");
+        logger_->info("Reconnected to login server.");
         result = false;
       }
     } else {
