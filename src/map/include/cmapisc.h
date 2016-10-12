@@ -27,8 +27,10 @@ class CMapISC : public RoseCommon::CRoseISC {
 
  protected:
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
-  bool HandlePacket(uint8_t* _buffer);
-  virtual void OnConnected();
+  bool HandlePacket(uint8_t* _buffer) override;
+
+  virtual void OnConnected() override;
+  virtual bool OnShutdown() override;
 };
 
 #endif

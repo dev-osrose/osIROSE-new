@@ -29,12 +29,44 @@ bool CMySQL_Row::getString(std::string const &name, std::string &data) {
   return getData<std::string>(name, data);
 }
 
+bool CMySQL_Row::getInt(std::string const &name, uint64_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int64_t &data) {
+  return getData(name, data);
+}
+
 bool CMySQL_Row::getInt(std::string const &name, uint32_t &data) {
-  return getData<uint32_t>(name, data);
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int32_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, uint16_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int16_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, uint8_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, int8_t &data) {
+  return getData(name, data);
+}
+
+bool CMySQL_Row::getInt(std::string const &name, bool &data) {
+  return getData(name, data);
 }
 
 bool CMySQL_Row::getFloat(std::string const &name, float &data) {
-  return getData<float>(name, data);
+  return getData(name, data);
 }
 
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
@@ -54,7 +86,39 @@ bool CMySQL_Result::getString(std::string const &name, std::string &data) {
   return rows_[current_row_]->getString(name, data);
 }
 
+bool CMySQL_Result::getInt(std::string const &name, uint64_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int64_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
 bool CMySQL_Result::getInt(std::string const &name, uint32_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int32_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, uint16_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int16_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, uint8_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, int8_t &data) {
+  return rows_[current_row_]->getInt(name, data);
+}
+
+bool CMySQL_Result::getInt(std::string const &name, bool &data) {
   return rows_[current_row_]->getInt(name, data);
 }
 
@@ -109,16 +173,14 @@ void CMySQL_Database::Connect(const std::string &_host, const std::string &_data
 std::unique_ptr<IResult> CMySQL_Database::QStore(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while executing the query: " << _query.c_str()
-                      << ": not connected" << Color::CL_RESET;
+      log->critical("Error while executing the query: {}: not connected", _query.c_str());
     throw std::runtime_error("Error not connected");
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start();  // This is if we pass the database around different
                          // threads
   if (auto log = logger_.lock())
-    log->debug() << "Executing query: " << _query.c_str();
+    log->debug("Executing query: {}", _query.c_str());
   mysqlpp::Query query = conn_.query(_query.c_str());
   std::unique_ptr<IResult> result(new CMySQL_Result(query.store()));
   while (query.more_results()) {
@@ -130,16 +192,14 @@ std::unique_ptr<IResult> CMySQL_Database::QStore(const std::string &_query) {
 void CMySQL_Database::QExecute(const std::string &_query) {
   if (!connected_) {
     if (auto log = logger_.lock())
-      log->critical() << Color::FG_RED
-                      << "Error while executing the query: " << _query.c_str()
-                      << ": not connected" << Color::CL_RESET;
+      log->critical("Error while executing the query: {}: not connected", _query.c_str());
     throw std::runtime_error("Error not connected");
   }
   std::lock_guard<std::mutex> lock(mutex_);
   conn_.thread_start();  // This is if we pass the database around different
                          // threads
   if (auto log = logger_.lock())
-    log->debug() << "Executing query: " << _query.c_str();
+    log->debug("Executing query: {}", _query.c_str());
   auto query = conn_.query(_query.c_str());
   query.exec(_query.c_str());
 }

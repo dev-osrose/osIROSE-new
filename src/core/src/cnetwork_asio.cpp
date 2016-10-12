@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,13 @@ CNetwork_Asio::~CNetwork_Asio() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   } while (!discard_queue_.empty());
 
+  send_mutex_.lock();
   while (send_queue_.empty() == false) send_queue_.pop();
+  send_mutex_.unlock();
+  
+  recv_mutex_.lock();
+  while (recv_queue_.empty() == false) recv_queue_.pop();
+  recv_mutex_.unlock();
 
   logger_.reset();
 }
@@ -106,8 +112,7 @@ bool CNetwork_Asio::Listen() {
   listener_.non_blocking(true);
   listener_.bind(endpoint);
   listener_.listen();
-  logger_->notice() << "Listening started on " << GetIpAddress() << ":"
-                    << GetPort();
+  logger_->info("Listening started on {}:{}", GetIpAddress(), GetPort());
   active_ = true;
   AcceptConnection();
   OnListening();
@@ -170,6 +175,18 @@ void CNetwork_Asio::ProcessSend() {
               if (!error) {
                 OnSent();
                 last_update_time_ = (Core::Time::GetTickCount());
+              } else {
+                logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
+                
+                switch(error.value()) {
+                  case asio::error::basic_errors::connection_reset:
+                  case asio::error::basic_errors::network_reset:
+                    Shutdown();
+                    break;
+                  default:
+                    logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
+                    break;
+                }
               }
 
               discard_mutex_.lock();
@@ -211,8 +228,10 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
         asio::transfer_exactly(
             BytesToRead),  // We want at least 6 bytes of data
         [this](std::error_code errorCode, std::size_t length) {
+          
           packet_offset_ += (uint16_t)length;
           last_update_time_ = (Core::Time::GetTickCount());
+          
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(
@@ -220,12 +239,12 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
               Shutdown();
             }
           } else {
-            if (errorCode.value() == 2) {
-              logger_->notice() << "Client " << GetId() << " disconnected.";
+            if (errorCode.value() == 2 || errorCode.value() == 104) {
+              logger_->info("Client {} disconnected.", GetId());
               OnDisconnected();
               Shutdown();
             } else {
-              logger_->debug("{}: Error {}: {}", GetId(), errorCode.value(),
+              logger_->debug("Client {}: Error {}: {}", GetId(), errorCode.value(),
                              errorCode.message());
               OnDisconnected();
               Shutdown();

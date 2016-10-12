@@ -35,7 +35,7 @@ message CharServer {
 	required int32 clientPort 	= 4 [default = 29100];
 	required int32 iscPort 		= 5 [default = 29110];
 	required int32 accessLevel 	= 6 [default = 1];
-    required int32 log_level        = 7 [default = 3]; // 0 -> 9; the lower the number the more details you get.
+	required int32 log_level        = 7 [default = 3]; // 0 -> 9; the lower the number the more details you get.
 }
 
 message MapServer {
@@ -46,7 +46,7 @@ message MapServer {
 	required int32 iscPort 		= 5 [default = 29210];
 	required int32 accessLevel 	= 6 [default = 1];
 	required int32 mapid 		= 7 [default = 0];
-    required int32 log_level        = 8 [default = 3]; // 0 -> 9; the lower the number the more details you get.
+	required int32 log_level        = 8 [default = 3]; // 0 -> 9; the lower the number the more details you get.
 }
 
 message	Configuration {

@@ -21,11 +21,11 @@
 using namespace RoseCommon;
 
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
-    : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0) {
+    : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0), entitySystem_(std::make_shared<EntitySystem>()) {
 
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
-	lua.set_function("log", [this](std::string str) { logger_->notice(str.c_str()); });
+	lua.set_function("log", [this](std::string str) { logger_->info(str.c_str()); });
 	//lua.script_file("./scripts/main.lua");
 
   if (mapidx >= 0) {
@@ -46,18 +46,22 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
     std::string _address = _sock.remote_endpoint().address().to_string();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      CMapClient* nClient = new CMapClient(std::move(_sock));
+      CMapClient* nClient = new CMapClient(std::move(_sock), entitySystem_);
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
-      nClient->SetId(client_count_++);
-      logger_->notice("Client connected from: {}", _address.c_str());
+      nClient->SetId(++client_count_);
+      logger_->info("Client connected from: {}", _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CMapISC* nClient = new CMapISC(std::move(_sock));
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId( server_count_++ );
-      logger_->notice( "Server connected from: {}", _address.c_str() );
+      logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(nClient);
     }
   }
+}
+
+void CMapServer::update(double dt) {
+    entitySystem_->update(dt);
 }

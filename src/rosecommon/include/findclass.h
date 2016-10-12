@@ -65,6 +65,12 @@ template <>
 struct find_recv_class<ePacketType::PAKCS_LOGOUT_REQ> { CliLogoutReq type; };
 
 template <>
+struct find_recv_class<ePacketType::PAKCS_STOP_MOVING> { CliStopMoving type; };
+
+template <>
+struct find_recv_class<ePacketType::PAKCS_MOUSE_CMD> { CliMouseCmd type; };
+
+template <>
 struct find_recv_class<ePacketType::PAKCS_CHANGE_MAP_REQ> { CliChangeMapReq type; };
 
 template <>
@@ -121,6 +127,15 @@ struct find_send_class<ePacketType::PAKCC_DELETE_CHAR_REPLY> { SrvDeleteCharRepl
 // MAP SERVER
 template <>
 struct find_send_class<ePacketType::PAKWC_SELECT_CHAR_REPLY> { SrvSelectCharReply type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_REMOVE_OBJECT> { SrvRemoveObject type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_MOUSE_CMD> { SrvMouseCmd type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_STOP> { SrvStopMoving type; };
 
 template <>
 struct find_send_class<ePacketType::PAKWC_INVENTORY_DATA> { SrvInventoryData type; };

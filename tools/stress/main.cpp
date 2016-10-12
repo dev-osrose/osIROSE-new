@@ -36,7 +36,7 @@ int main( int argc, char* argv[] )
   spdlog::set_pattern( "[%H:%M:%S.%e %z] [%L] [thread %t] %v" );
   static auto log = spdlog::stdout_logger_mt("StressTest");
 
-  log->notice( "Setting host to {}\n", host_ip.c_str() );
+  log->info( "Setting host to {}\n", host_ip.c_str() );
 
   std::thread io_thread_[THREAD_COUNT];
   for( int idx = 0; idx < THREAD_COUNT; idx++ )
@@ -81,7 +81,7 @@ int main( int argc, char* argv[] )
         return 1;
       }
 
-      log->notice("[{}] Completed in {} ms\n", thread_id, GetTickCount()-starttime);
+      log->info("[{}] Completed in {} ms\n", thread_id, GetTickCount()-starttime);
       std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
       socket.shutdown(asio::socket_base::shutdown_both, ec);
       return 0;
@@ -90,7 +90,7 @@ int main( int argc, char* argv[] )
     std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
   }
   std::this_thread::sleep_for( std::chrono::milliseconds( 400 ) );
-  log->notice("Waiting for threads to finish\n");
+  log->info("Waiting for threads to finish\n");
   for( int idx = 0; idx < THREAD_COUNT; idx++ )
   {
     io_thread_[idx].join();

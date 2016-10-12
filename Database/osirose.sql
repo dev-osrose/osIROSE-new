@@ -1,6 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `osirose` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `osirose`;
--- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: osirose
 -- ------------------------------------------------------
@@ -31,14 +29,14 @@ CREATE TABLE `accounts` (
   `salt` varchar(256) DEFAULT NULL,
   `access` int(11) DEFAULT '100',
   `active` int(11) DEFAULT '1',
-  `platinum` tinyint(1) DEFAULT '0',
+  `platinium` tinyint(1) DEFAULT '0',
   `online` tinyint(1) DEFAULT '0',
   `login_count` int(11) DEFAULT '0',
   `lastip` varchar(15) DEFAULT '0.0.0.0',
   `lasttime` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,14 +54,26 @@ CREATE TABLE `characters` (
   `level` int(10) unsigned NOT NULL DEFAULT '1',
   `job` int(11) unsigned DEFAULT '0',
   `clanid` int(11) unsigned NOT NULL DEFAULT '0',
+  `clan_contribution` int(11) unsigned NOT NULL DEFAULT '0',
   `clan_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `factionid` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_rank` int(11) unsigned NOT NULL DEFAULT '0',
+  `fame` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_fame2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points1` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points2` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points3` int(11) unsigned NOT NULL DEFAULT '0',
   `face` int(11) unsigned NOT NULL DEFAULT '0',
   `hair` int(11) unsigned NOT NULL DEFAULT '0',
   `stone` int(11) unsigned NOT NULL DEFAULT '0',
   `exp` bigint(20) unsigned NOT NULL DEFAULT '0',
   `zuly` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_hp` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_mp` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_hp` int(10) unsigned NOT NULL DEFAULT '81',
+  `current_mp` int(10) unsigned NOT NULL DEFAULT '55',
+  `max_hp` int(10) unsigned NOT NULL DEFAULT '81',
+  `max_mp` int(10) unsigned NOT NULL DEFAULT '55',
+  `stamina` int(11) unsigned NOT NULL DEFAULT '0',
   `str` int(10) unsigned NOT NULL DEFAULT '10',
   `dex` int(10) unsigned NOT NULL DEFAULT '10',
   `int_` int(10) unsigned NOT NULL DEFAULT '10',
@@ -75,15 +85,16 @@ CREATE TABLE `characters` (
   `penalty_exp` bigint(20) unsigned DEFAULT '0',
   `revive_map` int(11) NOT NULL DEFAULT '1',
   `map` int(11) NOT NULL DEFAULT '1',
-  `x` float NOT NULL DEFAULT '520000',
-  `y` float NOT NULL DEFAULT '520000',
+  `x` bigint(32) NOT NULL DEFAULT '520000',
+  `y` bigint(32) NOT NULL DEFAULT '520000',
   `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
+  `pk_flag` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   KEY `user_idx` (`userid`),
   CONSTRAINT `user` FOREIGN KEY (`userid`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +106,6 @@ DROP TABLE IF EXISTS `friends`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `friends` (
   `char_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `friend_account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `friend_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`),
   KEY `char_id_idx` (`char_id`,`friend_id`),
@@ -118,11 +128,41 @@ CREATE TABLE `inventory` (
   `amount` int(11) unsigned NOT NULL DEFAULT '0',
   `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `slot` int(11) unsigned NOT NULL DEFAULT '0',
+  `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
+  `socket` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
   CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `item_db`
+--
+
+DROP TABLE IF EXISTS `item_db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_db` (
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `price_buy` mediumint(10) unsigned DEFAULT NULL,
+  `price_sell` mediumint(10) unsigned DEFAULT NULL,
+  `weight` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `attack` smallint(3) unsigned DEFAULT NULL,
+  `defense` smallint(3) unsigned DEFAULT NULL,
+  `range` tinyint(2) unsigned DEFAULT NULL,
+  `slots` tinyint(2) unsigned DEFAULT NULL,
+  `equip_jobs` int(12) unsigned DEFAULT NULL,
+  `equip_genders` tinyint(2) unsigned DEFAULT NULL,
+  `equip_level` tinyint(3) unsigned DEFAULT NULL,
+  `refineable` tinyint(1) unsigned DEFAULT NULL,
+  `view_id` smallint(3) unsigned DEFAULT NULL,
+  `script` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,6 +236,28 @@ CREATE TABLE `skill` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `skill_db`
+--
+
+DROP TABLE IF EXISTS `skill_db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `skill_db` (
+  `id` int(10) unsigned NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `desc` varchar(45) DEFAULT '',
+  `level` varchar(45) DEFAULT '0',
+  `type` varchar(45) NOT NULL,
+  `range` int(11) DEFAULT NULL,
+  `class` set('0') DEFAULT '0',
+  `power` int(11) DEFAULT NULL,
+  `script` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `storage`
 --
 
@@ -236,6 +298,7 @@ CREATE TABLE `storage` (
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `character_exists`(`_char` VARCHAR(24)) RETURNS int(11)
+    READS SQL DATA
 BEGIN
   
   if (select * from characters where name = _char) > 0
@@ -262,6 +325,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `create_salt`() RETURNS varchar(256) CHARSET utf8
+    READS SQL DATA
 BEGIN
 SET @salt = SHA2( SHA2(RAND(), 256), 256 );
 RETURN @salt;
@@ -282,6 +346,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `user_exists`(`_user` VARCHAR(24)) RETURNS int(11)
+    READS SQL DATA
 BEGIN
   if (select id from accounts where username = _user) > 0
   then
@@ -305,6 +370,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `create_account`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(32))
+    MODIFIES SQL DATA
 BEGIN
 SET @salt = create_salt();
 INSERT INTO accounts(username, password, salt) VALUES(_user, SHA2( CONCAT(_pass,@salt), 256), @salt);
@@ -326,6 +392,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `create_char`(IN `_name` VARCHAR(24), IN `_userid` INT, IN `_race` INT, IN `_face` INT, IN `_hair` INT, IN `_stone` INT)
+    MODIFIES SQL DATA
 BEGIN
   DECLARE charid INT(10);
   DECLARE hatuid INT(10);
@@ -356,6 +423,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `create_session`(IN `_sessionid` INT, IN `_userid` INT, IN `_channelid` INT)
+    MODIFIES SQL DATA
 BEGIN
   INSERT into sessions(id, userid, channelid, time) values(_sessionid, _userid, _channelid, now());
 END ;;
@@ -375,6 +443,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT, IN `_name` VARCHAR(20))
+    MODIFIES SQL DATA
 BEGIN
 	DELETE FROM characters WHERE characters.userid = _charid AND characters.name = _name;
 END ;;
@@ -394,6 +463,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character`(IN `_charid` INT)
+    READS SQL DATA
 BEGIN
   SELECT * FROM `characters` WHERE characters.id = _charid;
 END ;;
@@ -413,8 +483,10 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character_list`(IN `_userid` INT)
-    NO SQL
-SELECT * FROM characters WHERE userid = _userid ;;
+    READS SQL DATA
+BEGIN
+  SELECT * FROM characters WHERE userid = _userid ;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -431,6 +503,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_equipped`(IN `_charid` INT(11))
+    READS SQL DATA
 BEGIN
   SELECT * FROM inventory WHERE char_id = _charid AND slot < 10;
 END ;;
@@ -450,6 +523,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_inventory`(IN `_charid` INT(11))
+    READS SQL DATA
 BEGIN
   SELECT * FROM inventory WHERE char_id = _charid;
 END ;;
@@ -468,12 +542,33 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_session`(IN `_sessionid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_session`(IN `_sessionid` INT, IN `_pass` VARCHAR(32))
+    READS SQL DATA
 BEGIN
-  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.password
+  SELECT sessions.userid, sessions.channelid, sessions.charid, accounts.platinium
   FROM `sessions`
   LEFT JOIN `accounts` on sessions.userid = accounts.id 
-  WHERE sessions.id = _sessionid;
+  WHERE sessions.id = _sessionid AND password = SHA2( CONCAT(_pass,accounts.salt), 256);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_skills` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_skills`(IN `_charid` INT(11))
+    READS SQL DATA
+BEGIN
+  SELECT * FROM skill WHERE char_id = _charid;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -491,6 +586,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_session_with_character`(IN `_sessionid` INT, IN `_charid` INT)
+    MODIFIES SQL DATA
 BEGIN
   UPDATE `sessions` 
   SET charid = _charid
@@ -513,7 +609,9 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(IN `_user` VARCHAR(16), IN `_pass` VARCHAR(32))
     READS SQL DATA
-SELECT id, password, access, active, `online` FROM accounts WHERE username = _user AND password = SHA2( CONCAT(_pass,salt), 256) ;;
+BEGIN
+  SELECT id, password, access, active, `online` FROM accounts WHERE username = _user AND password = SHA2( CONCAT(_pass,salt), 256) ;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -529,4 +627,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-20 22:58:06
+-- Dump completed on 2016-10-08  0:41:39

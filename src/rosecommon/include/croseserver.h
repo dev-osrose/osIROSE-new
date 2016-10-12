@@ -33,7 +33,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   static std::forward_list<CRoseClient*>& GetClientList() {
     return client_list_;
   }
-  static std::forward_list<CRoseISC*>& GetISCList() { return isc_list_; }
+  static std::forward_list<CRoseClient*>& GetISCList() { return isc_list_; }
   static std::mutex& GetClientListMutex() { return client_list_mutex_; }
   static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
   
@@ -59,7 +59,7 @@ class CRoseServer : public Core::CNetwork_Asio {
 
   bool isc_server_;
   static std::forward_list<CRoseClient*> client_list_;
-  static std::forward_list<CRoseISC*> isc_list_;
+  static std::forward_list<CRoseClient*> isc_list_;
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
 };

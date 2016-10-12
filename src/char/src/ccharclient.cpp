@@ -75,34 +75,30 @@ bool CCharClient::JoinServerReply(
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL get_session({});", sessionID);
+  std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      std::string pwd = "";
-      res->getString("password", pwd);
-      if (pwd == password) {
-        login_state_ = eSTATE::LOGGEDIN;
-        res->getInt("userid", userid_);
-        res->getInt("channelid", channelid_);
+      login_state_ = eSTATE::LOGGEDIN;
+      res->getInt("userid", userid_);
+      res->getInt("channelid", channelid_);
 
-        session_id_ = sessionID;
+      session_id_ = sessionID;
 
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::OK, std::time(nullptr));
-        Send(*packet);
-      } else {
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::INVALID_PASSWORD, 0);
-        Send(*packet);
-      }
+      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+          SrvJoinServerReply::OK, std::time(nullptr));
+      Send(*packet);
     } else {
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::FAILED, 0);
+          SrvJoinServerReply::INVALID_PASSWORD, 0);
       Send(*packet);
     }
+  } else {
+    auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+        SrvJoinServerReply::FAILED, 0);
+    Send(*packet);
   }
   return true;
 }
@@ -190,10 +186,15 @@ bool CCharClient::SendCharCreateReply(
                   P->race(), P->face(), P->hair(), P->stone());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
-  database.QExecute(query);
+  auto res = SrvCreateCharReply::OK;
+  try {
+      database.QExecute(query);
+  } catch (const mysqlpp::BadQuery &e) {
+      res = SrvCreateCharReply::NAME_TAKEN;
+  }
 
   auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
-      0, 0);  // result, isplatinum
+      res);
   Send(*packet);
 
   return true;

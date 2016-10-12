@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ namespace Core {
  * \date nov 2015
  */
 class CNetwork_Asio : public INetwork {
-  typedef std::unique_ptr<asio::io_service::work> asio_worker;
+  typedef std::unique_ptr<asio::io_context::work> asio_worker;
 
  public:
   CNetwork_Asio();
@@ -119,6 +119,7 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
+  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;

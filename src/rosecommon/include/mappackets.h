@@ -21,9 +21,7 @@
 #include <string>
 #include <exception>
 #include <vector>
-#include <array>
-
-
+#include "entityComponents.h"
 #include "cli_chat.h"
 #include "cli_stop.h"
 #include "cli_logout.h"
@@ -41,227 +39,91 @@ namespace RoseCommon {
 
 class SrvSelectCharReply : public CRosePacket {
  public:
-  SrvSelectCharReply();
+  SrvSelectCharReply(Entity character);
 
   virtual ~SrvSelectCharReply();
-
-  void setCharacter(const std::string &name, uint8_t race, uint16_t zone,
-                    float x, float y, uint16_t revive_zone, uint32_t utag);
-
-  void addEquipItem(uint8_t slot, uint16_t item_id = 0,
-                    uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0);
-
-  enum equipped_position
-  {
-    EQUIP_FACE = 0,
-    EQUIP_HAIR = 1,
-    EQUIP_HELMET = 2,
-    EQUIP_ARMOR = 3,
-    EQUIP_GAUNTLET = 4,
-    EQUIP_BOOTS = 5,
-    EQUIP_GOGGLES = 6,
-    EQUIP_FACE_ITEM = EQUIP_GOGGLES,
-    EQUIP_BACKPACK = 7,
-    EQUIP_WEAPON_R = 8,
-    EQUIP_WEAPON_L = 9,
-    MAX_EQUIPPED_ITEMS
-  };
-
-    struct equip_item : public ISerialize {
-        equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
-                   uint8_t grade = 0)
-            : id_(id), gem_op_(gem), socket_(socket != 0), grade_(grade) {}
-        //protected:
-        virtual void serialize( CRosePacket &os ) const override;
-        virtual void deserialize( CRosePacket &os ) override;
-
-    private:
-        uint16_t	id_;
-        uint16_t	gem_op_;
-        bool      socket_;
-        uint8_t		grade_;
-    };
 
  protected:
   void pack();
 
  private:
 
-  struct base_info : public ISerialize {
-    uint16_t job_;
-    uint8_t stone_;
-    uint8_t face_;
-    //------
-    uint8_t hair_;
-    uint8_t union_;
-    uint8_t rank_;
-    uint8_t fame_;
+  Entity entity_;
+};
 
-    base_info(uint8_t stone = 0, uint8_t face = 0, uint8_t hair = 0, uint16_t job = 0, uint8_t _union = 0, uint8_t rank = 0, uint8_t fame = 0)
-        : job_(job),
-          stone_(stone),
-          face_(face),
-          hair_(hair),
-          union_(_union),
-          rank_(rank),
-          fame_(fame) {}
+class CliMouseCmd : public CRosePacket {
+    public:
+        CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliMouseCmd();
 
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
+        virtual ~CliMouseCmd();
 
-  struct character_stats : public ISerialize {
-    uint16_t str_;
-    uint16_t dex_;
-    uint16_t int_;
-    uint16_t con_;
-    uint16_t charm_;
-    uint16_t sense_;
+        uint16_t targetId() const { return targetId_; }
+        float x() const { return x_; }
+        float y() const { return y_; }
+        uint16_t z() const { return z_; }
 
-    character_stats(uint16_t str = 10, uint16_t dex = 10, uint16_t _int = 10,
-                    uint16_t con = 10, uint16_t charm = 10, uint16_t sense = 10)
-        : str_(str),
-          dex_(dex),
-          int_(_int),
-          con_(con),
-          charm_(charm),
-          sense_(sense) {}
+    private:
+        uint16_t targetId_;
+        float x_;
+        float y_;
+        uint16_t z_;
+};
 
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
+class SrvMouseCmd : public CRosePacket {
+    public:
+        SrvMouseCmd(uint16_t sourceId, uint16_t destId, uint16_t dist,
+                float x, float y, int16_t z);
+        SrvMouseCmd();
 
-  struct status_effects : public ISerialize {
-    uint32_t expired_seconds_;
-    uint16_t value_;
-    uint16_t unknown_;
+        virtual ~SrvMouseCmd();
 
-    status_effects() : expired_seconds_(0), value_(0), unknown_(0) {}
+    protected:
+        void pack();
 
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
+    private:
+        uint16_t sourceId_;
+        uint16_t destId_;
+        uint16_t dist_;
+        float x_;
+        float y_;
+        int16_t z_;
+};
 
-  struct extended_stats : public ISerialize {
-    uint16_t hp_;
-    uint16_t mp_;
-    uint16_t level_;
-    uint16_t stat_points_;
-    uint16_t skill_points_;
-    uint8_t body_size_;
-    uint8_t head_size_;
-    uint64_t exp_;
-    uint64_t penalty_exp_;
+class CliStopMoving : public CRosePacket {
+    public:
+        CliStopMoving();
+        CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
 
-    uint16_t fame1_;
-    uint16_t fame2_;
-    uint16_t union_points_[MAX_UNION_COUNT];
+        virtual ~CliStopMoving();
 
-    uint32_t guild_id_;
-    uint16_t guild_contribution_;
-    uint8_t guild_position_;
+        float x() const { return x_; }
+        float y() const { return y_; }
+        int16_t z() const { return z_; }
 
-    uint16_t pk_flags_;
-    uint16_t stamina_;
+    private:
+        float x_;
+        float y_;
+        int16_t z_;
+};
 
-    status_effects status_[MAX_BUFF_STATUS];
+class SrvStopMoving : public CRosePacket {
+    public:
+        SrvStopMoving() : CRosePacket(ePacketType::PAKWC_STOP) {}
+        SrvStopMoving(Entity entity) : CRosePacket(ePacketType::PAKWC_STOP), entity_(entity) {}
 
-    uint16_t pat_hp_;
-    uint32_t pat_cooldown_time_;
+        virtual ~SrvStopMoving() {}
 
-    extended_stats() : hp_(100), mp_(100), level_(1), stat_points_(0),
-                       skill_points_(0), body_size_(1), head_size_(1),
-                       exp_(0), penalty_exp_(0), fame1_(0), fame2_(0),
-                       guild_id_(0), guild_contribution_(0), guild_position_(0),
-                       pk_flags_(0), stamina_(1000), pat_hp_(100),
-                       pat_cooldown_time_(0) {
-      for (int i = 0; i < MAX_UNION_COUNT; ++i)
-      {
-        union_points_[i] = 0;
-      }
-      for (int i = 0; i < MAX_BUFF_STATUS; ++i)
-      {
-        status_[i] = status_effects();
-      }
-    }
+    protected:
+        void pack() {
+            auto basic = entity_.component<BasicInfo>();
+            auto pos = entity_.component<Position>();
+            *this << basic->id_;
+            *this << pos->x_ << pos->y_ << pos->z_;
+        }
 
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
-
-  struct skills : public ISerialize {
-    uint16_t skill_id_[MAX_SKILL_COUNT];
-
-    skills() {
-      for (int i = 0; i < MAX_SKILL_COUNT; ++i)
-      {
-        skill_id_[i] = 0;
-      }
-    }
-
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
-
-  enum hotbar_item_type {
-    inv_item = 1,
-    command_item,
-    skill_item,
-    emote_item,
-    dialog_item,
-    clanskill_item,
-  };
-
-  struct hotbar_item : public ISerialize {
-    union {
-      struct {
-        unsigned short type_ : 5;
-        unsigned short slot_id_ : 11;
-      };
-      unsigned short item_;
-    };
-
-    hotbar_item() : item_(0) {}
-
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
-
-  struct hotbar : public ISerialize {
-    hotbar_item list_[MAX_HOTBAR_ITEMS];
-
-    hotbar() {
-      for (int i = 0; i < MAX_HOTBAR_ITEMS; ++i)
-      {
-        list_[i] = hotbar_item();
-      }
-    }
-
-//   protected:
-    virtual void serialize(CRosePacket &os) const override;
-    virtual void deserialize(CRosePacket &os) override;
-  };
-
-  uint8_t race_;
-  uint16_t zone_;
-  uint16_t revive_zone_;
-  float position_start_[2];  // x and y;
-
-  equip_item items_[MAX_EQUIPPED_ITEMS];
-  base_info base_character_info_;
-  character_stats stats_;
-  extended_stats ext_stats_;
-  skills learned_skills_;
-  hotbar hotbar_;
-
-  uint32_t unique_tag_;
-  std::string name_;
+    private:
+        Entity entity_;
 };
 
 //------------------------------------------------
@@ -269,20 +131,19 @@ class SrvSelectCharReply : public CRosePacket {
 
 class SrvInventoryData : public CRosePacket {
  public:
-  SrvInventoryData(int64_t zuly)
-      : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), zuly_(zuly){};
+  SrvInventoryData(Entity entity)
+      : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), entity_(entity) {};
 
  protected:
   void pack() {
-    *this << zuly_;
-    for (int i = 0; i < 140; ++i) {
-      *this << (uint16_t)0 << (uint32_t)0;
+    *this << entity_.component<AdvancedInfo>()->zuly_;
+    auto inventory = entity_.component<Inventory>();
+    for (auto &it : inventory->items_)
+        *this << (ISerialize&)it;
     }
-  };
 
  private:
-  int64_t zuly_;
-  //todo: item list goes here
+  Entity entity_;
 };
 
 //------------------------------------------------
@@ -362,84 +223,65 @@ class SrvBillingMsg : public CRosePacket {
 
 class SrvPlayerChar : public CRosePacket {
 public:
-    SrvPlayerChar()
-        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR) {}
-
-    SrvPlayerChar(uint32_t objectId, float posX, float posY, float destX, float destY, int32_t hp, uint8_t charRace, uint16_t runSpeed)
-        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR),
-          objectId_(objectId),
-          posX_(posX), posY_(posY), destX_(destX), destY_(destY),
-          command_(0), targetId_(0), moveMode_(0), hp_(hp),
-          teamId_(0), statusFlag_(0), charRace_(charRace),
-          runSpeed_(runSpeed), attackSpeed_(0), weightRate_(0),
-          equipItems_({}), shootData_({}), job_(0), level_(0),
-          ridingItems_({}), posZ_(0), subFlag_(0) {}
+    SrvPlayerChar(Entity entity)
+        : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR), entity_(entity) {}
 
     virtual ~SrvPlayerChar() {}
 
 protected:
     void pack() override
     {
-        *this << objectId_
-              << posX_ << posY_ << destX_ << destY_
-              << command_
-              << targetId_
-              << moveMode_
-              << hp_
-              << teamId_
-              << statusFlag_
-              << charRace_
-              << runSpeed_
-              << attackSpeed_
-              << weightRate_
-              << equipItems_
-              << shootData_
-              << job_
-              << level_
-              << ridingItems_
-              << posZ_
-              << subFlag_;
+
+        auto pos = entity_.component<Position>();
+        auto dest = entity_.component<Destination>();
+        auto advanced = entity_.component<AdvancedInfo>();
+        auto basic = entity_.component<BasicInfo>();
+        auto info = entity_.component<CharacterInfo>();
+        auto graphics = entity_.component<CharacterGraphics>();
+        auto equipped = entity_.component<EquippedItems>();
+        auto riding = entity_.component<RidingItems>();
+        auto bullets = entity_.component<BulletItems>();
+        float destX = pos->x_, destY = pos->y_;
+        if (dest) {
+            destX = dest->x_;
+            destY = dest->y_;
+        }
+
+        *this << basic->id_
+              << pos->x_ << pos->y_ << destX << destY
+              << basic->command_
+              << basic->targetId_
+              << advanced->moveMode_
+              << advanced->hp_
+              << basic->teamId_
+              << info->statusFlag_
+              << graphics->race_
+              << advanced->runSpeed_
+              << advanced->atkSpeed_
+              << advanced->weightRate_;
+
+        for (auto &it : equipped->items_)
+            it.partialSerialize(*this);
+
+        for (auto &it : bullets->items_)
+            it.bulletPartialSerialize(*this);
+
+        *this << info->job_
+              << basic->level_;
+
+        for (auto &it : riding->items_)
+            it.partialSerialize(*this);
+
+        *this << pos->z_
+              << (uint32_t)0; //subFlag
+
+        *this << basic->name_; //szUserID
+
+        *this << basic->name_; //Avatar name
     }
 
 private:
-    struct ShootData : public ISerialize {
-        union Whatever {
-            struct {
-                uint8_t type : 5;
-                uint16_t itemId : 10;
-            };
-            uint32_t shotItem;
-        };
-
-        Whatever whatever_;
-
-        virtual void serialize(CRosePacket &os) const override { os << whatever_; }
-        virtual void deserialize(CRosePacket &os) override { os >> whatever_; }
-    };
-
-    template<size_t N>
-    using equip_item_array = std::array<SrvSelectCharReply::equip_item, N>;
-    using shoot_data_array = std::array<ShootData, 3>;
-
-    uint32_t objectId_;
-    float posX_, posY_, destX_, destY_;
-    uint32_t command_;
-    uint32_t targetId_;
-    uint8_t moveMode_;
-    int32_t hp_;
-    int32_t teamId_;
-    uint64_t statusFlag_;
-    uint8_t charRace_;
-    uint16_t runSpeed_;
-    uint16_t attackSpeed_;
-    uint8_t weightRate_;
-    equip_item_array<SrvSelectCharReply::MAX_EQUIPPED_ITEMS> equipItems_;
-    shoot_data_array shootData_;
-    uint16_t job_;
-    uint8_t level_;
-    equip_item_array<6> ridingItems_;
-    uint16_t posZ_;
-    uint64_t subFlag_;
+    Entity entity_;
 };
 
 }

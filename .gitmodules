@@ -9,7 +9,7 @@
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "tools/spdlog"]
 	path = tools/spdlog
-	url = https://github.com/RavenX8/spdlog.git
+	url = https://github.com/gabime/spdlog.git
 [submodule "tools/pbjson"]
 	path = tools/pbjson
 	url = https://github.com/RavenX8/pbjson.git
@@ -18,10 +18,13 @@
 	url = https://github.com/RavenX8/lua.git
 [submodule "tools/sol2"]
 	path = tools/sol2
-	url = https://github.com/RavenX8/sol2.git
+	url = https://github.com/ThePhD/sol2.git
 [submodule "tools/mysqlpp"]
 	path = tools/mysqlpp
 	url = https://github.com/RavenX8/mysqlpp.git
 [submodule "tools/cxxopts"]
 	path = tools/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git
+[submodule "tools/entityx"]
+	path = tools/entityx
+	url = https://github.com/alecthomas/entityx.git

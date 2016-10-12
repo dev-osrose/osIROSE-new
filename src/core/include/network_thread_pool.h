@@ -19,12 +19,13 @@
 #include <queue>
 #include <mutex>
 #include <atomic>
+#include <bitset>
 
 namespace Core {
 #define MAX_NETWORK_THREADS 512
 
 class NetworkThreadPool {
-  typedef std::unique_ptr<asio::io_service::work> asio_worker;
+  typedef std::unique_ptr<asio::io_context::work> asio_worker;
 
  public:
   static NetworkThreadPool& GetInstance(uint16_t maxthreads = 0) {
@@ -39,8 +40,8 @@ class NetworkThreadPool {
     }
   }
 
-  asio::io_service* Get_IO_Service() { return &io_service_; }
-  uint16_t GetThreadCount() { return threads_running_; }
+  asio::io_context* Get_IO_Service() { return &io_service_; }
+  uint16_t GetThreadCount() { return threads_active_.count(); }
 
  private:
   NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)) {
@@ -55,34 +56,35 @@ class NetworkThreadPool {
 
     if (core_count > MAX_NETWORK_THREADS)
       core_count = MAX_NETWORK_THREADS;
-    else if (core_count == 0)
+    else if (core_count <= 0)
       core_count = 1;
 
-    threads_running_ = core_count;
     for (uint32_t idx = 0; idx < core_count; ++idx) {
-      io_thread_[idx] = std::thread([this]() {
-        ++threads_running_;
-        io_service_.run();
-        --threads_running_;
-      }); //todo(raven): change this to poll and loop while we are active.
+      threads_active_.set(idx);
+      
+      io_thread_[idx] = std::thread([this, idx]() {
+        int index = idx;
+        while(threads_active_.test(index)) io_service_.run_one();
+      });
     }
   }
 
   ~NetworkThreadPool() { Shutdown(); }
 
   void Shutdown() {
+    threads_active_.reset();
     io_work_.reset();
-
-    for (int idx = 0; idx < threads_running_; ++idx) {
-      io_thread_[idx].join();
+    for (int idx = 0; idx < MAX_NETWORK_THREADS; ++idx) {
+      if( true == io_thread_[idx].joinable() )
+        io_thread_[idx].join();
     }
     
     io_service_.stop();
   }
 
-  std::atomic<int> threads_running_;
+  std::bitset<MAX_NETWORK_THREADS> threads_active_;
   std::thread io_thread_[MAX_NETWORK_THREADS];
-  asio::io_service io_service_;
+  asio::io_context io_service_;
   asio_worker io_work_;
   static NetworkThreadPool* instance_;
 };

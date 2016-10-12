@@ -43,8 +43,10 @@ SET( SOURCES_MAIN
 	src/main.cpp
 	src/cmapserver
 	src/cmapclient
-	src/cmapisc )
-	
+	src/cmapisc
+    src/entitysystem
+    )
+
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 

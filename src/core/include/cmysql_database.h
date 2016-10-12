@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,7 +45,16 @@ class CMySQL_Row : public IRow {
 		virtual ~CMySQL_Row() {}
 
 		virtual bool getString(std::string const &columnName, std::string &data);
+		virtual bool getInt(std::string const &columnName, uint64_t &data);
+		virtual bool getInt(std::string const &columnName, int64_t &data);
 		virtual bool getInt(std::string const &columnName, uint32_t &data);
+		virtual bool getInt(std::string const &columnName, int32_t &data);
+		virtual bool getInt(std::string const &columnName, uint16_t &data);
+		virtual bool getInt(std::string const &columnName, int16_t &data);
+		virtual bool getInt(std::string const &columnName, uint8_t &data);
+		virtual bool getInt(std::string const &columnName, int8_t &data);
+		virtual bool getInt(std::string const &columnName, bool &data);
+
 		virtual bool getFloat(std::string const &columnName, float &data);
 
 	private:
@@ -78,7 +87,16 @@ class CMySQL_Result : public IResult {
   virtual uint32_t	size() const {return rows_.size();}
 
   virtual bool getString(std::string const &columnName, std::string &data);
-  virtual bool getInt(std::string const &columnName, uint32_t &data);
+    virtual bool getInt(std::string const &columnName, uint64_t &data);
+    virtual bool getInt(std::string const &columnName, int64_t &data);
+    virtual bool getInt(std::string const &columnName, uint32_t &data);
+    virtual bool getInt(std::string const &columnName, int32_t &data);
+    virtual bool getInt(std::string const &columnName, uint16_t &data);
+    virtual bool getInt(std::string const &columnName, int16_t &data);
+    virtual bool getInt(std::string const &columnName, uint8_t &data);
+    virtual bool getInt(std::string const &columnName, int8_t &data);
+    virtual bool getInt(std::string const &columnName, bool &data);
+
   virtual bool getFloat(std::string const &columnName, float &data);
 };
 

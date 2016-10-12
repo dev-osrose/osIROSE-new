@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,7 +73,7 @@ enum class ePacketType : uint16_t {
   PAKCS_JOIN_SERVER_REQ,
   PAKSC_JOIN_SERVER_REPLY,
   PAKWC_GM_COMMAND,
-  
+
   PAKWC_GLOBAL_VARS,
   PAKWC_GLOBAL_FLAGS,
 
@@ -130,7 +130,7 @@ enum class ePacketType : uint16_t {
   PAKCS_UPDATE_NPC = 0x774,
   PAKCS_SUMMON_CMD,
   PAKWC_SUMMON_CMD = PAKCS_SUMMON_CMD,
-  
+
   PAKCS_SET_ANIMATION = 0x781,
   PACWC_SET_ANIMATION = PAKCS_SET_ANIMATION,
   PAKCS_TOGGLE,
@@ -149,7 +149,7 @@ enum class ePacketType : uint16_t {
   PAKWC_ALLIED_CHAT = PAKCS_ALLIED_CHAT,
   PAKCS_ALLIED_SHOUT_CHAT,
   PAKWC_ALLIED_SHOUT_CHAT = PAKCS_ALLIED_SHOUT_CHAT,
-  
+
   PAKWC_EVENT_STATUS = 0x790,
   PAKWC_NPC_CHAR,
   PAKWC_MOB_CHAR,
@@ -158,7 +158,10 @@ enum class ePacketType : uint16_t {
   PAKCS_SET_POSITION,
   PAKCS_STOP,
   PAKWC_STOP = PAKCS_STOP,
-  PAKWC_MOVE,
+  PAKWC_MOVE, // for monsters only, the client doesn't even look at the Z
+
+  PAKCS_MOUSE_CMD = 0x79A, // client wants to move or click on an object
+  PAKWC_MOUSE_CMD = PAKCS_MOUSE_CMD, // answer from the server
 
   PAKWC_BILLING_MESSAGE = 0x7de,
   PAKCS_SCREEN_SHOT_TIME_REQ = 0x7eb,

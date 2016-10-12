@@ -57,7 +57,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
   std::fstream in(file_.c_str(), std::ios::in);
   std::shared_ptr<spdlog::logger> logger_ = CLog::GetLogger(log_type::GENERAL).lock();
   if (!in.is_open()) {
-    logger_->debug() << "file " << filename << " not found. Creating one";
+    logger_->debug("file {} not found. Creating one", filename );
 	std::fstream out(file_.c_str(), std::ios::out | std::ios::trunc);
     if (!out.is_open()) throw std::runtime_error("file not found");
 	std::string json;
@@ -67,7 +67,7 @@ Config::Config(std::string filename) : Configuration(), file_(filename) {
 	std::string json, err;
 	std::getline(in, json, static_cast<char>(in.eof()));
     if (pbjson::json2pb(json, this, err) < 0) {
-      logger_->error() << "Error while parsing the file: " << err;
+      logger_->error("Error while parsing the file: {}", err);
       throw std::runtime_error("Error while parsing the file");
     }
   }
