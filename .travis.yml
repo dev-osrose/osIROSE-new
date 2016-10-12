@@ -239,6 +239,44 @@ matrix:
     - mkdir logs;
     script:
     - "../ci/script.sh;"
+    
+  - env: g++-6 coverity_scan
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
+        - g++-6
+    cache:
+      directories:
+      - "./protobuf"
+    branches:
+      only:
+      - coverity_scan
+    before_install:
+    - export SUITE=none
+    - export GCOV_PATH=/usr/bin/gcov-6
+    - export LCOV_PATH=$HOME/usr/bin/lcov
+    - export GENHTML_PATH=$HOME/usr/bin/genhtml
+    - export PREFIX=$HOME
+    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - bash ./ci/.travis.install-mysql-5.7.sh
+    - "./ci/before_install.sh"
+    install:
+    - "./ci/install.sh"
+    script:
+    - echo "coverity scan"
+    
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
