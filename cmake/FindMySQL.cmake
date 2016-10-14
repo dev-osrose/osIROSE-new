@@ -33,10 +33,10 @@ if( WIN32 )
 			  "C:/Program Files/MySQL/MySQL Connector C 6.1/include"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/include"
-#			  "C:/Program Files/MySQL/*/include"
-#			  "$ENV{PROGRAMFILES}/MySQL/*/include"
-#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
-#			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" 
+			  "$ENV{PROGRAMFILES}/MySQL/*/include"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" 
+			  "C:/Program Files/MySQL/*/include"
 			  )
 			  
 	find_path( MYSQL_LIBRARY_PATH
@@ -45,10 +45,10 @@ if( WIN32 )
 			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
-#			  "C:/Program Files/MySQL/*/lib"
-#			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
-#			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "C:/Program Files/MySQL/*/lib"
 			  )
 	
 	find_library( MYSQL_LIBRARY
@@ -57,10 +57,10 @@ if( WIN32 )
 			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
 			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
-#			  "C:/Program Files/MySQL/*/lib"
-#			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-#			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
-#			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "C:/Program Files/MySQL/*/lib"
 			  )
 else()
 	find_path( MYSQL_INCLUDE_DIR
