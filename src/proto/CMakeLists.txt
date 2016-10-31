@@ -24,16 +24,16 @@ SET( ProtoFiles
 	iscpackets.proto
 )
 
-IF (PROJECT_DEBUG)
-  SET(args 
-	  PROTOFILES ${ProtoFiles} 
+SET(args 
+	  PROTOFILES ${ProtoFiles}
 	  OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
-	  DEBUG 1
   )
-ELSE()
+
+IF (DEBUG_PROTOBUF)
+  MESSAGE("${args}")
   SET(args 
-	  PROTOFILES ${ProtoFiles} 
-	  OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
+	  ${args}
+	  DEBUG
   )
 ENDIF()
 
