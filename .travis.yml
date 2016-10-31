@@ -318,9 +318,9 @@ deploy:
     acl: public_read
     upload-dir: ${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}
     on:
-      repo: RavenX8/osIROSE-new
-      all_branches: true
-#     branch: master
+      repo: dev-osrose/osIROSE-new
+#      all_branches: true
+      branch: master
       tag: true
       
   - provider: releases
