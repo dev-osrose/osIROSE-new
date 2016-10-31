@@ -6,13 +6,13 @@ project(${PROJECT})
 IF (MSVC)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 ELSE()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 ENDIF()
 
 include_directories(
@@ -24,10 +24,18 @@ SET( ProtoFiles
 	iscpackets.proto
 )
 
-SET(args 
-	PROTOFILES ${ProtoFiles} 
-	OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+IF (PROJECT_DEBUG)
+  SET(args 
+	  PROTOFILES ${ProtoFiles} 
+	  OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
+	  DEBUG 1
+  )
+ELSE()
+  SET(args 
+	  PROTOFILES ${ProtoFiles} 
+	  OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+ENDIF()
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})

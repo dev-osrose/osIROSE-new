@@ -229,7 +229,7 @@ FUNCTION(PROTOBUF_GENERATE_CPP SRCS HDRS)
             COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
             VERBATIM)
 		ELSE()
-		ADD_CUSTOM_COMMAND(
+		    ADD_CUSTOM_COMMAND(
             OUTPUT "${CPP_FILE}" "${H_FILE}"
             COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
             COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
