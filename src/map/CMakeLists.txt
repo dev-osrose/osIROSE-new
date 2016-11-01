@@ -37,7 +37,11 @@ include_directories(
 SET( SOURCES_HEADER
 	include/cmapserver
 	include/cmapclient
-	include/cmapisc )
+	include/cmapisc
+    include/entitySystem
+    include/entitySystems
+    include/systemmanager
+    )
 
 SET( SOURCES_MAIN
 	src/main.cpp
@@ -45,6 +49,7 @@ SET( SOURCES_MAIN
 	src/cmapclient
 	src/cmapisc
     src/entitysystem
+    src/systemmanager
     )
 
 find_package( Threads REQUIRED )

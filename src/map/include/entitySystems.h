@@ -2,9 +2,8 @@
 #ifndef _ENTITYSYSTEMS_H_
 # define _ENTITYSYSTEMS_H_
 
-#include "entityComponents.h"
-#include "mappackets.h"
 #include <cmath>
+#include "systemmanager.h"
 
 class EntitySystem;
 
@@ -13,15 +12,13 @@ class System {
         virtual ~System() {}
 
         virtual void update(EntityManager&, double dt) = 0;
-
-        virtual void processPacket(Entity receiver, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
-            (void)receiver;
-            (void)packet;
-        }
 };
 
 class MovementSystem : public System {
     public:
+        MovementSystem(SystemManager &manager) {
+            manager.registerDispatcher(RoseCommon::ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
+        }
         virtual ~MovementSystem() {}
 
         virtual void update(EntityManager &es, double dt) {
@@ -68,10 +65,16 @@ class MovementSystem : public System {
                 position->y_ = y;
             }
         }
+
+        void processMove(Entity entity, const RoseCommon::CRosePacket &packet) {
+            (void)entity;
+            (void)packet;
+        }
 };
 
 class UpdateComponents : public System {
     public:
+        UpdateComponents(SystemManager&) {}
         virtual ~UpdateComponents() {}
 
         virtual void update(EntityManager &es, double) {
@@ -119,6 +122,7 @@ class UpdateComponents : public System {
 
 class TimeKeeperSystem : public System {
     public:
+        TimeKeeperSystem(SystemManager&) {}
         virtual ~TimeKeeperSystem() {}
 
         virtual void update(EntityManager &es, double dt) {
@@ -134,46 +138,6 @@ class TimeKeeperSystem : public System {
                 (void)entity;
             }
         }
-};
-
-class SystemManager {
-    public:
-        SystemManager(EntityManager &es) : entityManager_(es) {}
-
-        template <typename T, typename... Args>
-        T& add(Args&&... args) {
-            systems_.emplace_back(new T(std::forward<Args>(args)...));
-            return *dynamic_cast<T*>(systems_.back().get());
-        }
-
-        template <typename T>
-        void remove() {
-            for (auto it = systems_.begin(); it != systems_.end(); ++it) {
-                if (dynamic_cast<T*>(it->get())) {
-                    systems_.erase(it);
-                    return;
-                }
-            }
-        }
-
-        template <typename T>
-        T* get() {
-            for (auto &it : systems_) {
-                T *tmp;
-                if ((tmp = dynamic_cast<T*>(it.get())))
-                    return tmp;
-            }
-            return nullptr;
-        }
-
-        void update(double dt) {
-            for (auto &it : systems_)
-                it->update(entityManager_, dt);
-        }
-
-    private:
-        EntityManager &entityManager_;
-        std::vector<std::unique_ptr<System>> systems_;
 };
 
 #endif /* !_ENTITYSYSTEMS_H_ */
