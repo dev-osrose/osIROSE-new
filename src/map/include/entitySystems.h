@@ -3,6 +3,7 @@
 # define _ENTITYSYSTEMS_H_
 
 #include "entityComponents.h"
+#include "mappackets.h"
 #include <cmath>
 
 class EntitySystem;
@@ -12,6 +13,11 @@ class System {
         virtual ~System() {}
 
         virtual void update(EntityManager&, double dt) = 0;
+
+        virtual void processPacket(Entity receiver, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
+            (void)receiver;
+            (void)packet;
+        }
 };
 
 class MovementSystem : public System {
