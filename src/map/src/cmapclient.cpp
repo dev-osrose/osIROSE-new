@@ -208,17 +208,25 @@ bool CMapClient::ChatWhisper(std::unique_ptr<RoseCommon::CliWhisper> P) {
 	std::string _recipient_name = P->targetId();
 	_recipient_name.erase(_recipient_name.size()-1); // for some reason this string has an extra char
 	std::string _message = P->message();
-	CMapClient *_recipient_client = NULL;
+	CMapClient *_recipient_client = nullptr;
 	entitySystem_->process<BasicInfo, SocketConnector>([&_recipient_client, _recipient_name] (Entity entity) {
-		if(_recipient_name == entity.component<BasicInfo>()->name_)
+		if(_recipient_name == entity.component<BasicInfo>()->name_) {
 			_recipient_client = entity.component<SocketConnector>()->client_;
+			return true;
+		}
+		return false;
 	});
   logger_->trace("{} ({}) is whispering '{}' to {}", _sender_name, _charID,  _message, _recipient_name);
 	if(_recipient_client) {
 		auto packet = makePacket<ePacketType::PAKWC_WHISPER_CHAT>(_message, _sender_name);
   	_recipient_client->Send(*packet);
   	return true;
-	} else return false;
+	} else {
+		auto packet = makePacket<ePacketType::PAKWC_WHISPER_CHAT>(std::string(""), std::string(""));
+		this->Send(*packet);
+		return true;
+	}
+	return false;
 }
 
 bool CMapClient::IsNearby(const IObject* _otherClient) const {
