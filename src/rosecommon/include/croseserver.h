@@ -42,7 +42,6 @@ class CRoseServer : public Core::CNetwork_Asio {
     EVERYONE_BUT_ME,
     NEARBY,
     NEARBY_BUT_ME,
-		PLAYER,
   };
   
   static void SendPacket(const IObject* target, eSendType type, CRosePacket &_buffer);
