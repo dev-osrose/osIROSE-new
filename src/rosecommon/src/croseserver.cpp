@@ -171,9 +171,13 @@ void CRoseServer::SendPacket(const IObject* sender, eSendType type, CRosePacket 
       }
       break;
     }
+		case eSendType::PLAYER:
+		{
+			((CRoseClient *)sender)->Send(_buffer);
+			break;
+		}
     default:
       break;
   }
 }
-
 }

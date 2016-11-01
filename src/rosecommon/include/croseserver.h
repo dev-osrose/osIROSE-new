@@ -42,9 +42,10 @@ class CRoseServer : public Core::CNetwork_Asio {
     EVERYONE_BUT_ME,
     NEARBY,
     NEARBY_BUT_ME,
+		PLAYER,
   };
   
-  static void SendPacket(const IObject* sender, eSendType type, CRosePacket &_buffer);
+  static void SendPacket(const IObject* target, eSendType type, CRosePacket &_buffer);
 
  protected:
   // Callback functions
