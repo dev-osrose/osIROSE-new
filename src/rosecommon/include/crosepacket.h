@@ -54,177 +54,177 @@ class ISerialize;
  * \date april 2016
  */
 class CRosePacket {
-	public:
-		CRosePacket(ePacketType type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
-          (void)reserved;
-			*this << size_ << (uint16_t)type_ << CRC;
-		}
+    public:
+        CRosePacket(ePacketType type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
+            (void)reserved;
+            *this << size_ << (uint16_t)type_ << CRC;
+        }
 
-		CRosePacket(uint16_t type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
-          (void)reserved;
-			*this << size_ << (uint16_t)type_ << CRC;
-		}
+        CRosePacket(uint16_t type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
+            (void)reserved;
+            *this << size_ << (uint16_t)type_ << CRC;
+        }
 
-		CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
-			std::memcpy(buffer_, buffer, sizeof(buffer_));
-			*this >> size_ >> type_ >> CRC_;
-		}
-		virtual ~CRosePacket() {}
+        CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
+            std::memcpy(buffer_, buffer, sizeof(buffer_));
+            *this >> size_ >> type_ >> CRC_;
+        }
+        virtual ~CRosePacket() {}
 
-		ePacketType type() const {return type_;}
-		uint16_t size() const {return size_;}
-		uint16_t CRC() const {return CRC_;}
-		uint8_t* data() {return buffer_+6;}
-		void resetCurrent() {current_ = buffer_;}
+        ePacketType type() const {return type_;}
+        uint16_t size() const {return size_;}
+        uint16_t CRC() const {return CRC_;}
+        uint8_t* data() {return buffer_+6;}
+        void resetCurrent() {current_ = buffer_;}
 
-		/*!
-		 * \brief Function to get the structured buffer
-		 *
-		 * This function will call pack(), and return a copy of it's internal buffer
-		 */
-		std::unique_ptr<uint8_t[]> getPacked() {
-			pack();
-			auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
-			std::memcpy(res.get(), buffer_, size_);
-			return res;
-		}
+        /*!
+         * \brief Function to get the structured buffer
+         *
+         * This function will call pack(), and return a copy of it's internal buffer
+         */
+        std::unique_ptr<uint8_t[]> getPacked() {
+            pack();
+            auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
+            std::memcpy(res.get(), buffer_, size_);
+            return res;
+        }
 
-		/*!
-		 * \brief Helper function to extract the size from a buffer
-		 */
-		static uint16_t size(const uint8_t buffer[MAX_PACKET_SIZE]) {
-			return read<uint16_t>(const_cast<uint8_t*>(buffer));
-		}
+        /*!
+         * \brief Helper function to extract the size from a buffer
+         */
+        static uint16_t size(const uint8_t buffer[MAX_PACKET_SIZE]) {
+            return read<uint16_t>(const_cast<uint8_t*>(buffer));
+        }
 
-		/*!
-		 * \brief Helper function to extract the type from a buffer
-		 */
-		static ePacketType type(const uint8_t buffer[MAX_PACKET_SIZE]) {
-			return read<ePacketType>(const_cast<uint8_t*>(buffer + sizeof(uint16_t)));
-		}
+        /*!
+         * \brief Helper function to extract the type from a buffer
+         */
+        static ePacketType type(const uint8_t buffer[MAX_PACKET_SIZE]) {
+            return read<ePacketType>(const_cast<uint8_t*>(buffer + sizeof(uint16_t)));
+        }
 
-		/*!
-		 * \brief Helper function to extract the CRC code from a buffer
-		 */
-		static uint8_t CRC(const uint8_t buffer[MAX_PACKET_SIZE]) {
-			return read<uint8_t>(const_cast<uint8_t*>(buffer +
-						sizeof(uint16_t) + sizeof(ePacketType)));
-		}
+        /*!
+         * \brief Helper function to extract the CRC code from a buffer
+         */
+        static uint8_t CRC(const uint8_t buffer[MAX_PACKET_SIZE]) {
+            return read<uint8_t>(const_cast<uint8_t*>(buffer +
+                                sizeof(uint16_t) + sizeof(ePacketType)));
+        }
 
-	protected:
-		/*!
-		 * \brief Reimplement this function to include last minute logic before the packet is wrote to an external buffer
-		 */
-		virtual void pack() {}
+    protected:
+        /*!
+         * \brief Reimplement this function to include last minute logic before the packet is wrote to an external buffer
+         */
+        virtual void pack() {}
 
-		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
-			os.writeNext<T>(data);
-			return os;
-		}
+        template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+        friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
+            os.writeNext<T>(data);
+            return os;
+        }
 
-		template <typename T>
-		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
-			for (const auto &it : data)
-				os.writeNext<typename T::value_type>(it);
-			return os;
-		}
+        template <typename T>
+        friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
+            for (const auto &it : data)
+                os.writeNext<typename T::value_type>(it);
+            return os;
+        }
 
-		friend CRosePacket &operator<<(CRosePacket &os, const std::string &data) {
-			for (const auto &it : data)
-				os.writeNext<char>(it);
-			os.writeNext<char>(0);
-			return os;
-		}
+        friend CRosePacket &operator<<(CRosePacket &os, const std::string &data) {
+            for (const auto &it : data)
+                os.writeNext<char>(it);
+            os.writeNext<char>(0);
+            return os;
+        }
 
-		friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
-			while (*data)
-				os.writeNext<char>(*(data++));
-			return os;
-		}
+        friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
+            while (*data)
+                os.writeNext<char>(*(data++));
+            return os;
+        }
 
-		template <size_t count>
-		friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
-			for (size_t i = 0; i < count; ++i)
-				os.writeNext<char>(data[i]);
-			return os;
-		}
+        template <size_t count>
+        friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
+            for (size_t i = 0; i < count; ++i)
+                os.writeNext<char>(data[i]);
+            return os;
+        }
 
-		template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
-		friend CRosePacket &operator>>(CRosePacket &os, T &data) {
-			data = os.readNext<T>();
-			return os;
-		}
+        template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+        friend CRosePacket &operator>>(CRosePacket &os, T &data) {
+            data = os.readNext<T>();
+            return os;
+        }
 
-		template <typename T>
-		friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
-			for (auto &it : data)
-				it = os.readNext<typename T::value_type>();
-			return os;
-		}
+        template <typename T>
+        friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
+            for (auto &it : data)
+                it = os.readNext<typename T::value_type>();
+            return os;
+        }
 
-		template <size_t count>
-		friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
-			for (size_t i = 0; i < count; ++i)
-				data[i] = os.readNext<char>();
-			return os;
-		}
+        template <size_t count>
+        friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
+            for (size_t i = 0; i < count; ++i)
+                data[i] = os.readNext<char>();
+            return os;
+        }
 
-		friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
-			do {
-				data.push_back(os.readNext<char>());
-			} while (data.back());
-			return os;
-		}
+        friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
+            do {
+                data.push_back(os.readNext<char>());
+            } while (data.back());
+            return os;
+        }
 
-		friend CRosePacket &operator<<(CRosePacket &os, const ISerialize &data) {
-			data.serialize(os);
-			return os;
-		}
+        friend CRosePacket &operator<<(CRosePacket &os, const ISerialize &data) {
+            data.serialize(os);
+            return os;
+        }
 
-		friend CRosePacket &operator>>(CRosePacket &os, ISerialize &data) {
-			data.deserialize(os);
-			return os;
-		}
+        friend CRosePacket &operator>>(CRosePacket &os, ISerialize &data) {
+            data.deserialize(os);
+            return os;
+        }
 
-	private:
-		template <typename T, typename = std::enable_if<!is_container<T>::value>>
-		static T read(uint8_t *data) {
-			static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
-			return *reinterpret_cast<T*>(data);
-		}
+    private:
+        template <typename T, typename = std::enable_if<!is_container<T>::value>>
+        static T read(uint8_t *data) {
+            static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
+            return *reinterpret_cast<T*>(data);
+        }
 
-		template <typename T, typename = std::enable_if<!is_container<T>::value>>
-		static void write(uint8_t *data, const T &payload) {
-			static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
-			*reinterpret_cast<T*>(data) = payload;
-		}
+        template <typename T, typename = std::enable_if<!is_container<T>::value>>
+        static void write(uint8_t *data, const T &payload) {
+            static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
+            *reinterpret_cast<T*>(data) = payload;
+        }
 
-		template <typename T>
-		T readNext() {
-			if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
-				return T();
-			auto tmp = current_;
-			current_ += sizeof(T);
-			return read<T>(tmp);
-		}
+        template <typename T>
+        T readNext() {
+            if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
+                return T();
+            auto tmp = current_;
+            current_ += sizeof(T);
+            return read<T>(tmp);
+        }
 
-		template <typename T>
-		void writeNext(const T &payload) {
-			if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
-				return;
-			auto tmp = current_;
-			current_ += sizeof(T);
-			size_ += sizeof(T);
-			write<T>(tmp, payload);
-			write<uint16_t>(buffer_, size_);
-		}
+        template <typename T>
+        void writeNext(const T &payload) {
+            if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
+                return;
+            auto tmp = current_;
+            current_ += sizeof(T);
+            size_ += sizeof(T);
+            write<T>(tmp, payload);
+            write<uint16_t>(buffer_, size_);
+        }
 
-		uint8_t buffer_[MAX_PACKET_SIZE];
-		uint8_t *current_;
-		uint16_t size_;
-		ePacketType type_;
-		uint16_t CRC_;
+        uint8_t buffer_[MAX_PACKET_SIZE];
+        uint8_t *current_;
+        uint16_t size_;
+        ePacketType type_;
+        uint16_t CRC_;
 };
 
 }
