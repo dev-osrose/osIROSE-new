@@ -175,4 +175,5 @@ void CRoseServer::SendPacket(const IObject* sender, eSendType type, CRosePacket 
       break;
   }
 }
+
 }

@@ -23,16 +23,16 @@ namespace RoseCommon {
 	
 class SrvWhisper : public CRosePacket {
  public:
-  SrvWhisper(const std::string &chat = "", const std::string &senderId = "")
+  SrvWhisper(const std::string &message = "", const std::string &senderId = "")
       : CRosePacket(ePacketType::PAKWC_WHISPER_CHAT),
-        chat_(chat),
+        message_(message),
 				senderId_(senderId) {}
 
  protected:
-  void pack() { *this << senderId_ << chat_; }
+  void pack() { *this << senderId_ << message_; }
 
  private:
-  std::string chat_;
+  std::string message_;
   std::string senderId_;
 };
 
