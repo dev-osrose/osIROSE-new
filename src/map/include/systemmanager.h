@@ -37,17 +37,19 @@ class SystemManager {
         void update(double dt);
 
         bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
-            auto res = dispatch_.find(packet.type());
-            if (res != dispatch_.end()) {
-                res->second.erase(std::remove_if(res->second.begin(), res->second.end(), [entity, &packet] (auto &func) {
-                            try {
-                                return !func(entity, packet);
-                            } catch (std::bad_cast) {}
-                            return true;
-                        }), res->second.end());
-                if (res->second.size())
-                    return true;
+            try {
+                auto res = dispatch_.at(packet.type());
+            } catch (std::out_of_range) {
+                return false;
             }
+            res->second.erase(std::remove_if(res->second.begin(), res->second.end(), [entity, &packet] (auto &func) {
+                        try {
+                            return !func(entity, packet);
+                        } catch (std::bad_cast) {}
+                        return true;
+                    }), res->second.end());
+            if (res->second.size())
+                return true;
             return false;
         }
 
