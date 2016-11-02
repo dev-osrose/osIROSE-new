@@ -42,9 +42,10 @@ class SystemManager {
         bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
             auto res = dispatch_.find(packet.type());
             if (res != dispatch_.end()) {
-                for (auto it : res->second) {
+                for (auto it = res->second.begin(); it != res->second.end(); ++it) {
                     try {
-                        it(entity, packet);
+                        if (!(*it)(entity, packet))
+                            res->second.erase(it);
                     } catch (std::bad_cast) {}
                 }
                 if (res->second.size())
@@ -61,11 +62,12 @@ class SystemManager {
                     res = it;
             if (!res)
                 return;
-            dispatch_[type].emplace_back([type, pos = dispatch_[type].size(), this, object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
-                    if (auto system = dynamic_cast<T*>(object.lock().get()))
+            dispatch_[type].emplace_back([object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
+                    if (auto system = dynamic_cast<T*>(object.lock().get())) {
                         (system ->* method)(entity, packet);
-                    else
-                        this->unregisterDispatcher(type, pos);
+                        return true;
+                    } else
+                        return false;
                     });
         }
 
@@ -80,6 +82,6 @@ class SystemManager {
     private:
         EntityManager &entityManager_;
         std::vector<std::shared_ptr<System>> systems_;
-        std::unordered_map<RoseCommon::ePacketType, std::vector<std::function<void(Entity, const RoseCommon::CRosePacket&)>>> dispatch_;
+        std::unordered_map<RoseCommon::ePacketType, std::vector<std::function<bool(Entity, const RoseCommon::CRosePacket&)>>> dispatch_;
 };
 
