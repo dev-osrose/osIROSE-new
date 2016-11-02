@@ -44,7 +44,7 @@ class SystemManager {
                                 return !func(entity, packet);
                             } catch (std::bad_cast) {}
                             return false;
-                        }));
+                        }), res->second.end());
                 if (res->second.size())
                     return true;
             }
