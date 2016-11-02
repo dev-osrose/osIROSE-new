@@ -43,7 +43,7 @@ class SystemManager {
                             try {
                                 return !func(entity, packet);
                             } catch (std::bad_cast) {}
-                            return false;
+                            return true;
                         }), res->second.end());
                 if (res->second.size())
                     return true;
