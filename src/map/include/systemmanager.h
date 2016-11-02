@@ -54,8 +54,8 @@ class SystemManager {
             return false;
         }
 
-        template <class T>
-        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(Entity, const RoseCommon::CRosePacket&)) {
+        template <class T, class U>
+        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(Entity, const U&)) {
             std::shared_ptr<System> res;
             for (auto &it : systems_)
                 if (dynamic_cast<T*>(it.get()))
@@ -64,7 +64,7 @@ class SystemManager {
                 return;
             dispatch_[type].emplace_back([object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
                     if (auto system = dynamic_cast<T*>(object.lock().get())) {
-                        (system ->* method)(entity, packet);
+                        (system ->* method)(entity, dynamic_cast<const U&>(packet));
                         return true;
                     } else
                         return false;

@@ -17,7 +17,7 @@ class PacketFactory : public Singleton<PacketFactory> {
         }
 
         std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
-            try{
+            try {
                 return mapping_.at(CRosePacket::type(buffer))(buffer)
             } catch (std::out_of_range) {
                 return nullptr;
@@ -25,7 +25,7 @@ class PacketFactory : public Singleton<PacketFactory> {
         }
 
     private:
-        std::unordered_map<ePacketType, std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_MACKET_SIZE])>> mapping_;
+        static const std::unordered_map<ePacketType, std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_MACKET_SIZE])>> mapping_;
 };
 
 #define REGISTER_PACKET(id, type) PacketFactory::getInstance().registerPacket<type>(id)

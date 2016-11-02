@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include "systemmanager.h"
+#include "mappackets.h"
 
 class EntitySystem;
 
@@ -66,7 +67,7 @@ class MovementSystem : public System {
             }
         }
 
-        void processMove(Entity entity, const RoseCommon::CRosePacket &packet) {
+        void processMove(Entity entity, const RoseCommon::CliMouseCmd &packet) {
             (void)entity;
             (void)packet;
         }
