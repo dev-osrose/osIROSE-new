@@ -58,7 +58,9 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     default: {
       // logger_->debug( "cmapclient default handle: 0x{1:04x}",
       // (uint16_t)CRosePacket::type(_buffer) );
-      return CRoseClient::HandlePacket(_buffer);
+       // auto packet = CRosePacket::getPacket(_buffer);
+       // if (!entitySystem_->dispatch(entity_, *packet))
+            return CRoseClient::HandlePacket(_buffer);
     }
   }
   return true;
@@ -161,7 +163,7 @@ bool CMapClient::ChangeMapReply(
   CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
           *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
 
-  entitySystem_->process<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
+  entitySystem_->processEntities<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
           auto basic = entity.component<BasicInfo>();
           if (entity != entity_ && basic->loggedIn_)
               this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
