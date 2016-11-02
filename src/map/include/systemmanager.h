@@ -7,6 +7,7 @@
 #include "epackettype.h"
 #include "entityComponents.h"
 #include <typeindex>
+#include <algorithm>
 
 class System;
 
@@ -38,12 +39,12 @@ class SystemManager {
         bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
             auto res = dispatch_.find(packet.type());
             if (res != dispatch_.end()) {
-                for (auto it = res->second.begin(); it != res->second.end(); ++it) {
-                    try {
-                        if (!(*it)(entity, packet))
-                            res->second.erase(it);
-                    } catch (std::bad_cast) {}
-                }
+                res->second.erase(std::remove_if(res->second.begin(), res->second.end(), [entity, &packet] (auto &func) {
+                            try {
+                                return !func(entity, packet);
+                            } catch (std::bad_cast) {}
+                            return false;
+                        }));
                 if (res->second.size())
                     return true;
             }
