@@ -206,13 +206,10 @@ bool CMapClient::ChatWhisper(std::unique_ptr<RoseCommon::CliWhisper> P) {
   uint16_t _charID = GetId();
   std::string _sender_name = entity_.component<BasicInfo>()->name_; 
 	std::string _recipient_name = P->targetId();
-	logger_->debug("first hex: {0:x}", _recipient_name[0]);
-	logger_->debug("2nd to last hex: {0:x}", _recipient_name[6]);
-	logger_->debug("last hex: {0:x}", _recipient_name[7]);
 	_recipient_name.erase(_recipient_name.size()-1); // for some reason this string has an extra char
 	std::string _message = P->message();
 	CMapClient *_recipient_client = nullptr;
-	entitySystem_->process<BasicInfo, SocketConnector>([this, &_recipient_client, _recipient_name] (Entity entity) {
+	entitySystem_->process<BasicInfo, SocketConnector>([&_recipient_client, _recipient_name] (Entity entity) {
 		if(_recipient_name == entity.component<BasicInfo>()->name_) {
 			_recipient_client = entity.component<SocketConnector>()->client_;
 			return true;
