@@ -9,29 +9,42 @@
 namespace RoseCommon {
 class PacketFactory : public Singleton<PacketFactory> {
     public:
-        template <class T>
-        registerPacket(ePacketType type) {
-            mapping_[type] = [] (uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
-                return new T(buffer);
-            }
-        }
+        using Wrapper = std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_PACKET_SIZE])>;
 
         std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
             try {
-                return mapping_.at(CRosePacket::type(buffer))(buffer)
+                return mapping_.at(CRosePacket::type(buffer)).second(buffer)
+            } catch (std::out_of_range) {
+                return nullptr;
+            }
+        }
+
+        template <typename... Args>
+        std::unique_ptr<CRosePacket> makePacket(ePacketType type, Args... &&args) {
+            try {
+                return mapping_..at(CRosePacket::type(buffer)).first(std::forward(args...));
             } catch (std::out_of_range) {
                 return nullptr;
             }
         }
 
     private:
-        static const std::unordered_map<ePacketType, std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_MACKET_SIZE])>> mapping_;
+        // TODO : check if Wrapper can contain nullptr
+        static const std::unordered_map<ePacketType, std::pair(Wrapper, Wrapper)> mapping_; // first -> send, second -> recv
 };
 
-#define REGISTER_PACKET(id, type) PacketFactory::getInstance().registerPacket<type>(id)
+template <class Class>
+constexpr std::pair<ePacketType, std::pair(PacketFactory::Wrapper, PacketFactory::Wrapper)> registerPacket(ePacketType type) {
+    return std::make_pair(type, [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> { return new Class(buffer); });
+}
 
 std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);
+}
+
+template <ePacketType Type, typename... Args>
+std::unique_ptr<CRosePacket> makePacket(Args... &&args) {
+    return PacketFactory::getInstance().makePacket(Type, std::forward(args...));
 }
 
 }
