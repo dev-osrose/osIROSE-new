@@ -20,15 +20,13 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
+        sources: &sources
         - ubuntu-toolchain-r-test
         - extras-precise
         - boost-latest
         - kalakris-cmake
+        - llvm-toolchain-precise-3.8
         packages:
         - cmake
         - lcov
@@ -37,6 +35,7 @@ matrix:
         - gcc-5
         - g++-5
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -59,19 +58,13 @@ matrix:
     - mkdir logs;
     script:
     - "../ci/script.sh;"
+
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -80,6 +73,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -106,15 +100,8 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -123,6 +110,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -150,16 +138,8 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
-        - llvm-toolchain-precise-3.8
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -174,6 +154,7 @@ matrix:
         - libstdc++6
         - libstdc++6-dev
     cache:
+      apt: true
       directories:
       - "./protobuf"
       - llvm-3.8.0
@@ -201,16 +182,8 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
-        - llvm-toolchain-precise-3.8
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -225,6 +198,7 @@ matrix:
         - libstdc++6
         - libstdc++6-dev
     cache:
+      apt: true
       directories:
       - "./protobuf"
       - llvm-3.8.0
@@ -254,11 +228,7 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -267,6 +237,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
