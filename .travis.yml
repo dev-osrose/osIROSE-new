@@ -150,9 +150,7 @@ matrix:
         - llvm-runtime
         - clang-3.8
         - libstdc++5
-        - libstdc++5-dev
         - libstdc++6
-        - libstdc++6-dev
     cache:
       apt: true
       directories:
@@ -194,9 +192,7 @@ matrix:
         - llvm-runtime
         - clang-3.8
         - libstdc++5
-        - libstdc++5-dev
         - libstdc++6
-        - libstdc++6-dev
     cache:
       apt: true
       directories:
