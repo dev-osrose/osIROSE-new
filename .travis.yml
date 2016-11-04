@@ -146,7 +146,7 @@ matrix:
     - mkdir logs;
     script:
     - "../ci/script.sh;"
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
+  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
     language: cpp
     addons:
@@ -159,21 +159,24 @@ matrix:
         - extras-precise
         - boost-latest
         - kalakris-cmake
-        - llvm-toolchain-precise-3.7
+        - llvm-toolchain-precise-3.8
         packages:
         - cmake
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.7
-        - llvm-3.7-dev
+        - llvm-3.8
+        - llvm-3.8-dev
         - llvm-runtime
-        - clang-3.7
+        - clang-3.8
         - libstdc++5
+        - libstdc++5-dev
+        - libstdc++6
+        - libstdc++6-dev
     cache:
       directories:
       - "./protobuf"
-      - llvm-3.7.0
+      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -182,7 +185,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
@@ -207,21 +210,24 @@ matrix:
         - extras-precise
         - boost-latest
         - kalakris-cmake
-        - llvm-toolchain-precise-3.7
+        - llvm-toolchain-precise-3.8
         packages:
         - cmake
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.7
-        - llvm-3.7-dev
+        - llvm-3.8
+        - llvm-3.8-dev
         - llvm-runtime
-        - clang-3.7
+        - clang-3.8
         - libstdc++5
+        - libstdc++5-dev
+        - libstdc++6
+        - libstdc++6-dev
     cache:
       directories:
       - "./protobuf"
-      - llvm-3.7.0
+      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -230,7 +236,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
