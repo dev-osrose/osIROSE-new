@@ -30,12 +30,12 @@ ENDIF()
 
 ADD_DEFINITIONS(-DSERVER_TESTING)
 
-file(GLOB_RECURSE CORE_HEADERS . ${CMAKE_SOURCE_DIR}/src/core/*.[h])
-file(GLOB_RECURSE ROSE_HEADERS . ${CMAKE_SOURCE_DIR}/src/rosecommon/*.[h])
+#file(GLOB_RECURSE CORE_HEADERS . ${CMAKE_SOURCE_DIR}/src/core/*.[h])
+#file(GLOB_RECURSE ROSE_HEADERS . ${CMAKE_SOURCE_DIR}/src/rosecommon/*.[h])
 file(GLOB_RECURSE LOGIN_HEADERS . ${CMAKE_SOURCE_DIR}/src/login/*.[h])
 file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
 file(GLOB_RECURSE MAP_HEADERS . ${CMAKE_SOURCE_DIR}/src/map/*.[h])
-file(GLOB_RECURSE PROJECT_TESTING_HEADERS . *.[h])
+#file(GLOB_RECURSE PROJECT_TESTING_HEADERS . *.[h])
 
 file(GLOB_RECURSE LOGIN_SOURCE . ${CMAKE_SOURCE_DIR}/src/login/[!main]*.[c][p][p])
 file(GLOB_RECURSE CHAR_SOURCE . ${CMAKE_SOURCE_DIR}/src/char/[!main]*.[c][p][p])
@@ -83,30 +83,32 @@ SET(SOURCES
 PROJECT(${PROJECT})
 
 INCLUDE_DIRECTORIES(
-    ${CMAKE_SOURCE_DIR}/src/proto/include
-    ${CMAKE_SOURCE_DIR}/src/core/include
-    ${CMAKE_SOURCE_DIR}/src/rosecommon/include
-	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
+#    ${CMAKE_SOURCE_DIR}/src/proto/include
+#    ${CMAKE_SOURCE_DIR}/src/core/include
+#    ${CMAKE_SOURCE_DIR}/src/rosecommon/include
+#	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
     ${CMAKE_SOURCE_DIR}/src/login/include
     ${CMAKE_SOURCE_DIR}/src/char/include
     ${CMAKE_SOURCE_DIR}/src/map/include
-    ${CMAKE_SOURCE_DIR}/tools/
-    ${CMAKE_SOURCE_DIR}/src/tests
+#    ${CMAKE_SOURCE_DIR}/tools/
+#    ${CMAKE_SOURCE_DIR}/src/tests
 )
 
 FIND_PACKAGE( Threads REQUIRED )
 
 ADD_EXECUTABLE(${PROJECT} ${HEADERS} ${SOURCES})
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-ADD_DEPENDENCIES(${PROJECT} gtest)
-ADD_DEPENDENCIES(${PROJECT} gmock)
-ADD_DEPENDENCIES(${PROJECT} Core)
-ADD_DEPENDENCIES(${PROJECT} RoseCommon)
-ADD_DEPENDENCIES(${PROJECT} protoGen)
-ADD_DEPENDENCIES(${PROJECT} lua)
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
-ENDIF()
+#ADD_DEPENDENCIES(${PROJECT} gtest)
+#ADD_DEPENDENCIES(${PROJECT} gmock)
+#ADD_DEPENDENCIES(${PROJECT} Core)
+#ADD_DEPENDENCIES(${PROJECT} RoseCommon)
+#ADD_DEPENDENCIES(${PROJECT} protoGen)
+#ADD_DEPENDENCIES(${PROJECT} lua)
+#IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+#	ADD_DEPENDENCIES(${PROJECT} mysqlpp)
+#ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
@@ -128,18 +130,15 @@ IF(ENABLE_TESTING_COVERAGE)
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_MYSQL)
-	TARGET_LINK_LIBRARIES(${PROJECT}
-			${MYSQL_LIBRARIES}
-        )
+#	TARGET_LINK_LIBRARIES(${PROJECT}
+#			${MYSQL_LIBRARIES}
+#        )
+  target_link_libraries(${PROJECT} PRIVATE mysqlpp)
 ENDIF()
 
-TARGET_LINK_LIBRARIES(${PROJECT}
+TARGET_LINK_LIBRARIES(${PROJECT} PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
-    Core
     RoseCommon
-    protoGen
-    mysqlpp
-    lua
     gtest
     gmock
     ${COVERAGE_LIBRARIES}
@@ -147,12 +146,12 @@ TARGET_LINK_LIBRARIES(${PROJECT}
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	TARGET_LINK_LIBRARIES(${PROJECT} libprotobuf
-		wsock32.lib 
+		PRIVATE wsock32.lib 
 	)
 ELSE()
 	TARGET_LINK_LIBRARIES(${PROJECT} 
-		protobuf
-		mysqlclient
+		PRIVATE protobuf
+		PRIVATE mysqlclient
 		)
 ENDIF()
 

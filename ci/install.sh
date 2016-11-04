@@ -10,13 +10,18 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		cd tools/protobuf
 		./autogen.sh
 		./configure --prefix=$PROOT/protobuf > /dev/null
-		make
+		make -j 4
 		make install
 
 		cd ../../
 	else
 		echo 'Using cached protobuf directory.';
 	fi
+	
+	git clone https://github.com/ninja-build/ninja.git
+	cd ninja
+	./configure.py --bootstrap
+	export PATH=$PATH:`pwd`
 
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz
@@ -35,12 +40,12 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	tar -xf bakefile-0.2.9.tar.gz
 	cd bakefile-0.2.9/
 	./configure
-	make
+	make -j4
 	sudo make install
 	
 	cd ../tools/mysqlpp
 	./bootstrap
-./configure
+  ./configure
 
 	cd lib
 	perl querydef.pl

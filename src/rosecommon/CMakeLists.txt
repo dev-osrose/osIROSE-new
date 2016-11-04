@@ -6,7 +6,8 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-project("RoseCommon")
+SET(PROJECT RoseCommon)
+project(${PROJECT})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 
@@ -23,9 +24,6 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 INCLUDE_DIRECTORIES(
-	${CMAKE_SOURCE_DIR}/src/core/include
-	${CMAKE_SOURCE_DIR}/src/proto/include
-	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/include/packets
 )
 
@@ -55,9 +53,17 @@ SET( SOURCES_BASE
   src/mappackets
 )
 
-add_library(RoseCommon STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
+
+target_link_libraries(${PROJECT} PRIVATE Core)
+target_link_libraries(${PROJECT} PRIVATE lua)
+
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 #	ADD_DEPENDENCIES(${PROJECT} libprotobuf)
-	ADD_DEPENDENCIES(RoseCommon protoGen)
+#	ADD_DEPENDENCIES(${PROJECT} protoGen)
 ENDIF()

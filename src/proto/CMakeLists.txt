@@ -39,12 +39,15 @@ ENDIF()
 
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 ADD_LIBRARY(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 IF (BUILD_PROTOBUF)
   IF (MSVC)
     ADD_DEPENDENCIES(${PROJECT} protoc)
   ELSE()
-    ADD_DEPENDENCIES(${PROJECT} libprotobuf)
+    target_link_libraries(${PROJECT} PRIVATE libprotobuf)
+    #ADD_DEPENDENCIES(${PROJECT} libprotobuf)
   ENDIF()
 ENDIF()
 

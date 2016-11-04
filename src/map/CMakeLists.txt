@@ -26,13 +26,13 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 # Our Stuff 
-include_directories(
-	${CMAKE_SOURCE_DIR}/src/core/include
-	${CMAKE_SOURCE_DIR}/src/proto/include
-	${CMAKE_SOURCE_DIR}/src/rosecommon/include
-	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+#include_directories(
+#	${CMAKE_SOURCE_DIR}/src/core/include
+#	${CMAKE_SOURCE_DIR}/src/proto/include
+#	${CMAKE_SOURCE_DIR}/src/rosecommon/include
+#	${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
+#	${CMAKE_CURRENT_SOURCE_DIR}/include
+#)
 
 SET( SOURCES_HEADER
 	include/cmapserver
@@ -49,57 +49,37 @@ SET( SOURCES_MAIN
 
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
-
-#IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-ADD_DEPENDENCIES(${PROJECT} protoGen)
-
-IF(BUILD_LUA)
-  ADD_DEPENDENCIES(${PROJECT} lua)
-ENDIF()
-
-IF(BUILD_MYSQLPP) 
-  ADD_DEPENDENCIES(${PROJECT} mysqlpp)
-ENDIF()
-
-IF(BUILD_PROTOBUF)
-  ADD_DEPENDENCIES(${PROJECT} libprotobuf)
-ENDIF()
-#ENDIF()
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 				
 IF(ENABLE_MYSQL)
-	TARGET_LINK_LIBRARIES(${PROJECT}
-			${MYSQL_LIBRARIES}
-        )
+target_link_libraries(${PROJECT} PRIVATE mysqlpp)
 ENDIF()
 
-target_link_libraries(${PROJECT} 
-	Core 
+target_link_libraries(${PROJECT} PRIVATE
 	RoseCommon
-	protoGen
-	lua
-	mysqlpp
 	${CMAKE_THREAD_LIBS_INIT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         TARGET_LINK_LIBRARIES(${PROJECT}
-                wsock32.lib
-                libprotobuf
+                PRIVATE wsock32.lib
+                PRIVATE libprotobuf
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
-                mysqlclient
-                protobuf
+                PRIVATE mysqlclient
+                PRIVATE protobuf
                 )
 ENDIF()
 
-INSTALL(
-    TARGETS ${PROJECT}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib/static
-    CONFIGURATIONS Release)
+#INSTALL(
+#    TARGETS ${PROJECT}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib/static
+#    CONFIGURATIONS Release)
     

@@ -28,10 +28,10 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
  
-INCLUDE_DIRECTORIES(
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_SOURCE_DIR}/src/proto/include
-)
+#INCLUDE_DIRECTORIES(
+#	${CMAKE_CURRENT_SOURCE_DIR}/include
+#	${CMAKE_SOURCE_DIR}/src/proto/include
+#)
 
 SET( SOURCES_HEADER
   include/logconsole
@@ -60,7 +60,12 @@ SET( SOURCES_BASE
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_link_libraries(${PROJECT} PRIVATE protoGen)
+target_link_libraries(${PROJECT} PRIVATE mysqlpp)
+
 #IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	ADD_DEPENDENCIES(${PROJECT} protoGen)
+#	ADD_DEPENDENCIES(${PROJECT} protoGen)
 #ENDIF()
 
