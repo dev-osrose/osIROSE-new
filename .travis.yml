@@ -176,7 +176,7 @@ matrix:
     - mkdir logs;
     script:
     - "../ci/script.sh;"
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
+  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
     language: cpp
     addons:
