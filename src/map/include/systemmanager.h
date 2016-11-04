@@ -81,6 +81,7 @@ class SystemManager {
     private:
         EntityManager &entityManager_;
         std::unordered_map<std::type_index, std::shared_ptr<System>> systems_;
+        // TODO : use a std::unordered_multimap
         std::unordered_map<RoseCommon::ePacketType, std::vector<std::function<bool(Entity, const RoseCommon::CRosePacket&)>>> dispatch_;
 };
 

@@ -7,9 +7,15 @@
 #include <fonctionnal>
 
 namespace RoseCommon {
+
 class PacketFactory : public Singleton<PacketFactory> {
     public:
-        using Wrapper = std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_PACKET_SIZE])>;
+        template <ePacketType Type, class Class>
+        void registerRecvPacket() {
+            mappingRecv_[Type] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
+                return new Class(buffer);
+            }
+        }
 
         std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
             try {
@@ -19,32 +25,60 @@ class PacketFactory : public Singleton<PacketFactory> {
             }
         }
 
-        template <typename... Args>
-        std::unique_ptr<CRosePacket> makePacket(ePacketType type, Args... &&args) {
-            try {
-                return mapping_..at(CRosePacket::type(buffer)).first(std::forward(args...));
-            } catch (std::out_of_range) {
-                return nullptr;
-            }
-        }
-
     private:
-        // TODO : check if Wrapper can contain nullptr
-        static const std::unordered_map<ePacketType, std::pair(Wrapper, Wrapper)> mapping_; // first -> send, second -> recv
+        using Wrapper = std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_PACKET_SIZE])>;
+
+        std::unordered_map<ePacketType, Wrapper> mappingRecv_;
+};
+
+template <ePacketType Type>
+struct packet_id {
+    static const ePacketType id = Type;
 };
 
 template <class Class>
-constexpr std::pair<ePacketType, std::pair(PacketFactory::Wrapper, PacketFactory::Wrapper)> registerPacket(ePacketType type) {
-    return std::make_pair(type, [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> { return new Class(buffer); });
-}
+struct packet_type {
+    typedef Class type;
+};
+
+template <ePacketType Type, class Class>
+struct register_id : packet_id<Type>, packet_type<Class> {
+    private:
+        friend packet_type<Class> packed_id(packet_id<Type>) {
+            return packet_type<Class>;
+        }
+};
+
+template <ePacketType Type, class Class>
+class RegisterRecvPacket {
+    private:
+        struct RegisterMe {
+            RegisterMe() {
+                PacketFactory::getInstance().registerPacket<Type, Class>();
+            }
+        };
+
+        RegisterRecvPacket() {
+            static RegisterMe me_;
+        }
+};
+
+template <ePacketType Type, class Class>
+class RegisterSendPacket {};
+
 
 std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);
 }
 
-template <ePacketType Type, typename... Args>
-std::unique_ptr<CRosePacket> makePacket(Args... &&args) {
-    return PacketFactory::getInstance().makePacket(Type, std::forward(args...));
+template <ePacketType Type>
+auto getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
+    return
+}
+
+template <ePacketType T, typename... Args>
+std::unique_ptr<decltype(<T>::type)>	makePacket(Args... &&args) {
+    return std::make_unique(std::forward(args...));
 }
 
 }
