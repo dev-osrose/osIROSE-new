@@ -54,9 +54,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - "../ci/before_script.sh;"
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -94,9 +94,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - "../ci/before_script.sh;"
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -135,9 +135,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - "../ci/before_script.sh;"
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -180,9 +180,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - "../ci/before_script.sh;"
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -225,9 +225,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - "../ci/before_script.sh;"
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - "../ci/script.sh"
     
   - env: g++-6 coverity_scan
     sudo: required
