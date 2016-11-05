@@ -55,8 +55,8 @@ add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 
-target_link_libraries(${PROJECT} PRIVATE Core)
-target_link_libraries(${PROJECT} PRIVATE lua)
+target_link_libraries(${PROJECT} Core)
+target_link_libraries(${PROJECT} lua)
 
 
 IF (MSVC)

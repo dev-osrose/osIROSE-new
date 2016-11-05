@@ -45,18 +45,18 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 				
 IF(ENABLE_MYSQL)
-  target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARIES} mysqlpp)
+  target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES} mysqlpp)
 ENDIF()
 
-target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARIES} RoseCommon)
-target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES} RoseCommon)
+target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 IF (MSVC)
-  target_link_libraries(${PROJECT} PRIVATE wsock32.lib)
-  target_link_libraries(${PROJECT} PRIVATE libprotobuf)
+  target_link_libraries(${PROJECT} wsock32.lib)
+  target_link_libraries(${PROJECT} libprotobuf)
 ELSE()
-  target_link_libraries(${PROJECT} PRIVATE mysqlclient)
-  target_link_libraries(${PROJECT} PRIVATE protobuf)
+  target_link_libraries(${PROJECT} mysqlclient)
+  target_link_libraries(${PROJECT} protobuf)
 ENDIF()
 
 #INSTALL(
