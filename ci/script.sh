@@ -6,7 +6,7 @@ if [ "$SUITE" = "coverage" ]; then
 	coveralls-lcov coverage.info.cleaned
 elif [ "$SUITE" = "tests" ]; then
   cmake -GNinja -DENABLE_TESTING=ON -DENABLE_TESTING_COVERAGE=OFF -DBUILD_MYSQLPP=ON .. && ninja
-  ctest --output-on-failure
+  ctest -GNinja --output-on-failure
 else
-	cmake .. && make
+	cmake -GNinja .. && ninja
 fi
