@@ -25,15 +25,6 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
 
-# Our Stuff 
-#include_directories(
-#  ${CMAKE_SOURCE_DIR}/src/core/include
-#  ${CMAKE_SOURCE_DIR}/src/rosecommon/include
-#  ${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets
-#  ${CMAKE_SOURCE_DIR}/src/proto/include
-#  ${CMAKE_CURRENT_SOURCE_DIR}/include
-#)
-
 SET( SOURCES_MAIN
   src/main.cpp )
   
@@ -54,13 +45,13 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 IF(ENABLE_MYSQL)
-  #do something?
+  target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARIES} mysqlpp)
 ENDIF()
 
 target_link_libraries(${PROJECT} PRIVATE RoseCommon)
 target_link_libraries(${PROJECT} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+IF (MSVC)
   target_link_libraries(${PROJECT} PRIVATE wsock32.lib)
   target_link_libraries(${PROJECT} PRIVATE libprotobuf)
 ELSE()

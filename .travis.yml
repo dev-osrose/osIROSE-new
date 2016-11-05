@@ -48,16 +48,13 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
+    - export CXX="g++-5" CC="gcc-5";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "../ci/before_script.sh;"
     script:
     - "../ci/script.sh;"
   - env: g++-6 BUILD_TYPE=Debug
@@ -91,16 +88,13 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "../ci/before_script.sh;"
     script:
     - "../ci/script.sh;"
   - env: g++-6 BUILD_TYPE=Release
@@ -135,16 +129,13 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "../ci/before_script.sh;"
     script:
     - "../ci/script.sh;"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
@@ -183,16 +174,13 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "../ci/before_script.sh;"
     script:
     - "../ci/script.sh;"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
@@ -231,16 +219,13 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "../ci/before_script.sh;"
     script:
     - "../ci/script.sh;"
     
@@ -273,7 +258,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
