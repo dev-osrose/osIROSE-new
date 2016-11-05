@@ -21,7 +21,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	git clone https://github.com/ninja-build/ninja.git
 	cd ninja
 	./configure.py --bootstrap
-	export PATH=$PATH:`pwd`
+	setenv PATH $PATH:`pwd`
 	cd ..
 
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz

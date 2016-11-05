@@ -55,5 +55,7 @@ IF(BUILD_TOOLS)
     SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
   ENDIF()
   
-  ADD_SUBDIRECTORY(stress)
+  IF(BUILD_STRESS)
+	ADD_SUBDIRECTORY(stress)
+  ENDIF()
 ENDIF()
