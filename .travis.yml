@@ -56,6 +56,7 @@ matrix:
     before_script:
     - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
@@ -96,6 +97,7 @@ matrix:
     before_script:
     - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Release
     sudo: required
@@ -137,6 +139,7 @@ matrix:
     before_script:
     - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
@@ -182,6 +185,7 @@ matrix:
     before_script:
     - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
@@ -227,6 +231,7 @@ matrix:
     before_script:
     - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh"
     
   - env: g++-6 coverity_scan
