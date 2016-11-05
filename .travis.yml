@@ -12,6 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
+  - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja
 services:
 - mysql
 matrix:
