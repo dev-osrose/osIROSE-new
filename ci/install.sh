@@ -22,6 +22,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	cd ninja
 	./configure.py --bootstrap
 	export PATH=$PATH:`pwd`
+	cd ..
 
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 	tar -xf lcov-1.12.tar.gz
@@ -45,7 +46,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	
 	cd ../tools/mysqlpp
 	./bootstrap
-  ./configure
+	./configure
 
 	cd lib
 	perl querydef.pl
