@@ -19,9 +19,14 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE
    ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
 set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
    ${CMAKE_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
-   
-SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
-#message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+
+IF(DEFINED ENV{BUILD_TYPE})
+    SET(BUILD_TYPE ENV{BUILD_TYPE})
+ELSE()
+    SET(BUILD_TYPE Debug)
+ENDIF()
+
+SET(CMAKE_BUILD_TYPE ${BUILD_TYPE})
 
 PROJECT("osIROSE")
 
@@ -41,34 +46,7 @@ MATH(EXPR PROJECT_ABI_VERSION_SUFFIX "${VERSION_MAJOR} * 10000 + ${VERSION_MINOR
 
 SET(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
-# Create a version file using git data
-if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  execute_process(
-    COMMAND git rev-parse --abbrev-ref HEAD
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_BRANCH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  execute_process(
-    COMMAND git log -1 --format=%h
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_COMMIT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-else()
-  set(GIT_BRANCH "")
-  set(GIT_COMMIT_HASH "")
-endif()
-# --------------------------
-
-#start version file
-message(STATUS "Generating version.h")
-configure_file(
-  ${CMAKE_SOURCE_DIR}/cmake/version.h.in
-  ${CMAKE_BINARY_DIR}/generated/version.h
-)
-#end version file
+CREATE_VERSION_FILE()
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -102,7 +80,7 @@ IF (BUILD_API_DOC)
 ENDIF (BUILD_API_DOC)
 #build API doc
 
-IF(ENABLE_MYSQL_ONE_INSTANCE)
+IF(ENABLE_MYSQL_ONE_INSTANCE OR BUILD_MYSQLPP)
   SET(ENABLE_MYSQL ON)
 ENDIF()
 

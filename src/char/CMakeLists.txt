@@ -73,7 +73,7 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 				
 IF(ENABLE_MYSQL)
-target_link_libraries(${PROJECT} PRIVATE mysqlpp)
+target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARIES} mysqlpp)
 ENDIF()
 
 

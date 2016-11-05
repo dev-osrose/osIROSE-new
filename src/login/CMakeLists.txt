@@ -56,11 +56,11 @@ target_include_directories(${PROJECT} PUBLIC
 SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-#IF(ENABLE_MYSQL)
-#	TARGET_LINK_LIBRARIES(${PROJECT} PRIVATE
-#			${MYSQL_LIBRARIES}
-#        )
-#ENDIF()
+IF(ENABLE_MYSQL)
+	TARGET_LINK_LIBRARIES(${PROJECT} PRIVATE
+			${MYSQL_LIBRARIES}
+        )
+ENDIF()
 				
 target_link_libraries(${PROJECT}
 	PRIVATE RoseCommon
@@ -74,7 +74,6 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}
-                PRIVATE mysqlclient
                 PRIVATE protobuf
                 )
 ENDIF()
