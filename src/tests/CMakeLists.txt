@@ -80,6 +80,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src/login/include
     ${CMAKE_SOURCE_DIR}/src/char/include
     ${CMAKE_SOURCE_DIR}/src/map/include
+	${CMAKE_CURRENT_SOURCE_DIR}/mock
 )
 
 FIND_PACKAGE( Threads REQUIRED )
