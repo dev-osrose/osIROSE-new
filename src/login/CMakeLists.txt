@@ -57,20 +57,17 @@ SET_TARGET_PROPERTIES(${PROJECT} PROPERTIES LINK_FLAGS
                 "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 IF(ENABLE_MYSQL)
-	TARGET_LINK_LIBRARIES(${PROJECT} PRIVATE
-			${MYSQL_LIBRARIES}
-        )
 ENDIF()
 				
-target_link_libraries(${PROJECT}
-	PRIVATE RoseCommon
-	PRIVATE ${CMAKE_THREAD_LIBS_INIT}
+target_link_libraries(${PROJECT} PRIVATE
+	RoseCommon
+	${CMAKE_THREAD_LIBS_INIT}
 )
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-        TARGET_LINK_LIBRARIES(${PROJECT}
-                PRIVATE wsock32.lib
-                PRIVATE libprotobuf
+        TARGET_LINK_LIBRARIES(${PROJECT} PRIVATE
+                wsock32.lib
+                libprotobuf
         )
 ELSE()
         TARGET_LINK_LIBRARIES(${PROJECT}

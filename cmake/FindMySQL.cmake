@@ -26,15 +26,15 @@
 
 if( WIN32 )
 
-	SET(BINDIR32_ENV_NAME "ProgramFiles(x86)")
+	SET(BINDIR32_ENV_NAME "Program Files (x86)")
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${EXTERNAL_INCLUDE_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector C 6.1/include"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/include"
+			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/include"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/include"
 			  "$ENV{PROGRAMFILES}/MySQL/*/include"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/include"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" 
 			  "C:/Program Files/MySQL/*/include"
 			  )
@@ -42,11 +42,11 @@ if( WIN32 )
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient.lib" "mysqlclient_r.lib"
 		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
+			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
 			  "C:/Program Files/MySQL/*/lib"
 			  )
@@ -54,11 +54,11 @@ if( WIN32 )
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
 		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector C 6.1/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/MySQL Connector C 6.1/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector C 6.1/lib"
+			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "$ENV{${BINDIR32_ENV_NAME}}/MySQL/*/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
 			  "C:/Program Files/MySQL/*/lib"
 			  )
