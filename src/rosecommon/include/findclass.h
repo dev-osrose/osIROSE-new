@@ -81,6 +81,9 @@ struct find_recv_class<ePacketType::PAKCS_REVIVE_REQ> { CliReviveReq type; };
 
 template <>
 struct find_recv_class<ePacketType::PAKCS_NORMAL_CHAT> { CliChat type; };
+
+template <>
+struct find_recv_class<ePacketType::PAKCS_WHISPER_CHAT> { CliWhisper type; };
 #endif
 
 //SEND PACKETS
@@ -160,6 +163,9 @@ struct find_send_class<ePacketType::PAKWC_REVIVE_REPLY> { SrvReviveReply type; }
 
 template <>
 struct find_send_class<ePacketType::PAKWC_NORMAL_CHAT> { SrvChat type; };
+
+template <>
+struct find_send_class<ePacketType::PAKWC_WHISPER_CHAT> { SrvWhisper type; };
 
 template <>
 struct find_send_class<ePacketType::PAKWC_PLAYER_CHAR> { SrvPlayerChar type; };

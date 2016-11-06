@@ -23,6 +23,7 @@
 #include <vector>
 #include "entityComponents.h"
 #include "cli_chat.h"
+#include "cli_whisper.h"
 #include "cli_stop.h"
 #include "cli_logout.h"
 #include "cli_revive.h"
@@ -34,6 +35,7 @@
 #include "srv_changemap.h"
 #include "srv_serverdata.h"
 #include "srv_removeobject.h"
+#include "srv_whisper.h"
 
 namespace RoseCommon {
 
