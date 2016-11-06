@@ -8,6 +8,12 @@
 #include "entityComponents.h"
 #include <typeindex>
 #include <algorithm>
+#include <type_traits>
+
+template <typename E>
+constexpr auto to_underlying(E e) noexcept {
+	return static_cast<typename std::underlying_type_t<E>>(e);
+}
 
 class System;
 
@@ -37,7 +43,7 @@ class SystemManager {
         void update(double dt);
 
         bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
-            auto res = dispatch_.equal_range(packet.type());
+            auto res = dispatch_.equal_range(to_underlying(packet.type()));
             if (res.first == dispatch_.end())
                 return false;
             for (auto it = res.first; it != res.second;) {
@@ -61,7 +67,7 @@ class SystemManager {
             } catch (std::out_of_range) {
                 return;
             }
-            dispatch_.emplace(type, [object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
+            dispatch_.emplace(to_underlying(type), [object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
                     if (auto system = dynamic_cast<T*>(object.lock().get())) {
                         (system ->* method)(entity, dynamic_cast<const U&>(packet));
                         return true;
@@ -73,6 +79,7 @@ class SystemManager {
     private:
         EntityManager &entityManager_;
         std::unordered_map<std::type_index, std::shared_ptr<System>> systems_;
-        std::unordered_multimap<RoseCommon::ePacketType, std::function<bool(Entity, const RoseCommon::CRosePacket&)>> dispatch_;
+        std::unordered_multimap<std::underlying_type_t<RoseCommon::ePacketType>,
+		std::function<bool(Entity, const RoseCommon::CRosePacket&)>> dispatch_;
 };
 
