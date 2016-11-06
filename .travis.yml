@@ -12,6 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
+  - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja
 services:
 - mysql
 matrix:
@@ -46,19 +47,16 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
+    - export CXX="g++-5" CC="gcc-5";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
-
+    - cd build
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -84,18 +82,16 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -122,17 +118,15 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh;"
   - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
@@ -170,11 +164,9 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
+    - cd build
     - "../ci/script.sh;"
   - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
@@ -212,12 +204,10 @@ matrix:
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
     
   - env: g++-6 coverity_scan
     sudo: required
@@ -245,7 +235,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
@@ -277,7 +267,7 @@ notifications:
 
 after_success:
   - mkdir ${PROOT}/public
-  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
+  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
 
 deploy:
   - provider: s3
@@ -291,9 +281,9 @@ deploy:
     acl: public_read
     upload-dir: ${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}
     on:
-      repo: RavenX8/osIROSE-new
-      all_branches: true
-#     branch: master
+      repo: dev-osrose/osIROSE-new
+#      all_branches: true
+      branch: master
       tag: true
       
   - provider: releases
