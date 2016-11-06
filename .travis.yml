@@ -295,7 +295,7 @@ notifications:
 
 after_success:
   - mkdir ${PROOT}/public
-  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
+  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
 
 deploy:
   - provider: s3
