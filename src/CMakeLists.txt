@@ -1,53 +1,51 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
-PROJECT(src)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 IF(ENABLE_TESTING_COVERAGE)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
+  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_TESTING)
   find_package(ProtocolBuffer REQUIRED)
 
-  INCLUDE_DIRECTORIES(
+  include_directories(
     SYSTEM ${GTEST_INCLUDE_DIR}
     SYSTEM ${GMOCK_INCLUDE_DIR}
   )
 ENDIF() # ENABLE_TESTING
 
 IF( ENABLE_ASAN )
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
-  SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
+  set(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
 ENDIF()
 
 IF( DISABLE_CRYPT )
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_CRYPT")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_CRYPT")
 ENDIF()
 
-INCLUDE_DIRECTORIES(
+include_directories(
   SYSTEM ${PROTOBUF_INCLUDE_DIR}
   SYSTEM ${ASIO_INCLUDE_DIR}
   SYSTEM ${EXTERNAL_INCLUDE_DIR}
   SYSTEM ${PBJSON_ROOT}
   SYSTEM ${SPDLOG_ROOT}
-  SYSTEM ${SELENE_ROOT}
   SYSTEM ${SOL2_ROOT}
   SYSTEM ${LUA_INCLUDE_DIR}
   SYSTEM ${CXXOPT_ROOT}
   SYSTEM ${ENTITYX_INCLUDE_DIR}
 )
 
-LINK_DIRECTORIES(
+link_directories(
   ${EXTERNAL_BINARY_DIR}
 )
 
 IF(ENABLE_MYSQL)
-  INCLUDE_DIRECTORIES(
+  include_directories(
     SYSTEM ${MYSQL_INCLUDE_DIRS}
     SYSTEM ${MYSQLpp_INCLUDE_DIR}
   )
   
-  LINK_DIRECTORIES(
+  link_directories(
     ${MYSQL_LIBRARY_PATH}
     ${MYSQLpp_LIBRARY_PATH}
   )
@@ -62,14 +60,14 @@ IF (MSVC)
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /LTCG /ignore:4075")
 ENDIF()
 
-ADD_SUBDIRECTORY(proto)
-ADD_SUBDIRECTORY(core)
-ADD_SUBDIRECTORY(rosecommon)
-ADD_SUBDIRECTORY(login)
-ADD_SUBDIRECTORY(char)
-ADD_SUBDIRECTORY(map)
+add_subdirectory(proto)
+add_subdirectory(core)
+add_subdirectory(rosecommon)
+add_subdirectory(login)
+add_subdirectory(char)
+add_subdirectory(map)
 
 IF(ENABLE_TESTING)
-  ADD_SUBDIRECTORY(tests)
+  add_subdirectory(tests)
 ENDIF()
 
