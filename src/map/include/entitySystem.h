@@ -5,6 +5,7 @@
 #include "entitySystems.h"
 #include <functional>
 #include <vector>
+#include <type_traits>
 
 class EntitySystem {
     public:
@@ -41,13 +42,7 @@ class EntitySystem {
         void saveCharacter(uint32_t  charId, Entity entity);
 
         template <typename ...T>
-        void process(std::function<void(Entity)> func) {
-            for (Entity entity : entityManager_.entities_with_components<T...>())
-                func(entity);
-        }
-
-        template <typename ...T>
-        void process(std::function<bool(Entity)> func) {
+        void processEntities(std::function<bool(Entity)>&& func) {
             for (Entity entity : entityManager_.entities_with_components<T...>())
                 if (!func(entity))
                     return;
