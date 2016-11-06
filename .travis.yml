@@ -12,6 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
+  - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja
 services:
 - mysql
 matrix:
@@ -47,18 +48,16 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5";
+    - export CXX="g++-5" CC="gcc-5";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -90,18 +89,16 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
   - env: g++-6 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -125,24 +122,25 @@ matrix:
     cache:
       directories:
       - "./protobuf"
+    branches:
+      except:
+      - coverity_scan
     before_install:
     - export SUITE=none
     - export GCOV_PATH=/usr/bin/gcov-6
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/g++-6" CC="/usr/bin/gcc-6";
+    - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
     language: cpp
@@ -179,18 +177,16 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
   - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
     language: cpp
@@ -227,18 +223,56 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+    - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
     - "./ci/install.sh"
     before_script:
-    - mysql --user="root" -e 'create database osirose;';
-    - mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql";
-    - mkdir build && cd build;
-    - mkdir logs;
+    - "./ci/before_script.sh"
     script:
-    - "../ci/script.sh;"
+    - cd build
+    - "../ci/script.sh"
+    
+  - env: g++-6 coverity_scan
+    sudo: required
+    language: cpp
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - kalakris-cmake
+        packages:
+        - cmake
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
+        - g++-6
+    cache:
+      directories:
+      - "./protobuf"
+    branches:
+      only:
+      - coverity_scan
+    before_install:
+    - export SUITE=none
+    - export GCOV_PATH=/usr/bin/gcov-6
+    - export LCOV_PATH=$HOME/usr/bin/lcov
+    - export GENHTML_PATH=$HOME/usr/bin/genhtml
+    - export PREFIX=$HOME
+    - export CXX="g++-6" CC="gcc-6";
+    - bash ./ci/.travis.install-mysql-5.7.sh
+    - "./ci/before_install.sh"
+    install:
+    - "./ci/install.sh"
+    script:
+    - echo "coverity scan"
+    after_success:
+    - echo "coverity scan success"
+    
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
@@ -261,7 +295,7 @@ notifications:
 
 after_success:
   - mkdir ${PROOT}/public
-  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/Database
+  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
 
 deploy:
   - provider: s3
@@ -275,9 +309,9 @@ deploy:
     acl: public_read
     upload-dir: ${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}
     on:
-      repo: RavenX8/osIROSE-new
-      all_branches: true
-#     branch: master
+      repo: dev-osrose/osIROSE-new
+#      all_branches: true
+      branch: master
       tag: true
       
   - provider: releases

@@ -9,6 +9,10 @@ configuration:
 platform:
 - Win32
 
+branches:
+  except:
+    - coverity_scan
+
 environment:
   ASIO_STANDALONE: 1
   MYSQL_DATABASE: osirose
@@ -36,9 +40,6 @@ install:
 - cmd: "./ci/msvc_mysqlpp_install.bat"
 - cmd: "./ci/msvc_install.bat"
 
-#cache: 
-#- %PROJECT_PATH%\3rdParty -> clear_cache.txt
-#- %PROJECT_PATH%\build\tools\protobuf -> clear_cache.txt
 build:
   parallel: true
   
@@ -79,8 +80,8 @@ test_script:
   - ps: $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1; $xml | Out-File C:/projects/osIROSE/build/results.xml; $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml));
 
 deploy:
-#  release: osirose-win-v$(appveyor_build_version)
-  description: 'Windows build'
+  release: osirose-win-v$(appveyor_build_version) # this is here to prevent appveyor from overwriting our release notes
+  description: ''
   provider: GitHub
   auth_token:
     secure: g7E2KwFd5bLd1ZiWSFGE9Ek13/uDOmmsOh080SXDBYcIpbL/rXHOU53F7t3ZxpmS # your encrypted token from GitHub
@@ -94,6 +95,6 @@ deploy:
 
   
 #init:
-#- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

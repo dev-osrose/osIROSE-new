@@ -6,31 +6,31 @@ osIROSE - Open Source International R.O.S.E Online Server
 [![cov-badge]][cov-link] [![ccov-badge]][ccov-link]
 [![coverity-scan]][coverity-scan-link]
 
-[lin-badge]: https://travis-ci.org/RavenX8/osIROSE-new.svg?branch=trunk "Linux build status"
-[lin-link]:  https://travis-ci.org/RavenX8/osIROSE-new "Linux build status"
+[lin-badge]: https://travis-ci.org/dev-osrose/osIROSE-new.svg?branch=trunk "Linux build status"
+[lin-link]:  https://travis-ci.org/dev-osrose/osIROSE-new "Linux build status"
 [win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "Windows build status"
-[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "Windows build status"
-[cov-badge]: https://coveralls.io/repos/RavenX8/osIROSE-new/badge.svg?branch=trunk&service=github
-[cov-link]:  https://coveralls.io/github/RavenX8/osIROSE-new?branch=trunk
-[ccov-badge]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk/graph/badge.svg
-[ccov-link]: https://codecov.io/gh/RavenX8/osIROSE-new/branch/trunk
+[win-link]:  https://ci.appveyor.com/project/dev-osrose/osirose-new/branch/trunk "Windows build status"
+[cov-badge]: https://coveralls.io/repos/github/dev-osrose/osIROSE-new/badge.svg?branch=trunk&service=github
+[cov-link]:  https://coveralls.io/github/dev-osrose/osIROSE-new?branch=trunk
+[ccov-badge]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk/graph/badge.svg
+[ccov-link]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk
 [coverity-scan]: https://scan.coverity.com/projects/7232/badge.svg
-[coverity-scan-link]: https://scan.coverity.com/projects/ravenx8-osirose-new
+[coverity-scan-link]: https://scan.coverity.com/projects/dev-osrose-osirose-new
 
 
 ##### Development and Community:
-[![GitHub Repository](https://img.shields.io/badge/github-RavenX8/osIROSE--new-green.svg)](https://github.com/RavenX8/osIROSE-new)
-[![Waffle Board](https://img.shields.io/badge/waffle-RavenX8/osIROSE--new-6699dd.svg)](https://waffle.io/RavenX8/osIROSE-new)  
+[![GitHub Repository](https://img.shields.io/badge/github-dev--osrose/osIROSE--new-green.svg)](https://github.com/dev-osrose/osIROSE-new)
+[![Waffle Board](https://img.shields.io/badge/waffle-dev--osrose/osIROSE--new-6699dd.svg)](https://waffle.io/dev-osrose/osIROSE-new)  
 [![Community Forum](https://img.shields.io/badge/forum-http%3A%2F%2Fforum.dev--osrose.com-green.svg)](http://forum.dev-osrose.com/index.php)
 [![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
 
 ##### Issues and Status
-[![GitHub issues](https://img.shields.io/github/issues/RavenX8/osIROSE-new.svg)](https://github.com/RavenX8/osIROSE-new/issues)
-[![Confirmed issues](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:confirmed&title=Confirmed%20Issues)](http://waffle.io/RavenX8/osIROSE-new) [![In-Progress](https://badge.waffle.io/RavenX8/osIROSE-new.svg?label=status:in-progress&title=In%20Progress)](http://waffle.io/RavenX8/osIROSE-new)
+[![GitHub issues](https://img.shields.io/github/issues/dev-osrose/osIROSE-new.svg)](https://github.com/dev-osrose/osIROSE-new/issues)
+[![Confirmed issues](https://badge.waffle.io/dev-osrose/osIROSE-new.svg?label=status:confirmed&title=Confirmed%20Issues)](http://waffle.io/dev-osrose/osIROSE-new) [![In-Progress](https://badge.waffle.io/dev-osrose/osIROSE-new.svg?label=status:in-progress&title=In%20Progress)](http://waffle.io/dev-osrose/osIROSE-new)
 
 ##### Project Info:
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)   
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/dev-osrose/osIROSE-new/master/LICENSE.txt)   
 
 C++ Installation - Unix
 -----------------------

@@ -46,6 +46,13 @@ class EntitySystem {
                 func(entity);
         }
 
+        template <typename ...T>
+        void process(std::function<bool(Entity)> func) {
+            for (Entity entity : entityManager_.entities_with_components<T...>())
+                if (!func(entity))
+                    return;
+        }
+
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;
