@@ -170,6 +170,20 @@ std::string RoseCommon::CliChat::getMessage() const { return chat_; }
 
 void RoseCommon::CliChat::pack() { *this << chat_; }
 //---------------------------------------------
+RoseCommon::CliWhisper::CliWhisper(const std::string &targetId, const std::string &message /*= ""*/)
+    : CRosePacket(ePacketType::PAKCS_WHISPER_CHAT), targetId_(targetId), message_(message) {}
+
+RoseCommon::CliWhisper::CliWhisper(uint8_t buffer[MAX_PACKET_SIZE])
+    : CRosePacket(buffer) {
+  if (type() != ePacketType::PAKCS_WHISPER_CHAT)
+    throw std::runtime_error("Not the right packet!");
+  *this >> targetId_ >> message_;
+}
+
+std::string RoseCommon::CliWhisper::targetId() const { return targetId_; }
+std::string RoseCommon::CliWhisper::message() const { return message_; }
+
+void RoseCommon::CliWhisper::pack() { *this << targetId_ << message_; }
 //---------------------------------------------
 //---------------------------------------------
 RoseCommon::CliReviveReq::CliReviveReq(uint8_t type /*= 0*/)

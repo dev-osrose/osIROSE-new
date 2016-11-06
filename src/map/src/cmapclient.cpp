@@ -17,6 +17,7 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
+#include "entityComponents.h"
 #include <cmath>
 
 using namespace RoseCommon;
@@ -51,6 +52,8 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     //      return LogoutReply();
     case ePacketType::PAKCS_NORMAL_CHAT:
       return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
+		case ePacketType::PAKCS_WHISPER_CHAT:
+			return ChatWhisper(getPacket<ePacketType::PAKCS_WHISPER_CHAT>(_buffer));
     case ePacketType::PAKCS_MOUSE_CMD:
       return MouseCmdRcv(getPacket<ePacketType::PAKCS_MOUSE_CMD>(_buffer));
     case ePacketType::PAKCS_STOP_MOVING:
@@ -190,6 +193,41 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   logger_->trace("client {} is sending '{}'", _charID, _message);
   CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
   return true;
+}
+
+bool CMapClient::ChatWhisper(std::unique_ptr<RoseCommon::CliWhisper> P) {
+  logger_->trace("CMapClient::ChatWhisper()");
+
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to whisper before logging in.",
+                  GetId());
+    return true;
+  }
+
+  uint16_t _charID = GetId();
+  std::string _sender_name = entity_.component<BasicInfo>()->name_; 
+	std::string _recipient_name = P->targetId();
+	_recipient_name.erase(_recipient_name.size()-1); // for some reason this string has an extra char
+	std::string _message = P->message();
+	CMapClient *_recipient_client = nullptr;
+	entitySystem_->processEntities<BasicInfo, SocketConnector>([&_recipient_client, &_recipient_name] (Entity entity) {
+		if(_recipient_name == entity.component<BasicInfo>()->name_) {
+			_recipient_client = entity.component<SocketConnector>()->client_;
+			return true;
+		}
+		return false;
+	});
+  logger_->trace("{} ({}) is whispering '{}' to {}", _sender_name, _charID,  _message, _recipient_name);
+	if(_recipient_client) {
+		auto packet = makePacket<ePacketType::PAKWC_WHISPER_CHAT>(_message, _sender_name);
+  	_recipient_client->Send(*packet);
+  	return true;
+	} else {
+		auto packet = makePacket<ePacketType::PAKWC_WHISPER_CHAT>(std::string(""), std::string("User cannot be found or is offline"));
+		this->Send(*packet);
+		return true;
+	}
+	return false;
 }
 
 bool CMapClient::IsNearby(const IObject* _otherClient) const {
