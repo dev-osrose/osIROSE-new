@@ -34,6 +34,7 @@
 #include "srv_changemap.h"
 #include "srv_serverdata.h"
 #include "srv_removeobject.h"
+#include "packetfactory.h"
 
 namespace RoseCommon {
 
@@ -51,7 +52,7 @@ class SrvSelectCharReply : public CRosePacket {
   Entity entity_;
 };
 
-class CliMouseCmd : public CRosePacket {
+class CliMouseCmd : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd> {
     public:
         CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
         CliMouseCmd();

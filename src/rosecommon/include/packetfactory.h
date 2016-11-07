@@ -13,7 +13,7 @@ class PacketFactory : public Singleton<PacketFactory> {
         template <ePacketType Type, class Class>
         void registerPacket() {
             mapping_[Type] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
-                return new Class(buffer);
+                return std::make_unique<Class>(buffer);
             };
         }
 
@@ -51,16 +51,11 @@ struct register_id : packet_id<Type>, packet_type<Class> {
 
 template <ePacketType Type, class Class>
 class RegisterRecvPacket {
-    private:
-        struct RegisterMe {
-            RegisterMe() {
-                PacketFactory::getInstance().registerPacket<Type, Class>();
-            }
-        };
-
-        RegisterRecvPacket() {
-            static RegisterMe me_;
-        }
+    constexpr static char registerType() {
+        PacketFactory::getInstance().registerPacket<Type, Class>();
+        return 0;
+    }
+    static const char __enforce_registration = registerType();
 };
 
 template <ePacketType Type>
@@ -68,13 +63,13 @@ struct find_class;
 
 #define REGISTER_SEND_PACKET(Type, Class) template <> struct find_class<Type> : register_id<Type, Class> {};
 
-std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
+/*std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);
 }
 
 template <ePacketType T, typename... Args>
 std::unique_ptr<decltype(find_class<T>::type)>	makePacket(Args... args) {
     return std::make_unique(args...);
-}
+}*/
 
 }
