@@ -11,7 +11,7 @@ namespace RoseCommon {
 class PacketFactory : public Singleton<PacketFactory> {
     public:
         template <ePacketType Type, class Class>
-        void registerPacket() {
+        constexpr void registerPacket() {
             mapping_[to_underlying(Type)] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
                 return std::make_unique<Class>(buffer);
             };
@@ -56,6 +56,9 @@ class RegisterRecvPacket {
         return 0;
     }
     static const char __enforce_registration = registerType();
+
+    public:
+        virtual ~RegisterRecvPacket() = default;
 };
 
 template <ePacketType Type>
