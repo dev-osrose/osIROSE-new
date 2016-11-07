@@ -48,6 +48,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-5" CC="gcc-5";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -89,6 +90,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -131,6 +133,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -177,6 +180,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -223,6 +227,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -263,6 +268,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
