@@ -12,14 +12,14 @@ class PacketFactory : public Singleton<PacketFactory> {
     public:
         template <ePacketType Type, class Class>
         void registerPacket() {
-            mapping_[Type] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
+            mapping_[to_underlying(Type)] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
                 return std::make_unique<Class>(buffer);
             };
         }
 
         std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
             try {
-                return mapping_.at(CRosePacket::type(buffer))(buffer);
+                return mapping_.at(to_underlying(CRosePacket::type(buffer)))(buffer);
             } catch (std::out_of_range) {
                 return nullptr;
             }
@@ -28,7 +28,7 @@ class PacketFactory : public Singleton<PacketFactory> {
     private:
         using Wrapper = std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_PACKET_SIZE])>;
 
-        std::unordered_map<ePacketType, Wrapper> mapping_;
+        std::unordered_map<std::underlying_type_t<ePacketType>, Wrapper> mapping_;
 };
 
 template <ePacketType Type>

@@ -10,10 +10,7 @@
 #include <algorithm>
 #include <type_traits>
 
-template <typename E>
-constexpr auto to_underlying(E e) noexcept {
-	return static_cast<typename std::underlying_type_t<E>>(e);
-}
+using RoseCommon::to_underlying;
 
 class System;
 
