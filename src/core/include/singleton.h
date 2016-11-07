@@ -25,10 +25,10 @@ class Singleton {
 		}
 
 	protected:
-		virtual ~Singleton() {}
+		virtual ~Singleton() = default;
+        explicit Singleton() = default;
 
 	private:
-		Singleton() = delete;
 		Singleton(const Singleton&) = delete;
 		Singleton& operator=(Singleton const&) = delete;
 };

@@ -26,7 +26,6 @@
 #include "crosepacket.h"
 #include "findclass.h"
 #include <exception>
-#include "singleton.h"
 
 namespace RoseCommon {
 
