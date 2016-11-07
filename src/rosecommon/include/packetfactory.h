@@ -64,7 +64,7 @@ class RegisterRecvPacket {
 template <ePacketType Type>
 struct find_class;
 
-#define REGISTER_SEND_PACKET(Type, Class) template <> struct find_class<Type> : register_id<Type, Class> {};
+#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_class<Type> : register_id<Type, Class> {};
 
 /*std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);

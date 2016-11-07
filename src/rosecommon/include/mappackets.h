@@ -17,7 +17,6 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
-#include "dataconsts.h"
 #include <string>
 #include <exception>
 #include <vector>
@@ -38,6 +37,7 @@
 
 namespace RoseCommon {
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply)
 class SrvSelectCharReply : public CRosePacket {
  public:
   SrvSelectCharReply(Entity character);
@@ -71,6 +71,7 @@ class CliMouseCmd : public CRosePacket, public RegisterRecvPacket<ePacketType::P
         uint16_t z_;
 };
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd)
 class SrvMouseCmd : public CRosePacket {
     public:
         SrvMouseCmd(uint16_t sourceId, uint16_t destId, uint16_t dist,
@@ -91,7 +92,7 @@ class SrvMouseCmd : public CRosePacket {
         int16_t z_;
 };
 
-class CliStopMoving : public CRosePacket {
+class CliStopMoving : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_STOP_MOVING, CliStopMoving> {
     public:
         CliStopMoving();
         CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
@@ -108,6 +109,7 @@ class CliStopMoving : public CRosePacket {
         int16_t z_;
 };
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_STOP_MOVING, SrvStopMoving)
 class SrvStopMoving : public CRosePacket {
     public:
         SrvStopMoving() : CRosePacket(ePacketType::PAKWC_STOP) {}
