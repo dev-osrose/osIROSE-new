@@ -7,7 +7,7 @@ class Class:
             self.type = type
             self.simple = simple
             self.getterName = self.name + "()"
-            self.complexPack = "//TODO : implement setter for " + self.name + "_"
+            self.complexPack = "TODO : implement " + self.name + "_"
 
         def getterHeader(self):
             return self.type + " &" + self.getterName + ";"
@@ -124,15 +124,17 @@ def packGetComponents(name, components):
 def entity(var, functions):
     components = set()
     variables = []
+    toImplement = False
     while True:
         print("-----Packing entity-----")
         print("1 - add simple variable/array")
         print("2 - add ISerialize variable")
         print("3 - add ISerialize array")
-        print("4 - return")
+        print("4 - add special variable/array")
+        print("5 - return")
         a = getInt("> ")
         print()
-        if a == 4:
+        if a == 5:
             break
         component, name = [x for x in input("Definition (<Component>::<name>) : ").split(":") if x][:2]
         components.add(component)
@@ -144,29 +146,36 @@ def entity(var, functions):
             variables.append(("serialize var", name, component))
         elif a == 3:
             variables.append(("serialize arr", name, component))
+        elif a == 5:
+            variables.append(("special", name, component))
+            toImplement = True
     data = packGetComponents(var.getName(), components) + "\n"
     for t, n, c in variables:
         tmp = c[0].lower() + c[1:] + "->" + n
         data += "\t{}\n".format(functions[t].format(tmp))
     var.complexPack = data
+    return toImplement
 
 def getEntity(var):
     functions = {
             "simple var" : "*this >> {};",
             "serialize var" : "*this >> static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) *this >> static_cast<ISerialize&>(it);"
+            "serialize arr" : "for (auto &it : {}) *this >> static_cast<ISerialize&>(it);",
+            "special" : "TODO : implement {}"
             }
-    entity(var, functions)
+    return entity(var, functions)
 
 def packEntity(var):
     functions = {
             "simple var" : "*this << {};",
             "serialize var" : "*this << static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) *this << static_cast<ISerialize&>(it);"
+            "serialize arr" : "for (auto &it : {}) *this << static_cast<ISerialize&>(it);",
+            "special" : "TODO : implement {}"
             }
-    entity(var, functions)
+    return entity(var, functions)
 
 def menu(obj):
+    toImplement = False
     while True:
         print("-----Menu-----")
         print("1 - add simple type")
@@ -182,17 +191,22 @@ def menu(obj):
         elif a == 2:
             var = obj.addVariable(n, t, False)
             if not obj.recv and "Entity" in t:
-                packEntity(var)
+                tmp = packEntity(var)
+                if not toImplement:
+                    toImplement = tmp
             elif "Entity" in t:
-                getEntity(var)
+                tmp = getEntity(var)
+                if not toImplement:
+                    toImplement = tmp
             else:
-                print("Error while generating the packet, abording")
-                exit(1)
+                var = obj.addVariable(n, t, False)
+                toImplement = True
+    return toImplement
 
 print("Welcome to the packet generator")
 packet = input("ePacketType : ")
 obj = Class(packet)
-menu(obj)
+toImplement = menu(obj)
 with open("rosecommon/include/packets/{}.h".format(obj.filename), "w") as f:
     f.write(obj.getHeader())
     print("header file written at location rosecommon/include/packets/{}.h".format(obj.filename))
@@ -212,3 +226,5 @@ with open("rosecommon/include/packets.h", "w") as f:
     for tmp in files:
         f.write('#include "{}"\n'.format(tmp))
     print("Added include to rosecommon/include/packets.h")
+if toImplement:
+    print("You have some implementation left in {}.cpp (it'll cause compilation errors if you don't)".format(obj.filename))
