@@ -83,10 +83,10 @@ class Class:
             data += "REGISTER_SEND_PACKET(ePacketType::{1}, {0})\nclass {0} : public CRosePacket {{".format(self.name, self.ePacketType)
         data += "\n\tpublic:\n\t"
         data += self.getHeaderConstructor()
-        if not self.recv:
-            data += "\t\tvirtual void pack();\n\n"
         for var in self.variables:
             data += "\t\t" + var.getterHeader() + "\n"
+        if not self.recv:
+            data += "\tprotected:\n\t\tvirtual void pack() override;\n\n"
         if len(self.variables):
             data += "\n\tprivate:\n"
             for var in self.variables:
