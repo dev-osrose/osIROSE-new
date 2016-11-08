@@ -7,6 +7,7 @@ class Class:
             self.type = type
             self.simple = simple
             self.getterName = self.name + "()"
+            self.complexPack = "//TODO : implement setter for " + self.name + "_"
 
         def getterHeader(self):
             return self.type + " &" + self.getterName + ";"
@@ -17,16 +18,24 @@ class Class:
             data += "\treturn " + self.name + "_;\n}"
             return data
 
+        def getName(self):
+            return self.name + '_'
+
         def getSetter(self):
             if self.simple:
                 return "*this << " + self.name + '_;'
-            return "//TODO : implement setter for " + self.name + '_'
+            return self.complexPack
 
         def getConstructor(self):
             return self.type + " " + self.name
 
         def getCppConstructor(self):
             return self.name + '_(' + self.name + ')'
+
+        def getGetter(self):
+            if self.simple:
+                return "*this >> " + self.name + '_;'
+            return self.complexPack
 
         def __str__(self):
             return self.type + ' ' + self.name + '_;'
@@ -57,10 +66,8 @@ class Class:
             constructor += "uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {\n"
             constructor += '\tif (type() != ePacketType::{})\n\t\tthrow std::runtime_error("Not the right packet!");\n'.format(self.ePacketType)
             if len(self.variables):
-                constructor += "\t*this"
                 for var in self.variables:
-                    constructor += " >> " + var.name + '_'
-                constructor += ";"
+                    constructor += "\t{}\n".format(var.getGetter())
         else:
             constructor += ") : CRosePacket(ePacketType::{}) {{\n".format(self.ePacketType)
             if len(self.variables):
@@ -106,6 +113,59 @@ def getInt(msg = ''):
         except ValueError:
             pass
 
+def packGetComponents(name, components):
+    get = "auto {{}} = {}.component<{{}}>();".format(name)
+    data = ""
+    for c in components:
+        tmp = c[0].lower() + c[1:]
+        data += "\t{}\n".format(get.format(tmp, c))
+    return data[1:]
+
+def entity(var, functions):
+    components = set()
+    variables = []
+    while True:
+        print("-----Packing entity-----")
+        print("1 - add simple variable/array")
+        print("2 - add ISerialize variable")
+        print("3 - add ISerialize array")
+        print("4 - return")
+        a = getInt("> ")
+        print()
+        if a == 4:
+            break
+        component, name = [x for x in input("Definition (<Component>::<name>) : ").split(":") if x][:2]
+        components.add(component)
+        if name[-1] != "_":
+            name += "_"
+        if a == 1:
+            variables.append(("simple var", name, component))
+        elif a == 2:
+            variables.append(("serialize var", name, component))
+        elif a == 3:
+            variables.append(("serialize arr", name, component))
+    data = packGetComponents(var.getName(), components) + "\n"
+    for t, n, c in variables:
+        tmp = c[0].lower() + c[1:] + "->" + n
+        data += "\t{}\n".format(functions[t].format(tmp))
+    var.complexPack = data
+
+def getEntity(var):
+    functions = {
+            "simple var" : "*this >> {};",
+            "serialize var" : "*this >> static_cast<ISerialize&>({});",
+            "serialize arr" : "for (auto &it : {}) *this >> static_cast<ISerialize&>(it);"
+            }
+    entity(var, functions)
+
+def packEntity(var):
+    functions = {
+            "simple var" : "*this << {};",
+            "serialize var" : "*this << static_cast<ISerialize&>({});",
+            "serialize arr" : "for (auto &it : {}) *this << static_cast<ISerialize&>(it);"
+            }
+    entity(var, functions)
+
 def menu(obj):
     while True:
         print("-----Menu-----")
@@ -113,19 +173,30 @@ def menu(obj):
         print("2 - add complex type")
         print("3 - quit")
         a = getInt("> ")
+        print()
         if a == 3:
             break
-        elif a == 1:
-            t, n = input("Definition : ").split(' ')[:2]
+        t, n = input("Definition (<type> <name>) : ").split()[:2]
+        if a == 1:
             obj.addVariable(n, t, True)
         elif a == 2:
-            t, n = input("Definition : ").split(' ')[:2]
-            obj.addVariable(n, t, False)
+            var = obj.addVariable(n, t, False)
+            if not obj.recv and "Entity" in t:
+                packEntity(var)
+            elif "Entity" in t:
+                getEntity(var)
+            else:
+                print("Error while generating the packet, abording")
+                exit(1)
 
 print("Welcome to the packet generator")
 packet = input("ePacketType : ")
 obj = Class(packet)
 menu(obj)
+print(obj.getHeader())
+print("-------------------------------------------------------")
+print(obj.getCpp())
+exit(0)
 with open("rosecommon/include/packets/{}.h".format(obj.filename), "w") as f:
     f.write(obj.getHeader())
     print("header file written at location rosecommon/include/packets/{}.h".format(obj.filename))
