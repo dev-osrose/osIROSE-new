@@ -146,7 +146,7 @@ def entity(var, functions):
             variables.append(("serialize var", name, component))
         elif a == 3:
             variables.append(("serialize arr", name, component))
-        elif a == 5:
+        elif a == 4:
             variables.append(("special", name, component))
             toImplement = True
     data = packGetComponents(var.getName(), components) + "\n"
