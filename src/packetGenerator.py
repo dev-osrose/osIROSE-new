@@ -137,6 +137,7 @@ def entity(var, functions):
         if a == 5:
             break
         component, name = [x for x in input("Definition (<Component>::<name>) : ").split(":") if x][:2]
+        component = component.title()
         components.add(component)
         if name[-1] != "_":
             name += "_"
