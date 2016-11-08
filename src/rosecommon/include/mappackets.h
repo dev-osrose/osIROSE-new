@@ -17,23 +17,13 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "dataconsts.h"
 #include <string>
 #include <exception>
 #include <vector>
 #include "entityComponents.h"
-#include "cli_chat.h"
-#include "cli_stop.h"
-#include "cli_logout.h"
-#include "cli_revive.h"
-#include "cli_changemap.h"
-#include "srv_chat.h"
-#include "src_revive.h"
-#include "srv_logout.h"
-#include "srv_initdata.h"
-#include "srv_changemap.h"
-#include "srv_serverdata.h"
-#include "srv_removeobject.h"
 #include "packetfactory.h"
+#include "packets.h"
 
 namespace RoseCommon {
 
@@ -50,25 +40,6 @@ class SrvSelectCharReply : public CRosePacket {
  private:
 
   Entity entity_;
-};
-
-class CliMouseCmd : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd> {
-    public:
-        CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
-        CliMouseCmd();
-
-        virtual ~CliMouseCmd();
-
-        uint16_t targetId() const { return targetId_; }
-        float x() const { return x_; }
-        float y() const { return y_; }
-        uint16_t z() const { return z_; }
-
-    private:
-        uint16_t targetId_;
-        float x_;
-        float y_;
-        uint16_t z_;
 };
 
 REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd)

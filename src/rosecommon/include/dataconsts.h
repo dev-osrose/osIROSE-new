@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include "epackettype.h"
-#include "crosepacket.h"
+#ifndef _DATACONSTS_H_
+#define _DATACONSTS_H_
 
 namespace RoseCommon {
-	
+#define MIN_SELL_TYPE 1
+#define MAX_SELL_TYPE 11
+
+#define MAX_UNION_COUNT 10
+#define MAX_BUFF_STATUS 40
+#define MAX_SKILL_COUNT 120
+#define MAX_HOTBAR_ITEMS 32
 }
+
+#endif

@@ -1,0 +1,16 @@
+#pragma once
+
+#include "cli_chat.h"
+#include "cli_changemap.h"
+#include "src_revive.h"
+#include "srv_logout.h"
+#include "cli_mousecmd.h"
+#include "srv_chat.h"
+#include "srv_serverdata.h"
+#include "cli_logout.h"
+#include "srv_removeobject.h"
+#include "srv_initdata.h"
+#include "template.h"
+#include "cli_stop.h"
+#include "srv_changemap.h"
+#include "cli_revive.h"

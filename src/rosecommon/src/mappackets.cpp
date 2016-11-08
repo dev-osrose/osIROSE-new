@@ -32,18 +32,6 @@ RoseCommon::CliLogoutReq::~CliLogoutReq() {}
 
 //--------------------------------------------
 
-RoseCommon::CliMouseCmd::CliMouseCmd() : CRosePacket(ePacketType::PAKCS_MOUSE_CMD) {}
-
-RoseCommon::CliMouseCmd::CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    if (type() != ePacketType::PAKCS_MOUSE_CMD)
-        throw std::runtime_error("Not the right packet!");
-    *this >> targetId_ >> x_ >> y_ >> z_;
-}
-
-RoseCommon::CliMouseCmd::~CliMouseCmd() {}
-
-//---------------------------------------------
-
 RoseCommon::SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CMD) {}
 
 RoseCommon::SrvMouseCmd::SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId,

@@ -39,9 +39,10 @@ set( SOURCES_HEADER
   include/loginpackets
   include/charpackets
   include/mappackets
+  include/packets.h
 )
 
-SET( SOURCES_BASE
+SET(SOURCES_BASE
   src/crosecrypt 
   src/croseserver
   src/croseclient
@@ -51,7 +52,9 @@ SET( SOURCES_BASE
   src/mappackets
 )
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS)
+
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 
