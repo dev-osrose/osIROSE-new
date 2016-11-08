@@ -42,27 +42,6 @@ class SrvSelectCharReply : public CRosePacket {
   Entity entity_;
 };
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd)
-class SrvMouseCmd : public CRosePacket {
-    public:
-        SrvMouseCmd(uint16_t sourceId, uint16_t destId, uint16_t dist,
-                float x, float y, int16_t z);
-        SrvMouseCmd();
-
-        virtual ~SrvMouseCmd();
-
-    protected:
-        void pack();
-
-    private:
-        uint16_t sourceId_;
-        uint16_t destId_;
-        uint16_t dist_;
-        float x_;
-        float y_;
-        int16_t z_;
-};
-
 class CliStopMoving : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_STOP_MOVING, CliStopMoving> {
     public:
         CliStopMoving();

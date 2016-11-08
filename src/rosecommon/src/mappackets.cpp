@@ -32,22 +32,6 @@ RoseCommon::CliLogoutReq::~CliLogoutReq() {}
 
 //--------------------------------------------
 
-RoseCommon::SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CMD) {}
-
-RoseCommon::SrvMouseCmd::SrvMouseCmd(uint16_t sourceObjId, uint16_t destObjId,
-        uint16_t srvDist, float destX, float destY, int16_t posZ)
-    : CRosePacket(ePacketType::PAKWC_MOUSE_CMD),
-    sourceId_(sourceObjId), destId_(destObjId), dist_(srvDist),
-    x_(destX), y_(destY), z_(posZ) {}
-
-void RoseCommon::SrvMouseCmd::pack() {
-    *this << sourceId_ << destId_ << dist_ << x_ << y_ << z_;
-}
-
-RoseCommon::SrvMouseCmd::~SrvMouseCmd() {}
-
-//---------------------------------------------
-
 RoseCommon::CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
 
 RoseCommon::CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {

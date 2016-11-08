@@ -116,9 +116,11 @@ def menu(obj):
         if a == 3:
             break
         elif a == 1:
-            obj.addVariable(input('Name : '), input('Type : '), True)
+            t, n = input("Definition : ").split(' ')[:2]
+            obj.addVariable(n, t, True)
         elif a == 2:
-            obj.addVariable(input('Name : '), input('Type : '), False)
+            t, n = input("Definition : ").split(' ')[:2]
+            obj.addVariable(n, t, False)
 
 print("Welcome to the packet generator")
 packet = input("ePacketType : ")

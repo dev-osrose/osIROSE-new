@@ -10,6 +10,7 @@
 #include "cli_logout.h"
 #include "srv_removeobject.h"
 #include "srv_initdata.h"
+#include "srv_mousecmd.h"
 #include "template.h"
 #include "cli_stop.h"
 #include "srv_changemap.h"
