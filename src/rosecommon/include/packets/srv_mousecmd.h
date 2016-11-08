@@ -1,6 +1,7 @@
 #pragma once
 
 #include "packetfactory.h"
+#include "entityComponents.h"
 
 namespace RoseCommon {
 
@@ -13,14 +14,15 @@ class SrvMouseCmd : public CRosePacket {
 
 		virtual ~SrvMouseCmd() = default;
 
-		virtual void pack();
-
 		uint16_t &sourceId();
 		uint16_t &destId();
 		uint16_t &dist();
 		float &x();
 		float &y();
 		uint16_t &z();
+
+    protected:
+        virtual void pack() override;
 
 	private:
 		uint16_t sourceId_;
