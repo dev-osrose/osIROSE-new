@@ -160,7 +160,7 @@ def getEntity(var):
     functions = {
             "simple var" : "*this >> {};",
             "serialize var" : "*this >> static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) *this >> static_cast<ISerialize&>(it);",
+            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this >> static_cast<ISerialize&>(it);\n\t}}",
             "special" : "TODO : implement {}"
             }
     return entity(var, functions)
@@ -169,7 +169,7 @@ def packEntity(var):
     functions = {
             "simple var" : "*this << {};",
             "serialize var" : "*this << static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) *this << static_cast<ISerialize&>(it);",
+            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this << static_cast<ISerialize&>(it);\n\t}}",
             "special" : "TODO : implement {}"
             }
     return entity(var, functions)
