@@ -76,7 +76,7 @@ class Class:
         return constructor + "\n}"
 
     def getHeader(self):
-        data = '#pragma once\n\n#include "packetfactory.h"\n\nnamespace RoseCommon {\n\n'
+        data = '#pragma once\n\n#include "packetfactory.h"\n#include "entityComponents.h"\n\nnamespace RoseCommon {\n\n'
         if self.recv:
             data += "class {0} : public CRosePacket, public RegisterRecvPacket<ePacketType::{1}, {0}> {{".format(self.name, self.ePacketType)
         else:
