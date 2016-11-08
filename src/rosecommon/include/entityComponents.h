@@ -112,6 +112,7 @@ struct CharacterInfo {
         guildRank_(0),
         pkFlag_(0),
         statusFlag_(0),
+        subFlag_(0),
         stamina_(0),
         patHp_(0),
         patCooldownTime_(0),
@@ -135,6 +136,7 @@ struct CharacterInfo {
     uint8_t guildRank_;
     uint16_t pkFlag_;
     uint32_t statusFlag_;
+    uint32_t subFlag_;
     uint16_t stamina_;
     uint16_t patHp_;
     uint32_t patCooldownTime_; // in seconds
