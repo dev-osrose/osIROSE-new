@@ -161,6 +161,10 @@ ENDIF() # NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
 #   Pass them in list form, e.g.: "-j;2" for -j 2
 FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 
+  IF(NOT GCOV_PATH)
+		MESSAGE(FATAL_ERROR "gcov not found! Aborting...")
+	ENDIF() # NOT GCOV_PATH
+
 	IF(NOT LCOV_PATH)
 		MESSAGE(FATAL_ERROR "lcov not found! Aborting...")
 	ENDIF() # NOT LCOV_PATH
@@ -178,16 +182,16 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 	ADD_CUSTOM_TARGET(${_targetname}
 
 		# Cleanup lcov
-		${LCOV_PATH} --directory . --zerocounters
+		${LCOV_PATH} --gcov-tool ${GCOV_PATH} --directory . --zerocounters
 
 		# Run tests
 		COMMAND ${test_command} ${ARGV3}
 
 		# Capturing lcov counters and generating report
-		COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
-		COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' ${COVERAGE_IGNORE_LIST} --output-file ${coverage_cleaned}
+		COMMAND ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --directory . --capture --output-file ${coverage_info}
+		COMMAND ${LCOV_PATH} --gcov-tool ${GCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' ${COVERAGE_IGNORE_LIST} --output-file ${coverage_cleaned}
 		COMMAND ${GENHTML_PATH} -o ${_outputname} ${coverage_cleaned}
-		COMMAND ${CMAKE_COMMAND} -E remove ${coverage_info} ${coverage_cleaned}
+		COMMAND ${CMAKE_COMMAND} --gcov-tool ${GCOV_PATH} -E remove ${coverage_info} ${coverage_cleaned}
 
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 		COMMENT "Resetting code coverage counters to zero.\nProcessing code coverage counters and generating report."
