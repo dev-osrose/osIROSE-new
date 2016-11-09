@@ -25,7 +25,7 @@ CMapClient::CMapClient()
     : CRoseClient(),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
-      session_id_(0),
+      sessionId_(0),
       userid_(0),
       charid_(0) {}
 
@@ -33,7 +33,7 @@ CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySy
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
-      session_id_(0),
+      sessionId_(0),
       userid_(0),
       charid_(0),
       entitySystem_(entitySystem)
@@ -87,7 +87,7 @@ bool CMapClient::JoinServerReply(
     return true;
   }
 
-  uint32_t sessionID = P->session_id();
+  uint32_t sessionID = P->sessionId();
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res, itemres;
@@ -101,7 +101,7 @@ bool CMapClient::JoinServerReply(
       login_state_ = eSTATE::LOGGEDIN;
       res->getInt("userid", userid_);
       res->getInt("charid", charid_);
-      session_id_ = sessionID;
+      sessionId_ = sessionID;
       bool platinium = false;
       res->getInt("platinium", platinium);
       entity_ = entitySystem_->loadCharacter(charid_, platinium);
@@ -175,7 +175,7 @@ bool CMapClient::ChangeMapReply(
   return true;
 }
 
-bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
+bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliNormalChat> P) {
   logger_->trace("CMapClient::ChatReply()");
 
   if (login_state_ != eSTATE::LOGGEDIN) {
@@ -185,10 +185,10 @@ bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliChat> P) {
   }
 
   uint16_t _charID = GetId();
-  std::string _message = P->getMessage();
+  std::string _message = P->message();
 
   auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
-          _message, _charID);
+          _charID, _message);
   logger_->trace("client {} is sending '{}'", _charID, _message);
   CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
   return true;
@@ -224,6 +224,6 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
     }
     entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
-            *makePacket<ePacketType::PAKWC_STOP>(entity_));
+            *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity_));
     return true;
 }

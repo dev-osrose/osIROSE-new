@@ -27,6 +27,7 @@
 
 namespace RoseCommon {
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData)
 class SrvQuestData : public CRosePacket {
  public:
   SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA){};

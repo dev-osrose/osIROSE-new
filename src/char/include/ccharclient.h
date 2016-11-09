@@ -18,6 +18,7 @@
 #include "croseclient.h"
 #include "packetclasses.h"
 #include "charpackets.h"
+#include "packets.h"
 #include "crosepacket.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
@@ -45,7 +46,7 @@ class CCharClient : public RoseCommon::CRoseClient {
 
   uint16_t access_rights_;
   eSTATE login_state_;
-  uint32_t session_id_;
+  uint32_t sessionId_;
   uint32_t userid_;
   uint32_t channelid_;
 

@@ -29,6 +29,7 @@
 #include <exception>
 #include <vector>
 #include "iscpackets.pb.h"
+#include "packets.h"
 
 //#include "loginpackets.h"
 //#include "charpackets.h"
@@ -39,7 +40,9 @@ namespace RoseCommon {
 //-----------------------------------------------
 // ISC Packets
 //-----------------------------------------------
-class IscServerRegister : public CRosePacket {
+REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
+REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
+class IscServerRegister : public CRosePacket, public RegisterRecvPacket<ePacketType::ISC_SERVER_REGISTER, IscServerRegister> {
  public:
   IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::ISC_SERVER_REGISTER)
@@ -83,6 +86,8 @@ class IscServerRegister : public CRosePacket {
 
 //------------------------------------------------
 
+REGISTER_SEND_PACKET(ePacketType::ISC_SHUTDOWN, IscServerShutdown)
+REGISTER_RECV_PACKET(ePacketType::ISC_SHUTDOWN, IscServerShutdown)
 class IscServerShutdown : public CRosePacket {
  public:
   IscServerShutdown(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {

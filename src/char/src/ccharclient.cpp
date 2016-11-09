@@ -16,7 +16,6 @@
 #include "ccharisc.h"
 #include "ccharclient.h"
 #include "epackettype.h"
-#include "rosepackets.h"
 #include "database.h"
 
 using namespace RoseCommon;
@@ -25,7 +24,7 @@ CCharClient::CCharClient()
     : CRoseClient(),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
-      session_id_(0),
+      sessionId_(0),
       userid_(0),
       channelid_(0) {}
 
@@ -33,7 +32,7 @@ CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
-      session_id_(0),
+      sessionId_(0),
       userid_(0),
       channelid_(0) {}
 
@@ -71,7 +70,7 @@ bool CCharClient::JoinServerReply(
     return true;
   }
 
-  uint32_t sessionID = P->session_id();
+  uint32_t sessionID = P->sessionId();
   std::string password = P->password();
 
   std::unique_ptr<Core::IResult> res;
@@ -85,7 +84,7 @@ bool CCharClient::JoinServerReply(
       res->getInt("userid", userid_);
       res->getInt("channelid", channelid_);
 
-      session_id_ = sessionID;
+      sessionId_ = sessionID;
 
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::OK, std::time(nullptr));
@@ -210,7 +209,7 @@ bool CCharClient::SendCharDeleteReply(
     return true;
   }
 
-  if (P->char_id() > 6) return false;
+  if (P->charId() > 6) return false;
 
   uint32_t time = 0;
   if (P->isDelete()) {
@@ -226,7 +225,7 @@ bool CCharClient::SendCharDeleteReply(
   }
 
   auto packet =
-      makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(P->name(), time);
+      makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
   Send(*packet);
   return true;
 }
@@ -244,7 +243,7 @@ bool CCharClient::SendCharSelectReply(
   login_state_ = eSTATE::TRANSFERING;
 
   std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
-                                  session_id_, character_real_id_[P->char_id()]);
+                                  sessionId_, character_real_id_[P->charId()]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);
@@ -254,8 +253,8 @@ bool CCharClient::SendCharSelectReply(
     if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
         server->GetId() == channelid_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
-          server->GetIpAddress(), server->GetPort(), session_id_,
-          0);  // this should be set to the map server's encryption seed
+          server->GetPort(), sessionId_,
+          0, server->GetIpAddress());  // this should be set to the map server's encryption seed
       Send(*packet);
     }
   }

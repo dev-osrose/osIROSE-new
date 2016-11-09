@@ -19,7 +19,7 @@ class SrvJoinServerReply : public CRosePacket {
 
 		SrvJoinServerReply();
 
-		SrvJoinServerReply(eResult result, uint32_t id, uint32_t payFlag);
+		SrvJoinServerReply(eResult result, uint32_t id, uint32_t payFlag = 0);
 
 		virtual ~SrvJoinServerReply() = default;
 

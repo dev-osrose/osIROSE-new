@@ -20,7 +20,7 @@ class SrvCreateCharReply : public CRosePacket {
 
 		SrvCreateCharReply();
 
-		SrvCreateCharReply(eResult result, uint8_t platinium);
+		SrvCreateCharReply(eResult result, uint8_t platinium = 0);
 
 		virtual ~SrvCreateCharReply() = default;
 
