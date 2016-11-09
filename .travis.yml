@@ -44,10 +44,11 @@ matrix:
       except:
       - coverity_scan
     before_install:
-    - export GCOV_PATH=/usr/bin/gcov-5
+    - export GCOV_EXEC=gcov-5
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-5" CC="gcc-5";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -85,10 +86,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-    - export GCOV_PATH=/usr/bin/gcov-6
+    #- export GCOV_PATH=/usr/bin/gcov-6
+    - export GCOV_EXEC=gcov-6
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -126,11 +129,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-    - export SUITE=none
-    - export GCOV_PATH=/usr/bin/gcov-6
+    #- export GCOV_PATH=/usr/bin/gcov-6
+    - export GCOV_EXEC=gcov-6
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -177,6 +181,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=tests
     - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -223,6 +228,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=tests
     - export CXX="clang++-3.7" CC="clang-3.7";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -258,11 +264,11 @@ matrix:
       only:
       - coverity_scan
     before_install:
-    - export SUITE=none
-    - export GCOV_PATH=/usr/bin/gcov-6
+    - export GCOV_EXEC=gcov-6
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
@@ -321,5 +327,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-      condition: $CXX = "/usr/bin/g++-6"
+      condition: $CXX = "g++-6"
       tags: true
