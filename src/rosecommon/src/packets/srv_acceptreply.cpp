@@ -5,7 +5,7 @@ namespace RoseCommon {
 SrvAcceptReply::SrvAcceptReply() : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY) {
 }
 
-SrvAcceptReply::SrvAcceptReply(uint8_t result, uint32_t randValue) : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY), result_(result), randValue_(randValue) {
+SrvAcceptReply::SrvAcceptReply(uint32_t randValue, uint8_t result) : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY), result_(result), randValue_(randValue) {
 }
 
 uint8_t &SrvAcceptReply::result() {

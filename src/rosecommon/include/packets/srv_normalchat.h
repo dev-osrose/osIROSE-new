@@ -11,7 +11,7 @@ class SrvNormalChat : public CRosePacket {
 	public:
 		SrvNormalChat();
 
-		SrvNormalChat(uint16_t charId, std::string message);
+		SrvNormalChat(uint16_t charId, const std::string &message);
 
 		virtual ~SrvNormalChat() = default;
 

@@ -20,7 +20,7 @@ class SrvSrvSelectReply : public CRosePacket {
 
 		SrvSrvSelectReply();
 
-		SrvSrvSelectReply(uint32_t sessionId, uint32_t cryptVal, uint16_t port, eResult result, std::string ip);
+		SrvSrvSelectReply(const std::string &ip, uint32_t sessionId, uint32_t cryptVal, uint16_t port, eResult result = OK);
 
 		virtual ~SrvSrvSelectReply() = default;
 

@@ -5,7 +5,7 @@ namespace RoseCommon {
 SrvDeleteCharReply::SrvDeleteCharReply() : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY) {
 }
 
-SrvDeleteCharReply::SrvDeleteCharReply(uint32_t remainingTime, std::string name) : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY), remainingTime_(remainingTime), name_(name) {
+SrvDeleteCharReply::SrvDeleteCharReply(uint32_t remainingTime, const std::string &name) : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY), remainingTime_(remainingTime), name_(name) {
 }
 
 uint32_t &SrvDeleteCharReply::remainingTime() {

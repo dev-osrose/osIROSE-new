@@ -11,7 +11,7 @@ class SrvSwitchServer : public CRosePacket {
 	public:
 		SrvSwitchServer();
 
-		SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, std::string ip);
+		SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string &ip);
 
 		virtual ~SrvSwitchServer() = default;
 

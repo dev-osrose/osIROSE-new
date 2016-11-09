@@ -11,7 +11,7 @@ class SrvDeleteCharReply : public CRosePacket {
 	public:
 		SrvDeleteCharReply();
 
-		SrvDeleteCharReply(uint32_t remainingTime, std::string name);
+		SrvDeleteCharReply(uint32_t remainingTime, const std::string &name);
 
 		virtual ~SrvDeleteCharReply() = default;
 

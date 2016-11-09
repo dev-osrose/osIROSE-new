@@ -5,7 +5,7 @@ namespace RoseCommon {
 SrvSrvSelectReply::SrvSrvSelectReply() : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY) {
 }
 
-SrvSrvSelectReply::SrvSrvSelectReply(uint32_t sessionId, uint32_t cryptVal, uint16_t port, eResult result, std::string ip) : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY), sessionId_(sessionId), cryptVal_(cryptVal), port_(port), result_(result), ip_(ip) {
+SrvSrvSelectReply::SrvSrvSelectReply(const std::string &ip, uint32_t sessionId, uint32_t cryptVal, uint16_t port, eResult result) : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY), sessionId_(sessionId), cryptVal_(cryptVal), port_(port), result_(result), ip_(ip) {
 }
 
 uint32_t &SrvSrvSelectReply::sessionId() {

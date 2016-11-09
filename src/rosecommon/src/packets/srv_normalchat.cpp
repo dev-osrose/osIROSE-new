@@ -5,7 +5,7 @@ namespace RoseCommon {
 SrvNormalChat::SrvNormalChat() : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT) {
 }
 
-SrvNormalChat::SrvNormalChat(uint16_t charId, std::string message) : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT), charId_(charId), message_(message) {
+SrvNormalChat::SrvNormalChat(uint16_t charId, const std::string &message) : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT), charId_(charId), message_(message) {
 }
 
 uint16_t &SrvNormalChat::charId() {

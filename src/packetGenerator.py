@@ -27,7 +27,9 @@ class Class:
             return self.complexPack
 
         def getConstructor(self):
-            return self.type + " " + self.name
+            if self.simple:
+                return self.type + " " + self.name
+            return "const " + self.type + " &" + self.name
 
         def getCppConstructor(self):
             return self.name + '_(' + self.name + ')'

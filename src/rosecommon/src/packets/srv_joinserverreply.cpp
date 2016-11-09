@@ -8,7 +8,7 @@ SrvJoinServerReply::SrvJoinServerReply() : CRosePacket(ePacketType::PAKSC_JOIN_S
 SrvJoinServerReply::SrvJoinServerReply(eResult result, uint32_t id, uint32_t payFlag) : CRosePacket(ePacketType::PAKSC_JOIN_SERVER_REPLY), result_(result), id_(id), payFlag_(payFlag) {
 }
 
-eResult &SrvJoinServerReply::result() {
+SrvJoinServerReply::eResult &SrvJoinServerReply::result() {
 	return result_;
 }
 
