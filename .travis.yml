@@ -327,5 +327,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-      condition: $CXX = "/usr/bin/g++-6"
+      condition: $CXX = "g++-6"
       tags: true
