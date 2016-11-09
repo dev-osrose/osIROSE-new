@@ -6,6 +6,7 @@
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat)
 class CliNormalChat : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat> {
 	public:
 		CliNormalChat(uint8_t buffer[MAX_PACKET_SIZE]);

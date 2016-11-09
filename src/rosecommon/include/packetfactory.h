@@ -31,24 +31,6 @@ class PacketFactory : public Singleton<PacketFactory> {
         std::unordered_map<std::underlying_type_t<ePacketType>, Wrapper> mapping_;
 };
 
-template <ePacketType Type>
-struct packet_id {
-    static const ePacketType value = Type;
-};
-
-template <class Class>
-struct packet_type {
-    typedef Class type;
-};
-
-template <ePacketType Type, class Class>
-struct register_id : packet_id<Type>, packet_type<Class> {
-    private:
-        friend packet_type<Class> packed_id(packet_id<Type>) {
-            return packet_type<Class>();
-        }
-};
-
 template <ePacketType Type, class Class>
 class RegisterRecvPacket {
     constexpr static char registerType() {
@@ -62,17 +44,33 @@ class RegisterRecvPacket {
 };
 
 template <ePacketType Type>
-struct find_class;
+struct find_send_class;
 
-#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_class<Type> : register_id<Type, Class> {};
+template <ePacketType Type>
+using find_send_class_t = typename find_send_class<Type>::type;
 
-/*std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
+template <ePacketType Type>
+struct find_recv_class;
+
+template <ePacketType Type>
+using find_recv_class_t = typename find_recv_class<Type>::type;
+
+#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; };
+
+#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; };
+
+std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);
 }
 
+template <ePacketType T>
+std::unique_ptr<find_recv_class_t<T>> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
+    return std::unique_ptr<find_recv_class_t<T>>(dynamic_cast<find_recv_class_t<T>*>(PacketFactory::getInstance().getPacket(buffer).release()));
+}
+
 template <ePacketType T, typename... Args>
-std::unique_ptr<decltype(find_class<T>::type)>	makePacket(Args... args) {
-    return std::make_unique(args...);
-}*/
+std::unique_ptr<find_send_class_t<T>> makePacket(Args... args) {
+    return std::make_unique<find_send_class_t<T>>(args...);
+}
 
 }

@@ -17,32 +17,15 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "packets.h"
 #include <string>
-#include <exception>
 #include <vector>
 
 namespace RoseCommon {
 
-class CliLoginReq : public CRosePacket {
- public:
-  CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliLoginReq(const std::string &user, const std::string &pass);
-
-  virtual ~CliLoginReq();
-
-  std::string password() const;
-  std::string username() const;
-
- protected:
-  void pack();
-
- private:
-  std::string password_;
-  std::string username_;
-};
-
 //------------------------------------------------
 
+REGISTER_SEND_PACKET(ePacketType::PAKLC_LOGIN_REPLY, SrvLoginReply)
 class SrvLoginReply : public CRosePacket {
  public:
   SrvLoginReply(uint8_t result, uint16_t right, uint16_t type);
@@ -91,25 +74,8 @@ class SrvLoginReply : public CRosePacket {
 };
 
 //------------------------------------------------
-//------------------------------------------------
-class CliChannelReq : public CRosePacket {
- public:
-  CliChannelReq(uint8_t buffer[MAX_PACKET_SIZE]);
-  CliChannelReq(uint32_t server_id);
 
-  virtual ~CliChannelReq();
-
-  uint32_t server_id() const;
-
- protected:
-  void pack();
-
- private:
-  uint32_t server_id_;
-};
-
-//------------------------------------------------
-
+REGISTER_SEND_PACKET(ePacketType::PAKLC_CHANNEL_LIST_REPLY, SrvChannelReply)
 class SrvChannelReply : public CRosePacket {
  public:
   SrvChannelReply(uint32_t serverid);
@@ -144,61 +110,6 @@ class SrvChannelReply : public CRosePacket {
   std::vector<info> channel_list_;
 };
 
-//------------------------------------------------
-//------------------------------------------------
-class CliServerSelectReq : public CRosePacket {
- public:
-  CliServerSelectReq(uint8_t buffer[MAX_PACKET_SIZE]);
-
-  CliServerSelectReq(uint32_t server_id, uint8_t channel_id);
-
-  virtual ~CliServerSelectReq();
-
-  uint32_t server_id() const;
-  uint8_t channel_id() const;
-
- protected:
-  void pack();
-
- private:
-  uint32_t server_id_;
-  uint8_t channel_id_;
-};
-
-//------------------------------------------------
-
-class SrvServerSelectReply : public CRosePacket {
- public:
-  SrvServerSelectReply(const std::string &ip, uint32_t session_id,
-                       uint32_t crypt_val, uint16_t port);
-
-  virtual ~SrvServerSelectReply();
-
-  uint32_t session_id() const;
-  uint32_t crypt_val() const;
-  uint16_t port() const;
-  uint8_t result() const;
-  std::string ip() const;
-
-  enum eResult : uint8_t {
-    OK = 0,
-    FAILED,
-    FULL,
-    INVALID_CHANNEL,
-    CHANNEL_NOT_ACTIVE,
-    INVALID_AGE
-  };
-
- protected:
-  void pack();
-
- private:
-  uint32_t session_id_;
-  uint32_t crypt_val_;
-  uint16_t port_;
-  uint8_t result_;
-  std::string ip_;
-};
 }
 
 #endif

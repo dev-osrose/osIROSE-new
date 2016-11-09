@@ -86,6 +86,7 @@ class SrvQuestData : public CRosePacket {
 //------------------------------------------------
 //------------------------------------------------
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_BILLING_MESSAGE, SrvBillingMsg)
 class SrvBillingMsg : public CRosePacket {
  public:
   SrvBillingMsg() : CRosePacket(ePacketType::PAKWC_BILLING_MESSAGE){};

@@ -4,6 +4,7 @@
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd)
 class CliMouseCmd : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd> {
 	public:
 		CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);

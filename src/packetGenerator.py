@@ -46,6 +46,10 @@ class Class:
         self.name = ('Cli' if self.recv else 'Srv') + "".join(ePacketType.title().split("_")[1:])
         self.variables = []
         self.filename = ('cli' if self.recv else 'srv') + "_" + "".join(ePacketType.lower().split("_")[1:])
+        self.includes = []
+
+    def addInclude(self, name):
+        self.includes.append('#include <{}>'.format(name))
 
     def addVariable(self, name, type, simple):
         self.variables.append(Class.Variable(name, type, simple))
@@ -76,8 +80,11 @@ class Class:
         return constructor + "\n}"
 
     def getHeader(self):
-        data = '#pragma once\n\n#include "packetfactory.h"\n#include "entityComponents.h"\n\nnamespace RoseCommon {\n\n'
+        data = '#pragma once\n\n#include "packetfactory.h"\n#include "entityComponents.h"\n'
+        data += "\n".join(self.includes)
+        data += '\n\nnamespace RoseCommon {\n\n'
         if self.recv:
+            data += "REGISTER_RECV_PACKET(ePacketType::{1}, {0})\n".format(self.name, self.ePacketType)
             data += "class {0} : public CRosePacket, public RegisterRecvPacket<ePacketType::{1}, {0}> {{".format(self.name, self.ePacketType)
         else:
             data += "REGISTER_SEND_PACKET(ePacketType::{1}, {0})\nclass {0} : public CRosePacket {{".format(self.name, self.ePacketType)
@@ -86,7 +93,7 @@ class Class:
         for var in self.variables:
             data += "\t\t" + var.getterHeader() + "\n"
         if not self.recv:
-            data += "\tprotected:\n\t\tvirtual void pack() override;\n\n"
+            data += "\n\tprotected:\n\t\tvirtual void pack() override;\n"
         if len(self.variables):
             data += "\n\tprivate:\n"
             for var in self.variables:
@@ -180,11 +187,15 @@ def menu(obj):
         print("-----Menu-----")
         print("1 - add simple type")
         print("2 - add complex type")
-        print("3 - quit")
+        print("3 - add include")
+        print("4 - quit")
         a = getInt("> ")
         print()
-        if a == 3:
+        if a == 4:
             break
+        elif a == 3:
+            obj.addInclude(input("Name of the file : "))
+            continue
         t, n = input("Definition (<type> <name>) : ").split()[:2]
         if a == 1:
             obj.addVariable(n, t, True)

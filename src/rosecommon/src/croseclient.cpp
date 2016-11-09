@@ -15,7 +15,7 @@
 #include <ctime>
 #include "croseclient.h"
 #include "epackettype.h"
-#include "rosepackets.h"
+#include "packets.h"
 
 namespace RoseCommon {
 //#define STRESS_TEST

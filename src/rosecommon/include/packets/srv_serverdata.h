@@ -17,9 +17,11 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "dataconsts.h"
 
 namespace RoseCommon {
-	
+
+REGISTER_SEND_PACKET(ePacketType::PAKWC_GLOBAL_VARS, SrvServerData)
 class SrvServerData : public CRosePacket {
  public:
   SrvServerData(uint8_t type);

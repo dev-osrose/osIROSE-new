@@ -133,14 +133,14 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   return true;
 }
 
-bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
+bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get channel list before logging in.",
         GetId());
     return true;
   }
-  uint32_t ServerID = P->server_id()-1;
+  uint32_t ServerID = P->serverId()-1;
 
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
@@ -161,15 +161,15 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
 }
 
 bool CLoginClient::ServerSelect(
-    std::unique_ptr<RoseCommon::CliServerSelectReq> P) {
+    std::unique_ptr<RoseCommon::CliSrvSelectReq> P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to select a server before logging in.",
         GetId());
     return true;
   }
-  uint32_t serverID = P->server_id()-1;
-  uint8_t channelID = P->channel_id()-1;
+  uint32_t serverID = P->serverId()-1;
+  uint8_t channelID = P->channelId()-1;
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
