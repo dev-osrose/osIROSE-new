@@ -29,11 +29,11 @@ std::string &SrvSrvSelectReply::ip() {
 }
 
 void SrvSrvSelectReply::pack() {
+    *this << result_;
 	*this << sessionId_;
 	*this << cryptVal_;
-	*this << port_;
-	*this << result_;
 	*this << ip_;
+    *this << port_;
 }
 
 }

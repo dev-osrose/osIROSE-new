@@ -93,11 +93,6 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      std::string pwd = "";
-      //res->getString("password", pwd);
-
-      //if (pwd == clientpass) 
-	  {
         uint32_t onlineStatus = 0, accessRights = 0;
         res->getInt("online", onlineStatus);
         if (res->getInt("access", accessRights)) {
@@ -119,13 +114,12 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
           // Online already
           SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
-//      } else {
-//        // incorrect password.
-//        SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-      }
     } else {
-      // The user doesn't exist or server is down.
-      SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+        if (database.QStore(fmt::format("SELECT username FROM accounts WHERE username='{}';", username_.c_str())))
+            SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+        else
+          // The user doesn't exist or server is down.
+          SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
     }
   } else {
     SendLoginReply(SrvLoginReply::FAILED);
