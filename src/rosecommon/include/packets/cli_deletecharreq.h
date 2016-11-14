@@ -12,6 +12,8 @@ class CliDeleteCharReq : public CRosePacket, public RegisterRecvPacket<ePacketTy
 		CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliDeleteCharReq(uint8_t charId, uint8_t isDelete, const std::string &name);
 
+        virtual void pack() override;
+
 		virtual ~CliDeleteCharReq() = default;
 
 		uint8_t &charId();

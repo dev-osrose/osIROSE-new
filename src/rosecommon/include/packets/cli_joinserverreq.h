@@ -12,6 +12,8 @@ class CliJoinServerReq : public CRosePacket, public RegisterRecvPacket<ePacketTy
 		CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliJoinServerReq(uint32_t sessionId, const std::string& password);
 
+        virtual void pack() override;
+
 		virtual ~CliJoinServerReq() = default;
 
 		uint32_t &sessionId();

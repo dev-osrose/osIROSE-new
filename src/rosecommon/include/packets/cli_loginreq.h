@@ -12,6 +12,8 @@ class CliLoginReq : public CRosePacket, public RegisterRecvPacket<ePacketType::P
 		CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliLoginReq(const std::string &user, const std::string& password);
 
+        virtual void pack() override;
+
 		virtual ~CliLoginReq() = default;
 
 		std::string &username();

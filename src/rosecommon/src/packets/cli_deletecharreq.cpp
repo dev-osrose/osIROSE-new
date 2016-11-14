@@ -13,6 +13,10 @@ CliDeleteCharReq::CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacke
 
 CliDeleteCharReq::CliDeleteCharReq(uint8_t charId, uint8_t isDelete, const std::string &name) : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ), charId_(charId), delete_(isDelete), name_(name) {}
 
+void CliDeleteCharReq::pack() {
+    *this << charId_ << delete_ << name_;
+}
+
 uint8_t &CliDeleteCharReq::charId() {
 	return charId_;
 }

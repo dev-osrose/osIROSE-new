@@ -12,6 +12,8 @@ class CliSelectCharReq : public CRosePacket, public RegisterRecvPacket<ePacketTy
 		CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string &name);
 
+        virtual void pack() override;
+
 		virtual ~CliSelectCharReq() = default;
 
 		uint8_t &charId();

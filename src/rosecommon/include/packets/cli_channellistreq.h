@@ -12,6 +12,8 @@ class CliChannelListReq : public CRosePacket, public RegisterRecvPacket<ePacketT
 		CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliChannelListReq(uint32_t serverId);
 
+        virtual void pack() override;
+
 		virtual ~CliChannelListReq() = default;
 
 		uint32_t &serverId();

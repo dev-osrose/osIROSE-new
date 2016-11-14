@@ -12,6 +12,8 @@ class CliSrvSelectReq : public CRosePacket, public RegisterRecvPacket<ePacketTyp
 		CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliSrvSelectReq(uint32_t serverId, uint8_t channelId);
 
+        virtual void pack() override;
+
 		virtual ~CliSrvSelectReq() = default;
 
 		uint32_t &serverId();

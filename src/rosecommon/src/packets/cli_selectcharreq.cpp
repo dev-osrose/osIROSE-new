@@ -14,6 +14,10 @@ CliSelectCharReq::CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacke
 
 CliSelectCharReq::CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string &name) : CRosePacket(ePacketType::PAKCS_SELECT_CHAR_REQ), charId_(charId), runMode_(runMode), rideMode_(rideMode), name_(name) {}
 
+void CliSelectCharReq::pack() {
+    *this << charId_ << runMode_ << rideMode_ << name_;
+}
+
 uint8_t &CliSelectCharReq::charId() {
 	return charId_;
 }

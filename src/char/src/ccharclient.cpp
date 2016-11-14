@@ -72,6 +72,7 @@ bool CCharClient::JoinServerReply(
 
   uint32_t sessionID = P->sessionId();
   std::string password = P->password();
+  logger_->info("user {}, password {} bla", sessionID, password);
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);

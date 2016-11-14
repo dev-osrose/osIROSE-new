@@ -65,7 +65,7 @@ inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t buffer[MAX_PACKET_SIZE])
 
 template <ePacketType T>
 std::unique_ptr<find_recv_class_t<T>> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
-    return std::unique_ptr<find_recv_class_t<T>>(dynamic_cast<find_recv_class_t<T>*>(PacketFactory::getInstance().getPacket(buffer).release()));
+    return std::make_unique<find_recv_class_t<T>>(buffer);
 }
 
 template <ePacketType T, typename... Args>
