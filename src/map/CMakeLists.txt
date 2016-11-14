@@ -29,8 +29,11 @@ SET( SOURCES_HEADER
 	include/cmapclient
 	include/cmapisc
     include/entitySystem
-    include/entitySystems
     include/systemmanager
+    include/systems/system.h
+    include/systems/movementsystem.h
+    include/systems/timesystem.h
+    include/systems/updatesystem.h
     )
 
 SET( SOURCES_MAIN
@@ -40,6 +43,9 @@ SET( SOURCES_MAIN
 	src/cmapisc
     src/entitysystem
     src/systemmanager
+    src/systems/movementsystem
+    src/systems/timesystem
+    src/systems/updatesystem
     )
 
 find_package( Threads REQUIRED )

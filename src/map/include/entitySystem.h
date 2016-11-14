@@ -2,47 +2,27 @@
 #ifndef _ENTITYSYSTEM_H_
 # define _ENTITYSYSTEM_H_
 
-#include "entitySystems.h"
 #include <functional>
 #include <vector>
 #include <type_traits>
+#include "crosepacket.h"
 
 class EntitySystem {
     public:
-        EntitySystem() : systemManager_(entityManager_) {
-            // TODO : use on_component_removed for Destination
-            systemManager_.add<MovementSystem>();
-            systemManager_.add<UpdateComponents>();
-        }
+        EntitySystem();
 
-        void update(double dt) {
-            systemManager_.update(dt);
-            for (auto it : toDestroy_)
-                if (it)
-                    it.destroy();
-            toDestroy_.clear();
-        }
+        void update(double dt);
 
-        void destroy(Entity entity) {
-            if (!entity)
-                return;
-            toDestroy_.push_back(entity);
-        }
+        void destroy(Entity entity);
 
-        Entity create() {
-            return entityManager_.create();
-        }
+        Entity create();
 
         template <typename T>
         T& get() {
             return *systemManager_.get<T>();
         }
 
-        bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
-            if (!entity)
-                return false;
-            return systemManager_.dispatch(entity, packet);
-        }
+        bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet);
 
         Entity loadCharacter(uint32_t charId, bool platinium);
         void saveCharacter(uint32_t  charId, Entity entity);
