@@ -30,10 +30,10 @@ SET( SOURCES_HEADER
 	include/cmapisc
     include/entitySystem
     include/systemmanager
-    include/systems/system.h
-    include/systems/movementsystem.h
-    include/systems/timesystem.h
-    include/systems/updatesystem.h
+    include/systems/system
+    include/systems/movementsystem
+    include/systems/timesystem
+    include/systems/updatesystem
     )
 
 SET( SOURCES_MAIN

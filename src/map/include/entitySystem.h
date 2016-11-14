@@ -6,6 +6,7 @@
 #include <vector>
 #include <type_traits>
 #include "crosepacket.h"
+#include "systems/system.h"
 
 class EntitySystem {
     public:

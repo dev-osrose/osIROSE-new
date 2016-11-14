@@ -1,5 +1,5 @@
 #include "systemmanager.h"
-#include "entitySystems.h"
+#include "systems/system.h"
 
 void SystemManager::update(double dt) {
     for (auto &it : systems_)

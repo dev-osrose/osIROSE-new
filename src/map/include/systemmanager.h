@@ -12,7 +12,11 @@
 
 using RoseCommon::to_underlying;
 
+namespace Systems {
 class System;
+}
+
+using Systems::System;
 
 class SystemManager {
     public:

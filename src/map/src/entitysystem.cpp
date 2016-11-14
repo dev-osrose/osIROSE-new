@@ -1,5 +1,37 @@
 #include "entitySystem.h"
+#include "systems/movementsystem.h"
+#include "systems/updatesystem.h"
 #include "database.h"
+
+EntitySystem::EntitySystem() : systemManager_(entityManager_) {
+    // TODO : use on_component_removed for Destination
+    systemManager_.add<Systems::MovementSystem>();
+    systemManager_.add<Systems::UpdateSystem>();
+}
+
+void EntitySystem::update(double dt) {
+    systemManager_.update(dt);
+    for (auto it : toDestroy_)
+        if (it)
+            it.destroy();
+    toDestroy_.clear();
+}
+
+void EntitySystem::destroy(Entity entity) {
+    if (!entity)
+        return;
+    toDestroy_.push_back(entity);
+}
+
+Entity EntitySystem::create() {
+    return entityManager_.create();
+}
+
+bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
+    if (!entity)
+        return false;
+    return systemManager_.dispatch(entity, packet);
+}
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     auto &database = Core::databasePool.getDatabase();
@@ -106,7 +138,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
 
     // TODO : write the inventory code
     entity.assign<Inventory>();
-    get<UpdateComponents>().calculateSpeed(entity);
+    get<Systems::UpdateSystem>().calculateSpeed(entity);
     return entity;
 }
 

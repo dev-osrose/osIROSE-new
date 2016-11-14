@@ -37,7 +37,7 @@ set( SOURCES_HEADER
   include/loginpackets
   include/charpackets
   include/mappackets
-  include/packets.h
+  include/packets
 )
 
 SET(SOURCES_BASE

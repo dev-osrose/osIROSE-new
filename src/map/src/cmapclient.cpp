@@ -17,6 +17,7 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
+#include "systems/movementsystem.h"
 #include <cmath>
 
 using namespace RoseCommon;
@@ -210,7 +211,7 @@ bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
     // TODO : set target
     auto pos = entity_.component<Position>();
     float dx = pos->x_ - P->x(), dy = pos->y_ - P->y();
-    entitySystem_->get<MovementSystem>().move(entity_, P->x(), P->y());
+    entitySystem_->get<Systems::MovementSystem>().move(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), std::sqrt(dx*dx + dy*dy), P->x(), P->y(), P->z()));
     return true;
@@ -222,7 +223,7 @@ bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
         logger_->warn("Client {} is attempting to stop moving before logging in.", GetId());
         return true;
     }
-    entitySystem_->get<MovementSystem>().stop(entity_, P->x(), P->y());
+    entitySystem_->get<Systems::MovementSystem>().stop(entity_, P->x(), P->y());
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
             *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity_));
     return true;

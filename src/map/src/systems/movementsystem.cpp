@@ -1,4 +1,4 @@
-#include "movementsystem.h"
+#include "systems/movementsystem.h"
 #include <cmath>
 
 using namespace Systems;
@@ -52,7 +52,7 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     }
 }
 
-void processMove(Entity entity, const RoseCommon::CliMouseCmd &packet) {
+void MovementSystem::processMove(Entity entity, const RoseCommon::CliMouseCmd &packet) {
     (void)entity;
     (void)packet;
 }
