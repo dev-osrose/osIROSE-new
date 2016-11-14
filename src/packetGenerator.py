@@ -217,6 +217,20 @@ def menu(obj):
     return toImplement
 
 print("Welcome to the packet generator")
+print("""How to use:
+        - enter the ePacketType name of the packet you will use
+        - you will then presented with a menu to choose between 3 options
+        - the first one is really simple, enter your type and name just has you would in the header file. The trailing _ will be added if need be
+        - the second one is the same as the first one, but the script won't implement the cpp part for you (except if it's an Entity, see below). If you add an Entity, the script will ask you some more information
+        - the last option is if you need a special include. In this case please write the name of the file that would be enclosed between <> (or "")
+        
+        - If you add an Entity, the script will ask you to specify which variables you want to extract from it. To do that you have multiple options
+        - first one is a CRosePacket parsable type
+        - second one is a ISerialize variable
+        - third one is a ISerialize array
+        - the last option won't implement the cpp part for you (except include the component if need be)
+
+        """)
 packet = input("ePacketType : ")
 obj = Class(packet)
 toImplement = menu(obj)
