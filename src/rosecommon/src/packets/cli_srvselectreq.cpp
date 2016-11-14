@@ -10,6 +10,8 @@ CliSrvSelectReq::CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(
 
 }
 
+CliSrvSelectReq::CliSrvSelectReq(uint32_t serverId, uint8_t channelId) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), serverId_(serverId), channelId_(channelId) {}
+
 uint32_t &CliSrvSelectReq::serverId() {
 	return serverId_;
 }

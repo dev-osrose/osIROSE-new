@@ -43,10 +43,10 @@ TEST(TestLoginServer, TestClientPacketPath) {
   // We aren't logged in yet
   // We should get a warning
   //-----------------------------------------
-  auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
+  auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
   netConnect.Send(*pak3);
 
-  auto pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0, 0));
+  auto pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0, 0));
   netConnect.Send(*pak4);
   //-----------------------------------------
 
@@ -60,10 +60,10 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  pak3 = std::unique_ptr<CRosePacket>(new CliChannelReq(1));
+  pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
   netConnect.Send(*pak3);
 
-  pak4 = std::unique_ptr<CRosePacket>(new CliServerSelectReq(0,0));
+  pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0,0));
   netConnect.Send(*pak4);
 
   auto pak5 = std::unique_ptr<CRosePacket>(new CliAlive());

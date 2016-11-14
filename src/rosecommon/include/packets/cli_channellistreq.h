@@ -10,6 +10,7 @@ REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANNEL_LIST_REQ, CliChannelListReq)
 class CliChannelListReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_CHANNEL_LIST_REQ, CliChannelListReq> {
 	public:
 		CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliChannelListReq(uint32_t serverId);
 
 		virtual ~CliChannelListReq() = default;
 

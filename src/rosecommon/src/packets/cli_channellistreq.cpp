@@ -9,6 +9,8 @@ CliChannelListReq::CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePac
 
 }
 
+CliChannelListReq::CliChannelListReq(uint32_t serverId) : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ), serverId_(serverId) {}
+
 uint32_t &CliChannelListReq::serverId() {
 	return serverId_;
 }

@@ -10,6 +10,7 @@ REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq)
 class CliAcceptReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq> {
 	public:
 		CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliAcceptReq();
 
 		virtual ~CliAcceptReq() = default;
 

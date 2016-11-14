@@ -10,6 +10,8 @@ CliLoginReq::CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) 
 
 }
 
+CliLoginReq::CliLoginReq(const std::string &user, const std::string &password) : CRosePacket(ePacketType::PAKCS_LOGIN_REQ), username_(user), password_(password) {}
+
 std::string &CliLoginReq::username() {
 	return username_;
 }

@@ -10,6 +10,7 @@ REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq)
 class CliSrvSelectReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq> {
 	public:
 		CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliSrvSelectReq(uint32_t serverId, uint8_t channelId);
 
 		virtual ~CliSrvSelectReq() = default;
 

@@ -8,4 +8,6 @@ CliAlive::CliAlive(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 
 }
 
+CliAlive::CliAlive() : CRosePacket(ePacketType::PAKCS_ALIVE) {}
+
 }
