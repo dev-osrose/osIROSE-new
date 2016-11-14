@@ -42,19 +42,19 @@ TEST(TestCharServer, TestClientPacketPath) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak = std::unique_ptr<CliCreateCharReq>(
-        new CliCreateCharReq("Raven", 1, 1, 1, 1, 1, 10));
+        new CliCreateCharReq(1, 1, 1, 1, 1, 10, "Raven"));
     netConnect.Send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak =
-        std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq("Raven", 1, 0));
+        std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq(1, 0, "Raven"));
     netConnect.Send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak = std::unique_ptr<CliSelectCharReq>(
-        new CliSelectCharReq("Raven", 1, 0, 0));
+        new CliSelectCharReq(1, 0, 0, "Raven"));
     netConnect.Send(*pak);
   }
 

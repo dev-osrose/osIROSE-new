@@ -10,6 +10,8 @@ CliJoinServerReq::CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacke
 
 }
 
+CliJoinServerReq::CliJoinServerReq(uint32_t sessionId, const std::string& password) : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ), sessionId_(sessionId), password_(password) {}
+
 uint32_t &CliJoinServerReq::sessionId() {
 	return sessionId_;
 }

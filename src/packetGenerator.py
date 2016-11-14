@@ -1,3 +1,5 @@
+#TODO : better gestion of const ref types
+
 class Class:
     class Variable:
         def __init__(self, name, type, simple):

@@ -15,6 +15,9 @@ CliCreateCharReq::CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacke
 
 }
 
+CliCreateCharReq::CliCreateCharReq(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint8_t zone, const std::string &name) :
+    CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ), race_(race), stone_(stone), hair_(hair), face_(face), weapon_(weapon), zone_(zone), name_(name) {}
+
 uint8_t &CliCreateCharReq::race() {
 	return race_;
 }

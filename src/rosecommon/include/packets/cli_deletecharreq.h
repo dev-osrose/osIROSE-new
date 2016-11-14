@@ -10,6 +10,7 @@ REGISTER_RECV_PACKET(ePacketType::PAKCS_DELETE_CHAR_REQ, CliDeleteCharReq)
 class CliDeleteCharReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_DELETE_CHAR_REQ, CliDeleteCharReq> {
 	public:
 		CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
+        CliDeleteCharReq(uint8_t charId, uint8_t isDelete, const std::string &name);
 
 		virtual ~CliDeleteCharReq() = default;
 
