@@ -19,6 +19,7 @@ void MovementSystem::update(EntityManager &es, double dt) {
         float dx = destination->x_ - position->x_;
         float dy = destination->y_ - position->y_;
         float distance = std::sqrt(dx * dx + dy * dy);
+        destination->dist_ = distance;
         float speed = advanced->runSpeed_;
         float ntime = distance / speed;
         if (ntime <= dt || distance == 0) {
@@ -39,9 +40,14 @@ void MovementSystem::move(Entity entity, float x, float y) {
     if (dest) {
         dest->x_ = x;
         dest->y_ = y;
-        return;
+    } else {
+        entity.assign<Destination>(x, y, 0);
+        dest = entity.component<Destination>();
     }
-    entity.assign<Destination>(x, y);
+    auto pos = entity.component<Position>();
+    float dx = pos->x_ - dest->x_;
+    float dy = pos->y_ - dest->y_;
+    dest->dist_ = std::sqrt(dx * dx + dy * dy);
 }
 
 void MovementSystem::stop(Entity entity, float x, float y) {
@@ -60,12 +66,9 @@ void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMou
     logger_->trace("MovementSystem::processMove");
     if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
         return;
-    auto pos = entity.component<Position>();
-    float dx = pos->x_ - packet.x(), dy = pos->y_ - packet.y();
     move(entity, packet.x(), packet.y());
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(
-                entity.component<BasicInfo>()->id_, packet.targetId(), std::sqrt(dx*dx + dy*dy), packet.x(), packet.y(), packet.z()));
+            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
 void MovementSystem::stopMoving(CMapClient *client, Entity entity, const CliStopMoving &packet) {

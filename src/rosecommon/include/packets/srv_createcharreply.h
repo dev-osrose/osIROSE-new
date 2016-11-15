@@ -19,19 +19,18 @@ class SrvCreateCharReply : public CRosePacket {
         };
 
 		SrvCreateCharReply();
-
-		SrvCreateCharReply(eResult result, uint8_t platinium = 0);
+		SrvCreateCharReply(SrvCreateCharReply::eResult result, uint8_t platinium = 0);
 
 		virtual ~SrvCreateCharReply() = default;
 
-		eResult &result();
-		uint8_t &platinium();
+		SrvCreateCharReply::eResult result() const;
+		uint8_t platinium() const;
 
 	protected:
 		virtual void pack() override;
 
 	private:
-		eResult result_;
+		SrvCreateCharReply::eResult result_;
 		uint8_t platinium_;
 };
 

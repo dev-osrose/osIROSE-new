@@ -2,26 +2,25 @@
 
 namespace RoseCommon {
 
-SrvPlayerChar::SrvPlayerChar() : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR) {
-}
+SrvPlayerChar::SrvPlayerChar() : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR) {}
 
-SrvPlayerChar::SrvPlayerChar(Entity entity) : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR), entity_(entity) {
-}
+SrvPlayerChar::SrvPlayerChar(Entity entity) : CRosePacket(ePacketType::PAKWC_PLAYER_CHAR), entity_(entity) {}
 
-Entity &SrvPlayerChar::entity() {
+Entity SrvPlayerChar::entity() const {
 	return entity_;
 }
 
+
 void SrvPlayerChar::pack() {
-	auto advancedInfo = entity_.component<AdvancedInfo>();
-	auto characterInfo = entity_.component<CharacterInfo>();
 	auto equippedItems = entity_.component<EquippedItems>();
-	auto characterGraphics = entity_.component<CharacterGraphics>();
 	auto ridingItems = entity_.component<RidingItems>();
-	auto bulletItems = entity_.component<BulletItems>();
-	auto destination = entity_.component<Destination>();
+	auto advancedInfo = entity_.component<AdvancedInfo>();
 	auto basicInfo = entity_.component<BasicInfo>();
+	auto bulletItems = entity_.component<BulletItems>();
+	auto characterGraphics = entity_.component<CharacterGraphics>();
+	auto characterInfo = entity_.component<CharacterInfo>();
 	auto position = entity_.component<Position>();
+	auto destination = entity_.component<Destination>();
     float destX = position->x_, destY = position->y_;
     if (destination) {
         destX = destination->x_;

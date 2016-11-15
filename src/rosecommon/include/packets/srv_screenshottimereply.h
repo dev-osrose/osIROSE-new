@@ -10,16 +10,15 @@ REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTim
 class SrvScreenShotTimeReply : public CRosePacket {
 	public:
 		SrvScreenShotTimeReply();
-
 		SrvScreenShotTimeReply(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min);
 
 		virtual ~SrvScreenShotTimeReply() = default;
 
-		uint16_t &year();
-		uint8_t &month();
-		uint8_t &day();
-		uint8_t &hour();
-		uint8_t &min();
+		uint16_t year() const;
+		uint8_t month() const;
+		uint8_t day() const;
+		uint8_t hour() const;
+		uint8_t min() const;
 
 	protected:
 		virtual void pack() override;

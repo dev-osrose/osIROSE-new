@@ -9,17 +9,20 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq)
 class CliSelectCharReq : public CRosePacket {
 	public:
+		CliSelectCharReq();
 		CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
-        CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string &name);
-
-        virtual void pack() override;
+		CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string &name);
 
 		virtual ~CliSelectCharReq() = default;
 
-		uint8_t &charId();
-		uint8_t &runMode();
-		uint8_t &rideMode();
+		uint8_t charId() const;
+		uint8_t runMode() const;
+		uint8_t rideMode() const;
 		std::string &name();
+		const std::string &name() const;
+
+	protected:
+		virtual void pack() override;
 
 	private:
 		uint8_t charId_;

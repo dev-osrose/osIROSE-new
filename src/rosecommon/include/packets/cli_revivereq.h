@@ -3,15 +3,12 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_REVIVE_REQ, CliReviveReq)
 class CliReviveReq : public CRosePacket {
 	public:
-		CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
-
-		virtual ~CliReviveReq() = default;
-
         enum eType : uint8_t {
             REVIVE_POS,
             SAVE_POS,
@@ -19,10 +16,19 @@ class CliReviveReq : public CRosePacket {
             CURRENT_POS
         };
 
-		eType &type();
+		CliReviveReq();
+		CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliReviveReq(CliReviveReq::eType type);
+
+		virtual ~CliReviveReq() = default;
+
+		CliReviveReq::eType type() const;
+
+	protected:
+		virtual void pack() override;
 
 	private:
-		eType type_;
+		CliReviveReq::eType type_;
 };
 
 }

@@ -2,20 +2,33 @@
 
 namespace RoseCommon {
 
+CliChangeMapReq::CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
+
 CliChangeMapReq::CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	if (type() != ePacketType::PAKCS_CHANGE_MAP_REQ)
 		throw std::runtime_error("Not the right packet!");
-	*this >> weightRate_;
-	*this >> z_;
+	auto position = entity_.component<Position>();
+	auto advancedInfo = entity_.component<AdvancedInfo>();
+
+	*this >> advancedInfo->weightRate_;
+	*this >> position->z_;
 
 }
 
-uint8_t &CliChangeMapReq::weightRate() {
-	return weightRate_;
+CliChangeMapReq::CliChangeMapReq(Entity entity) : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), entity_(entity) {}
+
+Entity CliChangeMapReq::entity() const {
+	return entity_;
 }
 
-uint16_t &CliChangeMapReq::z() {
-	return z_;
+
+void CliChangeMapReq::pack() {
+	auto position = entity_.component<Position>();
+	auto advancedInfo = entity_.component<AdvancedInfo>();
+
+	*this << advancedInfo->weightRate_;
+	*this << position->z_;
+
 }
 
 }

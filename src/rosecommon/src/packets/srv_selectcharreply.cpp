@@ -2,27 +2,26 @@
 
 namespace RoseCommon {
 
-SrvSelectCharReply::SrvSelectCharReply() : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {
-}
+SrvSelectCharReply::SrvSelectCharReply() : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {}
 
-SrvSelectCharReply::SrvSelectCharReply(Entity entity) : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY), entity_(entity) {
-}
+SrvSelectCharReply::SrvSelectCharReply(Entity entity) : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY), entity_(entity) {}
 
-Entity &SrvSelectCharReply::entity() {
+Entity SrvSelectCharReply::entity() const {
 	return entity_;
 }
 
+
 void SrvSelectCharReply::pack() {
-	auto equippedItems = entity_.component<EquippedItems>();
+	auto basicInfo = entity_.component<BasicInfo>();
+	auto position = entity_.component<Position>();
 	auto statusEffects = entity_.component<StatusEffects>();
 	auto characterInfo = entity_.component<CharacterInfo>();
 	auto characterGraphics = entity_.component<CharacterGraphics>();
-	auto advancedInfo = entity_.component<AdvancedInfo>();
-	auto hotbar = entity_.component<Hotbar>();
 	auto stats = entity_.component<Stats>();
-	auto position = entity_.component<Position>();
 	auto skills = entity_.component<Skills>();
-	auto basicInfo = entity_.component<BasicInfo>();
+	auto hotbar = entity_.component<Hotbar>();
+	auto equippedItems = entity_.component<EquippedItems>();
+	auto advancedInfo = entity_.component<AdvancedInfo>();
 
 	*this << characterGraphics->race_;
 	*this << position->map_;
@@ -62,16 +61,16 @@ void SrvSelectCharReply::pack() {
 	*this << characterInfo->pkFlag_;
 	*this << characterInfo->stamina_;
 	for (auto &it : statusEffects->effects_) {
-        *this << static_cast<ISerialize&>(it);
-    }
+		*this << static_cast<ISerialize&>(it);
+	}
 	*this << characterInfo->patHp_;
 	*this << characterInfo->patCooldownTime_;
 	for (auto &it : skills->skills_) {
-        *this << static_cast<ISerialize&>(it);
-    }
+		*this << static_cast<ISerialize&>(it);
+	}
 	for (auto &it : hotbar->items_) {
-        *this << static_cast<ISerialize&>(it);
-    }
+		*this << static_cast<ISerialize&>(it);
+	}
 	*this << basicInfo->tag_;
 	*this << basicInfo->name_;
 

@@ -19,26 +19,26 @@ class SrvSrvSelectReply : public CRosePacket {
         };
 
 		SrvSrvSelectReply();
-
-		SrvSrvSelectReply(const std::string &ip, uint32_t sessionId, uint32_t cryptVal, uint16_t port, eResult result = OK);
+		SrvSrvSelectReply(SrvSrvSelectReply::eResult result, uint32_t sessionId, uint32_t cryptVal, const std::string &ip, uint16_t port);
 
 		virtual ~SrvSrvSelectReply() = default;
 
-		uint32_t &sessionId();
-		uint32_t &cryptVal();
-		uint16_t &port();
-		eResult &result();
+		SrvSrvSelectReply::eResult result() const;
+		uint32_t sessionId() const;
+		uint32_t cryptVal() const;
 		std::string &ip();
+		const std::string &ip() const;
+		uint16_t port() const;
+
 	protected:
 		virtual void pack() override;
 
-
 	private:
+		SrvSrvSelectReply::eResult result_;
 		uint32_t sessionId_;
 		uint32_t cryptVal_;
-		uint16_t port_;
-		eResult result_;
 		std::string ip_;
+		uint16_t port_;
 };
 
 }

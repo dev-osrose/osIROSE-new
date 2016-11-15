@@ -9,11 +9,14 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_ALIVE, CliAlive)
 class CliAlive : public CRosePacket {
 	public:
+		CliAlive();
 		CliAlive(uint8_t buffer[MAX_PACKET_SIZE]);
-        CliAlive();
 
 		virtual ~CliAlive() = default;
 
+
+	protected:
+		virtual void pack() override;
 };
 
 }

@@ -2,15 +2,14 @@
 
 namespace RoseCommon {
 
-SrvRemoveObject::SrvRemoveObject() : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT) {
-}
+SrvRemoveObject::SrvRemoveObject() : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT) {}
 
-SrvRemoveObject::SrvRemoveObject(Entity entity) : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), entity_(entity) {
-}
+SrvRemoveObject::SrvRemoveObject(Entity entity) : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), entity_(entity) {}
 
-Entity &SrvRemoveObject::entity() {
+Entity SrvRemoveObject::entity() const {
 	return entity_;
 }
+
 
 void SrvRemoveObject::pack() {
 	auto basicInfo = entity_.component<BasicInfo>();

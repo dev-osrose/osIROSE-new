@@ -155,7 +155,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-      auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(std::time(nullptr));
+      auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(0, std::time(nullptr));
       Send(*packet);
       break;
     }
