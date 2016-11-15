@@ -8,7 +8,7 @@
 #include "crosepacket.h"
 #include "systems/system.h"
 
-#define THREESHOLD 100 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
+#define THREESHOLD 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
 
 class EntitySystem {
     public:

@@ -11,7 +11,8 @@ class ChatSystem : public System {
 
         virtual void update(EntityManager &es, double dt);
 
-        void normalChat(CMapClient *client, Entity entity, const RoseCommon::CliNormalChat &packet);
+        void normalChat(EntityManager &es, CMapClient *client, Entity entity, const RoseCommon::CliNormalChat &packet);
+        void whisperChat(EntityManager &es, CMapClient *client, Entity entity, const RoseCommon::CliWhisperChat &packet);
 };
 
 }

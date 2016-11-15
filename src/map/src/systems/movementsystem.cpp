@@ -62,7 +62,7 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     }
 }
 
-void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMouseCmd &packet) {
+void MovementSystem::processMove(EntityManager&, CMapClient *client, Entity entity, const CliMouseCmd &packet) {
     logger_->trace("MovementSystem::processMove");
     if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
         return;
@@ -71,7 +71,7 @@ void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMou
             *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
-void MovementSystem::stopMoving(CMapClient *client, Entity entity, const CliStopMoving &packet) {
+void MovementSystem::stopMoving(EntityManager&, CMapClient *client, Entity entity, const CliStopMoving &packet) {
     logger_->trace("MovementSystem::stopMoving");
     if (!client)
         return;

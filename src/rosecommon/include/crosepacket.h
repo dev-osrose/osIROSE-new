@@ -171,9 +171,8 @@ class CRosePacket {
         }
 
         friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
-            do {
-                data.push_back(os.readNext<char>());
-            } while (data.back());
+            while (auto next = os.readNext<char>())
+                data.push_back(next);
             return os;
         }
 
