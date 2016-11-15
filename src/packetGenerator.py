@@ -71,7 +71,7 @@ class Class:
         return self.variables[-1][0]
 
     def getHeaderConstructor(self):
-        data = "{0}();".format(self.name)
+        data = "\t{0}();".format(self.name)
         if self.recv:
             data += "\n\t\t{}(uint8_t buffer[MAX_PACKET_SIZE]);".format(self.name)
         if len(self.variables):
