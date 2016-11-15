@@ -245,11 +245,6 @@ print("""How to use:
 packet = input("ePacketType : ")
 obj = Class(packet)
 toImplement = menu(obj)
-print(obj.getHeader())
-print(obj.getCpp())
-if toImplement:
-    print("You have some implementation left in {}.cpp (it'll cause compilation errors if you don't)".format(obj.filename))
-exit(0)
 with open("rosecommon/include/packets/{}.h".format(obj.filename), "w") as f:
     f.write(obj.getHeader())
     print("header file written at location rosecommon/include/packets/{}.h".format(obj.filename))
