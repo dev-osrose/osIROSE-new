@@ -136,7 +136,7 @@ void CRoseServer::OnAccepted(tcp::socket _sock) {
   }
 }
 
-void CRoseServer::SendPacket(const IObject* sender, eSendType type, CRosePacket &_buffer) {
+void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer) {
   std::lock_guard<std::mutex> lock(client_list_mutex_);
   switch(type)
   {

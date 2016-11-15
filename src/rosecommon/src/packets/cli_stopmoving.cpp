@@ -15,12 +15,24 @@ float &CliStopMoving::x() {
 	return x_;
 }
 
+const float &CliStopMoving::x() const {
+    return x_;
+}
+
 float &CliStopMoving::y() {
 	return y_;
 }
 
+const float &CliStopMoving::y() const {
+    return y_;
+}
+
 int16_t &CliStopMoving::z() {
 	return z_;
+}
+
+const int16_t &CliStopMoving::z() const {
+    return z_;
 }
 
 }

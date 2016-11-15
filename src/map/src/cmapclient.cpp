@@ -17,7 +17,6 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
-#include "systems/movementsystem.h"
 #include <cmath>
 
 using namespace RoseCommon;
@@ -48,20 +47,16 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
       return ChangeMapReply(
           getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
-    //    case ePacketType::PAKCS_LOGOUT_REQ:
-    //      return LogoutReply();
-    case ePacketType::PAKCS_NORMAL_CHAT:
-      return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
-    //case ePacketType::PAKCS_MOUSE_CMD:
-    //  return MouseCmdRcv(getPacket<ePacketType::PAKCS_MOUSE_CMD>(_buffer));
-    case ePacketType::PAKCS_STOP_MOVING:
-      return StopMovingRcv(getPacket<ePacketType::PAKCS_STOP_MOVING>(_buffer));
     default: {
-       //logger_->debug( "cmapclient default handle: 0x{1:04x}",
-       //(uint16_t)CRosePacket::type(_buffer) );
         auto packet = fetchPacket(_buffer);
         if (!packet)
             return CRoseClient::HandlePacket(_buffer);
+
+        if (login_state_ != eSTATE::LOGGEDIN) {
+          logger_->warn("Client {} is attempting to execute an action before logging in.",
+                        GetId());
+          return true;
+        }
         if (!entitySystem_->dispatch(entity_, *packet))
             return CRoseClient::HandlePacket(_buffer);
     }
@@ -178,55 +173,7 @@ bool CMapClient::ChangeMapReply(
   return true;
 }
 
-bool CMapClient::ChatReply(std::unique_ptr<RoseCommon::CliNormalChat> P) {
-  logger_->trace("CMapClient::ChatReply()");
-
-  if (login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to chat before logging in.",
-                  GetId());
-    return true;
-  }
-
-  uint16_t _charID = GetId();
-  std::string _message = P->message();
-
-  auto packet = makePacket<ePacketType::PAKWC_NORMAL_CHAT>(
-          _charID, _message);
-  logger_->trace("client {} is sending '{}'", _charID, _message);
-  CMapServer::SendPacket(this, CMapServer::eSendType::NEARBY, *packet);
-  return true;
-}
-
-bool CMapClient::IsNearby(const IObject* _otherClient) const {
-  (void)_otherClient;
+bool CMapClient::IsNearby(const CRoseClient* _otherClient) const {
   logger_->trace("CMapClient::IsNearby()");
-  //TODO: Call the entity distance calc here
-  return true;
-}
-
-bool CMapClient::MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P) {
-    logger_->trace("CMapClient::MouseCmdRcv()");
-    if (login_state_ != eSTATE::LOGGEDIN) {
-        logger_->warn("Client {} is attempting to issue mouse commands before logging in.", GetId());
-        return true;
-    }
-    // TODO : set target
-    auto pos = entity_.component<Position>();
-    float dx = pos->x_ - P->x(), dy = pos->y_ - P->y();
-    entitySystem_->get<Systems::MovementSystem>().move(entity_, P->x(), P->y());
-    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(GetId(), P->targetId(), std::sqrt(dx*dx + dy*dy), P->x(), P->y(), P->z()));
-    return true;
-}
-
-bool CMapClient::StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P) {
-    logger_->trace("CMapClient::StopMovingRcv()");
-    if (login_state_ != eSTATE::LOGGEDIN) {
-        logger_->warn("Client {} is attempting to stop moving before logging in.", GetId());
-        return true;
-    }
-    entitySystem_->get<Systems::MovementSystem>().stop(entity_, P->x(), P->y());
-    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
-            *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity_));
-    return true;
+  return EntitySystem::isNearby(entity_, _otherClient->getEntity());
 }

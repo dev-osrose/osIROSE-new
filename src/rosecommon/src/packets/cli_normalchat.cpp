@@ -13,4 +13,8 @@ std::string &CliNormalChat::message() {
 	return message_;
 }
 
+const std::string &CliNormalChat::message() const {
+    return message_;
+}
+
 }

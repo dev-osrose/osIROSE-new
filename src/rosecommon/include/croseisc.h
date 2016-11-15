@@ -36,7 +36,7 @@ class CRoseISC : public CRoseClient {
   virtual bool HandlePacket(uint8_t* _buffer) override;
   
  private:
-  bool IsNearby(const IObject* _otherClient) const override { (void)_otherClient; return false; }
+  bool IsNearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return false; }
 };
 
 }

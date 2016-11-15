@@ -14,6 +14,7 @@ class CliNormalChat : public CRosePacket {
 		virtual ~CliNormalChat() = default;
 
 		std::string &message();
+        const std::string &message() const;
 
 	private:
 		std::string message_;

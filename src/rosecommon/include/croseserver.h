@@ -44,7 +44,7 @@ class CRoseServer : public Core::CNetwork_Asio {
     NEARBY_BUT_ME,
   };
   
-  static void SendPacket(const IObject* sender, eSendType type, CRosePacket &_buffer);
+  static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
 
  protected:
   // Callback functions

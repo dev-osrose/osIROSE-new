@@ -8,6 +8,8 @@
 #include "crosepacket.h"
 #include "systems/system.h"
 
+#define THREESHOLD 100 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
+
 class EntitySystem {
     public:
         EntitySystem();
@@ -27,6 +29,8 @@ class EntitySystem {
 
         Entity loadCharacter(uint32_t charId, bool platinium);
         void saveCharacter(uint32_t  charId, Entity entity);
+
+        static bool isNearby(Entity a, Entity b);
 
         template <typename ...T>
         void processEntities(std::function<bool(Entity)>&& func) {

@@ -172,7 +172,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CRoseClient::IsNearby(const IObject* _otherClient) const {
+bool CRoseClient::IsNearby(const CRoseClient* _otherClient) const {
   (void)_otherClient;
   logger_->trace("CRoseClient::IsNearby()");
   return false;

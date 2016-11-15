@@ -1,12 +1,14 @@
 #include "entitySystem.h"
 #include "systems/movementsystem.h"
 #include "systems/updatesystem.h"
+#include "systems/chatsystem.h"
 #include "database.h"
 
 EntitySystem::EntitySystem() : systemManager_(entityManager_) {
     // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
+    systemManager_.add<Systems::ChatSystem>();
 }
 
 void EntitySystem::update(double dt) {
@@ -25,6 +27,21 @@ void EntitySystem::destroy(Entity entity) {
 
 Entity EntitySystem::create() {
     return entityManager_.create();
+}
+
+bool EntitySystem::isNearby(Entity a, Entity b) {
+    if (!a || !b)
+        return false;
+    auto posa = a.component<Position>();
+    auto posb = b.component<Position>();
+    if (!posa || !posb)
+        return false; // FIXME : is it a bug if there is no position?
+    if (posa->map_ != posb->map_)
+        return false;
+    double dist = (posa->x_ - posb->x_) * (posa->x_ - posb->x_) + (posa->y_ - posb->y_) * (posa->y_ - posb->y_);
+    if (dist > THREESHOLD)
+        return false;
+    return true;
 }
 
 bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {

@@ -16,6 +16,8 @@ namespace Systems {
 class System;
 }
 
+class CMapClient;
+
 using Systems::System;
 
 class SystemManager {
@@ -61,14 +63,18 @@ class SystemManager {
 
         // FIXME : No possibility to manually unregister as of now
         template <class T, class U>
-        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(Entity, const U&)) {
+        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(CMapClient*, Entity, const U&)) {
             dispatch_.emplace(to_underlying(type), [this, method](Entity entity, const RoseCommon::CRosePacket &packet) {
-
                     if (auto *system = this->get<T>()) {
-                        (system ->* method)(entity, dynamic_cast<const U&>(packet));
-                        return true;
+                        if (!entity)
+                            return false;
+                        if (auto socket = entity.component<SocketConnector>()) {
+                            (system ->* method)(socket->client_, entity, dynamic_cast<const U&>(packet));
+                            return true;
+                        }
                     } else
                         return false;
+                    return false;
                     });
         }
 

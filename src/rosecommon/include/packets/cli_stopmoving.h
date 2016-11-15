@@ -13,8 +13,11 @@ class CliStopMoving : public CRosePacket {
 		virtual ~CliStopMoving() = default;
 
 		float &x();
+        const float &x() const;
 		float &y();
+        const float &y() const;
 		int16_t &z();
+        const int16_t &z() const;
 
 	private:
 		float x_;

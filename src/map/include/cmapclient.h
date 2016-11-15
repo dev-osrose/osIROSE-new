@@ -29,7 +29,7 @@ class CMapClient : public RoseCommon::CRoseClient {
 
   virtual ~CMapClient();
 
-  virtual bool IsNearby(const IObject* _otherClient) const override;
+  virtual bool IsNearby(const CRoseClient* _otherClient) const override;
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
@@ -39,10 +39,6 @@ class CMapClient : public RoseCommon::CRoseClient {
   bool LogoutReply();
   bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
   bool ChangeMapReply(std::unique_ptr<RoseCommon::CliChangeMapReq> P);
-  bool ChatReply(std::unique_ptr<RoseCommon::CliNormalChat> P);
-
-  bool MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P);
-  bool StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P);
 
   enum class eSTATE {
     DEFAULT,
@@ -55,7 +51,6 @@ class CMapClient : public RoseCommon::CRoseClient {
   uint32_t userid_;
   uint32_t charid_;
   std::shared_ptr<EntitySystem> entitySystem_;
-  Entity entity_;
 };
 
 #endif
