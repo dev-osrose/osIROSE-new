@@ -24,7 +24,7 @@ class SystemManager {
 
         template <typename T, typename... Args>
         T& add(Args&&... args) {
-            systems_[typeid(T)] = std::make_shared<T>(*this, std::forward<Args>(args)...);
+            systems_.emplace(typeid(T), std::make_unique<T>(*this, std::forward<Args>(args)...));
             return *dynamic_cast<T*>(systems_.at(typeid(T)).get());
         }
 
@@ -59,17 +59,12 @@ class SystemManager {
             return false;
         }
 
-        // FIXME : No possibility to unregister as of now
+        // FIXME : No possibility to manually unregister as of now
         template <class T, class U>
         void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(Entity, const U&)) {
-            std::shared_ptr<System> res;
-            try {
-                res = systems_.at(typeid(T));
-            } catch (std::out_of_range) {
-                return;
-            }
-            dispatch_.emplace(to_underlying(type), [object = std::weak_ptr<System>(res), method](Entity entity, const RoseCommon::CRosePacket &packet) {
-                    if (auto system = dynamic_cast<T*>(object.lock().get())) {
+            dispatch_.emplace(to_underlying(type), [this, method](Entity entity, const RoseCommon::CRosePacket &packet) {
+
+                    if (auto *system = this->get<T>()) {
                         (system ->* method)(entity, dynamic_cast<const U&>(packet));
                         return true;
                     } else
@@ -79,7 +74,7 @@ class SystemManager {
 
     private:
         EntityManager &entityManager_;
-        std::unordered_map<std::type_index, std::shared_ptr<System>> systems_;
+        std::unordered_map<std::type_index, std::unique_ptr<System>> systems_;
         std::unordered_multimap<std::underlying_type_t<RoseCommon::ePacketType>,
 		std::function<bool(Entity, const RoseCommon::CRosePacket&)>> dispatch_;
 };

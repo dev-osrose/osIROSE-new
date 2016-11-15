@@ -6,7 +6,7 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving)
-class CliStopMoving : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_STOP_MOVING, CliStopMoving> {
+class CliStopMoving : public CRosePacket {
 	public:
 		CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
 

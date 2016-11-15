@@ -7,7 +7,7 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq)
-class CliCreateCharReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq> {
+class CliCreateCharReq : public CRosePacket {
 	public:
 		CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliCreateCharReq(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint8_t zone, const std::string &name);

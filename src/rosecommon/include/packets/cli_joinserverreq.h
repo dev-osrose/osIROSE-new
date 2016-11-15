@@ -7,7 +7,7 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
-class CliJoinServerReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq> {
+class CliJoinServerReq : public CRosePacket {
 	public:
 		CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);
         CliJoinServerReq(uint32_t sessionId, const std::string& password);

@@ -42,7 +42,7 @@ namespace RoseCommon {
 //-----------------------------------------------
 REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
-class IscServerRegister : public CRosePacket, public RegisterRecvPacket<ePacketType::ISC_SERVER_REGISTER, IscServerRegister> {
+class IscServerRegister : public CRosePacket {
  public:
   IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
     if (type() != ePacketType::ISC_SERVER_REGISTER)

@@ -1,7 +1,10 @@
 #include "systems/movementsystem.h"
+#include "cmapserver.h"
+#include "packetfactory.h"
 #include <cmath>
 
 using namespace Systems;
+using namespace RoseCommon;
 
 MovementSystem::MovementSystem(SystemManager &manager) {
     manager.registerDispatcher(RoseCommon::ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
@@ -53,6 +56,13 @@ void MovementSystem::stop(Entity entity, float x, float y) {
 }
 
 void MovementSystem::processMove(Entity entity, const RoseCommon::CliMouseCmd &packet) {
-    (void)entity;
-    (void)packet;
+    if (!entity.component<Position>() || !entity.component<SocketConnector>() || !entity.component<SocketConnector>()->client_
+            || !entity.component<BasicInfo>())
+        return;
+    auto pos = entity.component<Position>();
+    float dx = pos->x_ - packet.x(), dy = pos->y_ - packet.y();
+    move(entity, packet.x(), packet.y());
+    CMapServer::SendPacket((IObject*)entity.component<SocketConnector>()->client_, CMapServer::eSendType::EVERYONE,
+            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(
+                entity.component<BasicInfo>()->id_, packet.targetId(), std::sqrt(dx*dx + dy*dy), packet.x(), packet.y(), packet.z()));
 }

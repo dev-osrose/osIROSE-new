@@ -52,15 +52,17 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     //      return LogoutReply();
     case ePacketType::PAKCS_NORMAL_CHAT:
       return ChatReply(getPacket<ePacketType::PAKCS_NORMAL_CHAT>(_buffer));
-    case ePacketType::PAKCS_MOUSE_CMD:
-      return MouseCmdRcv(getPacket<ePacketType::PAKCS_MOUSE_CMD>(_buffer));
+    //case ePacketType::PAKCS_MOUSE_CMD:
+    //  return MouseCmdRcv(getPacket<ePacketType::PAKCS_MOUSE_CMD>(_buffer));
     case ePacketType::PAKCS_STOP_MOVING:
       return StopMovingRcv(getPacket<ePacketType::PAKCS_STOP_MOVING>(_buffer));
     default: {
-      // logger_->debug( "cmapclient default handle: 0x{1:04x}",
-      // (uint16_t)CRosePacket::type(_buffer) );
-       // auto packet = CRosePacket::getPacket(_buffer);
-       // if (!entitySystem_->dispatch(entity_, *packet))
+       //logger_->debug( "cmapclient default handle: 0x{1:04x}",
+       //(uint16_t)CRosePacket::type(_buffer) );
+        auto packet = fetchPacket(_buffer);
+        if (!packet)
+            return CRoseClient::HandlePacket(_buffer);
+        if (!entitySystem_->dispatch(entity_, *packet))
             return CRoseClient::HandlePacket(_buffer);
     }
   }

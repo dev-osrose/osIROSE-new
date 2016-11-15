@@ -6,7 +6,7 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANGE_MAP_REQ, CliChangeMapReq)
-class CliChangeMapReq : public CRosePacket, public RegisterRecvPacket<ePacketType::PAKCS_CHANGE_MAP_REQ, CliChangeMapReq> {
+class CliChangeMapReq : public CRosePacket {
 	public:
 		CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
 

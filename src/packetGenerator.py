@@ -1,4 +1,5 @@
 #TODO : better gestion of const ref types
+#TODO : implement const ref accessors
 
 class Class:
     class Variable:
@@ -89,7 +90,7 @@ class Class:
         data += '\n\nnamespace RoseCommon {\n\n'
         if self.recv:
             data += "REGISTER_RECV_PACKET(ePacketType::{1}, {0})\n".format(self.name, self.ePacketType)
-            data += "class {0} : public CRosePacket, public RegisterRecvPacket<ePacketType::{1}, {0}> {{".format(self.name, self.ePacketType)
+            data += "class {0} : public CRosePacket {{".format(self.name, self.ePacketType)
         else:
             data += "REGISTER_SEND_PACKET(ePacketType::{1}, {0})\nclass {0} : public CRosePacket {{".format(self.name, self.ePacketType)
         data += "\n\tpublic:\n\t"
