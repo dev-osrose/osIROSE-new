@@ -4,7 +4,7 @@ namespace RoseCommon {
 
 SrvSwitchServer::SrvSwitchServer() : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER) {}
 
-SrvSwitchServer::SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeend, const std::string &ip) : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), sessionId_(sessionId), sessionSeend_(sessionSeend), ip_(ip) {}
+SrvSwitchServer::SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string &ip) : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), sessionId_(sessionId), sessionSeed_(sessionSeed), ip_(ip) {}
 
 uint16_t SrvSwitchServer::port() const {
 	return port_;
@@ -14,8 +14,8 @@ uint32_t SrvSwitchServer::sessionId() const {
 	return sessionId_;
 }
 
-uint32_t SrvSwitchServer::sessionSeend() const {
-	return sessionSeend_;
+uint32_t SrvSwitchServer::sessionSeed() const {
+	return sessionSeed_;
 }
 
 std::string &SrvSwitchServer::ip() {
@@ -30,7 +30,7 @@ const std::string &SrvSwitchServer::ip() const {
 void SrvSwitchServer::pack() {
 	*this << port_;
 	*this << sessionId_;
-	*this << sessionSeend_;
+	*this << sessionSeed_;
 	*this << ip_;
 }
 

@@ -11,7 +11,7 @@ class CliCreateCharReq : public CRosePacket {
 	public:
 		CliCreateCharReq();
 		CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliCreateCharReq(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint8_t zone, const std::string &name);
+		CliCreateCharReq(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint16_t zone, const std::string &name);
 
 		virtual ~CliCreateCharReq() = default;
 
@@ -20,7 +20,7 @@ class CliCreateCharReq : public CRosePacket {
 		uint8_t hair() const;
 		uint8_t face() const;
 		uint8_t weapon() const;
-		uint8_t zone() const;
+		uint16_t zone() const;
 		std::string &name();
 		const std::string &name() const;
 
@@ -33,7 +33,7 @@ class CliCreateCharReq : public CRosePacket {
 		uint8_t hair_;
 		uint8_t face_;
 		uint8_t weapon_;
-		uint8_t zone_;
+		uint16_t zone_;
 		std::string name_;
 };
 

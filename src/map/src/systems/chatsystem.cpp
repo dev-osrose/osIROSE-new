@@ -15,6 +15,6 @@ void ChatSystem::normalChat(CMapClient *client, Entity entity, const RoseCommon:
     if (!client || !entity.component<BasicInfo>())
         return;
     uint16_t id = entity.component<BasicInfo>()->id_;
-    CMapServer::SendPacket(client, CMapServer::eSendType::NEARBY, 
+    CMapServer::SendPacket(client, CMapServer::eSendType::NEARBY_BUT_ME, 
             *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(id, packet.message()));
 }

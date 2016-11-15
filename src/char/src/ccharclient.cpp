@@ -195,7 +195,7 @@ bool CCharClient::SendCharCreateReply(
   }
 
   auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
-      res, 0);
+      res);
   Send(*packet);
 
   return true;

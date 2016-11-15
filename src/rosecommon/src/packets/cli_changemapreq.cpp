@@ -7,28 +7,24 @@ CliChangeMapReq::CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_R
 CliChangeMapReq::CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	if (type() != ePacketType::PAKCS_CHANGE_MAP_REQ)
 		throw std::runtime_error("Not the right packet!");
-	auto position = entity_.component<Position>();
-	auto advancedInfo = entity_.component<AdvancedInfo>();
-
-	*this >> advancedInfo->weightRate_;
-	*this >> position->z_;
-
+	*this >> weightRate_;
+	*this >> z_;
 }
 
-CliChangeMapReq::CliChangeMapReq(Entity entity) : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), entity_(entity) {}
+CliChangeMapReq::CliChangeMapReq(uint8_t weightRate, uint16_t z) : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), weightRate_(weightRate), z_(z) {}
 
-Entity CliChangeMapReq::entity() const {
-	return entity_;
+uint8_t CliChangeMapReq::weightRate() const {
+	return weightRate_;
+}
+
+uint16_t CliChangeMapReq::z() const {
+	return z_;
 }
 
 
 void CliChangeMapReq::pack() {
-	auto position = entity_.component<Position>();
-	auto advancedInfo = entity_.component<AdvancedInfo>();
-
-	*this << advancedInfo->weightRate_;
-	*this << position->z_;
-
+	*this << weightRate_;
+	*this << z_;
 }
 
 }

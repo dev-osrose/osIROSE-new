@@ -11,17 +11,19 @@ class CliChangeMapReq : public CRosePacket {
 	public:
 		CliChangeMapReq();
 		CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliChangeMapReq(Entity entity);
+		CliChangeMapReq(uint8_t weightRate, uint16_t z);
 
 		virtual ~CliChangeMapReq() = default;
 
-		Entity entity() const;
+		uint8_t weightRate() const;
+		uint16_t z() const;
 
 	protected:
 		virtual void pack() override;
 
 	private:
-		Entity entity_;
+		uint8_t weightRate_;
+		uint16_t z_;
 };
 
 }
