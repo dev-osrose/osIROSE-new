@@ -1,50 +1,60 @@
-#TODO : better gestion of const ref types
-#TODO : implement const ref accessors
+class Variable:
+    def __init__(self, name, type, isSimple):
+        self.name = name
+        if self.name[-1] == '_':
+            self.name = self.name[:-1]
+        self.type = type
+        self.isSimple = isSimple
+        self.unpackComplex = "TODO : implement unpack " + self.getName()
+        self.packComplex = "TODO : implement pack " + self.getName()
+    
+    def getName(self):
+        return self.name + '_'
+
+    def getDeclaration(self):
+        return self.type + " " + self.getName() + ";"
+
+    def getterHeader(self, type = "", const = False):
+        const2 = ""
+        if type == "" or const:
+            const2 = "const"
+        if const:
+            const = "const "
+        else:
+            const = ""
+        return const + self.type + " " + type + self.name + "()" + (" " + const2 if len(const2) else "") + ";"
+
+    def getterCpp(self, className, type = "", const = False):
+        const2 = ""
+        if type == "" or const:
+            const2 = "const"
+        if const:
+            const = "const "
+        else:
+            const = ""
+        return const + self.type + " " + type + className + "::" + self.name + "()" + (" " + const2 if len(const2) else "") + " {\n\treturn " + self.getName() + ";\n}"
+
+    def constructorHeader(self, type = "", const = False):
+        if const:
+            const = "const "
+        else:
+            const = ""
+        return const + self.type + " " + type + self.name
+
+    def constructorInitCpp(self):
+        return self.getName() + "(" + self.name + ")"
+
+    def unpack(self):
+        if self.isSimple:
+            return "*this >> " + self.getName() + ";"
+        return self.unpackComplex
+
+    def pack(self):
+        if self.isSimple:
+            return "*this << " + self.getName() + ";"
+        return self.packComplex
 
 class Class:
-    class Variable:
-        def __init__(self, name, type, simple):
-            self.name = name
-            if self.name[-1] == '_':
-                self.name = self.name[:-1]
-            self.type = type
-            self.simple = simple
-            self.getterName = self.name + "()"
-            self.complexPack = "TODO : implement " + self.name + "_"
-
-        def getterHeader(self):
-            return self.type + " &" + self.getterName + ";"
-
-        def getterCpp(self, className):
-            data = self.type + " &"
-            data += className + "::" + self.getterName + " {\n"
-            data += "\treturn " + self.name + "_;\n}"
-            return data
-
-        def getName(self):
-            return self.name + '_'
-
-        def getSetter(self):
-            if self.simple:
-                return "*this << " + self.name + '_;'
-            return self.complexPack
-
-        def getConstructor(self):
-            if self.simple:
-                return self.type + " " + self.name
-            return "const " + self.type + " &" + self.name
-
-        def getCppConstructor(self):
-            return self.name + '_(' + self.name + ')'
-
-        def getGetter(self):
-            if self.simple:
-                return "*this >> " + self.name + '_;'
-            return self.complexPack
-
-        def __str__(self):
-            return self.type + ' ' + self.name + '_;'
-
     def __init__(self, ePacketType):
         self.ePacketType = ePacketType
         self.recv = "PAKCS_" in ePacketType
@@ -56,33 +66,34 @@ class Class:
     def addInclude(self, name):
         self.includes.append('#include <{}>'.format(name))
 
-    def addVariable(self, name, type, simple):
-        self.variables.append(Class.Variable(name, type, simple))
-        return self.variables[-1]
+    def addVariable(self, name, type, simple, byRef):
+        self.variables.append((Variable(name, type, simple), byRef))
+        return self.variables[-1][0]
 
     def getHeaderConstructor(self):
-        constructor = "\t{}(".format(self.name)
+        data = "{0}();".format(self.name)
         if self.recv:
-            constructor += "uint8_t buffer[MAX_PACKET_SIZE]"
-        elif len(self.variables):
-                constructor += ");\n\n\t\t{}({}".format(self.name, ", ".join([v.getConstructor() for v in self.variables]))
-        constructor += ");\n\n\t\tvirtual ~{}() = default;\n\n".format(self.name)
-        return constructor
+            data += "\n\t\t{}(uint8_t buffer[MAX_PACKET_SIZE]);".format(self.name)
+        if len(self.variables):
+            data += "\n\t\t" + self.name + "(" + ", ".join([v.constructorHeader("&" if b else "", b) for v, b in self.variables]) + ");"
+        data += "\n\n\t\tvirtual ~{}() = default;".format(self.name)
+        return data
 
     def getCppConstructor(self):
-        constructor = "{0}::{0}(".format(self.name)
+        data = "{0}::{0}() : CRosePacket(ePacketType::{1}) {{}}".format(self.name, self.ePacketType)
         if self.recv:
-            constructor += "uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {\n"
-            constructor += '\tif (type() != ePacketType::{})\n\t\tthrow std::runtime_error("Not the right packet!");\n'.format(self.ePacketType)
+            data += "\n\n{0}::{0}(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {{\n".format(self.name)
+            data += '\tif (type() != ePacketType::{})\n\t\tthrow std::runtime_error("Not the right packet!");\n'.format(self.ePacketType)
             if len(self.variables):
-                for var in self.variables:
-                    constructor += "\t{}\n".format(var.getGetter())
-        else:
-            constructor += ") : CRosePacket(ePacketType::{}) {{\n".format(self.ePacketType)
-            if len(self.variables):
-                constructor += "}}\n\n{0}::{0}({1}".format(self.name, ", ".join([v.getConstructor() for v in self.variables]))
-                constructor += ") : CRosePacket(ePacketType::{}), {} {{".format(self.ePacketType, ", ".join([v.getCppConstructor() for v in self.variables]))
-        return constructor + "\n}"
+                for v, b in self.variables:
+                    data += "\t{}\n".format(v.unpack())
+            data += "}"
+        if len(self.variables):
+            data += "\n\n{0}::{0}(".format(self.name) + ", ".join([v.constructorHeader("&" if b else "", b) for v, b in self.variables]) + ") : CRosePacket(ePacketType::{}), ".format(self.ePacketType)
+            data += ", ".join([v.constructorInitCpp() for v, b in self.variables])
+            data += " {}"
+        data += "\n"
+        return data
 
     def getHeader(self):
         data = '#pragma once\n\n#include "packetfactory.h"\n#include "entityComponents.h"\n'
@@ -94,27 +105,28 @@ class Class:
         else:
             data += "REGISTER_SEND_PACKET(ePacketType::{1}, {0})\nclass {0} : public CRosePacket {{".format(self.name, self.ePacketType)
         data += "\n\tpublic:\n\t"
-        data += self.getHeaderConstructor()
-        for var in self.variables:
-            data += "\t\t" + var.getterHeader() + "\n"
-        if not self.recv:
-            data += "\n\tprotected:\n\t\tvirtual void pack() override;\n"
+        data += self.getHeaderConstructor() + "\n\n"
+        for var, b in self.variables:
+            if b:
+                data += "\t\t" + var.getterHeader("&", False) + "\n"
+            data += "\t\t" + var.getterHeader("&" if b else "", b) + "\n"
+        data += "\n\tprotected:\n\t\tvirtual void pack() override;\n"
         if len(self.variables):
             data += "\n\tprivate:\n"
-            for var in self.variables:
-                data += "\t\t" + str(var) + "\n"
+            for var, b in self.variables:
+                data += "\t\t" + var.getDeclaration() + "\n"
         return data + '};\n\n}'
     
     def getCpp(self):
         data = '#include "{}.h"\n\nnamespace RoseCommon {{\n\n'.format(self.filename)
         data += self.getCppConstructor()
-        for var in self.variables:
-            data += "\n\n" + var.getterCpp(self.name)
-        if self.recv:
-            return data + '\n\n}'
+        for var, b in self.variables:
+            if b:
+                data += "\n" + var.getterCpp(self.name, "&", False) + "\n"
+            data += "\n" + var.getterCpp(self.name, "&" if b else "", b) + "\n"
         data += "\n\nvoid {}::pack() {{\n".format(self.name)
-        for var in self.variables:
-            data += "\t{}\n".format(var.getSetter())
+        for var, b in self.variables:
+            data += "\t{}\n".format(var.pack())
         data += "}"
         return data + '\n\n}'
 
@@ -125,7 +137,7 @@ def getInt(msg = ''):
         except ValueError:
             pass
 
-def packGetComponents(name, components):
+def getComponents(name, components):
     get = "auto {{}} = {}.component<{{}}>();".format(name)
     data = ""
     for c in components:
@@ -133,7 +145,19 @@ def packGetComponents(name, components):
         data += "\t{}\n".format(get.format(tmp, c))
     return data[1:]
 
-def entity(var, functions):
+def entity(var):
+    unpackFunctions = {
+            "simple var" : "*this >> {};",
+            "serialize var" : "*this >> static_cast<ISerialize&>({});",
+            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this >> static_cast<ISerialize&>(it);\n\t}}",
+            "special" : "TODO : implement {}"
+            }
+    packFunctions = {
+            "simple var" : "*this << {};",
+            "serialize var" : "*this << static_cast<ISerialize&>({});",
+            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this << static_cast<ISerialize&>(it);\n\t}}",
+            "special" : "TODO : implement {}"
+            }
     components = set()
     variables = []
     toImplement = False
@@ -161,30 +185,15 @@ def entity(var, functions):
         elif a == 4:
             variables.append(("special", name, component))
             toImplement = True
-    data = packGetComponents(var.getName(), components) + "\n"
+    packData = getComponents(var.getName(), components) + "\n"
+    unpackData = getComponents(var.getName(), components) + "\n"
     for t, n, c in variables:
         tmp = c[0].lower() + c[1:] + "->" + n
-        data += "\t{}\n".format(functions[t].format(tmp))
-    var.complexPack = data
+        packData += "\t{}\n".format(packFunctions[t].format(tmp))
+        unpackData += "\t{}\n".format(unpackFunctions[t].format(tmp))
+    var.unpackComplex = unpackData
+    var.packComplex = packData
     return toImplement
-
-def getEntity(var):
-    functions = {
-            "simple var" : "*this >> {};",
-            "serialize var" : "*this >> static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this >> static_cast<ISerialize&>(it);\n\t}}",
-            "special" : "TODO : implement {}"
-            }
-    return entity(var, functions)
-
-def packEntity(var):
-    functions = {
-            "simple var" : "*this << {};",
-            "serialize var" : "*this << static_cast<ISerialize&>({});",
-            "serialize arr" : "for (auto &it : {}) {{\n\t\t*this << static_cast<ISerialize&>(it);\n\t}}",
-            "special" : "TODO : implement {}"
-            }
-    return entity(var, functions)
 
 def menu(obj):
     toImplement = False
@@ -202,21 +211,20 @@ def menu(obj):
             obj.addInclude(input("Name of the file : "))
             continue
         t, n = input("Definition (<type> <name>) : ").split()[:2]
+        byRef = input("Pass by reference (y/n)? ")
+        if byRef == "y":
+            print("Passing by reference")
+            byRef = True
+        else:
+            print("Passing by value")
+            byRef = False
         if a == 1:
-            obj.addVariable(n, t, True)
+            obj.addVariable(n, t, True, byRef)
         elif a == 2:
-            var = obj.addVariable(n, t, False)
-            if not obj.recv and "Entity" in t:
-                tmp = packEntity(var)
-                if not toImplement:
-                    toImplement = tmp
-            elif "Entity" in t:
-                tmp = getEntity(var)
-                if not toImplement:
-                    toImplement = tmp
-            else:
-                var = obj.addVariable(n, t, False)
-                toImplement = True
+            var = obj.addVariable(n, t, False, byRef)
+            toImplement = True
+            if "Entity" in t:
+                toImplement = entity(var)
     return toImplement
 
 print("Welcome to the packet generator")
@@ -237,6 +245,11 @@ print("""How to use:
 packet = input("ePacketType : ")
 obj = Class(packet)
 toImplement = menu(obj)
+print(obj.getHeader())
+print(obj.getCpp())
+if toImplement:
+    print("You have some implementation left in {}.cpp (it'll cause compilation errors if you don't)".format(obj.filename))
+exit(0)
 with open("rosecommon/include/packets/{}.h".format(obj.filename), "w") as f:
     f.write(obj.getHeader())
     print("header file written at location rosecommon/include/packets/{}.h".format(obj.filename))
