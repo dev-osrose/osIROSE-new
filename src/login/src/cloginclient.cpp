@@ -111,11 +111,13 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
           SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
     } else {
-        if (database.QStore(fmt::format("SELECT username FROM accounts WHERE username='{}';", username_.c_str())))
+        if ((res = database.QStore(fmt::format("CALL user_exists('{}');", username_.c_str()))) && res->size())
             SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-        else
+        else if (res)
           // The user doesn't exist or server is down.
           SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+        else
+            SendLoginReply(SrvLoginReply::FAILED);
     }
   } else {
     SendLoginReply(SrvLoginReply::FAILED);
