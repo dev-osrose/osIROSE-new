@@ -2,7 +2,6 @@
 
 using namespace Systems;
 
-
 void UpdateSystem::update(EntityManager &es, double) {
     for (Entity entity : es.entities_with_components<AdvancedInfo, EquippedItems, Stats>())
         calculateSpeed(entity);

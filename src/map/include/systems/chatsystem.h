@@ -6,7 +6,7 @@ namespace Systems {
 
 class ChatSystem : public System {
     public:
-        ChatSystem(SystemManager &manager);
+        ChatSystem(EntityManager &es, SystemManager &manager);
         virtual ~ChatSystem() = default;
 
         virtual void update(EntityManager &es, double dt);

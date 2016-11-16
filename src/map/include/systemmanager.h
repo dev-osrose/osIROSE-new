@@ -26,7 +26,7 @@ class SystemManager {
 
         template <typename T, typename... Args>
         T& add(Args&&... args) {
-            systems_.emplace(typeid(T), std::make_unique<T>(*this, std::forward<Args>(args)...));
+            systems_.emplace(typeid(T), std::make_unique<T>(entityManager_, *this, std::forward<Args>(args)...));
             return *dynamic_cast<T*>(systems_.at(typeid(T)).get());
         }
 

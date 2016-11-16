@@ -2,7 +2,6 @@
 
 using namespace Systems;
 
-
 void TimeSystem::update(EntityManager &es, double dt) {
     Component<CharacterInfo> info;
     Component<StatusEffects> effects;

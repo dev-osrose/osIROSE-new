@@ -25,7 +25,7 @@ using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, Ad
       CharacterInfo, Graphics, CharacterGraphics, Position, StatusEffects,
       Skills, Hotbar, EquippedItems, Destination, RidingItems, BulletItems, Inventory>;
 
-using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>>;
+using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>, entityx::FeatureFlags::OBSERVABLE>;
 template <typename T>
 using Component = EntityManager::Component<T>;
 using Entity = EntityManager::Entity;

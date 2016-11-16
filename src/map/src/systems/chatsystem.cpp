@@ -5,7 +5,7 @@
 using namespace Systems;
 using namespace RoseCommon;
 
-ChatSystem::ChatSystem(SystemManager &manager) {
+ChatSystem::ChatSystem(EntityManager&, SystemManager &manager) {
     manager.registerDispatcher(ePacketType::PAKCS_NORMAL_CHAT, &ChatSystem::normalChat);
     manager.registerDispatcher(ePacketType::PAKCS_WHISPER_CHAT, &ChatSystem::whisperChat);
 }

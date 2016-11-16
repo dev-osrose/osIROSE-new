@@ -6,7 +6,7 @@ namespace Systems {
 
 class MovementSystem : public System {
     public:
-        MovementSystem(SystemManager &manager);
+        MovementSystem(EntityManager &es, SystemManager &manager);
         virtual ~MovementSystem() = default;
 
         virtual void update(EntityManager &es, double dt);

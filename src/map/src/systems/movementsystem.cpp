@@ -6,9 +6,19 @@
 using namespace Systems;
 using namespace RoseCommon;
 
-MovementSystem::MovementSystem(SystemManager &manager) {
+MovementSystem::MovementSystem(EntityManager &es, SystemManager &manager) {
     manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
     manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
+    es.on_component_removed<Destination>([](Entity entity, Component<Destination>) {
+            if (!entity)
+                return;
+            auto socket = entity.component<SocketConnector>();
+            if (!socket || !socket->client_)
+                return;
+            CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
+                    *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+            });
+    // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
 
 void MovementSystem::update(EntityManager &es, double dt) {
@@ -37,17 +47,22 @@ void MovementSystem::move(Entity entity, float x, float y) {
     if (!entity)
         return;
     auto dest = entity.component<Destination>();
+    auto pos = entity.component<Position>();
+    float dx = pos->x_ - x;
+    float dy = pos->y_ - y;
+    float dist = std::sqrt(dx * dx + dy * dy);
     if (dest) {
         dest->x_ = x;
         dest->y_ = y;
+        dest->dist_ = dist;
     } else {
-        entity.assign<Destination>(x, y, 0);
-        dest = entity.component<Destination>();
+        entity.assign<Destination>(x, y, dist);
     }
-    auto pos = entity.component<Position>();
-    float dx = pos->x_ - dest->x_;
-    float dy = pos->y_ - dest->y_;
-    dest->dist_ = std::sqrt(dx * dx + dy * dy);
+    auto socket = entity.component<SocketConnector>();
+    if (!socket || !socket->client_)
+        return;
+    CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
+        *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
 void MovementSystem::stop(Entity entity, float x, float y) {
@@ -72,8 +87,6 @@ void MovementSystem::processMove(EntityManager&, CMapClient *client, Entity enti
     if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
         return;
     move(entity, packet.x(), packet.y());
-    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
 void MovementSystem::stopMoving(EntityManager&, CMapClient *client, Entity entity, const CliStopMoving &packet) {
@@ -81,6 +94,4 @@ void MovementSystem::stopMoving(EntityManager&, CMapClient *client, Entity entit
     if (!client)
         return;
     stop(entity, packet.x(), packet.y());
-    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_STOP>(entity));
 }

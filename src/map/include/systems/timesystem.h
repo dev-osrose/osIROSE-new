@@ -6,7 +6,7 @@ namespace Systems {
 
 class TimeSystem : public System {
     public:
-        TimeSystem(SystemManager&) {}
+        TimeSystem(EntityManager&, SystemManager&) {}
         virtual ~TimeSystem() = default;
 
         virtual void update(EntityManager &es, double dt);
