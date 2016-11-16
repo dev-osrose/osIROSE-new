@@ -39,7 +39,7 @@ bool EntitySystem::isNearby(Entity a, Entity b) {
     if (posa->map_ != posb->map_)
         return false;
     double dist = (posa->x_ - posb->x_) * (posa->x_ - posb->x_) + (posa->y_ - posb->y_) * (posa->y_ - posb->y_);
-    if (dist > THREESHOLD)
+    if (dist > NEARBY_DIST)
         return false;
     return true;
 }

@@ -8,7 +8,9 @@
 #include "crosepacket.h"
 #include "systems/system.h"
 
-#define THREESHOLD 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
+// FIXME : set those values in the config file/database ?
+#define NEARBY_DIST 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
+#define POSITION_CHEATING 1000*1000
 
 class EntitySystem {
     public:

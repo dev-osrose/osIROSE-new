@@ -51,14 +51,20 @@ void MovementSystem::move(Entity entity, float x, float y) {
 }
 
 void MovementSystem::stop(Entity entity, float x, float y) {
-    if (!entity)
+    if (!entity || !entity.component<BasicInfo>())
         return;
     entity.remove<Destination>();
     auto position = entity.component<Position>();
     if (position) {
-        // TODO : check for cheating
-        position->x_ = x;
-        position->y_ = y;
+        float dx = position->x_ - x;
+        float dy = position->y_ - y;
+        if (dx * dx + dy * dy < POSITION_CHEATING) {
+            position->x_ = x;
+            position->y_ = y;
+        } else
+            logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
+                    entity.component<BasicInfo>()->id_, position->x_, position->y_, x, y);
+        // TODO : write the send position packet to every entity so they can update their model
     }
 }
 
