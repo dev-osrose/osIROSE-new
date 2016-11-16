@@ -15,6 +15,7 @@
 #include "srv_serverdata.h"
 #include "srv_playerchar.h"
 #include "srv_stopmoving.h"
+#include "srv_stop.h"
 #include "cli_joinserverreq.h"
 #include "srv_joinserverreply.h"
 #include "srv_whisperchat.h"

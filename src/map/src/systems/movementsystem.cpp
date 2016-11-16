@@ -64,7 +64,6 @@ void MovementSystem::stop(Entity entity, float x, float y) {
         } else
             logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
                     entity.component<BasicInfo>()->id_, position->x_, position->y_, x, y);
-        // TODO : write the send position packet to every entity so they can update their model
     }
 }
 
@@ -82,6 +81,6 @@ void MovementSystem::stopMoving(EntityManager&, CMapClient *client, Entity entit
     if (!client)
         return;
     stop(entity, packet.x(), packet.y());
-    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
-            *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+            *makePacket<ePacketType::PAKWC_STOP>(entity));
 }
