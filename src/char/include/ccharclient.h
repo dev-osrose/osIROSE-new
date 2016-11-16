@@ -44,13 +44,13 @@ class CCharClient : public RoseCommon::CRoseClient {
     TRANSFERING,
   };
 
-  uint16_t access_rights_;
-  eSTATE login_state_;
+  uint16_t accessRights_;
+  eSTATE loginState_;
   uint32_t sessionId_;
-  uint32_t userid_;
-  uint32_t channelid_;
+  uint32_t userId_;
+  uint32_t channelId_;
 
-  std::vector<uint32_t> character_real_id_;
+  std::vector<uint32_t> characterRealId_;
 };
 
 #endif
