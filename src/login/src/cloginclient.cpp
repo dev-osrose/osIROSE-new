@@ -79,7 +79,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   }
 
   username_ = Core::CMySQL_Database::escapeData(P->username());
-  std::string clientpass = P->password();
+  std::string clientpass = Core::CMySQL_Database::escapeData(P->password());
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
