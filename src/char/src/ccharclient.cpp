@@ -37,7 +37,6 @@ CCharClient::CCharClient(tcp::socket _sock)
       channelId_(0) {}
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
-    logger_->info("Packet incoming with type {}", (uint16_t)CRosePacket::type(_buffer));
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(

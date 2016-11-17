@@ -30,6 +30,7 @@ Entity EntitySystem::create() {
 }
 
 bool EntitySystem::isNearby(Entity a, Entity b) {
+    return true; // FIXME : actually implement the sight calculation instead of the distance
     if (!a || !b)
         return false;
     auto posa = a.component<Position>();
