@@ -1,36 +1,26 @@
-// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http ://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+#pragma once
 
-#ifndef __SRV_REMOVEOBJECT_H__
-#define __SRV_REMOVEOBJECT_H__
+#include "packetfactory.h"
+#include "entityComponents.h"
 
-#include "epackettype.h"
-#include "crosepacket.h"
 
 namespace RoseCommon {
 
+REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject)
 class SrvRemoveObject : public CRosePacket {
- public:
-  SrvRemoveObject(Entity entity);;
+	public:
+		SrvRemoveObject();
+		SrvRemoveObject(Entity entity);
 
- protected:
-  void pack();
+		virtual ~SrvRemoveObject() = default;
 
- private:
-  Entity entity_;
+		Entity entity() const;
+
+	protected:
+		virtual void pack() override;
+
+	private:
+		Entity entity_;
 };
 
 }
-
-#endif

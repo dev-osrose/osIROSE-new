@@ -18,7 +18,7 @@
 #include "ccharserver.h"
 #include "config.h"
 #include "iscpackets.pb.h"
-#include "rosepackets.h"
+#include "packets.h"
 
 using namespace RoseCommon;
 

@@ -18,7 +18,7 @@
 #include "croseclient.h"
 #include "packetclasses.h"
 #include "loginpackets.h"
-#include "rosepackets.h"
+#include "packets.h"
 
 class CLoginClient : public RoseCommon::CRoseClient {
  public:
@@ -31,8 +31,8 @@ class CLoginClient : public RoseCommon::CRoseClient {
 
   // Packet Helper Functions
   bool UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P);
-  bool ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P);
-  bool ServerSelect(std::unique_ptr<RoseCommon::CliServerSelectReq> P);
+  bool ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P);
+  bool ServerSelect(std::unique_ptr<RoseCommon::CliSrvSelectReq> P);
 
   void SendLoginReply(uint8_t Result);
 

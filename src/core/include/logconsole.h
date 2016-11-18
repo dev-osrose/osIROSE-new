@@ -39,7 +39,8 @@ namespace Core {
 enum class log_type {
   GENERAL,
   NETWORK,
-  DATABASE
+  DATABASE,
+  SYSTEM
 };
 
 class CLog {

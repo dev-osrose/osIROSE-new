@@ -345,14 +345,10 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `user_exists`(`_user` VARCHAR(24)) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_exists`(IN `_user` VARCHAR(24))
     READS SQL DATA
 BEGIN
-  if (select id from accounts where username = _user) > 0
-  then
-    return 1;
-  end if;
-return 0;
+  SELECT id from accounts where username = _user;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

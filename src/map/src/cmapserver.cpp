@@ -38,6 +38,10 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
   }
 }
 
+void CMapServer::SendPacket(const CMapClient* sender, CMapServer::eSendType type, CRosePacket &_buffer) {
+    CRoseServer::SendPacket(dynamic_cast<const CRoseClient*>(sender), type, _buffer);
+}
+
 CMapServer::~CMapServer() {}
 
 void CMapServer::OnAccepted(tcp::socket _sock) {

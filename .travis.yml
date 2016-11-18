@@ -21,15 +21,13 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
+        sources: &sources
         - ubuntu-toolchain-r-test
         - extras-precise
         - boost-latest
         - kalakris-cmake
+        - llvm-toolchain-precise-3.8
         packages:
         - cmake
         - lcov
@@ -38,6 +36,7 @@ matrix:
         - gcc-5
         - g++-5
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -63,15 +62,8 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -80,6 +72,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -106,15 +99,8 @@ matrix:
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -123,6 +109,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:
@@ -144,35 +131,29 @@ matrix:
     - "./ci/before_script.sh"
     script:
     - cd build
-    - "../ci/script.sh"
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Debug
+    - "../ci/script.sh;"
+  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
-        - llvm-toolchain-precise-3.7
+        sources: *sources
         packages:
         - cmake
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.7
-        - llvm-3.7-dev
+        - llvm-3.8
+        - llvm-3.8-dev
         - llvm-runtime
-        - clang-3.7
+        - clang-3.8
         - libstdc++5
+        - libstdc++6
     cache:
+      apt: true
       directories:
       - "./protobuf"
-      - llvm-3.7.0
+      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -181,8 +162,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=tests
-    - export CXX="clang++-3.7" CC="clang-3.7";
+    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
@@ -191,35 +171,29 @@ matrix:
     - "./ci/before_script.sh"
     script:
     - cd build
-    - "../ci/script.sh"
-  - env: clang-3.7 LIBCXX=1 BUILD_TYPE=Release
+    - "../ci/script.sh;"
+  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Release
     sudo: required
     language: cpp
     addons:
-#      artifacts:
-#        paths:
-#        - ${PROOT}/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}.tar.gz
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
-        - llvm-toolchain-precise-3.7
+        sources: *sources
         packages:
         - cmake
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.7
-        - llvm-3.7-dev
+        - llvm-3.8
+        - llvm-3.8-dev
         - llvm-runtime
-        - clang-3.7
+        - clang-3.8
         - libstdc++5
+        - libstdc++6
     cache:
+      apt: true
       directories:
       - "./protobuf"
-      - llvm-3.7.0
+      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -228,8 +202,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=tests
-    - export CXX="clang++-3.7" CC="clang-3.7";
+    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
@@ -245,11 +218,7 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - kalakris-cmake
+        sources: *sources
         packages:
         - cmake
         - lcov
@@ -258,6 +227,7 @@ matrix:
         - gcc-6
         - g++-6
     cache:
+      apt: true
       directories:
       - "./protobuf"
     branches:

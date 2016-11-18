@@ -19,7 +19,7 @@
 #include "packetclasses.h"
 #include "mappackets.h"
 #include "crosepacket.h"
-#include "rosepackets.h"
+#include "packets.h"
 #include "entitySystem.h"
 
 class CMapClient : public RoseCommon::CRoseClient {
@@ -29,7 +29,7 @@ class CMapClient : public RoseCommon::CRoseClient {
 
   virtual ~CMapClient();
 
-  virtual bool IsNearby(const IObject* _otherClient) const override;
+  virtual bool IsNearby(const CRoseClient* _otherClient) const override;
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
@@ -39,11 +39,6 @@ class CMapClient : public RoseCommon::CRoseClient {
   bool LogoutReply();
   bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
   bool ChangeMapReply(std::unique_ptr<RoseCommon::CliChangeMapReq> P);
-  bool ChatReply(std::unique_ptr<RoseCommon::CliChat> P);
-  bool ChatWhisper(std::unique_ptr<RoseCommon::CliWhisper> P);
-
-  bool MouseCmdRcv(std::unique_ptr<RoseCommon::CliMouseCmd> P);
-  bool StopMovingRcv(std::unique_ptr<RoseCommon::CliStopMoving> P);
 
   enum class eSTATE {
     DEFAULT,
@@ -52,11 +47,10 @@ class CMapClient : public RoseCommon::CRoseClient {
 
   uint16_t access_rights_;
   eSTATE login_state_;
-  uint32_t session_id_;
+  uint32_t sessionId_;
   uint32_t userid_;
   uint32_t charid_;
   std::shared_ptr<EntitySystem> entitySystem_;
-  Entity entity_;
 };
 
 #endif

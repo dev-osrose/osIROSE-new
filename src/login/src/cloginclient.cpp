@@ -79,7 +79,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   }
 
   username_ = Core::CMySQL_Database::escapeData(P->username());
-  std::string clientpass = P->password();
+  std::string clientpass = Core::CMySQL_Database::escapeData(P->password());
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
@@ -89,11 +89,6 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      std::string pwd = "";
-      //res->getString("password", pwd);
-
-      //if (pwd == clientpass) 
-	  {
         uint32_t onlineStatus = 0, accessRights = 0;
         res->getInt("online", onlineStatus);
         if (res->getInt("access", accessRights)) {
@@ -115,13 +110,14 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
           // Online already
           SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
-//      } else {
-//        // incorrect password.
-//        SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-      }
     } else {
-      // The user doesn't exist or server is down.
-      SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+        if ((res = database.QStore(fmt::format("CALL user_exists('{}');", username_.c_str()))) && res->size())
+            SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+        else if (res)
+          // The user doesn't exist or server is down.
+          SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+        else
+            SendLoginReply(SrvLoginReply::FAILED);
     }
   } else {
     SendLoginReply(SrvLoginReply::FAILED);
@@ -129,14 +125,14 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   return true;
 }
 
-bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
+bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get channel list before logging in.",
         GetId());
     return true;
   }
-  uint32_t ServerID = P->server_id()-1;
+  uint32_t ServerID = P->serverId()-1;
 
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
@@ -157,15 +153,15 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelReq> P) {
 }
 
 bool CLoginClient::ServerSelect(
-    std::unique_ptr<RoseCommon::CliServerSelectReq> P) {
+    std::unique_ptr<RoseCommon::CliSrvSelectReq> P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to select a server before logging in.",
         GetId());
     return true;
   }
-  uint32_t serverID = P->server_id()-1;
-  uint8_t channelID = P->channel_id()-1;
+  uint32_t serverID = P->serverId()-1;
+  uint8_t channelID = P->channelId()-1;
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
@@ -185,7 +181,7 @@ bool CLoginClient::ServerSelect(
       database.QExecute(query);
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          server->GetIpAddress(), session_id_, 0, server->GetPort());
+          SrvSrvSelectReply::OK, session_id_, 0, server->GetIpAddress(), server->GetPort());
       this->Send(*packet);
       break;
     }

@@ -1,5 +1,55 @@
 #include "entitySystem.h"
+#include "systems/movementsystem.h"
+#include "systems/updatesystem.h"
+#include "systems/chatsystem.h"
 #include "database.h"
+
+EntitySystem::EntitySystem() : systemManager_(entityManager_) {
+    // TODO : use on_component_removed for Destination
+    systemManager_.add<Systems::MovementSystem>();
+    systemManager_.add<Systems::UpdateSystem>();
+    systemManager_.add<Systems::ChatSystem>();
+}
+
+void EntitySystem::update(double dt) {
+    systemManager_.update(dt);
+    for (auto it : toDestroy_)
+        if (it)
+            it.destroy();
+    toDestroy_.clear();
+}
+
+void EntitySystem::destroy(Entity entity) {
+    if (!entity)
+        return;
+    toDestroy_.push_back(entity);
+}
+
+Entity EntitySystem::create() {
+    return entityManager_.create();
+}
+
+bool EntitySystem::isNearby(Entity a, Entity b) {
+    return true; // FIXME : actually implement the sight calculation instead of the distance
+    if (!a || !b)
+        return false;
+    auto posa = a.component<Position>();
+    auto posb = b.component<Position>();
+    if (!posa || !posb)
+        return false; // FIXME : is it a bug if there is no position?
+    if (posa->map_ != posb->map_)
+        return false;
+    double dist = (posa->x_ - posb->x_) * (posa->x_ - posb->x_) + (posa->y_ - posb->y_) * (posa->y_ - posb->y_);
+    if (dist > NEARBY_DIST)
+        return false;
+    return true;
+}
+
+bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
+    if (!entity)
+        return false;
+    return systemManager_.dispatch(entity, packet);
+}
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     auto &database = Core::databasePool.getDatabase();
@@ -106,7 +156,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
 
     // TODO : write the inventory code
     entity.assign<Inventory>();
-    get<UpdateComponents>().calculateSpeed(entity);
+    get<Systems::UpdateSystem>().calculateSpeed(entity);
     return entity;
 }
 

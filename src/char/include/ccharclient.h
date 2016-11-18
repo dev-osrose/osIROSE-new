@@ -18,6 +18,7 @@
 #include "croseclient.h"
 #include "packetclasses.h"
 #include "charpackets.h"
+#include "packets.h"
 #include "crosepacket.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
@@ -25,7 +26,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   CCharClient();
   CCharClient(tcp::socket _sock);
   
-  bool IsNearby(const IObject* _otherClient) const override { (void)_otherClient; return true; }
+  bool IsNearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
@@ -43,13 +44,13 @@ class CCharClient : public RoseCommon::CRoseClient {
     TRANSFERING,
   };
 
-  uint16_t access_rights_;
-  eSTATE login_state_;
-  uint32_t session_id_;
-  uint32_t userid_;
-  uint32_t channelid_;
+  uint16_t accessRights_;
+  eSTATE loginState_;
+  uint32_t sessionId_;
+  uint32_t userId_;
+  uint32_t channelId_;
 
-  std::vector<uint32_t> character_real_id_;
+  std::vector<uint32_t> characterRealId_;
 };
 
 #endif

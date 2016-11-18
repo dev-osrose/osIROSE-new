@@ -17,9 +17,11 @@
 
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "packetfactory.h"
 
 namespace RoseCommon {
 	
+REGISTER_SEND_PACKET(ePacketType::PAKWC_CHANGE_MAP_REPLY, SrvChangeMapReply)
 class SrvChangeMapReply : public CRosePacket {
  public:
   SrvChangeMapReply(uint16_t object_index, uint16_t current_hp,

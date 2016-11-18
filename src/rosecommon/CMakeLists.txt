@@ -12,7 +12,7 @@ project(${PROJECT})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 
 IF (NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -32,16 +32,15 @@ set( SOURCES_HEADER
   include/croseisc
   include/crosepacket
   include/epackettype
-  include/findclass
   include/iscontainer
   include/packetclasses
-  include/rosepackets
   include/loginpackets
   include/charpackets
   include/mappackets
+  include/packets
 )
 
-SET( SOURCES_BASE
+SET(SOURCES_BASE
   src/crosecrypt 
   src/croseserver
   src/croseclient
@@ -51,7 +50,9 @@ SET( SOURCES_BASE
   src/mappackets
 )
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS)
+
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 

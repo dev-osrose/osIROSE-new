@@ -24,19 +24,31 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
 
-set( SOURCES_HEADER
-  include/cmapserver
-  include/cmapclient
-  include/cmapisc 
-)
+SET( SOURCES_HEADER
+	include/cmapserver
+	include/cmapclient
+	include/cmapisc
+    include/entitySystem
+    include/systemmanager
+    include/systems/system
+    include/systems/movementsystem
+    include/systems/timesystem
+    include/systems/updatesystem
+    include/systems/chatsystem
+    )
 
-set( SOURCES_MAIN
-  src/main.cpp
-  src/cmapserver
-  src/cmapclient
-  src/cmapisc
-  src/entitysystem
-)
+SET( SOURCES_MAIN
+	src/main.cpp
+	src/cmapserver
+	src/cmapclient
+	src/cmapisc
+    src/entitysystem
+    src/systemmanager
+    src/systems/movementsystem
+    src/systems/timesystem
+    src/systems/updatesystem
+    src/systems/chatsystem
+    )
 
 find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

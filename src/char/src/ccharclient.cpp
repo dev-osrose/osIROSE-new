@@ -16,26 +16,25 @@
 #include "ccharisc.h"
 #include "ccharclient.h"
 #include "epackettype.h"
-#include "rosepackets.h"
 #include "database.h"
 
 using namespace RoseCommon;
 
 CCharClient::CCharClient()
     : CRoseClient(),
-      access_rights_(0),
-      login_state_(eSTATE::DEFAULT),
-      session_id_(0),
-      userid_(0),
-      channelid_(0) {}
+      accessRights_(0),
+      loginState_(eSTATE::DEFAULT),
+      sessionId_(0),
+      userId_(0),
+      channelId_(0) {}
 
 CCharClient::CCharClient(tcp::socket _sock)
     : CRoseClient(std::move(_sock)),
-      access_rights_(0),
-      login_state_(eSTATE::DEFAULT),
-      session_id_(0),
-      userid_(0),
-      channelid_(0) {}
+      accessRights_(0),
+      loginState_(eSTATE::DEFAULT),
+      sessionId_(0),
+      userId_(0),
+      channelId_(0) {}
 
 bool CCharClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -65,14 +64,15 @@ bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
   logger_->trace("CCharClient::JoinServerReply");
 
-  if (login_state_ != eSTATE::DEFAULT) {
+  if (loginState_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
                   GetId());
     return true;
   }
 
-  uint32_t sessionID = P->session_id();
-  std::string password = P->password();
+  uint32_t sessionID = P->sessionId();
+  std::string password = Core::CMySQL_Database::escapeData(P->password());
+  logger_->info("user {}, password {} bla", sessionID, password);
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
@@ -81,11 +81,11 @@ bool CCharClient::JoinServerReply(
   res = database.QStore(query);
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      login_state_ = eSTATE::LOGGEDIN;
-      res->getInt("userid", userid_);
-      res->getInt("channelid", channelid_);
+      loginState_ = eSTATE::LOGGEDIN;
+      res->getInt("userId", userId_);
+      res->getInt("channelId", channelId_);
 
-      session_id_ = sessionID;
+      sessionId_ = sessionID;
 
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::OK, std::time(nullptr));
@@ -106,7 +106,7 @@ bool CCharClient::JoinServerReply(
 bool CCharClient::SendCharListReply() {
   logger_->trace("CharListReply\n");
 
-  if (login_state_ != eSTATE::LOGGEDIN) {
+  if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get the char list before logging in.",
         GetId());
@@ -115,7 +115,7 @@ bool CCharClient::SendCharListReply() {
 
   // mysql query to get the characters created.
   std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL get_character_list({});", userid_);
+  std::string query = fmt::format("CALL get_character_list({});", userId_);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   res = database.QStore(query);
@@ -142,7 +142,7 @@ bool CCharClient::SendCharListReply() {
 
         {
           res->getInt("id", id);
-          character_real_id_.push_back(id);
+          characterRealId_.push_back(id);
           query = fmt::format("CALL get_equipped({});", id);
           itemres = database.QStore(query);
           if (itemres != nullptr) {
@@ -174,7 +174,7 @@ bool CCharClient::SendCharCreateReply(
     std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
   logger_->trace("CharCreateReply\n");
 
-  if (login_state_ != eSTATE::LOGGEDIN) {
+  if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get the create a char before logging in.",
         GetId());
@@ -182,7 +182,7 @@ bool CCharClient::SendCharCreateReply(
   }
   std::string query =
       fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});",
-                  Core::CMySQL_Database::escapeData(P->name().c_str()), userid_,
+                  Core::CMySQL_Database::escapeData(P->name().c_str()), userId_,
                   P->race(), P->face(), P->hair(), P->stone());
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -204,13 +204,13 @@ bool CCharClient::SendCharDeleteReply(
     std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
   logger_->trace("CharDeleteReply\n");
 
-  if (login_state_ != eSTATE::LOGGEDIN) {
+  if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to delete a char before logging in.",
                   GetId());
     return true;
   }
 
-  if (P->char_id() > 6) return false;
+  if (P->charId() > 6) return false;
 
   uint32_t time = 0;
   if (P->isDelete()) {
@@ -218,7 +218,7 @@ bool CCharClient::SendCharDeleteReply(
     time = std::time(nullptr);
 
     std::string query =
-        fmt::format("CALL delete_character({}, '{}');", userid_,
+        fmt::format("CALL delete_character({}, '{}');", userId_,
                     Core::CMySQL_Database::escapeData(P->name().c_str()));
 
     Core::IDatabase& database = Core::databasePool.getDatabase();
@@ -226,7 +226,7 @@ bool CCharClient::SendCharDeleteReply(
   }
 
   auto packet =
-      makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(P->name(), time);
+      makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
   Send(*packet);
   return true;
 }
@@ -235,16 +235,16 @@ bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   logger_->trace("CharSelectReply\n");
 
-  if (login_state_ != eSTATE::LOGGEDIN) {
+  if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to select a char before logging in.",
                   GetId());
     return true;
   }
 
-  login_state_ = eSTATE::TRANSFERING;
+  loginState_ = eSTATE::TRANSFERING;
 
   std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
-                                  session_id_, character_real_id_[P->char_id()]);
+                                  sessionId_, characterRealId_[P->charId()]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);
@@ -252,10 +252,10 @@ bool CCharClient::SendCharSelectReply(
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
-        server->GetId() == channelid_) {
+        server->GetId() == channelId_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
-          server->GetIpAddress(), server->GetPort(), session_id_,
-          0);  // this should be set to the map server's encryption seed
+          server->GetPort(), sessionId_,
+          0, server->GetIpAddress());  // this should be set to the map server's encryption seed
       Send(*packet);
     }
   }

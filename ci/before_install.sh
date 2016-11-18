@@ -14,7 +14,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}";
 		gcc --version
 	elif [ "$CXX" = "clang++" ]; then 
-		export CXX="/usr/bin/clang++-3.7" CC="/usr/bin/clang-3.7";
+		export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
 	fi
 elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
     brew update && brew --config

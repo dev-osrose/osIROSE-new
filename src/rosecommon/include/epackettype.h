@@ -124,8 +124,8 @@ enum class ePacketType : uint16_t {
   PAKWC_SET_WEIGHT_REPLY = PAKCS_SET_WEIGHT_REQ,
 
   PAKWC_ADJUST_POSITION = 0x770,
-  PAKCS_STOP_MOVING = 0x771,
-  PAKWC_STOP_MOVING = PAKCS_STOP_MOVING, // This needs to be Impl in the client
+  PAKCS_STOP_MOVING = 0x771, // because it can't anymore
+  PAKWC_STOP_MOVING = PAKCS_STOP_MOVING, // This needs to be Impl in the client, client should stop because it can't move anymore
 
   PAKCS_UPDATE_NPC = 0x774,
   PAKCS_SUMMON_CMD,
@@ -156,9 +156,9 @@ enum class ePacketType : uint16_t {
   PAKWC_PLAYER_CHAR,
   PAKWC_REMOVE_OBJECT,
   PAKCS_SET_POSITION,
-  PAKCS_STOP,
-  PAKWC_STOP = PAKCS_STOP,
-  PAKWC_MOVE, // for monsters only, the client doesn't even look at the Z
+  PAKCS_STOP, // client wants to stop
+  PAKWC_STOP = PAKCS_STOP, // object stops at position x
+  PAKWC_MOVE, // mouse cmd with move mode in it??
 
   PAKCS_MOUSE_CMD = 0x79A, // client wants to move or click on an object
   PAKWC_MOUSE_CMD = PAKCS_MOUSE_CMD, // answer from the server
@@ -178,6 +178,12 @@ inline bool operator!(const ePacketType& rhs) {
 inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs) {
   return (lhs != static_cast<uint32_t>(rhs));
 }
+
+template <typename E>
+constexpr auto to_underlying(E e) noexcept {
+	return static_cast<typename std::underlying_type_t<E>>(e);
+}
+
 
 struct tChannelInfo {
   uint16_t ChannelID;
