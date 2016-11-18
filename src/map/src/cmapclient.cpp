@@ -166,7 +166,7 @@ bool CMapClient::ChangeMapReply(
           auto basic = entity.component<BasicInfo>();
           if (entity != entity_ && basic->loggedIn_)
               this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
-            return true;
+          return true;
         });
 
   basic->loggedIn_ = true;
