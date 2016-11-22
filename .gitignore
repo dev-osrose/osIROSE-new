@@ -178,3 +178,4 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+compile_commands.json
