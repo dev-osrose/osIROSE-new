@@ -147,7 +147,9 @@ DROP TABLE IF EXISTS `item_db`;
 CREATE TABLE `item_db` (
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '',
+  `desc` varchar(255) NOT NULL DEFAULT '',
   `type` tinyint(2) NOT NULL DEFAULT '0',
+  `subtype` tinyint(2) NOT NULL DEFAULT '0',
   `price_buy` mediumint(10) unsigned DEFAULT NULL,
   `price_sell` mediumint(10) unsigned DEFAULT NULL,
   `weight` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -158,7 +160,7 @@ CREATE TABLE `item_db` (
   `equip_jobs` int(12) unsigned DEFAULT NULL,
   `equip_genders` tinyint(2) unsigned DEFAULT NULL,
   `equip_level` tinyint(3) unsigned DEFAULT NULL,
-  `refineable` tinyint(1) unsigned DEFAULT NULL,
+  `refinable` tinyint(1) unsigned DEFAULT NULL,
   `view_id` smallint(3) unsigned DEFAULT NULL,
   `script` text,
   PRIMARY KEY (`id`)
