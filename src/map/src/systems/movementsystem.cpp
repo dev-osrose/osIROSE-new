@@ -6,10 +6,10 @@
 using namespace Systems;
 using namespace RoseCommon;
 
-MovementSystem::MovementSystem(EntityManager &es, SystemManager &manager) {
+MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
     manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
-    es.on_component_removed<Destination>([](Entity entity, Component<Destination>) {
+    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Component<Destination>) {
             if (!entity)
                 return;
             auto socket = entity.component<SocketConnector>();
@@ -82,14 +82,14 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     }
 }
 
-void MovementSystem::processMove(EntityManager&, CMapClient *client, Entity entity, const CliMouseCmd &packet) {
+void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMouseCmd &packet) {
     logger_->trace("MovementSystem::processMove");
     if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
         return;
     move(entity, packet.x(), packet.y());
 }
 
-void MovementSystem::stopMoving(EntityManager&, CMapClient *client, Entity entity, const CliStopMoving &packet) {
+void MovementSystem::stopMoving(CMapClient *client, Entity entity, const CliStopMoving &packet) {
     logger_->trace("MovementSystem::stopMoving");
     if (!client)
         return;

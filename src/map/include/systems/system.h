@@ -9,13 +9,14 @@ namespace Systems {
 
 class System {
     public:
-        System() : logger_(Core::CLog::GetLogger(Core::log_type::SYSTEM).lock()) {}
+        System(SystemManager &manager) : manager_(manager), logger_(Core::CLog::GetLogger(Core::log_type::SYSTEM).lock()) {}
 
         virtual ~System() = default;
 
         virtual void update(EntityManager&, double dt) = 0;
 
     protected:
+        SystemManager &manager_;
         std::shared_ptr<spdlog::logger> logger_;
 };
 

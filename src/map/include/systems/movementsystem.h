@@ -6,7 +6,7 @@ namespace Systems {
 
 class MovementSystem : public System {
     public:
-        MovementSystem(EntityManager &es, SystemManager &manager);
+        MovementSystem(SystemManager &manager);
         virtual ~MovementSystem() = default;
 
         virtual void update(EntityManager &es, double dt);
@@ -15,8 +15,8 @@ class MovementSystem : public System {
 
         void stop(Entity entity, float x, float y);
 
-        void processMove(EntityManager &es, CMapClient *client, Entity entity, const RoseCommon::CliMouseCmd &packet);
-        void stopMoving(EntityManager &es, CMapClient *client, Entity entity, const RoseCommon::CliStopMoving &packet);
+        void processMove(CMapClient *client, Entity entity, const RoseCommon::CliMouseCmd &packet);
+        void stopMoving(CMapClient *client, Entity entity, const RoseCommon::CliStopMoving &packet);
 };
 
 }

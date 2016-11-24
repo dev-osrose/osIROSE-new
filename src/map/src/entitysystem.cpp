@@ -4,11 +4,33 @@
 #include "systems/chatsystem.h"
 #include "database.h"
 
-EntitySystem::EntitySystem() : systemManager_(entityManager_) {
+EntitySystem::EntitySystem() : systemManager_(*this) {
     // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
+}
+
+EntityManager &EntitySystem::getEntityManager() {
+    return entityManager_;
+}
+
+void EntitySystem::registerEntity(Entity entity) {
+    if (!entity)
+        return;
+    auto basic = entity.component<BasicInfo>();
+    if (!basic || basic->name_ == "" || !basic->id_)
+        return;
+    nameToEntity_[basic->name_] = entity;
+    idToEntity_[basic->id_] = entity;
+}
+
+Entity EntitySystem::getEntity(const std::string &name) {
+    return nameToEntity_[name];
+}
+
+Entity EntitySystem::getEntity(uint32_t charId) {
+    return idToEntity_[charId];
 }
 
 void EntitySystem::update(double dt) {
@@ -131,7 +153,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
 
     auto equipped = entity.assign<EquippedItems>();
     res = database.QStore(fmt::format("CALL get_equipped({});", charId));
-    if (!res || !res->size()) {
+    if (!res) {
         entity.destroy();
         return Entity();
     }
@@ -157,6 +179,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     // TODO : write the inventory code
     entity.assign<Inventory>();
     get<Systems::UpdateSystem>().calculateSpeed(entity);
+
+    registerEntity(entity);
     return entity;
 }
 

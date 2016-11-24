@@ -17,16 +17,17 @@ class System;
 }
 
 class CMapClient;
+class EntitySystem;
 
 using Systems::System;
 
 class SystemManager {
     public:
-        SystemManager(EntityManager &es) : entityManager_(es) {}
+        SystemManager(EntitySystem &es) : entitySystem_(es) {}
 
         template <typename T, typename... Args>
         T& add(Args&&... args) {
-            systems_.emplace(typeid(T), std::make_unique<T>(entityManager_, *this, std::forward<Args>(args)...));
+            systems_.emplace(typeid(T), std::make_unique<T>(*this, std::forward<Args>(args)...));
             return *dynamic_cast<T*>(systems_.at(typeid(T)).get());
         }
 
@@ -63,13 +64,13 @@ class SystemManager {
 
         // FIXME : No possibility to manually unregister as of now
         template <class T, class U>
-        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(EntityManager&, CMapClient*, Entity, const U&)) {
+        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(CMapClient*, Entity, const U&)) {
             dispatch_.emplace(to_underlying(type), [this, method](Entity entity, const RoseCommon::CRosePacket &packet) {
                     if (auto *system = this->get<T>()) {
                         if (!entity)
                             return false;
                         if (auto socket = entity.component<SocketConnector>()) {
-                            (system ->* method)(this->entityManager_, socket->client_, entity, dynamic_cast<const U&>(packet));
+                            (system ->* method)(socket->client_, entity, dynamic_cast<const U&>(packet));
                             return true;
                         }
                     } else
@@ -78,8 +79,13 @@ class SystemManager {
                     });
         }
 
+        Entity getEntity(const std::string &name);
+        Entity getEntity(uint32_t charId);
+
+        EntityManager &getEntityManager();
+
     private:
-        EntityManager &entityManager_;
+        EntitySystem &entitySystem_;
         std::unordered_map<std::type_index, std::unique_ptr<System>> systems_;
         std::unordered_multimap<std::underlying_type_t<RoseCommon::ePacketType>,
 		std::function<bool(Entity, const RoseCommon::CRosePacket&)>> dispatch_;
