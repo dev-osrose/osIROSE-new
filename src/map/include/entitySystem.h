@@ -7,6 +7,7 @@
 #include <type_traits>
 #include "crosepacket.h"
 #include "systems/system.h"
+#include <unordered_map>
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -41,10 +42,20 @@ class EntitySystem {
                     return;
         }
 
+        void registerEntity(const std::string &name, Entity entity);
+        void registerEntity(uint32_t charId, Entity entity);
+
+        Entity getEntity(const std::string &name);
+        Entity getEntity(uint32_t charId);
+
+        EntityManager &getEntityManager();
+
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;
         std::vector<Entity> toDestroy_;
+        std::unordered_map<std::string, Entity> nameToEntity_;
+        std::unordered_map<uint32_t, Entity> idToEntity_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

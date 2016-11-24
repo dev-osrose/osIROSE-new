@@ -6,7 +6,7 @@ namespace Systems {
 
 class UpdateSystem : public System {
     public:
-        UpdateSystem(EntityManager&, SystemManager&) {}
+        UpdateSystem(SystemManager &manager) : System(manager) {}
         virtual ~UpdateSystem() = default;
 
         virtual void update(EntityManager &es, double);
