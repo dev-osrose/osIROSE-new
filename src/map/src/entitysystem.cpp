@@ -15,16 +15,14 @@ EntityManager &EntitySystem::getEntityManager() {
     return entityManager_;
 }
 
-void EntitySystem::registerEntity(const std::string &name, Entity entity) {
+void EntitySystem::registerEntity(Entity entity) {
     if (!entity)
         return;
-    nameToEntity_[name] = entity;
-}
-
-void EntitySystem::registerEntity(uint32_t charId, Entity entity) {
-    if (!entity)
+    auto basic = entity.component<BasicInfo>();
+    if (!basic || basic->name_ == "" || !basic->id_)
         return;
-    idToEntity_[charId] = entity;
+    nameToEntity_[basic->name_] = entity;
+    idToEntity_[basic->id_] = entity;
 }
 
 Entity EntitySystem::getEntity(const std::string &name) {
@@ -182,8 +180,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     entity.assign<Inventory>();
     get<Systems::UpdateSystem>().calculateSpeed(entity);
 
-    registerEntity(basic->name_, entity);
-    registerEntity(charId, entity);
+    registerEntity(entity);
     return entity;
 }
 
