@@ -1,7 +1,7 @@
 #pragma once
 
 struct Stats {
-    Stats() : maxHp_(0), maxMp_(0), str_(0), dex_(0), int_(0), con_(0), charm_(0), sense_(0), bodySize_(0), headSize_(0) {}
+    Stats() : maxHp_(0), maxMp_(0), str_(0), dex_(0), int_(0), con_(0), charm_(0), sense_(0), bodySize_(100), headSize_(100) {}
 
     uint32_t maxHp_;
     uint32_t maxMp_;
