@@ -114,6 +114,23 @@ bool CMapClient::JoinServerReply(
         Send(*packet);
 
         entity_.assign<SocketConnector>(this);
+        auto inventory = entity_.component<Inventory>();
+        if (!inventory)
+            logger_->info("NO INVENTORY!");
+        for (auto &it : inventory->getEquipped())
+            logger_->info("item {} {} {} {} {} {} {} {} {} {} {}",
+                    it.type_,
+                    it.id_,
+                    it.isCreated_,
+                    it.gemOpt_,
+                    it.durability_,
+                    it.life_,
+                    it.hasSocket_,
+                    it.isAppraised_,
+                    it.refine_,
+                    it.count_,
+                    it.isStackable_
+                    );
         // SEND PLAYER DATA HERE!!!!!!
         auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
         Send(*packet2);

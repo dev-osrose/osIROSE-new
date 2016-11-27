@@ -10,9 +10,8 @@ Entity SrvPlayerChar::entity() const {
 	return entity_;
 }
 
-
 void SrvPlayerChar::pack() {
-	auto equippedItems = entity_.component<EquippedItems>();
+	auto inventory = entity_.component<Inventory>();
 	auto ridingItems = entity_.component<RidingItems>();
 	auto advancedInfo = entity_.component<AdvancedInfo>();
 	auto basicInfo = entity_.component<BasicInfo>();
@@ -42,7 +41,7 @@ void SrvPlayerChar::pack() {
 	*this << advancedInfo->runSpeed_;
 	*this << advancedInfo->atkSpeed_;
 	*this << advancedInfo->weightRate_;
-    for (auto &it : equippedItems->items_) {
+    for (auto &it : inventory->getEquipped()) {
         *this << it.getVisible();
     }
     for (auto &it : bulletItems->items_) {

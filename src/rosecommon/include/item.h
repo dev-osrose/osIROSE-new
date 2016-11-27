@@ -31,7 +31,6 @@ struct Item : public ISerialize {
     bool isAppraised_;
     uint8_t refine_;
     uint32_t count_;
-    uint16_t quality_;
     bool isStackable_;
 };
 

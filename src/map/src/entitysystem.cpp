@@ -153,19 +153,6 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     // TODO : write the hotbar table and loading code
     entity.assign<Hotbar>();
 
-    auto equipped = entity.assign<EquippedItems>();
-    res = database.QStore(fmt::format("CALL get_equipped({});", charId));
-    if (!res) {
-        entity.destroy();
-        return Entity();
-    }
-    for (auto &it : *res) {
-        size_t slot;
-        it->getInt("slot", slot);
-        equipped->items_[slot].loadFromDatabase(*it);
-    }
-    if (!equipped->items_[EquippedItems::FACE].id_)
-        equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
     entity.assign<StatusEffects>();
     entity.assign<RidingItems>();
     entity.assign<BulletItems>();
@@ -180,8 +167,12 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     for (auto &it : *res) {
         size_t slot;
         it->getInt("slot", slot);
+        if (slot >= Inventory::maxItems)
+            continue; // TODO : add a warning about that slot
         inventory->items_[slot].loadFromDatabase(*it);
     }
+    if (!inventory->items_[Inventory::FACE].id_)
+        inventory->items_[Inventory::FACE].id_ = graphics->face_;
     get<Systems::UpdateSystem>().calculateSpeed(entity);
 
     registerEntity(entity);

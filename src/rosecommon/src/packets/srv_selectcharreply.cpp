@@ -10,7 +10,6 @@ Entity SrvSelectCharReply::entity() const {
 	return entity_;
 }
 
-
 void SrvSelectCharReply::pack() {
 	auto basicInfo = entity_.component<BasicInfo>();
 	auto position = entity_.component<Position>();
@@ -20,7 +19,7 @@ void SrvSelectCharReply::pack() {
 	auto stats = entity_.component<Stats>();
 	auto skills = entity_.component<Skills>();
 	auto hotbar = entity_.component<Hotbar>();
-	auto equippedItems = entity_.component<EquippedItems>();
+	auto inventory = entity_.component<Inventory>();
 	auto advancedInfo = entity_.component<AdvancedInfo>();
 
 	*this << characterGraphics->race_;
@@ -28,7 +27,7 @@ void SrvSelectCharReply::pack() {
 	*this << position->x_;
 	*this << position->y_;
 	*this << position->spawn_;
-    for (auto &it : equippedItems->items_) {
+    for (auto &it : inventory->getEquipped()) {
         *this << it.getVisible();
     }
 	*this << characterInfo->stone_;

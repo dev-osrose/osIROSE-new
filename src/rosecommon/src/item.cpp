@@ -13,7 +13,6 @@ Item::Item() :
     isAppraised_(false),
     refine_(0),
     count_(0),
-    quality_(0),
     isStackable_(false) {}
 
 uint32_t Item::getVisible() const {
