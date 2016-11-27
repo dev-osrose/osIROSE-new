@@ -38,6 +38,7 @@ set( SOURCES_HEADER
   include/charpackets
   include/mappackets
   include/packets
+  include/item
 )
 
 SET(SOURCES_BASE
@@ -48,6 +49,7 @@ SET(SOURCES_BASE
   src/loginpackets
   src/charpackets
   src/mappackets
+  src/item
 )
 
 AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS)

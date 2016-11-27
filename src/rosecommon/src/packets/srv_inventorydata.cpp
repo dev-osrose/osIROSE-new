@@ -17,7 +17,7 @@ void SrvInventoryData::pack() {
 
 	*this << advancedInfo->zuly_;
 	for (auto &it : inventory->items_) {
-		*this << static_cast<ISerialize&>(it);
+		*this << it.getHeader() << it.getData();
 	}
 
 }

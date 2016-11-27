@@ -29,7 +29,7 @@ void SrvSelectCharReply::pack() {
 	*this << position->y_;
 	*this << position->spawn_;
     for (auto &it : equippedItems->items_) {
-        it.partialSerialize(*this);
+        *this << it.getVisible();
     }
 	*this << characterInfo->stone_;
 	*this << characterGraphics->face_;
@@ -61,15 +61,15 @@ void SrvSelectCharReply::pack() {
 	*this << characterInfo->pkFlag_;
 	*this << characterInfo->stamina_;
 	for (auto &it : statusEffects->effects_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.expiredSeconds_ << it.value_ << it.unkown_;
 	}
 	*this << characterInfo->patHp_;
 	*this << characterInfo->patCooldownTime_;
 	for (auto &it : skills->skills_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.id_;
 	}
 	for (auto &it : hotbar->items_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.item_;
 	}
 	*this << basicInfo->tag_;
 	*this << basicInfo->name_;

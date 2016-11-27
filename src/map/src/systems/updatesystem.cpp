@@ -18,8 +18,9 @@ void UpdateSystem::calculateSpeed(Entity entity) {
         auto equipped = entity.component<EquippedItems>();
         auto stats = entity.component<Stats>();
         advanced->runSpeed_ += stats->dex_ * .8500001;
-        if (equipped->items_[EquippedItems::BOOTS].wearable_.id_ && equipped->items_[EquippedItems::BOOTS].wearable_.life_) {
-            uint16_t realSpeed = equipped->items_[EquippedItems::BOOTS].runSpeed_ - 65;
+        if (equipped->items_[EquippedItems::BOOTS].id_ && equipped->items_[EquippedItems::BOOTS].life_) {
+            // FIXME : realSpeed = boots.runSpeed - 65
+            uint16_t realSpeed = -65;
             uint16_t realMod = realSpeed / 5;
             uint16_t dexMod = realMod * (stats->dex_ + realMod) / 23.222;
             advanced->runSpeed_ += (realSpeed * 5) + realMod + dexMod;

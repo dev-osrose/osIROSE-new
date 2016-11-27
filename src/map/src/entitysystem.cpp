@@ -4,6 +4,8 @@
 #include "systems/chatsystem.h"
 #include "database.h"
 
+using namespace RoseCommon;
+
 EntitySystem::EntitySystem() : systemManager_(*this) {
     // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
@@ -159,25 +161,27 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     }
     for (auto &it : *res) {
         size_t slot;
-        uint16_t id, gemOpt;
-        uint8_t refine;
         it->getInt("slot", slot);
-        it->getInt("itemid", id);
-        it->getInt("gem_opt", gemOpt);
-        it->getInt("socket", equipped->items_[slot].wearable_.hasSocket_);
-        it->getInt("refine", refine);
-        equipped->items_[slot].wearable_.id_ = id;
-        equipped->items_[slot].wearable_.gemOpt_ = gemOpt;
-        equipped->items_[slot].wearable_.refine_ = refine;
+        equipped->items_[slot].loadFromDatabase(*it);
     }
-    if (!equipped->items_[EquippedItems::FACE].wearable_.id_)
-        equipped->items_[EquippedItems::FACE].wearable_.id_ = graphics->face_;
+    if (!equipped->items_[EquippedItems::FACE].id_)
+        equipped->items_[EquippedItems::FACE].id_ = graphics->face_;
     entity.assign<StatusEffects>();
     entity.assign<RidingItems>();
     entity.assign<BulletItems>();
 
     // TODO : write the inventory code
-    entity.assign<Inventory>();
+    auto inventory = entity.assign<Inventory>();
+    res = database.QStore(fmt::format("CALL get_inventory({});", charId));
+    if (!res) {
+        entity.destroy();
+        return Entity();
+    }
+    for (auto &it : *res) {
+        size_t slot;
+        it->getInt("slot", slot);
+        inventory->items_[slot].loadFromDatabase(*it);
+    }
     get<Systems::UpdateSystem>().calculateSpeed(entity);
 
     registerEntity(entity);

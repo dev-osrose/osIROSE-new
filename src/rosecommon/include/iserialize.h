@@ -2,22 +2,23 @@
 #define __ISERIALIZE_H__
 
 #include "crosepacket.h"
+#include "idatabase.h"
 
 namespace RoseCommon {
-
-class CRosePacket;
 
 class ISerialize {
 	public:
 		virtual ~ISerialize() {}
 
 	protected:
-		friend CRosePacket &operator<<(CRosePacket&, const ISerialize&);
-		friend CRosePacket &operator>>(CRosePacket&, ISerialize&);
+        virtual uint32_t getVisible() const = 0;
+        virtual uint16_t getHeader() const = 0;
+        virtual uint32_t getData() const = 0;
 
-		virtual void serialize(CRosePacket &os) const = 0;
-		virtual void deserialize(CRosePacket &os) = 0;
+        virtual void saveToDatabase() const = 0;
+        virtual void loadFromDatabase(Core::IRow&) = 0;
 };
+
 }
 
 #endif

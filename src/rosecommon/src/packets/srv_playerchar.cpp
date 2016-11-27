@@ -43,15 +43,15 @@ void SrvPlayerChar::pack() {
 	*this << advancedInfo->atkSpeed_;
 	*this << advancedInfo->weightRate_;
     for (auto &it : equippedItems->items_) {
-        it.partialSerialize(*this);
+        *this << it.getVisible();
     }
     for (auto &it : bulletItems->items_) {
-        it.bulletPartialSerialize(*this);
+        *this << it.getHeader();
     }
 	*this << characterInfo->job_;
 	*this << basicInfo->level_;
     for (auto &it : ridingItems->items_) {
-        it.partialSerialize(*this);
+        *this << it.getVisible();
     }
 	*this << position->z_;
 	*this << characterInfo->subFlag_;

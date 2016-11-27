@@ -5,7 +5,7 @@
 #include <initializer_list>
 
 // This is not a component!
-struct StatusEffect : public RoseCommon::ISerialize {
+struct StatusEffect {
     StatusEffect() : expiredSeconds_(0), value_(0), unkown_(0), dt_(0) {}
     StatusEffect(uint32_t expiredSeconds, uint16_t value, uint16_t unkown = 0) :
         expiredSeconds_(expiredSeconds), value_(value), unkown_(unkown), dt_(0) {}
@@ -15,12 +15,6 @@ struct StatusEffect : public RoseCommon::ISerialize {
     uint16_t value_;
     uint16_t unkown_;
     double dt_; // to keep track of time (in seconds)
-
-    protected:
-        virtual void serialize(RoseCommon::CRosePacket &os) const {
-            os << expiredSeconds_ << value_ << unkown_;
-        }
-        virtual void deserialize(RoseCommon::CRosePacket&) {}
 };
 
 struct StatusEffects {
