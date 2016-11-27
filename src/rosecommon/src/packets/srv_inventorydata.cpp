@@ -16,7 +16,12 @@ void SrvInventoryData::pack() {
 	auto inventory = entity_.component<Inventory>();
 
 	*this << advancedInfo->zuly_;
+  bool faceSkipped = false;
 	for (auto &it : inventory->items_) {
+    if (!faceSkipped) {
+      faceSkipped = true;
+      continue;
+    }
 		*this << it.getHeader() << it.getData();
 	}
 
