@@ -63,7 +63,7 @@ CREATE TABLE `characters` (
   `faction_fame2` int(11) unsigned NOT NULL DEFAULT '0',
   `faction_points1` int(11) unsigned NOT NULL DEFAULT '0',
   `faction_points2` int(11) unsigned NOT NULL DEFAULT '0',
-tagGrowAbility  `faction_points3` int(11) unsigned NOT NULL DEFAULT '0',
+  `faction_points3` int(11) unsigned NOT NULL DEFAULT '0',
   `face` int(11) unsigned NOT NULL DEFAULT '0',
   `hair` int(11) unsigned NOT NULL DEFAULT '0',
   `stone` int(11) unsigned NOT NULL DEFAULT '0',

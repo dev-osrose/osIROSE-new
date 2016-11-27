@@ -171,8 +171,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
             continue; // TODO : add a warning about that slot
         inventory->items_[slot].loadFromDatabase(*it);
     }
-    if (!inventory->items_[Inventory::FACE].id_)
-        inventory->items_[Inventory::FACE].id_ = graphics->face_;
+    inventory->face_ = graphics->face_;
     get<Systems::UpdateSystem>().calculateSpeed(entity);
 
     registerEntity(entity);
