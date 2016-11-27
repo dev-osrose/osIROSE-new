@@ -21,15 +21,13 @@ uint32_t Item::getVisible() const {
 }
 
 uint16_t Item::getHeader() const {
-    return (id_ << 5) | type_;
+    return (isCreated_ << 15) | (id_ << 5) | type_;
 }
 
 uint32_t Item::getData() const {
     if (isStackable_)
         return count_;
-    return (refine_ << 28) | (isAppraised_ << 27)
-        | (hasSocket_ << 26) | (life_ << 16)
-        | durability_ << 9 << gemOpt_;
+    return (refine_ << 28) | (isAppraised_ << 27) | (hasSocket_ << 26) | (life_ << 16) | (durability_ << 9) | gemOpt_;
 }
 
 void Item::saveToDatabase() const {}
@@ -41,4 +39,7 @@ void Item::loadFromDatabase(Core::IRow &row) {
     row.getInt("refine", refine_);
     row.getInt("gem_opt", gemOpt_);
     row.getInt("socket", hasSocket_);
+    life_ = 1000; // FIXME : placeholder
+    durability_ = 10; // FIXME : placeholder
+    isAppraised_ = true; // FIXME : placeholder
 }
