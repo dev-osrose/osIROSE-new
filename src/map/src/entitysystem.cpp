@@ -2,6 +2,7 @@
 #include "systems/movementsystem.h"
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"
+#include "systems/inventorysystem.h"
 #include "database.h"
 
 using namespace RoseCommon;
@@ -11,6 +12,7 @@ EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
+    systemManager_.add<Systems::InventorySystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
