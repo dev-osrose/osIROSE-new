@@ -13,7 +13,7 @@ auto begin(array_wrapper<T> w) {
 
 template <typename T>
 auto end(array_wrapper<T> w) {
-    return std::begin(w.iterable) + w.length - 1;
+    return std::begin(w.iterable) + w.start + w.length;
 }
 
 struct Inventory {
