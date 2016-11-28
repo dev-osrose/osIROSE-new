@@ -5,14 +5,13 @@
 
 struct Inventory {
     enum Position {
-        FACE = 0,
-        HAIR = 1,
-        HELMET,
+	GOOGLES = 0,
+        HELMET = 1,
         ARMOR,
         GAUNTLET,
         BOOTS,
-        GOOGLES,
         BACKPACK,
+	JEWEL,
         WEAPON_R,
         WEAPON_L,
         MAX_EQUIPPED_ITEMS
@@ -20,16 +19,19 @@ struct Inventory {
 
     static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
 
-    uint16_t face_;
-
     std::array<RoseCommon::Item, maxItems> items_;
 
     std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> getEquipped() const {
         std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> data;
-        for (size_t i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-            data[i] = items_[i];
-        if (!data[FACE].id_)
-            data[FACE].id_ = face_;
+	data[0] = items_[HELMET];
+	data[1] = items_[ARMOR];
+	data[2] = items_[GAUNTLET];
+	data[3] = items_[BOOTS];
+	data[4] = items_[GOOGLES];
+	data[5] = items_[BACKPACK];
+	data[6] = items_[JEWEL];
+	data[7] = items_[WEAPON_R];
+	data[8] = items_[WEAPON_L];
         return data;
     }
 };
