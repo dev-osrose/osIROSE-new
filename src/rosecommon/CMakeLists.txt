@@ -39,21 +39,6 @@ set( SOURCES_HEADER
   include/mappackets
   include/packets
   include/item
-  include/components/advancedinfo
-  include/components/basicinfo
-  include/components/bulletitems
-  include/components/charactergraphics
-  include/components/characterinfo
-  include/components/destination
-  include/components/graphics
-  include/components/hotbar
-  include/components/inventory
-  include/components/position
-  include/components/ridingitems
-  include/components/skills
-  include/components/socketconnector
-  include/components/stats
-  include/components/statuseffects
 )
 
 SET(SOURCES_BASE
@@ -69,83 +54,46 @@ SET(SOURCES_BASE
 
 SET(SOURCES_PACKETS
   src/packets/cli_acceptreq 
-  include/packets/cli_acceptreq
   src/packets/cli_alive 
-  include/packets/cli_alive
   src/packets/cli_changemapreq 
-  include/packets/cli_changemapreq
   src/packets/cli_channellistreq 
-  include/packets/cli_channellistreq
   src/packets/cli_createcharreq 
-  include/packets/cli_createcharreq
   src/packets/cli_deletecharreq 
-  include/packets/cli_deletecharreq
   src/packets/cli_joinserverreq 
-  include/packets/cli_joinserverreq
   src/packets/cli_loginreq 
-  include/packets/cli_loginreq
   src/packets/cli_logoutreq 
-  include/packets/cli_logoutreq
   src/packets/cli_mousecmd 
-  include/packets/cli_mousecmd
   src/packets/cli_normalchat 
-  include/packets/cli_normalchat
   src/packets/cli_revivereq 
-  include/packets/cli_revivereq
   src/packets/cli_screenshottimereq 
-  include/packets/cli_screenshottimereq
   src/packets/cli_selectcharreq 
-  include/packets/cli_selectcharreq
   src/packets/cli_srvselectreq 
-  include/packets/cli_srvselectreq
   src/packets/cli_stop 
-  include/packets/cli_stop
   src/packets/cli_stopmoving 
-  include/packets/cli_stopmoving
   src/packets/cli_whisperchat 
-  include/packets/cli_whisperchat
+  src/packets/cli_equipitem
   src/packets/srv_acceptreply 
-  include/packets/srv_acceptreply
-#  src/packets/srv_changemap 
-  include/packets/srv_changemap
+  # src/packets/srv_changemap 
   src/packets/srv_createcharreply 
-  include/packets/srv_createcharreply
   src/packets/srv_deletecharreply 
-  include/packets/srv_deletecharreply
   src/packets/srv_initdata 
-  include/packets/srv_initdata
   src/packets/srv_inventorydata 
-  include/packets/srv_inventorydata
   src/packets/srv_joinserverreply 
-  include/packets/srv_joinserverreply
   src/packets/srv_logoutreply 
-  include/packets/srv_logoutreply
   src/packets/srv_mousecmd 
-  include/packets/srv_mousecmd
   src/packets/srv_normalchat 
-  include/packets/srv_normalchat
   src/packets/srv_playerchar 
-  include/packets/srv_playerchar
   src/packets/srv_removeobject 
-  include/packets/srv_removeobject
   src/packets/srv_revivereply 
-  include/packets/srv_revivereply
   src/packets/srv_screenshottimereply 
-  include/packets/srv_screenshottimereply
   src/packets/srv_selectcharreply 
-  include/packets/srv_selectcharreply
-#  src/packets/srv_serverdata 
-  include/packets/srv_serverdata
+  # src/packets/srv_serverdata 
   src/packets/srv_srvselectreply 
-  include/packets/srv_srvselectreply
   src/packets/srv_stop 
-  include/packets/srv_stop
   src/packets/srv_stopmoving 
-  include/packets/srv_stopmoving
   src/packets/srv_switchserver 
-  include/packets/srv_switchserver
   src/packets/srv_whisperchat 
-  include/packets/srv_whisperchat
+  src/packets/srv_equipitem
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files

@@ -28,18 +28,19 @@ struct Inventory {
         WEAPON_L,
         NECKLACE,
         RING,
-        EARING
+        EARING,
+        MAX_EQUIP_ITEMS
     };
 
     static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
-    static const uint8_t maxEquippedItems = 8;
 
     using equipped_wrapper = array_wrapper<const std::array<RoseCommon::Item, maxItems>>;
 
     std::array<RoseCommon::Item, maxItems> items_;
 
     equipped_wrapper getEquipped() const {
-        return { items_, 1, maxEquippedItems };
+        static const uint8_t maxVisibleEquippedItems = 8;
+        return { items_, 1, maxVisibleEquippedItems };
     }
 };
 

@@ -163,6 +163,9 @@ enum class ePacketType : uint16_t {
   PAKCS_MOUSE_CMD = 0x79A, // client wants to move or click on an object
   PAKWC_MOUSE_CMD = PAKCS_MOUSE_CMD, // answer from the server
 
+  PAKCS_EQUIP_ITEM = 0x7A5,
+  PAKWC_EQUIP_ITEM = PAKCS_EQUIP_ITEM,
+
   PAKWC_BILLING_MESSAGE = 0x7de,
   PAKCS_SCREEN_SHOT_TIME_REQ = 0x7eb,
   PAKSC_SCREEN_SHOT_TIME_REPLY = PAKCS_SCREEN_SHOT_TIME_REQ,
