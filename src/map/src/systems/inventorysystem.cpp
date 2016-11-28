@@ -28,7 +28,7 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
         logger_->warn("When requesting to change equipped item, the destination wasn't good");
         return;
     }
-    logger_->info("Swaping items from slot {} to {}", packet.slotFrom(), packet.slotTo());
+    logger_->info("Swaping items from slot {} to {} of char {}", packet.slotFrom(), packet.slotTo(), entity.component<BasicInfo>()->id_);
     if (!swapItems(entity, packet.slotTo(), packet.slotFrom()))
         return;
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
