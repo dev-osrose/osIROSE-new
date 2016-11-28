@@ -5,15 +5,17 @@
 
 struct Inventory {
     enum Position {
-	GOOGLES = 0,
-        HELMET = 1,
+	GOOGLES = 1,
+        HELMET = 2,
         ARMOR,
+        BACKPACK,
         GAUNTLET,
         BOOTS,
-        BACKPACK,
-	JEWEL,
         WEAPON_R,
         WEAPON_L,
+	NECKLACE,
+	RING,
+	EARRING,
         MAX_EQUIPPED_ITEMS
     };
 
@@ -23,15 +25,8 @@ struct Inventory {
 
     std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> getEquipped() const {
         std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> data;
-	data[0] = items_[HELMET];
-	data[1] = items_[ARMOR];
-	data[2] = items_[GAUNTLET];
-	data[3] = items_[BOOTS];
-	data[4] = items_[GOOGLES];
-	data[5] = items_[BACKPACK];
-	data[6] = items_[JEWEL];
-	data[7] = items_[WEAPON_R];
-	data[8] = items_[WEAPON_L];
+	for (size_t i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
+		data[i] = items_[i];
         return data;
     }
 };
