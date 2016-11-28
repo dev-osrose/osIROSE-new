@@ -41,8 +41,8 @@ void SrvPlayerChar::pack() {
 	*this << advancedInfo->runSpeed_;
 	*this << advancedInfo->atkSpeed_;
 	*this << advancedInfo->weightRate_;
-	*this << characterGraphics->face_;
-	*this << characterGraphics->hair_;
+	*this << (uint32_t)characterGraphics->face_;
+	*this << (uint32_t)characterGraphics->hair_;
     for (auto &it : inventory->getEquipped()) {
         *this << it.getVisible();
     }

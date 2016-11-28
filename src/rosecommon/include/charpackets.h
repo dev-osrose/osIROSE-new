@@ -44,15 +44,15 @@ class SrvCharacterListReply : public CRosePacket {
   enum equipped_position {
     EQUIP_FACE = 0,
     EQUIP_HAIR = 1,
-    EQUIP_HELMET = 2,
-    EQUIP_ARMOR = 3,
-    EQUIP_GAUNTLET = 4,
-    EQUIP_BOOTS = 5,
-    EQUIP_GOGGLES = 6,
+    EQUIP_GOGGLES,
     EQUIP_FACE_ITEM = EQUIP_GOGGLES,
-    EQUIP_BACKPACK = 7,
-    EQUIP_WEAPON_R = 8,
-    EQUIP_WEAPON_L = 9,
+    EQUIP_HELMET,
+    EQUIP_ARMOR,
+    EQUIP_BACKPACK,
+    EQUIP_GAUNTLET,
+    EQUIP_BOOTS,
+    EQUIP_WEAPON_R,
+    EQUIP_WEAPON_L,
     MAX_EQUIPPED_ITEMS
   };
 

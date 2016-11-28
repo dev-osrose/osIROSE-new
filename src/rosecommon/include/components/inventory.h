@@ -3,9 +3,22 @@
 #include "item.h"
 #include <array>
 
+template <typename T>
+struct array_wrapper { T& iterable; const size_t start; const size_t length; };
+
+template <typename T>
+auto begin(array_wrapper<T> w) {
+    return std::begin(w.iterable) + w.start;
+}
+
+template <typename T>
+auto end(array_wrapper<T> w) {
+    return std::begin(w.iterable) + w.length;
+}
+
 struct Inventory {
     enum Position {
-	GOOGLES = 1,
+        GOGGLES = 1,
         HELMET = 2,
         ARMOR,
         BACKPACK,
@@ -13,21 +26,20 @@ struct Inventory {
         BOOTS,
         WEAPON_R,
         WEAPON_L,
-	NECKLACE,
-	RING,
-	EARRING,
-        MAX_EQUIPPED_ITEMS
+        NECKLACE,
+        RING,
+        EARING
     };
 
     static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
+    static const uint8_t maxEquippedItems = 8;
+
+    using equipped_wrapper = array_wrapper<const std::array<RoseCommon::Item, maxItems>>;
 
     std::array<RoseCommon::Item, maxItems> items_;
 
-    std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> getEquipped() const {
-        std::array<RoseCommon::Item, MAX_EQUIPPED_ITEMS> data;
-	for (size_t i = 0; i < MAX_EQUIPPED_ITEMS; ++i)
-		data[i] = items_[i];
-        return data;
+    equipped_wrapper getEquipped() const {
+        return { items_, 1, maxEquippedItems };
     }
 };
 

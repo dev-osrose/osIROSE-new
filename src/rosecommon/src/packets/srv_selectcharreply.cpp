@@ -27,6 +27,8 @@ void SrvSelectCharReply::pack() {
 	*this << position->x_;
 	*this << position->y_;
 	*this << position->spawn_;
+    *this << (uint32_t)characterGraphics->face_;
+    *this << (uint32_t)characterGraphics->hair_;
     for (auto &it : inventory->getEquipped()) {
         *this << it.getVisible();
     }
