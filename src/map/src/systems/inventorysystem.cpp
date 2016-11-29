@@ -33,9 +33,7 @@ bool InventorySystem::swapItems(Entity entity, uint8_t &a, uint8_t &b) {
     if (!b)
         b = findNextEmptySlot(entity);
     auto inventory = entity.component<Inventory>();
-    auto tmp = inventory->items_[a];
-    inventory->items_[a] = inventory->items_[b];
-    inventory->items_[b] = tmp;
+    std::swap(inventory->items_[a], inventory->items_[b]);
     return true;
 }
 
