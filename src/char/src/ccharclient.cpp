@@ -72,7 +72,6 @@ bool CCharClient::JoinServerReply(
 
   uint32_t sessionID = P->sessionId();
   std::string password = Core::CMySQL_Database::escapeData(P->password());
-  logger_->info("user {}, password {} bla", sessionID, password);
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);

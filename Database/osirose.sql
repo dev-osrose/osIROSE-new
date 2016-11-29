@@ -36,7 +36,7 @@ CREATE TABLE `accounts` (
   `lasttime` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `characters` (
   UNIQUE KEY `name_UNIQUE` (`name`),
   KEY `user_idx` (`userid`),
   CONSTRAINT `user` FOREIGN KEY (`userid`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `inventory` (
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
   CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,23 +145,25 @@ DROP TABLE IF EXISTS `item_db`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `item_db` (
+  `type` tinyint(2) NOT NULL DEFAULT '0',
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '',
-  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `desc` varchar(500) NOT NULL DEFAULT '',
+  `subtype` smallint(3) NOT NULL DEFAULT '0',
   `price_buy` mediumint(10) unsigned DEFAULT NULL,
   `price_sell` mediumint(10) unsigned DEFAULT NULL,
   `weight` smallint(5) unsigned NOT NULL DEFAULT '0',
   `attack` smallint(3) unsigned DEFAULT NULL,
   `defense` smallint(3) unsigned DEFAULT NULL,
-  `range` tinyint(2) unsigned DEFAULT NULL,
+  `range` smallint(2) unsigned DEFAULT NULL,
   `slots` tinyint(2) unsigned DEFAULT NULL,
   `equip_jobs` int(12) unsigned DEFAULT NULL,
   `equip_genders` tinyint(2) unsigned DEFAULT NULL,
   `equip_level` tinyint(3) unsigned DEFAULT NULL,
-  `refineable` tinyint(1) unsigned DEFAULT NULL,
+  `refinable` tinyint(1) unsigned DEFAULT NULL,
   `view_id` smallint(3) unsigned DEFAULT NULL,
   `script` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`type`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -441,7 +443,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT, IN `_name` VARCHAR(20))
     MODIFIES SQL DATA
 BEGIN
-	DELETE FROM characters WHERE characters.userid = _charid AND characters.name = _name;
+	DELETE FROM characters WHERE characters.id = _charid AND characters.name = _name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
