@@ -237,12 +237,15 @@ bool CCharClient::SendCharSelectReply(
 
   loginState_ = eSTATE::TRANSFERING;
 
-  if (P->charId() >= characterRealId_.size()) {
-      logger_->warn("Wrong char id was sent!");
-      return false;
+  uint8_t selected_id = P->charId();
+  if(selected_id > characterRealId_.size()) {
+    logger_->warn("Client {} is attempting to select a invalid character.",
+                  GetId());
+    return false;
   }
+
   std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
-                                  sessionId_, characterRealId_[P->charId()]);
+                                  sessionId_, characterRealId_[selected_id]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);
