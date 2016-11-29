@@ -145,7 +145,6 @@ DROP TABLE IF EXISTS `item_db`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `item_db` (
-  `type` tinyint(2) NOT NULL DEFAULT '0',
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '',
   `desc` varchar(500) NOT NULL DEFAULT '',
