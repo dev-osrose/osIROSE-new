@@ -10,7 +10,6 @@ Entity SrvSelectCharReply::entity() const {
 	return entity_;
 }
 
-
 void SrvSelectCharReply::pack() {
 	auto basicInfo = entity_.component<BasicInfo>();
 	auto position = entity_.component<Position>();
@@ -20,7 +19,7 @@ void SrvSelectCharReply::pack() {
 	auto stats = entity_.component<Stats>();
 	auto skills = entity_.component<Skills>();
 	auto hotbar = entity_.component<Hotbar>();
-	auto equippedItems = entity_.component<EquippedItems>();
+	auto inventory = entity_.component<Inventory>();
 	auto advancedInfo = entity_.component<AdvancedInfo>();
 
 	*this << characterGraphics->race_;
@@ -28,8 +27,10 @@ void SrvSelectCharReply::pack() {
 	*this << position->x_;
 	*this << position->y_;
 	*this << position->spawn_;
-    for (auto &it : equippedItems->items_) {
-        it.partialSerialize(*this);
+    *this << (uint32_t)characterGraphics->face_;
+    *this << (uint32_t)characterGraphics->hair_;
+    for (auto &it : inventory->getEquipped()) {
+        *this << it.getVisible();
     }
 	*this << characterInfo->stone_;
 	*this << characterGraphics->face_;
@@ -61,15 +62,15 @@ void SrvSelectCharReply::pack() {
 	*this << characterInfo->pkFlag_;
 	*this << characterInfo->stamina_;
 	for (auto &it : statusEffects->effects_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.expiredSeconds_ << it.value_ << it.unkown_;
 	}
 	*this << characterInfo->patHp_;
 	*this << characterInfo->patCooldownTime_;
 	for (auto &it : skills->skills_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.id_;
 	}
 	for (auto &it : hotbar->items_) {
-		*this << static_cast<ISerialize&>(it);
+        *this << it.item_;
 	}
 	*this << basicInfo->tag_;
 	*this << basicInfo->name_;

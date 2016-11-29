@@ -72,7 +72,6 @@ bool CCharClient::JoinServerReply(
 
   uint32_t sessionID = P->sessionId();
   std::string password = Core::CMySQL_Database::escapeData(P->password());
-  logger_->info("user {}, password {} bla", sessionID, password);
 
   std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
@@ -134,12 +133,7 @@ bool CCharClient::SendCharListReply() {
         res->getInt("face", face);
         res->getInt("hair", hair);
 
-        packet->addCharacter(_name, race, level, job, delete_time);
-        packet->addEquipItem(
-            idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
-        packet->addEquipItem(
-            idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
-
+        packet->addCharacter(_name, race, level, job, face, hair, delete_time);
         {
           res->getInt("id", id);
           characterRealId_.push_back(id);
@@ -153,7 +147,7 @@ bool CCharClient::SendCharListReply() {
                 itemres->getInt("itemid", itemid);
 
                 packet->addEquipItem(
-                    idx, (SrvCharacterListReply::equipped_position)slot,
+                    idx, SrvCharacterListReply::getPosition(slot),
                     itemid);
                 itemres->incrementRow();
               }
@@ -243,8 +237,15 @@ bool CCharClient::SendCharSelectReply(
 
   loginState_ = eSTATE::TRANSFERING;
 
+  uint8_t selected_id = P->charId();
+  if(selected_id > characterRealId_.size()) {
+    logger_->warn("Client {} is attempting to select a invalid character.",
+                  GetId());
+    return false;
+  }
+
   std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
-                                  sessionId_, characterRealId_[P->charId()]);
+                                  sessionId_, characterRealId_[selected_id]);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
   database.QExecute(query);

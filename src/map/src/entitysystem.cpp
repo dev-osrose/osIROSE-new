@@ -2,13 +2,17 @@
 #include "systems/movementsystem.h"
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"
+#include "systems/inventorysystem.h"
 #include "database.h"
+
+using namespace RoseCommon;
 
 EntitySystem::EntitySystem() : systemManager_(*this) {
     // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
+    systemManager_.add<Systems::InventorySystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
@@ -151,34 +155,25 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     // TODO : write the hotbar table and loading code
     entity.assign<Hotbar>();
 
-    auto equipped = entity.assign<EquippedItems>();
-    res = database.QStore(fmt::format("CALL get_equipped({});", charId));
+    entity.assign<StatusEffects>();
+    entity.assign<RidingItems>();
+    entity.assign<BulletItems>();
+
+    // TODO : write the inventory code
+    auto inventory = entity.assign<Inventory>();
+    res = database.QStore(fmt::format("CALL get_inventory({});", charId));
     if (!res) {
         entity.destroy();
         return Entity();
     }
     for (auto &it : *res) {
         size_t slot;
-        uint16_t id, gemOpt;
-        uint8_t refine;
         it->getInt("slot", slot);
-        it->getInt("itemid", id);
-        it->getInt("gem_opt", gemOpt);
-        it->getInt("socket", equipped->items_[slot].wearable_.hasSocket_);
-        it->getInt("refine", refine);
-        equipped->items_[slot].wearable_.id_ = id;
-        equipped->items_[slot].wearable_.gemOpt_ = gemOpt;
-        equipped->items_[slot].wearable_.refine_ = refine;
+        if (slot >= Inventory::maxItems)
+            continue; // TODO : add a warning about that slot
+        inventory->items_[slot].loadFromDatabase(*it);
     }
-    if (!equipped->items_[EquippedItems::FACE].wearable_.id_)
-        equipped->items_[EquippedItems::FACE].wearable_.id_ = graphics->face_;
-    entity.assign<StatusEffects>();
-    entity.assign<RidingItems>();
-    entity.assign<BulletItems>();
-
-    // TODO : write the inventory code
-    entity.assign<Inventory>();
-    get<Systems::UpdateSystem>().calculateSpeed(entity);
+    Systems::UpdateSystem::calculateSpeed(entity);
 
     registerEntity(entity);
     return entity;

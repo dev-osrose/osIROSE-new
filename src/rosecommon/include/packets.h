@@ -1,12 +1,15 @@
 #pragma once
 
 #include "srv_inventorydata.h"
+#include "srv_setitem.h"
 #include "srv_normalchat.h"
 #include "srv_switchserver.h"
 #include "cli_selectcharreq.h"
 #include "cli_loginreq.h"
 #include "cli_normalchat.h"
+#include "cli_equipitem.h"
 #include "srv_deletecharreply.h"
+#include "srv_equipitem.h"
 #include "cli_srvselectreq.h"
 #include "srv_revivereply.h"
 #include "cli_stopmoving.h"
@@ -16,6 +19,7 @@
 #include "srv_playerchar.h"
 #include "srv_stopmoving.h"
 #include "srv_stop.h"
+#include "srv_setmoney.h"
 #include "cli_joinserverreq.h"
 #include "srv_joinserverreply.h"
 #include "srv_whisperchat.h"

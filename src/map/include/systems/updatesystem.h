@@ -11,11 +11,11 @@ class UpdateSystem : public System {
 
         virtual void update(EntityManager &es, double);
 
-        void calculateSpeed(Entity entity);
+        static void calculateSpeed(Entity entity);
 
-        void calculateAtkSpeed(Entity entity);
+        static void calculateAtkSpeed(Entity entity);
 
-        void calculateCommand(Entity entity);
+        static void calculateCommand(Entity entity);
 };
 
 }

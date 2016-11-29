@@ -10,9 +10,8 @@ Entity SrvPlayerChar::entity() const {
 	return entity_;
 }
 
-
 void SrvPlayerChar::pack() {
-	auto equippedItems = entity_.component<EquippedItems>();
+	auto inventory = entity_.component<Inventory>();
 	auto ridingItems = entity_.component<RidingItems>();
 	auto advancedInfo = entity_.component<AdvancedInfo>();
 	auto basicInfo = entity_.component<BasicInfo>();
@@ -42,16 +41,18 @@ void SrvPlayerChar::pack() {
 	*this << advancedInfo->runSpeed_;
 	*this << advancedInfo->atkSpeed_;
 	*this << advancedInfo->weightRate_;
-    for (auto &it : equippedItems->items_) {
-        it.partialSerialize(*this);
+	*this << (uint32_t)characterGraphics->face_;
+	*this << (uint32_t)characterGraphics->hair_;
+    for (auto &it : inventory->getEquipped()) {
+        *this << it.getVisible();
     }
     for (auto &it : bulletItems->items_) {
-        it.bulletPartialSerialize(*this);
+        *this << it.getHeader();
     }
 	*this << characterInfo->job_;
 	*this << basicInfo->level_;
     for (auto &it : ridingItems->items_) {
-        it.partialSerialize(*this);
+        *this << it.getVisible();
     }
 	*this << position->z_;
 	*this << characterInfo->subFlag_;
