@@ -24,6 +24,7 @@ class EntitySystem {
         Entity create();
 
         template <typename T>
+        [[deprecated]]
         T& get() {
             return *systemManager_.get<T>();
         }
@@ -36,6 +37,7 @@ class EntitySystem {
         static bool isNearby(Entity a, Entity b);
 
         template <typename ...T>
+        [[deprecated]]
         void processEntities(std::function<bool(Entity)>&& func) {
             for (Entity entity : entityManager_.entities_with_components<T...>())
                 if (!func(entity))
