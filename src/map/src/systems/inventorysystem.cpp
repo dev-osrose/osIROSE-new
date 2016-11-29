@@ -10,11 +10,27 @@ InventorySystem::InventorySystem(SystemManager &manager) : System(manager) {
 
 void InventorySystem::update(EntityManager&, double) {}
 
-bool InventorySystem::swapItems(Entity entity, uint8_t a, uint8_t b) {
+uint8_t InventorySystem::findNextEmptySlot(Entity entity) {
+    if (!entity || !entity.component<Inventory>())
+        return 0;
+    const auto &inventory = entity.component<Inventory>()->items_;
+    for (size_t i = Inventory::MAX_EQUIP_ITEMS; i < Inventory::maxItems; ++i)
+        if (!inventory[i].id_)
+            return i;
+    return 0;
+}
+
+bool InventorySystem::swapItems(Entity entity, uint8_t &a, uint8_t &b) {
     if (!entity || !entity.component<Inventory>())
         return false;
     if (a >= Inventory::maxItems || b >= Inventory::maxItems)
         return false;
+    if (a == b || (!a && !b))
+        return false;
+    if (!a)
+        a = findNextEmptySlot(entity);
+    if (!b)
+        b = findNextEmptySlot(entity);
     auto inventory = entity.component<Inventory>();
     auto tmp = inventory->items_[a];
     inventory->items_[a] = inventory->items_[b];
@@ -28,9 +44,14 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
         logger_->warn("When requesting to change equipped item, the destination wasn't good");
         return;
     }
-    logger_->info("Swaping items from slot {} to {} of char {}", packet.slotFrom(), packet.slotTo(), entity.component<BasicInfo>()->id_);
-    if (!swapItems(entity, packet.slotTo(), packet.slotFrom()))
+    uint8_t to = packet.slotTo();
+    uint8_t from = packet.slotFrom();
+    logger_->debug("Swapping items from slot {} to {} of char {}", from, to, entity.component<BasicInfo>()->id_);
+    if (!swapItems(entity, to, from)) {
+        logger_->warn("There was an error while swapping items");
         return;
+    }
+    logger_->debug("Items swapped from slot {} to {} of char {}", from, to, entity.component<BasicInfo>()->id_);
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity.component<BasicInfo>()->id_,
                 packet.slotTo(),
