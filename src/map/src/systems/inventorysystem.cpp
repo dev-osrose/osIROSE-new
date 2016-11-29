@@ -46,7 +46,7 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     uint8_t to = packet.slotTo();
     uint8_t from = packet.slotFrom();
     if (!swapItems(entity, to, from)) {
-        logger_->warn("There was an error while swapping items");
+        logger_->warn("There was an error while swapping items for client {}", entity.component<BasicInfo>()->id_);
         return;
     }
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
