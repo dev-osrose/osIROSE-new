@@ -10,19 +10,19 @@ REGISTER_SEND_PACKET(ePacketType::PAKWC_EQUIP_ITEM, SrvEquipItem)
 class SrvEquipItem : public CRosePacket {
 	public:
 		SrvEquipItem();
-		SrvEquipItem(Entity entity, uint8_t slot);
+		SrvEquipItem(Entity entity, int16_t slot);
 
 		virtual ~SrvEquipItem() = default;
 
 		Entity entity() const;
-		uint8_t slot() const;
+		int16_t slot() const;
 
 	protected:
 		virtual void pack() override;
 
 	private:
 		Entity entity_;
-		uint8_t slot_;
+		int16_t slot_;
 };
 
 }

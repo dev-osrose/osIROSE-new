@@ -11,13 +11,13 @@ CliEquipItem::CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer
 	*this >> slotFrom_;
 }
 
-CliEquipItem::CliEquipItem(uint8_t slotTo, uint8_t slotFrom) : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM), slotTo_(slotTo), slotFrom_(slotFrom) {}
+CliEquipItem::CliEquipItem(int16_t slotTo, int16_t slotFrom) : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM), slotTo_(slotTo), slotFrom_(slotFrom) {}
 
-uint8_t CliEquipItem::slotTo() const {
+int16_t CliEquipItem::slotTo() const {
 	return slotTo_;
 }
 
-uint8_t CliEquipItem::slotFrom() const {
+int16_t CliEquipItem::slotFrom() const {
 	return slotFrom_;
 }
 

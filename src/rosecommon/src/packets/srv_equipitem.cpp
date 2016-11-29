@@ -4,13 +4,13 @@ namespace RoseCommon {
 
 SrvEquipItem::SrvEquipItem() : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM) {}
 
-SrvEquipItem::SrvEquipItem(Entity entity, uint8_t slot) : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM), entity_(entity), slot_(slot) {}
+SrvEquipItem::SrvEquipItem(Entity entity, int16_t slot) : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM), entity_(entity), slot_(slot) {}
 
 Entity SrvEquipItem::entity() const {
 	return entity_;
 }
 
-uint8_t SrvEquipItem::slot() const {
+int16_t SrvEquipItem::slot() const {
 	return slot_;
 }
 
