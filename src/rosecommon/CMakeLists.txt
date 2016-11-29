@@ -150,6 +150,10 @@ SET(SOURCES_PACKETS
   include/packets/srv_whisperchat
   src/packets/srv_equipitem
   include/packets/srv_equipitem
+  src/packets/srv_setmoney
+  include/packets/srv_setmoney
+  src/packets/srv_setitem
+  include/packets/srv_setitem
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files

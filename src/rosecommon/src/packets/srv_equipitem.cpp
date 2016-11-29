@@ -4,29 +4,24 @@ namespace RoseCommon {
 
 SrvEquipItem::SrvEquipItem() : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM) {}
 
-SrvEquipItem::SrvEquipItem(uint16_t id, uint8_t slot, const Item &item) : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM), id_(id), slot_(slot), item_(item) {}
+SrvEquipItem::SrvEquipItem(Entity entity, uint8_t slot) : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM), entity_(entity), slot_(slot) {}
 
-uint16_t SrvEquipItem::id() const {
-	return id_;
+Entity SrvEquipItem::entity() const {
+	return entity_;
 }
 
 uint8_t SrvEquipItem::slot() const {
 	return slot_;
 }
 
-Item &SrvEquipItem::item() {
-	return item_;
-}
-
-const Item &SrvEquipItem::item() const {
-	return item_;
-}
-
 
 void SrvEquipItem::pack() {
-	*this << id_;
+	auto basicInfo = entity_.component<BasicInfo>();
+	auto inventory = entity_.component<Inventory>();
+
+	*this << basicInfo->id_;
 	*this << slot_;
-	*this << item_.getVisible();
+    *this << inventory->items_[slot_].getVisible();
 }
 
 }

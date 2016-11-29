@@ -1,5 +1,6 @@
 #include "systems/inventorysystem.h"
 #include "cmapserver.h"
+#include "cmapclient.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -53,7 +54,7 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     }
     logger_->debug("Items swapped from slot {} to {} of char {}", from, to, entity.component<BasicInfo>()->id_);
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-            *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity.component<BasicInfo>()->id_,
-                packet.slotTo(),
-                entity.component<Inventory>()->items_[packet.slotTo()]));
+            *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
+    auto list = {to, from};
+    client->Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, list));
 }
