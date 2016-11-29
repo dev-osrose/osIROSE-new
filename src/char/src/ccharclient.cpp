@@ -133,12 +133,7 @@ bool CCharClient::SendCharListReply() {
         res->getInt("face", face);
         res->getInt("hair", hair);
 
-        packet->addCharacter(_name, race, level, job, delete_time);
-        packet->addEquipItem(
-            idx, SrvCharacterListReply::equipped_position::EQUIP_FACE, face);
-        packet->addEquipItem(
-            idx, SrvCharacterListReply::equipped_position::EQUIP_HAIR, hair);
-
+        packet->addCharacter(_name, race, level, job, face, hair, delete_time);
         {
           res->getInt("id", id);
           characterRealId_.push_back(id);
@@ -152,7 +147,7 @@ bool CCharClient::SendCharListReply() {
                 itemres->getInt("itemid", itemid);
 
                 packet->addEquipItem(
-                    idx, (SrvCharacterListReply::equipped_position)slot,
+                    idx, SrvCharacterListReply::getPosition(slot),
                     itemid);
                 itemres->incrementRow();
               }
