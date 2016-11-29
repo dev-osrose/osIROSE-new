@@ -45,12 +45,10 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     }
     uint8_t to = packet.slotTo();
     uint8_t from = packet.slotFrom();
-    logger_->debug("Swapping items from slot {} to {} of char {}", from, to, entity.component<BasicInfo>()->id_);
     if (!swapItems(entity, to, from)) {
         logger_->warn("There was an error while swapping items");
         return;
     }
-    logger_->debug("Items swapped from slot {} to {} of char {}", from, to, entity.component<BasicInfo>()->id_);
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
     auto list = {to, from};
