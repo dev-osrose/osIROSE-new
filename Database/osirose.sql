@@ -149,6 +149,7 @@ CREATE TABLE `item_db` (
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '',
   `desc` varchar(500) NOT NULL DEFAULT '',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
   `subtype` smallint(3) NOT NULL DEFAULT '0',
   `price_buy` mediumint(10) unsigned DEFAULT NULL,
   `price_sell` mediumint(10) unsigned DEFAULT NULL,
@@ -163,7 +164,7 @@ CREATE TABLE `item_db` (
   `refinable` tinyint(1) unsigned DEFAULT NULL,
   `view_id` smallint(3) unsigned DEFAULT NULL,
   `script` text,
-  PRIMARY KEY (`type`,`id`)
+  PRIMARY KEY (`id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
