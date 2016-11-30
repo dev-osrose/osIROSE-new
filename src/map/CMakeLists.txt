@@ -36,6 +36,7 @@ SET( SOURCES_HEADER
     include/systems/updatesystem
     include/systems/chatsystem
     include/systems/inventorysystem
+    include/systems/partysystem
     )
 
 SET( SOURCES_MAIN
@@ -50,6 +51,7 @@ SET( SOURCES_MAIN
     src/systems/updatesystem
     src/systems/chatsystem
     src/systems/inventorysystem
+    src/systems/partysystem
     )
 
 find_package( Threads REQUIRED )
