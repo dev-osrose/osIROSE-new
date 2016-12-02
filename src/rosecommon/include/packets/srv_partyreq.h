@@ -9,19 +9,27 @@ namespace RoseCommon {
 REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REQ, SrvPartyReq)
 class SrvPartyReq : public CRosePacket {
 	public:
+        enum Request : uint8_t {
+            MAKE = 0,
+            JOIN = 1,
+            LEFT,
+            CHANGE_OWNER,
+            BAN = 0x81
+        };
+
 		SrvPartyReq();
-		SrvPartyReq(uint8_t request, Entity entity);
+		SrvPartyReq(Request request, Entity entity);
 
 		virtual ~SrvPartyReq() = default;
 
-		uint8_t request() const;
+		Request request() const;
 		Entity entity() const;
 
 	protected:
 		virtual void pack() override;
 
 	private:
-		uint8_t request_;
+		Request request_;
 		Entity entity_;
 };
 

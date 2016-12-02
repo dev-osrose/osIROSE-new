@@ -11,9 +11,9 @@ CliPartyReq::CliPartyReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) 
 	*this >> idXorTag_;
 }
 
-CliPartyReq::CliPartyReq(uint8_t request, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REQ), request_(request), idXorTag_(idXorTag) {}
+CliPartyReq::CliPartyReq(CliPartyReq::Request request, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REQ), request_(request), idXorTag_(idXorTag) {}
 
-uint8_t CliPartyReq::request() const {
+CliPartyReq::Request CliPartyReq::request() const {
 	return request_;
 }
 
@@ -23,7 +23,7 @@ uint32_t CliPartyReq::idXorTag() const {
 
 
 void CliPartyReq::pack() {
-	*this << request_;
+	*this << to_underlying(request_);
 	*this << idXorTag_;
 }
 

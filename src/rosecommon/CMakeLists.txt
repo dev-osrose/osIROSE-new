@@ -39,6 +39,7 @@ set( SOURCES_HEADER
   include/mappackets
   include/packets
   include/item
+  include/partybase
   include/components/advancedinfo
   include/components/basicinfo
   include/components/bulletitems

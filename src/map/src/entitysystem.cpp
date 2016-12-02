@@ -3,16 +3,17 @@
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
+#include "systems/partysystem.h"
 #include "database.h"
 
 using namespace RoseCommon;
 
 EntitySystem::EntitySystem() : systemManager_(*this) {
-    // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
     systemManager_.add<Systems::InventorySystem>();
+    systemManager_.add<Systems::PartySystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {

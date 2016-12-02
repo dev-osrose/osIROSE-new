@@ -58,6 +58,7 @@ void MovementSystem::move(Entity entity, float x, float y) {
     } else {
         entity.assign<Destination>(x, y, dist);
     }
+    // FIXME: what happens if the entity is an NPC or a monster?
     auto socket = entity.component<SocketConnector>();
     if (!socket || !socket->client_)
         return;

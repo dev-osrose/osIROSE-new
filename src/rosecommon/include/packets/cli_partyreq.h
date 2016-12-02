@@ -9,20 +9,28 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_REQ, CliPartyReq)
 class CliPartyReq : public CRosePacket {
 	public:
+        enum Request : uint8_t {
+            MAKE = 0,
+            JOIN = 1,
+            LEFT,
+            CHANGE_OWNER,
+            BAN = 0x81
+        };
+
 		CliPartyReq();
 		CliPartyReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliPartyReq(uint8_t request, uint32_t idXorTag);
+		CliPartyReq(Request request, uint32_t idXorTag);
 
 		virtual ~CliPartyReq() = default;
 
-		uint8_t request() const;
+		Request request() const;
 		uint32_t idXorTag() const;
 
 	protected:
 		virtual void pack() override;
 
 	private:
-		uint8_t request_;
+		Request request_;
 		uint32_t idXorTag_;
 };
 
