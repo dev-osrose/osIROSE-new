@@ -42,26 +42,6 @@ void PartySystem::processPartyReq(CMapClient*, Entity entity, const CliPartyReq 
         logger_->warn("Client {} requested a party with the non existing char {}", entity.component<BasicInfo>()->id_, packet.idXorTag());
         return;
     }
-    switch (packet.request()) {
-        case CliPartyReq::MAKE:
-            if (entity.component<Party>()) {
-                logger_->warn("Client {} is trying to create a party when already in one", entity.component<BasicInfo>()->id_);
-                return;
-            }
-            break;
-        case CliPartyReq::JOIN:
-            logger_->debug("Client {} join client {}", entity.component<BasicInfo>()->id_, other.component<BasicInfo>()->id_);
-            break;
-        case CliPartyReq::LEFT:
-            logger_->debug("Client {} left client {}", entity.component<BasicInfo>()->id_, other.component<BasicInfo>()->id_);
-            break;
-        case CliPartyReq::CHANGE_OWNER:
-            logger_->debug("Client {} change owner client {}", entity.component<BasicInfo>()->id_, other.component<BasicInfo>()->id_);
-            break;
-        default:
-            logger_->warn("The party request by client {} doesn't correspond to any known request : {}", entity.component<BasicInfo>()->id_, packet.request());
-            return;
-    }
     CMapClient *otherClient = other.component<SocketConnector>()->client_;
     otherClient->Send(*makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
 }

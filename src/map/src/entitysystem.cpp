@@ -78,7 +78,7 @@ bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet
     return systemManager_.dispatch(entity, packet);
 }
 
-Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
+Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
     auto &database = Core::databasePool.getDatabase();
     auto res = database.QStore(fmt::format("CALL get_character({});", charId));
     auto entity = create();
@@ -96,6 +96,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
     res->getInt("level", basic->level_);
+    basic->id_ = id;
+    basic->tag_ = id;
 
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);

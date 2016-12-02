@@ -103,12 +103,9 @@ bool CMapClient::JoinServerReply(
       sessionId_ = sessionID;
       bool platinium = false;
       res->getInt("platinium", platinium);
-      entity_ = entitySystem_->loadCharacter(charid_, platinium);
+      entity_ = entitySystem_->loadCharacter(charid_, platinium, GetId());
 
       if (entity_) {
-          auto basic =entity_.component<BasicInfo>();
-          basic->id_ = GetId();
-          basic->tag_ = GetId();
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);

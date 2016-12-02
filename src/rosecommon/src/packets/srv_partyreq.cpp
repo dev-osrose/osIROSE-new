@@ -19,7 +19,7 @@ void SrvPartyReq::pack() {
     auto basicInfo = entity_.component<BasicInfo>();
 
 	*this << to_underlying(request_);
-	*this << basicInfo->id_;
+	*this << basicInfo->tag_;
 	*this << basicInfo->name_;
 
 }
