@@ -14,7 +14,7 @@ class SrvPartyReq : public CRosePacket {
             JOIN = 1,
             LEFT,
             CHANGE_OWNER,
-            BAN = 0x81
+            KICK = 0x81
         };
 
 		SrvPartyReq();

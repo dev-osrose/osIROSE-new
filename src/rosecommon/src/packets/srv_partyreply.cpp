@@ -4,9 +4,11 @@ namespace RoseCommon {
 
 SrvPartyReply::SrvPartyReply() : CRosePacket(ePacketType::PAKWC_PARTY_REPLY) {}
 
-SrvPartyReply::SrvPartyReply(uint8_t reply, uint32_t id) : CRosePacket(ePacketType::PAKWC_PARTY_REPLY), reply_(reply), id_(id) {}
+SrvPartyReply::SrvPartyReply(SrvPartyReply::Reply reply, Entity entity) : CRosePacket(ePacketType::PAKWC_PARTY_REPLY), reply_(reply), id_(entity.component<BasicInfo>()->tag_) {}
 
-uint8_t SrvPartyReply::reply() const {
+SrvPartyReply::SrvPartyReply(SrvPartyReply::Reply reply, uint32_t id) : CRosePacket(ePacketType::PAKWC_PARTY_REPLY), reply_(reply), id_(id) {}
+
+SrvPartyReply::Reply SrvPartyReply::reply() const {
 	return reply_;
 }
 
@@ -16,7 +18,7 @@ uint32_t SrvPartyReply::id() const {
 
 
 void SrvPartyReply::pack() {
-	*this << reply_;
+	*this << to_underlying(reply_);
 	*this << id_;
 }
 

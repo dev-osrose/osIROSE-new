@@ -49,6 +49,10 @@ void EntitySystem::update(double dt) {
 void EntitySystem::destroy(Entity entity) {
     if (!entity)
         return;
+    if (entity.component<SocketConnector>() && entity.component<SocketConnector>()->client_)
+        entity.remove<SocketConnector>();
+    if (entity.component<Party>())
+        entity.remove<Party>();
     toDestroy_.push_back(entity);
 }
 

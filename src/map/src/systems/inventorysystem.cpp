@@ -51,6 +51,6 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     }
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-    auto list = {to, from};
+    auto list = { to, from };
     client->Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, list));
 }

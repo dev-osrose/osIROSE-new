@@ -2,7 +2,7 @@
 
 #include "packetfactory.h"
 #include "entityComponents.h"
-#include <initializer_list>
+#include <vector>
 
 namespace RoseCommon {
 
@@ -10,13 +10,13 @@ REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_MEMBER, SrvPartyMember)
 class SrvPartyMember : public CRosePacket {
 	public:
 		SrvPartyMember();
-		SrvPartyMember(uint8_t rules, bool isDelete, std::initializer_list<Entity> list);
+		SrvPartyMember(uint8_t rules, bool isDelete, const std::vector<Entity> &list);
 
 		virtual ~SrvPartyMember() = default;
 
 		uint8_t rules() const;
 		bool isDelete() const;
-		std::initializer_list<Entity> list() const;
+        const std::vector<Entity> &list() const;
 
 	protected:
 		virtual void pack() override;
@@ -24,7 +24,7 @@ class SrvPartyMember : public CRosePacket {
 	private:
 		uint8_t rules_;
 		bool isDelete_;
-		std::initializer_list<Entity> list_;
+        std::vector<Entity> list_;
 };
 
 }

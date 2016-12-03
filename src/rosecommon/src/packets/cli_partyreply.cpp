@@ -11,9 +11,9 @@ CliPartyReply::CliPartyReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buff
 	*this >> idXorTag_;
 }
 
-CliPartyReply::CliPartyReply(uint8_t reply, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REPLY), reply_(reply), idXorTag_(idXorTag) {}
+CliPartyReply::CliPartyReply(CliPartyReply::Reply reply, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REPLY), reply_(reply), idXorTag_(idXorTag) {}
 
-uint8_t CliPartyReply::reply() const {
+CliPartyReply::Reply CliPartyReply::reply() const {
 	return reply_;
 }
 
@@ -23,7 +23,7 @@ uint32_t CliPartyReply::idXorTag() const {
 
 
 void CliPartyReply::pack() {
-	*this << reply_;
+	*this << to_underlying(reply_);
 	*this << idXorTag_;
 }
 
