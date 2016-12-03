@@ -36,12 +36,12 @@ void SrvPartyMember::pack() {
         auto character = it.component<CharacterInfo>();
         *this << basic->tag_;
         *this << basic->id_;
-        *this << (int16_t)stats->maxHp_;
-        *this << (int16_t)advanced->hp_;
+        *this << stats->maxHp_;
+        *this << advanced->hp_;
         *this << character->statusFlag_;
         *this << stats->con_;
-        *this << (uint8_t)0; // TODO : RECOVERY HP
-        *this << (uint8_t)0; // TODO : RECOVERY MP
+        *this << (uint16_t)0; // TODO : RECOVERY HP
+        *this << (uint16_t)0; // TODO : RECOVERY MP
         *this << character->stamina_;
         *this << basic->name_;
     }
