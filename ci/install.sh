@@ -42,8 +42,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	cd bakefile-0.2.9/
 	./configure --prefix=$PROOT/bakefile > /dev/null
 	make -j4
-	setenv PATH $PATH:$PROOT/bakefile/bin
-	setenv PATH $PATH:$PROOT/bakefile/lib
+	export PATH=$PATH:$PROOT/bakefile/bin
+	export PATH=$PATH:$PROOT/bakefile/lib
 	make install
 	
 	cd ../tools/mysqlpp
