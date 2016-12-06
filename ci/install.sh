@@ -42,7 +42,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	cd bakefile-0.2.9/
 	./configure
 	make -j4
-	sudo make install
+	setenv PATH $PATH:`pwd`
+	#sudo make install
 	
 	cd ../tools/mysqlpp
 	./bootstrap
