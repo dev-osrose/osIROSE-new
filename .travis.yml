@@ -12,7 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja
+  - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja:$TRAVIS_BUILD_DIR/bakefile-0.2.9
 services:
 - mysql
 matrix:
