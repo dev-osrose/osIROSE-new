@@ -21,7 +21,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	git clone https://github.com/ninja-build/ninja.git
 	cd ninja
 	./configure.py --bootstrap
-	setenv PATH $PATH:`pwd`
+	#setenv PATH $PATH:`pwd`
 	cd ..
 
 	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
@@ -42,7 +42,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	cd bakefile-0.2.9/
 	./configure
 	make -j4
-	setenv PATH $PATH:`pwd`
+	#setenv PATH $PATH:`pwd`
 	#sudo make install
 	
 	cd ../tools/mysqlpp
