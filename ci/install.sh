@@ -40,7 +40,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	wget https://github.com/vslavik/bakefile/releases/download/v0.2.9/bakefile-0.2.9.tar.gz
 	tar -xf bakefile-0.2.9.tar.gz
 	cd bakefile-0.2.9/
-	./configure --prefix=$PROOT/bakefile > /dev/null
+	./configure
 	make -j4
 #	export PATH=$PATH:$PROOT/bakefile/bin
 #	export PATH=$PATH:$PROOT/bakefile/lib
