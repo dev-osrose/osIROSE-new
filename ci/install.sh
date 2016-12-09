@@ -47,7 +47,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	make install
 	
 	cd $PROOT/tools/mysqlpp
-	./bootstrap
+	./bootstrap root $PROOT/bakefile
 	./configure
 
 	cd lib
