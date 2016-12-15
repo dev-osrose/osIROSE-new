@@ -122,7 +122,7 @@ IF (MSVC)
   target_link_libraries(${PROJECT} libprotobuf)
   target_link_libraries(${PROJECT} wsock32.lib)
 ELSE()
-  target_link_libraries(${PROJECT} protobuf)
+  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
   target_link_libraries(${PROJECT} mysqlclient)
 ENDIF()
 

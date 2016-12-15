@@ -55,7 +55,7 @@ IF (MSVC)
   target_link_libraries(${PROJECT} wsock32.lib)
   target_link_libraries(${PROJECT} libprotobuf)
 ELSE()
-  target_link_libraries(${PROJECT} protobuf)
+  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
 ENDIF()
 
 #INSTALL(
