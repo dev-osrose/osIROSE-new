@@ -38,7 +38,7 @@ matrix:
     cache:
       apt: true
       directories:
-      - "./protobuf"
+      - $HOME/protobuf
     branches:
       except:
       - coverity_scan
@@ -50,9 +50,10 @@ matrix:
     - export SUITE=coverage
     - export CXX="g++-5" CC="gcc-5";
     #- bash ./ci/.travis.install-mysql-5.7.sh
-    - "./ci/before_install.sh"
+    - bash ./ci/before_install.sh
     install:
-    - "./ci/install.sh"
+    - bash ./ci/install-protobuf.sh
+    - bash ./ci/install.sh
     before_script:
     - "./ci/before_script.sh"
     script:
@@ -74,7 +75,7 @@ matrix:
     cache:
       apt: true
       directories:
-      - "./protobuf"
+      - $HOME/protobuf
     branches:
       except:
       - coverity_scan
@@ -88,7 +89,8 @@ matrix:
     #- bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
-    - "./ci/install.sh"
+    - bash ./ci/install-protobuf.sh
+    - bash ./ci/install.sh
     before_script:
     - "./ci/before_script.sh"
     script:
@@ -110,7 +112,7 @@ matrix:
     cache:
       apt: true
       directories:
-      - "./protobuf"
+      - $HOME/protobuf
     branches:
       except:
       - coverity_scan
@@ -124,7 +126,8 @@ matrix:
     #- bash ./ci/.travis.install-mysql-5.7.sh
     - "./ci/before_install.sh"
     install:
-    - "./ci/install.sh"
+    - bash ./ci/install-protobuf.sh
+    - bash ./ci/install.sh
     before_script:
     - "./ci/before_script.sh"
     script:
