@@ -32,7 +32,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
-        - libmysql++-dev
+        - libmysqlclient-dev
         - perl
         - gcc-5
         - g++-5
@@ -75,7 +75,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
-        - libmysql++-dev
+        - libmysqlclient-dev
         - perl
         - gcc-6
         - g++-6
@@ -118,7 +118,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
-        - libmysql++-dev
+        - libmysqlclient-dev
         - perl
         - gcc-6
         - g++-6
