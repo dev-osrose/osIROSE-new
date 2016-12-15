@@ -11,10 +11,12 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		echo 'Setting up mysql...';
     wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
     tar -xf mysql-connector-c-6.1.6-src.tar.gz
+    rm mysql-connector-c-6.1.6-src.tar.gz
     cd mysql-connector-c-6.1.6-src
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$HOME/mysql
 		make
 		make install
+    rm -r mysql-connector-c-6.1.6-src
     echo 'Finished installing mysql.';
 		cd ..
 	else

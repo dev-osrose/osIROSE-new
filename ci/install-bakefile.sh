@@ -9,10 +9,13 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     # Install bakefile
     wget https://github.com/vslavik/bakefile/releases/download/v0.2.9/bakefile-0.2.9.tar.gz
     tar -xf bakefile-0.2.9.tar.gz
+    rm bakefile-0.2.9.tar.gz
     cd bakefile-0.2.9/
     ./configure --prefix=$HOME/bakefile
     make -j4
     make install
+    
+    rm -r bakefile-0.2.9
     cd ..
   else
 		echo 'Using cached bakefile directory.';
