@@ -16,9 +16,9 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$HOME/mysql
 		make
 		make install
+		cd ..
     rm -r mysql-connector-c-6.1.6-src
     echo 'Finished installing mysql.';
-		cd ..
 	else
 		echo 'Using cached mysql directory.';
 	fi

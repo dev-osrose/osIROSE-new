@@ -15,8 +15,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     make -j4
     make install
     
-    rm -r bakefile-0.2.9
     cd ..
+    rm -r bakefile-0.2.9
   else
 		echo 'Using cached bakefile directory.';
 	fi
