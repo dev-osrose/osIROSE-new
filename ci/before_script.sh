@@ -6,7 +6,7 @@ fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   mysql --user="root" -e 'create database osirose;'
-  mysql --user="root" --database="osirose" --password="" < "./Database/osirose.sql"
+  mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
   mkdir build && cd build
   mkdir logs
 else
