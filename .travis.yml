@@ -40,6 +40,7 @@ matrix:
       directories:
       - $HOME/protobuf
       - $HOME/bakefile
+      - $HOME/mysql
     branches:
       except:
       - coverity_scan
@@ -83,6 +84,7 @@ matrix:
       directories:
       - $HOME/protobuf
       - $HOME/bakefile
+      - $HOME/mysql
     branches:
       except:
       - coverity_scan
@@ -126,6 +128,7 @@ matrix:
       directories:
       - $HOME/protobuf
       - $HOME/bakefile
+      - $HOME/mysql
     branches:
       except:
       - coverity_scan
