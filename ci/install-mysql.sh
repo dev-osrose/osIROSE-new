@@ -15,6 +15,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$HOME/mysql
 		make
 		make install
+    echo 'Finished installing mysql.';
 		cd ..
 	else
 		echo 'Using cached mysql directory.';

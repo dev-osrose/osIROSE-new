@@ -7,7 +7,9 @@ fi
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
 	cd $PROOT/tools/mysqlpp
 	./bootstrap
-	./configure
+	./configure --prefix=$HOME/mysqlpp
+  make
+  make install
 
 	cd lib
 	perl querydef.pl
