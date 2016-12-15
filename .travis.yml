@@ -12,7 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=$PATH:$HOME/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin
+  - PATH=$PATH:$HOME/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib
 services:
 - mysql
 matrix:
@@ -58,6 +58,7 @@ matrix:
     - bash ./ci/install-ninja.sh
     - bash ./ci/install-lcov.sh
     - bash ./ci/install-bakefile.sh
+    - bash ./ci/install-mysql.sh
     - bash ./ci/install-mysqlpp.sh
     #- bash ./ci/install.sh
     before_script:
@@ -101,6 +102,7 @@ matrix:
     - bash ./ci/install-ninja.sh
     - bash ./ci/install-lcov.sh
     - bash ./ci/install-bakefile.sh
+    - bash ./ci/install-mysql.sh
     - bash ./ci/install-mysqlpp.sh
     #- bash ./ci/install.sh
     before_script:
@@ -144,6 +146,7 @@ matrix:
     - bash ./ci/install-ninja.sh
     - bash ./ci/install-lcov.sh
     - bash ./ci/install-bakefile.sh
+    - bash ./ci/install-mysql.sh
     - bash ./ci/install-mysqlpp.sh
     #- bash ./ci/install.sh
     before_script:
