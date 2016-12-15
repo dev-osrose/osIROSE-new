@@ -71,7 +71,7 @@ matrix:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh
   - env: g++-6 BUILD_TYPE=Debug
-    sudo: false
+    sudo: true
     #dist: trusty
     language: cpp
     addons:
@@ -103,7 +103,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=tests
     - export CXX="g++-6" CC="gcc-6";
-    #- bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
+    - bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
