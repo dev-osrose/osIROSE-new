@@ -147,7 +147,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=tests
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     #- bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
