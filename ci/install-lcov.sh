@@ -5,15 +5,13 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
-	mkdir 3rdparty
-	mkdir 3rdparty/include
-	mkdir 3rdparty/lib
-  
-  ./install-protobuf.sh
-  ./install-ninja.sh
-  ./install-lcov.sh
-  ./install-bakefile.sh
-  ./install-mysqlpp.sh
+	wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
+	tar -xf lcov-1.12.tar.gz
+	cd lcov-1.12
+	make install
+
+	cd ..
+	gem install coveralls-lcov
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
