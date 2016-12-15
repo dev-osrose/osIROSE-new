@@ -105,7 +105,7 @@ IF(ENABLE_TESTING_COVERAGE)
     'bin2ascii.h'
   )
     
-  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage)
+  SETUP_TARGET_FOR_COVERAGE(coverage ctest "coverage --output-on-failure")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_MYSQL)
