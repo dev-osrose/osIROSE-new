@@ -52,21 +52,23 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-5" CC="gcc-5";
-    #- bash ./ci/.travis.install-mysql-5.7.sh
-    - bash ./ci/before_install.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash ./ci/install-protobuf.sh
-    - bash ./ci/install-ninja.sh
-    - bash ./ci/install-lcov.sh
-    - bash ./ci/install-bakefile.sh
-    - bash ./ci/install-mysql.sh
-    - bash ./ci/install-mysqlpp.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysqlpp.sh
     #- bash ./ci/install.sh
     before_script:
-    - "./ci/before_script.sh"
+    - mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - "../ci/script.sh"
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh
   - env: g++-6 BUILD_TYPE=Debug
     sudo: false
     language: cpp
@@ -96,21 +98,23 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
-    #- bash ./ci/.travis.install-mysql-5.7.sh
-    - "./ci/before_install.sh"
+    #- bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash ./ci/install-protobuf.sh
-    - bash ./ci/install-ninja.sh
-    - bash ./ci/install-lcov.sh
-    - bash ./ci/install-bakefile.sh
-    - bash ./ci/install-mysql.sh
-    - bash ./ci/install-mysqlpp.sh
-    #- bash ./ci/install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysqlpp.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install.sh
     before_script:
-    - "./ci/before_script.sh"
+    - mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - "../ci/script.sh"
+    - bash ../ci/script.sh
   - env: g++-6 BUILD_TYPE=Release
     sudo: false
     language: cpp
@@ -140,21 +144,23 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
-    #- bash ./ci/.travis.install-mysql-5.7.sh
-    - "./ci/before_install.sh"
+    #- bash $TRAVIS_BUILD_DIR/ci/.travis.install-mysql-5.7.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash ./ci/install-protobuf.sh
-    - bash ./ci/install-ninja.sh
-    - bash ./ci/install-lcov.sh
-    - bash ./ci/install-bakefile.sh
-    - bash ./ci/install-mysql.sh
-    - bash ./ci/install-mysqlpp.sh
-    #- bash ./ci/install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysqlpp.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install.sh
     before_script:
-    - "./ci/before_script.sh"
+    - mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - "../ci/script.sh;"
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
 #  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
 #    sudo: required
 #    language: cpp
