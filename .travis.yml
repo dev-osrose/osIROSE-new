@@ -12,7 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=$PATH:$HOME/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib
+  - PATH=$PATH:$HOME/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin
 services:
 - mysql
 matrix:
@@ -32,6 +32,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
+        - libmysql++-dev
         - perl
         - gcc-5
         - g++-5
@@ -39,6 +40,7 @@ matrix:
       apt: true
       directories:
       - $HOME/protobuf
+      - $HOME/bakefile
     branches:
       except:
       - coverity_scan
@@ -73,6 +75,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
+        - libmysql++-dev
         - perl
         - gcc-6
         - g++-6
@@ -80,6 +83,7 @@ matrix:
       apt: true
       directories:
       - $HOME/protobuf
+      - $HOME/bakefile
     branches:
       except:
       - coverity_scan
@@ -114,6 +118,7 @@ matrix:
         - cmake
         - lcov
         - libboost-dev
+        - libmysql++-dev
         - perl
         - gcc-6
         - g++-6
@@ -121,6 +126,7 @@ matrix:
       apt: true
       directories:
       - $HOME/protobuf
+      - $HOME/bakefile
     branches:
       except:
       - coverity_scan
