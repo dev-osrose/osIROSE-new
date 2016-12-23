@@ -23,6 +23,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 [![Waffle Board](https://img.shields.io/badge/waffle-RavenX8/osIROSE--new-6699dd.svg)](https://waffle.io/RavenX8/osIROSE-new)  
 [![Community Forum](https://img.shields.io/badge/forum-http%3A%2F%2Fforum.dev--osrose.com-green.svg)](http://forum.dev-osrose.com/index.php)
 [![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
+<img src="https://assets.brandfolder.com/odxjy2-1vxsm0-4mqaom/original/Koding_Logo_Color.png" width="10%" height="10%">
 
 ##### Issues and Status
 [![GitHub issues](https://img.shields.io/github/issues/RavenX8/osIROSE-new.svg)](https://github.com/RavenX8/osIROSE-new/issues)
@@ -30,7 +31,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 
 ##### Project Info:
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)   
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/RavenX8/osIROSE-new/master/LICENSE.txt)
 
 C++ Installation - Unix
 -----------------------
