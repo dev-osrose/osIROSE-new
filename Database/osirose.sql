@@ -36,7 +36,7 @@ CREATE TABLE `accounts` (
   `lasttime` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE = utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
