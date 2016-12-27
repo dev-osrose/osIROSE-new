@@ -608,7 +608,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(IN `_user` VARCHAR(16) CHARSET utf8, IN `_pass` VARCHAR(32) CHARSET utf8)
     READS SQL DATA
 BEGIN
-  SELECT id, password, access, active, `online` FROM accounts WHERE username = _user AND password = SHA2( CONCAT(_pass,salt), 256) ;
+  SELECT id, password, access, active, `online` FROM accounts WHERE username = _user COLLATE utf8_unicode_ci AND password = SHA2( CONCAT(_pass,salt), 256) COLLATE utf8_unicode_ci;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
