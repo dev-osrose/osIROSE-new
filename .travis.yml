@@ -200,7 +200,7 @@ matrix:
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysqlpp.sh
     before_script:
-	- mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
@@ -248,7 +248,7 @@ matrix:
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysqlpp.sh
     before_script:
-	- mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
