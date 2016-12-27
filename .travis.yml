@@ -13,7 +13,7 @@ env:
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
   - PATH=$PATH:$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib
-  - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/bakefile/lib:$HOME/mysql/lib:$HOME/mysqlpp/lib
+  - LD_LIBRARY_PATH=$HOME/bakefile/lib:$HOME/mysql/lib:$HOME/mysqlpp/lib:$LD_LIBRARY_PATH
 services:
 - mysql
 matrix:
@@ -36,7 +36,6 @@ matrix:
         - perl
         - gcc-5
         - g++-5
-        - mysql-server-5.5
     cache:
       apt: true
       directories:
