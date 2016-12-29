@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
   Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
   DisplayTitle();
   CheckUser();
-  
+
   if(auto log = console.lock()) {
     log->set_level((spdlog::level::level_enum)config.char_server().log_level());
     log->trace("Trace logs are enabled.");
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
   clientServer.Listen();
   clientServer.GetISCList().push_front(iscClient);
 
-  iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
+  iscServer.Init(config.serverdata().isclistenip(), config.char_server().iscport());
   iscServer.Listen();
 
   while (clientServer.IsActive()) {

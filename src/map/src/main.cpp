@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
   clientServer.Listen();
   clientServer.GetISCList().push_front(iscClient);
 
-  iscServer.Init(config.serverdata().ip(), config.map_server().iscport());
+  iscServer.Init(config.serverdata().isclistenip(), config.map_server().iscport());
   iscServer.Listen();
   iscClient->Connect();
 
