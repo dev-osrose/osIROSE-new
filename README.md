@@ -9,7 +9,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 [lin-badge]: https://travis-ci.org/dev-osrose/osIROSE-new.svg?branch=trunk "Linux build status"
 [lin-link]:  https://travis-ci.org/dev-osrose/osIROSE-new "Linux build status"
 [win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "Windows build status"
-[win-link]:  https://ci.appveyor.com/project/dev-osrose/osirose-new/branch/trunk "Windows build status"
+[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "Windows build status"
 [cov-badge]: https://coveralls.io/repos/github/dev-osrose/osIROSE-new/badge.svg?branch=trunk&service=github
 [cov-link]:  https://coveralls.io/github/dev-osrose/osIROSE-new?branch=trunk
 [ccov-badge]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk/graph/badge.svg
@@ -23,7 +23,6 @@ osIROSE - Open Source International R.O.S.E Online Server
 [![Waffle Board](https://img.shields.io/badge/waffle-dev--osrose/osIROSE--new-6699dd.svg)](https://waffle.io/dev-osrose/osIROSE-new)
 [![Community Forum](https://img.shields.io/badge/forum-http%3A%2F%2Fforum.dev--osrose.com-green.svg)](http://forum.dev-osrose.com/index.php)
 [![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-<img src="https://assets.brandfolder.com/odxjy2-1vxsm0-4mqaom/original/Koding_Logo_Color.png" width="10%" height="10%">
 
 ##### Issues and Status
 [![GitHub issues](https://img.shields.io/github/issues/dev-osrose/osIROSE-new.svg)](https://github.com/dev-osrose/osIROSE-new/issues)
