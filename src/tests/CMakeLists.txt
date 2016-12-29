@@ -105,7 +105,7 @@ IF(ENABLE_TESTING_COVERAGE)
     'bin2ascii.h'
   )
     
-  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage)
+  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF(ENABLE_MYSQL)
@@ -122,7 +122,7 @@ IF (MSVC)
   target_link_libraries(${PROJECT} libprotobuf)
   target_link_libraries(${PROJECT} wsock32.lib)
 ELSE()
-  target_link_libraries(${PROJECT} protobuf)
+  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
   target_link_libraries(${PROJECT} mysqlclient)
 ENDIF()
 

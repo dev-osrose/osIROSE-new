@@ -2,7 +2,7 @@ syntax = "proto2";
 package configFile;
 
 message	Database {
-	required string	host 		= 1 [default = "localhost"];
+	required string	host 		= 1 [default = "127.0.0.1"];
 	required string database 	= 2 [default = "osirose"];
 	required string user 		= 3 [default = "root"];
 	required string password 	= 4 [default = ""];

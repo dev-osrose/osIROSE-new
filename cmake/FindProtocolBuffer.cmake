@@ -252,8 +252,13 @@ IF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 ENDIF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 
 FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h 
-          PATHS "${PROTOBUF_ROOT}/include"
-				"/usr/include"
+          PATHS "$ENV{HOME}/include"
+                "$ENV{HOME}/usr/include"
+                "$ENV{HOME}/protobuf"
+                "$ENV{HOME}/protobuf/include"
+                "$ENV{PROTOBUF_ROOT}/include"
+                "${PROTOBUF_ROOT}/include"
+                "/usr/include"
                 "/usr/local/include"
                 "/usr/include/google"
                 "/usr/local/include/google"
@@ -270,29 +275,44 @@ ENDIF()
 
 FIND_LIBRARY(PROTOBUF_LIBRARY 
 			 NAMES "protobuf" "libprotobuf" "libprotobufd"
-             PATHS "${PROTOBUF_ROOT}/lib"
-					"${PROTOBUF_ROOT}/lib/*"
-					"/usr/lib"
-					"/usr/local/lib"
-					"/usr/local/lib/google"
+             PATHS 
+              "$ENV{HOME}/lib"
+              "$ENV{HOME}/usr/lib"
+              "$ENV{HOME}/protobuf"
+              "$ENV{HOME}/protobuf/lib"
+              "$ENV{PROTOBUF_ROOT}/lib"
+              "${PROTOBUF_ROOT}/lib"
+              "/usr/lib"
+              "/usr/local/lib"
+              "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Library"
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
 			 NAMES "protoc" "libprotoc" "libprotocd"
-             PATHS "${PROTOBUF_ROOT}/lib"
-					"${PROTOBUF_ROOT}/lib/*"
-					"/usr/lib"
-					"/usr/local/lib"
-					"/usr/local/lib/google"
+             PATHS 
+              "$ENV{HOME}/lib"
+              "$ENV{HOME}/usr/lib"
+              "$ENV{HOME}/protobuf"
+              "$ENV{HOME}/protobuf/lib"
+              "$ENV{PROTOBUF_ROOT}/lib"
+              "${PROTOBUF_ROOT}/lib"
+              "/usr/lib"
+              "/usr/local/lib"
+              "/usr/local/lib/google"
              DOC "The Google Protocol Buffers Compiler Library"
 )
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE 
 			 NAMES protoc
-             PATHS "${PROTOBUF_ROOT}/bin"
-					"${PROTOBUF_ROOT}/bin/*"
-					"/bin"
-					"/usr/bin"
-					"/usr/local/bin"
+             PATHS 
+              "$ENV{HOME}/bin"
+              "$ENV{HOME}/usr/bin"
+              "$ENV{HOME}/protobuf"
+              "$ENV{HOME}/protobuf/bin"
+              "$ENV{PROTOBUF_ROOT}/bin"
+              "${PROTOBUF_ROOT}/bin"
+              "/bin"
+              "/usr/bin"
+              "/usr/local/bin"
              DOC "The Google Protocol Buffers Compiler"
 )
 
