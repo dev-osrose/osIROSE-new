@@ -7,6 +7,8 @@ std::unordered_map<ePacketType, std::function<std::unique_ptr<CRosePacket>(uint8
     registerPacket<CliMouseCmd>(ePacketType::PAKCS_MOUSE_CMD),
 };
 
+}
+
 uint16_t getId(Entity entity) {
     return entity.component<BasicInfo>()->id_;
 }
@@ -21,5 +23,3 @@ CMapClient* getClient(Entity entity) {
     return entity.component<SocketConnector>()->client_;
 }
 
-
-}

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 struct PartyBase {
     PartyBase() :
@@ -13,6 +14,28 @@ struct PartyBase {
         lastEtc_(-1),
         lastZuly_(-1),
         capacity_(5) {} // FIXME : set that in a configurable way
+
+    PartyBase(Entity leader, Entity other) : PartyBase() {
+        leader_ = leader;
+        members_ = {leader, other};
+    }
+
+    bool addMember(Entity member) {
+        if (!member)
+            return false;
+        if (std::find(members_.begin(), members_.end(), member) != members_.end())
+            return false;
+        members_.push_back(member);
+        return true;
+    }
+
+    bool removeMember(Entity member) {
+        auto pos = std::find(members_.begin(), members_.end(), member);
+        if (pos == members_.end())
+            return false;
+        members_.erase(pos);
+        return true;
+    }
 
     uint32_t xp_;
     int range_;

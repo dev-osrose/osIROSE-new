@@ -8,8 +8,11 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REQ, &PartySystem::processPartyReq);
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REPLY, &PartySystem::processPartyReply);
     m.getEntityManager().on_component_removed<Party>([this](Entity entity, Component<Party> party) {
+            (void)entity;
+            (void)party;
             // TODO : send a packet to everyone else in the party
             });
+    // TODO : use on_component_assign for new members?
 }
 
 void PartySystem::update(EntityManager &es, double) {
@@ -25,6 +28,20 @@ void PartySystem::update(EntityManager &es, double) {
         for (auto it : party->party_->members_)
             logger_->trace("client {}", getId(it));
     }
+}
+
+void PartySystem::addPartyMember(Entity leader, Entity newMember) {
+    auto Cparty = leader.component<Party>();
+    if (!Cparty)
+        return;
+    std::shared_ptr<PartyBase> party = Cparty->party_;
+    if (!party)
+        party = Cparty->party_ = std::make_shared<PartyBase>(leader, newMember);
+    if (newMember.component<Party>())
+        return;
+    newMember.assign<Party>(party);
+    // TODO : send the packets
+    party->addMember(newMember);
 }
 
 void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPartyReq &packet) {

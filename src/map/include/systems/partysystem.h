@@ -13,6 +13,8 @@ class PartySystem : public System {
 
         virtual void update(EntityManager&, double);
 
+        void addPartyMember(Entity leader, Entity newMember);
+
         void processPartyReq(CMapClient *client, Entity entity, const RoseCommon::CliPartyReq &packet);
         void processPartyReply(CMapClient *client, Entity entity, const RoseCommon::CliPartyReply &packet);
 };
