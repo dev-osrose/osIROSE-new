@@ -32,7 +32,6 @@ set( SOURCES_HEADER
   include/croseisc
   include/crosepacket
   include/epackettype
-  include/iscontainer
   include/packetclasses
   include/loginpackets
   include/charpackets

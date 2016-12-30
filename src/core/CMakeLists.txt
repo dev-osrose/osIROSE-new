@@ -40,6 +40,7 @@ set( SOURCES_HEADER
   include/singleton
   include/riterator
   include/platform_defines
+  include/iscontainer.h
 )
 
 set( SOURCES_BASE

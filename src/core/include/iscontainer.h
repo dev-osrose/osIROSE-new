@@ -24,7 +24,7 @@
 #ifndef _ISCONTAINER_H_
 #define _ISCONTAINER_H_
 
-namespace RoseCommon {
+namespace Core {
 
 template<typename T>
 struct has_const_iterator
