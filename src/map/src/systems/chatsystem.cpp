@@ -16,9 +16,8 @@ void ChatSystem::normalChat(CMapClient *client, Entity entity, const CliNormalCh
     logger_->trace("ChatSystem::normalChat");
     if (!client || !entity.component<BasicInfo>())
         return;
-    uint16_t id = entity.component<BasicInfo>()->id_;
     CMapServer::SendPacket(client, CMapServer::eSendType::NEARBY, 
-            *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(id, packet.message()));
+            *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }
 
 void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisperChat &packet) {
@@ -26,10 +25,10 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
     if (!client || !entity.component<BasicInfo>())
         return;
     auto target = manager_.getEntity(packet.targetId());
-    if (!target || !target.component<SocketConnector>() || !target.component<SocketConnector>()->client_) {
+    if (!target || !getClient(target)) {
         client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
         return;
     }
-    target.component<SocketConnector>()->client_->Send(
-            *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), entity.component<BasicInfo>()->name_));
+    getClient(target)->Send(
+            *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), getName(entity)));
 }
