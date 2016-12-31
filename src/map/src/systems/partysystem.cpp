@@ -7,10 +7,11 @@ using namespace RoseCommon;
 PartySystem::PartySystem(SystemManager &m) : System(m) {
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REQ, &PartySystem::processPartyReq);
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REPLY, &PartySystem::processPartyReply);
-    m.getEntityManager().on_component_removed<Party>([this](Entity entity, Component<Party> party) {
-            (void)entity;
-            (void)party;
-            // TODO : send a packet to everyone else in the party
+    m.getEntityManager().on_component_removed<Party>([this](Entity entity, Component<Party> Cparty) {
+            auto party = Cparty->party_;
+            party->removeMember(entity);
+            for (auto &it : party->members_)
+                getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, {entity}));
             });
     // TODO : use on_component_assign for new members?
 }
@@ -40,7 +41,10 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
     if (newMember.component<Party>())
         return;
     newMember.assign<Party>(party);
-    // TODO : send the packets
+    for (auto &it : party->members_) {
+        getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, {newMember}));
+    }
+    getClient(newMember)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
     party->addMember(newMember);
 }
 
