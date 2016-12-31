@@ -65,6 +65,7 @@ SET(SOURCES_BASE
   src/charpackets
   src/mappackets
   src/item
+  src/entitycomponents
 )
 
 SET(SOURCES_PACKETS
