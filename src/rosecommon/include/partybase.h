@@ -15,9 +15,9 @@ struct PartyBase {
         lastZuly_(-1),
         capacity_(5) {} // FIXME : set that in a configurable way
 
-    PartyBase(Entity leader, Entity other) : PartyBase() {
+    PartyBase(Entity leader) : PartyBase() {
         leader_ = leader;
-        members_ = {leader, other};
+        members_ = {leader};
     }
 
     bool addMember(Entity member) {

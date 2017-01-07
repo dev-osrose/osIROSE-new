@@ -15,7 +15,6 @@ class PartySystem : public System {
 
         void addPartyMember(Entity leader, Entity newMember);
         void changeLeader(Entity leader, Entity newLeader);
-        void removeMember(Entity member, bool isKicked = false);
 
         void processPartyReq(CMapClient *client, Entity entity, const RoseCommon::CliPartyReq &packet);
         void processPartyReply(CMapClient *client, Entity entity, const RoseCommon::CliPartyReply &packet);
