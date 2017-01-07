@@ -11,7 +11,7 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
             auto party = Cparty->party_;
             party->removeMember(entity);
             for (auto &it : party->members_)
-                getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, {entity}));
+                getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, entity));
             });
     // TODO : use on_component_assign for new members?
 }
@@ -42,7 +42,7 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
         return;
     newMember.assign<Party>(party);
     for (auto &it : party->members_) {
-        getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, {newMember}));
+        getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, newMember));
     }
     getClient(newMember)->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
     party->addMember(newMember);
