@@ -6,8 +6,6 @@ SrvPartyMember::SrvPartyMember() : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER) 
 
 SrvPartyMember::SrvPartyMember(uint8_t rules, bool isDelete, const std::vector<Entity> &list) : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER), rules_(rules), isDelete_(isDelete), list_(list) {}
 
-SrvPartyMember::SrvPartyMember(uint8_t rules, bool isDelete, Entity entity) : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER), rules_(rules), isDelete_(isDelete), list_{entity} {}
-
 uint8_t SrvPartyMember::rules() const {
 	return rules_;
 }

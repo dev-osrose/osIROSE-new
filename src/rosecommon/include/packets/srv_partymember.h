@@ -11,7 +11,6 @@ class SrvPartyMember : public CRosePacket {
 	public:
 		SrvPartyMember();
 		SrvPartyMember(uint8_t rules, bool isDelete, const std::vector<Entity> &list);
-        SrvPartyMember(uint8_t rules, bool isDelete, Entity entity);
 
 		virtual ~SrvPartyMember() = default;
 

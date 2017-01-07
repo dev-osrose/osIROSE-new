@@ -16,7 +16,7 @@ set(Clang_LINK_FLAGS "")
 set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
 IF (NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall -Wextra -Werror -fconcepts")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
