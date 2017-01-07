@@ -48,6 +48,31 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
     party->addMember(newMember);
 }
 
+void PartySystem::changeLeader(Entity leader, Entity newLeader) {
+    auto Cparty = leader.component<Party>();
+    if (!Cparty)
+        return;
+    std::shared_ptr<PartyBase> party = Cparty->party_;
+    if (!party)
+        return;
+    if (!party->changeLeader(newLeader))
+        return;
+    // TODO : send the packets
+}
+
+void PartySystem::removeMember(Entity member, bool isKicked) {
+    auto Cparty = member.component<Party>();
+    if (!Cparty)
+        return;
+    std::shared_ptr<PartyBase> party = Cparty->party_;
+    if (!party)
+        return;
+    if (!party->removeMember(member))
+        return;
+    (void)isKicked;
+    // TODO : send packets
+}
+
 void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPartyReq &packet) {
     logger_->trace("PartySystem::processPartyReq");
     Entity other;
@@ -84,13 +109,21 @@ void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPa
             if (!entity.component<Party>()) {
                 logger_->warn("Client {} tried to give up ownership but isn't in a party", getId(entity));
                 return;
+            } else if (entity.component<Party>()->party_->leader_ != entity) {
+                logger_->warn("Client {} tried to give up ownership but doesn't have it", getId(entity));
+                return;
             }
-            // TODO : change leader
+            changeLeader(entity, other);
             return;
         case CliPartyReq::KICK:
-            if (!entity.component<Party>())
+            if (!entity.component<Party>()) {
+                logger_->warn("Client {} tried to kick a member party but isn't in one", getId(entity));
                 return;
-            // TODO : kick member
+            } else if (!entity.component<Party>()->party_->isMember(other)) {
+                logger_->warn("Client {} tried to kick a member that isn't in its party", getId(entity));
+                return;
+            }
+            removeMember(other, true);
             return;
         default:
             logger_->warn("Client {} sent a non valid request code {}", getId(entity), packet.request());
@@ -121,7 +154,8 @@ void PartySystem::processPartyReply(CMapClient*, Entity entity, const RoseCommon
         case CliPartyReply::ACCEPT_MAKE:
         case CliPartyReply::ACCEPT_JOIN:
             other.component<Party>()->isRequested_ = false;
-            // TODO : add party member
+            getClient(other)->Send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
+            addPartyMember(other, entity);
             return;
         default:
             logger_->warn("Client {} sent a party reply with reply {}", getId(entity), (int)packet.reply());

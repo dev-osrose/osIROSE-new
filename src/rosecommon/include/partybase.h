@@ -34,6 +34,19 @@ struct PartyBase {
         if (pos == members_.end())
             return false;
         members_.erase(pos);
+        if (leader_ == member)
+            leader_ = members_[0];
+        return true;
+    }
+
+    bool isMember(Entity member) {
+        return std::find(members_.begin(), members_.end(), member) != members_.end();
+    }
+
+    bool changeLeader(Entity leader) {
+        if (!isMember(leader) || leader == leader_)
+            return false;
+        leader_ = leader;
         return true;
     }
 

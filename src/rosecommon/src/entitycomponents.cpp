@@ -1,5 +1,4 @@
 #include "entityComponents.h"
-#include <cassert>
 
 uint16_t getId(Entity entity) {
     return entity.component<BasicInfo>()->id_;
@@ -10,7 +9,8 @@ std::string &getName(Entity entity) {
 }
 
 CMapClient* getClient(Entity entity) {
-    assert(entity.component<SocketConnector>() && entity.component<SocketConnector>()->client_);
+    if (!entity.component<SocketConnector>())
+        return nullptr;
     return entity.component<SocketConnector>()->client_;
 }
 
