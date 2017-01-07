@@ -19,8 +19,8 @@ concept bool NarrowConvertible = requires() {
 
 template <typename T, typename... Args>
 requires(NarrowConvertible<T, Args> &&...)
-auto make_vector(T &&value, Args&&... args) -> std::vector<std::remove_reference_t<decltype(value)>> {
-    std::vector<std::remove_reference_t<decltype(value)>> vec;
+std::vector<std::remove_reference_t<T>> make_vector(T &&value, Args&&... args) {
+    std::vector<std::remove_reference_t<T>> vec;
     vec.reserve(sizeof...(args) + 1);
     vec.push_back(std::forward<T>(value));
     (vec.push_back(std::forward<Args>(args)), ...);
