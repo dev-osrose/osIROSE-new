@@ -32,3 +32,17 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
     getClient(target)->Send(
             *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), getName(entity)));
 }
+
+void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat &packet) {
+    logger_->trace("ChatSystem::partyChat");
+    if (!client || !entity.component<BasicInfo>())
+        return;
+    if (!entity.component<Party>() || !entity.component<Party>()->party_) {
+        logger_->warn("Client {} tried to send a party message but isn't in a party", getId(entity));
+        return;
+    }
+    auto party = entity.component<Party>()->party_;
+    for (auto it : party->members_) {
+        getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
+    }
+}

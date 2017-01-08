@@ -111,6 +111,8 @@ SET(SOURCES_PACKETS
   include/packets/cli_partyreq
   src/packets/cli_partyreply
   include/packets/cli_partyreply
+  src/packets/cli_partychat
+  include/packets/cli_partychat
   #------------------------------------------------
   src/packets/srv_acceptreply 
   include/packets/srv_acceptreply
@@ -166,6 +168,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_partyreply
   src/packets/srv_partymember
   include/packets/srv_partymember
+  src/packets/srv_partychat
+  include/packets/srv_partychat
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files
