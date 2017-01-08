@@ -20,6 +20,14 @@ EntityManager &EntitySystem::getEntityManager() {
     return entityManager_;
 }
 
+std::shared_lock<std::shared_timed_mutex> EntitySystem::getReadLock(Entity) {
+    return std::move(std::shared_lock<std::shared_timed_mutex>(access_));
+}
+
+std::unique_lock<std::shared_timed_mutex> EntitySystem::getWriteLock(Entity) {
+    return std::move(std::unique_lock<std::shared_timed_mutex>(access_));
+}
+
 void EntitySystem::registerEntity(Entity entity) {
     if (!entity)
         return;
@@ -40,24 +48,24 @@ Entity EntitySystem::getEntity(uint32_t charId) {
 
 void EntitySystem::update(double dt) {
     systemManager_.update(dt);
-    for (auto it : toDestroy_)
+    for (auto it : toDestroy_) {
         if (it)
             it.destroy();
+    }
     toDestroy_.clear();
 }
 
 void EntitySystem::destroy(Entity entity) {
     if (!entity)
         return;
-    if (entity.component<SocketConnector>() && entity.component<SocketConnector>()->client_)
+    if (entity.component<SocketConnector>())
         entity.remove<SocketConnector>();
-    if (entity.component<Party>())
-        entity.remove<Party>();
     toDestroy_.push_back(entity);
 }
 
 Entity EntitySystem::create() {
-    return entityManager_.create();
+    Entity entity = entityManager_.create();
+    return entity;
 }
 
 bool EntitySystem::isNearby(Entity a, Entity b) {

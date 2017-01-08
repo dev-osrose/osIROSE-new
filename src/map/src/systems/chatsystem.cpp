@@ -8,6 +8,7 @@ using namespace RoseCommon;
 ChatSystem::ChatSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_NORMAL_CHAT, &ChatSystem::normalChat);
     manager.registerDispatcher(ePacketType::PAKCS_WHISPER_CHAT, &ChatSystem::whisperChat);
+    manager.registerDispatcher(ePacketType::PAKCS_PARTY_CHAT, &ChatSystem::partyChat);
 }
 
 void ChatSystem::update(EntityManager&, double) {}
@@ -29,8 +30,9 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
         client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
         return;
     }
-    getClient(target)->Send(
-            *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), getName(entity)));
+    if (auto socket = getClient(target))
+        socket->Send(
+                    *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), getName(entity)));
 }
 
 void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat &packet) {
@@ -43,6 +45,7 @@ void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat
     }
     auto party = entity.component<Party>()->party_;
     for (auto it : party->members_) {
-        getClient(it)->Send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
+        if (auto socket = getClient(it))
+            socket->Send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
     }
 }
