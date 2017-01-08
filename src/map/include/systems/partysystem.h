@@ -2,7 +2,7 @@
 
 #include "system.h"
 
-class PartyBase;
+struct PartyBase;
 
 namespace Systems {
 
