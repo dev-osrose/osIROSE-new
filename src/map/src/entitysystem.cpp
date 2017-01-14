@@ -20,14 +20,6 @@ EntityManager &EntitySystem::getEntityManager() {
     return entityManager_;
 }
 
-std::shared_lock<std::shared_timed_mutex> EntitySystem::getReadLock(Entity) {
-    return std::move(std::shared_lock<std::shared_timed_mutex>(access_));
-}
-
-std::unique_lock<std::shared_timed_mutex> EntitySystem::getWriteLock(Entity) {
-    return std::move(std::unique_lock<std::shared_timed_mutex>(access_));
-}
-
 void EntitySystem::registerEntity(Entity entity) {
     if (!entity)
         return;

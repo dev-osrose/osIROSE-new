@@ -8,8 +8,6 @@
 #include "crosepacket.h"
 #include "systems/system.h"
 #include <unordered_map>
-#include <shared_mutex>
-#include <mutex>
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -49,9 +47,6 @@ class EntitySystem {
         Entity getEntity(const std::string &name);
         Entity getEntity(uint32_t charId);
 
-        std::shared_lock<std::shared_timed_mutex> getReadLock(Entity entity);
-        std::unique_lock<std::shared_timed_mutex> getWriteLock(Entity entity);
-
         EntityManager &getEntityManager();
 
     private:
@@ -60,7 +55,6 @@ class EntitySystem {
         std::vector<Entity> toDestroy_;
         std::unordered_map<std::string, Entity> nameToEntity_;
         std::unordered_map<uint32_t, Entity> idToEntity_;
-        mutable std::shared_timed_mutex access_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */
