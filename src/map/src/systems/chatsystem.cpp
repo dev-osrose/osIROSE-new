@@ -18,7 +18,7 @@ void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
     if (!entity)
         return;
     if (auto client = getClient(entity))
-        client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>(msg, "server"));
+        client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("server", msg));
 }
 
 void ChatSystem::normalChat(CMapClient *client, Entity entity, const CliNormalChat &packet) {
