@@ -40,7 +40,6 @@ class CMapClient : public RoseCommon::CRoseClient {
 
   bool LogoutReply();
   bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
-  bool ChangeMapReply(std::unique_ptr<RoseCommon::CliChangeMapReq> P);
 
   enum class eSTATE {
     DEFAULT,

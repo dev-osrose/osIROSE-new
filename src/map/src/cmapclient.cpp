@@ -46,9 +46,6 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
-    case ePacketType::PAKCS_CHANGE_MAP_REQ:
-      return ChangeMapReply(
-          getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
     default: {
         auto packet = fetchPacket(_buffer);
         if (!packet)
@@ -108,6 +105,7 @@ bool CMapClient::JoinServerReply(
 
       if (entity_) {
         entity_.assign<SocketConnector>(connector_);
+        entity_.component<BasicInfo>()->loggedIn_.store(true);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
@@ -146,38 +144,6 @@ bool CMapClient::JoinServerReply(
     }
   return true;
 };
-
-bool CMapClient::ChangeMapReply(
-    std::unique_ptr<RoseCommon::CliChangeMapReq>) {
-  logger_->trace("CMapClient::ChangeMapReply()");
-
-  if (login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to change map before logging in.",
-                  GetId());
-    return true;
-  }
-  auto advanced = entity_.component<AdvancedInfo>();
-  auto basic = entity_.component<BasicInfo>();
-  auto info = entity_.component<CharacterInfo>();
-
-  Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
-
-  entitySystem_->get<Systems::ChatSystem>().sendMsg(entity_, std::to_string(GetId()));
-  CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
-          *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
-
-  entitySystem_->processEntities<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
-          (void)entity;
-          //auto basic = entity.component<BasicInfo>();
-          //if (false && entity != entity_ && basic->loggedIn_.load())
-          //    this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
-          return true;
-        });
-
-  basic->loggedIn_.store(true);
-
-  return true;
-}
 
 bool CMapClient::IsNearby(const CRoseClient* _otherClient) const {
   logger_->trace("CMapClient::IsNearby()");

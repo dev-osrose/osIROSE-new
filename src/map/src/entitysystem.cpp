@@ -4,6 +4,7 @@
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
 #include "systems/partysystem.h"
+#include "systems/mapsystem.h"
 #include "database.h"
 
 using namespace RoseCommon;
@@ -14,6 +15,7 @@ EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::ChatSystem>();
     systemManager_.add<Systems::InventorySystem>();
     systemManager_.add<Systems::PartySystem>();
+    systemManager_.add<Systems::MapSystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
