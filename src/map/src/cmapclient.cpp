@@ -19,6 +19,7 @@
 #include "database.h"
 #include "entityComponents.h"
 #include <cmath>
+#include "systems/chatsystem.h"
 
 using namespace RoseCommon;
 
@@ -160,17 +161,20 @@ bool CMapClient::ChangeMapReply(
   auto info = entity_.component<CharacterInfo>();
 
   Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
+
+  entitySystem_->get<Systems::ChatSystem>().sendMsg(entity_, std::to_string(GetId()));
   CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
           *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
 
   entitySystem_->processEntities<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
-          auto basic = entity.component<BasicInfo>();
-          if (entity != entity_ && basic->loggedIn_)
-              this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
+          (void)entity;
+          //auto basic = entity.component<BasicInfo>();
+          //if (false && entity != entity_ && basic->loggedIn_.load())
+          //    this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
           return true;
         });
 
-  basic->loggedIn_ = true;
+  basic->loggedIn_.store(true);
 
   return true;
 }

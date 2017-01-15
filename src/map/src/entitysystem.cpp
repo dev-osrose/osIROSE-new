@@ -94,6 +94,7 @@ bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePack
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
     auto &database = Core::databasePool.getDatabase();
     auto res = database.QStore(fmt::format("CALL get_character({});", charId));
+    std::lock_guard<std::mutex> lock(access_);
     auto entity = create();
     if (!res || res->size() != 1) {
         entity.destroy();

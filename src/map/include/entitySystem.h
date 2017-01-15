@@ -39,6 +39,7 @@ class EntitySystem {
 
         template <typename ...T>
         void processEntities(std::function<bool(Entity)>&& func) {
+            std::lock_guard<std::mutex> lock(access_);
             for (Entity entity : entityManager_.entities_with_components<T...>())
                 if (!func(entity))
                     return;
@@ -54,7 +55,7 @@ class EntitySystem {
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;
-        std::mutex access_;
+        mutable std::mutex access_;
         std::vector<Entity> toDestroy_;
         std::unordered_map<std::string, Entity> nameToEntity_;
         std::unordered_map<uint32_t, Entity> idToEntity_;

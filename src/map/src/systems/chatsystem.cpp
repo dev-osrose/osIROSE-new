@@ -13,6 +13,14 @@ ChatSystem::ChatSystem(SystemManager &manager) : System(manager) {
 
 void ChatSystem::update(EntityManager&, double) {}
 
+void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
+    logger_->trace("ChatSystem::sendMsg");
+    if (!entity)
+        return;
+    if (auto client = getClient(entity))
+        client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>(msg, "server"));
+}
+
 void ChatSystem::normalChat(CMapClient *client, Entity entity, const CliNormalChat &packet) {
     logger_->trace("ChatSystem::normalChat");
     if (!client || !entity.component<BasicInfo>())
