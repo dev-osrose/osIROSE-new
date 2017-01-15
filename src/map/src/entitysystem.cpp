@@ -56,8 +56,7 @@ void EntitySystem::destroy(Entity entity) {
 }
 
 Entity EntitySystem::create() {
-    Entity entity = entityManager_.create();
-    return entity;
+    return entityManager_.create();
 }
 
 bool EntitySystem::isNearby(Entity a, Entity b) {
