@@ -32,7 +32,7 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
     }
     if (auto socket = getClient(target))
         socket->Send(
-                    *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(packet.message(), getName(entity)));
+                    *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(getName(entity), packet.message()));
 }
 
 void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat &packet) {
