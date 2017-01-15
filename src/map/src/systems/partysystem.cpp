@@ -65,6 +65,7 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
         if (auto socket = getClient(it))
             socket->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, Core::make_vector(newMember)));
     }
+    party->addMember(newMember);
     if (auto socket = getClient(newMember))
         socket->Send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
 }
