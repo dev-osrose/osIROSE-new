@@ -42,6 +42,10 @@ void CMapServer::SendPacket(const CMapClient* sender, CMapServer::eSendType type
     CRoseServer::SendPacket(dynamic_cast<const CRoseClient*>(sender), type, _buffer);
 }
 
+void CMapServer::SendPacket(std::shared_ptr<CMapClient> sender, CMapServer::eSendType type, CRosePacket &_buffer) {
+    CRoseServer::SendPacket(dynamic_cast<const CRoseClient*>(sender.get()), type, _buffer);
+}
+
 CMapServer::~CMapServer() {}
 
 void CMapServer::OnAccepted(tcp::socket _sock) {
@@ -50,14 +54,15 @@ void CMapServer::OnAccepted(tcp::socket _sock) {
     std::string _address = _sock.remote_endpoint().address().to_string();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      CMapClient* nClient = new CMapClient(std::move(_sock), entitySystem_);
+      std::shared_ptr<CMapClient> nClient = std::make_shared<CMapClient>(std::move(_sock), entitySystem_);
+      nClient->setConnector(nClient);
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId(++client_count_);
       logger_->info("Client connected from: {}", _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      CMapISC* nClient = new CMapISC(std::move(_sock));
+      std::shared_ptr<CMapISC> nClient = std::make_shared<CMapISC>(std::move(_sock));
       nClient->SetLastUpdateTime(Core::Time::GetTickCount());
       nClient->SetId( server_count_++ );
       logger_->info( "Server connected from: {}", _address.c_str() );

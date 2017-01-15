@@ -8,6 +8,8 @@
 #include "crosepacket.h"
 #include "systems/system.h"
 #include <unordered_map>
+#include <mutex>
+#include <queue>
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -28,7 +30,7 @@ class EntitySystem {
             return *systemManager_.get<T>();
         }
 
-        bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet);
+        bool dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet);
 
         Entity loadCharacter(uint32_t charId, bool platinium, uint32_t id);
         void saveCharacter(uint32_t  charId, Entity entity);
@@ -52,9 +54,11 @@ class EntitySystem {
     private:
         EntityManager entityManager_;
         SystemManager systemManager_;
+        std::mutex access_;
         std::vector<Entity> toDestroy_;
         std::unordered_map<std::string, Entity> nameToEntity_;
         std::unordered_map<uint32_t, Entity> idToEntity_;
+        std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

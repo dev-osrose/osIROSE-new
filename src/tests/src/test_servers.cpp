@@ -36,8 +36,8 @@ TEST(TestFinalServers, TestISCConnections) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  CCharServer::GetISCList().push_front(charIscClient);
-  CMapServer::GetISCList().push_front(mapIscClient);
+  CCharServer::GetISCList().push_front(std::shared_ptr<CRoseClient>(charIscClient));
+  CMapServer::GetISCList().push_front(std::shared_ptr<CRoseClient>(mapIscClient));
 
   charIscClient->Connect();
   mapIscClient->Connect();

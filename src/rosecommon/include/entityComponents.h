@@ -36,6 +36,6 @@ uint16_t getId(Entity entity);
 
 std::string &getName(Entity entity);
 
-CMapClient *getClient(Entity entity);
+std::shared_ptr<CMapClient> getClient(Entity entity);
 
 #endif /* !_ENTITYCOMPONENTS_H_ */

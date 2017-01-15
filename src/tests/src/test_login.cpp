@@ -36,7 +36,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   iscServ->SetId(0);
   iscServ->SetType(1);
-  CLoginServer::GetISCList().push_front(iscServ);
+  CLoginServer::GetISCList().push_front(std::shared_ptr<CRoseClient>(iscServ));
 
 
   //-----------------------------------------

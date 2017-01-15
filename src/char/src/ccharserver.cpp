@@ -30,7 +30,7 @@ void CCharServer::OnAccepted(tcp::socket _sock) {
     std::string _address = _sock.remote_endpoint().address().to_string();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      CCharClient* nClient = new CCharClient(std::move(_sock));
+      std::shared_ptr<CCharClient> nClient = std::make_shared<CCharClient>(std::move(_sock));
       nClient->SetId(client_count_++);
       nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
       logger_->info( "[{}] Client connected from: {}", nClient->GetId(),
@@ -38,7 +38,7 @@ void CCharServer::OnAccepted(tcp::socket _sock) {
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      CCharISC* nClient = new CCharISC(std::move(_sock));
+      std::shared_ptr<CCharISC> nClient = std::make_shared<CCharISC>(std::move(_sock));
       nClient->SetId(server_count_++);
       nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
       logger_->info( "Server connected from: {}", _address.c_str() );

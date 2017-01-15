@@ -39,6 +39,12 @@ Entity EntitySystem::getEntity(uint32_t charId) {
 }
 
 void EntitySystem::update(double dt) {
+    std::lock_guard<std::mutex> lock(access_);
+    while (toDispatch_.size()) {
+        auto tmp = std::move(toDispatch_.front());
+        systemManager_.dispatch(tmp.first, *tmp.second);
+        toDispatch_.pop();
+    }
     systemManager_.update(dt);
     for (auto it : toDestroy_) {
         if (it)
@@ -50,8 +56,7 @@ void EntitySystem::update(double dt) {
 void EntitySystem::destroy(Entity entity) {
     if (!entity)
         return;
-    if (entity.component<SocketConnector>())
-        entity.remove<SocketConnector>();
+    std::lock_guard<std::mutex> lock(access_);
     toDestroy_.push_back(entity);
 }
 
@@ -75,10 +80,15 @@ bool EntitySystem::isNearby(Entity a, Entity b) {
     return true;
 }
 
-bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
+bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {
     if (!entity)
         return false;
-    return systemManager_.dispatch(entity, packet);
+    if (systemManager_.wouldDispatch(*packet)) {
+        std::lock_guard<std::mutex> lock(access_);
+        toDispatch_.emplace(std::make_pair(entity, std::move(packet)));
+        return true;
+    }
+    return false;
 }
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {

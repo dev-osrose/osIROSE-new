@@ -58,7 +58,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
                         GetId());
           return true;
         }
-        if (!entitySystem_->dispatch(entity_, *packet))
+        if (!entitySystem_->dispatch(entity_, std::move(packet)))
             CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
     }
   }
@@ -106,7 +106,7 @@ bool CMapClient::JoinServerReply(
       entity_ = entitySystem_->loadCharacter(charid_, platinium, GetId());
 
       if (entity_) {
-        entity_.assign<SocketConnector>(this);
+        entity_.assign<SocketConnector>(connector_);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));

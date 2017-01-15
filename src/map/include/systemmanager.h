@@ -46,6 +46,13 @@ class SystemManager {
 
         void update(double dt);
 
+        bool wouldDispatch(const RoseCommon::CRosePacket &packet) {
+            auto res = dispatch_.equal_range(to_underlying(packet.type()));
+            if (std::distance(res.first, res.second) > 0)
+                return true;
+            return false;
+        }
+
         bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
             auto res = dispatch_.equal_range(to_underlying(packet.type()));
             if (res.first == dispatch_.end())
@@ -70,7 +77,7 @@ class SystemManager {
                         if (!entity)
                             return false;
                         if (auto socket = getClient(entity)) {
-                            (system ->* method)(socket, entity, dynamic_cast<const U&>(packet));
+                            (system ->* method)(socket.get(), entity, dynamic_cast<const U&>(packet));
                             return true;
                         }
                     } else

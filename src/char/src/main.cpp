@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
   clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
   clientServer.Listen();
-  clientServer.GetISCList().push_front(iscClient);
+  clientServer.GetISCList().push_front(std::shared_ptr<RoseCommon::CRoseClient>(iscClient));
 
   iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
   iscServer.Listen();
