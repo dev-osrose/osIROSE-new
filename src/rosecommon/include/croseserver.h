@@ -41,6 +41,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   enum class eSendType : uint8_t {
     EVERYONE,
     EVERYONE_BUT_ME,
+    EVERYONE_BUT_ME_ON_MAP,
     NEARBY,
     NEARBY_BUT_ME,
   };

@@ -38,4 +38,6 @@ std::string &getName(Entity entity);
 
 std::shared_ptr<CMapClient> getClient(Entity entity);
 
+bool isConnected(Entity entity);
+
 #endif /* !_ENTITYCOMPONENTS_H_ */
