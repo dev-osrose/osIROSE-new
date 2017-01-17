@@ -21,7 +21,7 @@ void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
         client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("server", msg));
 }
 
-void ChatSystem::normalChat(CMapClient *client, Entity entity, const CliNormalChat &packet) {
+void ChatSystem::normalChat(std::shared_ptr<CMapClient> client, Entity entity, const CliNormalChat &packet) {
     logger_->trace("ChatSystem::normalChat");
     if (!client || !entity.component<BasicInfo>())
         return;
@@ -29,7 +29,7 @@ void ChatSystem::normalChat(CMapClient *client, Entity entity, const CliNormalCh
             *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }
 
-void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisperChat &packet) {
+void ChatSystem::whisperChat(std::shared_ptr<CMapClient> client, Entity entity, const CliWhisperChat &packet) {
     logger_->trace("ChatSystem::whisperChat");
     if (!client || !entity.component<BasicInfo>())
         return;
@@ -43,7 +43,7 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
                     *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(getName(entity), packet.message()));
 }
 
-void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat &packet) {
+void ChatSystem::partyChat(std::shared_ptr<CMapClient> client, Entity entity, const CliPartyChat &packet) {
     logger_->trace("ChatSystem::partyChat");
     if (!client || !entity.component<BasicInfo>())
         return;

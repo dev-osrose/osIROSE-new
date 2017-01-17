@@ -38,7 +38,7 @@ bool InventorySystem::swapItems(Entity entity, uint8_t &a, uint8_t &b) {
     return true;
 }
 
-void InventorySystem::processEquip(CMapClient *client, Entity entity, const RoseCommon::CliEquipItem &packet) {
+void InventorySystem::processEquip(std::shared_ptr<CMapClient> client, Entity entity, const RoseCommon::CliEquipItem &packet) {
     logger_->trace("InventorySystem::processEquip");
     if (packet.slotTo() < 1 || packet.slotTo() >= Inventory::MAX_EQUIP_ITEMS) {
         logger_->warn("When requesting to change equipped item, the destination wasn't good");

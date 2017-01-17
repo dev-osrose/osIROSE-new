@@ -13,9 +13,9 @@ class ChatSystem : public System {
 
         void sendMsg(Entity entity, const std::string &msg);
 
-        void normalChat(CMapClient *client, Entity entity, const RoseCommon::CliNormalChat &packet);
-        void whisperChat(CMapClient *client, Entity entity, const RoseCommon::CliWhisperChat &packet);
-        void partyChat(CMapClient *client, Entity entity, const RoseCommon::CliPartyChat &packet);
+        void normalChat(std::shared_ptr<CMapClient> client, Entity entity, const RoseCommon::CliNormalChat &packet);
+        void whisperChat(std::shared_ptr<CMapClient> client, Entity entity, const RoseCommon::CliWhisperChat &packet);
+        void partyChat(std::shared_ptr<CMapClient> client, Entity entity, const RoseCommon::CliPartyChat &packet);
 };
 
 }

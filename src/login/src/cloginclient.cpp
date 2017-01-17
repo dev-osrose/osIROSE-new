@@ -46,6 +46,10 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     for (auto& server : CLoginServer::GetISCList())
       if (server->GetType() == iscPacket::ServerType::CHAR) {
         CLoginISC* svr = dynamic_cast<CLoginISC*>(server.get());
+        if (!svr) {
+            logger_->warn("Error the server type isn't what it says it is");
+            continue;
+        }
 
         // This if check is needed since the client actually looks for this.
         packet->addServer(svr->GetName(), svr->GetId() + 1,
@@ -138,6 +142,10 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = dynamic_cast<CLoginISC*>(obj.get());
+    if (!server) {
+        logger_->warn("Error the server isn't what it says it is");
+        continue;
+    }
     if (server->GetType() == iscPacket::ServerType::CHAR &&
         server->GetId() == ServerID) {
       for (auto& obj : server->GetChannelList()) {

@@ -27,6 +27,6 @@ struct BasicInfo {
     int32_t teamId_;
     uint16_t targetId_;
     uint16_t command_;
-    std::atomic_bool loggedIn_;
+    mutable std::atomic_bool loggedIn_;
 };
 

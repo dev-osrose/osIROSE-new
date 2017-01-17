@@ -71,13 +71,13 @@ class SystemManager {
 
         // FIXME : No possibility to manually unregister as of now
         template <class T, class U>
-        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(CMapClient*, Entity, const U&)) {
+        void registerDispatcher(RoseCommon::ePacketType type, void(T::*method)(std::shared_ptr<CMapClient>, Entity, const U&)) {
             dispatch_.emplace(to_underlying(type), [this, method](Entity entity, const RoseCommon::CRosePacket &packet) {
                     if (auto *system = this->get<T>()) {
                         if (!entity)
                             return false;
                         if (auto socket = getClient(entity)) {
-                            (system ->* method)(socket.get(), entity, dynamic_cast<const U&>(packet));
+                            (system ->* method)(socket, entity, dynamic_cast<const U&>(packet));
                             return true;
                         }
                     } else

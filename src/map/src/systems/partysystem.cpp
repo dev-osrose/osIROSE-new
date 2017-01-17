@@ -85,7 +85,7 @@ void PartySystem::changeLeader(Entity leader, Entity newLeader) {
     }
 }
 
-void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPartyReq &packet) {
+void PartySystem::processPartyReq(std::shared_ptr<CMapClient> client, Entity entity, const CliPartyReq &packet) {
     logger_->trace("PartySystem::processPartyReq");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {
@@ -153,7 +153,7 @@ void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPa
     }
 }
 
-void PartySystem::processPartyReply(CMapClient*, Entity entity, const RoseCommon::CliPartyReply &packet) {
+void PartySystem::processPartyReply(std::shared_ptr<CMapClient>, Entity entity, const RoseCommon::CliPartyReply &packet) {
     logger_->trace("PartySystem::processPartyRequest");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {

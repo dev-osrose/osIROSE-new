@@ -150,6 +150,10 @@ bool CMapISC::OnShutdown() {
 			std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
 			for (auto& server : CMapServer::GetISCList()) {
 				CMapISC* svr = dynamic_cast<CMapISC*>(server.get());
+                if (!svr) {
+                    logger_->warn("Error wrong type of server");
+                    continue;
+                }
 				if (svr->GetType() == iscPacket::ServerType::CHAR) {
 					svr->Send(*packet);
 					break;

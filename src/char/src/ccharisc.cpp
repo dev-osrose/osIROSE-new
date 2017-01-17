@@ -96,6 +96,10 @@ bool CCharISC::ServerRegister(
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
+    if (!svr) {
+        logger_->warn("Error this is a wrong type of server");
+        continue;
+    }
     if (svr->IsLogin() == true) {
       svr->Send(*packet);
       return true;
@@ -158,6 +162,10 @@ bool CCharISC::OnShutdown() {
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
         CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
+        if (!svr) {
+            logger_->warn("Error this is a wrong type of server");
+            continue;
+        }
         if (svr->IsLogin()) {
           svr->Send(*packet);
           break;

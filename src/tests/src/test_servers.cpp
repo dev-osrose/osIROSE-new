@@ -16,9 +16,9 @@ using namespace RoseCommon;
 TEST(TestFinalServers, TestISCConnections) {
   CLoginServer loginIsc(true);
   CCharServer charIsc(true);
-  CCharISC* charIscClient = new CCharISC();
+  std::shared_ptr<CCharISC> charIscClient = std::make_shared<CCharISC>();
   CMapServer mapIsc(true);
-  CMapISC* mapIscClient = new CMapISC();
+  std::shared_ptr<CMapISC> mapIscClient = std::make_shared<CMapISC>();
 
   loginIsc.Init("127.0.0.1", 29010);
 
@@ -36,8 +36,8 @@ TEST(TestFinalServers, TestISCConnections) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  CCharServer::GetISCList().push_front(std::shared_ptr<CRoseClient>(charIscClient));
-  CMapServer::GetISCList().push_front(std::shared_ptr<CRoseClient>(mapIscClient));
+  CCharServer::GetISCList().push_front(charIscClient);
+  CMapServer::GetISCList().push_front(mapIscClient);
 
   charIscClient->Connect();
   mapIscClient->Connect();

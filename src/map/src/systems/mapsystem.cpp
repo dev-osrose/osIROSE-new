@@ -12,7 +12,7 @@ MapSystem::MapSystem(SystemManager &m) : System(m) {
 
 void MapSystem::update(EntityManager&, double) {}
 
-void MapSystem::processChangeMapReq(CMapClient *client, Entity entity, const RoseCommon::CliChangeMapReq&) {
+void MapSystem::processChangeMapReq(std::shared_ptr<CMapClient> client, Entity entity, const RoseCommon::CliChangeMapReq&) {
     logger_->trace("MapSystem::processChangeMapRequest");
 
     auto advanced = entity.component<AdvancedInfo>();
