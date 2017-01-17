@@ -11,7 +11,7 @@ class MapSystem : public System {
 
         virtual void update(EntityManager&, double);
 
-        void processChangeMapRequest(CMapClient *client, Entity entity, const RoseCommon::CliChangeMapReq &packet);
+        void processChangeMapReq(CMapClient *client, Entity entity, const RoseCommon::CliChangeMapReq &packet);
 };
 
 }

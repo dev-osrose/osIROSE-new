@@ -46,6 +46,8 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
+    case ePacketType::PAKCS_CHANGE_MAP_REQ:
+        entity_.component<BasicInfo>()->loggedIn_.store(false);
     default: {
         auto packet = fetchPacket(_buffer);
         if (!packet)
@@ -105,7 +107,6 @@ bool CMapClient::JoinServerReply(
 
       if (entity_) {
         entity_.assign<SocketConnector>(connector_);
-        entity_.component<BasicInfo>()->loggedIn_.store(true);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
