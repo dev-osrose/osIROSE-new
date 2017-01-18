@@ -32,13 +32,13 @@ set( SOURCES_HEADER
   include/croseisc
   include/crosepacket
   include/epackettype
-  include/iscontainer
   include/packetclasses
   include/loginpackets
   include/charpackets
   include/mappackets
   include/packets
   include/item
+  include/partybase
   include/components/advancedinfo
   include/components/basicinfo
   include/components/bulletitems
@@ -65,6 +65,7 @@ SET(SOURCES_BASE
   src/charpackets
   src/mappackets
   src/item
+  src/entitycomponents
 )
 
 SET(SOURCES_PACKETS
@@ -106,6 +107,13 @@ SET(SOURCES_PACKETS
   include/packets/cli_whisperchat
   src/packets/cli_equipitem
   include/packets/cli_equipitem
+  src/packets/cli_partyreq
+  include/packets/cli_partyreq
+  src/packets/cli_partyreply
+  include/packets/cli_partyreply
+  src/packets/cli_partychat
+  include/packets/cli_partychat
+  #------------------------------------------------
   src/packets/srv_acceptreply 
   include/packets/srv_acceptreply
 #  src/packets/srv_changemap 
@@ -154,6 +162,14 @@ SET(SOURCES_PACKETS
   include/packets/srv_setmoney
   src/packets/srv_setitem
   include/packets/srv_setitem
+  src/packets/srv_partyreq
+  include/packets/srv_partyreq
+  src/packets/srv_partyreply
+  include/packets/srv_partyreply
+  src/packets/srv_partymember
+  include/packets/srv_partymember
+  src/packets/srv_partychat
+  include/packets/srv_partychat
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files

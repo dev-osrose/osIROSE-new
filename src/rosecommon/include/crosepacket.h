@@ -114,14 +114,14 @@ class CRosePacket {
          */
         virtual void pack() {}
 
-        template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+        template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
         friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
             os.writeNext<T>(data);
             return os;
         }
 
         template <typename T>
-        friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
+        friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
             for (const auto &it : data)
                 os.writeNext<typename T::value_type>(it);
             return os;
@@ -147,14 +147,14 @@ class CRosePacket {
             return os;
         }
 
-        template <typename T, typename std::enable_if<!is_container<T>::value>::type* = nullptr>
+        template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
         friend CRosePacket &operator>>(CRosePacket &os, T &data) {
             data = os.readNext<T>();
             return os;
         }
 
         template <typename T>
-        friend typename std::enable_if<is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
+        friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
             for (auto &it : data)
                 it = os.readNext<typename T::value_type>();
             return os;
@@ -174,13 +174,13 @@ class CRosePacket {
         }
 
     private:
-        template <typename T, typename = std::enable_if<!is_container<T>::value>>
+        template <typename T, typename = std::enable_if<!Core::is_container<T>::value>>
         static T read(uint8_t *data) {
             static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
             return *reinterpret_cast<T*>(data);
         }
 
-        template <typename T, typename = std::enable_if<!is_container<T>::value>>
+        template <typename T, typename = std::enable_if<!Core::is_container<T>::value>>
         static void write(uint8_t *data, const T &payload) {
             static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
             *reinterpret_cast<T*>(data) = payload;

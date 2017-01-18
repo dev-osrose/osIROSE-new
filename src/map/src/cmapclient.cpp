@@ -59,7 +59,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
           return true;
         }
         if (!entitySystem_->dispatch(entity_, *packet))
-            return CRoseClient::HandlePacket(_buffer);
+            CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
     }
   }
   return true;
@@ -103,17 +103,15 @@ bool CMapClient::JoinServerReply(
       sessionId_ = sessionID;
       bool platinium = false;
       res->getInt("platinium", platinium);
-      entity_ = entitySystem_->loadCharacter(charid_, platinium);
+      entity_ = entitySystem_->loadCharacter(charid_, platinium, GetId());
 
       if (entity_) {
-          auto basic =entity_.component<BasicInfo>();
-          basic->id_ = GetId();
-          basic->tag_ = GetId();
+        entity_.assign<SocketConnector>(this);
+
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
         Send(*packet);
 
-        entity_.assign<SocketConnector>(this);
         // SEND PLAYER DATA HERE!!!!!!
         auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
         Send(*packet2);
@@ -149,7 +147,7 @@ bool CMapClient::JoinServerReply(
 };
 
 bool CMapClient::ChangeMapReply(
-    std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
+    std::unique_ptr<RoseCommon::CliChangeMapReq>) {
   logger_->trace("CMapClient::ChangeMapReply()");
 
   if (login_state_ != eSTATE::LOGGEDIN) {
@@ -157,10 +155,10 @@ bool CMapClient::ChangeMapReply(
                   GetId());
     return true;
   }
-  (void)P;
   auto advanced = entity_.component<AdvancedInfo>();
   auto basic = entity_.component<BasicInfo>();
   auto info = entity_.component<CharacterInfo>();
+
   Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
   CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
           *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));

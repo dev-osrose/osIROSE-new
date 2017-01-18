@@ -69,12 +69,10 @@ RoseCommon::SrvCharacterListReply::equipped_position RoseCommon::SrvCharacterLis
     return equipped_position::EQUIP_WEAPON_R;
 }
 
-#include <iostream>
 void RoseCommon::SrvCharacterListReply::addEquipItem(
     uint8_t char_id, uint8_t slot, uint16_t item_id /*= 0*/,
     uint16_t gem /*= 0*/, uint8_t socket /*= 0*/, uint8_t grade /*= 0*/) {
   if (char_id < character_count_ && slot < MAX_EQUIPPED_ITEMS) {
-    std::cout << "adding item " << (int)item_id << " to slot " << (int)slot << std::endl;
     equip_item item = character_list_[char_id].items_[slot];
     item.id_ = item_id;
     item.gem_op_ = gem;

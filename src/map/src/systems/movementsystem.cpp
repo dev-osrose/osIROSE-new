@@ -12,11 +12,9 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Component<Destination>) {
             if (!entity)
                 return;
-            auto socket = entity.component<SocketConnector>();
-            if (!socket || !socket->client_)
-                return;
-            CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
-                    *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+            if (auto client = getClient(entity))
+                CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+                        *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
             });
     // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
@@ -58,10 +56,9 @@ void MovementSystem::move(Entity entity, float x, float y) {
     } else {
         entity.assign<Destination>(x, y, dist);
     }
-    auto socket = entity.component<SocketConnector>();
-    if (!socket || !socket->client_)
-        return;
-    CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
+    // FIXME: what happens if the entity is an NPC or a monster?
+    if (auto client = getClient(entity))
+        CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
         *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
@@ -78,7 +75,7 @@ void MovementSystem::stop(Entity entity, float x, float y) {
             position->y_ = y;
         } else
             logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
-                    entity.component<BasicInfo>()->id_, position->x_, position->y_, x, y);
+                    getId(entity), position->x_, position->y_, x, y);
     }
 }
 

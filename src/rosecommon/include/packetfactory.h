@@ -51,7 +51,7 @@ using find_recv_class_t = typename find_recv_class<Type>::type;
 
 #define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; };
 
-#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; }; static bool __##Class = registerPacket<Type, Class>();
+#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; }; static const bool __##Class = registerPacket<Type, Class>();
 
 inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
     return PacketFactory::getInstance().getPacket(buffer);

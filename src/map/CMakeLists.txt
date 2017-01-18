@@ -15,7 +15,7 @@ set(Clang_LINK_FLAGS "")
 set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
 IF (NOT MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -36,6 +36,7 @@ SET( SOURCES_HEADER
     include/systems/updatesystem
     include/systems/chatsystem
     include/systems/inventorysystem
+    include/systems/partysystem
     )
 
 SET( SOURCES_MAIN
@@ -50,6 +51,7 @@ SET( SOURCES_MAIN
     src/systems/updatesystem
     src/systems/chatsystem
     src/systems/inventorysystem
+    src/systems/partysystem
     )
 
 find_package( Threads REQUIRED )

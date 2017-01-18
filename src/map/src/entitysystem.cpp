@@ -3,16 +3,17 @@
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
+#include "systems/partysystem.h"
 #include "database.h"
 
 using namespace RoseCommon;
 
 EntitySystem::EntitySystem() : systemManager_(*this) {
-    // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
     systemManager_.add<Systems::InventorySystem>();
+    systemManager_.add<Systems::PartySystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
@@ -39,15 +40,18 @@ Entity EntitySystem::getEntity(uint32_t charId) {
 
 void EntitySystem::update(double dt) {
     systemManager_.update(dt);
-    for (auto it : toDestroy_)
+    for (auto it : toDestroy_) {
         if (it)
             it.destroy();
+    }
     toDestroy_.clear();
 }
 
 void EntitySystem::destroy(Entity entity) {
     if (!entity)
         return;
+    if (entity.component<SocketConnector>())
+        entity.remove<SocketConnector>();
     toDestroy_.push_back(entity);
 }
 
@@ -77,7 +81,7 @@ bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet
     return systemManager_.dispatch(entity, packet);
 }
 
-Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
+Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
     auto &database = Core::databasePool.getDatabase();
     auto res = database.QStore(fmt::format("CALL get_character({});", charId));
     auto entity = create();
@@ -95,6 +99,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
     res->getInt("level", basic->level_);
+    basic->id_ = id;
+    basic->tag_ = id;
 
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);

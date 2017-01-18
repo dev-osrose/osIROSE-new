@@ -69,8 +69,8 @@ class SystemManager {
                     if (auto *system = this->get<T>()) {
                         if (!entity)
                             return false;
-                        if (auto socket = entity.component<SocketConnector>()) {
-                            (system ->* method)(socket->client_, entity, dynamic_cast<const U&>(packet));
+                        if (auto socket = getClient(entity)) {
+                            (system ->* method)(socket, entity, dynamic_cast<const U&>(packet));
                             return true;
                         }
                     } else
