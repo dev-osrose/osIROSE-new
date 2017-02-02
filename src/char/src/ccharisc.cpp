@@ -97,7 +97,6 @@ bool CCharISC::ServerRegister(
   for (auto& server : CCharServer::GetISCList()) {
     CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
     if (!svr) {
-        logger_->warn("Error this is a wrong type of server");
         continue;
     }
     if (svr->IsLogin() == true) {
@@ -163,7 +162,6 @@ bool CCharISC::OnShutdown() {
       for (auto& server : CCharServer::GetISCList()) {
         CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
         if (!svr) {
-            logger_->warn("Error this is a wrong type of server");
             continue;
         }
         if (svr->IsLogin()) {
