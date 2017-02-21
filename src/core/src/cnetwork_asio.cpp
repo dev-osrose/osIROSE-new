@@ -73,7 +73,7 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
 
 bool CNetwork_Asio::Shutdown(bool _final) {
   if (_final == true || OnShutdown() == true) {
-    Disconnect();
+    if(Disconnect() == false) return false; // Do not disconnect this client
 
     if (listener_.is_open()) {
       std::error_code ignored;
@@ -127,7 +127,8 @@ bool CNetwork_Asio::Reconnect() {
 }
 
 bool CNetwork_Asio::Disconnect() {
-  OnDisconnect();
+  if(OnDisconnect() == false) return false; // Do not disconnect this client
+
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
   OnDisconnected();
