@@ -42,7 +42,7 @@ CNetwork_Asio::CNetwork_Asio()
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
-  Shutdown();
+  Shutdown(true); // Class is being deleted so we HAVE to clean up this memory
 
   if (process_thread_.joinable()) process_thread_.join();
 
@@ -72,17 +72,18 @@ bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
 }
 
 bool CNetwork_Asio::Shutdown(bool _final) {
-  if (_final == true || OnShutdown() == true) {
-    if(Disconnect() == false) return false; // Do not disconnect this client
-
+  bool rtnValue = false;
+  if (_final == true ||
+    (OnShutdown() == true && Disconnect() == true))
+  {
+    rtnValue = true;
     if (listener_.is_open()) {
       std::error_code ignored;
       listener_.close(ignored);
     }
     active_ = false;
-    return true;
   }
-  return false;
+  return rtnValue;
 }
 
 bool CNetwork_Asio::Connect() {
@@ -121,14 +122,16 @@ bool CNetwork_Asio::Listen() {
 }
 
 bool CNetwork_Asio::Reconnect() {
-  if (remote_connection_ == false) return false;
+  if (remote_connection_ == false)
+    return false;
 
   Disconnect();
   return Connect();
 }
 
 bool CNetwork_Asio::Disconnect() {
-  if(OnDisconnect() == false) return false; // Do not disconnect this client
+  if(OnDisconnect() == false)
+    return false; // Do not disconnect this client
 
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
