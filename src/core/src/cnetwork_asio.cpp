@@ -53,7 +53,7 @@ CNetwork_Asio::~CNetwork_Asio() {
   send_mutex_.lock();
   while (send_queue_.empty() == false) send_queue_.pop();
   send_mutex_.unlock();
-  
+
   recv_mutex_.lock();
   while (recv_queue_.empty() == false) recv_queue_.pop();
   recv_mutex_.unlock();
@@ -106,13 +106,13 @@ bool CNetwork_Asio::Connect() {
 
 bool CNetwork_Asio::Listen() {
   OnListen();
-  tcp::endpoint endpoint(tcp::v4(), network_port_);
+  tcp::endpoint endpoint(asio::ip::address::from_string(network_ip_address_), network_port_);
   listener_.open(endpoint.protocol());
   listener_.set_option(tcp::acceptor::reuse_address(true));
   listener_.non_blocking(true);
   listener_.bind(endpoint);
   listener_.listen();
-  logger_->info("Listening started on {}:{}", GetIpAddress(), GetPort());
+  logger_->info("Listening started on {}:{}", endpoint.address().to_string(), endpoint.port());
   active_ = true;
   AcceptConnection();
   OnListening();
@@ -177,7 +177,7 @@ void CNetwork_Asio::ProcessSend() {
                 last_update_time_ = (Core::Time::GetTickCount());
               } else {
                 logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
-                
+
                 switch(error.value()) {
                   case asio::error::basic_errors::connection_reset:
                   case asio::error::basic_errors::network_reset:
@@ -228,10 +228,10 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
         asio::transfer_exactly(
             BytesToRead),  // We want at least 6 bytes of data
         [this](std::error_code errorCode, std::size_t length) {
-          
+
           packet_offset_ += (uint16_t)length;
           last_update_time_ = (Core::Time::GetTickCount());
-          
+
           if (!errorCode || errorCode.value() == 11) {
             if (OnReceived() == false) {
               logger_->debug(
