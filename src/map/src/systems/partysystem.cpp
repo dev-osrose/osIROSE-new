@@ -76,12 +76,12 @@ void PartySystem::changeLeader(Entity leader, Entity newLeader) {
     }
 }
 
-void PartySystem::processPartyReq(std::shared_ptr<CMapClient> client, Entity entity, const CliPartyReq &packet) {
+void PartySystem::processPartyReq(CMapClient& client, Entity entity, const CliPartyReq &packet) {
     logger_->trace("PartySystem::processPartyReq");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {
         logger_->debug("Client {} requested a party with the non existing char {}", getId(entity), packet.idXorTag());
-        client->Send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
+        client.Send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
         return;
     }
     Component<Party> party;
@@ -144,7 +144,7 @@ void PartySystem::processPartyReq(std::shared_ptr<CMapClient> client, Entity ent
     }
 }
 
-void PartySystem::processPartyReply(std::shared_ptr<CMapClient>, Entity entity, const RoseCommon::CliPartyReply &packet) {
+void PartySystem::processPartyReply(CMapClient&, Entity entity, const RoseCommon::CliPartyReply &packet) {
     logger_->trace("PartySystem::processPartyRequest");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {

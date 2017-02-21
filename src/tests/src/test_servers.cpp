@@ -16,9 +16,9 @@ using namespace RoseCommon;
 TEST(TestFinalServers, TestISCConnections) {
   CLoginServer loginIsc(true);
   CCharServer charIsc(true);
-  std::shared_ptr<CCharISC> charIscClient = std::make_shared<CCharISC>();
+  std::unique_ptr<CCharISC> charIscClient = std::make_unique<CCharISC>();
   CMapServer mapIsc(true);
-  std::shared_ptr<CMapISC> mapIscClient = std::make_shared<CMapISC>();
+  std::unique_ptr<CMapISC> mapIscClient = std::make_unique<CMapISC>();
 
   loginIsc.Init("127.0.0.1", 29010);
 
@@ -36,16 +36,18 @@ TEST(TestFinalServers, TestISCConnections) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  CCharServer::GetISCList().push_front(charIscClient);
-  CMapServer::GetISCList().push_front(mapIscClient);
-
   charIscClient->Connect();
   mapIscClient->Connect();
+  CMapISC *map = mapIscClient.get();
+  CCharISC *charc = charIscClient.get();
+
+  CCharServer::GetISCList().push_front(std::move(charIscClient));
+  CMapServer::GetISCList().push_front(std::move(mapIscClient));
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 
-  mapIscClient->Shutdown(true);
-  charIscClient->Shutdown(true);
+  map->Shutdown(true);
+  charc->Shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 

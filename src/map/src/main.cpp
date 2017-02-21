@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
   clientServer.Init(config.serverdata().ip(), config.map_server().clientport());
   clientServer.Listen();
-  clientServer.GetISCList().push_front(std::shared_ptr<CMapISC>(iscClient));
+  clientServer.GetISCList().push_front(std::move(std::unique_ptr<CMapISC>(iscClient)));
 
   iscServer.Init(config.serverdata().ip(), config.map_server().iscport());
   iscServer.Listen();

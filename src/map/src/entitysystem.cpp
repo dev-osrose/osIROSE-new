@@ -6,6 +6,7 @@
 #include "systems/partysystem.h"
 #include "systems/mapsystem.h"
 #include "database.h"
+#include "cmapclient.h"
 
 using namespace RoseCommon;
 
@@ -102,6 +103,8 @@ static void unloadEntity(Entity entity) {
         entity.remove<Destination>();
     if (entity.component<Party>())
         entity.remove<Party>();
+    if (auto client = getClient(entity))
+        client->canBeDeleted();
 }
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {

@@ -31,10 +31,10 @@ class CRoseServer : public Core::CNetwork_Asio {
 
   bool IsISCServer() { return isc_server_; }
 
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetClientList() {
+  static std::forward_list<std::unique_ptr<CRoseClient>>& GetClientList() {
     return client_list_;
   }
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
+  static std::forward_list<std::unique_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
   static std::mutex& GetClientListMutex() { return client_list_mutex_; }
   static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
   
@@ -47,6 +47,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   };
   
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
+  static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
  protected:
   // Callback functions
@@ -60,8 +61,8 @@ class CRoseServer : public Core::CNetwork_Asio {
   virtual void OnAccepted(tcp::socket _sock) override;
 
   bool isc_server_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> client_list_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> isc_list_;
+  static std::forward_list<std::unique_ptr<CRoseClient>> client_list_;
+  static std::forward_list<std::unique_ptr<CRoseClient>> isc_list_;
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
 };

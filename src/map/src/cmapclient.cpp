@@ -29,7 +29,8 @@ CMapClient::CMapClient()
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0) {}
+      charid_(0),
+      canBeDeleted_(true) {}
 
 CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
@@ -38,7 +39,8 @@ CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySy
       sessionId_(0),
       userid_(0),
       charid_(0),
-      entitySystem_(entitySystem)
+      entitySystem_(entitySystem),
+      canBeDeleted_(true)
       {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
@@ -69,15 +71,19 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
-CMapClient::~CMapClient() {
-}
-
 bool CMapClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
     entitySystem_->destroy(entity_);
+}
+
+bool CMapClient::OnShutdown() {
+    SetLastUpdateTime(std::chrono::steady_clock::time_point());
+    if (!canBeDeleted_.load())
+        return false;
+    return true;
 }
 
 bool CMapClient::JoinServerReply(
@@ -110,7 +116,8 @@ bool CMapClient::JoinServerReply(
       entity_ = entitySystem_->loadCharacter(charid_, platinium, GetId());
 
       if (entity_) {
-        entity_.assign<SocketConnector>(connector_);
+        canBeDeleted_.store(false);
+        entity_.assign<SocketConnector>(this);
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
