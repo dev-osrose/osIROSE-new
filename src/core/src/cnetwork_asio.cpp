@@ -80,8 +80,9 @@ bool CNetwork_Asio::Shutdown(bool _final) {
       listener_.close(ignored);
     }
     active_ = false;
+    return true;
   }
-  return true;
+  return false;
 }
 
 bool CNetwork_Asio::Connect() {
