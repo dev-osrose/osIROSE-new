@@ -125,6 +125,20 @@ class INetwork {
   virtual uint16_t GetPort() const { return network_port_; }
   virtual std::string GetIpAddress() const { return network_ip_address_; }
 
+  void registerOnAccept(std::function<bool()> _val) { OnAccept = _val; }
+  void registerOnAccepted(std::function<void(int*)> _val) { OnAccepted = _val; }
+  void registerOnConnect(std::function<bool()> _val) { OnConnect = _val; }
+  void registerOnConnected(std::function<void()> _val) { OnConnected = _val; }
+  void registerOnListen(std::function<bool()> _val) { OnListen = _val; }
+  void registerOnListening(std::function<void()> _val) { OnListening = _val; }
+  void registerOnDisconnect(std::function<bool()> _val) { OnDisconnect = _val; }
+  void registerOnDisconnected(std::function<void()> _val) { OnDisconnected = _val; }
+  void registerOnReceive(std::function<bool()> _val) { OnReceive = _val; }
+  void registerOnReceived(std::function<bool()> _val) { OnReceived = _val; }
+  void registerOnSend(std::function<bool(uint8_t*)> _val) { OnSend = _val; }
+  void registerOnSent(std::function<void()> _val) { OnSent = _val; }
+  void registerOnShutdown(std::function<bool()> _val) { OnShutdown = _val; }
+
  protected:
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
   virtual bool Recv(uint16_t _size = 6) = 0;
