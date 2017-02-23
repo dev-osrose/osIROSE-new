@@ -22,6 +22,27 @@ namespace RoseCommon {
 
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   ResetBuffer();
+
+  std::function<bool()> fnDummyBool = []() { return true;};
+  std::function<void()> fnDummyVoid = []() { };
+  this->registerOnAccept(fnDummyBool);
+  this->registerOnListen(fnDummyBool);
+
+  std::function<void(int*)> fnDummyAccepted = [](int*) {};
+  this->registerOnAccepted(fnDummyAccepted);
+
+  std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
+  this->registerOnConnect(fnOnConnect);
+  std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
+  this->registerOnConnected(fnOnConnected);
+  //this->registerOnListening(OnListening);
+  //this->registerOnDisconnect(OnDisconnect);
+  //this->registerOnDisconnected(OnDisconnected);
+  //this->registerOnReceive(OnReceive);
+  //this->registerOnReceived(OnReceived);
+  //this->registerOnSend(OnSend);
+  //this->registerOnSent(OnSent);
+  //this->registerOnShutdown(OnShutdown);
 }
 
 CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
@@ -66,7 +87,7 @@ bool CRoseClient::OnReceived() {
       ResetBuffer();
       return false;
     }
-    
+
     //logger_->trace("Received a packet header on CRoseClient: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
     if (packet_size_ > 6) return true;
   }
@@ -93,25 +114,25 @@ bool CRoseClient::OnReceived() {
 //  rtnVal = HandlePacket(buffer_);
   auto res = std::unique_ptr<uint8_t[]>(new uint8_t[CRosePacket::size(buffer_)]);
 	std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
-	
+
   recv_mutex_.lock();
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
-  
+
   asio::dispatch([this]() {
         if (true == active_) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
-          
+
           if(recv_empty == false)
           {
             bool rtnVal = true;
             std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
             recv_queue_.pop();
-            
+
             rtnVal = HandlePacket(_buffer.get());
             _buffer.reset(nullptr);
-            
+
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");

@@ -40,6 +40,8 @@ class CRoseClient : public Core::CNetwork_Asio {
   }
 
  protected:
+
+  virtual void OnAccepted(int*) {}
   // Callback functions
   virtual bool OnConnect() ;
   virtual void OnConnected() ;
