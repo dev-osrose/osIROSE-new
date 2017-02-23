@@ -92,22 +92,6 @@ class CNetwork_Asio : public INetwork {
   void AcceptConnection();
   void ProcessSend();
 
-  // Callback functions
-  virtual bool OnConnect() override;
-  virtual void OnConnected() override;
-  virtual bool OnListen() override;
-  virtual void OnListening() override;
-  virtual bool OnDisconnect() override;
-  virtual void OnDisconnected() override;
-  virtual bool OnReceive() override;
-  virtual bool OnReceived() override;
-  virtual bool OnSend(uint8_t* _buffer) override;
-  virtual void OnSent() override;
-  virtual bool OnAccept();
-  virtual void OnAccepted(tcp::socket _sock);
-  virtual bool OnShutdown() override;
-  virtual bool HandlePacket(uint8_t* _buffer);
-
   void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
     packet_offset_ = 0;

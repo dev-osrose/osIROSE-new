@@ -268,7 +268,7 @@ void CNetwork_Asio::AcceptConnection() {
         // Do something here for the new connection.
         // Make sure to use std::move(socket)
         // std::make_shared<CClientSesson>( std::move(socket) );
-        this->OnAccepted(std::move(socket));
+        this->OnAccepted(reinterpret_cast<int*>(&socket)); // Sucks that we have to do this
       } else {
         // Kill the socket
         std::error_code ignored;
@@ -277,43 +277,5 @@ void CNetwork_Asio::AcceptConnection() {
     }
     if (active_) AcceptConnection();
   });
-}
-
-bool CNetwork_Asio::OnConnect() { return true; }
-
-void CNetwork_Asio::OnConnected() {
-  //  if (!listener_.is_open()) Recv();
-}
-
-bool CNetwork_Asio::OnListen() { return true; }
-
-void CNetwork_Asio::OnListening() {
-  //  if (!listener_.is_open()) Recv();
-}
-
-bool CNetwork_Asio::OnDisconnect() { return true; }
-
-void CNetwork_Asio::OnDisconnected() {}
-
-bool CNetwork_Asio::OnReceive() { return active_; }
-
-bool CNetwork_Asio::OnReceived() { return true; }
-
-bool CNetwork_Asio::OnShutdown() { return true; }
-
-bool CNetwork_Asio::OnSend(uint8_t* _buffer) {
-  (void)_buffer;
-  return active_;
-}
-
-void CNetwork_Asio::OnSent() {}
-
-bool CNetwork_Asio::OnAccept() { return true; }
-
-void CNetwork_Asio::OnAccepted(tcp::socket _sock) { (void)_sock; }
-
-bool CNetwork_Asio::HandlePacket(uint8_t* _buffer) {
-  (void)_buffer;
-  return true;
 }
 }

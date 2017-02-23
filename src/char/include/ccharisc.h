@@ -32,7 +32,7 @@ class CCharISC : public RoseCommon::CRoseISC {
   bool HandlePacket(uint8_t* _buffer) override;
 
   virtual void OnConnected() override;
-  virtual bool OnShutdown() override;
+  virtual bool OnShutdown() ;
 };
 
 #endif

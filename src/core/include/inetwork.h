@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@
 
 #include <stdint.h>
 #include <memory>
+#include <functional>
 
 namespace Core {
 
@@ -41,7 +42,18 @@ namespace Core {
 class INetwork {
  public:
   INetwork()
-      : network_id_(0),
+      : OnConnect(nullptr),
+        OnConnected(nullptr),
+        OnListen(nullptr),
+        OnListening(nullptr),
+        OnDisconnect(nullptr),
+        OnDisconnected(nullptr),
+        OnReceive(nullptr),
+        OnReceived(nullptr),
+        OnSend(nullptr),
+        OnSent(nullptr),
+        OnShutdown(nullptr),
+        network_id_(0),
         network_type_(0),
         network_port_(0),
         network_ip_address_("") {}
@@ -118,17 +130,19 @@ class INetwork {
   virtual bool Recv(uint16_t _size = 6) = 0;
 
   // Callback functions
-  virtual bool OnConnect() = 0;
-  virtual void OnConnected() = 0;
-  virtual bool OnListen() = 0;
-  virtual void OnListening() = 0;
-  virtual bool OnDisconnect() = 0;
-  virtual void OnDisconnected() = 0;
-  virtual bool OnReceive() = 0;
-  virtual bool OnReceived() = 0;
-  virtual bool OnSend(uint8_t* _buffer) = 0;
-  virtual void OnSent() = 0;
-  virtual bool OnShutdown() = 0;
+  std::function<bool()> OnAccept;
+  std::function<void(int*)> OnAccepted;
+  std::function<bool()> OnConnect;
+  std::function<void()> OnConnected;
+  std::function<bool()> OnListen;
+  std::function<void()> OnListening;
+  std::function<bool()> OnDisconnect;
+  std::function<void()> OnDisconnected;
+  std::function<bool()> OnReceive;
+  std::function<bool()> OnReceived;
+  std::function<bool(uint8_t*)> OnSend;
+  std::function<void()> OnSent;
+  std::function<bool()> OnShutdown;
 
   // private:
   uint32_t network_id_;

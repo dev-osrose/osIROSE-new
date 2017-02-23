@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,26 +30,26 @@ class CRoseClient : public Core::CNetwork_Asio {
 
   virtual bool Send(CRosePacket &_buffer);
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
-  
+
   virtual bool IsNearby(const CRoseClient* _otherClient) const;
 
   Entity getEntity() const { return entity_; }
-  
-  virtual uint32_t GetObjId() const { 
-    return CRoseClient::GetId(); 
+
+  virtual uint32_t GetObjId() const {
+    return CRoseClient::GetId();
   }
 
  protected:
   // Callback functions
-  virtual bool OnConnect() override;
-  virtual void OnConnected() override;
-  virtual bool OnDisconnect() override;
-  virtual void OnDisconnected() override;
-  virtual bool OnReceive() override;
-  virtual bool OnReceived() override;
-  virtual bool OnSend(uint8_t* _buffer) override;
-  virtual void OnSent() override;
-  virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual bool OnConnect() ;
+  virtual void OnConnected() ;
+  virtual bool OnDisconnect() ;
+  virtual void OnDisconnected() ;
+  virtual bool OnReceive() ;
+  virtual bool OnReceived() ;
+  virtual bool OnSend(uint8_t* _buffer) ;
+  virtual void OnSent() ;
+  virtual bool HandlePacket(uint8_t* _buffer) ;
 
   PacketCodec crypt_;
 
