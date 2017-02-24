@@ -23,6 +23,7 @@
 #include <iostream>
 #include <thread>
 #include "cnetwork_asio.h"
+#include "platform_defines.h"
 
 namespace Core {
 
@@ -36,8 +37,8 @@ CNetwork_Asio::CNetwork_Asio()
       packet_offset_(0),
       packet_size_(6),
       active_(true),
-      remote_connection_(false),
-      last_update_time_(Core::Time::GetTickCount()) {
+      remote_connection_(false) {
+  SetLastUpdateTime(Core::Time::GetTickCount());
   logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
@@ -268,7 +269,10 @@ void CNetwork_Asio::AcceptConnection() {
         // Do something here for the new connection.
         // Make sure to use std::move(socket)
         // std::make_shared<CClientSesson>( std::move(socket) );
-        this->OnAccepted(reinterpret_cast<int*>(&socket)); // Sucks that we have to do this
+        CNetwork_Asio* nSock = new CNetwork_Asio();
+        nSock->SetSocket(std::move(socket));
+
+        this->OnAccepted(nSock);
       } else {
         // Kill the socket
         std::error_code ignored;

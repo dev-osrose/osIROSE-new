@@ -42,7 +42,6 @@
 #include "inetwork.h"
 #include "logconsole.h"
 #include "network_thread_pool.h"
-#include "platform_defines.h"
 
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
@@ -64,8 +63,6 @@ namespace Core {
  * \date nov 2015
  */
 class CNetwork_Asio : public INetwork {
-  typedef std::unique_ptr<asio::io_context::work> asio_worker;
-
  public:
   CNetwork_Asio();
   virtual ~CNetwork_Asio();
@@ -80,22 +77,17 @@ class CNetwork_Asio : public INetwork {
 
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
-  bool IsActive() {
+  virtual bool IsActive() {
     return active_;
   }
 
   bool isRemoteConnection() const { return remote_connection_; }
-  std::chrono::steady_clock::time_point GetLastUpdateTime() { return last_update_time_; }
-  void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_ = time; }
 
  protected:
   void AcceptConnection();
   void ProcessSend();
 
-  void SetSocket(int* _sock) { 
-    auto sock_ = reinterpret_cast<tcp::socket::native_handle_type*>(_sock);
-    socket_.assign(tcp::v4(), std::move(*sock_));
-  }
+  void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
   void ResetBuffer() {
     packet_offset_ = 0;
     packet_size_ = 6;
@@ -119,7 +111,6 @@ class CNetwork_Asio : public INetwork {
   uint16_t packet_size_;
   bool active_;
   bool remote_connection_;
-  std::chrono::steady_clock::time_point last_update_time_;
 };
 }
 

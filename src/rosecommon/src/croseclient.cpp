@@ -20,7 +20,12 @@
 namespace RoseCommon {
 //#define STRESS_TEST
 
-CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
+CRoseClient::CRoseClient() : crypt_() {
+  logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
+}
+
+CRoseClient::CRoseClient(INetwork* _sock) : crypt_() {
+  logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
   std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
   std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
   std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
@@ -30,43 +35,23 @@ CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
   std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
   std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
 
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
+  _sock->registerOnConnect(fnOnConnect);
+  _sock->registerOnConnected(fnOnConnected);
+  _sock->registerOnDisconnect(fnOnDisconnect);
+  _sock->registerOnDisconnected(fnOnDisconnected);
+  _sock->registerOnReceive(fnOnReceive);
+  _sock->registerOnReceived(fnOnReceived);
+  _sock->registerOnSend(fnOnSend);
+  _sock->registerOnSent(fnOnSent);
 
-  ResetBuffer();
+  _sock->Recv();
+  _sock->ResetBuffer();
 }
 
-CRoseClient::CRoseClient(int* _sock) : CNetwork_Asio(), crypt_() {
-  std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseClient::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseClient::OnReceive, this);
-  std::function<bool()> fnOnReceived = std::bind(&CRoseClient::OnReceived, this);
-  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
-
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
-
-  this->SetSocket(std::move(_sock));
-  Recv();
-  ResetBuffer();
+CRoseClient::~CRoseClient() {
+  Shutdown();
+  logger_.reset();
 }
-
-CRoseClient::~CRoseClient() { Shutdown(); }
 
 bool CRoseClient::Send(CRosePacket &_buffer) {
   return CRoseClient::Send(_buffer.getPacked());
@@ -74,13 +59,13 @@ bool CRoseClient::Send(CRosePacket &_buffer) {
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
   logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
-  return CNetwork_Asio::Send(std::move(_buffer));
+  return socket_->Send(std::move(_buffer));
 }
 
 // Callback functions
 bool CRoseClient::OnConnect() { return true; }
 
-void CRoseClient::OnConnected() { CNetwork_Asio::OnConnected(); }
+void CRoseClient::OnConnected() {  }
 
 bool CRoseClient::OnDisconnect() { return true; }
 
@@ -99,7 +84,7 @@ bool CRoseClient::OnReceived() {
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      ResetBuffer();
+      socket_->ResetBuffer();
       return false;
     }
 
@@ -112,7 +97,7 @@ bool CRoseClient::OnReceived() {
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
-    ResetBuffer();
+    socket_->ResetBuffer();
     return false;
   }
 #endif
@@ -135,7 +120,7 @@ bool CRoseClient::OnReceived() {
   recv_mutex_.unlock();
 
   asio::dispatch([this]() {
-        if (true == active_) {
+        if (true == socket_->IsActive()) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
 
@@ -151,14 +136,14 @@ bool CRoseClient::OnReceived() {
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");
-              Shutdown();
+              socket_->Shutdown();
             }
           }
           recv_mutex_.unlock();
         }
       });
 
-  ResetBuffer();
+  socket_->ResetBuffer();
   return rtnVal;
 }
 
@@ -201,7 +186,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       break;
     }
     default: {
-               logger_->warn("Unknown Packet Type: 0x{0:04x}", (uint16_t)CRosePacket::type(_buffer));
+      logger_->warn("Unknown Packet Type: 0x{0:04x}", (uint16_t)CRosePacket::type(_buffer));
       return false;
     }
   }

@@ -17,7 +17,7 @@
 
 #include <list>
 #include <forward_list>
-#include "cnetwork_asio.h"
+#include "inetwork.h"
 #include "croseclient.h"
 #include "croseisc.h"
 
@@ -46,6 +46,7 @@ class CRoseServer {
 
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
 
+  std::shared_ptr<spdlog::logger> logger_;
  protected:
   // Callback functions
   virtual bool OnConnect() ;
@@ -55,7 +56,7 @@ class CRoseServer {
   virtual bool OnDisconnect() ;
   virtual void OnDisconnected() ;
   virtual bool OnAccept() ;
-  virtual void OnAccepted(int* _sock) ;
+  virtual void OnAccepted(Core::INetwork* _sock) ;
 
   bool isc_server_;
   static std::forward_list<CRoseClient*> client_list_;

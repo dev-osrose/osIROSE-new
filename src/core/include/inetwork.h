@@ -26,6 +26,8 @@
 #include <stdint.h>
 #include <memory>
 #include <functional>
+#include <chrono>
+#include <thread>
 
 namespace Core {
 
@@ -114,6 +116,8 @@ class INetwork {
   */
   virtual bool Disconnect() = 0;
 
+  virtual bool IsActive() = 0;
+
   /*!
    * \brief Used to set the ID for this connection.
    *
@@ -121,14 +125,16 @@ class INetwork {
   */
   virtual void SetId(uint32_t _val) { network_id_ = _val; }
   virtual void SetType(uint32_t _val) { network_type_ = _val; }
+  virtual void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_ = time; }
 
   virtual uint32_t GetId() const { return network_id_; }
   virtual uint32_t GetType() const { return network_type_; }
   virtual uint16_t GetPort() const { return network_port_; }
   virtual std::string GetIpAddress() const { return network_ip_address_; }
+  virtual std::chrono::steady_clock::time_point GetLastUpdateTime() const { return last_update_time_; }
 
   void registerOnAccept(std::function<bool()> _val) { OnAccept = _val; }
-  void registerOnAccepted(std::function<void(int*)> _val) { OnAccepted = _val; }
+  void registerOnAccepted(std::function<void(INetwork*)> _val) { OnAccepted = _val; }
   void registerOnConnect(std::function<bool()> _val) { OnConnect = _val; }
   void registerOnConnected(std::function<void()> _val) { OnConnected = _val; }
   void registerOnListen(std::function<bool()> _val) { OnListen = _val; }
@@ -144,7 +150,7 @@ class INetwork {
   void initCallbacks() {
     std::function<void()> fnDummyVoid = []() {};
     std::function<bool()> fnDummyBool = []() { return true; };
-    std::function<void(int*)> fnDummyAccepted = [](int*) {};
+    std::function<void(INetwork*)> fnDummyAccepted = [](INetwork*) {};
     std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
 
     OnConnected = OnListening = OnDisconnected = OnSent = fnDummyVoid;
@@ -161,7 +167,7 @@ class INetwork {
 
   // Callback functions
   std::function<bool()> OnAccept;
-  std::function<void(int*)> OnAccepted;
+  std::function<void(INetwork*)> OnAccepted;
   std::function<bool()> OnConnect;
   std::function<void()> OnConnected;
   std::function<bool()> OnListen;
@@ -180,6 +186,7 @@ class INetwork {
   uint16_t network_port_;
 
   std::string network_ip_address_;
+  std::chrono::steady_clock::time_point last_update_time_;
 };
 }
 

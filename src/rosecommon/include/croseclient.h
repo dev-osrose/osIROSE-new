@@ -15,33 +15,45 @@
 #ifndef _CROSECLIENT_H_
 #define _CROSECLIENT_H_
 
+#include <spdlog/spdlog.h>
+#include "logconsole.h"
 #include "crosecrypt.h"
-#include "cnetwork_asio.h"
+#include "inetwork.h"
 #include "crosepacket.h"
 #include "entityComponents.h"
 
 namespace RoseCommon {
+class CRoseServer;
 
-class CRoseClient : public Core::CNetwork_Asio {
+class CRoseClient {
+ friend class CRoseServer;
  public:
   CRoseClient();
-  CRoseClient(int* _sock);
+  CRoseClient(Core::INetwork* _sock);
   virtual ~CRoseClient();
 
   virtual bool Send(CRosePacket &_buffer);
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
+  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer);
 
   virtual bool IsNearby(const CRoseClient* _otherClient) const;
 
   Entity getEntity() const { return entity_; }
 
   virtual uint32_t GetObjId() const {
-    return CRoseClient::GetId();
+    return socket_->GetId();
   }
+
+  bool IsActive() { return socket_->IsActive(); }
+  bool GetId() { return socket_->GetId(); }
+  virtual void SetId(uint32_t _val) { socket_->SetId(_val); }
+  std::chrono::steady_clock::time_point GetLastUpdateTime() { return socket_->GetLastUpdateTime(); }
+  virtual bool Shutdown(bool _final = false) { return socket_->Shutdown(_final); }
+
+  std::shared_ptr<spdlog::logger> logger_;
 
  protected:
 
-  virtual void OnAccepted(int*) {}
+  virtual void OnAccepted(Core::INetwork*) {}
   // Callback functions
   virtual bool OnConnect() ;
   virtual void OnConnected() ;
@@ -54,7 +66,7 @@ class CRoseClient : public Core::CNetwork_Asio {
   virtual bool HandlePacket(uint8_t* _buffer) ;
 
   PacketCodec crypt_;
-
+  Core::INetwork* socket_;
   Entity entity_;
 };
 
