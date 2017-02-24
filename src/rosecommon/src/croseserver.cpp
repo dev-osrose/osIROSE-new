@@ -24,7 +24,21 @@ std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
 CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
-  process_thread_ = std::thread([this]() {
+  //std::function<bool()> fnOnAccept = std::bind(&CRoseServer::OnAccept, this);
+  std::function<void(int*)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
+  std::function<bool()> fnOnConnect = std::bind(&CRoseServer::OnConnect, this);
+  std::function<void()> fnOnConnected = std::bind(&CRoseServer::OnConnected, this);
+  std::function<bool()> fnOnDisconnect = std::bind(&CRoseServer::OnDisconnect, this);
+  std::function<void()> fnOnDisconnected = std::bind(&CRoseServer::OnDisconnected, this);
+
+  //this->registerOnAccept(fnOnAccept);
+  socket_->registerOnAccepted(fnOnAccepted);
+  socket_->registerOnConnect(fnOnConnect);
+  socket_->registerOnConnected(fnOnConnected);
+  socket_->registerOnDisconnect(fnOnDisconnect);
+  socket_->registerOnDisconnected(fnOnDisconnected);
+
+  socket_->process_thread_ = std::thread([this]() {
     
     std::forward_list<CRoseClient*>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
@@ -76,8 +90,7 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
 }
 
 CRoseServer::~CRoseServer() {
-  Shutdown();
-  process_thread_.join();
+  socket_->Shutdown();
 
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
@@ -110,30 +123,32 @@ void CRoseServer::OnDisconnected() {}
 
 bool CRoseServer::OnAccept() { return true; }
 
-void CRoseServer::OnAccepted(tcp::socket _sock) {
+void CRoseServer::OnAccepted(int* _sock) {
+
+//  auto sock_ = reinterpret_cast<tcp::socket*>(_sock);
   logger_->warn(
       "CRoseServer::OnAccepted called! You should really overload this "
       "function.");
-  if (_sock.is_open()) {
-    std::string _address = _sock.remote_endpoint().address().to_string();
+//  if (sock_.is_open()) {
+//    std::string _address = sock_.remote_endpoint().address().to_string();
 
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CRoseClient* nClient = new CRoseClient(std::move(_sock));
       nClient->SetId(
           std::distance(std::begin(client_list_), std::end(client_list_)));
-      logger_->info("[{}] Client connected from: {}", nClient->GetId(),
-                      _address.c_str());
+//      logger_->info("[{}] Client connected from: {}", nClient->GetId(),
+//                      _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(std::move(_sock));
       nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-      logger_->info("[{}] Server connected from: {}", nClient->GetId(),
-                      _address.c_str());
+//      logger_->info("[{}] Server connected from: {}", nClient->GetId(),
+//                      _address.c_str());
       isc_list_.push_front(nClient);
     }
-  }
+//  }
 }
 
 void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer) {

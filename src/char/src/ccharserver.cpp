@@ -24,25 +24,25 @@ CCharServer::CCharServer(bool _isc) : CRoseServer(_isc), client_count_(0), serve
 
 CCharServer::~CCharServer() { Shutdown(); }
 
-void CCharServer::OnAccepted(tcp::socket _sock) {
-  if (_sock.is_open()) {
+void CCharServer::OnAccepted(int* _sock) {
+//  if (_sock.is_open()) {
     // Do Something?
-    std::string _address = _sock.remote_endpoint().address().to_string();
+//    std::string _address = _sock.remote_endpoint().address().to_string();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CCharClient* nClient = new CCharClient(std::move(_sock));
       nClient->SetId(client_count_++);
       nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
-      logger_->info( "[{}] Client connected from: {}", nClient->GetId(),
-                       _address.c_str());
+//      logger_->info( "[{}] Client connected from: {}", nClient->GetId(),
+//                       _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CCharISC* nClient = new CCharISC(std::move(_sock));
       nClient->SetId(server_count_++);
       nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
-      logger_->info( "Server connected from: {}", _address.c_str() );
+//      logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(nClient);
     }
-  }
+//  }
 }

@@ -23,7 +23,7 @@
 
 namespace RoseCommon {
 
-class CRoseServer : public Core::CNetwork_Asio {
+class CRoseServer {
  public:
   CRoseServer(bool _iscServer = false);
   virtual ~CRoseServer();
@@ -55,13 +55,15 @@ class CRoseServer : public Core::CNetwork_Asio {
   virtual bool OnDisconnect() ;
   virtual void OnDisconnected() ;
   virtual bool OnAccept() ;
-  virtual void OnAccepted(tcp::socket _sock) ;
+  virtual void OnAccepted(int* _sock) ;
 
   bool isc_server_;
   static std::forward_list<CRoseClient*> client_list_;
   static std::forward_list<CRoseClient*> isc_list_;
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
+
+  Core::INetwork* socket_;
 };
 
 }

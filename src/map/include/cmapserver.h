@@ -30,7 +30,7 @@ class CMapServer : public RoseCommon::CRoseServer {
  static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
 
  protected:
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual void OnAccepted(int* _sock);
 
   enum class ServerType : int8_t { MASTER_NODE = -1, WORKER_THREAD };
   int32_t map_idx_;

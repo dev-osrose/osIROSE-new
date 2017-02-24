@@ -25,7 +25,7 @@ CMapISC::CMapISC() : CRoseISC() {
   SetType(iscPacket::ServerType::MAP_MASTER);
 }
 
-CMapISC::CMapISC(tcp::socket _sock)
+CMapISC::CMapISC(int* _sock)
     : CRoseISC(std::move(_sock)) {
   SetType(iscPacket::ServerType::MAP_MASTER);
 }

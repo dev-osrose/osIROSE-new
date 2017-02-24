@@ -26,7 +26,7 @@ CLoginClient::CLoginClient()
       userid_(0),
       session_id_(0) {}
 
-CLoginClient::CLoginClient(tcp::socket _sock)
+CLoginClient::CLoginClient(int* _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),

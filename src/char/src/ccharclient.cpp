@@ -28,7 +28,7 @@ CCharClient::CCharClient()
       userId_(0),
       channelId_(0) {}
 
-CCharClient::CCharClient(tcp::socket _sock)
+CCharClient::CCharClient(int* _sock)
     : CRoseClient(std::move(_sock)),
       accessRights_(0),
       loginState_(eSTATE::DEFAULT),

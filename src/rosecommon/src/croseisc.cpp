@@ -17,9 +17,47 @@
 
 namespace RoseCommon {
 
-CRoseISC::CRoseISC() : CRoseClient() { ResetBuffer(); }
+CRoseISC::CRoseISC() : CRoseClient() { 
+  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
+  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
+  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
+  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
+  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
+  std::function<bool()> fnOnReceived = std::bind(&CRoseISC::OnReceived, this);
+  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
+  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
 
-CRoseISC::CRoseISC(tcp::socket _sock) : CRoseClient(std::move(_sock)) {
+  this->registerOnConnect(fnOnConnect);
+  this->registerOnConnected(fnOnConnected);
+  this->registerOnDisconnect(fnOnDisconnect);
+  this->registerOnDisconnected(fnOnDisconnected);
+  this->registerOnReceive(fnOnReceive);
+  this->registerOnReceived(fnOnReceived);
+  this->registerOnSend(fnOnSend);
+  this->registerOnSent(fnOnSent);
+
+  ResetBuffer(); 
+}
+
+CRoseISC::CRoseISC(int* _sock) : CRoseClient(std::move(_sock)) {
+  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
+  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
+  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
+  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
+  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
+  std::function<bool()> fnOnReceived = std::bind(&CRoseISC::OnReceived, this);
+  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
+  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
+
+  this->registerOnConnect(fnOnConnect);
+  this->registerOnConnected(fnOnConnected);
+  this->registerOnDisconnect(fnOnDisconnect);
+  this->registerOnDisconnected(fnOnDisconnected);
+  this->registerOnReceive(fnOnReceive);
+  this->registerOnReceived(fnOnReceived);
+  this->registerOnSend(fnOnSend);
+  this->registerOnSent(fnOnSent);
+
   ResetBuffer();
 }
 

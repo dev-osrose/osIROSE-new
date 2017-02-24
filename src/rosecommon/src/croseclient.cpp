@@ -21,32 +21,47 @@ namespace RoseCommon {
 //#define STRESS_TEST
 
 CRoseClient::CRoseClient() : CNetwork_Asio(), crypt_() {
-  ResetBuffer();
-
-  std::function<bool()> fnDummyBool = []() { return true;};
-  std::function<void()> fnDummyVoid = []() { };
-  this->registerOnAccept(fnDummyBool);
-  this->registerOnListen(fnDummyBool);
-
-  std::function<void(int*)> fnDummyAccepted = [](int*) {};
-  this->registerOnAccepted(fnDummyAccepted);
-
   std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
-  this->registerOnConnect(fnOnConnect);
   std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
+  std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
+  std::function<void()> fnOnDisconnected = std::bind(&CRoseClient::OnDisconnected, this);
+  std::function<bool()> fnOnReceive = std::bind(&CRoseClient::OnReceive, this);
+  std::function<bool()> fnOnReceived = std::bind(&CRoseClient::OnReceived, this);
+  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
+  std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
+
+  this->registerOnConnect(fnOnConnect);
   this->registerOnConnected(fnOnConnected);
-  //this->registerOnListening(OnListening);
-  //this->registerOnDisconnect(OnDisconnect);
-  //this->registerOnDisconnected(OnDisconnected);
-  //this->registerOnReceive(OnReceive);
-  //this->registerOnReceived(OnReceived);
-  //this->registerOnSend(OnSend);
-  //this->registerOnSent(OnSent);
-  //this->registerOnShutdown(OnShutdown);
+  this->registerOnDisconnect(fnOnDisconnect);
+  this->registerOnDisconnected(fnOnDisconnected);
+  this->registerOnReceive(fnOnReceive);
+  this->registerOnReceived(fnOnReceived);
+  this->registerOnSend(fnOnSend);
+  this->registerOnSent(fnOnSent);
+
+  ResetBuffer();
 }
 
-CRoseClient::CRoseClient(tcp::socket &&_sock) : CNetwork_Asio(), crypt_() {
-  SetSocket(std::move(_sock));
+CRoseClient::CRoseClient(int* _sock) : CNetwork_Asio(), crypt_() {
+  std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
+  std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
+  std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
+  std::function<void()> fnOnDisconnected = std::bind(&CRoseClient::OnDisconnected, this);
+  std::function<bool()> fnOnReceive = std::bind(&CRoseClient::OnReceive, this);
+  std::function<bool()> fnOnReceived = std::bind(&CRoseClient::OnReceived, this);
+  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
+  std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
+
+  this->registerOnConnect(fnOnConnect);
+  this->registerOnConnected(fnOnConnected);
+  this->registerOnDisconnect(fnOnDisconnect);
+  this->registerOnDisconnected(fnOnDisconnected);
+  this->registerOnReceive(fnOnReceive);
+  this->registerOnReceived(fnOnReceived);
+  this->registerOnSend(fnOnSend);
+  this->registerOnSent(fnOnSent);
+
+  this->SetSocket(std::move(_sock));
   Recv();
   ResetBuffer();
 }

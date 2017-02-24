@@ -92,7 +92,10 @@ class CNetwork_Asio : public INetwork {
   void AcceptConnection();
   void ProcessSend();
 
-  void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
+  void SetSocket(int* _sock) { 
+    auto sock_ = reinterpret_cast<tcp::socket::native_handle_type*>(_sock);
+    socket_.assign(tcp::v4(), std::move(*sock_));
+  }
   void ResetBuffer() {
     packet_offset_ = 0;
     packet_size_ = 6;
@@ -111,7 +114,6 @@ class CNetwork_Asio : public INetwork {
   std::mutex discard_mutex_;
   std::condition_variable recv_condition_;
 
-  std::thread process_thread_;
   uint8_t buffer_[MAX_PACKET_SIZE];
   uint16_t packet_offset_;
   uint16_t packet_size_;

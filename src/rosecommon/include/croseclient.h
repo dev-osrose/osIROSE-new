@@ -25,7 +25,7 @@ namespace RoseCommon {
 class CRoseClient : public Core::CNetwork_Asio {
  public:
   CRoseClient();
-  CRoseClient(tcp::socket &&_sock);
+  CRoseClient(int* _sock);
   virtual ~CRoseClient();
 
   virtual bool Send(CRosePacket &_buffer);

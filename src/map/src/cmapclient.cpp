@@ -30,7 +30,7 @@ CMapClient::CMapClient()
       userid_(0),
       charid_(0) {}
 
-CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySystem)
+CMapClient::CMapClient(int* _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),

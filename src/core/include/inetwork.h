@@ -56,7 +56,9 @@ class INetwork {
         network_id_(0),
         network_type_(0),
         network_port_(0),
-        network_ip_address_("") {}
+        network_ip_address_("") {
+    initCallbacks();
+  }
   virtual ~INetwork() {}
 
   /*!
@@ -138,6 +140,20 @@ class INetwork {
   void registerOnSend(std::function<bool(uint8_t*)> _val) { OnSend = _val; }
   void registerOnSent(std::function<void()> _val) { OnSent = _val; }
   void registerOnShutdown(std::function<bool()> _val) { OnShutdown = _val; }
+
+  void initCallbacks() {
+    std::function<void()> fnDummyVoid = []() {};
+    std::function<bool()> fnDummyBool = []() { return true; };
+    std::function<void(int*)> fnDummyAccepted = [](int*) {};
+    std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
+
+    OnConnected = OnListening = OnDisconnected = OnSent = fnDummyVoid;
+    OnAccept = OnConnect = OnListen = OnDisconnect = OnReceive = OnReceived = OnShutdown = fnDummyBool;
+    OnAccepted = fnDummyAccepted;
+    OnSend = fnDummySend;
+  }
+
+  std::thread process_thread_; //TODO:: Do this correctly
 
  protected:
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;

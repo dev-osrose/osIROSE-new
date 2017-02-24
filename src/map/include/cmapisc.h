@@ -21,7 +21,7 @@
 class CMapISC : public RoseCommon::CRoseISC {
  public:
   CMapISC();
-  CMapISC(tcp::socket _sock);
+  CMapISC(int* _sock);
 
   bool IsChar() const;
 
