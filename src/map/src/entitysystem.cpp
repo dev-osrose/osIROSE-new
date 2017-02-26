@@ -53,6 +53,9 @@ void EntitySystem::update(double dt) {
     systemManager_.update(dt);
     for (auto it : toDestroy_) {
         if (it) {
+            auto basic = it.component<BasicInfo>();
+            nameToEntity_.erase(basic->name_);
+            idToEntity_.erase(basic->id_);
             unloadEntity(it);
             it.destroy();
         }
