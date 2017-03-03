@@ -77,7 +77,8 @@ class CNetwork_Asio : public INetwork {
 
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
-  virtual bool IsActive() {
+
+  bool IsActive() override {
     return active_;
   }
 
@@ -88,7 +89,7 @@ class CNetwork_Asio : public INetwork {
   void ProcessSend();
 
   void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
-  void ResetBuffer() {
+  void ResetBuffer() override {
     packet_offset_ = 0;
     packet_size_ = 6;
   }

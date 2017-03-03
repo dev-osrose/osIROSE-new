@@ -72,7 +72,7 @@ bool CMySQL_Row::getFloat(std::string const &name, float &data) {
 CMySQL_Result::CMySQL_Result(const mysqlpp::StoreQueryResult &_res)
     : IResult() {
   for (auto const &it : _res)
-    rows_.emplace_back(std::unique_ptr<IRow>(new CMySQL_Row(it)));
+    rows_.emplace_back(std::unique_ptr<IRow>(std::make_unique<CMySQL_Row>(it)));
 }
 
 bool CMySQL_Result::incrementRow() {
@@ -146,7 +146,7 @@ CMySQL_Database::~CMySQL_Database() {
 
 CMySQL_Database::CMySQL_Database(const std::string &_host, const std::string &_database,
                                  const std::string &_user, const std::string &_password) {
-	Connect(_host, _database, _user, _password);
+  CMySQL_Database::Connect(_host, _database, _user, _password);
 }
 
 void CMySQL_Database::Connect(const std::string &_host, const std::string &_database,

@@ -161,9 +161,11 @@ class INetwork {
 
   std::thread process_thread_; //TODO:: Do this correctly
 
- protected:
   virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
   virtual bool Recv(uint16_t _size = 6) = 0;
+  virtual void ResetBuffer() = 0;
+
+ protected:
 
   // Callback functions
   std::function<bool()> OnAccept;

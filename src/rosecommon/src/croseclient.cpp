@@ -20,11 +20,11 @@
 namespace RoseCommon {
 //#define STRESS_TEST
 
-CRoseClient::CRoseClient() : crypt_() {
+CRoseClient::CRoseClient() : crypt_(), socket_(nullptr) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
 }
 
-CRoseClient::CRoseClient(INetwork* _sock) : crypt_() {
+CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
   std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
   std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
@@ -49,7 +49,7 @@ CRoseClient::CRoseClient(INetwork* _sock) : crypt_() {
 }
 
 CRoseClient::~CRoseClient() {
-  Shutdown();
+  CRoseClient::Shutdown();
   logger_.reset();
 }
 
@@ -58,7 +58,7 @@ bool CRoseClient::Send(CRosePacket &_buffer) {
 }
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
-  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
+  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), static_cast<uint16_t>(CRosePacket::type(_buffer.get())));
   return socket_->Send(std::move(_buffer));
 }
 
@@ -75,6 +75,7 @@ bool CRoseClient::OnReceive() { return true; }
 
 bool CRoseClient::OnReceived() {
   bool rtnVal = true;
+  /*
   if (packet_size_ == 6) {
 #ifndef DISABLE_CRYPT
     packet_size_ = crypt_.decodeClientHeader((unsigned char*)&buffer_);
@@ -144,6 +145,7 @@ bool CRoseClient::OnReceived() {
       });
 
   socket_->ResetBuffer();
+  //*/
   return rtnVal;
 }
 
@@ -186,7 +188,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       break;
     }
     default: {
-      logger_->warn("Unknown Packet Type: 0x{0:04x}", (uint16_t)CRosePacket::type(_buffer));
+      logger_->warn("Unknown Packet Type: 0x{0:04x}", static_cast<uint16_t>(CRosePacket::type(_buffer)));
       return false;
     }
   }

@@ -38,12 +38,12 @@ CNetwork_Asio::CNetwork_Asio()
       packet_size_(6),
       active_(true),
       remote_connection_(false) {
-  SetLastUpdateTime(Core::Time::GetTickCount());
+    INetwork::SetLastUpdateTime(Core::Time::GetTickCount());
   logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
-  Shutdown();
+  CNetwork_Asio::Shutdown();
 
   if (process_thread_.joinable()) process_thread_.join();
 
@@ -147,7 +147,7 @@ void CNetwork_Asio::ProcessSend() {
 
     if (send_empty != true && discard_empty == true) {
       send_mutex_.lock();
-      std::unique_ptr<uint8_t[]> _buffer = std::move(send_queue_.front());
+      auto _buffer = std::move(send_queue_.front());
       send_queue_.pop();
       send_mutex_.unlock();
 
@@ -222,7 +222,6 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
   if (OnReceive() == true) {
     (void)_size;
 
-    std::error_code errorCode;
     int16_t BytesToRead = packet_size_ - packet_offset_;
     asio::async_read(
         socket_, asio::buffer(&buffer_[packet_offset_], BytesToRead),

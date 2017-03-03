@@ -43,10 +43,10 @@ class CRoseClient {
     return socket_->GetId();
   }
 
-  bool IsActive() { return socket_->IsActive(); }
-  bool GetId() { return socket_->GetId(); }
+  bool IsActive() const { return socket_->IsActive(); }
+  bool GetId() const { return socket_->GetId(); }
   virtual void SetId(uint32_t _val) { socket_->SetId(_val); }
-  std::chrono::steady_clock::time_point GetLastUpdateTime() { return socket_->GetLastUpdateTime(); }
+  std::chrono::steady_clock::time_point GetLastUpdateTime() const { return socket_->GetLastUpdateTime(); }
   virtual bool Shutdown(bool _final = false) { return socket_->Shutdown(_final); }
 
   std::shared_ptr<spdlog::logger> logger_;
