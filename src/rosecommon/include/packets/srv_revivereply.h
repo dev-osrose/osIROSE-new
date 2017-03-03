@@ -3,24 +3,23 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_REVIVE_REPLY, SrvReviveReply)
 
-namespace RoseCommon {
+  class SrvReviveReply : public CRosePacket {
+  public:
+    SrvReviveReply();
+    SrvReviveReply(uint16_t mapId);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_REVIVE_REPLY, SrvReviveReply)
-class SrvReviveReply : public CRosePacket {
-	public:
-		SrvReviveReply();
-		SrvReviveReply(uint16_t mapId);
+    virtual ~SrvReviveReply() = default;
 
-		virtual ~SrvReviveReply() = default;
+    uint16_t mapId() const;
 
-		uint16_t mapId() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		uint16_t mapId_;
-};
-
+  private:
+    uint16_t mapId_;
+  };
 }

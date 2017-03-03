@@ -20,19 +20,19 @@
 #include "packetclasses.h"
 
 class CCharISC : public RoseCommon::CRoseISC {
- public:
+public:
   CCharISC();
-  CCharISC(int* _sock);
+  CCharISC(Core::INetwork* _sock);
 
   bool IsLogin() const;
   void SetLogin(bool val);
 
- protected:
+protected:
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer) override;
 
   virtual void OnConnected() override;
-  virtual bool OnShutdown() ;
+  virtual bool OnShutdown();
 };
 
 #endif

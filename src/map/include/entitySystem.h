@@ -1,4 +1,3 @@
-
 #ifndef _ENTITYSYSTEM_H_
 # define _ENTITYSYSTEM_H_
 
@@ -14,47 +13,47 @@
 #define POSITION_CHEATING 1000*1000
 
 class EntitySystem {
-    public:
-        EntitySystem();
+public:
+  EntitySystem();
 
-        void update(double dt);
+  void update(double dt);
 
-        void destroy(Entity entity);
+  void destroy(Entity entity);
 
-        Entity create();
+  Entity create();
 
-        template <typename T>
-        T& get() {
-            return *systemManager_.get<T>();
-        }
+  template <typename T>
+  T& get() {
+    return *systemManager_.get<T>();
+  }
 
-        bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet);
+  bool dispatch(Entity entity, const RoseCommon::CRosePacket& packet);
 
-        Entity loadCharacter(uint32_t charId, bool platinium, uint32_t id);
-        void saveCharacter(uint32_t  charId, Entity entity);
+  Entity loadCharacter(uint32_t charId, bool platinium, uint32_t id);
+  void saveCharacter(uint32_t charId, Entity entity);
 
-        static bool isNearby(Entity a, Entity b);
+  static bool isNearby(Entity a, Entity b);
 
-        template <typename ...T>
-        void processEntities(std::function<bool(Entity)>&& func) {
-            for (Entity entity : entityManager_.entities_with_components<T...>())
-                if (!func(entity))
-                    return;
-        }
+  template <typename ...T>
+  void processEntities(std::function<bool(Entity)>&& func) {
+    for ( Entity entity : entityManager_.entities_with_components<T...>() )
+      if ( !func( entity ) )
+        return;
+  }
 
-        void registerEntity(Entity entity);
+  void registerEntity(Entity entity);
 
-        Entity getEntity(const std::string &name);
-        Entity getEntity(uint32_t charId);
+  Entity getEntity(const std::string& name);
+  Entity getEntity(uint32_t charId);
 
-        EntityManager &getEntityManager();
+  EntityManager& getEntityManager();
 
-    private:
-        EntityManager entityManager_;
-        SystemManager systemManager_;
-        std::vector<Entity> toDestroy_;
-        std::unordered_map<std::string, Entity> nameToEntity_;
-        std::unordered_map<uint32_t, Entity> idToEntity_;
+private:
+  EntityManager entityManager_;
+  SystemManager systemManager_;
+  std::vector<Entity> toDestroy_;
+  std::unordered_map<std::string, Entity> nameToEntity_;
+  std::unordered_map<uint32_t, Entity> idToEntity_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

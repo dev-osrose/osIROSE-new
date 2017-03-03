@@ -3,24 +3,23 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject)
 
-namespace RoseCommon {
+  class SrvRemoveObject : public CRosePacket {
+  public:
+    SrvRemoveObject();
+    SrvRemoveObject(Entity entity);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject)
-class SrvRemoveObject : public CRosePacket {
-	public:
-		SrvRemoveObject();
-		SrvRemoveObject(Entity entity);
+    virtual ~SrvRemoveObject() = default;
 
-		virtual ~SrvRemoveObject() = default;
+    Entity entity() const;
 
-		Entity entity() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		Entity entity_;
-};
-
+  private:
+    Entity entity_;
+  };
 }

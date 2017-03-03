@@ -37,8 +37,6 @@
 #pragma warning(pop)
 #endif
 
-#include <thread>
-#include <condition_variable>
 #include "inetwork.h"
 #include "logconsole.h"
 #include "network_thread_pool.h"
@@ -48,71 +46,74 @@
 #endif
 
 using asio::ip::tcp;
-namespace Core {
 
-/*!
- * \class CNetwork_Asio
- *
- * \brief An asio impl for networking sockets
- *
- * This class uses ASIO (http://think-async.com/) to implement the networking interface
- *
- * \sa INetwork
- *
- * \author Raven
- * \date nov 2015
- */
-class CNetwork_Asio : public INetwork {
- public:
-  CNetwork_Asio();
-  virtual ~CNetwork_Asio();
+namespace Core
+{
+  /*!
+   * \class CNetwork_Asio
+   *
+   * \brief An asio impl for networking sockets
+   *
+   * This class uses ASIO (http://think-async.com/) to implement the networking interface
+   *
+   * \sa INetwork
+   *
+   * \author Raven
+   * \date nov 2015
+   */
+  class CNetwork_Asio : public INetwork {
+  public:
+    CNetwork_Asio();
+    virtual ~CNetwork_Asio();
 
-  virtual bool Init(std::string _ip, uint16_t _port) override;
-  virtual bool Shutdown(bool _final = false) override;
+    virtual bool Init(std::string _ip, uint16_t _port) override;
+    virtual bool Shutdown(bool _final = false) override;
 
-  virtual bool Connect() override;
-  virtual bool Listen() override;
-  virtual bool Reconnect() override;
-  virtual bool Disconnect() override;
+    virtual bool Connect() override;
+    virtual bool Listen() override;
+    virtual bool Reconnect() override;
+    virtual bool Disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
-  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
+    virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
+    virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
 
-  bool IsActive() override {
-    return active_;
-  }
+    bool IsActive() override {
+      return active_;
+    }
 
-  bool isRemoteConnection() const { return remote_connection_; }
+    bool isRemoteConnection() const { return remote_connection_; }
 
- protected:
-  void AcceptConnection();
-  void ProcessSend();
+  protected:
+    void AcceptConnection();
+    void ProcessSend();
 
-  void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
-  void ResetBuffer() override {
-    packet_offset_ = 0;
-    packet_size_ = 6;
-  }
-  std::shared_ptr<spdlog::logger> logger_;
+    void SetSocket(tcp::socket&& _sock) { socket_ = std::move( _sock ); }
 
- protected:
-  Core::NetworkThreadPool* networkService_;
-  tcp::socket socket_;
-  tcp::acceptor listener_;
-  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
-  std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
-  std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
-  std::mutex send_mutex_;
-  std::mutex recv_mutex_;
-  std::mutex discard_mutex_;
-  std::condition_variable recv_condition_;
+    void ResetBuffer() override {
+      packet_offset_ = 0;
+      packet_size_ = 6;
+    }
 
-  uint8_t buffer_[MAX_PACKET_SIZE];
-  uint16_t packet_offset_;
-  uint16_t packet_size_;
-  bool active_;
-  bool remote_connection_;
-};
+    std::shared_ptr<spdlog::logger> logger_;
+
+  protected:
+    Core::NetworkThreadPool* networkService_;
+    tcp::socket socket_;
+    tcp::acceptor listener_;
+    std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
+    std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
+    std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
+    std::mutex send_mutex_;
+    std::mutex recv_mutex_;
+    std::mutex discard_mutex_;
+    std::condition_variable recv_condition_;
+
+    uint8_t buffer_[MAX_PACKET_SIZE];
+    uint16_t packet_offset_;
+    uint16_t packet_size_;
+    bool active_;
+    bool remote_connection_;
+  };
 }
 
 #endif

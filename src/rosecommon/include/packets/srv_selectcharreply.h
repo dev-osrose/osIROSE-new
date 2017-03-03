@@ -3,24 +3,23 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply)
 
-namespace RoseCommon {
+  class SrvSelectCharReply : public CRosePacket {
+  public:
+    SrvSelectCharReply();
+    SrvSelectCharReply(Entity entity);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply)
-class SrvSelectCharReply : public CRosePacket {
-	public:
-		SrvSelectCharReply();
-		SrvSelectCharReply(Entity entity);
+    virtual ~SrvSelectCharReply() = default;
 
-		virtual ~SrvSelectCharReply() = default;
+    Entity entity() const;
 
-		Entity entity() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		Entity entity_;
-};
-
+  private:
+    Entity entity_;
+  };
 }

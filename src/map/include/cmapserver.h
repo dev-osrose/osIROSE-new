@@ -19,7 +19,7 @@
 #include "entitySystem.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
- public:
+public:
   CMapServer(bool _isc = false, int16_t mapidx = -1);
   virtual ~CMapServer();
 
@@ -27,12 +27,13 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   void update(double dt);
 
- static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket& _buffer);
 
- protected:
-  virtual void OnAccepted(int* _sock);
+protected:
+  virtual void OnAccepted(Core::INetwork* _sock);
 
   enum class ServerType : int8_t { MASTER_NODE = -1, WORKER_THREAD };
+
   int32_t map_idx_;
   uint32_t client_count_;
   uint32_t server_count_;

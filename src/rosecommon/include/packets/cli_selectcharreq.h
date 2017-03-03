@@ -4,31 +4,31 @@
 #include "entityComponents.h"
 #include <string>
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq)
 
-REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq)
-class CliSelectCharReq : public CRosePacket {
-	public:
-		CliSelectCharReq();
-		CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string &name);
+  class CliSelectCharReq : public CRosePacket {
+  public:
+    CliSelectCharReq();
+    CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]);
+    CliSelectCharReq(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string& name);
 
-		virtual ~CliSelectCharReq() = default;
+    virtual ~CliSelectCharReq() = default;
 
-		uint8_t charId() const;
-		uint8_t runMode() const;
-		uint8_t rideMode() const;
-		std::string &name();
-		const std::string &name() const;
+    uint8_t charId() const;
+    uint8_t runMode() const;
+    uint8_t rideMode() const;
+    std::string& name();
+    const std::string& name() const;
 
-	protected:
-		virtual void pack() override;
+  protected:
+    virtual void pack() override;
 
-	private:
-		uint8_t charId_;
-		uint8_t runMode_;
-		uint8_t rideMode_;
-		std::string name_;
-};
-
+  private:
+    uint8_t charId_;
+    uint8_t runMode_;
+    uint8_t rideMode_;
+    std::string name_;
+  };
 }

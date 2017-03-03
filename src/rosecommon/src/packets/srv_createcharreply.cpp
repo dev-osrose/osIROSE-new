@@ -1,23 +1,23 @@
 #include "srv_createcharreply.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  SrvCreateCharReply::SrvCreateCharReply() : CRosePacket( ePacketType::PAKCC_CREATE_CHAR_REPLY ) {}
 
-SrvCreateCharReply::SrvCreateCharReply() : CRosePacket(ePacketType::PAKCC_CREATE_CHAR_REPLY) {}
+  SrvCreateCharReply::SrvCreateCharReply(SrvCreateCharReply::eResult result, uint8_t platinium) : CRosePacket( ePacketType::PAKCC_CREATE_CHAR_REPLY ),
+                                                                                                  result_( result ),
+                                                                                                  platinium_( platinium ) {}
 
-SrvCreateCharReply::SrvCreateCharReply(SrvCreateCharReply::eResult result, uint8_t platinium) : CRosePacket(ePacketType::PAKCC_CREATE_CHAR_REPLY), result_(result), platinium_(platinium) {}
+  SrvCreateCharReply::eResult SrvCreateCharReply::result() const {
+    return result_;
+  }
 
-SrvCreateCharReply::eResult SrvCreateCharReply::result() const {
-	return result_;
-}
+  uint8_t SrvCreateCharReply::platinium() const {
+    return platinium_;
+  }
 
-uint8_t SrvCreateCharReply::platinium() const {
-	return platinium_;
-}
-
-
-void SrvCreateCharReply::pack() {
+  void SrvCreateCharReply::pack() {
     *this << result_;
-	*this << platinium_;
-}
-
+    *this << platinium_;
+  }
 }

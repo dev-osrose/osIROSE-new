@@ -10,8 +10,8 @@ TEST(Config, TestDefault) {
 }
 
 TEST(Config, TestDatabase) {
-  Core::Config &config = Core::Config::getInstance();
-  const ::configFile::Database &dbb = config.database();
+  Core::Config& config = Core::Config::getInstance();
+  const ::configFile::Database& dbb = config.database();
   EXPECT_EQ("127.0.0.1", dbb.host());
   EXPECT_EQ("osirose", dbb.database());
   EXPECT_EQ("root", dbb.user());
@@ -20,8 +20,8 @@ TEST(Config, TestDatabase) {
 }
 
 TEST(Config, TestServer) {
-  Core::Config &config = Core::Config::getInstance();
-  const ::configFile::Server &sd = config.serverdata();
+  Core::Config& config = Core::Config::getInstance();
+  const ::configFile::Server& sd = config.serverdata();
   EXPECT_EQ(0, sd.id());
   EXPECT_EQ("127.0.0.1", sd.ip());
   EXPECT_EQ(1, sd.accesslevel());

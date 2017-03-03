@@ -29,167 +29,168 @@
 #include <chrono>
 #include <thread>
 
-namespace Core {
-
-/*!
- * \class INetwork
- *
- * \brief An interface for networking sockets
- *
- * This interface is used to define the basic need for the server networking.
- *
- * \author Raven
- * \date nov 2015
- */
-class INetwork {
- public:
-  INetwork()
-      : OnConnect(nullptr),
-        OnConnected(nullptr),
-        OnListen(nullptr),
-        OnListening(nullptr),
-        OnDisconnect(nullptr),
-        OnDisconnected(nullptr),
-        OnReceive(nullptr),
-        OnReceived(nullptr),
-        OnSend(nullptr),
-        OnSent(nullptr),
-        OnShutdown(nullptr),
-        network_id_(0),
-        network_type_(0),
-        network_port_(0),
-        network_ip_address_("") {
-    initCallbacks();
-  }
-  virtual ~INetwork() {}
-
+namespace Core
+{
   /*!
-   * \brief Used to set the underlying IP adrress and port used in the rest of the functions.
+   * \class INetwork
    *
-   * This function should be called before using any other function. This sets up the class to a default working state.
+   * \brief An interface for networking sockets
    *
-   * \param[in] _ip The IP Address that the network will listen on or connect to.
-   * \param[in] _port The port that the network with either listen on or connect to.
-  */
-  virtual bool Init(std::string _ip, uint16_t _port) = 0;
-
-  /*!
-   * \brief Used to shutdown networking operations
+   * This interface is used to define the basic need for the server networking.
    *
-   * This function cleans up all of the packet queues and shuts down the current socket.
-  */
-  virtual bool Shutdown(bool _final = false) = 0;
+   * \author Raven
+   * \date nov 2015
+   */
+  class INetwork {
+  public:
+    INetwork()
+      : OnConnect( nullptr ),
+        OnConnected( nullptr ),
+        OnListen( nullptr ),
+        OnListening( nullptr ),
+        OnDisconnect( nullptr ),
+        OnDisconnected( nullptr ),
+        OnReceive( nullptr ),
+        OnReceived( nullptr ),
+        OnSend( nullptr ),
+        OnSent( nullptr ),
+        OnShutdown( nullptr ),
+        network_id_( 0 ),
+        network_type_( 0 ),
+        network_port_( 0 ),
+        network_ip_address_( "" ) {
+      initCallbacks();
+    }
 
-  /*!
-   * \brief Used to connect to the ip and port stored by Init
-   *
-   * This function opens a network connection to the stored ip and port.
-   *
-   * \sa Init OnConnect OnConnected
-  */
-  virtual bool Connect() = 0;
+    virtual ~INetwork() {}
 
-  /*!
-   * \brief Used to open a listen socket on the ip and port stored by Init
-   *
-   * This function opens a networking socket to listen for connection requests.
-   *
-   * \sa Init OnListen OnListening
-  */
-  virtual bool Listen() = 0;
+    /*!
+     * \brief Used to set the underlying IP adrress and port used in the rest of the functions.
+     *
+     * This function should be called before using any other function. This sets up the class to a default working state.
+     *
+     * \param[in] _ip The IP Address that the network will listen on or connect to.
+     * \param[in] _port The port that the network with either listen on or connect to.
+    */
+    virtual bool Init(std::string _ip, uint16_t _port) = 0;
 
-  /*!
-   * \brief Used to reconnect to the currently connected ip and port.
-   *
-   * This function resets the current class back to its default state right after calling Init
-   *
-   * \sa Init Connect Disconnect
-  */
-  virtual bool Reconnect() = 0;
+    /*!
+     * \brief Used to shutdown networking operations
+     *
+     * This function cleans up all of the packet queues and shuts down the current socket.
+    */
+    virtual bool Shutdown(bool _final = false) = 0;
 
-  /*!
-   * \brief Used to close the current socket connection.
-   *
-   * This function disconnects the currect socket connection.
-   *
-   * \sa Connect OnDisconnect OnDisconnected
-  */
-  virtual bool Disconnect() = 0;
+    /*!
+     * \brief Used to connect to the ip and port stored by Init
+     *
+     * This function opens a network connection to the stored ip and port.
+     *
+     * \sa Init OnConnect OnConnected
+    */
+    virtual bool Connect() = 0;
 
-  virtual bool IsActive() = 0;
+    /*!
+     * \brief Used to open a listen socket on the ip and port stored by Init
+     *
+     * This function opens a networking socket to listen for connection requests.
+     *
+     * \sa Init OnListen OnListening
+    */
+    virtual bool Listen() = 0;
 
-  /*!
-   * \brief Used to set the ID for this connection.
-   *
-   * \param[in] _val The ID for this instance. Should not be the same as any other.
-  */
-  virtual void SetId(uint32_t _val) { network_id_ = _val; }
-  virtual void SetType(uint32_t _val) { network_type_ = _val; }
-  virtual void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_ = time; }
+    /*!
+     * \brief Used to reconnect to the currently connected ip and port.
+     *
+     * This function resets the current class back to its default state right after calling Init
+     *
+     * \sa Init Connect Disconnect
+    */
+    virtual bool Reconnect() = 0;
 
-  virtual uint32_t GetId() const { return network_id_; }
-  virtual uint32_t GetType() const { return network_type_; }
-  virtual uint16_t GetPort() const { return network_port_; }
-  virtual std::string GetIpAddress() const { return network_ip_address_; }
-  virtual std::chrono::steady_clock::time_point GetLastUpdateTime() const { return last_update_time_; }
+    /*!
+     * \brief Used to close the current socket connection.
+     *
+     * This function disconnects the currect socket connection.
+     *
+     * \sa Connect OnDisconnect OnDisconnected
+    */
+    virtual bool Disconnect() = 0;
 
-  void registerOnAccept(std::function<bool()> _val) { OnAccept = _val; }
-  void registerOnAccepted(std::function<void(INetwork*)> _val) { OnAccepted = _val; }
-  void registerOnConnect(std::function<bool()> _val) { OnConnect = _val; }
-  void registerOnConnected(std::function<void()> _val) { OnConnected = _val; }
-  void registerOnListen(std::function<bool()> _val) { OnListen = _val; }
-  void registerOnListening(std::function<void()> _val) { OnListening = _val; }
-  void registerOnDisconnect(std::function<bool()> _val) { OnDisconnect = _val; }
-  void registerOnDisconnected(std::function<void()> _val) { OnDisconnected = _val; }
-  void registerOnReceive(std::function<bool()> _val) { OnReceive = _val; }
-  void registerOnReceived(std::function<bool()> _val) { OnReceived = _val; }
-  void registerOnSend(std::function<bool(uint8_t*)> _val) { OnSend = _val; }
-  void registerOnSent(std::function<void()> _val) { OnSent = _val; }
-  void registerOnShutdown(std::function<bool()> _val) { OnShutdown = _val; }
+    virtual bool IsActive() = 0;
 
-  void initCallbacks() {
-    std::function<void()> fnDummyVoid = []() {};
-    std::function<bool()> fnDummyBool = []() { return true; };
-    std::function<void(INetwork*)> fnDummyAccepted = [](INetwork*) {};
-    std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
+    /*!
+     * \brief Used to set the ID for this connection.
+     *
+     * \param[in] _val The ID for this instance. Should not be the same as any other.
+    */
+    virtual void SetId(uint32_t _val) { network_id_ = _val; }
+    virtual void SetType(uint32_t _val) { network_type_ = _val; }
+    virtual void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_ = time; }
 
-    OnConnected = OnListening = OnDisconnected = OnSent = fnDummyVoid;
-    OnAccept = OnConnect = OnListen = OnDisconnect = OnReceive = OnReceived = OnShutdown = fnDummyBool;
-    OnAccepted = fnDummyAccepted;
-    OnSend = fnDummySend;
-  }
+    virtual uint32_t GetId() const { return network_id_; }
+    virtual uint32_t GetType() const { return network_type_; }
+    virtual uint16_t GetPort() const { return network_port_; }
+    virtual std::string GetIpAddress() const { return network_ip_address_; }
+    virtual std::chrono::steady_clock::time_point GetLastUpdateTime() const { return last_update_time_; }
 
-  std::thread process_thread_; //TODO:: Do this correctly
+    void registerOnAccept(std::function<bool()> _val) { OnAccept = _val; }
+    void registerOnAccepted(std::function<void(INetwork*)> _val) { OnAccepted = _val; }
+    void registerOnConnect(std::function<bool()> _val) { OnConnect = _val; }
+    void registerOnConnected(std::function<void()> _val) { OnConnected = _val; }
+    void registerOnListen(std::function<bool()> _val) { OnListen = _val; }
+    void registerOnListening(std::function<void()> _val) { OnListening = _val; }
+    void registerOnDisconnect(std::function<bool()> _val) { OnDisconnect = _val; }
+    void registerOnDisconnected(std::function<void()> _val) { OnDisconnected = _val; }
+    void registerOnReceive(std::function<bool()> _val) { OnReceive = _val; }
+    void registerOnReceived(std::function<bool()> _val) { OnReceived = _val; }
+    void registerOnSend(std::function<bool(uint8_t*)> _val) { OnSend = _val; }
+    void registerOnSent(std::function<void()> _val) { OnSent = _val; }
+    void registerOnShutdown(std::function<bool()> _val) { OnShutdown = _val; }
 
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
-  virtual bool Recv(uint16_t _size = 6) = 0;
-  virtual void ResetBuffer() = 0;
+    void initCallbacks() {
+      std::function<void()> fnDummyVoid = []() {};
+      std::function<bool()> fnDummyBool = []() { return true; };
+      std::function<void(INetwork*)> fnDummyAccepted = [](INetwork*) {};
+      std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
 
- protected:
+      OnConnected = OnListening = OnDisconnected = OnSent = fnDummyVoid;
+      OnAccept = OnConnect = OnListen = OnDisconnect = OnReceive = OnReceived = OnShutdown = fnDummyBool;
+      OnAccepted = fnDummyAccepted;
+      OnSend = fnDummySend;
+    }
 
-  // Callback functions
-  std::function<bool()> OnAccept;
-  std::function<void(INetwork*)> OnAccepted;
-  std::function<bool()> OnConnect;
-  std::function<void()> OnConnected;
-  std::function<bool()> OnListen;
-  std::function<void()> OnListening;
-  std::function<bool()> OnDisconnect;
-  std::function<void()> OnDisconnected;
-  std::function<bool()> OnReceive;
-  std::function<bool()> OnReceived;
-  std::function<bool(uint8_t*)> OnSend;
-  std::function<void()> OnSent;
-  std::function<bool()> OnShutdown;
+    std::thread process_thread_; //TODO:: Do this correctly
 
-  // private:
-  uint32_t network_id_;
-  uint32_t network_type_;
-  uint16_t network_port_;
+    virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) = 0;
+    virtual bool Recv(uint16_t _size = 6) = 0;
+    virtual void ResetBuffer() = 0;
 
-  std::string network_ip_address_;
-  std::chrono::steady_clock::time_point last_update_time_;
-};
+  protected:
+
+    // Callback functions
+    std::function<bool()> OnAccept;
+    std::function<void(INetwork*)> OnAccepted;
+    std::function<bool()> OnConnect;
+    std::function<void()> OnConnected;
+    std::function<bool()> OnListen;
+    std::function<void()> OnListening;
+    std::function<bool()> OnDisconnect;
+    std::function<void()> OnDisconnected;
+    std::function<bool()> OnReceive;
+    std::function<bool()> OnReceived;
+    std::function<bool(uint8_t*)> OnSend;
+    std::function<void()> OnSent;
+    std::function<bool()> OnShutdown;
+
+    // private:
+    uint32_t network_id_;
+    uint32_t network_type_;
+    uint16_t network_port_;
+
+    std::string network_ip_address_;
+    std::chrono::steady_clock::time_point last_update_time_;
+  };
 }
 
 #endif

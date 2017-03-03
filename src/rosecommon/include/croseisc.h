@@ -17,27 +17,29 @@
 
 #include "croseclient.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  class CRoseISC : public CRoseClient {
+  public:
+    CRoseISC();
+    CRoseISC(Core::INetwork* _sock);
+    virtual ~CRoseISC();
 
-class CRoseISC : public CRoseClient {
- public:
-  CRoseISC();
-  CRoseISC(Core::INetwork* _sock);
-  virtual ~CRoseISC();
+  protected:
+    // Override the callback functions we will use only
+    virtual void OnConnected() override;
+    virtual bool OnDisconnect() override;
+    virtual void OnDisconnected() override;
+    virtual bool OnReceived() override;
+    virtual bool OnSend(uint8_t* _buffer) override;
+    virtual void OnSent() override;
+    virtual bool HandlePacket(uint8_t* _buffer) override;
 
- protected:
-  // Override the callback functions we will use only
-  virtual void OnConnected() override;
-  virtual bool OnDisconnect() override;
-  virtual void OnDisconnected() override;
-  virtual bool OnReceived() override;
-  virtual bool OnSend(uint8_t* _buffer) override;
-  virtual void OnSent() override;
-  virtual bool HandlePacket(uint8_t* _buffer) override;
-
- private:
-  bool IsNearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return false; }
-};
-
+  private:
+    bool IsNearby(const CRoseClient* _otherClient) const override {
+      (void)_otherClient;
+      return false;
+    }
+  };
 }
 #endif

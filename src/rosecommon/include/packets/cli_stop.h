@@ -3,27 +3,26 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP, CliStop)
 
-namespace RoseCommon {
+  class CliStop : public CRosePacket {
+  public:
+    CliStop();
+    CliStop(uint8_t buffer[MAX_PACKET_SIZE]);
+    CliStop(float x, float y);
 
-REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP, CliStop)
-class CliStop : public CRosePacket {
-	public:
-		CliStop();
-		CliStop(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliStop(float x, float y);
+    virtual ~CliStop() = default;
 
-		virtual ~CliStop() = default;
+    float x() const;
+    float y() const;
 
-		float x() const;
-		float y() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		float x_;
-		float y_;
-};
-
+  private:
+    float x_;
+    float y_;
+  };
 }

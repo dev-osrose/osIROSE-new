@@ -1,24 +1,23 @@
 #include "srv_deletecharreply.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  SrvDeleteCharReply::SrvDeleteCharReply() : CRosePacket( ePacketType::PAKCC_DELETE_CHAR_REPLY ) {}
 
-SrvDeleteCharReply::SrvDeleteCharReply() : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY) {
-}
+  SrvDeleteCharReply::SrvDeleteCharReply(uint32_t remainingTime, const std::string& name) : CRosePacket( ePacketType::PAKCC_DELETE_CHAR_REPLY ),
+                                                                                            remainingTime_( remainingTime ),
+                                                                                            name_( name ) {}
 
-SrvDeleteCharReply::SrvDeleteCharReply(uint32_t remainingTime, const std::string &name) : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY), remainingTime_(remainingTime), name_(name) {
-}
+  uint32_t& SrvDeleteCharReply::remainingTime() {
+    return remainingTime_;
+  }
 
-uint32_t &SrvDeleteCharReply::remainingTime() {
-	return remainingTime_;
-}
+  std::string& SrvDeleteCharReply::name() {
+    return name_;
+  }
 
-std::string &SrvDeleteCharReply::name() {
-	return name_;
-}
-
-void SrvDeleteCharReply::pack() {
-	*this << remainingTime_;
-	*this << name_;
-}
-
+  void SrvDeleteCharReply::pack() {
+    *this << remainingTime_;
+    *this << name_;
+  }
 }

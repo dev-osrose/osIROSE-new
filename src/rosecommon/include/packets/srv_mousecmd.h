@@ -3,24 +3,23 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd)
 
-namespace RoseCommon {
+  class SrvMouseCmd : public CRosePacket {
+  public:
+    SrvMouseCmd();
+    SrvMouseCmd(Entity entity);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd)
-class SrvMouseCmd : public CRosePacket {
-	public:
-		SrvMouseCmd();
-		SrvMouseCmd(Entity entity);
+    virtual ~SrvMouseCmd() = default;
 
-		virtual ~SrvMouseCmd() = default;
+    Entity entity() const;
 
-		Entity entity() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		Entity entity_;
-};
-
+  private:
+    Entity entity_;
+  };
 }

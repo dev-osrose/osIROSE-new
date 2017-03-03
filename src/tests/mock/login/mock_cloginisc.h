@@ -11,7 +11,7 @@ class CLoginISC_Mock : public CLoginISC {
  public:
   CLoginISC_Mock() : CLoginISC() { }
 
-  CLoginISC_Mock(int* _sock) : CLoginISC(std::move(_sock)) {
+  CLoginISC_Mock(Core::INetwork* _sock) : CLoginISC(std::move(_sock)) {
   }
 
  protected:

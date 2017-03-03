@@ -15,138 +15,140 @@
 #include "croseisc.h"
 #include "epackettype.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  CRoseISC::CRoseISC() : CRoseClient() {
+    std::function<bool()> fnOnConnect = std::bind( &CRoseISC::OnConnect, this );
+    std::function<void()> fnOnConnected = std::bind( &CRoseISC::OnConnected, this );
+    std::function<bool()> fnOnDisconnect = std::bind( &CRoseISC::OnDisconnect, this );
+    std::function<void()> fnOnDisconnected = std::bind( &CRoseISC::OnDisconnected, this );
+    std::function<bool()> fnOnReceive = std::bind( &CRoseISC::OnReceive, this );
+    std::function<bool()> fnOnReceived = std::bind( &CRoseISC::OnReceived, this );
+    std::function<bool(uint8_t*)> fnOnSend = std::bind( &CRoseISC::OnSend, this, std::placeholders::_1 );
+    std::function<void()> fnOnSent = std::bind( &CRoseISC::OnSent, this );
 
-CRoseISC::CRoseISC() : CRoseClient() {
-  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
-  std::function<bool()> fnOnReceived = std::bind(&CRoseISC::OnReceived, this);
-  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
+    this->registerOnConnect( fnOnConnect );
+    this->registerOnConnected( fnOnConnected );
+    this->registerOnDisconnect( fnOnDisconnect );
+    this->registerOnDisconnected( fnOnDisconnected );
+    this->registerOnReceive( fnOnReceive );
+    this->registerOnReceived( fnOnReceived );
+    this->registerOnSend( fnOnSend );
+    this->registerOnSent( fnOnSent );
 
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
-
-  ResetBuffer();
-}
-
-CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
-  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
-  std::function<bool()> fnOnReceived = std::bind(&CRoseISC::OnReceived, this);
-  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
-
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
-
-  ResetBuffer();
-}
-
-CRoseISC::~CRoseISC() {}
-
-void CRoseISC::OnConnected() {
-  // Do encryption handshake here
-  CRoseClient::OnConnected();
-}
-
-bool CRoseISC::OnDisconnect() { return true; }
-
-void CRoseISC::OnDisconnected() {}
-
-bool CRoseISC::OnReceived() {
-  bool rtnVal = true;
-  if (packet_size_ == 6) {
-    packet_size_ = (uint16_t)buffer_[0];
-    if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
-      logger_->debug("Client sent incorrect block header");
-      ResetBuffer();
-      return false;
-    }
-
-//    logger_->trace("Received a packet header on CRoseISC: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
-
-    if (packet_size_ > 6) return true;
+    ResetBuffer();
   }
 
-  logger_->debug("Received a packet on CRoseISC: Header[{0}, 0x{1:x}]",
-                 CRosePacket::size(buffer_),
-                 (uint16_t)CRosePacket::type(buffer_));
-//  rtnVal = HandlePacket(buffer_);
+  CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient( std::move( _sock ) ) {
+    std::function<bool()> fnOnConnect = std::bind( &CRoseISC::OnConnect, this );
+    std::function<void()> fnOnConnected = std::bind( &CRoseISC::OnConnected, this );
+    std::function<bool()> fnOnDisconnect = std::bind( &CRoseISC::OnDisconnect, this );
+    std::function<void()> fnOnDisconnected = std::bind( &CRoseISC::OnDisconnected, this );
+    std::function<bool()> fnOnReceive = std::bind( &CRoseISC::OnReceive, this );
+    std::function<bool()> fnOnReceived = std::bind( &CRoseISC::OnReceived, this );
+    std::function<bool(uint8_t*)> fnOnSend = std::bind( &CRoseISC::OnSend, this, std::placeholders::_1 );
+    std::function<void()> fnOnSent = std::bind( &CRoseISC::OnSent, this );
 
-  auto res = std::unique_ptr<uint8_t[]>(new uint8_t[CRosePacket::size(buffer_)]);
-	std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
+    this->registerOnConnect( fnOnConnect );
+    this->registerOnConnected( fnOnConnected );
+    this->registerOnDisconnect( fnOnDisconnect );
+    this->registerOnDisconnected( fnOnDisconnected );
+    this->registerOnReceive( fnOnReceive );
+    this->registerOnReceived( fnOnReceived );
+    this->registerOnSend( fnOnSend );
+    this->registerOnSent( fnOnSent );
 
-  recv_mutex_.lock();
-  recv_queue_.push(std::move(res));
-  recv_mutex_.unlock();
+    ResetBuffer();
+  }
 
-  asio::dispatch([this]() {
-        if (true == active_) {
+  CRoseISC::~CRoseISC() {}
+
+  void CRoseISC::OnConnected() {
+    // Do encryption handshake here
+    CRoseClient::OnConnected();
+  }
+
+  bool CRoseISC::OnDisconnect() { return true; }
+
+  void CRoseISC::OnDisconnected() {}
+
+  bool CRoseISC::OnReceived() {
+    bool rtnVal = true;
+    /*
+    if ( packet_size_ == 6 ) {
+      packet_size_ = (uint16_t)buffer_[0];
+      if ( packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE ) {
+        logger_->debug( "Client sent incorrect block header" );
+        ResetBuffer();
+        return false;
+      }
+
+      //    logger_->trace("Received a packet header on CRoseISC: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
+
+      if ( packet_size_ > 6 ) return true;
+    }
+
+    logger_->debug( "Received a packet on CRoseISC: Header[{0}, 0x{1:x}]",
+                    CRosePacket::size( buffer_ ),
+                    (uint16_t)CRosePacket::type( buffer_ ) );
+    //  rtnVal = HandlePacket(buffer_);
+
+    auto res = std::unique_ptr<uint8_t[]>( new uint8_t[CRosePacket::size( buffer_ )] );
+    std::memcpy( res.get(), buffer_, CRosePacket::size( buffer_ ) );
+
+    recv_mutex_.lock();
+    recv_queue_.push( std::move( res ) );
+    recv_mutex_.unlock();
+
+    asio::dispatch( [this]() {
+        if ( true == active_ ) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
           recv_mutex_.unlock();
 
-          if(recv_empty == false)
-          {
+          if ( recv_empty == false ) {
             bool rtnVal = true;
             recv_mutex_.lock();
-            std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
+            std::unique_ptr<uint8_t[]> _buffer = std::move( recv_queue_.front() );
             recv_queue_.pop();
             recv_mutex_.unlock();
 
-            rtnVal = HandlePacket(_buffer.get());
-            _buffer.reset(nullptr);
+            rtnVal = HandlePacket( _buffer.get() );
+            _buffer.reset( nullptr );
 
-            if(rtnVal == false) {
+            if ( rtnVal == false ) {
               // Abort connection
-              logger_->debug("HandlePacket returned false, disconnecting isc server.");
+              logger_->debug( "HandlePacket returned false, disconnecting isc server." );
               Shutdown();
             }
           }
         }
-      });
+      } );
 
-  ResetBuffer();
-  return rtnVal;
-}
-
-bool CRoseISC::OnSend(uint8_t* _buffer) {
-  // TODO: Encrypt the isc buffer.
-  (void)_buffer;
-  return true;
-}
-
-void CRoseISC::OnSent() {}
-
-bool CRoseISC::HandlePacket(uint8_t* _buffer) {
-  switch (CRosePacket::type(_buffer)) {
-    case ePacketType::ISC_ALIVE:
-      return true;
-    default: {
-      logger_->warn("Unknown Packet Type: 0x{0:x}",
-                    (uint16_t)CRosePacket::type(_buffer));
-      return false;
-    }
+    ResetBuffer();
+    //*/
+    return rtnVal;
   }
-  return true;
-}
+
+  bool CRoseISC::OnSend(uint8_t* _buffer) {
+    // TODO: Encrypt the isc buffer.
+    (void)_buffer;
+    return true;
+  }
+
+  void CRoseISC::OnSent() {}
+
+  bool CRoseISC::HandlePacket(uint8_t* _buffer) {
+    switch ( CRosePacket::type( _buffer ) ) {
+      case ePacketType::ISC_ALIVE:
+        return true;
+      default:
+        {
+          logger_->warn( "Unknown Packet Type: 0x{0:x}",
+                         static_cast<uint16_t>(CRosePacket::type( _buffer )) );
+          return false;
+        }
+    }
+    return true;
+  }
 }

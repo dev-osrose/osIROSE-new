@@ -23,75 +23,78 @@
 #include "iserialize.h"
 #include "packetfactory.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  //------------------------------------------------
+  //------------------------------------------------
 
-//------------------------------------------------
-//------------------------------------------------
+  REGISTER_SEND_PACKET(ePacketType::PAKCC_CHAR_LIST_REPLY, SrvCharacterListReply)
 
-REGISTER_SEND_PACKET(ePacketType::PAKCC_CHAR_LIST_REPLY, SrvCharacterListReply)
-class SrvCharacterListReply : public CRosePacket {
- public:
-  SrvCharacterListReply();
+  class SrvCharacterListReply : public CRosePacket {
+  public:
+    SrvCharacterListReply();
 
-  virtual ~SrvCharacterListReply();
+    virtual ~SrvCharacterListReply();
 
-  void addCharacter(const std::string &name, uint8_t race, uint16_t level,
-                    uint16_t job, uint32_t face, uint32_t hair, uint32_t delete_time = 0);
+    void addCharacter(const std::string& name, uint8_t race, uint16_t level,
+                      uint16_t job, uint32_t face, uint32_t hair, uint32_t delete_time = 0);
 
-  void addEquipItem(uint8_t char_id, uint8_t slot, uint16_t item_id = 0,
-                    uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0);
+    void addEquipItem(uint8_t char_id, uint8_t slot, uint16_t item_id = 0,
+                      uint16_t gem = 0, uint8_t socket = 0, uint8_t grade = 0);
 
-  enum equipped_position {
-    EQUIP_HELMET = 0,
-    EQUIP_ARMOR = 1,
-    EQUIP_GAUNTLET,
-    EQUIP_BOOTS,
-    EQUIP_GOGGLES,
-    EQUIP_BACKPACK,
-    EQUIP_WEAPON_R,
-    EQUIP_WEAPON_L,
-    MAX_EQUIPPED_ITEMS
-  };
-  static equipped_position getPosition(uint32_t slot);
-
- protected:
-  void pack();
-
- private:
-  uint8_t character_count_;
-
-  struct equip_item {
-    union {
-      PACK(struct {
-        unsigned int id_ : 10;     // 0~1023
-        unsigned int gem_op_ : 9;  // 0~512
-        unsigned int socket_ : 1;  // 0~1
-        unsigned int grade_ : 4;   // 0~15
-      });
-      uint32_t data;
+    enum equipped_position {
+      EQUIP_HELMET = 0,
+      EQUIP_ARMOR = 1,
+      EQUIP_GAUNTLET,
+      EQUIP_BOOTS,
+      EQUIP_GOGGLES,
+      EQUIP_BACKPACK,
+      EQUIP_WEAPON_R,
+      EQUIP_WEAPON_L,
+      MAX_EQUIPPED_ITEMS
     };
 
-    equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
-               uint8_t grade = 0);
+    static equipped_position getPosition(uint32_t slot);
+
+  protected:
+    void pack();
+
+  private:
+    uint8_t character_count_;
+
+    struct equip_item {
+      union {
+        PACK(struct {
+          unsigned int id_ : 10; // 0~1023
+          unsigned int gem_op_ : 9; // 0~512
+          unsigned int socket_ : 1; // 0~1
+          unsigned int grade_ : 4; // 0~15
+        });
+
+        uint32_t data;
+      };
+
+      equip_item(uint16_t id = 0, uint16_t gem = 0, uint8_t socket = 0,
+                 uint8_t grade = 0);
+    };
+
+    struct char_info {
+      uint32_t remain_sec_unitl_delete_;
+      uint16_t level_;
+      uint16_t job_;
+      uint8_t race_;
+      uint8_t platinum_;
+      equip_item items_[MAX_EQUIPPED_ITEMS];
+      std::string name_;
+      uint32_t face_;
+      uint32_t hair_;
+
+      char_info(const std::string& name, uint8_t race = 0, uint16_t level = 0,
+                uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0, uint32_t face = 1, uint32_t hair = 0);
+    };
+
+    std::vector<char_info> character_list_;
   };
-
-  struct char_info {
-    uint32_t remain_sec_unitl_delete_;
-    uint16_t level_;
-    uint16_t job_;
-    uint8_t race_;
-    uint8_t platinum_;
-    equip_item items_[MAX_EQUIPPED_ITEMS];
-    std::string name_;
-    uint32_t face_;
-    uint32_t hair_;
-
-    char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
-              uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0, uint32_t face = 1, uint32_t hair = 0);
-  };
-  std::vector<char_info> character_list_;
-};
-
 }
 
 #endif

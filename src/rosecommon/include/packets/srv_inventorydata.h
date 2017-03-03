@@ -3,24 +3,23 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_INVENTORY_DATA, SrvInventoryData)
 
-namespace RoseCommon {
+  class SrvInventoryData : public CRosePacket {
+  public:
+    SrvInventoryData();
+    SrvInventoryData(Entity entity);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_INVENTORY_DATA, SrvInventoryData)
-class SrvInventoryData : public CRosePacket {
-	public:
-		SrvInventoryData();
-		SrvInventoryData(Entity entity);
+    virtual ~SrvInventoryData() = default;
 
-		virtual ~SrvInventoryData() = default;
+    Entity entity() const;
 
-		Entity entity() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		Entity entity_;
-};
-
+  private:
+    Entity entity_;
+  };
 }

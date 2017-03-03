@@ -1,14 +1,14 @@
 #pragma once
 #include "iserialize.h"
 
-namespace RoseCommon {
-
-struct Item : public ISerialize {
+namespace RoseCommon
+{
+  struct Item : public ISerialize {
     enum Type {
-        WEARABLE = 0,
-        CONSUMABLE = 1,
-        ETC = 2,
-        RIDING = 3
+      WEARABLE = 0,
+      CONSUMABLE = 1,
+      ETC = 2,
+      RIDING = 3
     };
 
     Item();
@@ -32,6 +32,5 @@ struct Item : public ISerialize {
     uint8_t refine_;
     uint32_t count_;
     bool isStackable_;
-};
-
+  };
 }

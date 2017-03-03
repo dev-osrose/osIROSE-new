@@ -3,26 +3,25 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_EQUIP_ITEM, SrvEquipItem)
 
-namespace RoseCommon {
+  class SrvEquipItem : public CRosePacket {
+  public:
+    SrvEquipItem();
+    SrvEquipItem(Entity entity, int16_t slot);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_EQUIP_ITEM, SrvEquipItem)
-class SrvEquipItem : public CRosePacket {
-	public:
-		SrvEquipItem();
-		SrvEquipItem(Entity entity, int16_t slot);
+    virtual ~SrvEquipItem() = default;
 
-		virtual ~SrvEquipItem() = default;
+    Entity entity() const;
+    int16_t slot() const;
 
-		Entity entity() const;
-		int16_t slot() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		Entity entity_;
-		int16_t slot_;
-};
-
+  private:
+    Entity entity_;
+    int16_t slot_;
+  };
 }

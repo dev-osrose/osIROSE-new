@@ -12,29 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "iscpackets.pb.h"
 #include "cmapserver.h"
 #include "cmapisc.h"
 #include "config.h"
 #include "version.h"
 
-namespace {
-void DisplayTitle()
+namespace
 {
-  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  if(auto log = console.lock())
-  {
-    log->info( "--------------------------------" );
-    log->info( "        osIROSE 2 Alpha         " );
-    log->info( "  http://forum.dev-osrose.com/  " );
-    log->info( "--------------------------------" );
-    log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+  void DisplayTitle() {
+    auto console = Core::CLog::GetLogger( Core::log_type::GENERAL );
+    if ( auto log = console.lock() ) {
+      log->info( "--------------------------------" );
+      log->info( "        osIROSE 2 Alpha         " );
+      log->info( "  http://forum.dev-osrose.com/  " );
+      log->info( "--------------------------------" );
+      log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+    }
   }
-}
 
-void CheckUser()
-{
+  void CheckUser() {
 #ifndef _WIN32
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
   if(auto log = console.lock())
@@ -46,7 +43,7 @@ void CheckUser()
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   }
 #endif
-}
+  }
 }
 
 int main(int argc, char* argv[]) {
@@ -54,51 +51,51 @@ int main(int argc, char* argv[]) {
   (void)argv;
 
   try {
-  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  if(auto log = console.lock())
-    log->info( "Starting up server..." );
+    auto console = Core::CLog::GetLogger( Core::log_type::GENERAL );
+    if ( auto log = console.lock() )
+      log->info( "Starting up server..." );
 
-  Core::Config& config = Core::Config::getInstance();
-  Core::CLog::SetLevel((spdlog::level::level_enum)config.map_server().log_level());
-  DisplayTitle();
-  CheckUser();
+    Core::Config& config = Core::Config::getInstance();
+    Core::CLog::SetLevel( (spdlog::level::level_enum)config.map_server().log_level() );
+    DisplayTitle();
+    CheckUser();
 
-  if(auto log = console.lock()) {
-    log->set_level((spdlog::level::level_enum)config.map_server().log_level());
-    log->trace("Trace logs are enabled.");
-    log->debug("Debug logs are enabled.");
-  }
-  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+    if ( auto log = console.lock() ) {
+      log->set_level( (spdlog::level::level_enum)config.map_server().log_level() );
+      log->trace( "Trace logs are enabled." );
+      log->debug( "Debug logs are enabled." );
+    }
+    Core::NetworkThreadPool::GetInstance( config.serverdata().maxthreads() );
 
-  CMapServer clientServer;
-  CMapServer iscServer(true);
-  CMapISC* iscClient = new CMapISC();
-  iscClient->Init(config.map_server().charip(), config.map_server().chariscport());
-  iscClient->SetType(iscPacket::ServerType::CHAR);
+    CMapServer clientServer;
+    CMapServer iscServer( true );
+    CMapISC* iscClient = new CMapISC();
+    iscClient->Init( config.map_server().charip(), config.map_server().chariscport() );
+    iscClient->SetType( iscPacket::ServerType::CHAR );
 
-  clientServer.Init(config.serverdata().ip(), config.map_server().clientport());
-  clientServer.Listen();
-  clientServer.GetISCList().push_front(iscClient);
+    clientServer.Init( config.serverdata().ip(), config.map_server().clientport() );
+    clientServer.Listen();
+    clientServer.GetISCList().push_front( iscClient );
 
-  iscServer.Init(config.serverdata().isclistenip(), config.map_server().iscport());
-  iscServer.Listen();
-  iscClient->Connect();
+    iscServer.Init( config.serverdata().isclistenip(), config.map_server().iscport() );
+    iscServer.Listen();
+    iscClient->Connect();
 
-  auto start = Core::Time::GetTickCount();
-  while (clientServer.IsActive()) {
+    auto start = Core::Time::GetTickCount();
+    while ( clientServer.IsActive() ) {
       std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
-    clientServer.update(diff.count());
-    start = Core::Time::GetTickCount();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+      clientServer.update( diff.count() );
+      start = Core::Time::GetTickCount();
+      std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+    }
 
-  if(auto log = console.lock())
-    log->info( "Server shutting down..." );
-  Core::NetworkThreadPool::DeleteInstance();
-  spdlog::drop_all();
+    if ( auto log = console.lock() )
+      log->info( "Server shutting down..." );
+    Core::NetworkThreadPool::DeleteInstance();
+    spdlog::drop_all();
   }
-  catch (const spdlog::spdlog_ex& ex) {
-     std::cout << "Log failed: " << ex.what() << std::endl;
+  catch ( const spdlog::spdlog_ex& ex ) {
+    std::cout << "Log failed: " << ex.what() << std::endl;
   }
   return 0;
 }

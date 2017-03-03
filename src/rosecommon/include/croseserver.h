@@ -21,52 +21,52 @@
 #include "croseclient.h"
 #include "croseisc.h"
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  class CRoseServer {
+  public:
+    CRoseServer(bool _iscServer = false);
+    virtual ~CRoseServer();
 
-class CRoseServer {
- public:
-  CRoseServer(bool _iscServer = false);
-  virtual ~CRoseServer();
+    bool IsISCServer() { return isc_server_; }
 
-  bool IsISCServer() { return isc_server_; }
+    static std::forward_list<CRoseClient*>& GetClientList() {
+      return client_list_;
+    }
 
-  static std::forward_list<CRoseClient*>& GetClientList() {
-    return client_list_;
-  }
-  static std::forward_list<CRoseClient*>& GetISCList() { return isc_list_; }
-  static std::mutex& GetClientListMutex() { return client_list_mutex_; }
-  static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
+    static std::forward_list<CRoseClient*>& GetISCList() { return isc_list_; }
+    static std::mutex& GetClientListMutex() { return client_list_mutex_; }
+    static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
 
-  enum class eSendType : uint8_t {
-    EVERYONE,
-    EVERYONE_BUT_ME,
-    NEARBY,
-    NEARBY_BUT_ME,
+    enum class eSendType : uint8_t {
+      EVERYONE,
+      EVERYONE_BUT_ME,
+      NEARBY,
+      NEARBY_BUT_ME,
+    };
+
+    static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket& _buffer);
+
+    std::shared_ptr<spdlog::logger> logger_;
+  protected:
+    // Callback functions
+    virtual bool OnConnect();
+    virtual void OnConnected();
+    virtual bool OnListen();
+    virtual void OnListening();
+    virtual bool OnDisconnect();
+    virtual void OnDisconnected();
+    virtual bool OnAccept();
+    virtual void OnAccepted(Core::INetwork* _sock);
+
+    bool isc_server_;
+    static std::forward_list<CRoseClient*> client_list_;
+    static std::forward_list<CRoseClient*> isc_list_;
+    static std::mutex client_list_mutex_;
+    static std::mutex isc_list_mutex_;
+
+    Core::INetwork* socket_;
   };
-
-  static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
-
-  std::shared_ptr<spdlog::logger> logger_;
- protected:
-  // Callback functions
-  virtual bool OnConnect() ;
-  virtual void OnConnected() ;
-  virtual bool OnListen() ;
-  virtual void OnListening() ;
-  virtual bool OnDisconnect() ;
-  virtual void OnDisconnected() ;
-  virtual bool OnAccept() ;
-  virtual void OnAccepted(Core::INetwork* _sock) ;
-
-  bool isc_server_;
-  static std::forward_list<CRoseClient*> client_list_;
-  static std::forward_list<CRoseClient*> isc_list_;
-  static std::mutex client_list_mutex_;
-  static std::mutex isc_list_mutex_;
-
-  Core::INetwork* socket_;
-};
-
 }
 
 #endif

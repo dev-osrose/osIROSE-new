@@ -16,19 +16,20 @@
 #define __CCHARCLIENT_H__
 
 #include "croseclient.h"
-#include "packetclasses.h"
 #include "charpackets.h"
 #include "packets.h"
-#include "crosepacket.h"
 
 class CCharClient : public RoseCommon::CRoseClient {
- public:
+public:
   CCharClient();
-  CCharClient(int* _sock);
-  
-  bool IsNearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
+  CCharClient(Core::INetwork* _sock);
 
- protected:
+  bool IsNearby(const CRoseClient* _otherClient) const override {
+    (void)_otherClient;
+    return true;
+  }
+
+protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual bool OnReceived() override;
 

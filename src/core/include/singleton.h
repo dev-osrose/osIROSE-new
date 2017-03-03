@@ -12,25 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef _SINGLETON_H_
 #define _SINGLETON_H_
 
 template <typename T>
 class Singleton {
-	public:
-		static T& getInstance() {
-			static T instance;
-			return instance;
-		}
+public:
+  static T& getInstance() {
+    static T instance;
+    return instance;
+  }
 
-	protected:
-		virtual ~Singleton() = default;
-        explicit Singleton() = default;
+protected:
+  virtual ~Singleton() = default;
+  explicit Singleton() = default;
 
-	private:
-		Singleton(const Singleton&) = delete;
-		Singleton& operator=(Singleton const&) = delete;
+private:
+  Singleton(const Singleton&) = delete;
+  Singleton& operator=(Singleton const&) = delete;
 };
 
 #endif /* !_SINGLETON_H_ */

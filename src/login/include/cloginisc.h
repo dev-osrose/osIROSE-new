@@ -19,18 +19,19 @@
 #include "croseisc.h"
 
 class CLoginISC : public RoseCommon::CRoseISC {
- public:
+public:
   CLoginISC();
-  CLoginISC(int* _sock);
+  CLoginISC(Core::INetwork* _sock);
 
-  std::string GetName() { return server_name_; }
-  bool IsTestServer() { return test_server_; }
+  std::string GetName() const { return server_name_; }
+  bool IsTestServer() const { return test_server_; }
+
   std::forward_list<RoseCommon::tChannelInfo> GetChannelList() const {
     return channel_list_;
   }
 
- protected:
-  bool HandlePacket(uint8_t* _buffer);
+protected:
+  bool HandlePacket(uint8_t* _buffer) override;
   bool ServerRegister(const RoseCommon::CRosePacket& P);
   bool ServerShutdown(const RoseCommon::CRosePacket& P);
 

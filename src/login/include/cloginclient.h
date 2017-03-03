@@ -21,11 +21,11 @@
 #include "packets.h"
 
 class CLoginClient : public RoseCommon::CRoseClient {
- public:
+public:
   CLoginClient();
-  CLoginClient(int* _sock);
+  CLoginClient(Core::INetwork* _sock);
 
- protected:
+protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual bool OnReceived() override;
 

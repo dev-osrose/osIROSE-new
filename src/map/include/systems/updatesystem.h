@@ -2,20 +2,19 @@
 
 #include "system.h"
 
-namespace Systems {
+namespace Systems
+{
+  class UpdateSystem : public System {
+  public:
+    UpdateSystem(SystemManager& manager) : System( manager ) {}
+    virtual ~UpdateSystem() = default;
 
-class UpdateSystem : public System {
-    public:
-        UpdateSystem(SystemManager &manager) : System(manager) {}
-        virtual ~UpdateSystem() = default;
+    virtual void update(EntityManager& es, double);
 
-        virtual void update(EntityManager &es, double);
+    static void calculateSpeed(Entity entity);
 
-        static void calculateSpeed(Entity entity);
+    static void calculateAtkSpeed(Entity entity);
 
-        static void calculateAtkSpeed(Entity entity);
-
-        static void calculateCommand(Entity entity);
-};
-
+    static void calculateCommand(Entity entity);
+  };
 }

@@ -4,26 +4,26 @@
 #include "entityComponents.h"
 #include <string>
 
-namespace RoseCommon {
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKCC_DELETE_CHAR_REPLY, SrvDeleteCharReply)
 
-REGISTER_SEND_PACKET(ePacketType::PAKCC_DELETE_CHAR_REPLY, SrvDeleteCharReply)
-class SrvDeleteCharReply : public CRosePacket {
-	public:
-		SrvDeleteCharReply();
+  class SrvDeleteCharReply : public CRosePacket {
+  public:
+    SrvDeleteCharReply();
 
-		SrvDeleteCharReply(uint32_t remainingTime, const std::string &name);
+    SrvDeleteCharReply(uint32_t remainingTime, const std::string& name);
 
-		virtual ~SrvDeleteCharReply() = default;
+    virtual ~SrvDeleteCharReply() = default;
 
-		uint32_t &remainingTime();
-		std::string &name();
+    uint32_t& remainingTime();
+    std::string& name();
 
-	protected:
-		virtual void pack() override;
+  protected:
+    virtual void pack() override;
 
-	private:
-		uint32_t remainingTime_;
-		std::string name_;
-};
-
+  private:
+    uint32_t remainingTime_;
+    std::string name_;
+  };
 }

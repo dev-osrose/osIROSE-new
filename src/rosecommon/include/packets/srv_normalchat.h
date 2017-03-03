@@ -3,27 +3,26 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
+namespace RoseCommon
+{
+  REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat)
 
-namespace RoseCommon {
+  class SrvNormalChat : public CRosePacket {
+  public:
+    SrvNormalChat();
+    SrvNormalChat(uint16_t charId, const std::string& message);
 
-REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat)
-class SrvNormalChat : public CRosePacket {
-	public:
-		SrvNormalChat();
-		SrvNormalChat(uint16_t charId, const std::string &message);
+    virtual ~SrvNormalChat() = default;
 
-		virtual ~SrvNormalChat() = default;
+    uint16_t charId() const;
+    std::string& message();
+    const std::string& message() const;
 
-		uint16_t charId() const;
-		std::string &message();
-		const std::string &message() const;
+  protected:
+    virtual void pack() override;
 
-	protected:
-		virtual void pack() override;
-
-	private:
-		uint16_t charId_;
-		std::string message_;
-};
-
+  private:
+    uint16_t charId_;
+    std::string message_;
+  };
 }

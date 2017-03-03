@@ -1,8 +1,7 @@
 #pragma once
 
 struct Graphics {
-    Graphics(uint16_t view) : view_(view) {}
+  Graphics(uint16_t view) : view_( view ) {}
 
-    uint16_t view_;
+  uint16_t view_;
 };
-

@@ -22,54 +22,54 @@
 #include "crosepacket.h"
 #include "entityComponents.h"
 
-namespace RoseCommon {
-class CRoseServer;
+namespace RoseCommon
+{
+  class CRoseServer;
 
-class CRoseClient {
- friend class CRoseServer;
- public:
-  CRoseClient();
-  CRoseClient(Core::INetwork* _sock);
-  virtual ~CRoseClient();
+  class CRoseClient {
+    friend class CRoseServer;
+  public:
+    CRoseClient();
+    CRoseClient(Core::INetwork* _sock);
+    virtual ~CRoseClient();
 
-  virtual bool Send(CRosePacket &_buffer);
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer);
+    virtual bool Send(CRosePacket& _buffer);
+    virtual bool Send(std::unique_ptr<uint8_t[]> _buffer);
 
-  virtual bool IsNearby(const CRoseClient* _otherClient) const;
+    virtual bool IsNearby(const CRoseClient* _otherClient) const;
 
-  Entity getEntity() const { return entity_; }
+    Entity getEntity() const { return entity_; }
 
-  virtual uint32_t GetObjId() const {
-    return socket_->GetId();
-  }
+    virtual uint32_t GetObjId() const {
+      return socket_->GetId();
+    }
 
-  bool IsActive() const { return socket_->IsActive(); }
-  bool GetId() const { return socket_->GetId(); }
-  virtual void SetId(uint32_t _val) { socket_->SetId(_val); }
-  std::chrono::steady_clock::time_point GetLastUpdateTime() const { return socket_->GetLastUpdateTime(); }
-  virtual bool Shutdown(bool _final = false) { return socket_->Shutdown(_final); }
+    bool IsActive() const { return socket_->IsActive(); }
+    uint32_t GetId() const { return socket_->GetId(); }
+    virtual void SetId(uint32_t _val) { socket_->SetId( _val ); }
+    std::chrono::steady_clock::time_point GetLastUpdateTime() const { return socket_->GetLastUpdateTime(); }
+    virtual bool Shutdown(bool _final = false) { return socket_->Shutdown( _final ); }
 
-  std::shared_ptr<spdlog::logger> logger_;
+    std::shared_ptr<spdlog::logger> logger_;
 
- protected:
+  protected:
 
-  virtual void OnAccepted(Core::INetwork*) {}
-  // Callback functions
-  virtual bool OnConnect() ;
-  virtual void OnConnected() ;
-  virtual bool OnDisconnect() ;
-  virtual void OnDisconnected() ;
-  virtual bool OnReceive() ;
-  virtual bool OnReceived() ;
-  virtual bool OnSend(uint8_t* _buffer) ;
-  virtual void OnSent() ;
-  virtual bool HandlePacket(uint8_t* _buffer) ;
+    virtual void OnAccepted(Core::INetwork*) {}
+    // Callback functions
+    virtual bool OnConnect();
+    virtual void OnConnected();
+    virtual bool OnDisconnect();
+    virtual void OnDisconnected();
+    virtual bool OnReceive();
+    virtual bool OnReceived();
+    virtual bool OnSend(uint8_t* _buffer);
+    virtual void OnSent();
+    virtual bool HandlePacket(uint8_t* _buffer);
 
-  PacketCodec crypt_;
-  Core::INetwork* socket_;
-  Entity entity_;
-};
-
+    PacketCodec crypt_;
+    Core::INetwork* socket_;
+    Entity entity_;
+  };
 }
 
 #endif
