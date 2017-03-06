@@ -1,27 +1,27 @@
 #include "srv_normalchat.h"
 
-namespace RoseCommon
-{
-  SrvNormalChat::SrvNormalChat() : CRosePacket( ePacketType::PAKWC_NORMAL_CHAT ) {}
+namespace RoseCommon {
 
-  SrvNormalChat::SrvNormalChat(uint16_t charId, const std::string& message) : CRosePacket( ePacketType::PAKWC_NORMAL_CHAT ),
-                                                                              charId_( charId ),
-                                                                              message_( message ) {}
+SrvNormalChat::SrvNormalChat() : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT) {}
 
-  uint16_t SrvNormalChat::charId() const {
-    return charId_;
-  }
+SrvNormalChat::SrvNormalChat(uint16_t charId, const std::string &message) : CRosePacket(ePacketType::PAKWC_NORMAL_CHAT), charId_(charId), message_(message) {}
 
-  std::string& SrvNormalChat::message() {
-    return message_;
-  }
+uint16_t SrvNormalChat::charId() const {
+	return charId_;
+}
 
-  const std::string& SrvNormalChat::message() const {
-    return message_;
-  }
+std::string &SrvNormalChat::message() {
+	return message_;
+}
 
-  void SrvNormalChat::pack() {
-    *this << charId_;
-    *this << message_;
-  }
+const std::string &SrvNormalChat::message() const {
+	return message_;
+}
+
+
+void SrvNormalChat::pack() {
+	*this << charId_;
+	*this << message_;
+}
+
 }

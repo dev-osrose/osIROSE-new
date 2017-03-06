@@ -1,17 +1,18 @@
 #include "srv_logoutreply.h"
 
-namespace RoseCommon
-{
-  SrvLogoutReply::SrvLogoutReply() : CRosePacket( ePacketType::PAKWC_LOGOUT_REPLY ) {}
+namespace RoseCommon {
 
-  SrvLogoutReply::SrvLogoutReply(uint16_t waitTime) : CRosePacket( ePacketType::PAKWC_LOGOUT_REPLY ),
-                                                      waitTime_( waitTime ) {}
+SrvLogoutReply::SrvLogoutReply() : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY) {}
 
-  uint16_t SrvLogoutReply::waitTime() const {
-    return waitTime_;
-  }
+SrvLogoutReply::SrvLogoutReply(uint16_t waitTime) : CRosePacket(ePacketType::PAKWC_LOGOUT_REPLY), waitTime_(waitTime) {}
 
-  void SrvLogoutReply::pack() {
-    *this << waitTime_;
-  }
+uint16_t SrvLogoutReply::waitTime() const {
+	return waitTime_;
+}
+
+
+void SrvLogoutReply::pack() {
+	*this << waitTime_;
+}
+
 }

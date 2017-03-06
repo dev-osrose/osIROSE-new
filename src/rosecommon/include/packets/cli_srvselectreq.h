@@ -3,26 +3,27 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq)
 
-  class CliSrvSelectReq : public CRosePacket {
-  public:
-    CliSrvSelectReq();
-    CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliSrvSelectReq(uint32_t serverId, uint8_t channelId);
+namespace RoseCommon {
 
-    virtual ~CliSrvSelectReq() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq)
+class CliSrvSelectReq : public CRosePacket {
+	public:
+		CliSrvSelectReq();
+		CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliSrvSelectReq(uint32_t serverId, uint8_t channelId);
 
-    uint32_t serverId() const;
-    uint8_t channelId() const;
+		virtual ~CliSrvSelectReq() = default;
 
-  protected:
-    virtual void pack() override;
+		uint32_t serverId() const;
+		uint8_t channelId() const;
 
-  private:
-    uint32_t serverId_;
-    uint8_t channelId_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint32_t serverId_;
+		uint8_t channelId_;
+};
+
 }

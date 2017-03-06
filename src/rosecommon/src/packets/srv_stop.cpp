@@ -1,24 +1,25 @@
 #include "srv_stop.h"
 
-namespace RoseCommon
-{
-  SrvStop::SrvStop() : CRosePacket( ePacketType::PAKWC_STOP ) {}
+namespace RoseCommon {
 
-  SrvStop::SrvStop(Entity entity) : CRosePacket( ePacketType::PAKWC_STOP ),
-                                    entity_( entity ) {}
+SrvStop::SrvStop() : CRosePacket(ePacketType::PAKWC_STOP) {}
 
-  Entity SrvStop::entity() const {
-    return entity_;
-  }
+SrvStop::SrvStop(Entity entity) : CRosePacket(ePacketType::PAKWC_STOP), entity_(entity) {}
 
-  void SrvStop::pack() {
-    auto position = entity_.component<Position>();
-    auto basicInfo = entity_.component<BasicInfo>();
+Entity SrvStop::entity() const {
+	return entity_;
+}
 
-    *this << basicInfo->id_;
-    *this << position->x_;
-    *this << position->y_;
-    *this << position->z_;
 
-  }
+void SrvStop::pack() {
+	auto position = entity_.component<Position>();
+	auto basicInfo = entity_.component<BasicInfo>();
+
+	*this << basicInfo->id_;
+	*this << position->x_;
+	*this << position->y_;
+	*this << position->z_;
+
+}
+
 }

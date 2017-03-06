@@ -23,21 +23,21 @@
 #include "entitySystem.h"
 
 class CMapClient : public RoseCommon::CRoseClient {
-public:
+ public:
   CMapClient();
-  CMapClient(Core::INetwork* _sock, std::shared_ptr<EntitySystem> entitySystem);
+  CMapClient(int* _sock, std::shared_ptr<EntitySystem> entitySystem);
 
   virtual ~CMapClient();
 
   virtual bool IsNearby(const CRoseClient* _otherClient) const override;
 
-protected:
+ protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual bool OnReceived() override;
   virtual void OnDisconnected() override;
 
   bool LogoutReply();
-  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
+  bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
   bool ChangeMapReply(std::unique_ptr<RoseCommon::CliChangeMapReq> P);
 
   enum class eSTATE {

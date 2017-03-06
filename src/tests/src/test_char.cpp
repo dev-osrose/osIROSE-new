@@ -21,50 +21,57 @@ TEST(TestCharServer, TestClientPacketPath) {
   EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); {
-    std::string query = fmt::format( "CALL create_session({}, {}, {});", 1, 1, 0 );
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  {
+    std::string query = fmt::format("CALL create_session({}, {}, {});", 1, 1, 0);
 
     Core::IDatabase& database = Core::databasePool.getDatabase();
-    database.QExecute( query );
+    database.QExecute(query);
   }
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ); {
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  {
     auto pak = std::unique_ptr<CliJoinServerReq>(
-      new CliJoinServerReq( 1, "cc03e747a6afbbcbf8be7668acfebee5" ) );
-    netConnect.Send( *pak );
+        new CliJoinServerReq(1, "cc03e747a6afbbcbf8be7668acfebee5"));
+    netConnect.Send(*pak);
   }
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) ); {
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  {
     auto pak = std::unique_ptr<CliCreateCharReq>(
-      new CliCreateCharReq( 1, 1, 1, 1, 1, 10, "Raven" ) );
-    netConnect.Send( *pak );
+        new CliCreateCharReq(1, 1, 1, 1, 1, 10, "Raven"));
+    netConnect.Send(*pak);
   }
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) ); {
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  {
     auto pak =
-        std::unique_ptr<CliDeleteCharReq>( new CliDeleteCharReq( 1, 0, "Raven" ) );
-    netConnect.Send( *pak );
+        std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq(1, 0, "Raven"));
+    netConnect.Send(*pak);
   }
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) ); {
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  {
     auto pak = std::unique_ptr<CliCreateCharReq>(
-      new CliCreateCharReq( 1, 1, 1, 1, 1, 10, "Raven" ) );
-    netConnect.Send( *pak );
+        new CliCreateCharReq(1, 1, 1, 1, 1, 10, "Raven"));
+    netConnect.Send(*pak);
   }
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) ); {
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  {
     auto pak = std::unique_ptr<CliSelectCharReq>(
-      new CliSelectCharReq( 1, 0, 0, "Raven" ) );
-    netConnect.Send( *pak );
+        new CliSelectCharReq(1, 0, 0, "Raven"));
+    netConnect.Send(*pak);
   }
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  std::string query = fmt::format( "DELETE FROM sessions WHERE id = {}", 1 );
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::string query = fmt::format("DELETE FROM sessions WHERE id = {}", 1);
 
   Core::IDatabase& database = Core::databasePool.getDatabase();
-  database.QExecute( query );
+  database.QExecute(query);
 
   std::this_thread::sleep_for(
-    std::chrono::milliseconds( 500 ) ); // Change this to condition variables
+      std::chrono::milliseconds(500));  // Change this to condition variables
   // EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
   EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
@@ -77,18 +84,18 @@ TEST(TestCharServer, TestISCMap) {
   EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
-  mapISC.SetId( 0 );
-  mapISC.SetType( 3 );
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  mapISC.SetId(0);
+  mapISC.SetType(3);
   EXPECT_EQ(true, mapISC.Init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(mapISC.Connect());
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // todo(raven): Create a map connection here by crafting a isc packet
 
   std::this_thread::sleep_for(
-    std::chrono::milliseconds( 500 ) ); // Change this to condition variables
+      std::chrono::milliseconds(500));  // Change this to condition variables
 
   EXPECT_NO_FATAL_FAILURE(mapISC.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());

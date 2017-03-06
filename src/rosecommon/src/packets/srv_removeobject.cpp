@@ -1,20 +1,21 @@
 #include "srv_removeobject.h"
 
-namespace RoseCommon
-{
-  SrvRemoveObject::SrvRemoveObject() : CRosePacket( ePacketType::PAKWC_REMOVE_OBJECT ) {}
+namespace RoseCommon {
 
-  SrvRemoveObject::SrvRemoveObject(Entity entity) : CRosePacket( ePacketType::PAKWC_REMOVE_OBJECT ),
-                                                    entity_( entity ) {}
+SrvRemoveObject::SrvRemoveObject() : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT) {}
 
-  Entity SrvRemoveObject::entity() const {
-    return entity_;
-  }
+SrvRemoveObject::SrvRemoveObject(Entity entity) : CRosePacket(ePacketType::PAKWC_REMOVE_OBJECT), entity_(entity) {}
 
-  void SrvRemoveObject::pack() {
-    auto basicInfo = entity_.component<BasicInfo>();
+Entity SrvRemoveObject::entity() const {
+	return entity_;
+}
 
-    *this << basicInfo->id_;
 
-  }
+void SrvRemoveObject::pack() {
+	auto basicInfo = entity_.component<BasicInfo>();
+
+	*this << basicInfo->id_;
+
+}
+
 }

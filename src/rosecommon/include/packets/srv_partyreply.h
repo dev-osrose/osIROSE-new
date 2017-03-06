@@ -3,43 +3,44 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REPLY, SrvPartyReply)
 
-  class SrvPartyReply : public CRosePacket {
-  public:
-    enum Reply : uint8_t {
-      NOT_FOUND = 0,
-      BUSY = 1,
-      ACCEPT_MAKE,
-      ACCEPT_JOIN,
-      REJECT,
-      DESTROY,
-      FULL,
-      INVALID_LEVEL,
-      CHANGE_OWNER,
-      CHANGE_OWNER_DISCONNECT,
-      NO_CHANGE_TARGET,
-      KICK = 0x80,
-      DISCONNECT,
-      REJOIN
-    };
+namespace RoseCommon {
 
-    SrvPartyReply();
-    SrvPartyReply(Reply reply, uint32_t id);
-    SrvPartyReply(Reply reply, Entity entity);
+REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REPLY, SrvPartyReply)
+class SrvPartyReply : public CRosePacket {
+	public:
+        enum Reply : uint8_t {
+            NOT_FOUND = 0,
+            BUSY = 1,
+            ACCEPT_MAKE,
+            ACCEPT_JOIN,
+            REJECT,
+            DESTROY,
+            FULL,
+            INVALID_LEVEL,
+            CHANGE_OWNER,
+            CHANGE_OWNER_DISCONNECT,
+            NO_CHANGE_TARGET,
+            KICK = 0x80,
+            DISCONNECT,
+            REJOIN
+        };
 
-    virtual ~SrvPartyReply() = default;
+		SrvPartyReply();
+        SrvPartyReply(Reply reply, uint32_t id);
+		SrvPartyReply(Reply reply, Entity entity);
 
-    Reply reply() const;
-    uint32_t id() const;
+		virtual ~SrvPartyReply() = default;
 
-  protected:
-    virtual void pack() override;
+		Reply reply() const;
+        uint32_t id() const;
 
-  private:
-    Reply reply_;
-    uint32_t id_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		Reply reply_;
+        uint32_t id_;
+};
+
 }

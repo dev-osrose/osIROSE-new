@@ -3,25 +3,26 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_INIT_DATA, SrvInitData)
 
-  class SrvInitData : public CRosePacket {
-  public:
-    SrvInitData();
-    SrvInitData(uint32_t randSeed, uint16_t randIndex);
+namespace RoseCommon {
 
-    virtual ~SrvInitData() = default;
+REGISTER_SEND_PACKET(ePacketType::PAKWC_INIT_DATA, SrvInitData)
+class SrvInitData : public CRosePacket {
+	public:
+		SrvInitData();
+		SrvInitData(uint32_t randSeed, uint16_t randIndex);
 
-    uint32_t randSeed() const;
-    uint16_t randIndex() const;
+		virtual ~SrvInitData() = default;
 
-  protected:
-    virtual void pack() override;
+		uint32_t randSeed() const;
+		uint16_t randIndex() const;
 
-  private:
-    uint32_t randSeed_;
-    uint16_t randIndex_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint32_t randSeed_;
+		uint16_t randIndex_;
+};
+
 }

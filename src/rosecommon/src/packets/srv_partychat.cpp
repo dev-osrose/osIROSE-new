@@ -1,27 +1,27 @@
 #include "srv_partychat.h"
 
-namespace RoseCommon
-{
-  SrvPartyChat::SrvPartyChat() : CRosePacket( ePacketType::PAKWC_PARTY_CHAT ) {}
+namespace RoseCommon {
 
-  SrvPartyChat::SrvPartyChat(uint16_t charId, const std::string& message) : CRosePacket( ePacketType::PAKWC_PARTY_CHAT ),
-                                                                            charId_( charId ),
-                                                                            message_( message ) {}
+SrvPartyChat::SrvPartyChat() : CRosePacket(ePacketType::PAKWC_PARTY_CHAT) {}
 
-  uint16_t SrvPartyChat::charId() const {
-    return charId_;
-  }
+SrvPartyChat::SrvPartyChat(uint16_t charId, const std::string &message) : CRosePacket(ePacketType::PAKWC_PARTY_CHAT), charId_(charId), message_(message) {}
 
-  std::string& SrvPartyChat::message() {
-    return message_;
-  }
+uint16_t SrvPartyChat::charId() const {
+	return charId_;
+}
 
-  const std::string& SrvPartyChat::message() const {
-    return message_;
-  }
+std::string &SrvPartyChat::message() {
+	return message_;
+}
 
-  void SrvPartyChat::pack() {
-    *this << charId_;
-    *this << message_;
-  }
+const std::string &SrvPartyChat::message() const {
+	return message_;
+}
+
+
+void SrvPartyChat::pack() {
+	*this << charId_;
+	*this << message_;
+}
+
 }

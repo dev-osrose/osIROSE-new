@@ -3,18 +3,20 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq)
 
-  class CliAcceptReq : public CRosePacket {
-  public:
-    CliAcceptReq();
-    CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]);
+namespace RoseCommon {
 
-    virtual ~CliAcceptReq() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq)
+class CliAcceptReq : public CRosePacket {
+	public:
+		CliAcceptReq();
+		CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]);
 
-  protected:
-    virtual void pack() override;
-  };
+		virtual ~CliAcceptReq() = default;
+
+
+	protected:
+		virtual void pack() override;
+};
+
 }

@@ -5,19 +5,19 @@
 #include "packets.h"
 #include "logconsole.h"
 
-namespace Systems
-{
-  class System {
-  public:
-    System(SystemManager& manager) : manager_( manager ),
-                                     logger_( Core::CLog::GetLogger( Core::log_type::SYSTEM ).lock() ) {}
+namespace Systems {
 
-    virtual ~System() = default;
+class System {
+    public:
+        System(SystemManager &manager) : manager_(manager), logger_(Core::CLog::GetLogger(Core::log_type::SYSTEM).lock()) {}
 
-    virtual void update(EntityManager&, double dt) = 0;
+        virtual ~System() = default;
 
-  protected:
-    SystemManager& manager_;
-    std::shared_ptr<spdlog::logger> logger_;
-  };
+        virtual void update(EntityManager&, double dt) = 0;
+
+    protected:
+        SystemManager &manager_;
+        std::shared_ptr<spdlog::logger> logger_;
+};
+
 }

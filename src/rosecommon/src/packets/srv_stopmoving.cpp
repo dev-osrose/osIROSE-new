@@ -1,24 +1,25 @@
 #include "srv_stopmoving.h"
 
-namespace RoseCommon
-{
-  SrvStopMoving::SrvStopMoving() : CRosePacket( ePacketType::PAKWC_STOP_MOVING ) {}
+namespace RoseCommon {
 
-  SrvStopMoving::SrvStopMoving(Entity entity) : CRosePacket( ePacketType::PAKWC_STOP_MOVING ),
-                                                entity_( entity ) {}
+SrvStopMoving::SrvStopMoving() : CRosePacket(ePacketType::PAKWC_STOP_MOVING) {}
 
-  Entity SrvStopMoving::entity() const {
-    return entity_;
-  }
+SrvStopMoving::SrvStopMoving(Entity entity) : CRosePacket(ePacketType::PAKWC_STOP_MOVING), entity_(entity) {}
 
-  void SrvStopMoving::pack() {
-    auto position = entity_.component<Position>();
-    auto basicInfo = entity_.component<BasicInfo>();
+Entity SrvStopMoving::entity() const {
+	return entity_;
+}
 
-    *this << basicInfo->id_;
-    *this << position->x_;
-    *this << position->y_;
-    *this << position->z_;
 
-  }
+void SrvStopMoving::pack() {
+	auto position = entity_.component<Position>();
+	auto basicInfo = entity_.component<BasicInfo>();
+
+	*this << basicInfo->id_;
+	*this << position->x_;
+	*this << position->y_;
+	*this << position->z_;
+
+}
+
 }

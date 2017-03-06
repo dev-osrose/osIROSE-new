@@ -3,7 +3,8 @@
 class CMapClient;
 
 struct SocketConnector {
-  SocketConnector(CMapClient* client) : client_( client ) {}
+    SocketConnector(CMapClient *client) : client_(client) {}
 
-  CMapClient* client_;
+    CMapClient *client_;
 };
+

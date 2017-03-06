@@ -18,12 +18,12 @@
 #include "croseserver.h"
 
 class CCharServer : public RoseCommon::CRoseServer {
-public:
+ public:
   CCharServer(bool _isc = false);
   virtual ~CCharServer();
 
-protected:
-  void OnAccepted(Core::INetwork* _sock) override;
+ protected:
+  virtual void OnAccepted(int* _sock);
   uint32_t client_count_;
   uint32_t server_count_;
 };

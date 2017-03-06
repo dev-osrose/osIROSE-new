@@ -3,26 +3,27 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem)
 
-  class CliEquipItem : public CRosePacket {
-  public:
-    CliEquipItem();
-    CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliEquipItem(int16_t slotTo, int16_t slotFrom);
+namespace RoseCommon {
 
-    virtual ~CliEquipItem() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem)
+class CliEquipItem : public CRosePacket {
+	public:
+		CliEquipItem();
+		CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliEquipItem(int16_t slotTo, int16_t slotFrom);
 
-    int16_t slotTo() const;
-    int16_t slotFrom() const;
+		virtual ~CliEquipItem() = default;
 
-  protected:
-    virtual void pack() override;
+		int16_t slotTo() const;
+		int16_t slotFrom() const;
 
-  private:
-    int16_t slotTo_;
-    int16_t slotFrom_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		int16_t slotTo_;
+		int16_t slotFrom_;
+};
+
 }

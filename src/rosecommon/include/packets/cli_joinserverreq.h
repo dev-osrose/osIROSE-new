@@ -4,27 +4,27 @@
 #include "entityComponents.h"
 #include <string>
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
+namespace RoseCommon {
 
-  class CliJoinServerReq : public CRosePacket {
-  public:
-    CliJoinServerReq();
-    CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliJoinServerReq(uint32_t sessionId, const std::string& password);
+REGISTER_RECV_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
+class CliJoinServerReq : public CRosePacket {
+	public:
+		CliJoinServerReq();
+		CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliJoinServerReq(uint32_t sessionId, const std::string &password);
 
-    virtual ~CliJoinServerReq() = default;
+		virtual ~CliJoinServerReq() = default;
 
-    uint32_t sessionId() const;
-    std::string& password();
-    const std::string& password() const;
+		uint32_t sessionId() const;
+		std::string &password();
+		const std::string &password() const;
 
-  protected:
-    virtual void pack() override;
+	protected:
+		virtual void pack() override;
 
-  private:
-    uint32_t sessionId_;
-    std::string password_;
-  };
+	private:
+		uint32_t sessionId_;
+		std::string password_;
+};
+
 }

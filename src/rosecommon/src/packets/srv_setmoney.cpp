@@ -1,20 +1,21 @@
 #include "srv_setmoney.h"
 
-namespace RoseCommon
-{
-  SrvSetMoney::SrvSetMoney() : CRosePacket( ePacketType::PAKWC_SET_MONEY ) {}
+namespace RoseCommon {
 
-  SrvSetMoney::SrvSetMoney(Entity entity) : CRosePacket( ePacketType::PAKWC_SET_MONEY ),
-                                            entity_( entity ) {}
+SrvSetMoney::SrvSetMoney() : CRosePacket(ePacketType::PAKWC_SET_MONEY) {}
 
-  Entity SrvSetMoney::entity() const {
-    return entity_;
-  }
+SrvSetMoney::SrvSetMoney(Entity entity) : CRosePacket(ePacketType::PAKWC_SET_MONEY), entity_(entity) {}
 
-  void SrvSetMoney::pack() {
-    auto advancedInfo = entity_.component<AdvancedInfo>();
+Entity SrvSetMoney::entity() const {
+	return entity_;
+}
 
-    *this << advancedInfo->zuly_;
 
-  }
+void SrvSetMoney::pack() {
+	auto advancedInfo = entity_.component<AdvancedInfo>();
+
+	*this << advancedInfo->zuly_;
+
+}
+
 }

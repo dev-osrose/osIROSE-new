@@ -3,33 +3,34 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REQ, SrvPartyReq)
 
-  class SrvPartyReq : public CRosePacket {
-  public:
-    enum Request : uint8_t {
-      MAKE = 0,
-      JOIN = 1,
-      LEFT,
-      CHANGE_OWNER,
-      KICK = 0x81
-    };
+namespace RoseCommon {
 
-    SrvPartyReq();
-    SrvPartyReq(Request request, Entity entity);
+REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REQ, SrvPartyReq)
+class SrvPartyReq : public CRosePacket {
+	public:
+        enum Request : uint8_t {
+            MAKE = 0,
+            JOIN = 1,
+            LEFT,
+            CHANGE_OWNER,
+            KICK = 0x81
+        };
 
-    virtual ~SrvPartyReq() = default;
+		SrvPartyReq();
+		SrvPartyReq(Request request, Entity entity);
 
-    Request request() const;
-    Entity entity() const;
+		virtual ~SrvPartyReq() = default;
 
-  protected:
-    virtual void pack() override;
+		Request request() const;
+		Entity entity() const;
 
-  private:
-    Request request_;
-    Entity entity_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		Request request_;
+		Entity entity_;
+};
+
 }

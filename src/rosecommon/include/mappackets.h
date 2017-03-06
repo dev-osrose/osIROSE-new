@@ -25,69 +25,77 @@
 #include "packetfactory.h"
 #include "packets.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData)
+namespace RoseCommon {
 
-  class SrvQuestData : public CRosePacket {
-  public:
-    SrvQuestData() : CRosePacket( ePacketType::PAKWC_QUEST_DATA ) {};
+REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData)
+class SrvQuestData : public CRosePacket {
+ public:
+  SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA){};
 
-  protected:
-    void pack() {
-      //Quest data
-      for ( int i = 0; i < 5; ++i ) {
-        *this << (uint16_t)0;
-      }
-      for ( int i = 0; i < 3; ++i ) {
-        *this << (uint16_t)0;
-      }
-      for ( int i = 0; i < 7; ++i ) {
-        *this << (uint16_t)0;
-      }
-      for ( int i = 0; i < 10; ++i ) {
-        *this << (uint16_t)0;
-      }
-
-      for ( int i = 0; i < 10; ++i ) {
-        *this << (uint16_t)0 << (uint32_t)0;
-
-        for ( int i = 0; i < 10; ++i ) {
-          *this << (uint16_t)0;
-        }
-        *this << (uint32_t)0;
-
-        for ( int i = 0; i < 6; ++i ) {
-          *this << (uint16_t)0 << (uint32_t)0;
-        }
-      }
-
-      for ( int i = 0; i < 16; ++i ) {
-        *this << (uint32_t)0;
-      }
-
-      // Wish list
-      for ( int i = 0; i < 30; ++i ) {
-        *this << (uint16_t)0 << (uint32_t)0;
-      }
-    };
-
+ protected:
+  void pack() {
     //Quest data
-    //Wish List
+    for (int i = 0; i < 5; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 3; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 7; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+    for (int i = 0; i < 10; ++i)
+    {
+      *this << (uint16_t)0;
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+      *this << (uint16_t)0 << (uint32_t)0;
+
+      for (int i = 0; i < 10; ++i)
+      {
+        *this << (uint16_t)0;
+      }
+      *this << (uint32_t)0;
+
+      for (int i = 0; i < 6; ++i)
+      {
+        *this << (uint16_t)0 << (uint32_t)0;
+      }
+    }
+
+    for (int i = 0; i < 16; ++i)
+    {
+      *this << (uint32_t)0;
+    }
+
+    // Wish list
+    for (int i = 0; i < 30; ++i)
+    {
+      *this << (uint16_t)0 << (uint32_t)0;
+    }
   };
 
-  //------------------------------------------------
-  //------------------------------------------------
+  //Quest data
+  //Wish List
+};
 
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_BILLING_MESSAGE, SrvBillingMsg)
+//------------------------------------------------
+//------------------------------------------------
 
-  class SrvBillingMsg : public CRosePacket {
-  public:
-    SrvBillingMsg() : CRosePacket( ePacketType::PAKWC_BILLING_MESSAGE ) {};
+REGISTER_SEND_PACKET(ePacketType::PAKWC_BILLING_MESSAGE, SrvBillingMsg)
+class SrvBillingMsg : public CRosePacket {
+ public:
+  SrvBillingMsg() : CRosePacket(ePacketType::PAKWC_BILLING_MESSAGE){};
 
-  protected:
-    void pack() { *this << (uint16_t)0x1001 << (uint32_t)2; };
-  };
+ protected:
+  void pack() { *this << (uint16_t)0x1001 << (uint32_t)2; };
+};
+
 }
 
 #endif

@@ -1,30 +1,30 @@
 #include "cli_srvselectreq.h"
 
-namespace RoseCommon
-{
-  CliSrvSelectReq::CliSrvSelectReq() : CRosePacket( ePacketType::PAKCS_SRV_SELECT_REQ ) {}
+namespace RoseCommon {
 
-  CliSrvSelectReq::CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket( buffer ) {
-    if ( type() != ePacketType::PAKCS_SRV_SELECT_REQ )
-      throw std::runtime_error( "Not the right packet!" );
-    *this >> serverId_;
-    *this >> channelId_;
-  }
+CliSrvSelectReq::CliSrvSelectReq() : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ) {}
 
-  CliSrvSelectReq::CliSrvSelectReq(uint32_t serverId, uint8_t channelId) : CRosePacket( ePacketType::PAKCS_SRV_SELECT_REQ ),
-                                                                           serverId_( serverId ),
-                                                                           channelId_( channelId ) {}
+CliSrvSelectReq::CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+	if (type() != ePacketType::PAKCS_SRV_SELECT_REQ)
+		throw std::runtime_error("Not the right packet!");
+	*this >> serverId_;
+	*this >> channelId_;
+}
 
-  uint32_t CliSrvSelectReq::serverId() const {
-    return serverId_;
-  }
+CliSrvSelectReq::CliSrvSelectReq(uint32_t serverId, uint8_t channelId) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), serverId_(serverId), channelId_(channelId) {}
 
-  uint8_t CliSrvSelectReq::channelId() const {
-    return channelId_;
-  }
+uint32_t CliSrvSelectReq::serverId() const {
+	return serverId_;
+}
 
-  void CliSrvSelectReq::pack() {
-    *this << serverId_;
-    *this << channelId_;
-  }
+uint8_t CliSrvSelectReq::channelId() const {
+	return channelId_;
+}
+
+
+void CliSrvSelectReq::pack() {
+	*this << serverId_;
+	*this << channelId_;
+}
+
 }

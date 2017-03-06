@@ -3,18 +3,20 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGOUT_REQ, CliLogoutReq)
 
-  class CliLogoutReq : public CRosePacket {
-  public:
-    CliLogoutReq();
-    CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]);
+namespace RoseCommon {
 
-    virtual ~CliLogoutReq() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGOUT_REQ, CliLogoutReq)
+class CliLogoutReq : public CRosePacket {
+	public:
+		CliLogoutReq();
+		CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]);
 
-  protected:
-    virtual void pack() override;
-  };
+		virtual ~CliLogoutReq() = default;
+
+
+	protected:
+		virtual void pack() override;
+};
+
 }

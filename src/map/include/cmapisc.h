@@ -19,18 +19,18 @@
 #include "packetclasses.h"
 
 class CMapISC : public RoseCommon::CRoseISC {
-public:
+ public:
   CMapISC();
-  CMapISC(Core::INetwork* _sock);
+  CMapISC(int* _sock);
 
   bool IsChar() const;
 
-protected:
+ protected:
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer) override;
 
   virtual void OnConnected() override;
-  virtual bool OnShutdown();
+  virtual bool OnShutdown() ;
 };
 
 #endif

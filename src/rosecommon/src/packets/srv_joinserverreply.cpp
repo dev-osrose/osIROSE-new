@@ -1,29 +1,28 @@
 #include "srv_joinserverreply.h"
 
-namespace RoseCommon
-{
-  SrvJoinServerReply::SrvJoinServerReply() : CRosePacket( ePacketType::PAKSC_JOIN_SERVER_REPLY ) {}
+namespace RoseCommon {
 
-  SrvJoinServerReply::SrvJoinServerReply(SrvJoinServerReply::eResult result, uint32_t id, uint32_t payFlag) : CRosePacket( ePacketType::PAKSC_JOIN_SERVER_REPLY ),
-                                                                                                              result_( result ),
-                                                                                                              id_( id ),
-                                                                                                              payFlag_( payFlag ) {}
+SrvJoinServerReply::SrvJoinServerReply() : CRosePacket(ePacketType::PAKSC_JOIN_SERVER_REPLY) {}
 
-  SrvJoinServerReply::eResult SrvJoinServerReply::result() const {
-    return result_;
-  }
+SrvJoinServerReply::SrvJoinServerReply(SrvJoinServerReply::eResult result, uint32_t id, uint32_t payFlag) : CRosePacket(ePacketType::PAKSC_JOIN_SERVER_REPLY), result_(result), id_(id), payFlag_(payFlag) {}
 
-  uint32_t SrvJoinServerReply::id() const {
-    return id_;
-  }
+SrvJoinServerReply::eResult SrvJoinServerReply::result() const {
+	return result_;
+}
 
-  uint32_t SrvJoinServerReply::payFlag() const {
-    return payFlag_;
-  }
+uint32_t SrvJoinServerReply::id() const {
+	return id_;
+}
 
-  void SrvJoinServerReply::pack() {
-    *this << to_underlying( result_ );
-    *this << id_;
-    *this << payFlag_;
-  }
+uint32_t SrvJoinServerReply::payFlag() const {
+	return payFlag_;
+}
+
+
+void SrvJoinServerReply::pack() {
+    *this << to_underlying(result_);
+	*this << id_;
+	*this << payFlag_;
+}
+
 }

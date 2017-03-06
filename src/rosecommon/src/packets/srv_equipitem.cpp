@@ -1,27 +1,27 @@
 #include "srv_equipitem.h"
 
-namespace RoseCommon
-{
-  SrvEquipItem::SrvEquipItem() : CRosePacket( ePacketType::PAKWC_EQUIP_ITEM ) {}
+namespace RoseCommon {
 
-  SrvEquipItem::SrvEquipItem(Entity entity, int16_t slot) : CRosePacket( ePacketType::PAKWC_EQUIP_ITEM ),
-                                                            entity_( entity ),
-                                                            slot_( slot ) {}
+SrvEquipItem::SrvEquipItem() : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM) {}
 
-  Entity SrvEquipItem::entity() const {
-    return entity_;
-  }
+SrvEquipItem::SrvEquipItem(Entity entity, int16_t slot) : CRosePacket(ePacketType::PAKWC_EQUIP_ITEM), entity_(entity), slot_(slot) {}
 
-  int16_t SrvEquipItem::slot() const {
-    return slot_;
-  }
+Entity SrvEquipItem::entity() const {
+	return entity_;
+}
 
-  void SrvEquipItem::pack() {
-    auto basicInfo = entity_.component<BasicInfo>();
-    auto inventory = entity_.component<Inventory>();
+int16_t SrvEquipItem::slot() const {
+	return slot_;
+}
 
-    *this << basicInfo->id_;
-    *this << slot_;
+
+void SrvEquipItem::pack() {
+	auto basicInfo = entity_.component<BasicInfo>();
+	auto inventory = entity_.component<Inventory>();
+
+	*this << basicInfo->id_;
+	*this << slot_;
     *this << inventory->items_[slot_].getVisible();
-  }
+}
+
 }

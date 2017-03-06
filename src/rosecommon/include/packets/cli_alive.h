@@ -3,18 +3,20 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_ALIVE, CliAlive)
 
-  class CliAlive : public CRosePacket {
-  public:
-    CliAlive();
-    CliAlive(uint8_t buffer[MAX_PACKET_SIZE]);
+namespace RoseCommon {
 
-    virtual ~CliAlive() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_ALIVE, CliAlive)
+class CliAlive : public CRosePacket {
+	public:
+		CliAlive();
+		CliAlive(uint8_t buffer[MAX_PACKET_SIZE]);
 
-  protected:
-    virtual void pack() override;
-  };
+		virtual ~CliAlive() = default;
+
+
+	protected:
+		virtual void pack() override;
+};
+
 }

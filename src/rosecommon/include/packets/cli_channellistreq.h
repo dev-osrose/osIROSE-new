@@ -3,24 +3,25 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANNEL_LIST_REQ, CliChannelListReq)
 
-  class CliChannelListReq : public CRosePacket {
-  public:
-    CliChannelListReq();
-    CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliChannelListReq(uint32_t serverId);
+namespace RoseCommon {
 
-    virtual ~CliChannelListReq() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANNEL_LIST_REQ, CliChannelListReq)
+class CliChannelListReq : public CRosePacket {
+	public:
+		CliChannelListReq();
+		CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliChannelListReq(uint32_t serverId);
 
-    uint32_t serverId() const;
+		virtual ~CliChannelListReq() = default;
 
-  protected:
-    virtual void pack() override;
+		uint32_t serverId() const;
 
-  private:
-    uint32_t serverId_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint32_t serverId_;
+};
+
 }

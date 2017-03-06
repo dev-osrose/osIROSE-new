@@ -3,23 +3,24 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_LOGOUT_REPLY, SrvLogoutReply)
 
-  class SrvLogoutReply : public CRosePacket {
-  public:
-    SrvLogoutReply();
-    SrvLogoutReply(uint16_t waitTime);
+namespace RoseCommon {
 
-    virtual ~SrvLogoutReply() = default;
+REGISTER_SEND_PACKET(ePacketType::PAKWC_LOGOUT_REPLY, SrvLogoutReply)
+class SrvLogoutReply : public CRosePacket {
+	public:
+		SrvLogoutReply();
+		SrvLogoutReply(uint16_t waitTime);
 
-    uint16_t waitTime() const;
+		virtual ~SrvLogoutReply() = default;
 
-  protected:
-    virtual void pack() override;
+		uint16_t waitTime() const;
 
-  private:
-    uint16_t waitTime_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint16_t waitTime_;
+};
+
 }

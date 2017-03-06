@@ -3,31 +3,32 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTimeReply)
 
-  class SrvScreenShotTimeReply : public CRosePacket {
-  public:
-    SrvScreenShotTimeReply();
-    SrvScreenShotTimeReply(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min);
+namespace RoseCommon {
 
-    virtual ~SrvScreenShotTimeReply() = default;
+REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTimeReply)
+class SrvScreenShotTimeReply : public CRosePacket {
+	public:
+		SrvScreenShotTimeReply();
+		SrvScreenShotTimeReply(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min);
 
-    uint16_t year() const;
-    uint8_t month() const;
-    uint8_t day() const;
-    uint8_t hour() const;
-    uint8_t min() const;
+		virtual ~SrvScreenShotTimeReply() = default;
 
-  protected:
-    virtual void pack() override;
+		uint16_t year() const;
+		uint8_t month() const;
+		uint8_t day() const;
+		uint8_t hour() const;
+		uint8_t min() const;
 
-  private:
-    uint16_t year_;
-    uint8_t month_;
-    uint8_t day_;
-    uint8_t hour_;
-    uint8_t min_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint16_t year_;
+		uint8_t month_;
+		uint8_t day_;
+		uint8_t hour_;
+		uint8_t min_;
+};
+
 }

@@ -4,28 +4,28 @@
 #include "entityComponents.h"
 #include <string>
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat)
+namespace RoseCommon {
 
-  class CliWhisperChat : public CRosePacket {
-  public:
-    CliWhisperChat();
-    CliWhisperChat(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliWhisperChat(const std::string& targetId, const std::string& message);
+REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat)
+class CliWhisperChat : public CRosePacket {
+	public:
+		CliWhisperChat();
+		CliWhisperChat(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliWhisperChat(const std::string &targetId, const std::string &message);
 
-    virtual ~CliWhisperChat() = default;
+		virtual ~CliWhisperChat() = default;
 
-    std::string& targetId();
-    const std::string& targetId() const;
-    std::string& message();
-    const std::string& message() const;
+		std::string &targetId();
+		const std::string &targetId() const;
+		std::string &message();
+		const std::string &message() const;
 
-  protected:
-    virtual void pack() override;
+	protected:
+		virtual void pack() override;
 
-  private:
-    std::string targetId_;
-    std::string message_;
-  };
+	private:
+		std::string targetId_;
+		std::string message_;
+};
+
 }

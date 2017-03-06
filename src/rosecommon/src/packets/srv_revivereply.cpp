@@ -1,17 +1,18 @@
 #include "srv_revivereply.h"
 
-namespace RoseCommon
-{
-  SrvReviveReply::SrvReviveReply() : CRosePacket( ePacketType::PAKWC_REVIVE_REPLY ) {}
+namespace RoseCommon {
 
-  SrvReviveReply::SrvReviveReply(uint16_t mapId) : CRosePacket( ePacketType::PAKWC_REVIVE_REPLY ),
-                                                   mapId_( mapId ) {}
+SrvReviveReply::SrvReviveReply() : CRosePacket(ePacketType::PAKWC_REVIVE_REPLY) {}
 
-  uint16_t SrvReviveReply::mapId() const {
-    return mapId_;
-  }
+SrvReviveReply::SrvReviveReply(uint16_t mapId) : CRosePacket(ePacketType::PAKWC_REVIVE_REPLY), mapId_(mapId) {}
 
-  void SrvReviveReply::pack() {
-    *this << mapId_;
-  }
+uint16_t SrvReviveReply::mapId() const {
+	return mapId_;
+}
+
+
+void SrvReviveReply::pack() {
+	*this << mapId_;
+}
+
 }

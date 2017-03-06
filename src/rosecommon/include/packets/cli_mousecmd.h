@@ -3,30 +3,31 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd)
 
-  class CliMouseCmd : public CRosePacket {
-  public:
-    CliMouseCmd();
-    CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliMouseCmd(uint16_t targetId, float x, float y, uint16_t z);
+namespace RoseCommon {
 
-    virtual ~CliMouseCmd() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd)
+class CliMouseCmd : public CRosePacket {
+	public:
+		CliMouseCmd();
+		CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliMouseCmd(uint16_t targetId, float x, float y, uint16_t z);
 
-    uint16_t targetId() const;
-    float x() const;
-    float y() const;
-    uint16_t z() const;
+		virtual ~CliMouseCmd() = default;
 
-  protected:
-    virtual void pack() override;
+		uint16_t targetId() const;
+		float x() const;
+		float y() const;
+		uint16_t z() const;
 
-  private:
-    uint16_t targetId_;
-    float x_;
-    float y_;
-    uint16_t z_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint16_t targetId_;
+		float x_;
+		float y_;
+		uint16_t z_;
+};
+
 }

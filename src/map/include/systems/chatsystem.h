@@ -2,17 +2,18 @@
 
 #include "system.h"
 
-namespace Systems
-{
-  class ChatSystem : public System {
-  public:
-    ChatSystem(SystemManager& manager);
-    virtual ~ChatSystem() = default;
+namespace Systems {
 
-    virtual void update(EntityManager& es, double dt);
+class ChatSystem : public System {
+    public:
+        ChatSystem(SystemManager &manager);
+        virtual ~ChatSystem() = default;
 
-    void normalChat(CMapClient* client, Entity entity, const RoseCommon::CliNormalChat& packet);
-    void whisperChat(CMapClient* client, Entity entity, const RoseCommon::CliWhisperChat& packet);
-    void partyChat(CMapClient* client, Entity entity, const RoseCommon::CliPartyChat& packet);
-  };
+        virtual void update(EntityManager &es, double dt);
+
+        void normalChat(CMapClient *client, Entity entity, const RoseCommon::CliNormalChat &packet);
+        void whisperChat(CMapClient *client, Entity entity, const RoseCommon::CliWhisperChat &packet);
+        void partyChat(CMapClient *client, Entity entity, const RoseCommon::CliPartyChat &packet);
+};
+
 }

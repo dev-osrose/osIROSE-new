@@ -3,23 +3,24 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_STOP_MOVING, SrvStopMoving)
 
-  class SrvStopMoving : public CRosePacket {
-  public:
-    SrvStopMoving();
-    SrvStopMoving(Entity entity);
+namespace RoseCommon {
 
-    virtual ~SrvStopMoving() = default;
+REGISTER_SEND_PACKET(ePacketType::PAKWC_STOP_MOVING, SrvStopMoving)
+class SrvStopMoving : public CRosePacket {
+	public:
+		SrvStopMoving();
+		SrvStopMoving(Entity entity);
 
-    Entity entity() const;
+		virtual ~SrvStopMoving() = default;
 
-  protected:
-    virtual void pack() override;
+		Entity entity() const;
 
-  private:
-    Entity entity_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		Entity entity_;
+};
+
 }

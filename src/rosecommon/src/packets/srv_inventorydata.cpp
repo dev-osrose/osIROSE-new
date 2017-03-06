@@ -1,24 +1,25 @@
 #include "srv_inventorydata.h"
 
-namespace RoseCommon
-{
-  SrvInventoryData::SrvInventoryData() : CRosePacket( ePacketType::PAKWC_INVENTORY_DATA ) {}
+namespace RoseCommon {
 
-  SrvInventoryData::SrvInventoryData(Entity entity) : CRosePacket( ePacketType::PAKWC_INVENTORY_DATA ),
-                                                      entity_( entity ) {}
+SrvInventoryData::SrvInventoryData() : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA) {}
 
-  Entity SrvInventoryData::entity() const {
-    return entity_;
-  }
+SrvInventoryData::SrvInventoryData(Entity entity) : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA), entity_(entity) {}
 
-  void SrvInventoryData::pack() {
-    auto advancedInfo = entity_.component<AdvancedInfo>();
-    auto inventory = entity_.component<Inventory>();
+Entity SrvInventoryData::entity() const {
+	return entity_;
+}
 
-    *this << advancedInfo->zuly_;
-    for ( auto& it : inventory->items_ ) {
-      *this << it.getHeader() << it.getData();
-    }
 
-  }
+void SrvInventoryData::pack() {
+	auto advancedInfo = entity_.component<AdvancedInfo>();
+	auto inventory = entity_.component<Inventory>();
+
+	*this << advancedInfo->zuly_;
+	for (auto &it : inventory->items_) {
+		*this << it.getHeader() << it.getData();
+	}
+
+}
+
 }

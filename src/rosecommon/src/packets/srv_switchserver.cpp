@@ -1,39 +1,37 @@
 #include "srv_switchserver.h"
 
-namespace RoseCommon
-{
-  SrvSwitchServer::SrvSwitchServer() : CRosePacket( ePacketType::PAKCC_SWITCH_SERVER ) {}
+namespace RoseCommon {
 
-  SrvSwitchServer::SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string& ip) : CRosePacket( ePacketType::PAKCC_SWITCH_SERVER ),
-                                                                                                                     port_( port ),
-                                                                                                                     sessionId_( sessionId ),
-                                                                                                                     sessionSeed_( sessionSeed ),
-                                                                                                                     ip_( ip ) {}
+SrvSwitchServer::SrvSwitchServer() : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER) {}
 
-  uint16_t SrvSwitchServer::port() const {
-    return port_;
-  }
+SrvSwitchServer::SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string &ip) : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), sessionId_(sessionId), sessionSeed_(sessionSeed), ip_(ip) {}
 
-  uint32_t SrvSwitchServer::sessionId() const {
-    return sessionId_;
-  }
+uint16_t SrvSwitchServer::port() const {
+	return port_;
+}
 
-  uint32_t SrvSwitchServer::sessionSeed() const {
-    return sessionSeed_;
-  }
+uint32_t SrvSwitchServer::sessionId() const {
+	return sessionId_;
+}
 
-  std::string& SrvSwitchServer::ip() {
-    return ip_;
-  }
+uint32_t SrvSwitchServer::sessionSeed() const {
+	return sessionSeed_;
+}
 
-  const std::string& SrvSwitchServer::ip() const {
-    return ip_;
-  }
+std::string &SrvSwitchServer::ip() {
+	return ip_;
+}
 
-  void SrvSwitchServer::pack() {
-    *this << port_;
-    *this << sessionId_;
-    *this << sessionSeed_;
-    *this << ip_;
-  }
+const std::string &SrvSwitchServer::ip() const {
+	return ip_;
+}
+
+
+void SrvSwitchServer::pack() {
+	*this << port_;
+	*this << sessionId_;
+	*this << sessionSeed_;
+	*this << ip_;
+}
+
 }

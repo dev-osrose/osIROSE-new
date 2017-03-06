@@ -2,20 +2,21 @@
 
 #include "system.h"
 
-namespace Systems
-{
-  class MovementSystem : public System {
-  public:
-    MovementSystem(SystemManager& manager);
-    virtual ~MovementSystem() = default;
+namespace Systems {
 
-    virtual void update(EntityManager& es, double dt);
+class MovementSystem : public System {
+    public:
+        MovementSystem(SystemManager &manager);
+        virtual ~MovementSystem() = default;
 
-    void move(Entity entity, float x, float y);
+        virtual void update(EntityManager &es, double dt);
 
-    void stop(Entity entity, float x, float y);
+        void move(Entity entity, float x, float y);
 
-    void processMove(CMapClient* client, Entity entity, const RoseCommon::CliMouseCmd& packet);
-    void stopMoving(CMapClient* client, Entity entity, const RoseCommon::CliStopMoving& packet);
-  };
+        void stop(Entity entity, float x, float y);
+
+        void processMove(CMapClient *client, Entity entity, const RoseCommon::CliMouseCmd &packet);
+        void stopMoving(CMapClient *client, Entity entity, const RoseCommon::CliStopMoving &packet);
+};
+
 }

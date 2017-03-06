@@ -3,23 +3,24 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_MONEY, SrvSetMoney)
 
-  class SrvSetMoney : public CRosePacket {
-  public:
-    SrvSetMoney();
-    SrvSetMoney(Entity entity);
+namespace RoseCommon {
 
-    virtual ~SrvSetMoney() = default;
+REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_MONEY, SrvSetMoney)
+class SrvSetMoney : public CRosePacket {
+	public:
+		SrvSetMoney();
+		SrvSetMoney(Entity entity);
 
-    Entity entity() const;
+		virtual ~SrvSetMoney() = default;
 
-  protected:
-    virtual void pack() override;
+		Entity entity() const;
 
-  private:
-    Entity entity_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		Entity entity_;
+};
+
 }

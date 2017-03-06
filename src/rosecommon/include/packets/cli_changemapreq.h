@@ -3,26 +3,27 @@
 #include "packetfactory.h"
 #include "entityComponents.h"
 
-namespace RoseCommon
-{
-  REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANGE_MAP_REQ, CliChangeMapReq)
 
-  class CliChangeMapReq : public CRosePacket {
-  public:
-    CliChangeMapReq();
-    CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
-    CliChangeMapReq(uint8_t weightRate, uint16_t z);
+namespace RoseCommon {
 
-    virtual ~CliChangeMapReq() = default;
+REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANGE_MAP_REQ, CliChangeMapReq)
+class CliChangeMapReq : public CRosePacket {
+	public:
+		CliChangeMapReq();
+		CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliChangeMapReq(uint8_t weightRate, uint16_t z);
 
-    uint8_t weightRate() const;
-    uint16_t z() const;
+		virtual ~CliChangeMapReq() = default;
 
-  protected:
-    virtual void pack() override;
+		uint8_t weightRate() const;
+		uint16_t z() const;
 
-  private:
-    uint8_t weightRate_;
-    uint16_t z_;
-  };
+	protected:
+		virtual void pack() override;
+
+	private:
+		uint8_t weightRate_;
+		uint16_t z_;
+};
+
 }
