@@ -16,6 +16,7 @@
 #include "ccharisc.h"
 #include "config.h"
 #include "version.h"
+#include "network_thread_pool.h"
 
 namespace {
 void DisplayTitle()
@@ -58,12 +59,12 @@ int main(int argc, char* argv[]) {
     log->info("Starting up server...");
 
   Core::Config& config = Core::Config::getInstance();
-  Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
+  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
   DisplayTitle();
   CheckUser();
 
   if(auto log = console.lock()) {
-    log->set_level((spdlog::level::level_enum)config.char_server().log_level());
+    log->set_level(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
   }

@@ -18,25 +18,6 @@
 namespace RoseCommon {
 
 CRoseISC::CRoseISC() : CRoseClient() {
-  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
-  std::function<bool()> fnOnReceived = std::bind(&CRoseISC::OnReceived, this);
-  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
-
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
-
-  ResetBuffer();
 }
 
 CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
@@ -49,16 +30,16 @@ CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
   std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
   std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
 
-  this->registerOnConnect(fnOnConnect);
-  this->registerOnConnected(fnOnConnected);
-  this->registerOnDisconnect(fnOnDisconnect);
-  this->registerOnDisconnected(fnOnDisconnected);
-  this->registerOnReceive(fnOnReceive);
-  this->registerOnReceived(fnOnReceived);
-  this->registerOnSend(fnOnSend);
-  this->registerOnSent(fnOnSent);
+  socket_->registerOnConnect(fnOnConnect);
+  socket_->registerOnConnected(fnOnConnected);
+  socket_->registerOnDisconnect(fnOnDisconnect);
+  socket_->registerOnDisconnected(fnOnDisconnected);
+  socket_->registerOnReceive(fnOnReceive);
+  socket_->registerOnReceived(fnOnReceived);
+  socket_->registerOnSend(fnOnSend);
+  socket_->registerOnSent(fnOnSent);
 
-  ResetBuffer();
+  socket_->ResetBuffer();
 }
 
 CRoseISC::~CRoseISC() {}
@@ -74,7 +55,7 @@ void CRoseISC::OnDisconnected() {}
 
 bool CRoseISC::OnReceived() {
   bool rtnVal = true;
-  if (packet_size_ == 6) {
+  /*if (packet_size_ == 6) {
     packet_size_ = (uint16_t)buffer_[0];
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
@@ -125,7 +106,7 @@ bool CRoseISC::OnReceived() {
         }
       });
 
-  ResetBuffer();
+  ResetBuffer();*/
   return rtnVal;
 }
 
@@ -143,7 +124,7 @@ bool CRoseISC::HandlePacket(uint8_t* _buffer) {
       return true;
     default: {
       logger_->warn("Unknown Packet Type: 0x{0:x}",
-                    (uint16_t)CRosePacket::type(_buffer));
+                    static_cast<uint16_t>(CRosePacket::type( _buffer )));
       return false;
     }
   }
