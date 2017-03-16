@@ -12,7 +12,7 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-  CLoginISC* iscServ = new CLoginISC();
+  std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
   CLoginClient_Mock netConnect;
   EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.Listen());
@@ -36,7 +36,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   iscServ->SetId(0);
   iscServ->SetType(1);
-  CLoginServer::GetISCList().push_front(iscServ);
+  CLoginServer::GetISCList().push_front(std::move(iscServ));
 
 
   //-----------------------------------------

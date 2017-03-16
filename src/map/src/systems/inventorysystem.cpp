@@ -38,7 +38,7 @@ bool InventorySystem::swapItems(Entity entity, uint8_t &a, uint8_t &b) {
     return true;
 }
 
-void InventorySystem::processEquip(CMapClient *client, Entity entity, const RoseCommon::CliEquipItem &packet) {
+void InventorySystem::processEquip(CMapClient& client, Entity entity, const RoseCommon::CliEquipItem &packet) {
     logger_->trace("InventorySystem::processEquip");
     if (packet.slotTo() < 1 || packet.slotTo() >= Inventory::MAX_EQUIP_ITEMS) {
         logger_->warn("When requesting to change equipped item, the destination wasn't good");
@@ -52,5 +52,5 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     }
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-    client->Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
+    client.Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }

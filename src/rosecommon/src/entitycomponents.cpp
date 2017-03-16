@@ -14,3 +14,8 @@ CMapClient *getClient(Entity entity) {
     return entity.component<SocketConnector>()->client_;
 }
 
+bool isConnected(Entity entity) {
+    if (!entity.component<BasicInfo>())
+        return false;
+    return entity.component<BasicInfo>()->loggedIn_.load();
+}

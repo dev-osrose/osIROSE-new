@@ -79,16 +79,14 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     }
 }
 
-void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMouseCmd &packet) {
+void MovementSystem::processMove(CMapClient&, Entity entity, const CliMouseCmd &packet) {
     logger_->trace("MovementSystem::processMove");
-    if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
+    if (!entity.component<Position>() || !entity.component<BasicInfo>())
         return;
     move(entity, packet.x(), packet.y());
 }
 
-void MovementSystem::stopMoving(CMapClient *client, Entity entity, const CliStopMoving &packet) {
+void MovementSystem::stopMoving(CMapClient&, Entity entity, const CliStopMoving &packet) {
     logger_->trace("MovementSystem::stopMoving");
-    if (!client)
-        return;
     stop(entity, packet.x(), packet.y());
 }

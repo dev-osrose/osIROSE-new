@@ -245,9 +245,9 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
-              logger_->info("Client {} disconnected.", GetId());
               OnDisconnected();
-              Shutdown();
+              if (Shutdown())
+                  logger_->info("Client {} disconnected.", GetId());
             } else {
               logger_->debug("Client {}: Error {}: {}", GetId(), errorCode.value(),
                              errorCode.message());

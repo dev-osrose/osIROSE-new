@@ -27,7 +27,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   void update(double dt);
 
- static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
 
  protected:
   virtual void OnAccepted(tcp::socket _sock);

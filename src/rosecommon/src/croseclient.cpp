@@ -37,7 +37,7 @@ bool CRoseClient::Send(CRosePacket &_buffer) {
 }
 
 bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
-  logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()));
+  logger_->trace("Sending a packet on CRoseClient {2}: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), (uint16_t)CRosePacket::type(_buffer.get()), GetId());
   return CNetwork_Asio::Send(std::move(_buffer));
 }
 
@@ -81,7 +81,7 @@ bool CRoseClient::OnReceived() {
   }
 #endif
 
-  logger_->trace("Received a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
+  logger_->trace("Received a packet on CRoseClient {2}: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_), GetId());
 #ifdef SPDLOG_TRACE_ON
   fmt::MemoryWriter out;
   for(int i = 0; i < CRosePacket::size(buffer_); i++)
