@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliChannelListReq::CliChannelListReq() : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ) {}
 
 CliChannelListReq::CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_CHANNEL_LIST_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_CHANNEL_LIST_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> serverId_;
 }
 

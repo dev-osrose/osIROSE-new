@@ -45,7 +45,7 @@ REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 class IscServerRegister : public CRosePacket {
  public:
   IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-      throw_assert(type() != ePacketType::ISC_SERVER_REGISTER, "Not the right packet!");
+      throw_assert(type() == ePacketType::ISC_SERVER_REGISTER, "Not the right packet!");
     uint32_t _size = size();
     auto data = std::unique_ptr<uint8_t[]>(new uint8_t[_size]);
     memset(data.get(), 0, _size);
@@ -90,7 +90,7 @@ REGISTER_RECV_PACKET(ePacketType::ISC_SHUTDOWN, IscServerShutdown)
 class IscServerShutdown : public CRosePacket {
  public:
   IscServerShutdown(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-      throw_assert(type() != ePacketType::ISC_SHUTDOWN, "Not the right packet");
+      throw_assert(type() == ePacketType::ISC_SHUTDOWN, "Not the right packet");
     uint32_t _size = size();
     auto data = std::unique_ptr<uint8_t[]>(new uint8_t[_size]);
     memset(data.get(), 0, _size);

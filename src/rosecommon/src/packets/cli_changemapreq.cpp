@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliChangeMapReq::CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
 
 CliChangeMapReq::CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_CHANGE_MAP_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_CHANGE_MAP_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> weightRate_;
 	*this >> z_;
 }

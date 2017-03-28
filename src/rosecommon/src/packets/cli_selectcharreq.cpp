@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliSelectCharReq::CliSelectCharReq() : CRosePacket(ePacketType::PAKCS_SELECT_CHAR_REQ) {}
 
 CliSelectCharReq::CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_SELECT_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_SELECT_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> charId_;
 	*this >> runMode_;
 	*this >> rideMode_;

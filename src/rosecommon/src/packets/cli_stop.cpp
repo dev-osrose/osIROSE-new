@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliStop::CliStop() : CRosePacket(ePacketType::PAKCS_STOP) {}
 
 CliStop::CliStop(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_STOP, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_STOP, "Not the right packet: " << to_underlying(type()));
     *this >> x_;
 	*this >> y_;
 }

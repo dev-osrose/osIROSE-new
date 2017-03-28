@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliMouseCmd::CliMouseCmd() : CRosePacket(ePacketType::PAKCS_MOUSE_CMD) {}
 
 CliMouseCmd::CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_MOUSE_CMD, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_MOUSE_CMD, "Not the right packet: " << to_underlying(type()));
     *this >> targetId_;
 	*this >> x_;
 	*this >> y_;

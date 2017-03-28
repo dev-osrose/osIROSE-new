@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliScreenShotTimeReq::CliScreenShotTimeReq() : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ) {}
 
 CliScreenShotTimeReq::CliScreenShotTimeReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> count_;
 }
 

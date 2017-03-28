@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliCreateCharReq::CliCreateCharReq() : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ) {}
 
 CliCreateCharReq::CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_CREATE_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_CREATE_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> race_;
 	*this >> stone_;
 	*this >> hair_;

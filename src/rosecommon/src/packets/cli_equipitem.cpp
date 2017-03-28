@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliEquipItem::CliEquipItem() : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM) {}
 
 CliEquipItem::CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_EQUIP_ITEM, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_EQUIP_ITEM, "Not the right packet: " << to_underlying(type()));
     *this >> slotTo_;
 	*this >> slotFrom_;
 }

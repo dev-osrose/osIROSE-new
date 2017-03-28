@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliReviveReq::CliReviveReq() : CRosePacket(ePacketType::PAKCS_REVIVE_REQ) {}
 
 CliReviveReq::CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    throw_assert(type() != ePacketType::PAKCS_REVIVE_REQ, "Not the right packet: " << to_underlying(type()));
+    throw_assert(CRosePacket::type() == ePacketType::PAKCS_REVIVE_REQ, "Not the right packet: " << to_underlying(type()));
 	*this >> type_;
 }
 

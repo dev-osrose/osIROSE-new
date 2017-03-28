@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliPartyChat::CliPartyChat() : CRosePacket(ePacketType::PAKCS_PARTY_CHAT) {}
 
 CliPartyChat::CliPartyChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_PARTY_CHAT, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_PARTY_CHAT, "Not the right packet: " << to_underlying(type()));
     *this >> message_;
 }
 

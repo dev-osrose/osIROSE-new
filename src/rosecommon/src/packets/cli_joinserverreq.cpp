@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliJoinServerReq::CliJoinServerReq() : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ) {}
 
 CliJoinServerReq::CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_JOIN_SERVER_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_JOIN_SERVER_REQ, "Not the right packet: " << to_underlying(type()));
     *this >> sessionId_;
     char pass[32];
     *this >> pass;

@@ -6,7 +6,7 @@ namespace RoseCommon {
 CliLoginReq::CliLoginReq() : CRosePacket(ePacketType::PAKCS_LOGIN_REQ) {}
 
 CliLoginReq::CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() != ePacketType::PAKCS_LOGIN_REQ, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_LOGIN_REQ, "Not the right packet: " << to_underlying(type()));
     char pass[32];
     *this >> pass;
     password_ = std::string(pass, 32);
