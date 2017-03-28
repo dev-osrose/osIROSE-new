@@ -83,7 +83,7 @@ class Class:
         data = "{0}::{0}() : CRosePacket(ePacketType::{1}) {{}}".format(self.name, self.ePacketType)
         if self.recv:
             data += "\n\n{0}::{0}(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {{\n".format(self.name)
-            data += '\tif (type() != ePacketType::{})\n\t\tthrow std::runtime_error("Not the right packet!");\n'.format(self.ePacketType)
+            data += '\tthrow_assert(type() != ePacketType::{}, "Not the right packet: " << to_underlying(type()));\n'.format(self.ePacketType)
             if len(self.variables):
                 for v, b in self.variables:
                     data += "\t{}\n".format(v.unpack())
@@ -118,7 +118,7 @@ class Class:
         return data + '};\n\n}'
     
     def getCpp(self):
-        data = '#include "{}.h"\n\nnamespace RoseCommon {{\n\n'.format(self.filename)
+        data = '#include "{}.h"\n#include "throwassert.h"\n\nnamespace RoseCommon {{\n\n'.format(self.filename)
         data += self.getCppConstructor()
         for var, b in self.variables:
             if b:

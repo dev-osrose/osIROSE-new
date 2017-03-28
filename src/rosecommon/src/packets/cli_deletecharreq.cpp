@@ -1,13 +1,13 @@
 #include "cli_deletecharreq.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliDeleteCharReq::CliDeleteCharReq() : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ) {}
 
 CliDeleteCharReq::CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_DELETE_CHAR_REQ)
-		throw std::runtime_error("Not the right packet!");
-	*this >> charId_;
+	throw_assert(type() != ePacketType::PAKCS_DELETE_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
+    *this >> charId_;
 	*this >> isDelete_;
 	*this >> name_;
 }

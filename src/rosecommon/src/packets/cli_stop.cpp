@@ -1,13 +1,13 @@
 #include "cli_stop.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliStop::CliStop() : CRosePacket(ePacketType::PAKCS_STOP) {}
 
 CliStop::CliStop(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_STOP)
-		throw std::runtime_error("Not the right packet!");
-	*this >> x_;
+	throw_assert(type() != ePacketType::PAKCS_STOP, "Not the right packet: " << to_underlying(type()));
+    *this >> x_;
 	*this >> y_;
 }
 

@@ -1,13 +1,13 @@
 #include "cli_stopmoving.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
 
 CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_STOP_MOVING)
-		throw std::runtime_error("Not the right packet!");
-	*this >> x_;
+	throw_assert(type() != ePacketType::PAKCS_STOP_MOVING, "Not the right packet: " << to_underlying(type()));
+    *this >> x_;
 	*this >> y_;
 	*this >> z_;
 }

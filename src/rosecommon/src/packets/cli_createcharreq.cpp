@@ -1,13 +1,13 @@
 #include "cli_createcharreq.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliCreateCharReq::CliCreateCharReq() : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ) {}
 
 CliCreateCharReq::CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_CREATE_CHAR_REQ)
-		throw std::runtime_error("Not the right packet!");
-	*this >> race_;
+	throw_assert(type() != ePacketType::PAKCS_CREATE_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
+    *this >> race_;
 	*this >> stone_;
 	*this >> hair_;
 	*this >> face_;
