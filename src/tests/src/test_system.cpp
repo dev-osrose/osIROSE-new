@@ -10,7 +10,7 @@ using namespace Systems;
 
 using ::testing::Return;
 
-TEST(TestSystems, TestChatSystem) {
+TEST(TestSystems, TestChatSystemSendMsg) {
     EntitySystem_Mock entitySystem;
     SystemManager_Mock mock(entitySystem);
     ChatSystem chat(mock);
@@ -19,5 +19,9 @@ TEST(TestSystems, TestChatSystem) {
     Entity e = man.create();
     e.assign<SocketConnector>((CMapClient*)&cli);
     EXPECT_CALL(cli, Send(_)).WillOnce(Return(true));
+    chat.sendMsg(e, "test");
+    e.remove<SocketConnector>();
+    chat.sendMsg(e, "test");
+    e.destroy();
     chat.sendMsg(e, "test");
 }
