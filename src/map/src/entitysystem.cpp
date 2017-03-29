@@ -1,4 +1,4 @@
-#include "entitySystem.h"
+#include "entitysystem.h"
 #include "systems/movementsystem.h"
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"

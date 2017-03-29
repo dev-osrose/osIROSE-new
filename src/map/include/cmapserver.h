@@ -16,7 +16,7 @@
 #define _CMAPSERVER_H_
 
 #include "croseserver.h"
-#include "entitySystem.h"
+#include "entitysystem.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:

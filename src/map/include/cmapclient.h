@@ -20,7 +20,7 @@
 #include "mappackets.h"
 #include "crosepacket.h"
 #include "packets.h"
-#include "entitySystem.h"
+#include "entitysystem.h"
 #include <atomic>
 
 class CMapClient : public RoseCommon::CRoseClient {
