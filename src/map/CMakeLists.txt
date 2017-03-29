@@ -28,7 +28,7 @@ SET( SOURCES_HEADER
 	include/cmapserver
 	include/cmapclient
 	include/cmapisc
-    include/entitySystem
+    include/entitysystem
     include/systemmanager
     include/systems/system
     include/systems/movementsystem

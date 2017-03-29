@@ -26,7 +26,7 @@
 #include <functional>
 #include "crosepacket.h"
 #include "epackettype.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include <typeindex>
 #include <algorithm>
 #include <type_traits>

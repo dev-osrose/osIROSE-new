@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include "systemmanager.h"
 #include "packets.h"
 #include "logconsole.h"

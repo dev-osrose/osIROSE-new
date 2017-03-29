@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /*!
- * \file entityComponents
+ * \file entitycomponents
  * \brief The file defining the entity component model
  *
  * \author L3nn0x

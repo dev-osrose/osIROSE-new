@@ -96,7 +96,7 @@ class Class:
         return data
 
     def getHeader(self):
-        data = '#pragma once\n\n#include "packetfactory.h"\n#include "entityComponents.h"\n'
+        data = '#pragma once\n\n#include "packetfactory.h"\n#include "entitycomponents.h"\n'
         data += "\n".join(self.includes)
         data += '\n\nnamespace RoseCommon {\n\n'
         if self.recv:

@@ -21,7 +21,7 @@
 #include <string>
 #include <exception>
 #include <vector>
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include "packetfactory.h"
 #include "packets.h"
 

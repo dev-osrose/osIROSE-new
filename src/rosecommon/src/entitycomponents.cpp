@@ -1,4 +1,4 @@
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include "throwassert.h"
 
 uint16_t getId(Entity entity) {

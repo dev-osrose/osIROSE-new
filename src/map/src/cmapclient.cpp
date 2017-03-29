@@ -17,7 +17,7 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include <cmath>
 #include "systems/chatsystem.h"
 

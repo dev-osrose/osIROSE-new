@@ -1,7 +1,7 @@
 #pragma once
 
 #include "packetfactory.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include <string>
 
 namespace RoseCommon {

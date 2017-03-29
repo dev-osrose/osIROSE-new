@@ -18,7 +18,7 @@
 #include "crosecrypt.h"
 #include "cnetwork_asio.h"
 #include "crosepacket.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 
 namespace RoseCommon {
 
