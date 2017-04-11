@@ -42,13 +42,11 @@
 #include "components/inventory.h"
 #include "components/party.h"
 
-using GameComponents = entityx::Components<SocketConnector, BasicInfo, Stats, AdvancedInfo,
-      CharacterInfo, Graphics, CharacterGraphics, Position, StatusEffects,
-      Skills, Hotbar, Destination, RidingItems, BulletItems, Inventory, Party>;
+using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
+      SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
+      CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
+      RidingItems, BulletItems, Inventory, Party>;
 
-using EntityManager = entityx::EntityX<GameComponents, entityx::ColumnStorage<GameComponents>, entityx::FeatureFlags::OBSERVABLE>;
-template <typename T>
-using Component = EntityManager::Component<T>;
 using Entity = EntityManager::Entity;
 
 #include "partybase.h"

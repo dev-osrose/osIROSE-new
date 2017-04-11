@@ -10,8 +10,6 @@
 
 using namespace RoseCommon;
 
-static void unloadEntity(Entity entity);
-
 EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
@@ -56,7 +54,8 @@ void EntitySystem::update(double dt) {
             auto basic = it.component<BasicInfo>();
             nameToEntity_.erase(basic->name_);
             idToEntity_.erase(basic->id_);
-            unloadEntity(it);
+            if (auto client = getClient(it))
+                client->canBeDeleted();
             it.destroy();
         }
     }
@@ -99,15 +98,6 @@ bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePack
         return true;
     }
     return false;
-}
-
-static void unloadEntity(Entity entity) {
-    if (entity.component<Destination>())
-        entity.remove<Destination>();
-    if (entity.component<Party>())
-        entity.remove<Party>();
-    if (auto client = getClient(entity))
-        client->canBeDeleted();
 }
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {

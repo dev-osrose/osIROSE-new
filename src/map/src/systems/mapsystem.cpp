@@ -26,7 +26,8 @@ void MapSystem::processChangeMapReq(CMapClient& client, Entity entity, const Ros
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
             *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
     auto &manager = manager_.getEntityManager();
-    for (Entity e : manager.entities_with_components(basic)) {
+    for (Entity e : manager.entities_with_components<BasicInfo>()) {
+        basic = e.component<BasicInfo>();
         if (e != entity && basic->loggedIn_.load())
             client.Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
     }
