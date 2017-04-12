@@ -2,6 +2,7 @@
 #include "throwassert.h"
 
 uint16_t getId(Entity entity) {
+    throw_assert(entity.component<BasicInfo>(), "There is no basic info for entity " << entity.id().id());
     return entity.component<BasicInfo>()->id_;
 }
 
