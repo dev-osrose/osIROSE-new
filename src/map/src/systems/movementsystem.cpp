@@ -9,7 +9,7 @@ using namespace RoseCommon;
 MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
     manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
-    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Component<Destination>) {
+    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Destination*) {
             if (!entity)
                 return;
             if (auto client = getClient(entity))
@@ -20,10 +20,10 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
 }
 
 void MovementSystem::update(EntityManager &es, double dt) {
-    Component<Position> position;
-    Component<Destination> destination;
-    Component<AdvancedInfo> advanced;
-    for (Entity entity : es.entities_with_components(position, destination, advanced)) {
+    for (Entity entity : es.entities_with_components<Position, Destination, AdvancedInfo>()) {
+        Position *position = entity.component<Position>();
+        Destination *destination = entity.component<Destination>();
+        AdvancedInfo *advanced = entity.component<AdvancedInfo>();
         float dx = destination->x_ - position->x_;
         float dy = destination->y_ - position->y_;
         float distance = std::sqrt(dx * dx + dy * dy);

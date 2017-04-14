@@ -1,6 +1,6 @@
 #include "systemmanager.h"
 #include "systems/system.h"
-#include "entitySystem.h"
+#include "entitysystem.h"
 
 void SystemManager::update(double dt) {
     auto &entityManager = entitySystem_.getEntityManager();

@@ -1,12 +1,12 @@
 #include "cli_partyreq.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliPartyReq::CliPartyReq() : CRosePacket(ePacketType::PAKCS_PARTY_REQ) {}
 
 CliPartyReq::CliPartyReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_PARTY_REQ)
-		throw std::runtime_error("Not the right packet!");
+    throw_assert(type() == ePacketType::PAKCS_PARTY_REQ, "Not the right packet: " << to_underlying(type()));
 	*this >> request_;
 	*this >> idXorTag_;
 }

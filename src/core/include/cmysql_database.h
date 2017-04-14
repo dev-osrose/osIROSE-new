@@ -45,6 +45,7 @@ class CMySQL_Row : public IRow {
 		virtual ~CMySQL_Row() {}
 
 		virtual bool getString(std::string const &columnName, std::string &data);
+
 		virtual bool getInt(std::string const &columnName, uint64_t &data);
 		virtual bool getInt(std::string const &columnName, int64_t &data);
 		virtual bool getInt(std::string const &columnName, uint32_t &data);
@@ -87,15 +88,16 @@ class CMySQL_Result : public IResult {
   virtual uint32_t	size() const {return rows_.size();}
 
   virtual bool getString(std::string const &columnName, std::string &data);
-    virtual bool getInt(std::string const &columnName, uint64_t &data);
-    virtual bool getInt(std::string const &columnName, int64_t &data);
-    virtual bool getInt(std::string const &columnName, uint32_t &data);
-    virtual bool getInt(std::string const &columnName, int32_t &data);
-    virtual bool getInt(std::string const &columnName, uint16_t &data);
-    virtual bool getInt(std::string const &columnName, int16_t &data);
-    virtual bool getInt(std::string const &columnName, uint8_t &data);
-    virtual bool getInt(std::string const &columnName, int8_t &data);
-    virtual bool getInt(std::string const &columnName, bool &data);
+
+  virtual bool getInt(std::string const &columnName, uint64_t &data);
+  virtual bool getInt(std::string const &columnName, int64_t &data);
+  virtual bool getInt(std::string const &columnName, uint32_t &data);
+  virtual bool getInt(std::string const &columnName, int32_t &data);
+  virtual bool getInt(std::string const &columnName, uint16_t &data);
+  virtual bool getInt(std::string const &columnName, int16_t &data);
+  virtual bool getInt(std::string const &columnName, uint8_t &data);
+  virtual bool getInt(std::string const &columnName, int8_t &data);
+  virtual bool getInt(std::string const &columnName, bool &data);
 
   virtual bool getFloat(std::string const &columnName, float &data);
 };

@@ -110,7 +110,7 @@ class CRosePacket {
 
     protected:
         /*!
-         * \brief Reimplement this function to include last minute logic before the packet is wrote to an external buffer
+         * \brief Reimplement this function to include last minute logic before the packet is written to an external buffer
          */
         virtual void pack() {}
 

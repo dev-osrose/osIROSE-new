@@ -1,13 +1,13 @@
 #include "cli_screenshottimereq.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliScreenShotTimeReq::CliScreenShotTimeReq() : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ) {}
 
 CliScreenShotTimeReq::CliScreenShotTimeReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ)
-		throw std::runtime_error("Not the right packet!");
-	*this >> count_;
+	throw_assert(type() == ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ, "Not the right packet: " << to_underlying(type()));
+    *this >> count_;
 }
 
 CliScreenShotTimeReq::CliScreenShotTimeReq(uint16_t count) : CRosePacket(ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ), count_(count) {}

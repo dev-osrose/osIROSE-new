@@ -1,13 +1,13 @@
 #include "cli_whisperchat.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliWhisperChat::CliWhisperChat() : CRosePacket(ePacketType::PAKCS_WHISPER_CHAT) {}
 
 CliWhisperChat::CliWhisperChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_WHISPER_CHAT)
-		throw std::runtime_error("Not the right packet!");
-	*this >> targetId_;
+	throw_assert(type() == ePacketType::PAKCS_WHISPER_CHAT, "Not the right packet: " << to_underlying(type()));
+    *this >> targetId_;
 	*this >> message_;
 }
 
