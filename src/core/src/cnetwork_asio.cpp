@@ -38,7 +38,8 @@ CNetwork_Asio::CNetwork_Asio()
       packet_size_(6),
       active_(true),
       remote_connection_(false) {
-    INetwork::set_update_time(Core::Time::GetTickCount());
+  initCallbacks();
+  INetwork::set_update_time(Core::Time::GetTickCount());
   logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
@@ -54,10 +55,6 @@ CNetwork_Asio::~CNetwork_Asio() {
   send_mutex_.lock();
   while (send_queue_.empty() == false) send_queue_.pop();
   send_mutex_.unlock();
-
-  //recv_mutex_.lock();
-  //while (recv_queue_.empty() == false) recv_queue_.pop();
-  //recv_mutex_.unlock();
 
   logger_.reset();
 }
@@ -233,7 +230,7 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
           update_time_ = (Core::Time::GetTickCount());
 
           if (!errorCode || errorCode.value() == 11) {
-            if (OnReceived(packet_size_, buffer_) == false) {
+            if (OnReceived(packet_size_, &buffer_[0]) == false) {
               logger_->debug(
                   "OnReceived aborted the connection, disconnecting...");
               shutdown();

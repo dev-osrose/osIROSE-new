@@ -21,23 +21,12 @@ CRoseISC::CRoseISC() : CRoseClient() {
 }
 
 CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
-  std::function<bool()> fnOnConnect = std::bind(&CRoseISC::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseISC::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseISC::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseISC::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseISC::OnReceive, this);
   std::function<bool(uint16_t&, uint8_t*)> fnOnReceived = std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2);
   std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseISC::OnSent, this);
 
-  socket_->registerOnConnect(fnOnConnect);
-  socket_->registerOnConnected(fnOnConnected);
-  socket_->registerOnDisconnect(fnOnDisconnect);
-  socket_->registerOnDisconnected(fnOnDisconnected);
-  socket_->registerOnReceive(fnOnReceive);
+
   socket_->registerOnReceived(fnOnReceived);
   socket_->registerOnSend(fnOnSend);
-  socket_->registerOnSent(fnOnSent);
 
   socket_->reset_internal_buffer();
 }

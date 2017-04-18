@@ -116,7 +116,7 @@ class INetwork {
   */
   virtual bool disconnect() = 0;
 
-  virtual bool is_active() = 0;
+  virtual bool is_active() const = 0;
 
   /*!
    * \brief Used to set the ID for this connection.
@@ -170,8 +170,6 @@ class INetwork {
   virtual void reset_internal_buffer() = 0;
   virtual void dispatch(std::function<void()> _handler) = 0;
 
- protected:
-
   // Callback functions
   std::function<bool()> OnAccept;
   std::function<void(INetwork*)> OnAccepted;
@@ -186,6 +184,8 @@ class INetwork {
   std::function<bool(uint8_t*)> OnSend;
   std::function<void()> OnSent;
   std::function<bool()> OnShutdown;
+
+  protected:
 
   // private:
   uint32_t network_id_;

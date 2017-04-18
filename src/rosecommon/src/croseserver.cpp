@@ -17,6 +17,11 @@
 #include "croseserver.h"
 #include "platform_defines.h"
 
+#define USE_ASIO_NETWORKING
+#ifdef USE_ASIO_NETWORKING
+#include "cnetwork_asio.h"
+#endif
+
 namespace RoseCommon {
 
 std::forward_list<CRoseClient*> CRoseServer::client_list_;
@@ -24,22 +29,22 @@ std::forward_list<CRoseClient*> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
-CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
+CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer),
+  socket_(new Core::CNetwork_Asio() ) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
 
-  //std::function<bool()> fnOnAccept = std::bind(&CRoseServer::OnAccept, this);
   std::function<void(Core::INetwork*)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
-  std::function<bool()> fnOnConnect = std::bind(&CRoseServer::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseServer::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseServer::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseServer::OnDisconnected, this);
+  //std::function<bool()> fnOnConnect = std::bind(&CRoseServer::OnConnect, this);
+  //std::function<void()> fnOnConnected = std::bind(&CRoseServer::OnConnected, this);
+  //std::function<bool()> fnOnDisconnect = std::bind(&CRoseServer::OnDisconnect, this);
+  //std::function<void()> fnOnDisconnected = std::bind(&CRoseServer::OnDisconnected, this);
 
-  //this->registerOnAccept(fnOnAccept);
+  socket_->initCallbacks();
   socket_->registerOnAccepted(fnOnAccepted);
-  socket_->registerOnConnect(fnOnConnect);
-  socket_->registerOnConnected(fnOnConnected);
-  socket_->registerOnDisconnect(fnOnDisconnect);
-  socket_->registerOnDisconnected(fnOnDisconnected);
+  //socket_->registerOnConnect(fnOnConnect);
+  //socket_->registerOnConnected(fnOnConnected);
+  //socket_->registerOnDisconnect(fnOnDisconnect);
+  //socket_->registerOnDisconnected(fnOnDisconnected);
 
   socket_->process_thread_ = std::thread([this]() {
 
@@ -86,14 +91,14 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
         }
       (*mutex_ptr).unlock();
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    } while (socket_->is_active() == true);
+    } while (is_active() == true);
 
     return 0;
   });
 }
 
 CRoseServer::~CRoseServer() {
-  socket_->shutdown();
+  socket_->shutdown(true);
 
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
@@ -109,6 +114,11 @@ CRoseServer::~CRoseServer() {
       delete client;
     }
     isc_list_.clear();
+  }
+
+  if (socket_ != nullptr) {
+    delete socket_;
+    socket_ = nullptr;
   }
 
   logger_.reset();

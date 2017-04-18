@@ -12,12 +12,13 @@
 #include "cmysql_databasepool.h"
 #include "database.h"
 #include "mock/login/mock_cloginclient.h"
+#include "cnetwork_asio.h"
 
 using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
-  CLoginClient_Mock netConnect;
+  CLoginClient_Mock netConnect(new Core::CNetwork_Asio());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 
@@ -80,7 +81,7 @@ TEST(TestCharServer, TestClientPacketPath) {
 
 TEST(TestCharServer, TestISCMap) {
   CCharServer network;
-  CMapISC mapISC;
+  CMapISC mapISC(new Core::CNetwork_Asio());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 

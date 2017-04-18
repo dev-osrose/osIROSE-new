@@ -26,23 +26,14 @@ CRoseClient::CRoseClient() : crypt_(), socket_(nullptr) {
 
 CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
-  std::function<bool()> fnOnConnect = std::bind(&CRoseClient::OnConnect, this);
-  std::function<void()> fnOnConnected = std::bind(&CRoseClient::OnConnected, this);
-  std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
-  std::function<void()> fnOnDisconnected = std::bind(&CRoseClient::OnDisconnected, this);
-  std::function<bool()> fnOnReceive = std::bind(&CRoseClient::OnReceive, this);
+
+
   std::function<bool(uint16_t&, uint8_t*)> fnOnReceived = std::bind(&CRoseClient::OnReceived, this, std::placeholders::_1, std::placeholders::_2);
   std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
-  std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
 
-  _sock->registerOnConnect(fnOnConnect);
-  _sock->registerOnConnected(fnOnConnected);
-  _sock->registerOnDisconnect(fnOnDisconnect);
-  _sock->registerOnDisconnected(fnOnDisconnected);
-  _sock->registerOnReceive(fnOnReceive);
+
   _sock->registerOnReceived(fnOnReceived);
   _sock->registerOnSend(fnOnSend);
-  _sock->registerOnSent(fnOnSent);
 
   _sock->recv_data();
   _sock->reset_internal_buffer();
@@ -78,7 +69,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   ///*
   if (packet_size_ == 6) {
 #ifndef DISABLE_CRYPT
-    packet_size_ = crypt_.decodeClientHeader((unsigned char*)&buffer_);
+    packet_size_ = crypt_.decodeClientHeader(reinterpret_cast<unsigned char*>(&buffer_));
 #else
     packet_size_ = buffer_[0];
 #endif
@@ -95,7 +86,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 
 // decrypt packet now
 #ifndef DISABLE_CRYPT
-  if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
+  if (!crypt_.decodeClientBody(reinterpret_cast<unsigned char*>(&buffer_))) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
     socket_->reset_internal_buffer();
@@ -114,7 +105,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 
 //  rtnVal = HandlePacket(buffer_);
   auto res = std::unique_ptr<uint8_t[]>(new uint8_t[CRosePacket::size(buffer_)]);
-	std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
+  std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
 
   recv_mutex_.lock();
   recv_queue_.push(std::move(res));

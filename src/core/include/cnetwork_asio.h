@@ -78,7 +78,7 @@ class CNetwork_Asio : public INetwork {
   virtual bool send_data(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool recv_data(uint16_t _size = MAX_PACKET_SIZE) override;
 
-  bool is_active() override {
+  bool is_active() const override {
     return active_;
   }
 

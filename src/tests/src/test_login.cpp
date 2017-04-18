@@ -7,13 +7,14 @@
 #include "ccharisc.h"
 #include "mock/login/mock_cloginclient.h"
 #include "mock/login/mock_cloginisc.h"
+#include "cnetwork_asio.h"
 
 using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-  CLoginISC* iscServ = new CLoginISC();
-  CLoginClient_Mock netConnect;
+  CLoginISC* iscServ = new CLoginISC(new Core::CNetwork_Asio());
+  CLoginClient_Mock netConnect(new Core::CNetwork_Asio());
   EXPECT_EQ(true, network.init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 
