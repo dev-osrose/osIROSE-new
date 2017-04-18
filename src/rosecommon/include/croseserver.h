@@ -46,6 +46,20 @@ class CRoseServer {
 
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
 
+  bool init(std::string _ip, uint16_t _port) { return socket_->init(_ip, _port); }
+  bool listen() { return socket_->listen();  }
+  bool connect() { return socket_->connect(); }
+  bool is_active() const { return socket_->is_active();  }
+  void set_type(uint32_t _val) { socket_->set_type(_val); }
+
+  bool get_id() const { return socket_->get_id(); }
+  uint32_t get_type() const { return socket_->get_type(); }
+  uint16_t get_port() const { return socket_->get_port(); }
+  std::string get_address() const { return socket_->get_address(); }
+
+  bool disconnect() { return socket_->disconnect(); }
+  bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
+
   std::shared_ptr<spdlog::logger> logger_;
  protected:
   // Callback functions
