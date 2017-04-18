@@ -32,22 +32,28 @@ class CRoseClient {
   CRoseClient(Core::INetwork* _sock);
   virtual ~CRoseClient();
 
-  virtual bool Send(CRosePacket &_buffer);
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer);
+  virtual bool send(CRosePacket &_buffer);
+  virtual bool send(std::unique_ptr<uint8_t[]> _buffer);
 
-  virtual bool IsNearby(const CRoseClient* _otherClient) const;
+  virtual bool is_nearby(const CRoseClient* _otherClient) const;
 
   Entity getEntity() const { return entity_; }
 
-  virtual uint32_t GetObjId() const {
-    return socket_->GetId();
+  virtual uint32_t get_obj_id() const {
+    return socket_->get_id();
   }
 
-  bool IsActive() const { return socket_->IsActive(); }
-  bool GetId() const { return socket_->GetId(); }
-  virtual void SetId(uint32_t _val) { socket_->SetId(_val); }
-  std::chrono::steady_clock::time_point GetLastUpdateTime() const { return socket_->GetLastUpdateTime(); }
-  virtual bool Shutdown(bool _final = false) { return socket_->Shutdown(_final); }
+  bool is_active() const { return socket_->is_active(); }
+  bool get_id() const { return socket_->get_id(); }
+  uint32_t get_type() const { return socket_->get_type(); }
+  uint16_t get_port() const { return socket_->get_port(); }
+  std::string get_address() const { return socket_->get_address(); }
+  std::chrono::steady_clock::time_point get_update_time() const { return socket_->get_update_time(); }
+
+
+  virtual void set_id(uint32_t _val) { socket_->set_id(_val); }
+  virtual void set_update_time(std::chrono::steady_clock::time_point _val) { socket_->set_update_time(_val); }
+  virtual bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
 
   std::shared_ptr<spdlog::logger> logger_;
 
@@ -60,7 +66,7 @@ class CRoseClient {
   virtual bool OnDisconnect() ;
   virtual void OnDisconnected() ;
   virtual bool OnReceive() ;
-  virtual bool OnReceived() ;
+  virtual bool OnReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
   virtual bool OnSend(uint8_t* _buffer) ;
   virtual void OnSent() ;
   virtual bool HandlePacket(uint8_t* _buffer) ;
@@ -68,6 +74,9 @@ class CRoseClient {
   PacketCodec crypt_;
   Core::INetwork* socket_;
   Entity entity_;
+
+  std::mutex recv_mutex_;
+  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
 };
 
 }

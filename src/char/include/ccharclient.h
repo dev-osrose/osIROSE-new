@@ -24,13 +24,12 @@
 class CCharClient : public RoseCommon::CRoseClient {
  public:
   CCharClient();
-  CCharClient(int* _sock);
+  CCharClient(Core::INetwork* _sock);
   
-  bool IsNearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
+  bool is_nearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
-  virtual bool OnReceived() override;
 
   bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
   bool SendCharListReply();

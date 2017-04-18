@@ -41,7 +41,7 @@ class NetworkThreadPool {
   }
 
   asio::io_context* Get_IO_Service() { return &io_service_; }
-  uint16_t GetThreadCount() const { return threads_active_.count(); }
+  uint16_t GetThreadCount() const { return static_cast<uint16_t>(threads_active_.count()); }
 
  private:
   NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)) {

@@ -73,18 +73,18 @@ int main(int argc, char* argv[]) {
   CCharServer clientServer;
   CCharServer iscServer(true);
   CCharISC* iscClient = new CCharISC();
-  iscClient->Init(config.char_server().loginip(), config.char_server().loginiscport());
+  iscClient->init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient->SetLogin(true);
-  iscClient->Connect();
+  iscClient->connect();
 
-  clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
-  clientServer.Listen();
+  clientServer.init(config.serverdata().ip(), config.char_server().clientport());
+  clientServer.listen();
   clientServer.GetISCList().push_front(iscClient);
 
-  iscServer.Init(config.serverdata().isclistenip(), config.char_server().iscport());
-  iscServer.Listen();
+  iscServer.init(config.serverdata().isclistenip(), config.char_server().iscport());
+  iscServer.listen();
 
-  while (clientServer.IsActive()) {
+  while (clientServer.is_active()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   if(auto log = console.lock())

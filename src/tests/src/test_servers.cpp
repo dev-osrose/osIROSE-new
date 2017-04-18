@@ -20,38 +20,38 @@ TEST(TestFinalServers, TestISCConnections) {
   CMapServer mapIsc(true);
   CMapISC* mapIscClient = new CMapISC();
 
-  loginIsc.Init("127.0.0.1", 29010);
+  loginIsc.init("127.0.0.1", 29010);
 
-  charIsc.Init("127.0.0.1", 29110);
-  charIscClient->Init("127.0.0.1", 29010);
+  charIsc.init("127.0.0.1", 29110);
+  charIscClient->init("127.0.0.1", 29010);
   charIscClient->SetLogin(true);
 
-  mapIsc.Init("127.0.0.1", 29210);
-  mapIscClient->Init("127.0.0.1", 29110);
-  mapIscClient->SetType(iscPacket::ServerType::CHAR);
+  mapIsc.init("127.0.0.1", 29210);
+  mapIscClient->init("127.0.0.1", 29110);
+  mapIscClient->set_type(iscPacket::ServerType::CHAR);
 
-  loginIsc.Listen();
-  charIsc.Listen();
-  mapIsc.Listen();
+  loginIsc.listen();
+  charIsc.listen();
+  mapIsc.listen();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
   CCharServer::GetISCList().push_front(charIscClient);
   CMapServer::GetISCList().push_front(mapIscClient);
 
-  charIscClient->Connect();
-  mapIscClient->Connect();
+  charIscClient->connect();
+  mapIscClient->connect();
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 
-  mapIscClient->Shutdown(true);
-  charIscClient->Shutdown(true);
+  mapIscClient->shutdown(true);
+  charIscClient->shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  mapIsc.Shutdown(true);
-  charIsc.Shutdown(true);
-  loginIsc.Shutdown(true);
+  mapIsc.shutdown(true);
+  charIsc.shutdown(true);
+  loginIsc.shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }

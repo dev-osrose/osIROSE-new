@@ -31,7 +31,7 @@ CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   std::function<bool()> fnOnDisconnect = std::bind(&CRoseClient::OnDisconnect, this);
   std::function<void()> fnOnDisconnected = std::bind(&CRoseClient::OnDisconnected, this);
   std::function<bool()> fnOnReceive = std::bind(&CRoseClient::OnReceive, this);
-  std::function<bool()> fnOnReceived = std::bind(&CRoseClient::OnReceived, this);
+  std::function<bool(uint16_t&, uint8_t*)> fnOnReceived = std::bind(&CRoseClient::OnReceived, this, std::placeholders::_1, std::placeholders::_2);
   std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseClient::OnSend, this, std::placeholders::_1);
   std::function<void()> fnOnSent = std::bind(&CRoseClient::OnSent, this);
 
@@ -44,22 +44,22 @@ CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   _sock->registerOnSend(fnOnSend);
   _sock->registerOnSent(fnOnSent);
 
-  _sock->Recv();
-  _sock->ResetBuffer();
+  _sock->recv_data();
+  _sock->reset_internal_buffer();
 }
 
 CRoseClient::~CRoseClient() {
-  CRoseClient::Shutdown();
+  CRoseClient::shutdown();
   logger_.reset();
 }
 
-bool CRoseClient::Send(CRosePacket &_buffer) {
-  return CRoseClient::Send(_buffer.getPacked());
+bool CRoseClient::send(CRosePacket &_buffer) {
+  return CRoseClient::send(_buffer.getPacked());
 }
 
-bool CRoseClient::Send(std::unique_ptr<uint8_t[]> _buffer) {
+bool CRoseClient::send(std::unique_ptr<uint8_t[]> _buffer) {
   logger_->trace("Sending a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), static_cast<uint16_t>(CRosePacket::type(_buffer.get())));
-  return socket_->Send(std::move(_buffer));
+  return socket_->send_data(std::move(_buffer));
 }
 
 // Callback functions
@@ -73,9 +73,9 @@ void CRoseClient::OnDisconnected() {}
 
 bool CRoseClient::OnReceive() { return true; }
 
-bool CRoseClient::OnReceived() {
+bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
-  /*
+  ///*
   if (packet_size_ == 6) {
 #ifndef DISABLE_CRYPT
     packet_size_ = crypt_.decodeClientHeader((unsigned char*)&buffer_);
@@ -85,7 +85,7 @@ bool CRoseClient::OnReceived() {
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      socket_->ResetBuffer();
+      socket_->reset_internal_buffer();
       return false;
     }
 
@@ -98,7 +98,7 @@ bool CRoseClient::OnReceived() {
   if (!crypt_.decodeClientBody((unsigned char*)&buffer_)) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
-    socket_->ResetBuffer();
+    socket_->reset_internal_buffer();
     return false;
   }
 #endif
@@ -120,8 +120,8 @@ bool CRoseClient::OnReceived() {
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
 
-  asio::dispatch([this]() {
-        if (true == socket_->IsActive()) {
+  socket_->dispatch([this]() {
+        if (true == socket_->is_active()) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
 
@@ -137,14 +137,14 @@ bool CRoseClient::OnReceived() {
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");
-              socket_->Shutdown();
+              socket_->shutdown();
             }
           }
           recv_mutex_.unlock();
         }
       });
 
-  socket_->ResetBuffer();
+  socket_->reset_internal_buffer();
   //*/
   return rtnVal;
 }
@@ -164,7 +164,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 #ifdef STRESS_TEST
       auto packet =
           std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE));
-      Send(*packet);
+      send(*packet);
 #endif
       //return CNetwork_Asio::HandlePacket(_buffer);
       break;
@@ -172,19 +172,19 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
 #ifdef STRESS_TEST
     case ePacketType::STRESS: {
       std::unique_ptr<CRosePacket> packet( new CRosePacket(_buffer) );
-      Send(*packet);
+      send(*packet);
       break;
     }
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
       auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(std::time(nullptr));
-      Send(*packet);
+      send(*packet);
       break;
     }
     case ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ: {
       auto packet = makePacket<ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY>();
-      Send(*packet);
+      send(*packet);
       break;
     }
     default: {
@@ -195,7 +195,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CRoseClient::IsNearby(const CRoseClient* _otherClient) const {
+bool CRoseClient::is_nearby(const CRoseClient* _otherClient) const {
   (void)_otherClient;
   logger_->trace("CRoseClient::IsNearby()");
   return false;

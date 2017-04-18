@@ -21,7 +21,7 @@
 class CLoginISC : public RoseCommon::CRoseISC {
  public:
   CLoginISC();
-  CLoginISC(int* _sock);
+  CLoginISC(Core::INetwork* _sock);
 
   std::string GetName() { return server_name_; }
   bool IsTestServer() { return test_server_; }

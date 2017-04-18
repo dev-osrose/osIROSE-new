@@ -38,12 +38,12 @@ CNetwork_Asio::CNetwork_Asio()
       packet_size_(6),
       active_(true),
       remote_connection_(false) {
-    INetwork::SetLastUpdateTime(Core::Time::GetTickCount());
+    INetwork::set_update_time(Core::Time::GetTickCount());
   logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
-  CNetwork_Asio::Shutdown();
+  CNetwork_Asio::shutdown();
 
   if (process_thread_.joinable()) process_thread_.join();
 
@@ -55,26 +55,26 @@ CNetwork_Asio::~CNetwork_Asio() {
   while (send_queue_.empty() == false) send_queue_.pop();
   send_mutex_.unlock();
 
-  recv_mutex_.lock();
-  while (recv_queue_.empty() == false) recv_queue_.pop();
-  recv_mutex_.unlock();
+  //recv_mutex_.lock();
+  //while (recv_queue_.empty() == false) recv_queue_.pop();
+  //recv_mutex_.unlock();
 
   logger_.reset();
 }
 
-bool CNetwork_Asio::Init(std::string _ip, uint16_t _port) {
+bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
   if (_ip.length() < 2)  // We can actually use host names instead of IP
     // addresses. Ex. google.com
     return false;
 
-  network_ip_address_ = _ip;
+  network_address_ = _ip;
   network_port_ = _port;
   return true;
 }
 
-bool CNetwork_Asio::Shutdown(bool _final) {
+bool CNetwork_Asio::shutdown(bool _final) {
   if (_final == true || OnShutdown() == true) {
-    Disconnect();
+    disconnect();
 
     if (listener_.is_open()) {
       std::error_code ignored;
@@ -85,10 +85,10 @@ bool CNetwork_Asio::Shutdown(bool _final) {
   return true;
 }
 
-bool CNetwork_Asio::Connect() {
+bool CNetwork_Asio::connect() {
   tcp::resolver resolver(*networkService_->Get_IO_Service());
   auto endpoint_iterator =
-      resolver.resolve(network_ip_address_, std::to_string(network_port_));
+      resolver.resolve(network_address_, std::to_string(network_port_));
 
   OnConnect();
   send_mutex_.lock();
@@ -105,9 +105,9 @@ bool CNetwork_Asio::Connect() {
   return active_;
 }
 
-bool CNetwork_Asio::Listen() {
+bool CNetwork_Asio::listen() {
   OnListen();
-  tcp::endpoint endpoint(asio::ip::address::from_string(network_ip_address_), network_port_);
+  tcp::endpoint endpoint(asio::ip::address::from_string(network_address_), network_port_);
   listener_.open(endpoint.protocol());
   listener_.set_option(tcp::acceptor::reuse_address(true));
   listener_.non_blocking(true);
@@ -120,14 +120,14 @@ bool CNetwork_Asio::Listen() {
   return true;
 }
 
-bool CNetwork_Asio::Reconnect() {
+bool CNetwork_Asio::reconnect() {
   if (remote_connection_ == false) return false;
 
-  Disconnect();
-  return Connect();
+  disconnect();
+  return connect();
 }
 
-bool CNetwork_Asio::Disconnect() {
+bool CNetwork_Asio::disconnect() {
   OnDisconnect();
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
@@ -175,14 +175,14 @@ void CNetwork_Asio::ProcessSend() {
               (void)bytes_transferred;
               if (!error) {
                 OnSent();
-                last_update_time_ = (Core::Time::GetTickCount());
+                update_time_ = (Core::Time::GetTickCount());
               } else {
                 logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
 
                 switch(error.value()) {
                   case asio::error::basic_errors::connection_reset:
                   case asio::error::basic_errors::network_reset:
-                    Shutdown();
+                    shutdown();
                     break;
                   default:
                     logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
@@ -204,12 +204,12 @@ void CNetwork_Asio::ProcessSend() {
             });
       else
         logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
-                       _size, _command, GetId());
+                       _size, _command, get_id());
     }
   }
 }
 
-bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
+bool CNetwork_Asio::send_data(std::unique_ptr<uint8_t[]> _buffer) {
   send_mutex_.lock();
   send_queue_.push(std::move(_buffer));
   send_mutex_.unlock();
@@ -218,7 +218,7 @@ bool CNetwork_Asio::Send(std::unique_ptr<uint8_t[]> _buffer) {
   return true;
 }
 
-bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
+bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
   if (OnReceive() == true) {
     (void)_size;
 
@@ -230,29 +230,28 @@ bool CNetwork_Asio::Recv(uint16_t _size /*= 6*/) {
         [this](std::error_code errorCode, std::size_t length) {
 
           packet_offset_ += (uint16_t)length;
-          last_update_time_ = (Core::Time::GetTickCount());
+          update_time_ = (Core::Time::GetTickCount());
 
           if (!errorCode || errorCode.value() == 11) {
-            if (OnReceived() == false) {
+            if (OnReceived(packet_size_, buffer_) == false) {
               logger_->debug(
                   "OnReceived aborted the connection, disconnecting...");
-              Shutdown();
+              shutdown();
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
-              logger_->info("Client {} disconnected.", GetId());
+              logger_->info("Client {} disconnected.", get_id());
               OnDisconnected();
-              Shutdown();
+              shutdown();
             } else {
-              logger_->debug("Client {}: Error {}: {}", GetId(), errorCode.value(),
+              logger_->debug("Client {}: Error {}: {}", get_id(), errorCode.value(),
                              errorCode.message());
               OnDisconnected();
-              Shutdown();
+              shutdown();
               return;
             }
           }
-          recv_condition_.notify_all();
-          if (active_) Recv();
+          if (active_) recv_data();
         });
   }
   return true;
@@ -281,4 +280,12 @@ void CNetwork_Asio::AcceptConnection() {
     if (active_) AcceptConnection();
   });
 }
+
+void CNetwork_Asio::dispatch(std::function<void()> _handler) {
+  asio::dispatch( [_handler]()
+  {
+    _handler();
+  });
+}
+
 }

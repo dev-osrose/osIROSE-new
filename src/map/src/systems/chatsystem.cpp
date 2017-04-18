@@ -27,11 +27,11 @@ void ChatSystem::whisperChat(CMapClient *client, Entity entity, const CliWhisper
         return;
     auto target = manager_.getEntity(packet.targetId());
     if (!target || !getClient(target)) {
-        client->Send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
+        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
         return;
     }
     if (auto socket = getClient(target))
-        socket->Send(
+        socket->send(
                     *makePacket<ePacketType::PAKWC_WHISPER_CHAT>(getName(entity), packet.message()));
 }
 
@@ -46,6 +46,6 @@ void ChatSystem::partyChat(CMapClient *client, Entity entity, const CliPartyChat
     auto party = entity.component<Party>()->party_;
     for (auto it : party->members_) {
         if (auto socket = getClient(it))
-            socket->Send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
+            socket->send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
     }
 }

@@ -25,15 +25,14 @@
 class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
-  CMapClient(int* _sock, std::shared_ptr<EntitySystem> entitySystem);
+  CMapClient(Core::INetwork* _sock, std::shared_ptr<EntitySystem> entitySystem);
 
   virtual ~CMapClient();
 
-  virtual bool IsNearby(const CRoseClient* _otherClient) const override;
+  virtual bool is_nearby(const CRoseClient* _otherClient) const override;
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
-  virtual bool OnReceived() override;
   virtual void OnDisconnected() override;
 
   bool LogoutReply();

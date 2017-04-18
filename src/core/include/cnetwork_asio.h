@@ -67,29 +67,31 @@ class CNetwork_Asio : public INetwork {
   CNetwork_Asio();
   virtual ~CNetwork_Asio();
 
-  virtual bool Init(std::string _ip, uint16_t _port) override;
-  virtual bool Shutdown(bool _final = false) override;
+  virtual bool init(std::string _ip, uint16_t _port) override;
+  virtual bool shutdown(bool _final = false) override;
 
-  virtual bool Connect() override;
-  virtual bool Listen() override;
-  virtual bool Reconnect() override;
-  virtual bool Disconnect() override;
+  virtual bool connect() override;
+  virtual bool listen() override;
+  virtual bool reconnect() override;
+  virtual bool disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
-  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
+  virtual bool send_data(std::unique_ptr<uint8_t[]> _buffer) override;
+  virtual bool recv_data(uint16_t _size = MAX_PACKET_SIZE) override;
 
-  bool IsActive() override {
+  bool is_active() override {
     return active_;
   }
 
   bool isRemoteConnection() const { return remote_connection_; }
+
+  virtual void dispatch(std::function<void()> _handler) override;
 
  protected:
   void AcceptConnection();
   void ProcessSend();
 
   void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
-  void ResetBuffer() override {
+  void reset_internal_buffer() override {
     packet_offset_ = 0;
     packet_size_ = 6;
   }
@@ -99,11 +101,10 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
-  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
+  
   std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
-  std::mutex recv_mutex_;
   std::mutex discard_mutex_;
   std::condition_variable recv_condition_;
 

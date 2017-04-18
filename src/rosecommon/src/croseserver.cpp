@@ -63,8 +63,8 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
     do {
       (*mutex_ptr).lock();
         (*list_ptr).remove_if([this, inactive_log] (CRoseClient* i) {
-            if (i->IsActive() == false) {
-              logger_->debug(inactive_log.c_str(), i->GetId());
+            if (i->is_active() == false) {
+              logger_->debug(inactive_log.c_str(), i->get_id());
               delete i;
               return true;
             }
@@ -75,37 +75,37 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer) {
           std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                           update - client->GetLastUpdateTime())
+                           update - client->get_update_time())
                            .count();
           if (dt > (1000 * 60) * 5)  // wait 5 minutes before time out
           {
-            logger_->info(timeout_log.c_str(), client->GetId());
-            client->Shutdown();
+            logger_->info(timeout_log.c_str(), client->get_id());
+            client->shutdown();
             // Do not delete them now. Do it next time.
           }
         }
       (*mutex_ptr).unlock();
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    } while (socket_->IsActive() == true);
+    } while (socket_->is_active() == true);
 
     return 0;
   });
 }
 
 CRoseServer::~CRoseServer() {
-  socket_->Shutdown();
+  socket_->shutdown();
 
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
     for (auto& client : client_list_) {
-      client->Shutdown(true);
+      client->shutdown(true);
       delete client;
     }
     client_list_.clear();
   } else {
     std::lock_guard<std::mutex> lock(isc_list_mutex_);
     for (auto& client : isc_list_) {
-      client->Shutdown(true);
+      client->shutdown(true);
       delete client;
     }
     isc_list_.clear();
@@ -139,16 +139,16 @@ void CRoseServer::OnAccepted(Core::INetwork* _sock) {
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CRoseClient* nClient = new CRoseClient(_sock);
-      nClient->SetId(
+      nClient->set_id(
           std::distance(std::begin(client_list_), std::end(client_list_)));
-//      logger_->info("[{}] Client connected from: {}", nClient->GetId(),
+//      logger_->info("[{}] Client connected from: {}", nClient->get_id(),
 //                      _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(_sock);
-      nClient->SetId(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-//      logger_->info("[{}] Server connected from: {}", nClient->GetId(),
+      nClient->set_id(std::distance(std::begin(isc_list_), std::end(isc_list_)));
+//      logger_->info("[{}] Server connected from: {}", nClient->get_id(),
 //                      _address.c_str());
       isc_list_.push_front(nClient);
     }
@@ -162,7 +162,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::EVERYONE:
     {
       for (auto& client : client_list_) {
-        client->Send(_buffer);
+        client->send(_buffer);
       }
       break;
     }
@@ -170,23 +170,23 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     {
       for (auto& client : client_list_) {
         if( client != sender )
-          client->Send(_buffer);
+          client->send(_buffer);
       }
       break;
     }
     case eSendType::NEARBY:
     {
       for (auto& client : client_list_) {
-        if( client->IsNearby(sender) == true )
-          client->Send(_buffer);
+        if( client->is_nearby(sender) == true )
+          client->send(_buffer);
       }
       break;
     }
     case eSendType::NEARBY_BUT_ME:
     {
       for (auto& client : client_list_) {
-        if( client != sender && client->IsNearby(sender) == true )
-          client->Send(_buffer);
+        if( client != sender && client->is_nearby(sender) == true )
+          client->send(_buffer);
       }
       break;
     }

@@ -52,5 +52,5 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     }
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-    client->Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
+    client->send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }
