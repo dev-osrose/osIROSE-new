@@ -9,7 +9,16 @@ using ::testing::Invoke;
 #include "cloginclient.h"
 class CLoginClient_Mock : public CLoginClient {
  public:
-   CLoginClient_Mock(Core::INetwork* _sock) : CLoginClient(_sock) {}
+   CLoginClient_Mock() : CLoginClient() {
+   }
+
+   virtual void set_socket(Core::INetwork* _val) {
+    CLoginClient::set_socket(_val);
+
+    std::function<bool(uint8_t*)> fnOnSend = std::bind(&CLoginClient_Mock::OnSend, this, std::placeholders::_1);
+    socket_->registerOnSend(fnOnSend);
+   }
+
  protected:
   virtual bool OnSend(uint8_t* _buffer) {
     crypt_.encodeClientPacket(_buffer);

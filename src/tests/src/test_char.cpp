@@ -18,7 +18,8 @@ using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
-  CLoginClient_Mock netConnect(new Core::CNetwork_Asio());
+  CLoginClient_Mock netConnect;
+  netConnect.set_socket(new Core::CNetwork_Asio());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 

@@ -29,6 +29,8 @@
 #include <chrono>
 #include <thread>
 
+#include "platform_defines.h"
+
 namespace Core {
 
 /*!
@@ -58,7 +60,8 @@ class INetwork {
         network_id_(0),
         network_type_(0),
         network_port_(0),
-        network_address_("") {
+        network_address_(""),
+        update_time_(Core::Time::GetTickCount()) {
     initCallbacks();
   }
   virtual ~INetwork() {}

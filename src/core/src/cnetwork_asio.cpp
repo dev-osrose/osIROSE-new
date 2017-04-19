@@ -36,9 +36,8 @@ CNetwork_Asio::CNetwork_Asio()
       listener_(*networkService_->Get_IO_Service()),
       packet_offset_(0),
       packet_size_(6),
-      active_(true),
+      active_(false),
       remote_connection_(false) {
-  initCallbacks();
   INetwork::set_update_time(Core::Time::GetTickCount());
   logger_ = CLog::GetLogger(log_type::NETWORK).lock();
 }
@@ -125,7 +124,8 @@ bool CNetwork_Asio::reconnect() {
 }
 
 bool CNetwork_Asio::disconnect() {
-  OnDisconnect();
+  if( OnDisconnect() == false) return false;
+
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
   OnDisconnected();
@@ -265,6 +265,7 @@ void CNetwork_Asio::AcceptConnection() {
         // Make sure to use std::move(socket)
         // std::make_shared<CClientSesson>( std::move(socket) );
         CNetwork_Asio* nSock = new CNetwork_Asio();
+        nSock->set_address(socket.remote_endpoint().address().to_string());
         nSock->SetSocket(std::move(socket));
 
         this->OnAccepted(nSock);

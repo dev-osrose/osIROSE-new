@@ -34,17 +34,8 @@ CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer),
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
 
   std::function<void(Core::INetwork*)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
-  //std::function<bool()> fnOnConnect = std::bind(&CRoseServer::OnConnect, this);
-  //std::function<void()> fnOnConnected = std::bind(&CRoseServer::OnConnected, this);
-  //std::function<bool()> fnOnDisconnect = std::bind(&CRoseServer::OnDisconnect, this);
-  //std::function<void()> fnOnDisconnected = std::bind(&CRoseServer::OnDisconnected, this);
 
-  socket_->initCallbacks();
   socket_->registerOnAccepted(fnOnAccepted);
-  //socket_->registerOnConnect(fnOnConnect);
-  //socket_->registerOnConnected(fnOnConnected);
-  //socket_->registerOnDisconnect(fnOnDisconnect);
-  //socket_->registerOnDisconnected(fnOnDisconnected);
 
   socket_->process_thread_ = std::thread([this]() {
 
@@ -151,15 +142,15 @@ void CRoseServer::OnAccepted(Core::INetwork* _sock) {
       CRoseClient* nClient = new CRoseClient(_sock);
       nClient->set_id(
           std::distance(std::begin(client_list_), std::end(client_list_)));
-//      logger_->info("[{}] Client connected from: {}", nClient->get_id(),
-//                      _address.c_str());
+      logger_->info("[{}] Client connected from: {}", nClient->get_id(),
+                      _sock->get_address().c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       CRoseISC* nClient = new CRoseISC(_sock);
       nClient->set_id(std::distance(std::begin(isc_list_), std::end(isc_list_)));
-//      logger_->info("[{}] Server connected from: {}", nClient->get_id(),
-//                      _address.c_str());
+      logger_->info("[{}] Server connected from: {}", nClient->get_id(),
+                      _sock->get_address().c_str());
       isc_list_.push_front(nClient);
     }
 //  }

@@ -32,6 +32,8 @@ class CRoseClient {
   CRoseClient(Core::INetwork* _sock);
   virtual ~CRoseClient();
 
+  virtual void set_socket(Core::INetwork* _val) { socket_ = _val; };
+
   virtual bool send(CRosePacket &_buffer);
   virtual bool send(std::unique_ptr<uint8_t[]> _buffer);
 

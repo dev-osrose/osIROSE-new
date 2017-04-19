@@ -67,7 +67,7 @@ TEST(TestRoseNetwork, TestConnectIp) {
   //                                        [&done] { return done; })
   //                                        );
   //	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 
 TEST(TestRoseNetwork, TestRecv) {
@@ -76,7 +76,7 @@ TEST(TestRoseNetwork, TestRecv) {
   EXPECT_NO_FATAL_FAILURE(network.connect());
   std::this_thread::sleep_for(std::chrono::milliseconds(
       500));  // Make sure we wait a little for data to come in
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 
 TEST(TestRoseNetwork, TestReconnect) {
@@ -141,7 +141,7 @@ TEST(TestRoseNetwork, TestListen) {
   //        EXPECT_TRUE(cv.wait_for(lock, std::chrono::seconds(1), [&done] {
   //        return done; }));
 
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 
 TEST(TestRoseNetwork, TestListenAndConnect) {
@@ -171,6 +171,7 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
   EXPECT_EQ(true, netConnect.init("127.0.0.1", 29100));
   EXPECT_NO_FATAL_FAILURE(netConnect.connect());
 
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   /* CRosePacket* pak = new CRosePacket(ePacketType::PAKCS_CHAR_LIST_REQ, */
                                      /* sizeof(pakChannelList_Req)); */
@@ -180,11 +181,11 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
   //	std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); //
   //Change this to condition variables
   EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
-  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
+  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown(true));
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 
 TEST(TestRoseNetwork, TestListenAndConnect2) {
@@ -212,9 +213,11 @@ TEST(TestRoseNetwork, TestListenAndConnect2) {
   //        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) ); //
   //        Change this to condition variables
   EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
-  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
+  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown(true));
 
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 
 TEST(TestRoseNetwork, TestISCListenAndConnect) {
@@ -238,9 +241,11 @@ TEST(TestRoseNetwork, TestISCListenAndConnect) {
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
   EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
-  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
+  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown(true));
 
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
 #ifdef STRESS_TEST
 
