@@ -52,7 +52,7 @@ class CRoseServer {
   bool is_active() const { return socket_->is_active();  }
   void set_type(uint32_t _val) { socket_->set_type(_val); }
 
-  bool get_id() const { return socket_->get_id(); }
+  uint32_t get_id() const { return socket_->get_id(); }
   uint32_t get_type() const { return socket_->get_type(); }
   uint16_t get_port() const { return socket_->get_port(); }
   std::string get_address() const { return socket_->get_address(); }
