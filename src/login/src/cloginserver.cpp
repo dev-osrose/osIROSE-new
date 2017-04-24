@@ -26,17 +26,17 @@ CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), ser
 CLoginServer::~CLoginServer() { socket_->shutdown(); }
 
 void CLoginServer::OnAccepted(Core::INetwork* _sock) {
-  //if (_sock.is_open()) {
+  //if (_sock->is_active()) {
     // Do Something?
-    //std::string _address = _sock.remote_endpoint().address().to_string();
+    std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       CLoginClient* nClient = new CLoginClient(std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
-//      logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
-//                    _address.c_str());
+      logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
+              _address.c_str());
       client_list_.push_front(nClient);
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
@@ -44,7 +44,7 @@ void CLoginServer::OnAccepted(Core::INetwork* _sock) {
       nClient->set_id(server_count_++);
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);
-//      logger_->info("Server connected from: {}", _address.c_str());
+      logger_->info("Server connected from: {}", _address.c_str());
       isc_list_.push_front(nClient);
     }
   //}
