@@ -35,8 +35,8 @@ CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   _sock->registerOnReceived(fnOnReceived);
   _sock->registerOnSend(fnOnSend);
 
-  _sock->recv_data();
   _sock->reset_internal_buffer();
+  _sock->recv_data();
 }
 
 CRoseClient::~CRoseClient() {

@@ -88,6 +88,8 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 
   CLoginServer network(true);
   CCharISC netConnect;
+  netConnect.set_socket(new Core::CNetwork_Asio());
+
   EXPECT_EQ(true, network.init("127.0.0.1", 29111));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 

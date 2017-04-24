@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <stdint.h>
+#include "cnetwork_asio.h"
 #include "iscpackets.pb.h"
 #include "epackettype.h"
 #include "crosepacket.h"
@@ -19,6 +20,9 @@ TEST(TestFinalServers, TestISCConnections) {
   CCharISC* charIscClient = new CCharISC();
   CMapServer mapIsc(true);
   CMapISC* mapIscClient = new CMapISC();
+
+  charIscClient->set_socket(new Core::CNetwork_Asio());
+  mapIscClient->set_socket(new Core::CNetwork_Asio());
 
   loginIsc.init("127.0.0.1", 29010);
 
