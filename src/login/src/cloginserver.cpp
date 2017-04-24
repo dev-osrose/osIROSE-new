@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,7 @@ void CLoginServer::OnAccepted(Core::INetwork* _sock) {
       CLoginClient* nClient = new CLoginClient(std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
+      nClient->set_active(true);
 //      logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
 //                    _address.c_str());
       client_list_.push_front(nClient);
@@ -42,6 +43,7 @@ void CLoginServer::OnAccepted(Core::INetwork* _sock) {
       CLoginISC* nClient = new CLoginISC(std::move(_sock));
       nClient->set_id(server_count_++);
       nClient->set_update_time(Core::Time::GetTickCount());
+      nClient->set_active(true);
 //      logger_->info("Server connected from: {}", _address.c_str());
       isc_list_.push_front(nClient);
     }

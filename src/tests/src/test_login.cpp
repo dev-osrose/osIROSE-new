@@ -20,11 +20,11 @@ TEST(TestLoginServer, TestClientPacketPath) {
   netConnect.set_socket(new Core::CNetwork_Asio());
 
   EXPECT_EQ(true, network.init("127.0.0.1", 29110));
-  EXPECT_NO_FATAL_FAILURE(network.listen());
+  EXPECT_EQ(true, network.listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   EXPECT_EQ(true, netConnect.init("127.0.0.1", 29110));
-  EXPECT_NO_FATAL_FAILURE(netConnect.connect());
+  EXPECT_EQ(true, netConnect.connect());
 
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
@@ -76,7 +76,9 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
 
   std::this_thread::sleep_for(
-      std::chrono::milliseconds(100));  // Change this to condition variables
+      std::chrono::milliseconds(1000));  // Change this to condition variables
+
+  EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
 
   CLoginServer::GetISCList().clear();
 

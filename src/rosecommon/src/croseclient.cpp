@@ -75,7 +75,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   ///*
   if (packet_size_ == 6) {
 #ifndef DISABLE_CRYPT
-    packet_size_ = crypt_.decodeClientHeader(reinterpret_cast<unsigned char*>(&buffer_));
+    packet_size_ = crypt_.decodeClientHeader(reinterpret_cast<unsigned char*>(buffer_));
 #else
     packet_size_ = buffer_[0];
 #endif
@@ -86,13 +86,12 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
       return false;
     }
 
-    //logger_->trace("Received a packet header on CRoseClient: Header[{0}, 0x{1:04x}]", packet_size_, (uint16_t)CRosePacket::type(buffer_));
     if (packet_size_ > 6) return true;
   }
 
 // decrypt packet now
 #ifndef DISABLE_CRYPT
-  if (!crypt_.decodeClientBody(reinterpret_cast<unsigned char*>(&buffer_))) {
+  if (!crypt_.decodeClientBody(reinterpret_cast<unsigned char*>(buffer_))) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
     socket_->reset_internal_buffer();
@@ -108,9 +107,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   logger_->trace("{}", out.c_str());
 #endif
 
-
-//  rtnVal = HandlePacket(buffer_);
-  auto res = std::unique_ptr<uint8_t[]>(new uint8_t[CRosePacket::size(buffer_)]);
+  auto res = std::make_unique<uint8_t[]>( CRosePacket::size(buffer_) );
   std::memcpy(res.get(), buffer_, CRosePacket::size(buffer_));
 
   recv_mutex_.lock();
@@ -156,6 +153,7 @@ bool CRoseClient::OnSend(uint8_t* _buffer) {
 void CRoseClient::OnSent() {}
 
 bool CRoseClient::HandlePacket(uint8_t* _buffer) {
+  logger_->trace("CRoseClient::HandlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
@@ -189,6 +187,7 @@ bool CRoseClient::HandlePacket(uint8_t* _buffer) {
       return false;
     }
   }
+  logger_->trace("CRoseClient::HandlePacket end");
   return true;
 }
 

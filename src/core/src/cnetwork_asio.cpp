@@ -65,6 +65,7 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 
   network_address_ = _ip;
   network_port_ = _port;
+  active_ = true;
   return true;
 }
 
@@ -164,7 +165,7 @@ void CNetwork_Asio::ProcessSend() {
       logger_->trace( "{}", out.c_str() );
 #endif
 
-      if (OnSend(raw_ptr))
+      if (OnSend(raw_ptr)) {
         asio::async_write(
             socket_, asio::buffer(raw_ptr, _size),
             [this](const asio::error_code& error,
@@ -199,6 +200,7 @@ void CNetwork_Asio::ProcessSend() {
               ProcessSend();
 
             });
+      }
       else
         logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
                        _size, _command, get_id());
@@ -230,10 +232,12 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
           update_time_ = (Core::Time::GetTickCount());
 
           if (!errorCode || errorCode.value() == 11) {
-            if (OnReceived(packet_size_, &buffer_[0]) == false) {
+            if (OnReceived(packet_size_, buffer_) == false) {
               logger_->debug(
                   "OnReceived aborted the connection, disconnecting...");
               shutdown();
+            } else {
+              if (is_active()) recv_data();
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
@@ -245,10 +249,8 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
                              errorCode.message());
               OnDisconnected();
               shutdown();
-              return;
             }
           }
-          if (active_) recv_data();
         });
   }
   return true;

@@ -28,6 +28,7 @@
 #include <functional>
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include "platform_defines.h"
 
@@ -120,6 +121,7 @@ class INetwork {
   virtual bool disconnect() = 0;
 
   virtual bool is_active() const = 0;
+  virtual void set_active(bool _val) = 0;
 
   /*!
    * \brief Used to set the ID for this connection.
@@ -157,7 +159,10 @@ class INetwork {
     std::function<bool()> fnDummyBool = []() { return true; };
     std::function<void(INetwork*)> fnDummyAccepted = [](INetwork*) {};
     std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
-    std::function<bool(uint16_t&, uint8_t*)> fnDummyRecv = [](uint16_t&, uint8_t*) { return true; };
+    std::function<bool(uint16_t&, uint8_t*)> fnDummyRecv = [](uint16_t&, uint8_t*) {
+      std::cout << "Shit is broken!\n";
+      return true;
+    };
 
     OnConnected = OnListening = OnDisconnected = OnSent = fnDummyVoid;
     OnAccept = OnConnect = OnListen = OnDisconnect = OnReceive = OnShutdown = fnDummyBool;

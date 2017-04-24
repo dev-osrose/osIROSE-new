@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -191,6 +191,7 @@ bool CLoginClient::ServerSelect(
 }
 
 bool CLoginClient::HandlePacket(uint8_t* _buffer) {
+  logger_->trace("CLoginClient::HandlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_CHANNEL_LIST_REQ:
       return ChannelList(
@@ -204,5 +205,6 @@ bool CLoginClient::HandlePacket(uint8_t* _buffer) {
     default:
       return CRoseClient::HandlePacket(_buffer);
   }
+  logger_->trace("CLoginClient::HandlePacket end");
   return true;
 }

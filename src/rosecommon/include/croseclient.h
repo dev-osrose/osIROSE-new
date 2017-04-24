@@ -53,6 +53,7 @@ class CRoseClient {
   bool listen() { return socket_->listen(); }
   bool connect() { return socket_->connect();  }
   bool is_active() const { return socket_->is_active(); }
+  void set_active(bool _val) { socket_->set_active(_val); }
   void set_type(uint32_t _val) { socket_->set_type(_val); }
   uint32_t get_id() const { return socket_->get_id(); }
   uint32_t get_type() const { return socket_->get_type(); }

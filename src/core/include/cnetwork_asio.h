@@ -78,9 +78,10 @@ class CNetwork_Asio : public INetwork {
   virtual bool send_data(std::unique_ptr<uint8_t[]> _buffer) override;
   virtual bool recv_data(uint16_t _size = MAX_PACKET_SIZE) override;
 
-  bool is_active() const override {
+  virtual bool is_active() const override {
     return active_;
   }
+  virtual void set_active(bool _val) override { active_ = _val; }
 
   bool isRemoteConnection() const { return remote_connection_; }
 
@@ -91,7 +92,7 @@ class CNetwork_Asio : public INetwork {
   void ProcessSend();
 
   void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
-  void reset_internal_buffer() override {
+  virtual void reset_internal_buffer() override {
     packet_offset_ = 0;
     packet_size_ = 6;
   }
@@ -101,7 +102,7 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
-  
+
   std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
