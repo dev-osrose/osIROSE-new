@@ -57,7 +57,10 @@ class CRoseServer {
   uint16_t get_port() const { return socket_->get_port(); }
   std::string get_address() const { return socket_->get_address(); }
 
-  virtual void set_socket(Core::INetwork* _val) { socket_ = _val; };
+  virtual void set_socket(Core::INetwork* _val) {
+   socket_ = _val;
+   socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
+  };
   bool disconnect() { return socket_->disconnect(); }
   bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
 

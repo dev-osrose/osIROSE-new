@@ -41,6 +41,12 @@ CRoseClient::CRoseClient(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
 
 CRoseClient::~CRoseClient() {
   CRoseClient::shutdown();
+
+  if (socket_ != nullptr) {
+    delete socket_;
+    socket_ = nullptr;
+  }
+
   logger_.reset();
 }
 

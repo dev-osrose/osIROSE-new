@@ -82,7 +82,8 @@ TEST(TestCharServer, TestClientPacketPath) {
 
 TEST(TestCharServer, TestISCMap) {
   CCharServer network;
-  CMapISC mapISC(new Core::CNetwork_Asio());
+  CMapISC mapISC;
+  mapISC.set_socket(new Core::CNetwork_Asio());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 
