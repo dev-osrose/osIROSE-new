@@ -33,4 +33,4 @@
 	url = https://github.com/HowardHinnant/date
 [submodule "tools/sqlpp11"]
 	path = tools/sqlpp11
-	url = https://github.com/rbock/sqlpp11
+	url = https://github.com/L3nn0x/sqlpp11
