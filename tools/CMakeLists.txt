@@ -46,6 +46,11 @@ IF(BUILD_TOOLS)
   INCLUDE_DIRECTORIES(
     SYSTEM ${SPDLOG_ROOT}
   )
+
+  SET(HinnantDate_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/date)
+  ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/sqlpp11)
+
+  EXECUTE_PROCESS(COMMAND ${CMAKE_CURRENT_LIST_DIR}/sqlpp11/scripts/ddl2cpp ${CMAKE_SOURCE_DIR}/Database/osirose.sql ${CMAKE_BINARY_DIR}/generated/osiroseDatabase osiroseDatabase)
   
   IF(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")

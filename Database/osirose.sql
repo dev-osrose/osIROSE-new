@@ -251,7 +251,7 @@ CREATE TABLE `skill_db` (
   `level` varchar(45) DEFAULT '0',
   `type` varchar(45) NOT NULL,
   `range` int(11) DEFAULT NULL,
-  `class` set('0') DEFAULT '0',
+  `class_` set('0') DEFAULT '0',
   `power` int(11) DEFAULT NULL,
   `script` text,
   PRIMARY KEY (`id`),

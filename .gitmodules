@@ -28,3 +28,9 @@
 [submodule "tools/entityx"]
 	path = tools/entityx
 	url = https://github.com/alecthomas/entityx.git
+[submodule "tools/date"]
+	path = tools/date
+	url = https://github.com/HowardHinnant/date
+[submodule "tools/sqlpp11"]
+	path = tools/sqlpp11
+	url = https://github.com/rbock/sqlpp11

@@ -33,6 +33,8 @@ include_directories(
   SYSTEM ${LUA_INCLUDE_DIR}
   SYSTEM ${CXXOPT_ROOT}
   SYSTEM ${ENTITYX_INCLUDE_DIR}
+  SYSTEM ${SQLPP_INCLUDE_DIR}
+  SYSTEM ${DATE_INCLUDE_DIR}
 )
 
 link_directories(
