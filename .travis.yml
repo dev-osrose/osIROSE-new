@@ -12,7 +12,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
+  - PATH=$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
   - LD_LIBRARY_PATH=$HOME/bakefile/lib:$HOME/mysql/lib:$HOME/mysqlpp/lib:$LD_LIBRARY_PATH
 services:
 - mysql
@@ -52,7 +52,19 @@ matrix:
     - export CXX="g++-5" CC="gcc-5";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -98,7 +110,19 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -142,7 +166,19 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -190,7 +226,19 @@ matrix:
     - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -238,7 +286,19 @@ matrix:
     - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -283,7 +343,19 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
-    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${DEPS_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
