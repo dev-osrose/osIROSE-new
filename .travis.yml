@@ -27,10 +27,8 @@ matrix:
         - ubuntu-toolchain-r-test
         - extras-precise
         - boost-latest
-        - kalakris-cmake
         - llvm-toolchain-precise-3.8
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -54,6 +52,7 @@ matrix:
     - export CXX="g++-5" CC="gcc-5";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -72,12 +71,10 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources: 
+        sources:
         - ubuntu-toolchain-r-test
         - boost-latest
-        - kalakris-cmake
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -101,6 +98,7 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -121,7 +119,6 @@ matrix:
       apt:
         sources: *sources
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -145,6 +142,7 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -165,7 +163,6 @@ matrix:
       apt:
         sources: *sources
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -193,6 +190,7 @@ matrix:
     - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -213,7 +211,6 @@ matrix:
       apt:
         sources: *sources
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -241,6 +238,7 @@ matrix:
     - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -254,7 +252,7 @@ matrix:
     script:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh;
-    
+
   - env: g++-6 coverity_scan
     sudo: false
     language: cpp
@@ -262,7 +260,6 @@ matrix:
       apt:
         sources: *sources
         packages:
-        - cmake
         - lcov
         - libboost-dev
         - perl
@@ -286,6 +283,7 @@ matrix:
     - export CXX="g++-6" CC="gcc-6";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
+    - bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
@@ -296,7 +294,7 @@ matrix:
     - echo "coverity scan"
     after_success:
     - echo "coverity scan success"
-    
+
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
@@ -323,7 +321,7 @@ after_success:
 
 deploy:
   - provider: s3
-    access_key_id: 
+    access_key_id:
       secure: "UWYxD84ECFtx0u+JL+HyFgX/AzGDbAqpLeSsYzd+MkC/tkf3EHdbJTwe/x+NPpItk5QmIVYTTqLjaFoX65stNI6DYawxJmOv/mkZcSgDQm3y4yEprbdAfDSjCRduIL+uGJN1V2S6ga9HFazndSlRFWN1KbrfpJf0I7b4oGvyH4U48Z4IE1Y8/AUFXnCKAp2IHsmGdGz6fZ0P/LYuk8yAInDfOluD0golWUp9EQh/IUJ+Ke/UZy3cYaKhDRBP5kzRFrThwEOdz7/VWpSzlIOwQOZz6L+6TyaDWRBkx+RuMn9yDOEkOPjPg0AvmF8KU3O4OZmUZVKEggJrHidedd9vDMVQoKh54tKme2rMyH5qYtU1iAqoe7Z2n/PvLPM/e10NXP1/9VjBnWVJkStL/vhP9/nextdNM1jyzLNlOICrDqHNEodkvMa6DUjXjGTAi/GIgNRzkZC+FLRkVcPtq30uPHsoMNSz4/zDSkGY4EoC/zJSEwX5otQMvurS0ae9DDxLLyaVAGnerKkbn1RNcYR9If31EFQQlPZVRU3ew/EBZBgQ9l+ibIl2J3Y99/j4gB0yzEhn3tMk/dzCZ8fhlQspqCMAygNHUz2QrD09y1BgkfzpvVpXw/LwW0ddUvwreLGTfBz2KHpe26bt6WnObBM/N40s4Pa3qE77oAWCm+ysBt4="
     secret_access_key:
       secure: "rTNxFWfSexIC9pj4ZYPHLCzslkFcZC9YhoS1d8q8TeAWuDAZFzxoQfHh0NFcE3Rtx82JddZqulsL8lxbmQlebokYIgMPy7SgasV8eUUaKpIdSIm1WFUxs0qg4wLcnw+u4Wn8mkT9ZKba4PVISZl+l70JgKdldh7QMYjoGeACrNLepquIGEfnlJvcSITBXKpBfGuBTjXgtcHG6EtmrpuM+WPcOgBDKPiRDyIIrW+sRNMYZ43hccj4hj7360x9iY8V68RVGYn0sGzujtGeTym8u8vpMEYgPdY5jtsUOdlqrrqfH7pPyeAgEQIab4SmOGceSgnlcuhNPM5PLVDkbO11pEpSTrAj0wsahu/n0dDsj2B/KwM5GiNMtb2CjEs2su2SQudZEZHnN0IuNTeKFmnu9rlFpmbqf/MN2hSANsMqNFG4V4Cdl01lLGUfWkWGaBuWZ5obyWeA8aEJtDudzEpmaAI/oZu4vWVWN1gtSprm1fO8n65iGlhGf2SwaCJBESPD9TaInHWhgWbBqRefy0wx9Qe0pTh+zZHWRY+azVtUMW3B2XcCpv53qAqwcS8NTydz0Y7z5x5zbja8YYgowde9O1cXzbLKljhlOTW2mU0/tJaUXj1/4T7G4jbqAqcqr4BuTO7LO6KbJGo08gVkstNd9Ppxf5B4hmuI7fhPZKE7emg="
@@ -337,7 +335,7 @@ deploy:
 #      all_branches: true
       branch: master
       tag: true
-      
+
   - provider: releases
     api_key:
       secure: "BeGzqO3xstU53ChZHaEd0tx94UnOFE8mhD/47jLlBWy2MM1pxFfI9zYSfGaBAa0FBY4SjSxPyA8ChZcoHWVxSv0j59LxhI+sOyTS5Rak3UT1Nlm3WqmvRIEx5E9kuF4Z28nXQuJYPvMqdXwx7F4Qk2wRLuQHmrvllwnuEJouelR54EiAcF6h5Gk7G1j8Yvpn7kyJIJL8+a3zwEt8u4UEw8S9R4akti6EINmyYbKldVny4i8uzSas1fjeJmZlXLGvykjlcGFl4X5OEmShowRcHNjhyK7Awprbycbf7rV2es0V/UFIr+xYX/6z7sdtGiXpoBYTQksilE3IcYAt5WcvgxPnSgG12njcTHjhX+MQFW+bbYWr21OA9DQn+KfRMTI00DB3huv1KCFh5IawSjijY9j8scijMofb58vYj960yUJfoOnZeicp3raM4/eVRKCtEdk7UwWNLqqB3o1Cfug8ZohhSbUHeGUQfyCBtYWSrE6/xb5mQmOUQI54ocSUKcmvv59G58nZic0Nl29cj9aYyu1lc093gSxnQ9cCtwbNkKCHiA+Z5MGScJ5jwydylckzeQysUzOK/ISFU4O0vX48GhSBOb3D6O9K4AoVG43vBu9E895tktDuj0BQ4uvtT7fN8xDJc6vg2uAEQst0yfWJZ/qDzKJIEoFYnvbMQh0JCwA="
