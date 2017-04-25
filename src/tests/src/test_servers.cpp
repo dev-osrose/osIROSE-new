@@ -17,9 +17,9 @@ using namespace RoseCommon;
 TEST(TestFinalServers, TestISCConnections) {
   CLoginServer loginIsc(true);
   CCharServer charIsc(true);
-  CCharISC* charIscClient = new CCharISC();
+  std::unique_ptr<CCharISC> charIscClient = std::make_unique<CCharISC>();
   CMapServer mapIsc(true);
-  CMapISC* mapIscClient = new CMapISC();
+  std::unique_ptr<CMapISC> mapIscClient = std::make_unique<CMapISC>();
 
   charIscClient->set_socket(new Core::CNetwork_Asio());
   mapIscClient->set_socket(new Core::CNetwork_Asio());
@@ -40,16 +40,18 @@ TEST(TestFinalServers, TestISCConnections) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  CCharServer::GetISCList().push_front(charIscClient);
-  CMapServer::GetISCList().push_front(mapIscClient);
-
   charIscClient->connect();
   mapIscClient->connect();
+  CMapISC *map = mapIscClient.get();
+  CCharISC *charc = charIscClient.get();
+
+  CCharServer::GetISCList().push_front(std::move(charIscClient));
+  CMapServer::GetISCList().push_front(std::move(mapIscClient));
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 
-  mapIscClient->shutdown(true);
-  charIscClient->shutdown(true);
+  map->shutdown(true);
+  charc->shutdown(true);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 

@@ -96,7 +96,10 @@ bool CCharISC::ServerRegister(
   // it
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
-    CCharISC* svr = (CCharISC*)server;
+    CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
+    if (!svr) {
+        continue;
+    }
     if (svr->IsLogin() == true) {
       svr->send(*packet);
       return true;
@@ -158,7 +161,10 @@ bool CCharISC::OnShutdown() {
       //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
-        CCharISC* svr = (CCharISC*)server;
+        CCharISC* svr = dynamic_cast<CCharISC*>(server.get());
+        if (!svr) {
+            continue;
+        }
         if (svr->IsLogin()) {
           svr->send(*packet);
           break;

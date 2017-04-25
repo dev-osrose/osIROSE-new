@@ -16,7 +16,7 @@
 #define _CMAPSERVER_H_
 
 #include "croseserver.h"
-#include "entitySystem.h"
+#include "entitysystem.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
@@ -27,7 +27,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   void update(double dt);
 
- static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
 
  protected:
   virtual void OnAccepted(Core::INetwork* _sock);

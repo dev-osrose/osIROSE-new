@@ -99,7 +99,7 @@ bool CRoseClient::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   }
 #endif
 
-  logger_->trace("Received a packet on CRoseClient: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_));
+  logger_->trace("Received a packet on CRoseClient {2}: Header[{0}, 0x{1:04x}]", CRosePacket::size(buffer_), (uint16_t)CRosePacket::type(buffer_), get_id());
 #ifdef SPDLOG_TRACE_ON
   fmt::MemoryWriter out;
   for(int i = 0; i < CRosePacket::size(buffer_); i++)

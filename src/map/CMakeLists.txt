@@ -28,7 +28,7 @@ SET( SOURCES_HEADER
 	include/cmapserver
 	include/cmapclient
 	include/cmapisc
-    include/entitySystem
+    include/entitysystem
     include/systemmanager
     include/systems/system
     include/systems/movementsystem
@@ -37,6 +37,7 @@ SET( SOURCES_HEADER
     include/systems/chatsystem
     include/systems/inventorysystem
     include/systems/partysystem
+    include/systems/mapsystem
     )
 
 SET( SOURCES_MAIN
@@ -52,6 +53,7 @@ SET( SOURCES_MAIN
     src/systems/chatsystem
     src/systems/inventorysystem
     src/systems/partysystem
+    src/systems/mapsystem
     )
 
 find_package( Threads REQUIRED )

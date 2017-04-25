@@ -45,7 +45,10 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList())
       if (server->get_type() == iscPacket::ServerType::CHAR) {
-        CLoginISC* svr = (CLoginISC*)server;
+        CLoginISC* svr = dynamic_cast<CLoginISC*>(server.get());
+        if (!svr) {
+            continue;
+        }
 
         // This if check is needed since the client actually looks for this.
         packet->addServer(svr->GetName(), svr->get_id() + 1,
@@ -66,7 +69,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
-    if (server->get_type() == iscPacket::ServerType::CHAR) serverCount++;
+    if (server && server->get_type() == iscPacket::ServerType::CHAR) serverCount++;
   }
   CLoginServer::GetISCListMutex().unlock();
 
@@ -137,7 +140,10 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = (CLoginISC*)obj;
+    CLoginISC* server = dynamic_cast<CLoginISC*>(obj.get());
+    if (!server) {
+        continue;
+    }
     if (server->get_type() == iscPacket::ServerType::CHAR &&
         server->get_id() == ServerID) {
       for (auto& obj : server->GetChannelList()) {
@@ -171,7 +177,7 @@ bool CLoginClient::ServerSelect(
   // 4 = Channel not active
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = (CLoginISC*)obj;
+    CLoginISC* server = (CLoginISC*)obj.get();
     if (server->get_type() == iscPacket::ServerType::CHAR &&
         server->get_id() == serverID) {
       std::string query = fmt::format("CALL create_session({}, {}, {});",

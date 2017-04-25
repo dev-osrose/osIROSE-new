@@ -13,7 +13,7 @@ using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
-  CLoginISC* iscServ = new CLoginISC();
+  std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
   CLoginClient_Mock netConnect;
 
   iscServ->set_socket(new Core::CNetwork_Asio());
@@ -41,7 +41,7 @@ TEST(TestLoginServer, TestClientPacketPath) {
 
   iscServ->set_id(0);
   iscServ->set_type(1);
-  CLoginServer::GetISCList().push_front(iscServ);
+  CLoginServer::GetISCList().push_front(std::move(iscServ));
 
 
   //-----------------------------------------

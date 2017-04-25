@@ -20,7 +20,7 @@
 #include "crosecrypt.h"
 #include "inetwork.h"
 #include "crosepacket.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 
 namespace RoseCommon {
 class CRoseServer;

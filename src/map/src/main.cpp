@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 
   clientServer.init(config.serverdata().ip(), config.map_server().clientport());
   clientServer.listen();
-  clientServer.GetISCList().push_front(iscClient);
+  clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
 
   iscServer.init(config.serverdata().isclistenip(), config.map_server().iscport());
   iscServer.listen();

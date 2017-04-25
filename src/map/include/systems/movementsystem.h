@@ -15,8 +15,8 @@ class MovementSystem : public System {
 
         void stop(Entity entity, float x, float y);
 
-        void processMove(CMapClient *client, Entity entity, const RoseCommon::CliMouseCmd &packet);
-        void stopMoving(CMapClient *client, Entity entity, const RoseCommon::CliStopMoving &packet);
+        void processMove(CMapClient& client, Entity entity, const RoseCommon::CliMouseCmd &packet);
+        void stopMoving(CMapClient& client, Entity entity, const RoseCommon::CliStopMoving &packet);
 };
 
 }

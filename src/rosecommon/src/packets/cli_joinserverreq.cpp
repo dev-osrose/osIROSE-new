@@ -1,13 +1,13 @@
 #include "cli_joinserverreq.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 CliJoinServerReq::CliJoinServerReq() : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ) {}
 
 CliJoinServerReq::CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	if (type() != ePacketType::PAKCS_JOIN_SERVER_REQ)
-		throw std::runtime_error("Not the right packet!");
-	*this >> sessionId_;
+	throw_assert(type() == ePacketType::PAKCS_JOIN_SERVER_REQ, "Not the right packet: " << to_underlying(type()));
+    *this >> sessionId_;
     char pass[32];
     *this >> pass;
     password_ = std::string(pass, 32);
@@ -30,7 +30,7 @@ const std::string &CliJoinServerReq::password() const {
 
 void CliJoinServerReq::pack() {
 	*this << sessionId_;
-    *this << password_.c_str();
+	*this << password_.c_str();
 }
 
 }

@@ -8,7 +8,8 @@ using namespace RoseCommon;
 PartySystem::PartySystem(SystemManager &m) : System(m) {
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REQ, &PartySystem::processPartyReq);
     m.registerDispatcher(ePacketType::PAKCS_PARTY_REPLY, &PartySystem::processPartyReply);
-    m.getEntityManager().on_component_removed<Party>([this](Entity entity, Component<Party> Cparty) {
+    m.getEntityManager().on_component_removed<Party>([this](Entity entity, Party* Cparty) {
+            this->logger_->trace("deleting the party for client {}", getId(entity));
             auto party = Cparty->party_;
             if (!party)
                 return;
@@ -29,25 +30,15 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
     // TODO : use on_component_assign for new members?
 }
 
-void PartySystem::update(EntityManager &es, double dt) {
-    static double counter = 0.f;
-    counter += dt;
-    if (counter < 1.0f)
-        return;
-    counter = 0.f;
-    Component<Party> party;
-    Component<BasicInfo> info;
-    for (Entity entity : es.entities_with_components(info, party)) {
+void PartySystem::update(EntityManager &es, double) {
+    for (Entity entity : es.entities_with_components<BasicInfo, Party>()) {
+        Party *party = entity.component<Party>();
         if (!party->party_) {
+            BasicInfo *info = entity.component<BasicInfo>();
             logger_->trace("Client {} has the Party component but no affiliated party. {}", info->id_, party->isRequested_);
             if (!party->isRequested_)
                 entity.remove<Party>();
-            continue;
         }
-        logger_->trace("Client {} is in a party", info->id_);
-        logger_->trace("Party leader is {}, party members are", party->party_->leader_);
-        for (auto it : party->party_->members_)
-            logger_->trace("client {}", getId(it));
     }
 }
 
@@ -65,9 +56,9 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
         if (auto socket = getClient(it))
             socket->send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, Core::make_vector(newMember)));
     }
-    party->addMember(newMember);
     if (auto socket = getClient(newMember))
         socket->send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
+    party->addMember(newMember);
 }
 
 void PartySystem::changeLeader(Entity leader, Entity newLeader) {
@@ -85,15 +76,15 @@ void PartySystem::changeLeader(Entity leader, Entity newLeader) {
     }
 }
 
-void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPartyReq &packet) {
+void PartySystem::processPartyReq(CMapClient& client, Entity entity, const CliPartyReq &packet) {
     logger_->trace("PartySystem::processPartyReq");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {
         logger_->debug("Client {} requested a party with the non existing char {}", getId(entity), packet.idXorTag());
-        client->send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
+        client.send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
         return;
     }
-    Component<Party> party;
+    Party* party = nullptr;
     switch (packet.request()) {
         case CliPartyReq::MAKE:
             if (entity.component<Party>() && entity.component<Party>()->party_) {
@@ -153,7 +144,7 @@ void PartySystem::processPartyReq(CMapClient *client, Entity entity, const CliPa
     }
 }
 
-void PartySystem::processPartyReply(CMapClient*, Entity entity, const RoseCommon::CliPartyReply &packet) {
+void PartySystem::processPartyReply(CMapClient&, Entity entity, const RoseCommon::CliPartyReply &packet) {
     logger_->trace("PartySystem::processPartyRequest");
     Entity other;
     if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {

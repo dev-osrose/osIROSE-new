@@ -43,7 +43,7 @@ CNetwork_Asio::CNetwork_Asio()
 }
 
 CNetwork_Asio::~CNetwork_Asio() {
-  CNetwork_Asio::shutdown();
+  CNetwork_Asio::shutdown(true);
 
   if (process_thread_.joinable()) process_thread_.join();
 
@@ -70,16 +70,18 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 }
 
 bool CNetwork_Asio::shutdown(bool _final) {
-  if (_final == true || OnShutdown() == true) {
-    disconnect();
-
+  bool rtnValue = false;
+  if (_final == true ||
+    (OnShutdown() == true && disconnect() == true))
+  {
+    rtnValue = true;
     if (listener_.is_open()) {
       std::error_code ignored;
       listener_.close(ignored);
     }
     active_ = false;
   }
-  return true;
+  return rtnValue;
 }
 
 bool CNetwork_Asio::connect() {
@@ -118,14 +120,16 @@ bool CNetwork_Asio::listen() {
 }
 
 bool CNetwork_Asio::reconnect() {
-  if (remote_connection_ == false) return false;
+  if (remote_connection_ == false)
+    return false;
 
   disconnect();
   return connect();
 }
 
 bool CNetwork_Asio::disconnect() {
-  if( OnDisconnect() == false) return false;
+  if(OnDisconnect() == false)
+    return false; // Do not disconnect this client
 
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
@@ -241,9 +245,10 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
             }
           } else {
             if (errorCode.value() == 2 || errorCode.value() == 104) {
-              logger_->info("Client {} disconnected.", get_id());
+
+              if( shutdown() )
+                logger_->info("Client {} disconnected.", get_id());
               OnDisconnected();
-              shutdown();
             } else {
               logger_->debug("Client {}: Error {}: {}", get_id(), errorCode.value(),
                              errorCode.message());

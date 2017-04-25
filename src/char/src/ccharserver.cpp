@@ -31,21 +31,21 @@ void CCharServer::OnAccepted(Core::INetwork* _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      CCharClient* nClient = new CCharClient(std::move(_sock));
+      std::unique_ptr<CCharClient> nClient = std::make_unique<CCharClient>(std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
       logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
                        _address.c_str());
-      client_list_.push_front(nClient);
+      client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      CCharISC* nClient = new CCharISC(std::move(_sock));
+      std::unique_ptr<CCharISC> nClient = std::make_unique<CCharISC>(std::move(_sock));
       nClient->set_id(server_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
       logger_->info( "Server connected from: {}", _address.c_str() );
-      isc_list_.push_front(nClient);
+      isc_list_.push_front(std::move(nClient));
     }
   //}
 }
