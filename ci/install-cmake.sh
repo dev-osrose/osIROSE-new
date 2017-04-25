@@ -11,5 +11,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
   mkdir cmake_app && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
   export PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${PATH}
 else
-  brew install cmake
+  brew upgrade cmake || brew install cmake
 fi
+
+cmake --version
