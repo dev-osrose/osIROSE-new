@@ -149,7 +149,7 @@ bool CMapISC::OnShutdown() {
 			auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
 			std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
 			for (auto& server : CMapServer::GetISCList()) {
-				CMapISC* svr = dynamic_cast<CMapISC*>(server.get());
+				CMapISC* svr = static_cast<CMapISC*>(server.get());
                 if (!svr) {
                     continue;
                 }

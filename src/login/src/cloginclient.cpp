@@ -45,7 +45,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList())
       if (server->get_type() == iscPacket::ServerType::CHAR) {
-        CLoginISC* svr = dynamic_cast<CLoginISC*>(server.get());
+        CLoginISC* svr = static_cast<CLoginISC*>(server.get());
         if (!svr) {
             continue;
         }
@@ -140,7 +140,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = dynamic_cast<CLoginISC*>(obj.get());
+    CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (!server) {
         continue;
     }
@@ -177,7 +177,7 @@ bool CLoginClient::ServerSelect(
   // 4 = Channel not active
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = (CLoginISC*)obj.get();
+    CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (server->get_type() == iscPacket::ServerType::CHAR &&
         server->get_id() == serverID) {
       std::string query = fmt::format("CALL create_session({}, {}, {});",
