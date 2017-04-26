@@ -1,6 +1,6 @@
 version: '{branch}-ci-{build}'
 os:
-- Visual Studio 2015 
+- Visual Studio 2017
 
 configuration:
 - Debug
@@ -25,10 +25,10 @@ environment:
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\tools\googletest\googlemock\include;C:\projects\osIROSE\tools\googletest\googletest\include;C:\projects\osIROSE\tools\spdlog\include;C:\projects\osIROSE\tools\pbjson\src;
-  
+
 matrix:
   fast_finish: true
-  
+
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
 services: mysql
@@ -42,7 +42,7 @@ install:
 
 build:
   parallel: true
-  
+
 build_script:
 - cd build
 - cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=ON ..
@@ -55,7 +55,7 @@ after_build:
 artifacts:
 - path: win32-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-  
+
 notifications:
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
@@ -65,7 +65,7 @@ notifications:
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: false
-  
+
 before_test:
   - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
   - SET STATIC_DEPS=true
@@ -74,7 +74,7 @@ before_test:
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
   - C:/projects/osIROSE/build/bin/%CONFIGURATION%/osirose-tests.exe --gtest_filter=SetupTesting.**
   - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
-  
+
 test_script:
   - ctest -C %CONFIGURATION% --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
   #- ps: $xml = cmd /c "C:\Python35\python" C:/projects/osIROSE/ci/convert.py -t C:/projects/osIROSE/build -x C:/projects/osIROSE/ci/conv.xsl 2`>`&1; $xml | Out-File C:/projects/osIROSE/build/results.xml; $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path C:/projects/osIROSE/build/results.xml));
@@ -94,7 +94,7 @@ deploy:
 #    branch: master                 # release from master branch only
     appveyor_repo_tag: true        # deploy on tag push only
 
-  
+
 #init:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
