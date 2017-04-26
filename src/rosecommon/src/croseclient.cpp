@@ -20,10 +20,11 @@
 namespace RoseCommon {
 //#define STRESS_TEST
 
-CRoseClient::CRoseClient() : CRoseSocket(nullptr) {
+CRoseClient::CRoseClient() : CRoseSocket() {
 }
 
 CRoseClient::CRoseClient(Core::INetwork* _sock) : CRoseSocket(_sock) {
+  _sock->recv_data();
 }
 
 CRoseClient::~CRoseClient() {

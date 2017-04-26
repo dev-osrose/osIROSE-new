@@ -23,7 +23,7 @@
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }
 
-CLoginServer::~CLoginServer() { socket_->shutdown(); }
+CLoginServer::~CLoginServer() { socket_->shutdown(true); }
 
 void CLoginServer::OnAccepted(Core::INetwork* _sock) {
   //if (_sock->is_active()) {

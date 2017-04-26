@@ -30,7 +30,6 @@ CRoseSocket::CRoseSocket(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
   _sock->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
 
   _sock->reset_internal_buffer();
-  _sock->recv_data();
 }
 
 CRoseSocket::~CRoseSocket() {

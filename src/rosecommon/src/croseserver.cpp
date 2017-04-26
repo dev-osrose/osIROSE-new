@@ -87,8 +87,6 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(new Core::CNetwork_Asio(
 }
 
 CRoseServer::~CRoseServer() {
-  socket_->shutdown(true);
-
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
     for (auto& client : client_list_) {
@@ -102,13 +100,6 @@ CRoseServer::~CRoseServer() {
     }
     isc_list_.clear();
   }
-
-  if (socket_ != nullptr) {
-    delete socket_;
-    socket_ = nullptr;
-  }
-
-  logger_.reset();
 }
 
 void CRoseServer::OnAccepted(Core::INetwork* _sock) {

@@ -121,5 +121,5 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
   //EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
   //EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
 
-  EXPECT_NO_FATAL_FAILURE(network.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }
