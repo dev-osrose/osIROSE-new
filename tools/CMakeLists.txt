@@ -49,6 +49,7 @@ IF(BUILD_TOOLS)
 
   # SQLPP11
   SET(HinnantDate_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/date)
+  SET(ENABLE_TESTS OFF)
   ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/sqlpp11)
 
   EXECUTE_PROCESS(COMMAND ${CMAKE_CURRENT_LIST_DIR}/sqlpp11/scripts/ddl2cpp ${CMAKE_SOURCE_DIR}/Database/osirose.sql ${CMAKE_BINARY_DIR}/generated/osiroseDatabase osiroseDatabase)
