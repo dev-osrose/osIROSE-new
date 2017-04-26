@@ -34,3 +34,6 @@
 [submodule "tools/sqlpp11"]
 	path = tools/sqlpp11
 	url = https://github.com/L3nn0x/sqlpp11
+[submodule "tools/sqlpp11-connector-mysql"]
+	path = tools/sqlpp11-connector-mysql
+	url = https://github.com/rbock/sqlpp11-connector-mysql
