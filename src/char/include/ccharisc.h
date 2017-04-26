@@ -31,8 +31,8 @@ class CCharISC : public RoseCommon::CRoseISC {
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer) override;
 
-  virtual void OnConnected();
-  virtual bool OnShutdown();
+  virtual void OnConnected() override;
+  virtual bool OnShutdown() override;
 };
 
 #endif

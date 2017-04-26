@@ -71,11 +71,13 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 
 bool CNetwork_Asio::shutdown(bool _final) {
   bool rtnValue = false;
+  if ( !is_active() ) 
+    return true;
+
   if (_final == true ||
     (OnShutdown() == true && disconnect() == true))
   {
     rtnValue = true;
-    asio::post( [&](){
     if (listener_.is_open()) {
       std::error_code ignored;
       listener_.close(ignored);
@@ -85,8 +87,6 @@ bool CNetwork_Asio::shutdown(bool _final) {
       std::error_code ignored;
       socket_.close(ignored);
     }
-    return true;
-    });
     active_ = false;
   }
   return rtnValue;
