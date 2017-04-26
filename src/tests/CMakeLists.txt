@@ -104,22 +104,6 @@ macro (compile_test name path)
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  IF(ENABLE_TESTING_COVERAGE)
-    include(CodeCoverage)
-
-    set(COVERAGE_IGNORE_LIST
-      'tools/*'
-      '3rdparty/*'
-      'protobuf/*'
-      '*.pb.*'
-      'rapidjson/*'
-      'pbjson.*'
-      'bin2ascii.h'
-    )
-
-    SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
-  ENDIF() # ENABLE_TESTING_COVERAGE
-
   IF(ENABLE_MYSQL)
     target_link_libraries(${TEST_NAME} mysqlpp)
   ENDIF()
@@ -144,6 +128,22 @@ endmacro (compile_test)
 
 #---------------------------------
 #build the actual tests
+
+IF(ENABLE_TESTING_COVERAGE)
+  include(CodeCoverage)
+
+  set(COVERAGE_IGNORE_LIST
+    'tools/*'
+    '3rdparty/*'
+    'protobuf/*'
+    '*.pb.*'
+    'rapidjson/*'
+    'pbjson.*'
+    'bin2ascii.h'
+  )
+
+  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
+ENDIF() # ENABLE_TESTING_COVERAGE
 
 compile_test(Config src/test_config)
 compile_test(Console src/test_logconsole)
