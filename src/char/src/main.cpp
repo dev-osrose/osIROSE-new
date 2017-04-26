@@ -17,6 +17,7 @@
 #include "config.h"
 #include "version.h"
 #include "network_thread_pool.h"
+#include "cnetwork_asio.h"
 
 namespace {
 void DisplayTitle()
@@ -72,7 +73,7 @@ int main(int argc, char* argv[]) {
 
   CCharServer clientServer;
   CCharServer iscServer(true);
-  CCharISC* iscClient = new CCharISC();
+  CCharISC* iscClient = new CCharISC(new Core::CNetwork_Asio());
   iscClient->init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient->SetLogin(true);
   iscClient->connect();

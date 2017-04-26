@@ -21,74 +21,24 @@
 #include "inetwork.h"
 #include "crosepacket.h"
 #include "entitycomponents.h"
+#include "crosesocket.h"
 
 namespace RoseCommon {
 class CRoseServer;
 
-class CRoseClient {
+class CRoseClient : public CRoseSocket {
  friend class CRoseServer;
  public:
   CRoseClient();
   CRoseClient(Core::INetwork* _sock);
   virtual ~CRoseClient();
 
-  virtual void set_socket(Core::INetwork* _val) {
-   socket_ = _val;
-   socket_->registerOnReceived(std::bind(&CRoseClient::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-   socket_->registerOnSend(std::bind(&CRoseClient::OnSend, this, std::placeholders::_1));
-  };
-
-  virtual bool send(CRosePacket &_buffer);
-  virtual bool send(std::unique_ptr<uint8_t[]> _buffer);
-
   virtual bool is_nearby(const CRoseClient* _otherClient) const;
 
   Entity getEntity() const { return entity_; }
 
-  virtual uint32_t get_obj_id() const {
-    return socket_->get_id();
-  }
-
-  bool init(std::string _ip, uint16_t _port) { return socket_->init(_ip, _port); }
-  bool listen() { return socket_->listen(); }
-  bool connect() { return socket_->connect();  }
-  bool is_active() const { return socket_->is_active(); }
-  void set_active(bool _val) { socket_->set_active(_val); }
-  void set_type(uint32_t _val) { socket_->set_type(_val); }
-  uint32_t get_id() const { return socket_->get_id(); }
-  uint32_t get_type() const { return socket_->get_type(); }
-  uint16_t get_port() const { return socket_->get_port(); }
-  std::string get_address() const { return socket_->get_address(); }
-  std::chrono::steady_clock::time_point get_update_time() const { return socket_->get_update_time(); }
-
-
-  virtual void set_id(uint32_t _val) { socket_->set_id(_val); }
-  virtual void set_update_time(std::chrono::steady_clock::time_point _val) { socket_->set_update_time(_val); }
-  virtual bool disconnect() { return socket_->disconnect(); }
-  virtual bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
-
-  std::shared_ptr<spdlog::logger> logger_;
-
  protected:
-
-  virtual void OnAccepted(Core::INetwork*) {}
-  // Callback functions
-  virtual bool OnConnect() ;
-  virtual void OnConnected() ;
-  virtual bool OnDisconnect() ;
-  virtual void OnDisconnected() ;
-  virtual bool OnReceive() ;
-  virtual bool OnReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
-  virtual bool OnSend(uint8_t* _buffer) ;
-  virtual void OnSent() ;
-  virtual bool HandlePacket(uint8_t* _buffer) ;
-
-  PacketCodec crypt_;
-  Core::INetwork* socket_;
   Entity entity_;
-
-  std::mutex recv_mutex_;
-  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
 };
 
 }

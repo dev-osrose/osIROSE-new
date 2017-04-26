@@ -24,12 +24,12 @@
 
 namespace RoseCommon {
 
-class CRoseServer {
+class CRoseServer : public CRoseSocket {
  public:
   CRoseServer(bool _iscServer = false);
   virtual ~CRoseServer();
 
-  bool IsISCServer() { return isc_server_; }
+  bool IsISCServer() const { return isc_server_; }
 
   static std::forward_list<std::unique_ptr<CRoseClient>>& GetClientList() {
     return client_list_;
@@ -49,34 +49,13 @@ class CRoseServer {
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
   static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
-  bool init(std::string _ip, uint16_t _port) { return socket_->init(_ip, _port); }
-  bool listen() { return socket_->listen();  }
-  bool connect() { return socket_->connect(); }
-  bool is_active() const { return socket_->is_active();  }
-  void set_type(uint32_t _val) { socket_->set_type(_val); }
-
-  uint32_t get_id() const { return socket_->get_id(); }
-  uint32_t get_type() const { return socket_->get_type(); }
-  uint16_t get_port() const { return socket_->get_port(); }
-  std::string get_address() const { return socket_->get_address(); }
-
-  virtual void set_socket(Core::INetwork* _val) {
+  void set_socket(Core::INetwork* _val) override {
    socket_ = _val;
    socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
   };
-  bool disconnect() { return socket_->disconnect(); }
-  bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
 
-  std::shared_ptr<spdlog::logger> logger_;
  protected:
   // Callback functions
-  virtual bool OnConnect() ;
-  virtual void OnConnected() ;
-  virtual bool OnListen() ;
-  virtual void OnListening() ;
-  virtual bool OnDisconnect() ;
-  virtual void OnDisconnected() ;
-  virtual bool OnAccept() ;
   virtual void OnAccepted(Core::INetwork* _sock) ;
 
   bool isc_server_;
@@ -84,8 +63,6 @@ class CRoseServer {
   static std::forward_list<std::unique_ptr<CRoseClient>> isc_list_;
   static std::mutex client_list_mutex_;
   static std::mutex isc_list_mutex_;
-
-  Core::INetwork* socket_;
 };
 
 }

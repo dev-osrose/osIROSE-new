@@ -29,9 +29,8 @@ std::forward_list<std::unique_ptr<CRoseClient>> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
-CRoseServer::CRoseServer(bool _iscServer) : isc_server_(_iscServer),
-  socket_(new Core::CNetwork_Asio() ) {
-  logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
+CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(new Core::CNetwork_Asio()),
+  isc_server_(_iscServer) {
 
   std::function<void(Core::INetwork*)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
 
@@ -111,20 +110,6 @@ CRoseServer::~CRoseServer() {
 
   logger_.reset();
 }
-
-bool CRoseServer::OnConnect() { return true; }
-
-void CRoseServer::OnConnected() {}
-
-bool CRoseServer::OnListen() { return true; }
-
-void CRoseServer::OnListening() {}
-
-bool CRoseServer::OnDisconnect() { return true; }
-
-void CRoseServer::OnDisconnected() {}
-
-bool CRoseServer::OnAccept() { return true; }
 
 void CRoseServer::OnAccepted(Core::INetwork* _sock) {
 

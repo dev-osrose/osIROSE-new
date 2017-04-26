@@ -20,6 +20,7 @@
 #include "version.h"
 #include "network_thread_pool.h"
 #include "platform_defines.h"
+#include "cnetwork_asio.h"
 
 namespace {
 void DisplayTitle()
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
 
   CMapServer clientServer;
   CMapServer iscServer(true);
-  CMapISC* iscClient = new CMapISC();
+  CMapISC* iscClient = new CMapISC(new Core::CNetwork_Asio());
   iscClient->init(config.map_server().charip(), config.map_server().chariscport());
   iscClient->set_type(iscPacket::ServerType::CHAR);
 

@@ -21,12 +21,10 @@ CRoseISC::CRoseISC() : CRoseClient() {
 }
 
 CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
-  std::function<bool(uint16_t&, uint8_t*)> fnOnReceived = std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2);
-  std::function<bool(uint8_t*)> fnOnSend = std::bind(&CRoseISC::OnSend, this, std::placeholders::_1);
-
-
-  socket_->registerOnReceived(fnOnReceived);
-  socket_->registerOnSend(fnOnSend);
+  socket_->registerOnReceived(std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_->registerOnSend(std::bind(&CRoseISC::OnSend, this, std::placeholders::_1));
+  socket_->registerOnConnected(std::bind(&CRoseISC::OnConnected, this));
+  socket_->registerOnShutdown(std::bind(&CRoseISC::OnShutdown, this));
 
   socket_->reset_internal_buffer();
 }
@@ -34,13 +32,9 @@ CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
 CRoseISC::~CRoseISC() {}
 
 void CRoseISC::OnConnected() {
-  // Do encryption handshake here
-  CRoseClient::OnConnected();
 }
 
-bool CRoseISC::OnDisconnect() { return true; }
-
-void CRoseISC::OnDisconnected() {}
+bool CRoseISC::OnShutdown() { return true; }
 
 bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
@@ -103,8 +97,6 @@ bool CRoseISC::OnSend(uint8_t* _buffer) {
   (void)_buffer;
   return true;
 }
-
-void CRoseISC::OnSent() {}
 
 bool CRoseISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {

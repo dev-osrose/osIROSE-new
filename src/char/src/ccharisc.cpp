@@ -125,28 +125,28 @@ void CCharISC::OnConnected() {
 
   if (socket_->process_thread_.joinable() == false) {
     socket_->process_thread_ = std::thread([this]() {
-		  while (is_active() == true && IsLogin() == true) {
-			  std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-			  int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-				  update - get_update_time())
-				  .count();
-			  if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
-			  {
-				  logger_->trace("Sending ISC_ALIVE");
-				  auto packet = std::unique_ptr<CRosePacket>(
-					  new CRosePacket(ePacketType::ISC_ALIVE));
-				  send(*packet);
-			  }
-			  std::this_thread::sleep_for(
-				  std::chrono::milliseconds(500));  // sleep for 30 seconds
-		  }
-		  return 0;
-	  });
+      while (is_active() == true && IsLogin() == true) {
+        std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+          update - get_update_time())
+          .count();
+        if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+        {
+          logger_->trace("Sending ISC_ALIVE");
+          auto packet = std::unique_ptr<CRosePacket>(
+            new CRosePacket(ePacketType::ISC_ALIVE));
+          send(*packet);
+        }
+        std::this_thread::sleep_for(
+          std::chrono::milliseconds(500));  // sleep for 30 seconds
+      }
+      return 0;
+    });
   }
 }
 
 bool CCharISC::OnShutdown() {
-  logger_->trace("CCharISC::OnDisconnected()");
+  logger_->trace("CCharISC::OnShutdown()");
   bool result = true;
 
   if (is_active() == true) {
@@ -156,8 +156,8 @@ bool CCharISC::OnShutdown() {
         result = false;
       }
     } else {
-		auto packet = std::unique_ptr<CRosePacket>(
-			new CRosePacket(ePacketType::ISC_SHUTDOWN));
+    auto packet = std::unique_ptr<CRosePacket>(
+      new CRosePacket(ePacketType::ISC_SHUTDOWN));
       //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
