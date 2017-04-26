@@ -30,7 +30,7 @@ class CMapISC : public RoseCommon::CRoseISC {
   bool HandlePacket(uint8_t* _buffer) override;
 
   virtual void OnConnected() override;
-  virtual bool OnShutdown() ;
+  virtual bool OnShutdown() override;
 };
 
 #endif
