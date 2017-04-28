@@ -12,18 +12,20 @@
 #include "cmysql_databasepool.h"
 #include "database.h"
 #include "mock/login/mock_cloginclient.h"
+#include "cnetwork_asio.h"
 
 using namespace RoseCommon;
 
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
   CLoginClient_Mock netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
-  EXPECT_NO_FATAL_FAILURE(network.Listen());
+  netConnect.set_socket(new Core::CNetwork_Asio());
+  EXPECT_EQ(true, network.init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(network.listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29112));
-  EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
+  EXPECT_EQ(true, netConnect.init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(netConnect.connect());
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
   {
@@ -37,31 +39,31 @@ TEST(TestCharServer, TestClientPacketPath) {
   {
     auto pak = std::unique_ptr<CliJoinServerReq>(
         new CliJoinServerReq(1, "cc03e747a6afbbcbf8be7668acfebee5"));
-    netConnect.Send(*pak);
+    netConnect.send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak = std::unique_ptr<CliCreateCharReq>(
         new CliCreateCharReq(1, 1, 1, 1, 1, 10, "Raven"));
-    netConnect.Send(*pak);
+    netConnect.send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak =
         std::unique_ptr<CliDeleteCharReq>(new CliDeleteCharReq(1, 0, "Raven"));
-    netConnect.Send(*pak);
+    netConnect.send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak = std::unique_ptr<CliCreateCharReq>(
         new CliCreateCharReq(1, 1, 1, 1, 1, 10, "Raven"));
-    netConnect.Send(*pak);
+    netConnect.send(*pak);
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   {
     auto pak = std::unique_ptr<CliSelectCharReq>(
         new CliSelectCharReq(1, 0, 0, "Raven"));
-    netConnect.Send(*pak);
+    netConnect.send(*pak);
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -72,23 +74,24 @@ TEST(TestCharServer, TestClientPacketPath) {
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
-  // EXPECT_NO_FATAL_FAILURE( netConnect.Disconnect( ) );
-  EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
+  // EXPECT_NO_FATAL_FAILURE( netConnect.disconnect( ) );
+  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
   // std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown());
 }
 
 TEST(TestCharServer, TestISCMap) {
   CCharServer network;
   CMapISC mapISC;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29112));
-  EXPECT_NO_FATAL_FAILURE(network.Listen());
+  mapISC.set_socket(new Core::CNetwork_Asio());
+  EXPECT_EQ(true, network.init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(network.listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  mapISC.SetId(0);
-  mapISC.SetType(3);
-  EXPECT_EQ(true, mapISC.Init("127.0.0.1", 29112));
-  EXPECT_NO_FATAL_FAILURE(mapISC.Connect());
+  mapISC.set_id(0);
+  mapISC.set_type(3);
+  EXPECT_EQ(true, mapISC.init("127.0.0.1", 29112));
+  EXPECT_NO_FATAL_FAILURE(mapISC.connect());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -97,6 +100,6 @@ TEST(TestCharServer, TestISCMap) {
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
 
-  EXPECT_NO_FATAL_FAILURE(mapISC.Shutdown());
-  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+  EXPECT_NO_FATAL_FAILURE(mapISC.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown());
 }

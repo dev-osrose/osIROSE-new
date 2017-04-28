@@ -20,6 +20,7 @@
 #include <mutex>
 #include <atomic>
 #include <bitset>
+#include "threadpool.h"
 
 namespace Core {
 #define MAX_NETWORK_THREADS 512
@@ -41,15 +42,14 @@ class NetworkThreadPool {
   }
 
   asio::io_context* Get_IO_Service() { return &io_service_; }
-  uint16_t GetThreadCount() { return threads_active_.count(); }
+  uint16_t GetThreadCount() const { return static_cast<uint16_t>(threads_active_.count()); }
 
  private:
-  NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)) {
+  NetworkThreadPool(uint16_t maxthreads) : io_work_(new asio_worker::element_type(io_service_)), 
+    pool( std::thread::hardware_concurrency() ) {
     uint16_t core_count = std::thread::hardware_concurrency()
                ? std::thread::hardware_concurrency()
-               : 1;;
-
-    core_count *= 2;
+               : 1;
 
     if(maxthreads != 0 && core_count > maxthreads)
       core_count = maxthreads;
@@ -61,11 +61,7 @@ class NetworkThreadPool {
 
     for (uint32_t idx = 0; idx < core_count; ++idx) {
       threads_active_.set(idx);
-      
-      io_thread_[idx] = std::thread([this, idx]() {
-        int index = idx;
-        while(threads_active_.test(index)) io_service_.run_one();
-      });
+      pool.enqueue([this, idx]() { (*this)(idx); });
     }
   }
 
@@ -74,18 +70,20 @@ class NetworkThreadPool {
   void Shutdown() {
     threads_active_.reset();
     io_work_.reset();
-    for (int idx = 0; idx < MAX_NETWORK_THREADS; ++idx) {
-      if( true == io_thread_[idx].joinable() )
-        io_thread_[idx].join();
-    }
-    
     io_service_.stop();
   }
 
+  NetworkThreadPool& operator()(uint32_t _id) {
+    io_service_.run_one();
+    if( threads_active_.test(_id) ) 
+      pool.enqueue([this, _id]() { (*this)(_id); });
+    return *this;
+  }
+
   std::bitset<MAX_NETWORK_THREADS> threads_active_;
-  std::thread io_thread_[MAX_NETWORK_THREADS];
   asio::io_context io_service_;
   asio_worker io_work_;
+  ThreadPool pool;
   static NetworkThreadPool* instance_;
 };
 }

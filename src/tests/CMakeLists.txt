@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.6)
 link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
-set(PROJECT osirose-tests)
+set(PROJECT_LIB osirose-lib)
 set(CMAKE_BUILD_TYPE "Debug")
 
 IF(ENABLE_MYSQL_ONE_INSTANCE)
@@ -21,7 +21,7 @@ IF (NOT MSVC)
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat -Wl,-Map=${PROJECT}.map")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
 ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
@@ -69,16 +69,16 @@ set(SOURCES_BASE
   src/test_char
   src/test_servers
   src/test_crosepacket
-  src/test_system
+  #src/test_system
 )
 
 set(SOURCES
-  ${SERVER_SOURCE}
   ${SOURCE_MAIN}
   ${SOURCES_BASE}
 )
 
-project(${PROJECT})
+#build the lib
+project(${PROJECT_LIB})
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/src/login/include
@@ -88,15 +88,51 @@ include_directories(
 
 find_package( Threads REQUIRED )
 
-add_executable(${PROJECT} ${HEADERS} ${SOURCES})
-target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+add_library(${PROJECT_LIB} STATIC ${SERVER_SOURCE} ${HEADERS})
+target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/login/include>)
+target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/char/include>)
+target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/map/include>)
+target_link_libraries(${PROJECT_LIB} RoseCommon)
 
-set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
+
+macro (compile_test name path)
+  set(TEST_NAME Test${name})
+  project(${TEST_NAME})
+  find_package( Threads REQUIRED )
+
+  add_executable(${TEST_NAME} main ${path})
+  target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
+
+  IF(ENABLE_MYSQL)
+    target_link_libraries(${TEST_NAME} mysqlpp)
+  ENDIF()
+
+  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
+  target_link_libraries(${TEST_NAME} RoseCommon)
+  target_link_libraries(${TEST_NAME} gtest)
+  target_link_libraries(${TEST_NAME} gmock)
+  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+
+  IF (MSVC)
+    target_link_libraries(${TEST_NAME} libprotobuf)
+    target_link_libraries(${TEST_NAME} wsock32.lib)
+  ELSE()
+    target_link_libraries(${TEST_NAME} ${PROTOBUF_LIBRARY})
+    target_link_libraries(${TEST_NAME} mysqlclient)
+  ENDIF()
+
+  add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+endmacro (compile_test)
+
+#---------------------------------
+#build the actual tests
 
 IF(ENABLE_TESTING_COVERAGE)
   include(CodeCoverage)
-  
-  set(COVERAGE_IGNORE_LIST 
+
+  set(COVERAGE_IGNORE_LIST
     'tools/*'
     '3rdparty/*'
     'protobuf/*'
@@ -105,30 +141,18 @@ IF(ENABLE_TESTING_COVERAGE)
     'pbjson.*'
     'bin2ascii.h'
   )
-    
+
   SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
-IF(ENABLE_MYSQL)
-  target_link_libraries(${PROJECT} mysqlpp)
-ENDIF()
-
-target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} gtest)
-target_link_libraries(${PROJECT} gmock)
-target_link_libraries(${PROJECT} ${COVERAGE_LIBRARIES})
-
-IF (MSVC)
-  target_link_libraries(${PROJECT} libprotobuf)
-  target_link_libraries(${PROJECT} wsock32.lib)
-ELSE()
-  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
-  target_link_libraries(${PROJECT} mysqlclient)
-ENDIF()
-
-add_test(NAME SetupTesting COMMAND osirose-tests --gtest_filter=SetupTesting.*)
-add_test(NAME TestConfig COMMAND osirose-tests --gtest_filter=Config.*)
-add_test(NAME TestNetworking COMMAND osirose-tests --gtest_filter=Test*Network*.*)
-add_test(NAME TestDatabases COMMAND osirose-tests --gtest_filter=Test*Database.*)
-add_test(NAME TestServers COMMAND osirose-tests --gtest_filter=Test*Server*.*)
+compile_test(Config src/test_config)
+compile_test(Console src/test_logconsole)
+compile_test(MySQLDB src/test_mysql_database)
+compile_test(ASIONetwork src/test_network_asio)
+compile_test(RoseCrypt src/test_crosecrypt)
+compile_test(RoseNetwork src/test_crose_network)
+compile_test(LoginServer src/test_login)
+compile_test(CharServer src/test_char)
+compile_test(AllServers src/test_servers)
+compile_test(RosePackets src/test_crosepacket)
+compile_test(Systems src/test_system)

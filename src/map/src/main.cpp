@@ -18,6 +18,9 @@
 #include "cmapisc.h"
 #include "config.h"
 #include "version.h"
+#include "network_thread_pool.h"
+#include "platform_defines.h"
+#include "cnetwork_asio.h"
 
 namespace {
 void DisplayTitle()
@@ -72,20 +75,20 @@ int main(int argc, char* argv[]) {
 
   CMapServer clientServer;
   CMapServer iscServer(true);
-  CMapISC* iscClient = new CMapISC();
-  iscClient->Init(config.map_server().charip(), config.map_server().chariscport());
-  iscClient->SetType(iscPacket::ServerType::CHAR);
+  CMapISC* iscClient = new CMapISC(new Core::CNetwork_Asio());
+  iscClient->init(config.map_server().charip(), config.map_server().chariscport());
+  iscClient->set_type(iscPacket::ServerType::CHAR);
 
-  clientServer.Init(config.serverdata().ip(), config.map_server().clientport());
-  clientServer.Listen();
+  clientServer.init(config.serverdata().ip(), config.map_server().clientport());
+  clientServer.listen();
   clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
 
-  iscServer.Init(config.serverdata().isclistenip(), config.map_server().iscport());
-  iscServer.Listen();
-  iscClient->Connect();
+  iscServer.init(config.serverdata().isclistenip(), config.map_server().iscport());
+  iscServer.listen();
+  iscClient->connect();
 
   auto start = Core::Time::GetTickCount();
-  while (clientServer.IsActive()) {
+  while (clientServer.is_active()) {
       std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
     clientServer.update(diff.count());
     start = Core::Time::GetTickCount();

@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,19 +17,19 @@
 
 #include <list>
 #include <forward_list>
-#include "cnetwork_asio.h"
+#include "inetwork.h"
 #include "croseclient.h"
 #include "croseisc.h"
 #include <memory>
 
 namespace RoseCommon {
 
-class CRoseServer : public Core::CNetwork_Asio {
+class CRoseServer : public CRoseSocket {
  public:
   CRoseServer(bool _iscServer = false);
   virtual ~CRoseServer();
 
-  bool IsISCServer() { return isc_server_; }
+  bool IsISCServer() const { return isc_server_; }
 
   static std::forward_list<std::unique_ptr<CRoseClient>>& GetClientList() {
     return client_list_;
@@ -37,7 +37,7 @@ class CRoseServer : public Core::CNetwork_Asio {
   static std::forward_list<std::unique_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
   static std::mutex& GetClientListMutex() { return client_list_mutex_; }
   static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
-  
+
   enum class eSendType : uint8_t {
     EVERYONE,
     EVERYONE_BUT_ME,
@@ -45,20 +45,18 @@ class CRoseServer : public Core::CNetwork_Asio {
     NEARBY,
     NEARBY_BUT_ME,
   };
-  
+
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
   static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
+  void set_socket(Core::INetwork* _val) override {
+   socket_ = _val;
+   socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
+  };
+
  protected:
   // Callback functions
-  virtual bool OnConnect() override;
-  virtual void OnConnected() override;
-  virtual bool OnListen() override;
-  virtual void OnListening() override;
-  virtual bool OnDisconnect() override;
-  virtual void OnDisconnected() override;
-  virtual bool OnAccept() override;
-  virtual void OnAccepted(tcp::socket _sock) override;
+  virtual void OnAccepted(Core::INetwork* _sock) ;
 
   bool isc_server_;
   static std::forward_list<std::unique_ptr<CRoseClient>> client_list_;

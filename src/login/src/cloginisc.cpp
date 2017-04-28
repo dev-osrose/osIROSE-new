@@ -20,7 +20,7 @@ using namespace RoseCommon;
 CLoginISC::CLoginISC()
     : CRoseISC(), channel_count_(0), min_right_(0), test_server_(false) {}
 
-CLoginISC::CLoginISC(tcp::socket _sock)
+CLoginISC::CLoginISC(Core::INetwork* _sock)
     : CRoseISC(std::move(_sock)),
       channel_count_(0),
       min_right_(0),
@@ -64,12 +64,10 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   // todo: replace these numbers with the actual enum name
   if (_type == iscPacket::ServerType::CHAR) {
     server_name_ = pServerReg.name();
-    network_ip_address_ = pServerReg.addr();
-    network_port_ = pServerReg.port();
+    socket_->set_address(pServerReg.addr());
+    socket_->set_port(pServerReg.port());
     min_right_ = pServerReg.accright();
-    network_type_ = _type;
-
-    this->SetType( _type );
+    socket_->set_type(_type);
   } else if (_type == iscPacket::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
@@ -81,7 +79,7 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   }
 
   logger_->debug( "ISC Server Type: [{}]\n",
-                   GetType() );
+    socket_->get_type() );
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
                   ServerType_Name(pServerReg.type()).c_str(),

@@ -24,13 +24,13 @@ class CLoginServer : public RoseCommon::CRoseServer {
   virtual ~CLoginServer();
 
   // This will give you the count of the clients in the list
-  uint32_t GetClientCount() {
+  uint32_t GetClientCount() const {
     return (client_list_.empty() ? 0 : std::distance(std::begin(client_list_),
                                                      std::end(client_list_)));
   }
 
  protected:
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual void OnAccepted(Core::INetwork* _sock);
   uint32_t client_count_;
   uint32_t server_count_;
 };
