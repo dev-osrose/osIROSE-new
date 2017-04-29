@@ -32,7 +32,7 @@ CMapClient::CMapClient()
       charid_(0),
       canBeDeleted_(true) {}
 
-CMapClient::CMapClient(Core::INetwork* _sock, std::shared_ptr<EntitySystem> entitySystem)
+CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),

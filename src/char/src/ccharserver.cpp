@@ -25,7 +25,7 @@ CCharServer::CCharServer(bool _isc) : CRoseServer(_isc), client_count_(0), serve
 
 CCharServer::~CCharServer() { socket_->shutdown(); }
 
-void CCharServer::OnAccepted(Core::INetwork* _sock) {
+void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (_sock->is_active()) {
     // Do Something?
     std::string _address = _sock->get_address();

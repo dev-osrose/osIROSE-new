@@ -26,7 +26,7 @@
 class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
-  CMapClient(Core::INetwork* _sock, std::shared_ptr<EntitySystem> entitySystem);
+  CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem);
 
   virtual ~CMapClient() = default;
 

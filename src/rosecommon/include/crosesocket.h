@@ -27,11 +27,11 @@ namespace RoseCommon {
 class CRoseSocket {
  public:
   CRoseSocket();
-  CRoseSocket(Core::INetwork* _sock);
+  CRoseSocket(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseSocket();
 
-  virtual void set_socket(Core::INetwork* _val) {
-   socket_ = _val;
+  virtual void set_socket(std::unique_ptr<Core::INetwork> _val) {
+   socket_ = std::move(_val);
    socket_->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
    socket_->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
    socket_->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
@@ -72,7 +72,7 @@ class CRoseSocket {
   virtual bool HandlePacket(uint8_t* _buffer) ;
 
   PacketCodec crypt_;
-  Core::INetwork* socket_;
+  std::unique_ptr<Core::INetwork> socket_;
 
   std::mutex recv_mutex_;
   std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;

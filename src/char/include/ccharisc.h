@@ -22,7 +22,7 @@
 class CCharISC : public RoseCommon::CRoseISC {
  public:
   CCharISC();
-  CCharISC(Core::INetwork* _sock);
+  CCharISC(std::unique_ptr<Core::INetwork> _sock);
 
   bool IsLogin() const;
   void SetLogin(bool val);

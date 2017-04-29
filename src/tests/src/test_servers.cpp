@@ -1,9 +1,7 @@
 #include "gtest/gtest.h"
 
-#include <stdint.h>
 #include "cnetwork_asio.h"
 #include "iscpackets.pb.h"
-#include "epackettype.h"
 #include "crosepacket.h"
 #include "cloginserver.h"
 #include "ccharserver.h"
@@ -21,8 +19,8 @@ TEST(TestFinalServers, TestISCConnections) {
   CMapServer mapIsc(true);
   std::unique_ptr<CMapISC> mapIscClient = std::make_unique<CMapISC>();
 
-  charIscClient->set_socket(new Core::CNetwork_Asio());
-  mapIscClient->set_socket(new Core::CNetwork_Asio());
+  charIscClient->set_socket(std::make_unique<Core::CNetwork_Asio>());
+  mapIscClient->set_socket(std::make_unique<Core::CNetwork_Asio>());
 
   loginIsc.init("127.0.0.1", 29010);
 
@@ -48,16 +46,16 @@ TEST(TestFinalServers, TestISCConnections) {
   CCharServer::GetISCList().push_front(std::move(charIscClient));
   CMapServer::GetISCList().push_front(std::move(mapIscClient));
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+  std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
   map->shutdown(true);
   charc->shutdown(true);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 
   mapIsc.shutdown(true);
   charIsc.shutdown(true);
   loginIsc.shutdown(true);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 }

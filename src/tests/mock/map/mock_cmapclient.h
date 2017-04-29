@@ -10,8 +10,8 @@ using ::testing::Invoke;
 class CMapClient_Mock : public CMapClient {
     public:
       CMapClient_Mock() : CMapClient() {};
-      CMapClient_Mock(Core::INetwork* _sock) : CMapClient() {
-        set_socket(_sock);
+      CMapClient_Mock(std::unique_ptr<Core::INetwork> _sock) : CMapClient() {
+        set_socket(std::move(_sock));
       };
 
 

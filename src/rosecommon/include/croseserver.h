@@ -15,11 +15,9 @@
 #ifndef _CROSE_NETWORK_H_
 #define _CROSE_NETWORK_H_
 
-#include <list>
 #include <forward_list>
 #include "inetwork.h"
 #include "croseclient.h"
-#include "croseisc.h"
 #include <memory>
 
 namespace RoseCommon {
@@ -49,14 +47,14 @@ class CRoseServer : public CRoseSocket {
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
   static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
-  void set_socket(Core::INetwork* _val) override {
-   socket_ = _val;
+  void set_socket(std::unique_ptr<Core::INetwork> _val) override {
+   socket_ = std::move(_val);
    socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
   };
 
  protected:
   // Callback functions
-  virtual void OnAccepted(Core::INetwork* _sock) ;
+  virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) ;
 
   bool isc_server_;
   static std::forward_list<std::unique_ptr<CRoseClient>> client_list_;

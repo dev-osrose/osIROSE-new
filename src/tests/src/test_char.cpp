@@ -19,7 +19,7 @@ using namespace RoseCommon;
 TEST(TestCharServer, TestClientPacketPath) {
   CCharServer network;
   CLoginClient_Mock netConnect;
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 
@@ -83,7 +83,7 @@ TEST(TestCharServer, TestClientPacketPath) {
 TEST(TestCharServer, TestISCMap) {
   CCharServer network;
   CMapISC mapISC;
-  mapISC.set_socket(new Core::CNetwork_Asio());
+  mapISC.set_socket(std::make_unique<Core::CNetwork_Asio>());
   EXPECT_EQ(true, network.init("127.0.0.1", 29112));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 

@@ -28,7 +28,7 @@ CCharClient::CCharClient()
       userId_(0),
       channelId_(0) {}
 
-CCharClient::CCharClient(Core::INetwork* _sock)
+CCharClient::CCharClient(std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       accessRights_(0),
       loginState_(eSTATE::DEFAULT),

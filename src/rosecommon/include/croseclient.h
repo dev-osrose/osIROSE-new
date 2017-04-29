@@ -30,7 +30,7 @@ class CRoseClient : public CRoseSocket {
  friend class CRoseServer;
  public:
   CRoseClient();
-  CRoseClient(Core::INetwork* _sock);
+  CRoseClient(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseClient();
 
   virtual bool is_nearby(const CRoseClient* _otherClient) const;

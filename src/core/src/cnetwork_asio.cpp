@@ -279,11 +279,11 @@ void CNetwork_Asio::AcceptConnection() {
         // Do something here for the new connection.
         // Make sure to use std::move(socket)
         // std::make_shared<CClientSesson>( std::move(socket) );
-        CNetwork_Asio* nSock = new CNetwork_Asio();
+        auto nSock = std::make_unique<CNetwork_Asio>();
         nSock->set_address(socket.remote_endpoint().address().to_string());
         nSock->SetSocket(std::move(socket));
 
-        this->OnAccepted(nSock);
+        this->OnAccepted(std::move(nSock));
       } else {
         // Kill the socket
         std::error_code ignored;

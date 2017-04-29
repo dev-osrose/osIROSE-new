@@ -23,8 +23,8 @@ namespace RoseCommon {
 CRoseClient::CRoseClient() : CRoseSocket() {
 }
 
-CRoseClient::CRoseClient(Core::INetwork* _sock) : CRoseSocket(_sock) {
-  _sock->recv_data();
+CRoseClient::CRoseClient(std::unique_ptr<Core::INetwork> _sock) : CRoseSocket(std::move(_sock)) {
+  socket_->recv_data();
 }
 
 CRoseClient::~CRoseClient() {

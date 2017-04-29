@@ -30,7 +30,7 @@ class CLoginServer : public RoseCommon::CRoseServer {
   }
 
  protected:
-  virtual void OnAccepted(Core::INetwork* _sock);
+  virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
   uint32_t client_count_;
   uint32_t server_count_;
 };

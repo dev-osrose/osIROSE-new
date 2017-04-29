@@ -16,6 +16,7 @@
 #include "logconsole.h"
 #include "croseserver.h"
 #include "platform_defines.h"
+#include "croseisc.h"
 
 #define USE_ASIO_NETWORKING
 #ifdef USE_ASIO_NETWORKING
@@ -29,10 +30,10 @@ std::forward_list<std::unique_ptr<CRoseClient>> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
-CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(new Core::CNetwork_Asio()),
+CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::CNetwork_Asio>()),
   isc_server_(_iscServer) {
 
-  std::function<void(Core::INetwork*)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
+  std::function<void(std::unique_ptr<Core::INetwork>)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
 
   socket_->registerOnAccepted(fnOnAccepted);
 
@@ -102,28 +103,28 @@ CRoseServer::~CRoseServer() {
   }
 }
 
-void CRoseServer::OnAccepted(Core::INetwork* _sock) {
+void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 
   logger_->warn(
       "CRoseServer::OnAccepted called! You should really overload this "
       "function.");
 //  if (sock_.is_open()) {
-//    std::string _address = sock_.remote_endpoint().address().to_string();
+    std::string _address = _sock->get_address();
 
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      auto nClient = std::make_unique<CRoseClient>(_sock);
+      auto nClient = std::make_unique<CRoseClient>(std::move(_sock));
       nClient->set_id(
           std::distance(std::begin(client_list_), std::end(client_list_)));
       logger_->info("[{}] Client connected from: {}", nClient->get_id(),
-                      _sock->get_address().c_str());
+        _address.c_str());
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      auto nClient = std::make_unique<CRoseISC>(_sock);
+      auto nClient = std::make_unique<CRoseISC>(std::move(_sock));
       nClient->set_id(std::distance(std::begin(isc_list_), std::end(isc_list_)));
       logger_->info("[{}] Server connected from: {}", nClient->get_id(),
-                      _sock->get_address().c_str());
+        _address.c_str());
       isc_list_.push_front(std::move(nClient));
     }
 //  }

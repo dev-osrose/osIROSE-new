@@ -11,6 +11,7 @@
 #include "crosepacket.h"
 #include "logconsole.h"
 #include "cnetwork_asio.h"
+#include "croseisc.h"
 
 using namespace RoseCommon;
 
@@ -151,7 +152,7 @@ TEST(TestRoseNetwork, TestListenAndConnect) {
 
   CRoseServer network;
   CRoseClient netConnect;
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
   EXPECT_EQ(true, network.init(
                       "127.0.0.1",
                       29100));  // We are going to connect to google's website
@@ -193,7 +194,7 @@ TEST(TestRoseNetwork, TestListenAndConnect2) {
   CRoseServer network;
   CRoseClient netConnect;
 
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
   EXPECT_EQ(true, network.init("127.0.0.1", 29110));
   EXPECT_NO_FATAL_FAILURE(network.listen());
 
@@ -230,7 +231,7 @@ TEST(TestRoseNetwork, TestISCListenAndConnect) {
 
   CRoseServer network(true);
   CRoseISC netConnect;
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
   EXPECT_EQ(true, network.init(
                       "127.0.0.1",
                       29110));  // We are going to connect to google's website

@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 
   CMapServer clientServer;
   CMapServer iscServer(true);
-  CMapISC* iscClient = new CMapISC(new Core::CNetwork_Asio());
+  CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
   iscClient->init(config.map_server().charip(), config.map_server().chariscport());
   iscClient->set_type(iscPacket::ServerType::CHAR);
 

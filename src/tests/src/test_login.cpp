@@ -16,8 +16,8 @@ TEST(TestLoginServer, TestClientPacketPath) {
   std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
   CLoginClient_Mock netConnect;
 
-  iscServ->set_socket(new Core::CNetwork_Asio());
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  iscServ->set_socket(std::make_unique<Core::CNetwork_Asio>());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
 
   EXPECT_EQ(true, network.init("127.0.0.1", 29110));
   EXPECT_EQ(true, network.listen());
@@ -90,7 +90,7 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 
   CLoginServer network(true);
   CCharISC netConnect;
-  netConnect.set_socket(new Core::CNetwork_Asio());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
 
   EXPECT_EQ(true, network.init("127.0.0.1", 29111));
   EXPECT_NO_FATAL_FAILURE(network.listen());

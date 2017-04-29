@@ -23,23 +23,19 @@ CRoseSocket::CRoseSocket() : crypt_(), socket_(nullptr) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
 }
 
-CRoseSocket::CRoseSocket(Core::INetwork* _sock) : crypt_(), socket_(_sock) {
+CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock) : crypt_(), socket_(std::move(_sock)) {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
-  _sock->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-  _sock->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-  _sock->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+  socket_->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
+  socket_->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
 
-  _sock->reset_internal_buffer();
+  socket_->reset_internal_buffer();
 }
 
 CRoseSocket::~CRoseSocket() {
   CRoseSocket::shutdown(true);
 
-  if (socket_ != nullptr) {
-    delete socket_;
-    socket_ = nullptr;
-  }
-
+  //socket_.release();
   logger_.reset();
 }
 

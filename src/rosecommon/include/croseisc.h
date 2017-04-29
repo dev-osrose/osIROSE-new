@@ -22,7 +22,7 @@ namespace RoseCommon {
 class CRoseISC : public CRoseClient {
  public:
   CRoseISC();
-  CRoseISC(Core::INetwork* _sock);
+  CRoseISC(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseISC();
 
  protected:

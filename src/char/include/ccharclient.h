@@ -24,7 +24,7 @@
 class CCharClient : public RoseCommon::CRoseClient {
  public:
   CCharClient();
-  CCharClient(Core::INetwork* _sock);
+  CCharClient(std::unique_ptr<Core::INetwork> _sock);
   
   bool is_nearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
 

@@ -23,7 +23,7 @@
 class CLoginClient : public RoseCommon::CRoseClient {
  public:
   CLoginClient();
-  CLoginClient(Core::INetwork* _sock);
+  CLoginClient(std::unique_ptr<Core::INetwork> _sock);
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;

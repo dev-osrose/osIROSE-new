@@ -141,7 +141,7 @@ class INetwork {
   virtual std::chrono::steady_clock::time_point get_update_time() const { return update_time_; }
 
   void registerOnAccept(std::function<bool()> _val) { OnAccept = _val; }
-  void registerOnAccepted(std::function<void(INetwork*)> _val) { OnAccepted = _val; }
+  void registerOnAccepted(std::function<void(std::unique_ptr<Core::INetwork>)> _val) { OnAccepted = _val; }
   void registerOnConnect(std::function<bool()> _val) { OnConnect = _val; }
   void registerOnConnected(std::function<void()> _val) { OnConnected = _val; }
   void registerOnListen(std::function<bool()> _val) { OnListen = _val; }
@@ -157,7 +157,7 @@ class INetwork {
   void initCallbacks() {
     std::function<void()> fnDummyVoid = []() {};
     std::function<bool()> fnDummyBool = []() { return true; };
-    std::function<void(INetwork*)> fnDummyAccepted = [](INetwork*) {};
+    std::function<void(std::unique_ptr<Core::INetwork>)> fnDummyAccepted = [](std::unique_ptr<Core::INetwork>) {};
     std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
     std::function<bool(uint16_t&, uint8_t*)> fnDummyRecv = [](uint16_t&, uint8_t*) {
       std::cout << "Shit is broken!\n";
@@ -180,7 +180,7 @@ class INetwork {
 
   // Callback functions
   std::function<bool()> OnAccept;
-  std::function<void(INetwork*)> OnAccepted;
+  std::function<void(std::unique_ptr<Core::INetwork>)> OnAccepted;
   std::function<bool()> OnConnect;
   std::function<void()> OnConnected;
   std::function<bool()> OnListen;

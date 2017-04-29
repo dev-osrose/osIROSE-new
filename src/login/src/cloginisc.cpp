@@ -20,7 +20,7 @@ using namespace RoseCommon;
 CLoginISC::CLoginISC()
     : CRoseISC(), channel_count_(0), min_right_(0), test_server_(false) {}
 
-CLoginISC::CLoginISC(Core::INetwork* _sock)
+CLoginISC::CLoginISC(std::unique_ptr<Core::INetwork> _sock)
     : CRoseISC(std::move(_sock)),
       channel_count_(0),
       min_right_(0),

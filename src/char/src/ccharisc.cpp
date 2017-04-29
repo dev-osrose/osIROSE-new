@@ -25,7 +25,7 @@ using namespace RoseCommon;
 
 CCharISC::CCharISC() : CRoseISC() {}
 
-CCharISC::CCharISC(Core::INetwork* _sock) : CRoseISC(std::move(_sock)) {}
+CCharISC::CCharISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {

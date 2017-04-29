@@ -20,7 +20,7 @@ namespace RoseCommon {
 CRoseISC::CRoseISC() : CRoseClient() {
 }
 
-CRoseISC::CRoseISC(Core::INetwork* _sock) : CRoseClient(std::move(_sock)) {
+CRoseISC::CRoseISC(std::unique_ptr<Core::INetwork> _sock) : CRoseClient(std::move(_sock)) {
   socket_->registerOnReceived(std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
   socket_->registerOnSend(std::bind(&CRoseISC::OnSend, this, std::placeholders::_1));
   socket_->registerOnConnected(std::bind(&CRoseISC::OnConnected, this));

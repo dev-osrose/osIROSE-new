@@ -49,7 +49,7 @@ void CMapServer::SendPacket(const CMapClient& sender, CMapServer::eSendType type
 
 CMapServer::~CMapServer() {}
 
-void CMapServer::OnAccepted(Core::INetwork* _sock) {
+void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (_sock->is_active()) {
     // Do Something?
     std::string _address = _sock->get_address();

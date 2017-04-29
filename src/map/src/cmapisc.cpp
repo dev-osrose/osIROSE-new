@@ -26,7 +26,7 @@ CMapISC::CMapISC() : CRoseISC() {
 //  socket_->set_type(iscPacket::ServerType::MAP_MASTER);
 }
 
-CMapISC::CMapISC(Core::INetwork* _sock)
+CMapISC::CMapISC(std::unique_ptr<Core::INetwork> _sock)
     : CRoseISC(std::move(_sock)) {
   socket_->set_type(iscPacket::ServerType::MAP_MASTER);
 }
