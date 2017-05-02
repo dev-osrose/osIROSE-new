@@ -86,7 +86,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::osirose>();
   Core::AccountsTable table;
   const auto res = conn.run(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
           .from(table).where(table.username == username_
