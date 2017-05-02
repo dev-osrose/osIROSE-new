@@ -38,12 +38,20 @@ class ConnectionPool : public Singleton<ConnectionPool<Connectors...>> {
         }
 
     private:
+        struct foo {
+            constexpr foo(std::size_t &i, const std::string &name) : i(i), name(name) {}
+            template <class T>
+            constexpr void operator()(const std::size_t is, const T pair) {
+                i = name == pair.first ? is : i;
+            }
+            std::size_t &i;
+            const std::string &name;
+        };
+
         template <class Tuple>
         static constexpr std::size_t findFactoryId(Tuple &tup, const std::string &name) {
             std::size_t i = 0;
-            for_each_in_tuple(tup, [&](const std::size_t is, const auto pair) {
-                    i = name == pair.first ? is : i;
-                    });
+            for_each_in_tuple(tup, foo(i, name));
             return i;
         }
 
