@@ -16,7 +16,6 @@
 #define _CLOGINSERVER_H_
 
 #include "croseserver.h"
-#include "cmysql_database.h"
 
 class CLoginServer : public RoseCommon::CRoseServer {
  public:

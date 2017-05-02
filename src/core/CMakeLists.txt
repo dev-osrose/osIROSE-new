@@ -31,17 +31,15 @@ set( SOURCES_HEADER
   include/config 
   ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
-  include/cmysql_database
+  include/mysqlconnection
   include/network_thread_pool
-  include/idatabase
   include/inetwork
-  include/idatabasepool
-  include/cmysql_databasepool
+  include/connectionpool
   include/singleton
   include/riterator
   include/platform_defines
-  include/iscontainer.h
-  include/makevector.h
+  include/iscontainer
+  include/makevector
 )
 
 set( SOURCES_BASE
@@ -49,7 +47,8 @@ set( SOURCES_BASE
   src/cnetwork_asio
   src/config
   ${PBJSON_ROOT}/pbjson.cpp
-  src/cmysql_database
+  src/mysqlconnection
+  src/connection
 )
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})

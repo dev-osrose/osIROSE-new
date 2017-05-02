@@ -47,9 +47,6 @@ struct Item : public ISerialize {
     virtual uint16_t getHeader() const override;
     virtual uint32_t getData() const override;
 
-    virtual void saveToDatabase() const override;
-    virtual void loadFromDatabase(Core::IRow&) override;
-
     uint8_t type_;
     uint16_t id_;
     bool isCreated_;

@@ -15,7 +15,7 @@
 #include "cloginserver.h"
 #include "cloginisc.h"
 #include "cloginclient.h"
-#include "database.h"
+#include "connection.h"
 
 using namespace RoseCommon;
 
@@ -81,14 +81,16 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
     return true;
   }
 
-  username_ = Core::CMySQL_Database::escapeData(P->username());
-  std::string clientpass = Core::CMySQL_Database::escapeData(P->password());
+  username_ = Core::escapeData(P->username());
+  std::string clientpass = Core::escapeData(P->password());
 
-  std::unique_ptr<Core::IResult> res;
   std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
 
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  res = database.QStore(query);
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountsTable table;
+  const auto res = conn.run(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+          .from(table).where(table.username == username_
+              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)"))));
 
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {

@@ -17,7 +17,6 @@
 #include "cloginisc.h"
 #include "epackettype.h"
 #include "config.h"
-#include "database.h"
 
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }

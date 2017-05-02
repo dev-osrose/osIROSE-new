@@ -2,8 +2,7 @@
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
+// You may obtain a copy of the License at 
 // http ://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
@@ -17,6 +16,9 @@
 #include "config.h"
 #include "logconsole.h"
 #include "version.h"
+
+#include "connection.h"
+#include "mysqlconnection.h"
 
 namespace {
 void DisplayTitle()
@@ -130,6 +132,13 @@ int main(int argc, char* argv[]) {
     }
 
     Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+
+    Core::connectionPool.addConnector(Core::osirose, std::bind(
+                Core::mysqlFactory, 
+                config.database().user(),
+                config.database().password(), 
+                config.database().database(),
+                config.database().host()));
 
     CLoginServer clientServer;
     CLoginServer iscServer(true);
