@@ -12,7 +12,7 @@ function test_dep() {
     return 0
 }
 
-readonly deps=('cmake' 'gcc-5' 'g++-5' 'unzip' 'autoconf' 'python' 'ruby')
+readonly deps=('cmake' 'gcc-5' 'g++-5' 'unzip' 'autoconf' 'python' 'ruby' 'yad')
 declare -a mising_dep
 stat=0
 
