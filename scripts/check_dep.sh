@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 function test_dep() {
     local dep=$1;shift
-    if ! eval "${dep}" --version > /dev/null
+    if ! type ${dep} > /dev/null 2>&1
     then
         echo "missing ${dep} dependency"
         return 1
@@ -18,35 +18,42 @@ stat=0
 
 for dep in ${deps[@]}
 do
-    test_dep ${dep}
-    rc=$?
-    if [[ ${rc} -ne 0 ]]
+    if ! test_dep "${dep}"
     then
         missing_dep=("${missing_dep[@]}" ${dep})
+        stat=1
     fi
-    stat=${stat} || ${rc}
 done
 
+echo "stat=${stat}"
 if [[ ${stat} -ne 0 ]]
 then
     echo "Missing dependencies"
-    case $(lsb_release -si) in
-        "Ubuntu"|"Debian") source install_dep_deb.sh;;
-        "Arch"|"Manjaro") source install_dep_arch.sh;;
+    distro=$(lsb_release -si)
+    case ${distro} in
+        "Ubuntu"|"Debian")
+            echo "Using debian package manager"
+            source scripts/install_dep_deb.sh
+            ;;
+        "Arch"|"ManjaroLinux")
+            echo "Using arch package manager"
+            source scripts/install_dep_arch.sh
+            ;;
         default)
-            echo "Please install ${missing_dep[@]}"
+            echo "Please install ${missing_dep[*]}"
             exit 1;;
     esac
     if ! pre_install
     then
-        echo "Initialisation failed" > &2
+        echo "Initialisation failed" >&2
+        exit 1
     fi
     echo "Installation command may ask your password"
     for dep in ${missing_dep[@]}
     do
-        if ! install ${dep}
+        if ! install_dep "${dep}"
         then
-            echo "Failed to install ${dep}" > &2
+            echo "Failed to install ${dep}" >&2
             exit 2
         fi
     done

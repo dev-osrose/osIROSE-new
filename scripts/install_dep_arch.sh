@@ -6,7 +6,7 @@ function pre_install() {
     return 0
 }
 
-function install() {
+function install_dep() {
     sudo pacman -S "$1"
 }
 

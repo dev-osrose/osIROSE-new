@@ -7,6 +7,6 @@ function pre_install() {
     sudo apt-get update
 }
 
-function install() {
+function install_dep() {
     sudo apt-get "install" "$1"
 }
