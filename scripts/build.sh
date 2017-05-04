@@ -10,7 +10,12 @@ then
     touch build/deps
 fi
 
-source "scripts/default-env.sh"
+if [[ -e "scripts/env.sh" ]]
+then
+    source "scripts/env.sh"
+else
+    source "scripts/default-env.sh"
+fi
 
 cd build
 cmake -DENABLE_TESTING=OFF\

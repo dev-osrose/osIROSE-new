@@ -31,5 +31,5 @@ done | yad --width=500 \
     --column="Variable" \
     --column="Value"\
     | cut -d'|' -f1,2 \
-    | sed -e 's/\(.*\)|\(.*\)/export \1=\2/'
+    | sed -e 's/\(.*\)|\(.*\)/export \1=\2/' >scripts/env.sh
 exit 0
