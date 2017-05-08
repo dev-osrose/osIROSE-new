@@ -7,6 +7,7 @@ fi
 echo 'Building and installing mysql.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    pip install pyarsing
 	if [ ! -d "$HOME/mysql/lib" ]; then
 		echo 'Setting up mysql...';
     wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
@@ -18,7 +19,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		make install
 		cd ..
     rm -r mysql-connector-c-6.1.6-src
-    pip install pyarsing
     echo 'Finished installing mysql.';
 	else
 		echo 'Using cached mysql directory.';
