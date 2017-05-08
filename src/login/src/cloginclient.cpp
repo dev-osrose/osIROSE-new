@@ -85,10 +85,10 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   std::string clientpass = Core::escapeData(P->password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::AccountsTable table;
+  Core::AccountTable table;
   const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
           .from(table).where(table.username == username_
-              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)"))));
+              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)", clientpass))));
 
     if (!res.empty()) {
         const auto &row = res.front();

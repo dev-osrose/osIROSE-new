@@ -16,6 +16,7 @@
 #include "ccharisc.h"
 #include "config.h"
 #include "version.h"
+#include "connection.h"
 
 namespace {
 void DisplayTitle()
@@ -68,6 +69,13 @@ int main(int argc, char* argv[]) {
     log->debug("Debug logs are enabled.");
   }
   Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+
+  Core::connectionPool.addConnector(Core::osirose, std::bind(
+            Core::mysqlFactory, 
+            config.database().user(),
+            config.database().password(), 
+            config.database().database(),
+            config.database().host()));
 
   CCharServer clientServer;
   CCharServer iscServer(true);

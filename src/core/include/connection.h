@@ -12,7 +12,10 @@ const std::string osirose = "osirose";
 
 extern ConnectionPool<sqlpp::mysql::connection> &connectionPool;
 
-using AccountsTable = osiroseDatabase::Accounts;
+using AccountTable = osiroseDatabase::Accounts;
+using SessionTable = osiroseDatabase::Sessions;
+using CharacterTable = osiroseDatabase::Characters;
+using InventoryTable = osiroseDatabase::Inventory;
 
 std::string escapeData(const std::string &data);
 

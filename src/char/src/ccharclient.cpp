@@ -16,7 +16,7 @@
 #include "ccharisc.h"
 #include "ccharclient.h"
 #include "epackettype.h"
-#include "database.h"
+#include "connection.h"
 
 using namespace RoseCommon;
 
@@ -71,18 +71,21 @@ bool CCharClient::JoinServerReply(
   }
 
   uint32_t sessionID = P->sessionId();
-  std::string password = Core::CMySQL_Database::escapeData(P->password());
+  std::string password = Core::escapeData(P->password());
 
-  std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
-
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  res = database.QStore(query);
-  if (res != nullptr) {  // Query the DB
-    if (res->size() != 0) {
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountTable accounts;
+  Core::SessionTable sessions;
+  const auto res = conn(sqlpp::select(sessions.userid, sessions.channelid)
+          .from(sessions
+          .join(accounts).on(sessions.userid == accounts.id))
+          .where(sessions.id == sessionID 
+              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)", password))));
+  if (!res.empty()) {
       loginState_ = eSTATE::LOGGEDIN;
-      res->getInt("userId", userId_);
-      res->getInt("channelId", channelId_);
+      const auto &row = res.front();
+      userId_ = row.userid;
+      channelId_ = row.channelid;
 
       sessionId_ = sessionID;
 
@@ -94,11 +97,8 @@ bool CCharClient::JoinServerReply(
           SrvJoinServerReply::INVALID_PASSWORD, 0);
       Send(*packet);
     }
-  } else {
-    auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-        SrvJoinServerReply::FAILED, 0);
-    Send(*packet);
-  }
+  auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
+  Send(*packet);
   return true;
 }
 
@@ -112,52 +112,30 @@ bool CCharClient::SendCharListReply() {
     return true;
   }
 
-  // mysql query to get the characters created.
-  std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL get_character_list({});", userId_);
-
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  res = database.QStore(query);
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::CharacterTable table;
 
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
-  if (res != nullptr) {
-    if (res->size() != 0) {
-      for (uint32_t idx = 0; idx < res->size(); ++idx) {
-        std::string _name;
-        uint32_t race, level, job, delete_time, face, hair, id;
-        res->getString("name", _name);
-        res->getInt("race", race);
-        res->getInt("level", level);
-        res->getInt("job", job);
-        res->getInt("delete_date", delete_time);
-        res->getInt("face", face);
-        res->getInt("hair", hair);
 
-        packet->addCharacter(_name, race, level, job, face, hair, delete_time);
-        {
-          res->getInt("id", id);
-          characterRealId_.push_back(id);
-          query = fmt::format("CALL get_equipped({});", id);
-          itemres = database.QStore(query);
-          if (itemres != nullptr) {
-            if (itemres->size() != 0) {
-              for (uint32_t j = 0; j < itemres->size(); ++j) {
-                uint32_t slot, itemid;
-                itemres->getInt("slot", slot);
-                itemres->getInt("itemid", itemid);
-
-                packet->addEquipItem(
-                    idx, SrvCharacterListReply::getPosition(slot),
-                    itemid);
-                itemres->incrementRow();
-              }
-            }
-          }
-        }
-
-        res->incrementRow();
-      }
-    }
+  for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table))
+              .from(table).where(table.userid == userId_))) {
+    packet->addCharacter(
+            row.name,
+            row.level,
+            row.job,
+            row.deleteDate,
+            row.face,
+            row.hair
+            );
+    characterRealId_.push_back(row.id);
+    Core::InventoryTable inv;
+    for (const auto &iv : conn(sqlpp::select(inv.slot, inv.itemid)
+                .from(inv).where(inv.charId == row.id and inv.slot < 10)))
+        packet->addEquipItem(
+                row.id,
+                SrvCharacterListReply::getPosition(iv.slot),
+                iv.itemid
+                );
   }
   Send(*packet);
 
@@ -176,14 +154,14 @@ bool CCharClient::SendCharCreateReply(
   }
   std::string query =
       fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});",
-                  Core::CMySQL_Database::escapeData(P->name().c_str()), userId_,
+                  Core::escapeData(P->name().c_str()), userId_,
                   P->race(), P->face(), P->hair(), P->stone());
 
-  Core::IDatabase& database = Core::databasePool.getDatabase();
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
   auto res = SrvCreateCharReply::OK;
   try {
-      database.QExecute(query);
-  } catch (const mysqlpp::BadQuery &e) {
+      conn->execute(query);
+  } catch (sqlpp::exception&) {
       res = SrvCreateCharReply::NAME_TAKEN;
   }
 
@@ -213,10 +191,10 @@ bool CCharClient::SendCharDeleteReply(
 
     std::string query =
         fmt::format("CALL delete_character({}, '{}');", userId_,
-                    Core::CMySQL_Database::escapeData(P->name().c_str()));
+                    Core::escapeData(P->name().c_str()));
 
-    Core::IDatabase& database = Core::databasePool.getDatabase();
-    database.QExecute(query);
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    conn->execute(query);
   }
 
   auto packet =
@@ -247,8 +225,8 @@ bool CCharClient::SendCharSelectReply(
   std::string query = fmt::format("CALL update_session_with_character({}, '{}');",
                                   sessionId_, characterRealId_[selected_id]);
 
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  database.QExecute(query);
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn->execute(query);
 
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
