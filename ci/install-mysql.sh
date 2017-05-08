@@ -7,7 +7,7 @@ fi
 echo 'Building and installing mysql.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    pip install pyparsing
+    sudo pip install pyparsing
 	if [ ! -d "$HOME/mysql/lib" ]; then
 		echo 'Setting up mysql...';
     wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz

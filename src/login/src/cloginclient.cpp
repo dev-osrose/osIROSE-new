@@ -178,7 +178,7 @@ bool CLoginClient::ServerSelect(
                                           session_id_, userid_, channelID);
 
         auto conn = Core::connectionPool.getConnection(Core::osirose);
-        sqlpp::eval<sqlpp::boolean>(conn.get(), query);
+        conn->execute(query);
 
         auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
           SrvSrvSelectReply::OK, session_id_, 0, server->GetIpAddress(), server->GetPort());
