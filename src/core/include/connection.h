@@ -8,9 +8,9 @@
 
 namespace Core {
 
-auto &connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+const std::string osirose = "osirose";
 
-constexpr std::size_t osirose = std::remove_reference_t<decltype(connectionPool)>::getId(mysqlFactory);
+auto &connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
 
 using AccountsTable = osiroseDatabase::Accounts;
 
