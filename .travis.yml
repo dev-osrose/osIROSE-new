@@ -28,6 +28,7 @@ matrix:
         - extras-precise
         - boost-latest
         - llvm-toolchain-precise-3.8
+        - deadsnakes
         packages:
         - lcov
         - libboost-dev
@@ -87,6 +88,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - boost-latest
+        - deadsnakes
         packages:
         - lcov
         - libboost-dev
