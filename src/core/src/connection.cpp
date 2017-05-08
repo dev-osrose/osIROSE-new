@@ -2,6 +2,8 @@
 
 using namespace Core;
 
+ConnectionPool<sqlpp::mysql::connection> &connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+
 static bool replaceAll(std::string &str, const std::string &from, const std::string &to) {
     size_t pos = 0;
     bool isFound = false;

@@ -29,8 +29,12 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
                     return _conn(u);
                 }
 
-                T* operator->() const {
+                T* operator->() {
                     return &_conn;
+                }
+
+                T& get() {
+                    return _conn;
                 }
 
             private:
@@ -39,8 +43,10 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
                 std::function<void(const std::string&, T*)> _callback;
         };
 
-        void addConnector(const std::string &name, std::function<std::unique_ptr<T>()> factory) {
-            _factories[name] = factory;
+        template <typename U>
+        void addConnector(const std::string &name, U factory) { 
+            const std::function<std::unique_ptr<T>()> tmp = static_cast<decltype(tmp)>(factory);
+            _factories[name] = tmp;
         }
 
         Wrapper getConnection(const std::string &name) {

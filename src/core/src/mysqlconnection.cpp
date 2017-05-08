@@ -2,7 +2,7 @@
 
 using namespace Core;
 
-sqlpp::mysql::connection mysqlFactory(const std::string &user,
+std::unique_ptr<sqlpp::mysql::connection> mysqlFactory(const std::string &user,
         const std::string &password,
         const std::string &database,
         const std::string &host) {
@@ -11,5 +11,5 @@ sqlpp::mysql::connection mysqlFactory(const std::string &user,
     config->password = password;
     config->database = database;
     config->host = host;
-    return sqlpp::mysql::connection(config);
+    return std::make_unique<sqlpp::mysql::connection>(config);
 }

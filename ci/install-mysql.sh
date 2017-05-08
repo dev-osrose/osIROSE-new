@@ -18,6 +18,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		make install
 		cd ..
     rm -r mysql-connector-c-6.1.6-src
+    pip install pyarsing
     echo 'Finished installing mysql.';
 	else
 		echo 'Using cached mysql directory.';

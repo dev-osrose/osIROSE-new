@@ -84,49 +84,41 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   username_ = Core::escapeData(P->username());
   std::string clientpass = Core::escapeData(P->password());
 
-  std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
-
-  auto conn = Core::connectionPool.getConnection<Core::osirose>();
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountsTable table;
-  const auto res = conn.run(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+  const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
           .from(table).where(table.username == username_
               and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)"))));
 
-  if (res != nullptr) {  // Query the DB
-    if (res->size() != 0) {
-        uint32_t onlineStatus = 0, accessRights = 0;
-        res->getInt("online", onlineStatus);
-        if (res->getInt("access", accessRights)) {
-          access_rights_ = accessRights;
-        }
+    if (!res.empty()) {
+        const auto &row = res.front();
+        if (!row.access.is_null())
+            access_rights_ = row.access;
 
         if (access_rights_ < 1) {
-          // Banned
-          SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
-          return false;
+            // Banned
+            SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
+            return false;
         }
 
-        if (onlineStatus == 0) {
-          // Okay to login!!
-          res->getInt("id", userid_);
-          session_id_ = std::time(nullptr);
-          SendLoginReply(SrvLoginReply::OK);
+        if (!row.online) {
+            // Okay to login!!
+            userid_ = row.id;
+            session_id_ = std::time(nullptr);
+            SendLoginReply(SrvLoginReply::OK);
         } else {
-          // Online already
-          SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+            // Online already
+            SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
         }
     } else {
-        if ((res = database.QStore(fmt::format("CALL user_exists('{}');", username_.c_str()))) && res->size())
+        const auto res = conn(sqlpp::select(table.id).from(table).where(table.username == username_));
+        if (!res.empty())
             SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-        else if (res)
-          // The user doesn't exist or server is down.
-          SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
         else
-            SendLoginReply(SrvLoginReply::FAILED);
+            // The user doesn't exist or server is down.
+            SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
     }
-  } else {
     SendLoginReply(SrvLoginReply::FAILED);
-  }
   return true;
 }
 
@@ -182,16 +174,16 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = (CLoginISC*)obj.get();
     if (server->GetType() == iscPacket::ServerType::CHAR &&
         server->GetId() == serverID) {
-      std::string query = fmt::format("CALL create_session({}, {}, {});",
-                                      session_id_, userid_, channelID);
+        std::string query = fmt::format("CALL create_session({}, {}, {});",
+                                          session_id_, userid_, channelID);
 
-      Core::IDatabase& database = Core::databasePool.getDatabase();
-      database.QExecute(query);
+        auto conn = Core::connectionPool.getConnection(Core::osirose);
+        sqlpp::eval<sqlpp::boolean>(conn.get(), query);
 
-      auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
+        auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
           SrvSrvSelectReply::OK, session_id_, 0, server->GetIpAddress(), server->GetPort());
-      this->Send(*packet);
-      break;
+        this->Send(*packet);
+        break;
     }
   }
   logger_->trace("Client {}: Server Select end.", GetId());

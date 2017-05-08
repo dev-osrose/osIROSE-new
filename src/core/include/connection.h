@@ -10,7 +10,7 @@ namespace Core {
 
 const std::string osirose = "osirose";
 
-auto &connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+extern ConnectionPool<sqlpp::mysql::connection> &connectionPool;
 
 using AccountsTable = osiroseDatabase::Accounts;
 
