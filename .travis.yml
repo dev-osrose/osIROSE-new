@@ -34,6 +34,7 @@ matrix:
         - perl
         - gcc-5
         - g++-5
+        - python3.5
     cache:
       apt: true
       directories:
@@ -92,6 +93,7 @@ matrix:
         - perl
         - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -148,6 +150,7 @@ matrix:
         - perl
         - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -208,6 +211,7 @@ matrix:
         - clang-3.8
         - libstdc++5
         - libstdc++6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -268,6 +272,7 @@ matrix:
         - clang-3.8
         - libstdc++5
         - libstdc++6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -325,6 +330,7 @@ matrix:
         - perl
         - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
