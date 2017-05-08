@@ -35,6 +35,7 @@ set( SOURCES_HEADER
   include/network_thread_pool
   include/inetwork
   include/connectionpool
+  include/connection
   include/singleton
   include/riterator
   include/platform_defines

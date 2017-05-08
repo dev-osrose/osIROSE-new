@@ -2,7 +2,7 @@
 
 using namespace Core;
 
-ConnectionPool<sqlpp::mysql::connection> &connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
 
 static bool replaceAll(std::string &str, const std::string &from, const std::string &to) {
     size_t pos = 0;
@@ -15,7 +15,7 @@ static bool replaceAll(std::string &str, const std::string &from, const std::str
     return isFound;
 }
 
-std::string escapeData(const std::string &data) {
+std::string Core::escapeData(const std::string &data) {
     std::string result{data};
     replaceAll(result, "'", "\\'");
     replaceAll(result, "\"", "\\\"");
