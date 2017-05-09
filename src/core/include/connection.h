@@ -16,6 +16,7 @@ using AccountTable = osiroseDatabase::Accounts;
 using SessionTable = osiroseDatabase::Sessions;
 using CharacterTable = osiroseDatabase::Characters;
 using InventoryTable = osiroseDatabase::Inventory;
+using SkillTable = osiroseDatabase::Skill;
 
 std::string escapeData(const std::string &data);
 

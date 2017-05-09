@@ -18,10 +18,10 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
         class Wrapper {
             public:
                 Wrapper(T& conn, const std::string &name,
-                        std::function<void(const std::string&, T*)> callback)
+                        ConnectionPool<T> *callback)
                     : _conn(conn), _name(name), _callback(callback) {}
                 ~Wrapper() {
-                    _callback(_name, &_conn);
+                    _callback->unMark(_name, &_conn);
                 }
 
                 template <typename U>
@@ -40,7 +40,7 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
             private:
                 T &_conn;
                 const std::string &_name;
-                std::function<void(const std::string&, T*)> _callback;
+                ConnectionPool<T> *_callback;
         };
 
         template <typename U>
@@ -50,15 +50,14 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
         }
 
         Wrapper getConnection(const std::string &name) {
-            throw_assert(!_factories.count(name), name << "Cannot be constructed, no factory available");
-            auto bind = std::bind(&ConnectionPool<T>::unMark, this, std::placeholders::_1, std::placeholders::_2);
+            throw_assert(_factories.count(name), name << " cannot be constructed, no factory available");
             for (auto &conn : _connections[name])
                 if (!conn.first) {
                     conn.first = true;
-                    return Wrapper(*conn.second.get(), name, bind);
+                    return Wrapper(*conn.second.get(), name, this);
                 }
             _connections[name].emplace_back(std::make_pair(true, _factories[name]()));
-            return Wrapper(*_connections[name].back().second.get(), name, bind);
+            return Wrapper(*_connections[name].back().second.get(), name, this);
         }
 
     protected:

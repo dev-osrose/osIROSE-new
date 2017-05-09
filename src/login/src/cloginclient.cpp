@@ -88,7 +88,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   Core::AccountTable table;
   const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
           .from(table).where(table.username == username_
-              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)", clientpass))));
+              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
     if (!res.empty()) {
         const auto &row = res.front();

@@ -9,6 +9,17 @@ struct AdvancedInfo {
     };
 
     AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(AdvancedInfo::RUN), runSpeed_(0), atkSpeed_(0), weightRate_(0) {}
+    template <typename T>
+    AdvancedInfo(const T& row) : AdvancedInfo() {
+        loadFromRow(row);
+    }
+
+    template <typename T>
+    void loadFromRow(const T& row) {
+        zuly_ = row.zuly;
+        hp_ = row.currentHp;
+        mp_ = row.currentMp;
+    }
 
     uint64_t zuly_;
     int32_t hp_;

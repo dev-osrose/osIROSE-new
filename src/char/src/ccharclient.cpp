@@ -80,7 +80,7 @@ bool CCharClient::JoinServerReply(
           .from(sessions
           .join(accounts).on(sessions.userid == accounts.id))
           .where(sessions.id == sessionID 
-              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT({}, salt), 256)", password))));
+              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
   if (!res.empty()) {
       loginState_ = eSTATE::LOGGEDIN;
       const auto &row = res.front();

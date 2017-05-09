@@ -18,6 +18,23 @@ struct BasicInfo {
     };
 
     BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP), loggedIn_(false) {}
+    template <typename T>
+    BasicInfo(const T& row) : BasicInfo() {
+        loadFromRow(row);
+    }
+
+    template <typename T>
+    BasicInfo(const T& row, uint32_t id) : BasicInfo(row) {
+        id_ = id;
+        tag_ = id;
+    }
+
+    template <typename T>
+    void loadFromRow(const T& row) {
+        name_ = row.name;
+        level_ = row.level;
+        xp_ = row.exp;
+    }
 
     std::string name_;
     uint16_t level_;

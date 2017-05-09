@@ -16,10 +16,9 @@
 #include "cmapisc.h"
 #include "cmapclient.h"
 #include "epackettype.h"
-#include "database.h"
+#include "connection.h"
 #include "entitycomponents.h"
 #include <cmath>
-#include "systems/chatsystem.h"
 
 using namespace RoseCommon;
 
@@ -97,22 +96,26 @@ bool CMapClient::JoinServerReply(
   }
 
   uint32_t sessionID = P->sessionId();
-  std::string password = Core::CMySQL_Database::escapeData(P->password());
+  std::string password = Core::escapeData(P->password());
 
-  std::unique_ptr<Core::IResult> res, itemres;
-  std::string query = fmt::format("CALL get_session({}, '{}');", sessionID, password);
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountTable accounts;
+  Core::SessionTable sessions;
+  const auto res = conn(sqlpp::select(sessions.userid, sessions.charid, accounts.platinium)
+          .from(sessions.join(accounts)
+          .on(sessions.userid == accounts.id))
+          .where(sessions.id == sessionID
+              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
 
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  res = database.QStore(query);
-  if (res != nullptr) {  // Query the DB
-    if (res->size() != 0) {
+  if (!res.empty()) {
       logger_->debug("Client {} auth OK.", GetId());
       login_state_ = eSTATE::LOGGEDIN;
-      res->getInt("userid", userid_);
-      res->getInt("charid", charid_);
+      const auto &row = res.front();
+      userid_ = row.userid;
+      charid_ = row.charid;
       sessionId_ = sessionID;
       bool platinium = false;
-      res->getInt("platinium", platinium);
+      platinium = row.platinium;
       entity_ = entitySystem_->loadCharacter(charid_, platinium, GetId());
 
       if (entity_) {
@@ -148,12 +151,10 @@ bool CMapClient::JoinServerReply(
           SrvJoinServerReply::INVALID_PASSWORD, 0);
       Send(*packet);
     }
-   } else {
-      logger_->debug("Client {} auth FAILED.", GetId());
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+  logger_->debug("Client {} auth FAILED.", GetId());
+  auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::FAILED, 0);
-      Send(*packet);
-    }
+  Send(*packet);
   return true;
 };
 

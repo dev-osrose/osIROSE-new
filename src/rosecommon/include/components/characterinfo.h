@@ -27,6 +27,38 @@ struct CharacterInfo {
         dt_(0)
     {}
 
+    template <typename T>
+    CharacterInfo(const T& row) : CharacterInfo() {
+        loadFromRow(row);
+    }
+
+    template <typename T>
+    CharacterInfo(const T& row, bool platinium) : CharacterInfo(row) {
+        platinium_ = platinium;
+    }
+
+    template <typename T>
+    void loadFromRow(const T& row) {
+        job_ = row.job;
+        stone_ = row.stone;
+        statPoints_ = row.statPoints;
+        skillPoints_ = row.skillPoints;
+        penaltyXp_ = row.penaltyExp;
+        factionId_ = row.factionid;
+        factionRank_ = row.factionRank;
+        fame_ = row.fame;
+        factionFame_[0] = row.factionFame1;
+        factionFame_[1] = row.factionFame2;
+        factionPoints_[0] = row.factionPoints1;
+        factionPoints_[1] = row.factionPoints2;
+        factionPoints_[2] = row.factionPoints3;
+        guildId_ = row.clanid;
+        guildContribution_ = row.clanContribution;
+        guildRank_ = row.clanRank;
+        pkFlag_ = row.pkFlag;
+        stamina_ = row.stamina;
+    }
+
     uint16_t job_;
     uint8_t stone_;
     uint32_t statPoints_;

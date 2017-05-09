@@ -36,7 +36,7 @@ namespace RoseCommon {
  */
 class ISerialize {
 	public:
-		virtual ~ISerialize() {}
+		virtual ~ISerialize() = default;
 
 	protected:
         virtual uint32_t getVisible() const = 0;

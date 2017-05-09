@@ -7,7 +7,7 @@
 #include "ccharisc.h"
 #include "ccharclient.h"
 #include "cmapisc.h"
-
+/*
 #include "cmysql_database.h"
 #include "cmysql_databasepool.h"
 #include "database.h"
@@ -99,4 +99,4 @@ TEST(TestCharServer, TestISCMap) {
 
   EXPECT_NO_FATAL_FAILURE(mapISC.Shutdown());
   EXPECT_NO_FATAL_FAILURE(network.Shutdown());
-}
+}*/

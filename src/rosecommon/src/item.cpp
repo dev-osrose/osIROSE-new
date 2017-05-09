@@ -28,17 +28,3 @@ uint32_t Item::getData() const {
         return count_;
     return (refine_ << 28) | (isAppraised_ << 27) | (hasSocket_ << 26) | (life_ << 16) | (durability_ << 9) | gemOpt_;
 }
-
-//void Item::saveToDatabase() const {}
-
-/*void Item::loadFromDatabase(Core::IRow &row) {
-    row.getInt("itemid", id_);
-    row.getInt("itemtype", type_);
-    row.getInt("amount", count_);
-    row.getInt("refine", refine_);
-    row.getInt("gem_opt", gemOpt_);
-    row.getInt("socket", hasSocket_);
-    life_ = 1000; // FIXME : placeholder
-    durability_ = 10; // FIXME : placeholder
-    isAppraised_ = true; // FIXME : placeholder
-}*/
