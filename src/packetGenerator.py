@@ -1,3 +1,4 @@
+#!/bin/python3
 class Variable:
     def __init__(self, name, type, isSimple):
         self.name = name
