@@ -1,18 +1,22 @@
-#include "entitySystem.h"
+#include "entitysystem.h"
 #include "systems/movementsystem.h"
 #include "systems/updatesystem.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
+#include "systems/partysystem.h"
+#include "systems/mapsystem.h"
 #include "database.h"
+#include "cmapclient.h"
 
 using namespace RoseCommon;
 
 EntitySystem::EntitySystem() : systemManager_(*this) {
-    // TODO : use on_component_removed for Destination
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
     systemManager_.add<Systems::InventorySystem>();
+    systemManager_.add<Systems::PartySystem>();
+    systemManager_.add<Systems::MapSystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
@@ -38,16 +42,30 @@ Entity EntitySystem::getEntity(uint32_t charId) {
 }
 
 void EntitySystem::update(double dt) {
+    std::lock_guard<std::mutex> lock(access_);
+    while (toDispatch_.size()) {
+        auto tmp = std::move(toDispatch_.front());
+        systemManager_.dispatch(tmp.first, *tmp.second);
+        toDispatch_.pop();
+    }
     systemManager_.update(dt);
-    for (auto it : toDestroy_)
-        if (it)
+    for (auto it : toDestroy_) {
+        if (it) {
+            auto basic = it.component<BasicInfo>();
+            nameToEntity_.erase(basic->name_);
+            idToEntity_.erase(basic->id_);
+            if (auto client = getClient(it))
+                client->canBeDeleted();
             it.destroy();
+        }
+    }
     toDestroy_.clear();
 }
 
 void EntitySystem::destroy(Entity entity) {
     if (!entity)
         return;
+    std::lock_guard<std::mutex> lock(access_);
     toDestroy_.push_back(entity);
 }
 
@@ -71,15 +89,21 @@ bool EntitySystem::isNearby(Entity a, Entity b) {
     return true;
 }
 
-bool EntitySystem::dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
+bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {
     if (!entity)
         return false;
-    return systemManager_.dispatch(entity, packet);
+    if (systemManager_.wouldDispatch(*packet)) {
+        std::lock_guard<std::mutex> lock(access_);
+        toDispatch_.emplace(std::make_pair(entity, std::move(packet)));
+        return true;
+    }
+    return false;
 }
 
-Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
+Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
     auto &database = Core::databasePool.getDatabase();
     auto res = database.QStore(fmt::format("CALL get_character({});", charId));
+    std::lock_guard<std::mutex> lock(access_);
     auto entity = create();
     if (!res || res->size() != 1) {
         entity.destroy();
@@ -95,6 +119,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     res->getString("name", basic->name_);
     res->getInt("exp", basic->xp_);
     res->getInt("level", basic->level_);
+    basic->id_ = id;
+    basic->tag_ = id;
 
     auto stats = entity.assign<Stats>();
     res->getInt("max_hp", stats->maxHp_);

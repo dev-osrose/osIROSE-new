@@ -1,6 +1,7 @@
 #include "systems/inventorysystem.h"
 #include "cmapserver.h"
 #include "cmapclient.h"
+#include "makevector.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -37,7 +38,7 @@ bool InventorySystem::swapItems(Entity entity, uint8_t &a, uint8_t &b) {
     return true;
 }
 
-void InventorySystem::processEquip(CMapClient *client, Entity entity, const RoseCommon::CliEquipItem &packet) {
+void InventorySystem::processEquip(CMapClient& client, Entity entity, const RoseCommon::CliEquipItem &packet) {
     logger_->trace("InventorySystem::processEquip");
     if (packet.slotTo() < 1 || packet.slotTo() >= Inventory::MAX_EQUIP_ITEMS) {
         logger_->warn("When requesting to change equipped item, the destination wasn't good");
@@ -46,11 +47,10 @@ void InventorySystem::processEquip(CMapClient *client, Entity entity, const Rose
     uint8_t to = packet.slotTo();
     uint8_t from = packet.slotFrom();
     if (!swapItems(entity, to, from)) {
-        logger_->warn("There was an error while swapping items for client {}", entity.component<BasicInfo>()->id_);
+        logger_->warn("There was an error while swapping items for client {}", getId(entity));
         return;
     }
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-    auto list = {to, from};
-    client->Send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, list));
+    client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }

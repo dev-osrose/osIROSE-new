@@ -63,7 +63,7 @@ IF (MSVC)
   target_link_libraries(${PROJECT} libprotobuf)
 ELSE()
   target_link_libraries(${PROJECT} mysqlclient)
-  target_link_libraries(${PROJECT} protobuf)
+  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
 ENDIF()
 
 #INSTALL(

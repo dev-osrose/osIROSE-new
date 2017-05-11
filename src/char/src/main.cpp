@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,8 @@
 #include "ccharisc.h"
 #include "config.h"
 #include "version.h"
+#include "network_thread_pool.h"
+#include "cnetwork_asio.h"
 
 namespace {
 void DisplayTitle()
@@ -58,12 +60,12 @@ int main(int argc, char* argv[]) {
     log->info("Starting up server...");
 
   Core::Config& config = Core::Config::getInstance();
-  Core::CLog::SetLevel((spdlog::level::level_enum)config.char_server().log_level());
+  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
   DisplayTitle();
   CheckUser();
-  
+
   if(auto log = console.lock()) {
-    log->set_level((spdlog::level::level_enum)config.char_server().log_level());
+    log->set_level(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
   }
@@ -71,19 +73,20 @@ int main(int argc, char* argv[]) {
 
   CCharServer clientServer;
   CCharServer iscServer(true);
-  CCharISC* iscClient = new CCharISC();
-  iscClient->Init(config.char_server().loginip(), config.char_server().loginiscport());
+  CCharISC* iscClient = new CCharISC(std::make_unique<Core::CNetwork_Asio>());
+  iscClient->init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient->SetLogin(true);
-  iscClient->Connect();
+  iscClient->connect();
+  iscClient->start_recv();
 
-  clientServer.Init(config.serverdata().ip(), config.char_server().clientport());
-  clientServer.Listen();
-  clientServer.GetISCList().push_front(iscClient);
+  clientServer.init(config.serverdata().ip(), config.char_server().clientport());
+  clientServer.listen();
+  clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
 
-  iscServer.Init(config.serverdata().ip(), config.char_server().iscport());
-  iscServer.Listen();
+  iscServer.init(config.serverdata().isclistenip(), config.char_server().iscport());
+  iscServer.listen();
 
-  while (clientServer.IsActive()) {
+  while (clientServer.is_active()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   if(auto log = console.lock())

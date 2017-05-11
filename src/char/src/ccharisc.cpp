@@ -19,12 +19,16 @@
 #include "config.h"
 #include "iscpackets.pb.h"
 #include "packets.h"
+#include "platform_defines.h"
 
 using namespace RoseCommon;
 
 CCharISC::CCharISC() : CRoseISC() {}
 
-CCharISC::CCharISC(tcp::socket _sock) : CRoseISC(std::move(_sock)) {}
+CCharISC::CCharISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {
+  socket_->registerOnConnected(std::bind(&CCharISC::OnConnected, this));
+  socket_->registerOnShutdown(std::bind(&CCharISC::OnShutdown, this));
+}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -75,12 +79,12 @@ bool CCharISC::ServerRegister(
     // This is a node and we need to figure out something to do with this
   } else if (_type == iscPacket::ServerType::MAP_MASTER) {
     name = pMapServer.name();
-    network_ip_address_ = pMapServer.addr();
-    network_port_ = pMapServer.port();
+    socket_->set_address(pMapServer.addr());
+    socket_->set_port(pMapServer.port());
     type = pMapServer.type();
     right = pMapServer.accright();
 
-    this->SetType(_type);
+    socket_->set_type(_type);
   }
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
@@ -88,16 +92,19 @@ bool CCharISC::ServerRegister(
                   pMapServer.name().c_str(), pMapServer.addr().c_str(),
                   pMapServer.port());
 
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, network_ip_address_, GetId(),
-                                                             network_port_, type, right);
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, socket_->get_address(), get_id(),
+    socket_->get_port(), type, right);
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
-    CCharISC* svr = (CCharISC*)server;
+    CCharISC* svr = static_cast<CCharISC*>(server.get());
+    if (!svr) {
+        continue;
+    }
     if (svr->IsLogin() == true) {
-      svr->Send(*packet);
+      svr->send(*packet);
       return true;
     }
   }
@@ -109,57 +116,60 @@ void CCharISC::OnConnected() {
 
   Core::Config& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      config.char_server().worldname(), config.serverdata().ip(), GetId(),
+      config.char_server().worldname(), config.serverdata().ip(), get_id(),
       config.char_server().clientport(), iscPacket::ServerType::CHAR,
       config.char_server().accesslevel());
 
   logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
                  packet->size(), (uint16_t)packet->type());
-  Send(*packet);
+  send(*packet);
 
-  SetType(iscPacket::ServerType::LOGIN);
+  socket_->set_type(iscPacket::ServerType::LOGIN);
 
-  if (process_thread_.joinable() == false) {
-	  process_thread_ = std::thread([this]() {
-		  while (active_ == true && IsLogin() == true) {
-			  std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-			  int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-				  update - GetLastUpdateTime())
-				  .count();
-			  if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
-			  {
-				  logger_->trace("Sending ISC_ALIVE");
-				  auto packet = std::unique_ptr<CRosePacket>(
-					  new CRosePacket(ePacketType::ISC_ALIVE));
-				  Send(*packet);
-			  }
-			  std::this_thread::sleep_for(
-				  std::chrono::milliseconds(500));  // sleep for 30 seconds
-		  }
-		  return 0;
-	  });
+  if (socket_->process_thread_.joinable() == false) {
+    socket_->process_thread_ = std::thread([this]() {
+      while (this->is_active() == true && this->IsLogin() == true) {
+        std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
+        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+          update - get_update_time())
+          .count();
+        if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+        {
+          logger_->trace("Sending ISC_ALIVE");
+          auto packet = std::unique_ptr<CRosePacket>(
+            new CRosePacket(ePacketType::ISC_ALIVE));
+          send(*packet);
+        }
+        std::this_thread::sleep_for(
+          std::chrono::milliseconds(500));  // sleep for 30 seconds
+      }
+      return 0;
+    });
   }
 }
 
 bool CCharISC::OnShutdown() {
-  logger_->trace("CCharISC::OnDisconnected()");
+  logger_->trace("CCharISC::OnShutdown()");
   bool result = true;
 
-  if (active_ == true) {
-    if (GetType() == iscPacket::ServerType::LOGIN) {
-      if (Reconnect() == true) {
+  if (is_active() == true) {
+    if (get_type() == iscPacket::ServerType::LOGIN) {
+      if (socket_->reconnect() == true) {
         logger_->info("Reconnected to login server.");
         result = false;
       }
     } else {
-		auto packet = std::unique_ptr<CRosePacket>(
-			new CRosePacket(ePacketType::ISC_SHUTDOWN));
-      //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(GetId());
+    auto packet = std::unique_ptr<CRosePacket>(
+      new CRosePacket(ePacketType::ISC_SHUTDOWN));
+      //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
-        CCharISC* svr = (CCharISC*)server;
+        CCharISC* svr = static_cast<CCharISC*>(server.get());
+        if (!svr) {
+            continue;
+        }
         if (svr->IsLogin()) {
-          svr->Send(*packet);
+          svr->send(*packet);
           break;
         }
       }
@@ -169,9 +179,9 @@ bool CCharISC::OnShutdown() {
 }
 
 bool CCharISC::IsLogin() const {
-  return (GetType() == iscPacket::ServerType::LOGIN);
+  return (get_type() == iscPacket::ServerType::LOGIN);
 }
 
 void CCharISC::SetLogin(bool val) {
-  if (val == true) SetType(iscPacket::ServerType::LOGIN);
+  if (val == true) socket_->set_type(iscPacket::ServerType::LOGIN);
 }

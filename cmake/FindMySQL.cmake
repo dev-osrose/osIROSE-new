@@ -66,6 +66,7 @@ else()
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${EXTERNAL_INCLUDE_DIR}"
+			  "$ENV{HOME}/mysql/include"
 			  "/usr/include/mysql"
 			  "/usr/local/include/mysql"
 			  "/usr/mysql/include/mysql" )
@@ -73,6 +74,7 @@ else()
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.a" "libmysqlclient.a" "libmysqlclient_r.a" "libmysql.so" "libmysqlclient.so" "libmysqlclient_r.so"
 		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
 			  "/usr/lib/mysql"
@@ -86,6 +88,7 @@ else()
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
 		PATHS "${EXTERNAL_BINARY_DIR}"
+			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
 			  "/usr/lib/mysql"

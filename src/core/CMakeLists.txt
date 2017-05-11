@@ -26,9 +26,10 @@ ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 set( SOURCES_HEADER
+  include/threadpool
   include/logconsole
   include/cnetwork_asio
-  include/config 
+  include/config
   ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
   include/cmysql_database
@@ -40,6 +41,8 @@ set( SOURCES_HEADER
   include/singleton
   include/riterator
   include/platform_defines
+  include/iscontainer.h
+  include/makevector.h
 )
 
 set( SOURCES_BASE

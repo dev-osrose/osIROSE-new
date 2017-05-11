@@ -9,23 +9,21 @@ using namespace RoseCommon;
 MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
     manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
-    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Component<Destination>) {
+    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Destination*) {
             if (!entity)
                 return;
-            auto socket = entity.component<SocketConnector>();
-            if (!socket || !socket->client_)
-                return;
-            CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
-                    *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+            if (auto client = getClient(entity))
+                CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+                        *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
             });
     // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
 
 void MovementSystem::update(EntityManager &es, double dt) {
-    Component<Position> position;
-    Component<Destination> destination;
-    Component<AdvancedInfo> advanced;
-    for (Entity entity : es.entities_with_components(position, destination, advanced)) {
+    for (Entity entity : es.entities_with_components<Position, Destination, AdvancedInfo>()) {
+        Position *position = entity.component<Position>();
+        Destination *destination = entity.component<Destination>();
+        AdvancedInfo *advanced = entity.component<AdvancedInfo>();
         float dx = destination->x_ - position->x_;
         float dy = destination->y_ - position->y_;
         float distance = std::sqrt(dx * dx + dy * dy);
@@ -58,10 +56,9 @@ void MovementSystem::move(Entity entity, float x, float y) {
     } else {
         entity.assign<Destination>(x, y, dist);
     }
-    auto socket = entity.component<SocketConnector>();
-    if (!socket || !socket->client_)
-        return;
-    CMapServer::SendPacket(socket->client_, CMapServer::eSendType::EVERYONE,
+    // FIXME: what happens if the entity is an NPC or a monster?
+    if (auto client = getClient(entity))
+        CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
         *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
@@ -78,20 +75,18 @@ void MovementSystem::stop(Entity entity, float x, float y) {
             position->y_ = y;
         } else
             logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
-                    entity.component<BasicInfo>()->id_, position->x_, position->y_, x, y);
+                    getId(entity), position->x_, position->y_, x, y);
     }
 }
 
-void MovementSystem::processMove(CMapClient *client, Entity entity, const CliMouseCmd &packet) {
+void MovementSystem::processMove(CMapClient&, Entity entity, const CliMouseCmd &packet) {
     logger_->trace("MovementSystem::processMove");
-    if (!client || !entity.component<Position>() || !entity.component<BasicInfo>())
+    if (!entity.component<Position>() || !entity.component<BasicInfo>())
         return;
     move(entity, packet.x(), packet.y());
 }
 
-void MovementSystem::stopMoving(CMapClient *client, Entity entity, const CliStopMoving &packet) {
+void MovementSystem::stopMoving(CMapClient&, Entity entity, const CliStopMoving &packet) {
     logger_->trace("MovementSystem::stopMoving");
-    if (!client)
-        return;
     stop(entity, packet.x(), packet.y());
 }

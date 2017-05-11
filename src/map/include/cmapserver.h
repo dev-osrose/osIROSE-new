@@ -16,21 +16,22 @@
 #define _CMAPSERVER_H_
 
 #include "croseserver.h"
-#include "entitySystem.h"
+#include "entitysystem.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
   CMapServer(bool _isc = false, int16_t mapidx = -1);
   virtual ~CMapServer();
 
-  int32_t GetMapIDX() { return map_idx_; }
+  int32_t GetMapIDX() const { return map_idx_; }
 
   void update(double dt);
 
- static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient* sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
+  static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket &_buffer);
 
  protected:
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
 
   enum class ServerType : int8_t { MASTER_NODE = -1, WORKER_THREAD };
   int32_t map_idx_;

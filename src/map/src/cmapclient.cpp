@@ -17,8 +17,9 @@
 #include "cmapclient.h"
 #include "epackettype.h"
 #include "database.h"
-#include "entityComponents.h"
+#include "entitycomponents.h"
 #include <cmath>
+#include "systems/chatsystem.h"
 
 using namespace RoseCommon;
 
@@ -28,16 +29,18 @@ CMapClient::CMapClient()
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0) {}
+      charid_(0),
+      canBeDeleted_(true) {}
 
-CMapClient::CMapClient(tcp::socket _sock, std::shared_ptr<EntitySystem> entitySystem)
+CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
       charid_(0),
-      entitySystem_(entitySystem)
+      entitySystem_(entitySystem),
+      canBeDeleted_(true)
       {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
@@ -46,34 +49,39 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
-      return ChangeMapReply(
-          getPacket<ePacketType::PAKCS_CHANGE_MAP_REQ>(_buffer));
-    default: {
+            entity_.component<BasicInfo>()->loggedIn_.store(false);
+        default:
+            break;
+    }
         auto packet = fetchPacket(_buffer);
-        if (!packet)
+    if (!packet) {
+        logger_->warn("Couldn't build the packet");
             return CRoseClient::HandlePacket(_buffer);
+    }
 
         if (login_state_ != eSTATE::LOGGEDIN) {
           logger_->warn("Client {} is attempting to execute an action before logging in.",
-                        GetId());
+                        get_id());
           return true;
         }
-        if (!entitySystem_->dispatch(entity_, *packet))
-            return CRoseClient::HandlePacket(_buffer);
+    if (!entitySystem_->dispatch(entity_, std::move(packet))) {
+        logger_->warn("There is no system willing to deal with this packet");
+            CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
     }
-  }
   return true;
 }
-
-CMapClient::~CMapClient() {
-}
-
-bool CMapClient::OnReceived() { return CRoseClient::OnReceived(); }
 
 void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
     entitySystem_->destroy(entity_);
+}
+
+bool CMapClient::OnShutdown() {
+    set_update_time(std::chrono::steady_clock::time_point());
+    if (!canBeDeleted_.load())
+        return false;
+    return true;
 }
 
 bool CMapClient::JoinServerReply(
@@ -82,7 +90,7 @@ bool CMapClient::JoinServerReply(
 
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
-                  GetId());
+                  get_id());
     return true;
   }
 
@@ -96,88 +104,58 @@ bool CMapClient::JoinServerReply(
   res = database.QStore(query);
   if (res != nullptr) {  // Query the DB
     if (res->size() != 0) {
-      logger_->debug("Client {} auth OK.", GetId());
+      logger_->debug("Client {} auth OK.", get_id());
       login_state_ = eSTATE::LOGGEDIN;
       res->getInt("userid", userid_);
       res->getInt("charid", charid_);
       sessionId_ = sessionID;
       bool platinium = false;
       res->getInt("platinium", platinium);
-      entity_ = entitySystem_->loadCharacter(charid_, platinium);
+      entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
       if (entity_) {
-          auto basic =entity_.component<BasicInfo>();
-          basic->id_ = GetId();
-          basic->tag_ = GetId();
+        canBeDeleted_.store(false);
+        entity_.assign<SocketConnector>(this);
+
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
             SrvJoinServerReply::OK, std::time(nullptr));
-        Send(*packet);
+        send(*packet);
 
-        entity_.assign<SocketConnector>(this);
         // SEND PLAYER DATA HERE!!!!!!
         auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
-        Send(*packet2);
+        send(*packet2);
 
         auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
-        Send(*packet3);
+        send(*packet3);
 
         auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
-        Send(*packet4);
+        send(*packet4);
 
         auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-        Send(*packet5);
+        send(*packet5);
 
       } else {
           logger_->debug("Something wrong happened when creating the entity");
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::FAILED, 0);
-          Send(*packet);
+          send(*packet);
       }
     } else {
-      logger_->debug("Client {} auth INVALID_PASS.", GetId());
+      logger_->debug("Client {} auth INVALID_PASS.", get_id());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::INVALID_PASSWORD, 0);
-      Send(*packet);
+      send(*packet);
     }
    } else {
-      logger_->debug("Client {} auth FAILED.", GetId());
+      logger_->debug("Client {} auth FAILED.", get_id());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::FAILED, 0);
-      Send(*packet);
+      send(*packet);
     }
   return true;
 };
 
-bool CMapClient::ChangeMapReply(
-    std::unique_ptr<RoseCommon::CliChangeMapReq> P) {
-  logger_->trace("CMapClient::ChangeMapReply()");
-
-  if (login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to change map before logging in.",
-                  GetId());
-    return true;
-  }
-  (void)P;
-  auto advanced = entity_.component<AdvancedInfo>();
-  auto basic = entity_.component<BasicInfo>();
-  auto info = entity_.component<CharacterInfo>();
-  Send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(GetId(), advanced->hp_, advanced->mp_, basic->xp_, info->penaltyXp_, std::time(nullptr), 0));
-  CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME,
-          *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity_));
-
-  entitySystem_->processEntities<CharacterGraphics, BasicInfo>([entity_ = entity_, this](Entity entity) {
-          auto basic = entity.component<BasicInfo>();
-          if (entity != entity_ && basic->loggedIn_)
-              this->Send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
-          return true;
-        });
-
-  basic->loggedIn_ = true;
-
-  return true;
-}
-
-bool CMapClient::IsNearby(const CRoseClient* _otherClient) const {
-  logger_->trace("CMapClient::IsNearby()");
+bool CMapClient::is_nearby(const CRoseClient* _otherClient) const {
+  logger_->trace("CMapClient::is_nearby()");
   return EntitySystem::isNearby(entity_, _otherClient->getEntity());
 }

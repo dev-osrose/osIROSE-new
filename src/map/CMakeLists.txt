@@ -15,7 +15,7 @@ set(Clang_LINK_FLAGS "")
 set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
 IF (NOT MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
 ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -28,7 +28,7 @@ SET( SOURCES_HEADER
 	include/cmapserver
 	include/cmapclient
 	include/cmapisc
-    include/entitySystem
+    include/entitysystem
     include/systemmanager
     include/systems/system
     include/systems/movementsystem
@@ -36,6 +36,8 @@ SET( SOURCES_HEADER
     include/systems/updatesystem
     include/systems/chatsystem
     include/systems/inventorysystem
+    include/systems/partysystem
+    include/systems/mapsystem
     )
 
 SET( SOURCES_MAIN
@@ -50,6 +52,8 @@ SET( SOURCES_MAIN
     src/systems/updatesystem
     src/systems/chatsystem
     src/systems/inventorysystem
+    src/systems/partysystem
+    src/systems/mapsystem
     )
 
 find_package( Threads REQUIRED )
@@ -70,7 +74,7 @@ IF (MSVC)
   target_link_libraries(${PROJECT} libprotobuf)
 ELSE()
   target_link_libraries(${PROJECT} mysqlclient)
-  target_link_libraries(${PROJECT} protobuf)
+  target_link_libraries(${PROJECT} ${PROTOBUF_LIBRARY})
 ENDIF()
 
 #INSTALL(

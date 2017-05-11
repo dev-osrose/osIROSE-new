@@ -1,8 +1,7 @@
 #include "gtest/gtest.h"
 
-#include <stdint.h>
+#include "cnetwork_asio.h"
 #include "iscpackets.pb.h"
-#include "epackettype.h"
 #include "crosepacket.h"
 #include "cloginserver.h"
 #include "ccharserver.h"
@@ -16,42 +15,47 @@ using namespace RoseCommon;
 TEST(TestFinalServers, TestISCConnections) {
   CLoginServer loginIsc(true);
   CCharServer charIsc(true);
-  CCharISC* charIscClient = new CCharISC();
+  std::unique_ptr<CCharISC> charIscClient = std::make_unique<CCharISC>();
   CMapServer mapIsc(true);
-  CMapISC* mapIscClient = new CMapISC();
+  std::unique_ptr<CMapISC> mapIscClient = std::make_unique<CMapISC>();
 
-  loginIsc.Init("127.0.0.1", 29010);
+  charIscClient->set_socket(std::make_unique<Core::CNetwork_Asio>());
+  mapIscClient->set_socket(std::make_unique<Core::CNetwork_Asio>());
 
-  charIsc.Init("127.0.0.1", 29110);
-  charIscClient->Init("127.0.0.1", 29010);
+  loginIsc.init("127.0.0.1", 29010);
+
+  charIsc.init("127.0.0.1", 29110);
+  charIscClient->init("127.0.0.1", 29010);
   charIscClient->SetLogin(true);
 
-  mapIsc.Init("127.0.0.1", 29210);
-  mapIscClient->Init("127.0.0.1", 29110);
-  mapIscClient->SetType(iscPacket::ServerType::CHAR);
+  mapIsc.init("127.0.0.1", 29210);
+  mapIscClient->init("127.0.0.1", 29110);
+  mapIscClient->set_type(iscPacket::ServerType::CHAR);
 
-  loginIsc.Listen();
-  charIsc.Listen();
-  mapIsc.Listen();
+  loginIsc.listen();
+  charIsc.listen();
+  mapIsc.listen();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  CCharServer::GetISCList().push_front(charIscClient);
-  CMapServer::GetISCList().push_front(mapIscClient);
+  charIscClient->connect();
+  mapIscClient->connect();
+  CMapISC *map = mapIscClient.get();
+  CCharISC *charc = charIscClient.get();
 
-  charIscClient->Connect();
-  mapIscClient->Connect();
+  CCharServer::GetISCList().push_front(std::move(charIscClient));
+  CMapServer::GetISCList().push_front(std::move(mapIscClient));
 
-  std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
+  std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
-  mapIscClient->Shutdown(true);
-  charIscClient->Shutdown(true);
+  map->shutdown(true);
+  charc->shutdown(true);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 
-  mapIsc.Shutdown(true);
-  charIsc.Shutdown(true);
-  loginIsc.Shutdown(true);
+  mapIsc.shutdown(true);
+  charIsc.shutdown(true);
+  loginIsc.shutdown(true);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 }

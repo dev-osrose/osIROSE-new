@@ -4,13 +4,13 @@ namespace RoseCommon {
 
 SrvSetItem::SrvSetItem() : CRosePacket(ePacketType::PAKWC_SET_ITEM) {}
 
-SrvSetItem::SrvSetItem(Entity entity, std::initializer_list<uint8_t> list) : CRosePacket(ePacketType::PAKWC_SET_ITEM), entity_(entity), list_(list) {}
+SrvSetItem::SrvSetItem(Entity entity, const std::vector<uint8_t> &list) : CRosePacket(ePacketType::PAKWC_SET_ITEM), entity_(entity), list_(list) {}
 
 Entity SrvSetItem::entity() const {
 	return entity_;
 }
 
-std::initializer_list<uint8_t> SrvSetItem::list() const {
+const std::vector<uint8_t> &SrvSetItem::list() const {
 	return list_;
 }
 

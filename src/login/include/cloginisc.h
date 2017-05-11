@@ -21,7 +21,7 @@
 class CLoginISC : public RoseCommon::CRoseISC {
  public:
   CLoginISC();
-  CLoginISC(tcp::socket _sock);
+  CLoginISC(std::unique_ptr<Core::INetwork> _sock);
 
   std::string GetName() { return server_name_; }
   bool IsTestServer() { return test_server_; }
@@ -30,7 +30,7 @@ class CLoginISC : public RoseCommon::CRoseISC {
   }
 
  protected:
-  bool HandlePacket(uint8_t* _buffer);
+  bool HandlePacket(uint8_t* _buffer) override;
   bool ServerRegister(const RoseCommon::CRosePacket& P);
   bool ServerShutdown(const RoseCommon::CRosePacket& P);
 

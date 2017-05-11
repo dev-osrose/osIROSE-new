@@ -40,7 +40,8 @@ enum class log_type {
   GENERAL,
   NETWORK,
   DATABASE,
-  SYSTEM
+  SYSTEM,
+  ASSERT,
 };
 
 class CLog {

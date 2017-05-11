@@ -2,14 +2,14 @@ osIROSE - Open Source International R.O.S.E Online Server
 ===================================================
 
 ##### Build status
-[![lin-badge]][lin-link] [![win-badge]][win-link]  
+[![lin-badge]][lin-link] [![win-badge]][win-link]
 [![cov-badge]][cov-link] [![ccov-badge]][ccov-link]
 [![coverity-scan]][coverity-scan-link]
 
 [lin-badge]: https://travis-ci.org/dev-osrose/osIROSE-new.svg?branch=trunk "Linux build status"
 [lin-link]:  https://travis-ci.org/dev-osrose/osIROSE-new "Linux build status"
 [win-badge]: https://ci.appveyor.com/api/projects/status/20x0eufp7djvunf3/branch/trunk?svg=true "Windows build status"
-[win-link]:  https://ci.appveyor.com/project/dev-osrose/osirose-new/branch/trunk "Windows build status"
+[win-link]:  https://ci.appveyor.com/project/RavenX8/osirose-new/branch/trunk "Windows build status"
 [cov-badge]: https://coveralls.io/repos/github/dev-osrose/osIROSE-new/badge.svg?branch=trunk&service=github
 [cov-link]:  https://coveralls.io/github/dev-osrose/osIROSE-new?branch=trunk
 [ccov-badge]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk/graph/badge.svg
@@ -20,9 +20,9 @@ osIROSE - Open Source International R.O.S.E Online Server
 
 ##### Development and Community:
 [![GitHub Repository](https://img.shields.io/badge/github-dev--osrose/osIROSE--new-green.svg)](https://github.com/dev-osrose/osIROSE-new)
-[![Waffle Board](https://img.shields.io/badge/waffle-dev--osrose/osIROSE--new-6699dd.svg)](https://waffle.io/dev-osrose/osIROSE-new)  
+[![Waffle Board](https://img.shields.io/badge/waffle-dev--osrose/osIROSE--new-6699dd.svg)](https://waffle.io/dev-osrose/osIROSE-new)
 [![Community Forum](https://img.shields.io/badge/forum-http%3A%2F%2Fforum.dev--osrose.com-green.svg)](http://forum.dev-osrose.com/index.php)
-[![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)    
+[![Join the chat at https://gitter.im/dev-osrose/osIROSE](https://badges.gitter.im/dev-osrose/osIROSE.svg)](https://gitter.im/dev-osrose/osIROSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ##### Issues and Status
 [![GitHub issues](https://img.shields.io/github/issues/dev-osrose/osIROSE-new.svg)](https://github.com/dev-osrose/osIROSE-new/issues)
@@ -30,7 +30,7 @@ osIROSE - Open Source International R.O.S.E Online Server
 
 ##### Project Info:
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/dev-osrose/osIROSE-new/master/LICENSE.txt)   
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/dev-osrose/osIROSE-new/master/LICENSE.txt)
 
 C++ Installation - Unix
 -----------------------
@@ -46,7 +46,7 @@ This will install all of the tools and sources required to build the project.
 To build the servers, execute the following:
 
     $ make
-    
+
 To install the servers to the system (not recommended), execute the following commands:
 
     $ make install
@@ -58,13 +58,13 @@ If you installed the servers, to run the servers execute the following:
     $ LoginServer&
     $ CharServer&
     $ MapServer&
-    
+
 If you opted to keep them in place, the server binaries are located in the bin folder inside the build directory. So from where you ran the command make, you will want to run the following:
 
     $ ./bin/LoginServer&
     $ ./bin/CharServer&
     $ ./bin/MapServer&
-    
+
 After running for the first time, the servers will create a config file in the current directory.
 
 C++ Installation - Windows
@@ -72,7 +72,7 @@ C++ Installation - Windows
 
 ##### Programs required:
 [![vis-studio]][vis-studio-link]
-[![cmake]][cmake-link]  
+[![cmake]][cmake-link]
 [![mysql]][mysql-link]
 [![perl]][perl-link]
 
@@ -93,7 +93,7 @@ After downloading and installing the above applications, to compile the servers 
     cd build
     cmake -DBUILD_TYPE=Release -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
     cmake --build . --config Release
-    
+
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).
 
 After running for the first time, the servers will create a config file in the current directory that can be modified.

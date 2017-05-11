@@ -63,7 +63,7 @@ TEST(TestMySQL_Database, TestQStore)
         std::string query = fmt::format("CALL create_account('{0}', '{1}');", "test", "cc03e747a6afbbcbf8be7668acfebee5");
         database.QExecute(query);
 	std::unique_ptr<Core::IResult>	res;
-	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
+	EXPECT_NO_FATAL_FAILURE(res = database.QStore("select * from test_table;"));
 	uint32_t	id;
 	EXPECT_EQ(res->getInt("id", id), true);
 	EXPECT_EQ(id, 0);
@@ -103,8 +103,8 @@ TEST(TestMySQL_Database, TestMultipleResults)
 	database.QExecute("insert into test_table(id, value, str, data) values(0, 12, 'plop', '\x08\x12\x24');");
 	database.QExecute("insert into test_table(id, value, str, data) values(1, NULL, 'null values', NULL);");
 	std::unique_ptr<Core::IResult>	res, res2;
-	EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
-	EXPECT_NO_FATAL_FAILURE(res2 = std::move(database.QStore("select * from test_table;")));
+	EXPECT_NO_FATAL_FAILURE(res = database.QStore("select * from test_table;"));
+	EXPECT_NO_FATAL_FAILURE(res2 = database.QStore("select * from test_table;"));
 }
 
 TEST(TestMySQL_Database, TestThreaded)
@@ -124,12 +124,12 @@ TEST(TestMySQL_Database, TestThreaded)
 	std::thread first([&database] () {
 			std::unique_ptr<Core::IResult> res;
 			for (int i = 0; i < 20; ++i)
-				EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
+				EXPECT_NO_FATAL_FAILURE(res = database.QStore("select * from test_table;"));
 			});
 	std::thread second([&database] () {
 			std::unique_ptr<Core::IResult> res;
 			for (int i = 0; i < 20; ++i)
-				EXPECT_NO_FATAL_FAILURE(res = std::move(database.QStore("select * from test_table;")));
+				EXPECT_NO_FATAL_FAILURE(res = database.QStore("select * from test_table;"));
 			});
 	first.join();
 	second.join();
@@ -168,10 +168,10 @@ TEST(TestMySQL_DatabasePool, TestGetInstance) {
 	struct Filename {
 		constexpr static const char *str() { return "test.ini"; }
 	};
-	EXPECT_NO_FATAL_FAILURE(Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance());
+	EXPECT_NO_FATAL_FAILURE(Core::databasePoolFilename<Filename>::getInstance());
 	EXPECT_NO_FATAL_FAILURE([] () {
 			Core::IDatabasePool &pool = Core::databasePoolFilename<Filename>::getInstance();
-			EXPECT_NO_FATAL_FAILURE(Core::IDatabase &database = pool.getDatabase());
+			EXPECT_NO_FATAL_FAILURE(pool.getDatabase());
 		});
 
 	EXPECT_NO_FATAL_FAILURE([] () {

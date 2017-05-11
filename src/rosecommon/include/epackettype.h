@@ -166,6 +166,17 @@ enum class ePacketType : uint16_t {
   PAKCS_EQUIP_ITEM = 0x7A5,
   PAKWC_EQUIP_ITEM = PAKCS_EQUIP_ITEM,
 
+  PAKCS_PARTY_REQ = 0x7d0,
+  PAKWC_PARTY_REQ = PAKCS_PARTY_REQ,
+  PAKCS_PARTY_REPLY,
+  PAKWC_PARTY_REPLY = PAKCS_PARTY_REPLY,
+  PAKWC_PARTY_MEMBER,
+  PAKWC_PARTY_ITEM,
+  PAKWC_PARTY_LVLXP,
+
+  PAKCS_PARTY_RULE = 0x7d7,
+  PAKWC_PARTY_RULE = PAKCS_PARTY_RULE,
+
   PAKWC_BILLING_MESSAGE = 0x7de,
   PAKCS_SCREEN_SHOT_TIME_REQ = 0x7eb,
   PAKSC_SCREEN_SHOT_TIME_REPLY = PAKCS_SCREEN_SHOT_TIME_REQ,
@@ -184,7 +195,7 @@ inline bool operator!=(const uint32_t& lhs, const ePacketType& rhs) {
 
 template <typename E>
 constexpr auto to_underlying(E e) noexcept {
-	return static_cast<typename std::underlying_type_t<E>>(e);
+  return static_cast<typename std::underlying_type_t<E>>(e);
 }
 
 
