@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
   iscServer.init(config.serverdata().isclistenip(), config.map_server().iscport());
   iscServer.listen();
   iscClient->connect();
+  iscClient->start_recv();
 
   auto start = Core::Time::GetTickCount();
   while (clientServer.is_active()) {

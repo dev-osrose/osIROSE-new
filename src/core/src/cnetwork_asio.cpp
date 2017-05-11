@@ -97,17 +97,19 @@ bool CNetwork_Asio::connect() {
   auto endpoint_iterator =
       resolver.resolve(network_address_, std::to_string(network_port_));
 
-  OnConnect();
-  send_mutex_.lock();
-  std::error_code errorCode;
-  asio::connect(socket_, endpoint_iterator, errorCode);
-  send_mutex_.unlock();
-  remote_connection_ = true;
-  if (!errorCode) {
-    OnConnected();
-    active_ = true;
-  } else {
-    active_ = false;
+  if (OnConnect()) {
+    send_mutex_.lock();
+    std::error_code errorCode;
+    asio::connect(socket_, endpoint_iterator, errorCode);
+    send_mutex_.unlock();
+    remote_connection_ = true;
+    if (!errorCode) {
+      OnConnected();
+      active_ = true;
+    }
+    else {
+      active_ = false;
+    }
   }
   return active_;
 }
@@ -146,20 +148,17 @@ bool CNetwork_Asio::disconnect() {
 }
 
 void CNetwork_Asio::ProcessSend() {
-  if (true == active_) {
+  if (this->is_active()) {
     discard_mutex_.lock();
     bool discard_empty = discard_queue_.empty();
     discard_mutex_.unlock();
 
     send_mutex_.lock();
     bool send_empty = send_queue_.empty();
-    send_mutex_.unlock();
 
     if (send_empty != true && discard_empty == true) {
-      send_mutex_.lock();
       auto _buffer = std::move(send_queue_.front());
       send_queue_.pop();
-      send_mutex_.unlock();
 
       uint8_t* raw_ptr = _buffer.get();
       uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
@@ -217,6 +216,7 @@ void CNetwork_Asio::ProcessSend() {
         logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
                        _size, _command, get_id());
     }
+    send_mutex_.unlock();
   }
 }
 
@@ -242,26 +242,44 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
 
           packet_offset_ += (uint16_t)length;
           update_time_ = (Core::Time::GetTickCount());
-
-          if (!errorCode || errorCode.value() == 11) {
+          if ( !errorCode ) {
             if (OnReceived(packet_size_, buffer_) == false) {
               logger_->debug(
-                  "OnReceived aborted the connection, disconnecting...");
+                "OnReceived aborted the connection, disconnecting...");
               shutdown();
-            } else {
-              if (is_active()) recv_data();
             }
-          } else {
-            if (errorCode.value() == 2 || errorCode.value() == 104) {
+            else {
+              if (this->is_active()) 
+                recv_data();
+            }
+          }
+          else
+          {
+            switch ( errorCode.value() ) {
+              case asio::error::try_again:
+                {
+                  if ( this->is_active() )
+                    recv_data();
+                }
+                break;
 
-              if( shutdown() )
-                logger_->info("Client {} disconnected.", get_id());
-              OnDisconnected();
-            } else {
-              logger_->debug("Client {}: Error {}: {}", get_id(), errorCode.value(),
-                             errorCode.message());
-              OnDisconnected();
-              shutdown();
+              case asio::error::basic_errors::connection_reset:
+              case asio::error::basic_errors::network_reset:
+              case asio::error::misc_errors::eof:
+                if ( shutdown() ) {
+                  logger_->info( "Socket {} disconnected.", get_id() );
+                  OnDisconnected();
+                }
+                break;
+
+              default:
+                {
+                  logger_->debug( "Socket {}: Error {}: {}", get_id(), errorCode.value(),
+                                  errorCode.message() );
+                  shutdown( true );
+                  OnDisconnected();
+                }
+                break;
             }
           }
         });
@@ -282,6 +300,7 @@ void CNetwork_Asio::AcceptConnection() {
         auto nSock = std::make_unique<CNetwork_Asio>();
         nSock->set_address(socket.remote_endpoint().address().to_string());
         nSock->SetSocket(std::move(socket));
+        nSock->set_active(true);
 
         this->OnAccepted(std::move(nSock));
       } else {

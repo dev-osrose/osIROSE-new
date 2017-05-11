@@ -24,10 +24,10 @@ using namespace RoseCommon;
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
     : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0), entitySystem_(std::make_shared<EntitySystem>()) {
 
-	sol::state lua;
-	lua.open_libraries(sol::lib::base);
-	lua.set_function("log", [this](std::string str) { logger_->info(str.c_str()); });
-	//lua.script_file("./scripts/main.lua");
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  lua.set_function("log", [this](std::string str) { logger_->info(str.c_str()); });
+  //lua.script_file("./scripts/main.lua");
 
   if (mapidx >= 0) {
     // We are a worker thread/process
@@ -59,6 +59,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       nClient->set_id(++client_count_);
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);
+      nClient->start_recv();
       logger_->info("Client connected from: {}", _address.c_str());
       client_list_.push_front(std::move(nClient));
     } else {
@@ -67,6 +68,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       nClient->set_id( server_count_++ );
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);
+      nClient->start_recv();
       logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(std::move(nClient));
     }

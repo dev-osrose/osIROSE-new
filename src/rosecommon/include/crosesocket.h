@@ -61,6 +61,7 @@ class CRoseSocket {
   virtual void set_update_time(std::chrono::steady_clock::time_point _val) { socket_->set_update_time(_val); }
   virtual bool disconnect() { return socket_->disconnect(); }
   virtual bool shutdown(bool _final = false) { return socket_->shutdown(_final); }
+  virtual void start_recv() { socket_->recv_data(); }
 
   std::shared_ptr<spdlog::logger> logger_;
 

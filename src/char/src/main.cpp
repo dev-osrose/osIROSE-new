@@ -77,6 +77,7 @@ int main(int argc, char* argv[]) {
   iscClient->init(config.char_server().loginip(), config.char_server().loginiscport());
   iscClient->SetLogin(true);
   iscClient->connect();
+  iscClient->start_recv();
 
   clientServer.init(config.serverdata().ip(), config.char_server().clientport());
   clientServer.listen();

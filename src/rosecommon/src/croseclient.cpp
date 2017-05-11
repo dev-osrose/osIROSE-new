@@ -24,7 +24,7 @@ CRoseClient::CRoseClient() : CRoseSocket() {
 }
 
 CRoseClient::CRoseClient(std::unique_ptr<Core::INetwork> _sock) : CRoseSocket(std::move(_sock)) {
-  socket_->recv_data();
+  set_active(true);
 }
 
 CRoseClient::~CRoseClient() {

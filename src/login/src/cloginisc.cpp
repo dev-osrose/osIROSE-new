@@ -27,6 +27,7 @@ CLoginISC::CLoginISC(std::unique_ptr<Core::INetwork> _sock)
       test_server_(false) {}
 
 bool CLoginISC::HandlePacket(uint8_t* _buffer) {
+  logger_->trace("CLoginISC::HandlePacket(uint8_t* _buffer)");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
@@ -46,10 +47,14 @@ bool CLoginISC::HandlePacket(uint8_t* _buffer) {
 bool CLoginISC::ServerRegister(const CRosePacket& P) {
   uint16_t _size = P.size() - 6;
 
+  logger_->trace("CLoginISC::ServerRegister(const CRosePacket& P)");
+
   iscPacket::ServerReg pServerReg;
   if (pServerReg.ParseFromArray(const_cast<CRosePacket&>(P).data(), _size) ==
-      false)
+    false) {
+    logger_->error("Couldn't decode proto msg!!");
     return false;  // m_Log.eicprintf( "Couldn't decode proto msg\n" );
+  }
 
   int16_t _type = 0;
 

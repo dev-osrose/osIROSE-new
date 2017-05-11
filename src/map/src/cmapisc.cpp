@@ -29,6 +29,8 @@ CMapISC::CMapISC() : CRoseISC() {
 CMapISC::CMapISC(std::unique_ptr<Core::INetwork> _sock)
     : CRoseISC(std::move(_sock)) {
   socket_->set_type(iscPacket::ServerType::MAP_MASTER);
+  socket_->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
+  socket_->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
 }
 
 bool CMapISC::IsChar() const { return socket_->get_type() == iscPacket::ServerType::CHAR; }

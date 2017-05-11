@@ -30,7 +30,7 @@ class CLoginISC : public RoseCommon::CRoseISC {
   }
 
  protected:
-  bool HandlePacket(uint8_t* _buffer);
+  bool HandlePacket(uint8_t* _buffer) override;
   bool ServerRegister(const RoseCommon::CRosePacket& P);
   bool ServerShutdown(const RoseCommon::CRosePacket& P);
 

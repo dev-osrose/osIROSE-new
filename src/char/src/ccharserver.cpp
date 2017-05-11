@@ -35,6 +35,7 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
+      nClient->start_recv();
       logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
                        _address.c_str());
       client_list_.push_front(std::move(nClient));
@@ -44,6 +45,7 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       nClient->set_id(server_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
+      nClient->start_recv();
       logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(std::move(nClient));
     }

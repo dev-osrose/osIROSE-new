@@ -25,7 +25,10 @@ using namespace RoseCommon;
 
 CCharISC::CCharISC() : CRoseISC() {}
 
-CCharISC::CCharISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {}
+CCharISC::CCharISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {
+  socket_->registerOnConnected(std::bind(&CCharISC::OnConnected, this));
+  socket_->registerOnShutdown(std::bind(&CCharISC::OnShutdown, this));
+}
 
 bool CCharISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -125,7 +128,7 @@ void CCharISC::OnConnected() {
 
   if (socket_->process_thread_.joinable() == false) {
     socket_->process_thread_ = std::thread([this]() {
-      while (is_active() == true && IsLogin() == true) {
+      while (this->is_active() == true && this->IsLogin() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
           update - get_update_time())
