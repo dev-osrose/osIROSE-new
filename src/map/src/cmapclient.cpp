@@ -99,60 +99,63 @@ bool CMapClient::JoinServerReply(
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable accounts;
   Core::SessionTable sessions;
-  const auto res = conn(sqlpp::select(sessions.userid, sessions.charid, accounts.platinium)
-          .from(sessions.join(accounts)
-          .on(sessions.userid == accounts.id))
-          .where(sessions.id == sessionID
-              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
+  try {
+      const auto res = conn(sqlpp::select(sessions.userid, sessions.charid, accounts.platinium)
+              .from(sessions.join(accounts)
+              .on(sessions.userid == accounts.id))
+              .where(sessions.id == sessionID
+                  and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
 
-  if (!res.empty()) {
-      logger_->debug("Client {} auth OK.", get_id());
-      login_state_ = eSTATE::LOGGEDIN;
-      const auto &row = res.front();
-      userid_ = row.userid;
-      charid_ = row.charid;
-      sessionId_ = sessionID;
-      bool platinium = false;
-      platinium = row.platinium;
-      entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
+      if (!res.empty()) {
+          logger_->debug("Client {} auth OK.", get_id());
+          login_state_ = eSTATE::LOGGEDIN;
+          const auto &row = res.front();
+          userid_ = row.userid;
+          charid_ = row.charid;
+          sessionId_ = sessionID;
+          bool platinium = false;
+          platinium = row.platinium;
+          entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
-      if (entity_) {
-        canBeDeleted_.store(false);
-        entity_.assign<SocketConnector>(this);
+          if (entity_) {
+            canBeDeleted_.store(false);
+            entity_.assign<SocketConnector>(this);
 
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-            SrvJoinServerReply::OK, std::time(nullptr));
-        send(*packet);
+            auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+                SrvJoinServerReply::OK, std::time(nullptr));
+            send(*packet);
 
-        // SEND PLAYER DATA HERE!!!!!!
-        auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
-        send(*packet2);
+            // SEND PLAYER DATA HERE!!!!!!
+            auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
+            send(*packet2);
 
-        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
-        send(*packet3);
+            auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
+            send(*packet3);
 
-        auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
-        send(*packet4);
+            auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
+            send(*packet4);
 
-        auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-        send(*packet5);
+            auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
+            send(*packet5);
 
-      } else {
-          logger_->debug("Something wrong happened when creating the entity");
+          } else {
+              logger_->debug("Something wrong happened when creating the entity");
+              auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+                  SrvJoinServerReply::FAILED, 0);
+              send(*packet);
+          }
+        } else {
+          logger_->debug("Client {} auth INVALID_PASS.", get_id());
           auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-              SrvJoinServerReply::FAILED, 0);
+              SrvJoinServerReply::INVALID_PASSWORD, 0);
           send(*packet);
-      }
-    } else {
-      logger_->debug("Client {} auth INVALID_PASS.", get_id());
+        }
+  } catch (sqlpp::exception&) {
+      logger_->debug("Client {} auth FAILED.", get_id());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::INVALID_PASSWORD, 0);
+              SrvJoinServerReply::FAILED, 0);
       send(*packet);
-    }
-  logger_->debug("Client {} auth FAILED.", get_id());
-  auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::FAILED, 0);
-  send(*packet);
+  }
   return true;
 };
 

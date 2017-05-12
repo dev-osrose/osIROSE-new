@@ -86,39 +86,42 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable table;
-  const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
-          .from(table).where(table.username == username_
-              and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
+  try {
+      const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+              .from(table).where(table.username == username_
+                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
-    if (!res.empty()) {
-        const auto &row = res.front();
-        if (!row.access.is_null())
-            access_rights_ = row.access;
+        if (!res.empty()) {
+            const auto &row = res.front();
+            if (!row.access.is_null())
+                access_rights_ = row.access;
 
-        if (access_rights_ < 1) {
-            // Banned
-            SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
-            return false;
-        }
+            if (access_rights_ < 1) {
+                // Banned
+                SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
+                return false;
+            }
 
-        if (!row.online) {
-            // Okay to login!!
-            userid_ = row.id;
-            session_id_ = std::time(nullptr);
-            SendLoginReply(SrvLoginReply::OK);
+            if (!row.online) {
+                // Okay to login!!
+                userid_ = row.id;
+                session_id_ = std::time(nullptr);
+                SendLoginReply(SrvLoginReply::OK);
+            } else {
+                // Online already
+                SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+            }
         } else {
-            // Online already
-            SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+            const auto res = conn(sqlpp::select(table.id).from(table).where(table.username == username_));
+            if (!res.empty())
+                SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+            else
+                // The user doesn't exist or server is down.
+                SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
         }
-    } else {
-        const auto res = conn(sqlpp::select(table.id).from(table).where(table.username == username_));
-        if (!res.empty())
-            SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-        else
-            // The user doesn't exist or server is down.
-            SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
-    }
-    SendLoginReply(SrvLoginReply::FAILED);
+  } catch (sqlpp::exception&) {
+        SendLoginReply(SrvLoginReply::FAILED);
+  }
   return true;
 }
 

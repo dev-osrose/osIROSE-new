@@ -73,29 +73,32 @@ bool CCharClient::JoinServerReply(
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable accounts;
   Core::SessionTable sessions;
-  const auto res = conn(sqlpp::select(sessions.userid, sessions.channelid)
-          .from(sessions
-          .join(accounts).on(sessions.userid == accounts.id))
-          .where(sessions.id == sessionID 
-              and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
-  if (!res.empty()) {
-      loginState_ = eSTATE::LOGGEDIN;
-      const auto &row = res.front();
-      userId_ = row.userid;
-      channelId_ = row.channelid;
+  try {
+      const auto res = conn(sqlpp::select(sessions.userid, sessions.channelid)
+              .from(sessions
+              .join(accounts).on(sessions.userid == accounts.id))
+              .where(sessions.id == sessionID 
+                  and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
+      if (!res.empty()) {
+          loginState_ = eSTATE::LOGGEDIN;
+          const auto &row = res.front();
+          userId_ = row.userid;
+          channelId_ = row.channelid;
 
-      sessionId_ = sessionID;
+          sessionId_ = sessionID;
 
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::OK, std::time(nullptr));
+          auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+              SrvJoinServerReply::OK, std::time(nullptr));
+          send(*packet);
+        } else {
+          auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
+              SrvJoinServerReply::INVALID_PASSWORD, 0);
+          send(*packet);
+        }
+  } catch (sqlpp::exception&) {
+      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
       send(*packet);
-    } else {
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
-          SrvJoinServerReply::INVALID_PASSWORD, 0);
-      send(*packet);
-    }
-  auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
-  send(*packet);
+  }
   return true;
 }
 
@@ -113,26 +116,29 @@ bool CCharClient::SendCharListReply() {
   Core::CharacterTable table;
 
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
+  uint32_t id = 0;
 
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table))
               .from(table).where(table.userid == userId_))) {
     packet->addCharacter(
             row.name,
+            row.race,
             row.level,
             row.job,
-            row.deleteDate,
             row.face,
-            row.hair
+            row.hair,
+            row.deleteDate
             );
     characterRealId_.push_back(row.id);
     Core::InventoryTable inv;
     for (const auto &iv : conn(sqlpp::select(inv.slot, inv.itemid)
                 .from(inv).where(inv.charId == row.id and inv.slot < 10)))
         packet->addEquipItem(
-                row.id,
+                id,
                 SrvCharacterListReply::getPosition(iv.slot),
                 iv.itemid
                 );
+    ++id;
   }
   send(*packet);
 
