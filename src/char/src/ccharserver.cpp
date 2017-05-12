@@ -16,33 +16,38 @@
 #include "ccharclient.h"
 #include "ccharisc.h"
 #include "epackettype.h"
+#include "platform_defines.h"
 
 using namespace RoseCommon;
 
 CCharServer::CCharServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }
 
-CCharServer::~CCharServer() { Shutdown(); }
+CCharServer::~CCharServer() { socket_->shutdown(); }
 
-void CCharServer::OnAccepted(tcp::socket _sock) {
-  if (_sock.is_open()) {
+void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
+  //if (_sock->is_active()) {
     // Do Something?
-    std::string _address = _sock.remote_endpoint().address().to_string();
+    std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
       std::unique_ptr<CCharClient> nClient = std::make_unique<CCharClient>(std::move(_sock));
-      nClient->SetId(client_count_++);
-      nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
-      logger_->info( "[{}] Client connected from: {}", nClient->GetId(),
+      nClient->set_id(client_count_++);
+      nClient->set_update_time( Core::Time::GetTickCount() );
+      nClient->set_active(true);
+      nClient->start_recv();
+      logger_->info( "[{}] Client connected from: {}", nClient->get_id(),
                        _address.c_str());
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
       std::unique_ptr<CCharISC> nClient = std::make_unique<CCharISC>(std::move(_sock));
-      nClient->SetId(server_count_++);
-      nClient->SetLastUpdateTime( Core::Time::GetTickCount() );
+      nClient->set_id(server_count_++);
+      nClient->set_update_time( Core::Time::GetTickCount() );
+      nClient->set_active(true);
+      nClient->start_recv();
       logger_->info( "Server connected from: {}", _address.c_str() );
       isc_list_.push_front(std::move(nClient));
     }
-  }
+  //}
 }

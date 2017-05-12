@@ -24,14 +24,14 @@ set( ProtoFiles
   iscpackets.proto
 )
 
-set(args 
+set(args
   PROTOFILES ${ProtoFiles}
-  OUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/include
+  OUTPATH ${CMAKE_BINARY_DIR}/generated
 )
 
 IF (DEBUG_PROTOBUF)
   message("${args}")
-  set(args 
+  set(args
     ${args}
     DEBUG
   )
@@ -40,7 +40,7 @@ ENDIF()
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${args})
 add_library(${PROJECT} STATIC ${ProtoSources} ${ProtoHeaders})
 target_include_directories(${PROJECT} PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>)
 
 IF (BUILD_PROTOBUF)
   IF (MSVC)

@@ -42,7 +42,6 @@
 #include "inetwork.h"
 #include "logconsole.h"
 #include "network_thread_pool.h"
-#include "platform_defines.h"
 
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE 0x7FF
@@ -64,52 +63,36 @@ namespace Core {
  * \date nov 2015
  */
 class CNetwork_Asio : public INetwork {
-  typedef std::unique_ptr<asio::io_context::work> asio_worker;
-
  public:
   CNetwork_Asio();
   virtual ~CNetwork_Asio();
 
-  virtual bool Init(std::string _ip, uint16_t _port) override;
-  virtual bool Shutdown(bool _final = false) override;
+  virtual bool init(std::string _ip, uint16_t _port) override;
+  virtual bool shutdown(bool _final = false) override;
 
-  virtual bool Connect() override;
-  virtual bool Listen() override;
-  virtual bool Reconnect() override;
-  virtual bool Disconnect() override;
+  virtual bool connect() override;
+  virtual bool listen() override;
+  virtual bool reconnect() override;
+  virtual bool disconnect() override;
 
-  virtual bool Send(std::unique_ptr<uint8_t[]> _buffer) override;
-  virtual bool Recv(uint16_t _size = MAX_PACKET_SIZE) override;
-  bool IsActive() {
+  virtual bool send_data(std::unique_ptr<uint8_t[]> _buffer) override;
+  virtual bool recv_data(uint16_t _size = MAX_PACKET_SIZE) override;
+
+  virtual bool is_active() const override {
     return active_;
   }
+  virtual void set_active(bool _val) override { active_ = _val; }
 
   bool isRemoteConnection() const { return remote_connection_; }
-  std::chrono::steady_clock::time_point GetLastUpdateTime() { return last_update_time_; }
-  void SetLastUpdateTime(std::chrono::steady_clock::time_point time) { last_update_time_ = time; }
+
+  virtual void dispatch(std::function<void()> _handler) override;
 
  protected:
   void AcceptConnection();
   void ProcessSend();
 
-  // Callback functions
-  virtual bool OnConnect() override;
-  virtual void OnConnected() override;
-  virtual bool OnListen() override;
-  virtual void OnListening() override;
-  virtual bool OnDisconnect() override;
-  virtual void OnDisconnected() override;
-  virtual bool OnReceive() override;
-  virtual bool OnReceived() override;
-  virtual bool OnSend(uint8_t* _buffer) override;
-  virtual void OnSent() override;
-  virtual bool OnAccept();
-  virtual void OnAccepted(tcp::socket _sock);
-  virtual bool OnShutdown() override;
-  virtual bool HandlePacket(uint8_t* _buffer);
-
-  void SetSocket(tcp::socket &&_sock) { socket_ = std::move(_sock); }
-  void ResetBuffer() {
+  void SetSocket(tcp::socket&& _sock) { socket_ = std::move(_sock); }
+  virtual void reset_internal_buffer() override {
     packet_offset_ = 0;
     packet_size_ = 6;
   }
@@ -119,21 +102,18 @@ class CNetwork_Asio : public INetwork {
   Core::NetworkThreadPool* networkService_;
   tcp::socket socket_;
   tcp::acceptor listener_;
-  std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
+
   std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
   std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
   std::mutex send_mutex_;
-  std::mutex recv_mutex_;
   std::mutex discard_mutex_;
   std::condition_variable recv_condition_;
 
-  std::thread process_thread_;
   uint8_t buffer_[MAX_PACKET_SIZE];
   uint16_t packet_offset_;
   uint16_t packet_size_;
   bool active_;
   bool remote_connection_;
-  std::chrono::steady_clock::time_point last_update_time_;
 };
 }
 

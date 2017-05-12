@@ -7,6 +7,7 @@
 #include "ccharisc.h"
 #include "mock/login/mock_cloginclient.h"
 #include "mock/login/mock_cloginisc.h"
+#include "cnetwork_asio.h"
 
 using namespace RoseCommon;
 
@@ -14,28 +15,32 @@ TEST(TestLoginServer, TestClientPacketPath) {
   CLoginServer network;
   std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
   CLoginClient_Mock netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29110));
-  EXPECT_NO_FATAL_FAILURE(network.Listen());
+
+  iscServ->set_socket(std::make_unique<Core::CNetwork_Asio>());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
+
+  EXPECT_EQ(true, network.init("127.0.0.1", 29110));
+  EXPECT_EQ(true, network.listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29110));
-  EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
+  EXPECT_EQ(true, netConnect.init("127.0.0.1", 29110));
+  EXPECT_EQ(true, netConnect.connect());
 
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
   auto pak = std::unique_ptr<CliAcceptReq>(new CliAcceptReq());
-  netConnect.Send(*pak);
+  netConnect.send(*pak);
 
   //TODO(raven): Move this into a static function so we can just call the function
   //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
   // cc03e747a6afbbcbf8be7668acfebee5 == test123
   auto pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
-  netConnect.Send(*pak2);
+  netConnect.send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  iscServ->SetId(0);
-  iscServ->SetType(1);
+  iscServ->set_id(0);
+  iscServ->set_type(1);
   CLoginServer::GetISCList().push_front(std::move(iscServ));
 
 
@@ -44,60 +49,64 @@ TEST(TestLoginServer, TestClientPacketPath) {
   // We should get a warning
   //-----------------------------------------
   auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
-  netConnect.Send(*pak3);
+  netConnect.send(*pak3);
 
   auto pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0, 0));
-  netConnect.Send(*pak4);
+  netConnect.send(*pak4);
   //-----------------------------------------
 
   //Incorrect Password
   pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
-  netConnect.Send(*pak2);
+  netConnect.send(*pak2);
 
   //Correct password
   pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
-  netConnect.Send(*pak2);
+  netConnect.send(*pak2);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
-  netConnect.Send(*pak3);
+  netConnect.send(*pak3);
 
   pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0,0));
-  netConnect.Send(*pak4);
+  netConnect.send(*pak4);
 
   auto pak5 = std::unique_ptr<CRosePacket>(new CliAlive());
-  netConnect.Send(*pak5);
+  netConnect.send(*pak5);
 
 
   std::this_thread::sleep_for(
-      std::chrono::milliseconds(100));  // Change this to condition variables
+      std::chrono::milliseconds(1000));  // Change this to condition variables
+
+  EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
 
   CLoginServer::GetISCList().clear();
 
-  EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
-  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+  EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown());
 }
 
 TEST(TestLoginServer, TestISCRosePacketPath) {
 
   CLoginServer network(true);
   CCharISC netConnect;
-  EXPECT_EQ(true, network.Init("127.0.0.1", 29111));
-  EXPECT_NO_FATAL_FAILURE(network.Listen());
+  netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
+
+  EXPECT_EQ(true, network.init("127.0.0.1", 29111));
+  EXPECT_NO_FATAL_FAILURE(network.listen());
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  EXPECT_EQ(true, netConnect.Init("127.0.0.1", 29111));
-  EXPECT_NO_FATAL_FAILURE(netConnect.Connect());
+  EXPECT_EQ(true, netConnect.init("127.0.0.1", 29111));
+  EXPECT_NO_FATAL_FAILURE(netConnect.connect());
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 //  CRosePacket* pak = new CRosePacket( ePacketType::ISC_ALIVE );
-//  netConnect.Send( pak );
+//  netConnect.send_data( pak );
 //  {
 //    uint8_t serverCount = 0;
 //    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
 //    for (auto& server : CLoginServer::GetISCList()) {
-//      if (server->GetType() == 1) serverCount++;
+//      if (server->get_type() == 1) serverCount++;
 //    }
 //
 //    EXPECT_EQ(1, serverCount);
@@ -105,12 +114,12 @@ TEST(TestLoginServer, TestISCRosePacketPath) {
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 //  CRosePacket* pak2 = new CRosePacket( ePacketType::ISC_ALIVE );
-//  netConnect.Send( pak2 );
+//  netConnect.send_data( pak2 );
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(500));  // Change this to condition variables
-  //EXPECT_NO_FATAL_FAILURE(netConnect.Disconnect());
-  //EXPECT_NO_FATAL_FAILURE(netConnect.Shutdown());
+  //EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
+  //EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
 
-  EXPECT_NO_FATAL_FAILURE(network.Shutdown());
+  EXPECT_NO_FATAL_FAILURE(network.shutdown(true));
 }

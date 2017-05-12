@@ -16,6 +16,7 @@
 #include "config.h"
 #include "logconsole.h"
 #include "version.h"
+#include "network_thread_pool.h"
 
 #include "connection.h"
 #include "mysqlconnection.h"
@@ -143,13 +144,13 @@ int main(int argc, char* argv[]) {
     CLoginServer clientServer;
     CLoginServer iscServer(true);
 
-    clientServer.Init(config.serverdata().ip(), config.login_server().clientport());
-    clientServer.Listen();
+    clientServer.init(config.serverdata().ip(), config.login_server().clientport());
+    clientServer.listen();
 
-    iscServer.Init(config.serverdata().isclistenip(), config.login_server().iscport());
-    iscServer.Listen();
+    iscServer.init(config.serverdata().isclistenip(), config.login_server().iscport());
+    iscServer.listen();
 
-    while (clientServer.IsActive()) {
+    while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 

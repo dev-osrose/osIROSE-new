@@ -26,6 +26,7 @@ include_directories(
 )
 
 set( SOURCES_HEADER
+  include/crosesocket
   include/crosecrypt
   include/croseserver
   include/croseclient 
@@ -57,6 +58,7 @@ set( SOURCES_HEADER
 )
 
 SET(SOURCES_BASE
+  src/crosesocket
   src/crosecrypt 
   src/croseserver
   src/croseclient

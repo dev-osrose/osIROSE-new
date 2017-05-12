@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,7 @@ CLoginClient::CLoginClient()
       userid_(0),
       session_id_(0) {}
 
-CLoginClient::CLoginClient(tcp::socket _sock)
+CLoginClient::CLoginClient(std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
@@ -44,32 +44,32 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList())
-      if (server->GetType() == iscPacket::ServerType::CHAR) {
-        CLoginISC* svr = dynamic_cast<CLoginISC*>(server.get());
+      if (server->get_type() == iscPacket::ServerType::CHAR) {
+        CLoginISC* svr = static_cast<CLoginISC*>(server.get());
         if (!svr) {
             continue;
         }
 
         // This if check is needed since the client actually looks for this.
-        packet->addServer(svr->GetName(), svr->GetId() + 1,
+        packet->addServer(svr->GetName(), svr->get_id() + 1,
                           svr->IsTestServer());
       }
   }
 
-  this->Send(*packet);
+  this->send(*packet);
 }
 
 bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
-                  GetId());
+                  get_id());
     return true;
   }
   uint32_t serverCount = 0;
 
   CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
-    if (server && server->GetType() == iscPacket::ServerType::CHAR) serverCount++;
+    if (server && server->get_type() == iscPacket::ServerType::CHAR) serverCount++;
   }
   CLoginServer::GetISCListMutex().unlock();
 
@@ -126,7 +126,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get channel list before logging in.",
-        GetId());
+        get_id());
     return true;
   }
   uint32_t ServerID = P->serverId()-1;
@@ -134,12 +134,12 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = dynamic_cast<CLoginISC*>(obj.get());
+    CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (!server) {
         continue;
     }
-    if (server->GetType() == iscPacket::ServerType::CHAR &&
-        server->GetId() == ServerID) {
+    if (server->get_type() == iscPacket::ServerType::CHAR &&
+        server->get_id() == ServerID) {
       for (auto& obj : server->GetChannelList()) {
         tChannelInfo info = obj;
         { packet->addChannel(info.channelName, info.ChannelID+1, 0); }
@@ -147,8 +147,8 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
     }
   }
 
-  this->Send(*packet);
-  logger_->trace("Client {}: Channel List end.", GetId());
+  this->send(*packet);
+  logger_->trace("Client {}: Channel List end.", get_id());
   return true;
 }
 
@@ -157,7 +157,7 @@ bool CLoginClient::ServerSelect(
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to select a server before logging in.",
-        GetId());
+        get_id());
     return true;
   }
   uint32_t serverID = P->serverId()-1;
@@ -171,26 +171,27 @@ bool CLoginClient::ServerSelect(
   // 4 = Channel not active
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
-    CLoginISC* server = (CLoginISC*)obj.get();
-    if (server->GetType() == iscPacket::ServerType::CHAR &&
-        server->GetId() == serverID) {
-        std::string query = fmt::format("CALL create_session({}, {}, {});",
-                                          session_id_, userid_, channelID);
+    CLoginISC* server = static_cast<CLoginISC*>(obj.get());
+    if (server->get_type() == iscPacket::ServerType::CHAR &&
+        server->get_id() == serverID) {
+      std::string query = fmt::format("CALL create_session({}, {}, {});",
+                                      session_id_, userid_, channelID);
 
         auto conn = Core::connectionPool.getConnection(Core::osirose);
         conn->execute(query);
 
-        auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          SrvSrvSelectReply::OK, session_id_, 0, server->GetIpAddress(), server->GetPort());
-        this->Send(*packet);
-        break;
+      auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
+          SrvSrvSelectReply::OK, session_id_, 0, server->get_address(), server->get_port());
+      this->send(*packet);
+      break;
     }
   }
-  logger_->trace("Client {}: Server Select end.", GetId());
+  logger_->trace("Client {}: Server Select end.", get_id());
   return true;
 }
 
 bool CLoginClient::HandlePacket(uint8_t* _buffer) {
+  logger_->trace("CLoginClient::HandlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_CHANNEL_LIST_REQ:
       return ChannelList(
@@ -204,7 +205,6 @@ bool CLoginClient::HandlePacket(uint8_t* _buffer) {
     default:
       return CRoseClient::HandlePacket(_buffer);
   }
+  logger_->trace("CLoginClient::HandlePacket end");
   return true;
 }
-
-bool CLoginClient::OnReceived() { return CRoseClient::OnReceived(); }

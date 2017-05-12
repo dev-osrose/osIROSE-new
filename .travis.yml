@@ -400,21 +400,21 @@ after_success:
   - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
 
 deploy:
-  - provider: s3
-    access_key_id:
-      secure: "UWYxD84ECFtx0u+JL+HyFgX/AzGDbAqpLeSsYzd+MkC/tkf3EHdbJTwe/x+NPpItk5QmIVYTTqLjaFoX65stNI6DYawxJmOv/mkZcSgDQm3y4yEprbdAfDSjCRduIL+uGJN1V2S6ga9HFazndSlRFWN1KbrfpJf0I7b4oGvyH4U48Z4IE1Y8/AUFXnCKAp2IHsmGdGz6fZ0P/LYuk8yAInDfOluD0golWUp9EQh/IUJ+Ke/UZy3cYaKhDRBP5kzRFrThwEOdz7/VWpSzlIOwQOZz6L+6TyaDWRBkx+RuMn9yDOEkOPjPg0AvmF8KU3O4OZmUZVKEggJrHidedd9vDMVQoKh54tKme2rMyH5qYtU1iAqoe7Z2n/PvLPM/e10NXP1/9VjBnWVJkStL/vhP9/nextdNM1jyzLNlOICrDqHNEodkvMa6DUjXjGTAi/GIgNRzkZC+FLRkVcPtq30uPHsoMNSz4/zDSkGY4EoC/zJSEwX5otQMvurS0ae9DDxLLyaVAGnerKkbn1RNcYR9If31EFQQlPZVRU3ew/EBZBgQ9l+ibIl2J3Y99/j4gB0yzEhn3tMk/dzCZ8fhlQspqCMAygNHUz2QrD09y1BgkfzpvVpXw/LwW0ddUvwreLGTfBz2KHpe26bt6WnObBM/N40s4Pa3qE77oAWCm+ysBt4="
-    secret_access_key:
-      secure: "rTNxFWfSexIC9pj4ZYPHLCzslkFcZC9YhoS1d8q8TeAWuDAZFzxoQfHh0NFcE3Rtx82JddZqulsL8lxbmQlebokYIgMPy7SgasV8eUUaKpIdSIm1WFUxs0qg4wLcnw+u4Wn8mkT9ZKba4PVISZl+l70JgKdldh7QMYjoGeACrNLepquIGEfnlJvcSITBXKpBfGuBTjXgtcHG6EtmrpuM+WPcOgBDKPiRDyIIrW+sRNMYZ43hccj4hj7360x9iY8V68RVGYn0sGzujtGeTym8u8vpMEYgPdY5jtsUOdlqrrqfH7pPyeAgEQIab4SmOGceSgnlcuhNPM5PLVDkbO11pEpSTrAj0wsahu/n0dDsj2B/KwM5GiNMtb2CjEs2su2SQudZEZHnN0IuNTeKFmnu9rlFpmbqf/MN2hSANsMqNFG4V4Cdl01lLGUfWkWGaBuWZ5obyWeA8aEJtDudzEpmaAI/oZu4vWVWN1gtSprm1fO8n65iGlhGf2SwaCJBESPD9TaInHWhgWbBqRefy0wx9Qe0pTh+zZHWRY+azVtUMW3B2XcCpv53qAqwcS8NTydz0Y7z5x5zbja8YYgowde9O1cXzbLKljhlOTW2mU0/tJaUXj1/4T7G4jbqAqcqr4BuTO7LO6KbJGo08gVkstNd9Ppxf5B4hmuI7fhPZKE7emg="
-    bucket: osirose-builds
-    skip_cleanup: true
-    local-dir: ${PROOT}/public
-    acl: public_read
-    upload-dir: ${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}
-    on:
-      repo: dev-osrose/osIROSE-new
-#      all_branches: true
-      branch: master
-      tag: true
+#  - provider: s3
+#    access_key_id:
+#      secure: "UWYxD84ECFtx0u+JL+HyFgX/AzGDbAqpLeSsYzd+MkC/tkf3EHdbJTwe/x+NPpItk5QmIVYTTqLjaFoX65stNI6DYawxJmOv/mkZcSgDQm3y4yEprbdAfDSjCRduIL+uGJN1V2S6ga9HFazndSlRFWN1KbrfpJf0I7b4oGvyH4U48Z4IE1Y8/AUFXnCKAp2IHsmGdGz6fZ0P/LYuk8yAInDfOluD0golWUp9EQh/IUJ+Ke/UZy3cYaKhDRBP5kzRFrThwEOdz7/VWpSzlIOwQOZz6L+6TyaDWRBkx+RuMn9yDOEkOPjPg0AvmF8KU3O4OZmUZVKEggJrHidedd9vDMVQoKh54tKme2rMyH5qYtU1iAqoe7Z2n/PvLPM/e10NXP1/9VjBnWVJkStL/vhP9/nextdNM1jyzLNlOICrDqHNEodkvMa6DUjXjGTAi/GIgNRzkZC+FLRkVcPtq30uPHsoMNSz4/zDSkGY4EoC/zJSEwX5otQMvurS0ae9DDxLLyaVAGnerKkbn1RNcYR9If31EFQQlPZVRU3ew/EBZBgQ9l+ibIl2J3Y99/j4gB0yzEhn3tMk/dzCZ8fhlQspqCMAygNHUz2QrD09y1BgkfzpvVpXw/LwW0ddUvwreLGTfBz2KHpe26bt6WnObBM/N40s4Pa3qE77oAWCm+ysBt4="
+#    secret_access_key:
+#      secure: "rTNxFWfSexIC9pj4ZYPHLCzslkFcZC9YhoS1d8q8TeAWuDAZFzxoQfHh0NFcE3Rtx82JddZqulsL8lxbmQlebokYIgMPy7SgasV8eUUaKpIdSIm1WFUxs0qg4wLcnw+u4Wn8mkT9ZKba4PVISZl+l70JgKdldh7QMYjoGeACrNLepquIGEfnlJvcSITBXKpBfGuBTjXgtcHG6EtmrpuM+WPcOgBDKPiRDyIIrW+sRNMYZ43hccj4hj7360x9iY8V68RVGYn0sGzujtGeTym8u8vpMEYgPdY5jtsUOdlqrrqfH7pPyeAgEQIab4SmOGceSgnlcuhNPM5PLVDkbO11pEpSTrAj0wsahu/n0dDsj2B/KwM5GiNMtb2CjEs2su2SQudZEZHnN0IuNTeKFmnu9rlFpmbqf/MN2hSANsMqNFG4V4Cdl01lLGUfWkWGaBuWZ5obyWeA8aEJtDudzEpmaAI/oZu4vWVWN1gtSprm1fO8n65iGlhGf2SwaCJBESPD9TaInHWhgWbBqRefy0wx9Qe0pTh+zZHWRY+azVtUMW3B2XcCpv53qAqwcS8NTydz0Y7z5x5zbja8YYgowde9O1cXzbLKljhlOTW2mU0/tJaUXj1/4T7G4jbqAqcqr4BuTO7LO6KbJGo08gVkstNd9Ppxf5B4hmuI7fhPZKE7emg="
+#    bucket: osirose-builds
+#    skip_cleanup: true
+#    local-dir: ${PROOT}/public
+#    acl: public_read
+#    upload-dir: ${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}
+#    on:
+#      repo: dev-osrose/osIROSE-new
+##      all_branches: true
+#      branch: master
+#      tag: true
 
   - provider: releases
     api_key:

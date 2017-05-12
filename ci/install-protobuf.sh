@@ -12,8 +12,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		cd tools/protobuf
 		./autogen.sh
 		./configure --prefix=$HOME/protobuf
-		make -j 4
-		make install
+		make -j 4 && make install
 
 		cd ../../
 	else

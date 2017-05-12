@@ -23,7 +23,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   virtual ~CCharServer();
 
  protected:
-  virtual void OnAccepted(tcp::socket _sock);
+  virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
   uint32_t client_count_;
   uint32_t server_count_;
 };

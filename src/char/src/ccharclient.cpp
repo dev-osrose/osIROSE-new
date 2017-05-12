@@ -28,7 +28,7 @@ CCharClient::CCharClient()
       userId_(0),
       channelId_(0) {}
 
-CCharClient::CCharClient(tcp::socket _sock)
+CCharClient::CCharClient(std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       accessRights_(0),
       loginState_(eSTATE::DEFAULT),
@@ -57,16 +57,13 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
   }
   return true;
 }
-
-bool CCharClient::OnReceived() { return CRoseClient::OnReceived(); }
-
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
   logger_->trace("CCharClient::JoinServerReply");
 
   if (loginState_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
-                  GetId());
+                  get_id());
     return true;
   }
 
@@ -91,14 +88,14 @@ bool CCharClient::JoinServerReply(
 
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::OK, std::time(nullptr));
-      Send(*packet);
+      send(*packet);
     } else {
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
           SrvJoinServerReply::INVALID_PASSWORD, 0);
-      Send(*packet);
+      send(*packet);
     }
   auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
-  Send(*packet);
+  send(*packet);
   return true;
 }
 
@@ -108,7 +105,7 @@ bool CCharClient::SendCharListReply() {
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get the char list before logging in.",
-        GetId());
+        get_id());
     return true;
   }
 
@@ -137,7 +134,7 @@ bool CCharClient::SendCharListReply() {
                 iv.itemid
                 );
   }
-  Send(*packet);
+  send(*packet);
 
   return true;
 }
@@ -149,7 +146,7 @@ bool CCharClient::SendCharCreateReply(
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get the create a char before logging in.",
-        GetId());
+        get_id());
     return true;
   }
   std::string query =
@@ -167,7 +164,7 @@ bool CCharClient::SendCharCreateReply(
 
   auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(
       res);
-  Send(*packet);
+  send(*packet);
 
   return true;
 }
@@ -178,7 +175,7 @@ bool CCharClient::SendCharDeleteReply(
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to delete a char before logging in.",
-                  GetId());
+                  get_id());
     return true;
   }
 
@@ -199,7 +196,7 @@ bool CCharClient::SendCharDeleteReply(
 
   auto packet =
       makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
-  Send(*packet);
+  send(*packet);
   return true;
 }
 
@@ -209,7 +206,7 @@ bool CCharClient::SendCharSelectReply(
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to select a char before logging in.",
-                  GetId());
+                  get_id());
     return true;
   }
 
@@ -218,7 +215,7 @@ bool CCharClient::SendCharSelectReply(
   uint8_t selected_id = P->charId();
   if(selected_id > characterRealId_.size()) {
     logger_->warn("Client {} is attempting to select a invalid character.",
-                  GetId());
+                  get_id());
     return false;
   }
 
@@ -230,12 +227,12 @@ bool CCharClient::SendCharSelectReply(
 
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
-    if (server->GetType() == iscPacket::ServerType::MAP_MASTER &&
-        server->GetId() == channelId_) {
+    if (server->get_type() == iscPacket::ServerType::MAP_MASTER &&
+        server->get_id() == channelId_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
-          server->GetPort(), sessionId_,
-          0, server->GetIpAddress());  // this should be set to the map server's encryption seed
-      Send(*packet);
+          server->get_port(), sessionId_,
+          0, server->get_address());  // this should be set to the map server's encryption seed
+      send(*packet);
     }
   }
 
