@@ -35,7 +35,7 @@ function GenerateProject {
     $global:config = "Release"
   }
 
-  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=' + $global:unit_tests + ' ..  2>&1'
+  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=' + $global:unit_tests + ' ..  2>&1'
   Write-Host "Running '$cmake_command'"
   cmd /c $cmake_command
 
