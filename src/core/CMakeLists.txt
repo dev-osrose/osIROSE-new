@@ -60,5 +60,7 @@ add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(${PROJECT} protoGen)
-target_link_libraries(${PROJECT} sqlpp-mysql)
+IF (ENABLE_MYSQL)
+    target_link_libraries(${PROJECT} sqlpp-mysql)
+ENDIF()
 
