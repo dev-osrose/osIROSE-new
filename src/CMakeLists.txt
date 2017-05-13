@@ -35,7 +35,6 @@ include_directories(
   SYSTEM ${ENTITYX_INCLUDE_DIR}
   SYSTEM ${SQLPP_INCLUDE_DIR}
   SYSTEM ${DATE_INCLUDE_DIR}
-  SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
 )
 
 link_directories(
@@ -43,19 +42,15 @@ link_directories(
 )
 
 IF(ENABLE_MYSQL)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_MYSQL")
   include_directories(
     SYSTEM ${MYSQL_INCLUDE_DIRS}
-    SYSTEM ${MYSQLpp_INCLUDE_DIR}
+    SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
   )
   
   link_directories(
     ${MYSQL_LIBRARY_PATH}
-    ${MYSQLpp_LIBRARY_PATH}
   )
-  
-  IF (MSVC)
-    add_definitions(-DMYSQLPP_NO_DLL)
-  ENDIF()
 ENDIF()
 
 IF (MSVC)

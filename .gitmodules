@@ -19,9 +19,6 @@
 [submodule "tools/sol2"]
 	path = tools/sol2
 	url = https://github.com/ThePhD/sol2.git
-[submodule "tools/mysqlpp"]
-	path = tools/mysqlpp
-	url = https://github.com/RavenX8/mysqlpp.git
 [submodule "tools/cxxopts"]
 	path = tools/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git

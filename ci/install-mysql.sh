@@ -7,7 +7,6 @@ fi
 echo 'Building and installing mysql.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    #virtualenv osiROSE
     pip install pyparsing
 	if [ ! -d "$HOME/mysql/lib" ]; then
 		echo 'Setting up mysql...';
