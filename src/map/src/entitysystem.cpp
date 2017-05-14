@@ -9,7 +9,6 @@
 #include "cmapclient.h"
 
 using namespace RoseCommon;
-
 EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
@@ -51,6 +50,7 @@ void EntitySystem::update(double dt) {
     systemManager_.update(dt);
     for (auto it : toDestroy_) {
         if (it) {
+            saveCharacter(it.component<CharacterInfo>()->charId_, it);
             auto basic = it.component<BasicInfo>();
             nameToEntity_.erase(basic->name_);
             idToEntity_.erase(basic->id_);
@@ -123,7 +123,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     entity.assign<Stats>(charRow);
     entity.assign<AdvancedInfo>(charRow);
     entity.assign<CharacterGraphics>(charRow);
-    entity.assign<CharacterInfo>(charRow, platinium);
+    entity.assign<CharacterInfo>(charRow, platinium, charId);
 
     // TODO : write the pat initialization code
     auto skills = entity.assign<Skills>();
@@ -155,5 +155,28 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
 void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
     if (!entity)
         return;
-    (void)charId;
+    auto chat = systemManager_.get<Systems::ChatSystem>();
+    chat->sendMsg(entity, "Character saved");
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    Core::CharacterTable characters;
+
+    using sqlpp::parameter;
+    
+    auto update = sqlpp::dynamic_update(conn.get(), characters).dynamic_set().where(characters.id == charId);
+    entity.component<Position>()->commitToUpdate(update);
+    //entity.component<BasicInfo>()->commitToUpdate(update);
+    //entity.component<Stats>()->commitToUpdate(update);
+    //entity.component<AdvancedInfo>()->commitToUpdate(update);
+    //entity.component<CharacterGraphics>()->commitToUpdate(update);
+    //entity.component<CharacterInfo>()->commitToUpdate(update);
+    //entity.component<Hotbar>()->commitToUpdate(update);
+    //entity.component<StatusEffects>()->commitToUpdate(update);
+    //entity.component<RidingItems>()->commitToUpdate(update);
+    //entity.component<BulletItems>()->commitToUpdate(update);
+
+    conn->run(update);
+
+    //entity.component<Skills>()->commitToUpdate(updateSkills);
+    
+    //entity.component<Inventory>()->commitToUpdate(updateInventory);
 }

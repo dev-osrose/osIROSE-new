@@ -24,7 +24,8 @@ struct CharacterInfo {
         stamina_(0),
         patHp_(0),
         patCooldownTime_(0),
-        dt_(0)
+        dt_(0),
+        charId_(0)
     {}
 
     template <typename T>
@@ -33,8 +34,9 @@ struct CharacterInfo {
     }
 
     template <typename T>
-    CharacterInfo(const T& row, bool platinium) : CharacterInfo(row) {
+    CharacterInfo(const T& row, bool platinium, uint32_t charId) : CharacterInfo(row) {
         platinium_ = platinium;
+        charId_ = charId;
     }
 
     template <typename T>
@@ -81,5 +83,6 @@ struct CharacterInfo {
     uint16_t patHp_;
     uint32_t patCooldownTime_; // in seconds
     double dt_; // to keep track of seconds for patCoolDownTime_
+    uint32_t charId_;
 };
 
