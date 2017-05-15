@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
     socket->init(ip, loginPort);
     LoginClient loginClient{std::move(socket)};
     loginClient.connect();
+    loginClient.start_recv();
     while (loginClient.is_active())
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
