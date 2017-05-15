@@ -15,14 +15,116 @@ using namespace RoseCommon;
 
 class LoginClient : public CRoseSocket {
     public:
-        LoginClient(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)) {}
+        LoginClient(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)), running(true) {
+            socket_->registerOnDisconnected([this]() {
+                    this->OnDisconnected();
+                    });
+            socket_->registerOnConnected([this]() {
+                    this->OnConnected();
+                    });
+            socket_->registerOnSend([this](uint8_t *buffer) {
+                    return this->OnSend(buffer);
+                    });
+            socket_->registerOnReceived([this](uint16_t& packetSize, uint8_t* buffer) {
+                    return this->OnReceived(packetSize, buffer);
+                    });
+        }
         virtual ~LoginClient() = default;
 
-        bool HandlePacket(uint8_t *buffer) override {
-            logger_->trace("Client::HandlePacket start");
+        bool isRunning() const { return running; }
+
+    protected:
+        virtual void OnDisconnected() {
+            logger_->trace("OnDisconnected");
+            //running = false;
+        }
+        virtual void OnConnected() {
+            logger_->trace("OnConnected");
+            auto packet = CliAcceptReq();
+            send(packet);
+        }
+
+        virtual bool OnSend(uint8_t *buffer) {
+            logger_->trace("OnSend");
             (void)buffer;
+#ifndef DISABLE_CRYPT
+            crypt_.encodeClientPacket(buffer);
+#endif
             return true;
         }
+
+        virtual bool OnReceived(uint16_t& packetSize, uint8_t *buffer) {
+            logger_->trace("OnReceived");
+            if (packetSize == 6) {
+#ifndef DISABLE_CRYPT
+            packetSize = crypt_.decodeServerHeader(reinterpret_cast<unsigned char*>(buffer));
+#else
+            packetSize = buffer[0];
+#endif
+            }
+            if (packetSize < 6 || packetSize > MAX_PACKET_SIZE) {
+                logger_->debug("Server sent incorrect block header");
+                socket_->reset_internal_buffer();
+                return false;
+            }
+#ifndef DISABLE_CRYPT
+            if (!crypt_.decodeServerBody(reinterpret_cast<unsigned char*>(buffer))) {
+                logger_->debug("Server sent an illegal block");
+                socket_->reset_internal_buffer();
+                return false;
+            }
+#endif
+            logger_->trace("Received a packet on CRoseSocket {2}: Header [{0}, 0x{1:04x}]", CRosePacket::size(buffer), (uint16_t)CRosePacket::type(buffer), get_id());
+#ifdef SPDLOG_TRACE_ON
+            fmt::MemoryWriter out;
+            for (int i = 0; i < CRosePacket::size(buffer); ++i)
+                out.write("0x{0:02x} ", buffer[i]);
+            logger_->trace("{}", out.c_str());
+#endif
+            auto res = std::make_unique<uint8_t[]>(CRosePacket::size(buffer));
+            std::memcpy(res.get(), buffer, CRosePacket::size(buffer));
+            recv_mutex_.lock();
+            recv_queue_.push(std::move(res));
+            recv_mutex_.unlock();
+            socket_->dispatch([this]() {
+                    if (socket_->is_active()) {
+                        recv_mutex_.lock();
+                        if (!recv_queue_.empty()) {
+                            std::unique_ptr<uint8_t[]> buffer = std::move(recv_queue_.front());
+                            recv_queue_.pop();
+                            if (!HandlePacket(buffer.get())) {
+                                logger_->debug("HandlePacket returned false, disconnecting server");
+                                socket_->shutdown();
+                            }
+                        }
+                        recv_mutex_.unlock();
+                    }
+                    });
+            socket_->reset_internal_buffer();
+            return true;
+        }
+
+        virtual bool HandlePacket(uint8_t *buffer) override {
+            logger_->trace("Client::HandlePacket start");
+            switch (CRosePacket::type(buffer)) {
+                case ePacketType::PAKSS_ACCEPT_REPLY:
+                    logger_->info("Got accept reply");
+                    logger_->info("Trying to login");
+                    {
+                        auto packet = CliLoginReq("cc03e747a6afbbcbf8be7668acfebee5", "test2");
+                        send(packet);
+                    }
+                    break;
+                default:
+                    logger_->info("Received a packet : {}", (uint16_t)CRosePacket::type(buffer));
+                    running = false;
+                    break;
+            }
+            return true;
+        }
+
+    private:
+        bool running;
 };
 
 void ParseCommandLine(int argc, char** argv)
@@ -63,10 +165,7 @@ int main(int argc, char* argv[]) {
     socket->init(ip, loginPort);
     LoginClient loginClient{std::move(socket)};
     loginClient.connect();
-    auto packet = CliLoginReq("cc03e747a6afbbcbf8be7668acfebee5", "test2");
-    loginClient.start_recv();
-    loginClient.send(packet);
-    while (true);
+    while (loginClient.isRunning());
 
     log->info( "Client shutting down..." );
     spdlog::drop_all();
