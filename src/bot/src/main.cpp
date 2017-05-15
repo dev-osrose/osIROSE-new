@@ -15,29 +15,14 @@ using namespace RoseCommon;
 
 class LoginClient : public CRoseSocket {
     public:
-        LoginClient(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)), running(true) {
-            socket_->registerOnDisconnected([this]() {
-                    this->OnDisconnected();
-                    });
-            socket_->registerOnConnected([this]() {
-                    this->OnConnected();
-                    });
-            socket_->registerOnSend([this](uint8_t *buffer) {
-                    return this->OnSend(buffer);
-                    });
-            socket_->registerOnReceived([this](uint16_t& packetSize, uint8_t* buffer) {
-                    return this->OnReceived(packetSize, buffer);
-                    });
+        LoginClient(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)) {
+            socket_->registerOnConnected(std::bind(&LoginClient::OnConnected, this));
+            socket_->registerOnSend(std::bind(&LoginClient::OnSend, this, std::placeholders::_1));
+            socket_->registerOnReceived(std::bind(&LoginClient::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
         }
         virtual ~LoginClient() = default;
 
-        bool isRunning() const { return running; }
-
     protected:
-        virtual void OnDisconnected() {
-            logger_->trace("OnDisconnected");
-            //running = false;
-        }
         virtual void OnConnected() {
             logger_->trace("OnConnected");
             auto packet = CliAcceptReq();
@@ -165,7 +150,8 @@ int main(int argc, char* argv[]) {
     socket->init(ip, loginPort);
     LoginClient loginClient{std::move(socket)};
     loginClient.connect();
-    while (loginClient.isRunning());
+    while (loginClient.is_active())
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     log->info( "Client shutting down..." );
     spdlog::drop_all();
