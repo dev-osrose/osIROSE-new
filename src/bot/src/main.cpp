@@ -5,6 +5,7 @@
 #include "packetfactory.h"
 #include "crosesocket.h"
 #include "cnetwork_asio.h"
+#include "network_thread_pool.h"
 
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
@@ -141,6 +142,8 @@ int main(int argc, char* argv[]) {
     auto log = console.lock();
     log->info( "Starting up client..." );
     log->set_level((spdlog::level::level_enum)0);
+
+    Core::NetworkThreadPool::GetInstance(1);
 
     auto socket = std::make_unique<Core::CNetwork_Asio>();
     socket->init(ip, loginPort);
