@@ -65,6 +65,8 @@ add_subdirectory(login)
 add_subdirectory(char)
 add_subdirectory(map)
 
+add_subdirectory(bot)
+
 IF(ENABLE_TESTING)
   add_subdirectory(tests)
 ENDIF()

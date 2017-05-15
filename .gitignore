@@ -180,4 +180,3 @@ $RECYCLE.BIN/
 .DS_Store
 compile_commands.json
 .config
-src/bot/*
