@@ -17,7 +17,6 @@
 
 #include "croseclient.h"
 #include "packetclasses.h"
-#include "loginpackets.h"
 #include "packets.h"
 
 class CLoginClient : public RoseCommon::CRoseClient {

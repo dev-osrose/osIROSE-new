@@ -34,7 +34,6 @@ set( SOURCES_HEADER
   include/crosepacket
   include/epackettype
   include/packetclasses
-  include/loginpackets
   include/charpackets
   include/mappackets
   include/packets
@@ -63,7 +62,6 @@ SET(SOURCES_BASE
   src/croseserver
   src/croseclient
   src/croseisc
-  src/loginpackets
   src/charpackets
   src/mappackets
   src/item
@@ -172,6 +170,10 @@ SET(SOURCES_PACKETS
   include/packets/srv_partymember
   src/packets/srv_partychat
   include/packets/srv_partychat
+  src/packets/srv_loginreply
+  include/packets/srv_loginreply
+  src/packets/srv_channellistreply
+  include/packets/srv_channellistreply
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files

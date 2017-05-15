@@ -39,7 +39,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
 
   if (Result == 0) {
     login_state_ = eSTATE::LOGGEDIN;
-    packet->setRight(access_rights_);
+    packet->right() = access_rights_;
 
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
