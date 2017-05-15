@@ -102,14 +102,10 @@ class LoginClient : public CRoseSocket {
                     break;
                 default:
                     logger_->info("Received a packet : {}", (uint16_t)CRosePacket::type(buffer));
-                    running = false;
                     break;
             }
             return true;
         }
-
-    private:
-        bool running;
 };
 
 void ParseCommandLine(int argc, char** argv)
