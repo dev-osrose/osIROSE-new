@@ -121,42 +121,42 @@ int main(int argc, char* argv[]) {
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
       log->info( "Starting up server..." );
-    
+
     Core::Config& config = Core::Config::getInstance();
     Core::CLog::SetLevel((spdlog::level::level_enum)config.map_server().log_level());
     DisplayTitle();
     CheckUser();
-    
+
     if(auto log = console.lock()) {
       log->set_level((spdlog::level::level_enum)config.map_server().log_level());
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
     Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
-    
+
     CMapServer clientServer;
     CMapServer iscServer(true);
   CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
   iscClient->init(config.map_server().charip(), config.map_server().chariscport());
   iscClient->set_type(iscPacket::ServerType::CHAR);
-    
+
   clientServer.init(config.serverdata().ip(), config.map_server().clientport());
   clientServer.listen();
   clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
-    
+
   iscServer.init(config.serverdata().isclistenip(), config.map_server().iscport());
   iscServer.listen();
   iscClient->connect();
   iscClient->start_recv();
-    
-    auto start = Core::Time::GetTickCount();
+
+  auto start = Core::Time::GetTickCount();
   while (clientServer.is_active()) {
         std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
       clientServer.update(diff.count());
       start = Core::Time::GetTickCount();
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    
+
     if(auto log = console.lock())
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();

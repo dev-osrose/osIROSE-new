@@ -36,19 +36,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(PROJECT_DEBUG 
+option(PROJECT_DEBUG
   "Enable debugging messages support" ON)
-option(ENABLE_TESTING 
+option(ENABLE_TESTING
   "Enable testing" OFF)
-option(ENABLE_TESTING_COVERAGE, 
+option(ENABLE_TESTING_COVERAGE,
   "Enable generating code coverage report" OFF)
-option(BUILD_TOOLS 
+option(BUILD_TOOLS
   "Build server tools" ON)
-option(BUILD_PROTOBUF 
+option(BUILD_PROTOBUF
   "Build Protobuf (Leave this off)" OFF)
 option(BUILD_API_DOC
   "Build doxygen documentation" OFF)
-option(ENABLE_MYSQL_ONE_INSTANCE 
+option(ENABLE_MYSQL_ONE_INSTANCE
 	"Enable use of the single instance mysql database" ON)
 option(ENABLE_EXPERMENTAL
   "Enable expermental features" OFF)
@@ -68,16 +68,16 @@ IF(ENABLE_MYSQL_ONE_INSTANCE OR BUILD_MYSQLPP)
   set(ENABLE_MYSQL ON)
 ENDIF()
 
-set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/tools)
+set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/3rdparty)
 
 IF(ENABLE_TESTING)
   enable_testing() #enable ctest
-  
+
   include( CTest )
   include( Dart )
 
   set(CMAKE_RULE_MESSAGES OFF)
-  
+
   IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     add_subdirectory(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
     set(GMOCK_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googlemock/include)
@@ -91,7 +91,7 @@ IF(ENABLE_TESTING)
     set(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
     set(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
   ENDIF()
-  
+
   set(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
@@ -109,11 +109,11 @@ set(PROTOBUF_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/protobuf/src" CACHE STRING "${EX
 set(MYSQLpp_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" CACHE STRING "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" FORCE)
 set(ENTITYX_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/entityx/entityx)
 
-IF(ENABLE_MYSQL)  
+IF(ENABLE_MYSQL)
   message(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
-  
+
   find_package(MySQL REQUIRED)
-  
+
   configure_file(
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h.in
     ${MYSQLpp_INCLUDE_DIR}/mysql++.h
@@ -123,10 +123,10 @@ ENDIF()
 IF (MSVC)
   set(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" CACHE STRING "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" FORCE)
   set(MYSQLpp_LIBRARY_PATH "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" FORCE)
-  
+
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4221")
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4221")
-  
+
   IF (${BUILD_TYPE} STREQUAL Debug)
     set(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobufd.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobufd.lib" FORCE)
   ELSE()
@@ -145,7 +145,7 @@ ELSE()
     set(MYSQLpp_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/protobuf/lib" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib" FORCE)
     #set(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" FORCE)
   ENDIF()
-  
+
   set(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
 
@@ -156,5 +156,6 @@ ENDIF()
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
 set(BUILD_LUA ON CACHE BOOL "" FORCE)
-add_subdirectory(tools)
+add_subdirectory(3rdparty)
 add_subdirectory(src)
+add_subdirectory(tools)
