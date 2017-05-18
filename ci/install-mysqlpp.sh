@@ -4,8 +4,8 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
     TRAVIS_OS_NAME=linux
 fi
 
-if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
-	cd $PROOT/tools/mysqlpp
+if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+	cd $PROOT/3rdparty/mysqlpp
 	./bootstrap
 	./configure
 
