@@ -32,6 +32,7 @@ class SrvLoginReply : public CRosePacket {
         };
 
 		SrvLoginReply();
+        SrvLoginReply(uint8_t buffer[MAX_PACKET_SIZE]);
         SrvLoginReply(uint8_t result, uint16_t right, uint16_t type);
 		SrvLoginReply(uint8_t result, uint16_t right, uint16_t type, const std::vector<ServerInfo> &servers);
 

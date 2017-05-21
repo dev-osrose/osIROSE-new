@@ -19,6 +19,7 @@ class SrvSrvSelectReply : public CRosePacket {
         };
 
 		SrvSrvSelectReply();
+        SrvSrvSelectReply(uint8_t buffer[MAX_PACKET_SIZE]);
 		SrvSrvSelectReply(SrvSrvSelectReply::eResult result, uint32_t sessionId, uint32_t cryptVal, const std::string &ip, uint16_t port);
 
 		virtual ~SrvSrvSelectReply() = default;

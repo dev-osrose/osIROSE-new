@@ -19,6 +19,7 @@ class SrvChannelListReply : public CRosePacket {
         };
 
 		SrvChannelListReply();
+        SrvChannelListReply(uint8_t buffer[MAX_PACKET_SIZE]);
         SrvChannelListReply(uint32_t id);
 		SrvChannelListReply(uint32_t id, const std::vector<ChannelInfo> &channels);
 

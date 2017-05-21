@@ -5,6 +5,22 @@ namespace RoseCommon {
 
 SrvChannelListReply::SrvChannelListReply() : CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY) {}
 
+SrvChannelListReply::SrvChannelListReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+    throw_assert(CRosePacket::type() == ePacketType::PAKLC_CHANNEL_LIST_REPLY, "Not the right packet: " << to_underlying(CRosePacket::type()));
+    *this >> id_;
+    uint8_t nb;
+    *this >> nb;
+    while (nb-- > 0) {
+        SrvChannelListReply::ChannelInfo channel;
+        *this >> channel.id_
+              >> channel.lowAge_
+              >> channel.highAge_
+              >> channel.capacity_
+              >> channel.name_;
+        channels_.push_back(channel);
+    }
+}
+
 SrvChannelListReply::SrvChannelListReply(uint32_t id) : CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY), id_(id) {}
 
 SrvChannelListReply::SrvChannelListReply(uint32_t id, const std::vector<SrvChannelListReply::ChannelInfo> &channels) : CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY), id_(id), channels_(channels) {}
