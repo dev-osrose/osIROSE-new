@@ -5,6 +5,10 @@ IF(ENABLE_TESTING_COVERAGE)
   set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
 
+IF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=900")
+ENDIF()
+
 IF(ENABLE_TESTING)
   find_package(ProtocolBuffer REQUIRED)
 
@@ -47,7 +51,7 @@ IF(ENABLE_MYSQL)
     SYSTEM ${MYSQL_INCLUDE_DIRS}
     SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
   )
-  
+
   link_directories(
     ${MYSQL_LIBRARY_PATH}
   )
