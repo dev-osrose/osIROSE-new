@@ -48,19 +48,28 @@ set( SOURCES_BASE
 )
 
 IF (ENABLE_MYSQL)
-    list(APPEND SOURCES_HEADER
-        include/mysqlconnection
-        )
-    list(APPEND SOURCES_BASE
-        src/mysqlconnection
-        )
+  list(APPEND SOURCES_HEADER
+    include/mysqlconnection
+  )
+  list(APPEND SOURCES_BASE
+    src/mysqlconnection
+  )
 ENDIF()
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+set(args
+  SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
+  SQLROOT ${CMAKE_SOURCE_DIR}/Database
+  NAME osiroseDatabase
+  OUTPATH ${CMAKE_BINARY_DIR}/generated
+)
+
+GENERATE_SQL_HEADER(SQL_HEADER ${args})
+
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(${PROJECT} protoGen)
 IF (ENABLE_MYSQL)
-    target_link_libraries(${PROJECT} sqlpp-mysql)
+  target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()
 

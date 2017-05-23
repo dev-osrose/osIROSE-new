@@ -23,7 +23,7 @@ ENDIF()
 
 SET( SOURCES_MAIN
   src/main.cpp )
-  
+
 SET( SOURCES_HEADER
   include/cloginserver
   include/cloginclient

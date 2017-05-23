@@ -1,6 +1,7 @@
+#include <string>
 #include "connection.h"
 
-using namespace Core;
+using Core::ConnectionPool;
 
 ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
 
