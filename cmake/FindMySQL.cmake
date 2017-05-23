@@ -72,7 +72,7 @@ else()
 			  "/usr/mysql/include/mysql" )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql.a" "libmysqlclient_r.a" "libmysql.so" "libmysqlclient_r.so"
+		NAMES libmysqlclient_r.a libmysqlclient_r.so
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
@@ -86,7 +86,7 @@ else()
               "/usr/lib/x86_64-linux-gnu" )
 	
 	find_library( MYSQL_LIBRARY
-		NAMES "libmysql" "mysqlclient_r"
+		NAMES mysqlclient mysqlclient_r
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
