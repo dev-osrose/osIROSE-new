@@ -8,7 +8,7 @@ echo 'Building and installing mysql.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     pip install --user pyparsing
-#	if [ ! -d "$HOME/mysql/lib" ]; then
+	if [ ! -d "$HOME/mysql/lib" ]; then
 		echo 'Setting up mysql...';
     wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
     tar -xf mysql-connector-c-6.1.6-src.tar.gz
@@ -20,9 +20,9 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		cd ..
     rm -r mysql-connector-c-6.1.6-src
     echo 'Finished installing mysql.';
-#	else
-#		echo 'Using cached mysql directory.';
-#	fi
+	else
+		echo 'Using cached mysql directory.';
+	fi
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
