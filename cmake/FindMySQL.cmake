@@ -40,7 +40,7 @@ if( WIN32 )
 			  )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql.lib" "mysqlclient.lib" "mysqlclient_r.lib"
+		NAMES "libmysql.lib" "mysqlclient_r.lib"
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
@@ -52,7 +52,7 @@ if( WIN32 )
 			  )
 	
 	find_library( MYSQL_LIBRARY
-		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
+		NAMES "libmysql" "mysqlclient_r"
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
@@ -72,7 +72,7 @@ else()
 			  "/usr/mysql/include/mysql" )
 			  
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql.a" "libmysqlclient.a" "libmysqlclient_r.a" "libmysql.so" "libmysqlclient.so" "libmysqlclient_r.so"
+		NAMES libmysqlclient_r.a libmysqlclient_r.so
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
@@ -86,7 +86,7 @@ else()
               "/usr/lib/x86_64-linux-gnu" )
 	
 	find_library( MYSQL_LIBRARY
-		NAMES "libmysql" "mysqlclient" "mysqlclient_r"
+		NAMES mysqlclient mysqlclient_r
 		PATHS "${EXTERNAL_BINARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"

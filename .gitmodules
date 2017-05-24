@@ -19,12 +19,18 @@
 [submodule "tools/sol2"]
 	path = 3rdparty/sol2
 	url = https://github.com/ThePhD/sol2.git
-[submodule "tools/mysqlpp"]
-	path = 3rdparty/mysqlpp
-	url = https://github.com/RavenX8/mysqlpp.git
 [submodule "tools/cxxopts"]
 	path = 3rdparty/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git
 [submodule "tools/entityx"]
 	path = 3rdparty/entityx
 	url = https://github.com/alecthomas/entityx.git
+[submodule "tools/date"]
+	path = 3rdparty/date
+	url = https://github.com/HowardHinnant/date
+[submodule "tools/sqlpp11"]
+	path = 3rdparty/sqlpp11
+	url = https://github.com/L3nn0x/sqlpp11
+[submodule "tools/sqlpp11-connector-mysql"]
+	path = 3rdparty/sqlpp11-connector-mysql
+	url = https://github.com/RavenX8/sqlpp11-connector-mysql

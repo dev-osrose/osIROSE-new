@@ -13,7 +13,6 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   ./install-ninja.sh
   ./install-lcov.sh
   ./install-bakefile.sh
-  ./install-mysqlpp.sh
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1

@@ -48,12 +48,12 @@ option(BUILD_PROTOBUF
   "Build Protobuf (Leave this off)" OFF)
 option(BUILD_API_DOC
   "Build doxygen documentation" OFF)
-option(ENABLE_MYSQL_ONE_INSTANCE
-	"Enable use of the single instance mysql database" ON)
 option(ENABLE_EXPERMENTAL
   "Enable expermental features" OFF)
 option(DISABLE_CRYPT
   "Enable this to not use encryption functions" OFF)
+option(ENABLE_MYSQL
+    "Use Mysql connection" ON)
 
 #build API doc
 IF (BUILD_API_DOC)
@@ -64,9 +64,6 @@ IF (BUILD_API_DOC)
 ENDIF (BUILD_API_DOC)
 #build API doc
 
-IF(ENABLE_MYSQL_ONE_INSTANCE OR BUILD_MYSQLPP)
-  set(ENABLE_MYSQL ON)
-ENDIF()
 
 set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/3rdparty)
 
@@ -106,23 +103,17 @@ set(EXTERNAL_BINARY_DIR ${CMAKE_SOURCE_DIR}/3rdparty/lib)
 set(ASIO_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/asio/asio/include)
 set(EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdparty/include)
 set(PROTOBUF_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/protobuf/src" CACHE STRING "${EXTERNAL_DEPS_ROOT}/protobuf/src" FORCE)
-set(MYSQLpp_INCLUDE_DIR "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" CACHE STRING "${EXTERNAL_DEPS_ROOT}/mysqlpp/lib" FORCE)
 set(ENTITYX_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/entityx/entityx)
+set(SQLPP_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/sqlpp11/include)
+set(DATE_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/date)
 
 IF(ENABLE_MYSQL)
-  message(STATUS "MySQL++ Include Path: ${MYSQLpp_INCLUDE_DIR}")
-
+  set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/sqlpp11-connector-mysql/include)
   find_package(MySQL REQUIRED)
-
-  configure_file(
-    ${MYSQLpp_INCLUDE_DIR}/mysql++.h.in
-    ${MYSQLpp_INCLUDE_DIR}/mysql++.h
-  )
 ENDIF()
 
 IF (MSVC)
   set(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" CACHE STRING "${CMAKE_BINARY_DIR}/bin/${BUILD_TYPE}/protoc.exe" FORCE)
-  set(MYSQLpp_LIBRARY_PATH "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/" FORCE)
 
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4221")
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4221")
@@ -142,7 +133,6 @@ ELSE()
   ELSE()
       #set(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
       #set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_SOURCE_DIR}/protobuf/bin/protoc)
-    set(MYSQLpp_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/protobuf/lib" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib" FORCE)
     #set(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" FORCE)
   ENDIF()
 

@@ -18,6 +18,7 @@
 #include "cmapisc.h"
 #include "config.h"
 #include "version.h"
+#include "connection.h"
 #include "network_thread_pool.h"
 #include "platform_defines.h"
 #include "cnetwork_asio.h"
@@ -133,6 +134,14 @@ int main(int argc, char* argv[]) {
       log->debug("Debug logs are enabled.");
     }
     Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+
+  Core::connectionPool.addConnector(Core::osirose, std::bind(
+                Core::mysqlFactory, 
+                config.database().user(),
+                config.database().password(), 
+                config.database().database(),
+                config.database().host()));
+
 
     CMapServer clientServer;
     CMapServer iscServer(true);

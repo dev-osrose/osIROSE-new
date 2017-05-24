@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-link_directories(${EXTERNAL_BINARY_DIR} ${PROTOBUF_BINARY_DIR} ${MYSQL_BINARY_DIR})
+link_directories(${EXTERNAL_BINARY_DIR} ${PROTOBUF_BINARY_DIR})
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -10,10 +10,6 @@ set(PROJECT Core)
 project(${PROJECT})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
-
-IF(ENABLE_MYSQL_ONE_INSTANCE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_MYSQL_ONE_INSTANCE")
-ENDIF()
 
 IF (NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Werror")
@@ -32,17 +28,15 @@ set( SOURCES_HEADER
   include/config
   ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
-  include/cmysql_database
   include/network_thread_pool
-  include/idatabase
   include/inetwork
-  include/idatabasepool
-  include/cmysql_databasepool
+  include/connectionpool
+  include/connection
   include/singleton
   include/riterator
   include/platform_defines
-  include/iscontainer.h
-  include/makevector.h
+  include/iscontainer
+  include/makevector
 )
 
 set( SOURCES_BASE
@@ -50,12 +44,32 @@ set( SOURCES_BASE
   src/cnetwork_asio
   src/config
   ${PBJSON_ROOT}/pbjson.cpp
-  src/cmysql_database
+  src/connection
 )
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER})
+IF (ENABLE_MYSQL)
+  list(APPEND SOURCES_HEADER
+    include/mysqlconnection
+  )
+  list(APPEND SOURCES_BASE
+    src/mysqlconnection
+  )
+ENDIF()
+
+set(args
+  SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
+  SQLROOT ${CMAKE_SOURCE_DIR}/Database
+  NAME osiroseDatabase
+  OUTPATH ${CMAKE_BINARY_DIR}/generated
+)
+
+GENERATE_SQL_HEADER(SQL_HEADER ${args})
+
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(${PROJECT} protoGen)
-target_link_libraries(${PROJECT} mysqlpp)
+IF (ENABLE_MYSQL)
+  target_link_libraries(${PROJECT} sqlpp-mysql)
+ENDIF()
 

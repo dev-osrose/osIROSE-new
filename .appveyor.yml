@@ -45,7 +45,7 @@ build:
 
 build_script:
 - cd build
-- cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=ON ..
+- cmake -DBUILD_TYPE=%CONFIGURATION% -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=ON ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:

@@ -5,11 +5,10 @@
 #include "systems/inventorysystem.h"
 #include "systems/partysystem.h"
 #include "systems/mapsystem.h"
-#include "database.h"
+#include "connection.h"
 #include "cmapclient.h"
 
 using namespace RoseCommon;
-
 EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
@@ -51,6 +50,7 @@ void EntitySystem::update(double dt) {
     systemManager_.update(dt);
     for (auto it : toDestroy_) {
         if (it) {
+            saveCharacter(it.component<CharacterInfo>()->charId_, it);
             auto basic = it.component<BasicInfo>();
             nameToEntity_.erase(basic->name_);
             idToEntity_.erase(basic->id_);
@@ -101,104 +101,51 @@ bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePack
 }
 
 Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
-    auto &database = Core::databasePool.getDatabase();
-    auto res = database.QStore(fmt::format("CALL get_character({});", charId));
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    Core::CharacterTable characters;
+    Core::InventoryTable inventoryTable;
+    Core::SkillTable skillsTable;
+
+    auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
+                .from(characters)
+                .where(characters.id == charId));
+
     std::lock_guard<std::mutex> lock(access_);
     auto entity = create();
-    if (!res || res->size() != 1) {
+    if (charRes.front().count != 1L) {
         entity.destroy();
         return Entity();
     }
-    auto pos = entity.assign<Position>();
-    res->getFloat("x", pos->x_);
-    res->getFloat("y", pos->y_);
-    res->getInt("map", pos->map_);
-    res->getInt("revive_map", pos->spawn_);
+    const auto &charRow = charRes.front();
 
-    auto basic = entity.assign<BasicInfo>();
-    res->getString("name", basic->name_);
-    res->getInt("exp", basic->xp_);
-    res->getInt("level", basic->level_);
-    basic->id_ = id;
-    basic->tag_ = id;
-
-    auto stats = entity.assign<Stats>();
-    res->getInt("max_hp", stats->maxHp_);
-    res->getInt("max_mp", stats->maxMp_);
-    res->getInt("str", stats->str_);
-    res->getInt("dex", stats->dex_);
-    res->getInt("int_", stats->int_);
-    res->getInt("con", stats->con_);
-    res->getInt("charm", stats->charm_);
-    res->getInt("sense", stats->sense_);
-
-    auto advanced = entity.assign<AdvancedInfo>();
-    res->getInt("zuly", advanced->zuly_);
-    res->getInt("current_hp", advanced->hp_);
-    res->getInt("current_mp", advanced->mp_);
-
-    auto graphics = entity.assign<CharacterGraphics>();
-    res->getInt("face", graphics->face_);
-    res->getInt("hair", graphics->hair_);
-    res->getInt("race", graphics->race_);
-
-    auto info = entity.assign<CharacterInfo>();
-    res->getInt("job", info->job_);
-    res->getInt("stone", info->stone_);
-    res->getInt("stat_points", info->statPoints_);
-    res->getInt("skill_points", info->skillPoints_);
-    res->getInt("penalty_exp", info->penaltyXp_);
-    res->getInt("delete_date", info->deleteDate_);
-    info->platinium_ = platinium;
-    res->getInt("factionid", info->factionId_);
-    res->getInt("faction_rank", info->factionRank_);
-    res->getInt("fame", info->fame_);
-    res->getInt("faction_fame1", info->factionFame_[0]);
-    res->getInt("faction_fame2", info->factionFame_[1]);
-    res->getInt("faction_points1", info->factionPoints_[0]);
-    res->getInt("faction_points2", info->factionPoints_[1]);
-    res->getInt("faction_points3", info->factionPoints_[2]);
-    res->getInt("clanid", info->guildId_);
-    res->getInt("clan_contribution", info->guildContribution_);
-    res->getInt("clan_rank", info->guildRank_);
-    res->getInt("pk_flag", info->pkFlag_);
-    res->getInt("stamina", info->stamina_);
+    entity.assign<Position>(charRow);
+    entity.assign<BasicInfo>(charRow, id);
+    entity.assign<Stats>(charRow);
+    entity.assign<AdvancedInfo>(charRow);
+    entity.assign<CharacterGraphics>(charRow);
+    entity.assign<CharacterInfo>(charRow, platinium, charId);
 
     // TODO : write the pat initialization code
     auto skills = entity.assign<Skills>();
-    auto sks = database.QStore(fmt::format("SELECT id, level from skill where char_id = {};", charId));
-    if (sks) {
-        size_t i = 0;
-        for (auto &sk : *sks) {
-            if (i >= 120)
-                break;
-            sk->getInt("id", skills->skills_[i].id_);
-            sk->getInt("level", skills->skills_[i].level_);
-            ++i;
-        }
-    }
+    auto skillRes = conn(sqlpp::select(skillsTable.id, skillsTable.level)
+            .from(skillsTable)
+            .where(skillsTable.charId == charId));
+    skills->loadFromResult(skillRes);
 
     // TODO : write the hotbar table and loading code
     entity.assign<Hotbar>();
-
     entity.assign<StatusEffects>();
     entity.assign<RidingItems>();
     entity.assign<BulletItems>();
 
     // TODO : write the inventory code
     auto inventory = entity.assign<Inventory>();
-    res = database.QStore(fmt::format("CALL get_inventory({});", charId));
-    if (!res) {
-        entity.destroy();
-        return Entity();
-    }
-    for (auto &it : *res) {
-        size_t slot;
-        it->getInt("slot", slot);
-        if (slot >= Inventory::maxItems)
-            continue; // TODO : add a warning about that slot
-        inventory->items_[slot].loadFromDatabase(*it);
-    }
+
+    auto invRes = conn(sqlpp::select(sqlpp::all_of(inventoryTable))
+                .from(inventoryTable)
+                .where(inventoryTable.charId == charId));
+    inventory->loadFromResult(invRes);
+
     Systems::UpdateSystem::calculateSpeed(entity);
 
     registerEntity(entity);
@@ -208,5 +155,28 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
 void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
     if (!entity)
         return;
-    (void)charId;
+    auto chat = systemManager_.get<Systems::ChatSystem>();
+    chat->sendMsg(entity, "Character saved");
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    Core::CharacterTable characters;
+
+    using sqlpp::parameter;
+    
+    auto update = sqlpp::dynamic_update(conn.get(), characters).dynamic_set().where(characters.id == charId);
+    entity.component<Position>()->commitToUpdate(update);
+    //entity.component<BasicInfo>()->commitToUpdate(update);
+    //entity.component<Stats>()->commitToUpdate(update);
+    //entity.component<AdvancedInfo>()->commitToUpdate(update);
+    //entity.component<CharacterGraphics>()->commitToUpdate(update);
+    //entity.component<CharacterInfo>()->commitToUpdate(update);
+    //entity.component<Hotbar>()->commitToUpdate(update);
+    //entity.component<StatusEffects>()->commitToUpdate(update);
+    //entity.component<RidingItems>()->commitToUpdate(update);
+    //entity.component<BulletItems>()->commitToUpdate(update);
+
+    conn->run(update);
+
+    //entity.component<Skills>()->commitToUpdate(updateSkills);
+    
+    //entity.component<Inventory>()->commitToUpdate(updateInventory);
 }

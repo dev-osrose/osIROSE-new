@@ -9,7 +9,7 @@ sudo apt-get install unzip
 sudo apt-get install autoconf
 sudo apt-get install libtool
 sudo apt-get install libssl-dev
-sudo apt-get install python libmysqlclient-dev libmysqld-dev libmysqlclient20 libmysql++-dev
+sudo apt-get install python libmysqlclient-dev libmysqld-dev libmysqlclient20
 
 git submodule init
 git submodule update
@@ -36,4 +36,4 @@ export BUILD_TYPE=Debug
 
 mkdir build
 cd build
-cmake -DENABLE_TESTING=OFF -DENABLE_TESTING_COVERAGE=OFF -DBUILD_PROTOBUF=OFF -DBUILD_MYSQLPP=OFF ..
+cmake -DENABLE_TESTING=OFF -DENABLE_TESTING_COVERAGE=OFF -DBUILD_PROTOBUF=OFF ..
