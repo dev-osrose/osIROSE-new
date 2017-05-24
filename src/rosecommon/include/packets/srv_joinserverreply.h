@@ -18,6 +18,7 @@ class SrvJoinServerReply : public CRosePacket {
         };
 
 		SrvJoinServerReply();
+    SrvJoinServerReply(uint8_t buffer[MAX_PACKET_SIZE]);
 		SrvJoinServerReply(SrvJoinServerReply::eResult result, uint32_t id, uint32_t payFlag = 0);
 
 		virtual ~SrvJoinServerReply() = default;

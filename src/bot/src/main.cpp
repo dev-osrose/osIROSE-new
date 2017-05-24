@@ -179,14 +179,36 @@ class LoginClient : public Client {
 
 class CharClient : public Client {
     public:
-        CharClient(std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)) {}
+  CharClient(uint32_t sessionId, std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)), sessionId_(sessionId) {}
         virtual ~CharClient() = default;
 
     private:
+        uint32_t sessionId_;
+
         virtual bool HandlePacket(uint8_t *buffer) override {
             logger_->trace("CharClient::HandlePacket");
-            (void)buffer;
-            return false;
+            switch (CRosePacket::type(buffer)) {
+            case ePacketType::PAKSS_ACCEPT_REPLY:
+              logger_->info("asking for joinning server");
+              {
+                auto packet = CliJoinServerReq(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+                send(packet);
+              }
+              break;
+            case ePacketType::PAKSC_JOIN_SERVER_REPLY:
+              logger_->info("Got join server reply:");
+              {
+                auto reply = SrvJoinServerReply(buffer);
+                logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.result(), reply.id(), reply.payFlag());
+                if (reply.result() != SrvJoinServerReply::OK)
+                  return false;
+              }
+              break;
+            default:
+              logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
+              return false;
+            }
+            return true;
         }
 };
 
@@ -239,7 +261,7 @@ int main(int argc, char* argv[]) {
         log->info("Connecting to char server");
         socket = std::make_unique<Core::CNetwork_Asio>();
         socket->init(loginClient.ip(), loginClient.port());
-        CharClient charClient{std::move(socket)};
+        CharClient charClient{loginClient.sessionId(), std::move(socket)};
         charClient.connect();
         charClient.start_recv();
         while (charClient.is_active())
