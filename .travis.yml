@@ -39,8 +39,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
     branches:
       except:
@@ -68,9 +68,9 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql --user="root" -e 'create database osirose;'
@@ -98,8 +98,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
     branches:
       except:
@@ -127,9 +127,9 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql --user="root" -e 'create database osirose;'
@@ -154,8 +154,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
     branches:
       except:
@@ -183,9 +183,9 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql --user="root" -e 'create database osirose;'
@@ -214,8 +214,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
       - llvm-3.8.0
     branches:
@@ -243,9 +243,9 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql --user="root" -e 'create database osirose;'
@@ -274,8 +274,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
       - llvm-3.8.0
     branches:
@@ -303,9 +303,9 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql --user="root" -e 'create database osirose;'
@@ -331,8 +331,8 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
+      - /opt/protobuf
+      #- $HOME/bakefile
       - $HOME/mysql
     branches:
       only:
@@ -362,7 +362,7 @@ matrix:
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
 #    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     script:
     - echo "coverity scan"
