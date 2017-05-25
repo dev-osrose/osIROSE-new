@@ -11,7 +11,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		echo 'Setting up protobuf...';
 		cd 3rdparty/protobuf
 		./autogen.sh
-		./configure --prefix=/opt/protobuf
+		./configure --prefix=$PROOT/3rdparty
 		make -j 4 && make install
 
 		cd ../../

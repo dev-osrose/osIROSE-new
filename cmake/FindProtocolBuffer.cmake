@@ -252,7 +252,8 @@ IF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 ENDIF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 
 FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h 
-          PATHS "$ENV{HOME}/include"
+          PATHS "${EXTERNAL_DEPS_ROOT}/include"
+                "$ENV{HOME}/include"
                 "$ENV{HOME}/usr/include"
                 "$ENV{HOME}/protobuf"
                 "$ENV{HOME}/protobuf/include"
@@ -278,6 +279,7 @@ ENDIF()
 FIND_LIBRARY(PROTOBUF_LIBRARY 
 			 NAMES "protobuf" "libprotobuf" "libprotobufd"
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/lib"
               "$ENV{HOME}/lib"
               "$ENV{HOME}/usr/lib"
               "$ENV{HOME}/protobuf"
@@ -294,6 +296,7 @@ FIND_LIBRARY(PROTOBUF_LIBRARY
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
 			 NAMES "protoc" "libprotoc" "libprotocd"
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/lib"
               "$ENV{HOME}/lib"
               "$ENV{HOME}/usr/lib"
               "$ENV{HOME}/protobuf"
@@ -310,6 +313,7 @@ FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE 
 			 NAMES protoc
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/bin"
               "$ENV{HOME}/bin"
               "$ENV{HOME}/usr/bin"
               "$ENV{HOME}/protobuf"
