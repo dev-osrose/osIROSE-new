@@ -285,6 +285,7 @@ FIND_LIBRARY(PROTOBUF_LIBRARY
               "/usr/lib"
               "/usr/local/lib"
               "/usr/local/lib/google"
+              NO_DEFAULT_PATH
              DOC "The Google Protocol Buffers Library"
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
