@@ -7,7 +7,7 @@ fi
 echo 'Building and installing protobuf.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	if [[ ! -d "/opt/protobuf/lib" || ! -f "/opt/protobuf/bin/protoc" ]]; then
+	if [[ ! -d "$PROOT/3rdparty/lib" || ! -f "$PROOT/3rdparty/bin/protoc" ]]; then
 		echo 'Setting up protobuf...';
 		cd 3rdparty/protobuf
 		./autogen.sh

@@ -39,9 +39,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -98,9 +98,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -154,9 +154,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -214,9 +214,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
       - llvm-3.8.0
     branches:
       except:
@@ -274,9 +274,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
       - llvm-3.8.0
     branches:
       except:
@@ -331,9 +331,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - /opt/protobuf
-      #- $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       only:
       - coverity_scan
