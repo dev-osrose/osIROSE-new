@@ -9,7 +9,7 @@ echo 'Building and installing protobuf.';
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	if [[ ! -d "$HOME/protobuf/lib" || ! -f "$HOME/protobuf/bin/protoc" ]]; then
 		echo 'Setting up protobuf...';
-		cd tools/protobuf
+		cd 3rdparty/protobuf
 		./autogen.sh
 		./configure --prefix=$HOME/protobuf
 		make -j 4 && make install

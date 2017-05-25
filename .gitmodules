@@ -1,36 +1,36 @@
 [submodule "tools/googletest"]
-	path = tools/googletest
+	path = 3rdparty/googletest
 	url = https://github.com/google/googletest
 [submodule "tools/protobuf"]
-	path = tools/protobuf
+	path = 3rdparty/protobuf
 	url = https://github.com/google/protobuf.git
 [submodule "tools/asio"]
-	path = tools/asio
+	path = 3rdparty/asio
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "tools/spdlog"]
-	path = tools/spdlog
+	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
 [submodule "tools/pbjson"]
-	path = tools/pbjson
+	path = 3rdparty/pbjson
 	url = https://github.com/RavenX8/pbjson.git
 [submodule "tools/lua"]
-	path = tools/lua
+	path = 3rdparty/lua
 	url = https://github.com/RavenX8/lua.git
 [submodule "tools/sol2"]
-	path = tools/sol2
+	path = 3rdparty/sol2
 	url = https://github.com/ThePhD/sol2.git
 [submodule "tools/cxxopts"]
-	path = tools/cxxopts
+	path = 3rdparty/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git
 [submodule "tools/entityx"]
-	path = tools/entityx
+	path = 3rdparty/entityx
 	url = https://github.com/alecthomas/entityx.git
 [submodule "tools/date"]
-	path = tools/date
+	path = 3rdparty/date
 	url = https://github.com/HowardHinnant/date
 [submodule "tools/sqlpp11"]
-	path = tools/sqlpp11
+	path = 3rdparty/sqlpp11
 	url = https://github.com/L3nn0x/sqlpp11
 [submodule "tools/sqlpp11-connector-mysql"]
-	path = tools/sqlpp11-connector-mysql
+	path = 3rdparty/sqlpp11-connector-mysql
 	url = https://github.com/RavenX8/sqlpp11-connector-mysql
