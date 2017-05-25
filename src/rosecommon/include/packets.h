@@ -22,6 +22,7 @@
 #include "cli_partychat.h"
 #include "srv_createcharreply.h"
 #include "srv_partychat.h"
+#include "cli_charlistreq.h"
 #include "srv_serverdata.h"
 #include "srv_playerchar.h"
 #include "srv_stopmoving.h"

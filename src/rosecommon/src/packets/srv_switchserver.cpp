@@ -1,8 +1,17 @@
 #include "srv_switchserver.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 SrvSwitchServer::SrvSwitchServer() : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER) {}
+
+SrvSwitchServer::SrvSwitchServer(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+	throw_assert(type() == ePacketType::PAKCC_SWITCH_SERVER, "Not the right packet: " << to_underlying(type()));
+	*this >> port_;
+	*this >> sessionId_;
+	*this >> sessionSeed_;
+	*this >> ip_;
+}
 
 SrvSwitchServer::SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string &ip) : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER), port_(port), sessionId_(sessionId), sessionSeed_(sessionSeed), ip_(ip) {}
 
