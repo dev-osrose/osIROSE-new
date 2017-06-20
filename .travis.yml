@@ -77,6 +77,7 @@ matrix:
     #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -130,13 +131,11 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -187,13 +186,11 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -254,6 +251,7 @@ matrix:
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -312,6 +310,7 @@ matrix:
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -362,11 +361,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-#    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
-#    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     script:
     - echo "coverity scan"
