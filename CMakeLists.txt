@@ -65,7 +65,6 @@ ENDIF (BUILD_API_DOC)
 
 
 set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/3rdparty)
-include(FindProtocolBuffer)
 
 IF(ENABLE_TESTING)
   enable_testing() #enable ctest
