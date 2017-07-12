@@ -10,16 +10,17 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     pip install --user pyparsing
 	if [ ! -f "$PROOT/3rdparty/lib/libmysqlclient.so" ]; then
 		echo 'Setting up mysql...';
-    wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
-    tar -xf mysql-connector-c-6.1.6-src.tar.gz
-    rm mysql-connector-c-6.1.6-src.tar.gz
-    cd mysql-connector-c-6.1.6-src
-    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$PROOT/3rdparty
-		make
-		make install
-		cd ..
-    rm -r mysql-connector-c-6.1.6-src
-    echo 'Finished installing mysql.';
+    
+        wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
+        tar -xf mysql-connector-c-6.1.6-src.tar.gz
+        rm mysql-connector-c-6.1.6-src.tar.gz
+        cd mysql-connector-c-6.1.6-src
+        cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$PROOT/3rdparty
+        make
+        make install 
+        cd .. && rm -r mysql-connector-c-6.1.6-src
+    
+        echo 'Finished installing mysql.';
 	else
 		echo 'Using cached mysql directory.';
 	fi
