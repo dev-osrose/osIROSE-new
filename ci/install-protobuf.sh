@@ -12,7 +12,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 		cd 3rdparty/protobuf
 		./autogen.sh
 		./configure --prefix=$PROOT/3rdparty
-		make -j 4 && make install
+		make clean && make -j 4 && make install
 
 		cd ../../
 	else
