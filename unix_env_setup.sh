@@ -17,6 +17,7 @@ cmake --version
 cd 3rdparty/protobuf
 ./autogen.sh
 ./configure --prefix=$PROOT/3rdparty
+make clean
 make -j 4 && make install
 cd ../..
 
