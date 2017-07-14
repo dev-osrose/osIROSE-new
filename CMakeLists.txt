@@ -19,6 +19,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(OsIROSECMakeTools)
 
+#--------------------------------
+# Setup version info
+#--------------------------------
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 2)
 set(VERSION_PATCH 0)
@@ -31,10 +34,17 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 
+#--------------------------------
+# Setup output directories
+#--------------------------------
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+
+#--------------------------------
+# Setup options
+#--------------------------------
 option(PROJECT_DEBUG
   "Enable debugging messages support" ON)
 option(ENABLE_TESTING
@@ -54,6 +64,10 @@ option(DISABLE_CRYPT
 option(ENABLE_MYSQL
     "Use Mysql connection" ON)
 
+
+#--------------------------------
+# Build API Docs
+#--------------------------------
 #build API doc
 IF (BUILD_API_DOC)
   find_package(Doxygen)
@@ -63,7 +77,9 @@ IF (BUILD_API_DOC)
 ENDIF (BUILD_API_DOC)
 #build API doc
 
-
+#--------------------------------
+# Setup/build external libaries
+#--------------------------------
 set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/3rdparty)
 
 IF(ENABLE_TESTING)
@@ -123,13 +139,9 @@ IF (MSVC)
     set(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" FORCE)
   ENDIF()
 ELSE()
-  IF(ENABLE_MYSQL)
+  IF(ENABLE_MYSQL AND NOT MYSQL_INCLUDE_DIR)
     set(MYSQL_INCLUDE_DIR /usr/include/mysql)
   ENDIF()
-
-  #IF(BUILD_PROTOBUF)
-  #  set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/protoc)
-  #ENDIF()
 
   set(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
 ENDIF()
@@ -140,6 +152,7 @@ ENDIF()
 
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
+# We have to build lua for the project
 set(BUILD_LUA ON CACHE BOOL "" FORCE)
 add_subdirectory(3rdparty)
 add_subdirectory(src)
