@@ -252,12 +252,15 @@ IF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 ENDIF (PROTOBUF_LIBRARIES AND PROTOBUF_INCLUDE_DIR)
 
 FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h 
-          PATHS "$ENV{HOME}/include"
+          PATHS "${EXTERNAL_DEPS_ROOT}/include"
+                "$ENV{HOME}/include"
                 "$ENV{HOME}/usr/include"
                 "$ENV{HOME}/protobuf"
                 "$ENV{HOME}/protobuf/include"
                 "$ENV{PROTOBUF_ROOT}/include"
                 "${PROTOBUF_ROOT}/include"
+                "/opt/protobuf"
+                "/opt/protobuf/include"
                 "/usr/include"
                 "/usr/local/include"
                 "/usr/include/google"
@@ -276,12 +279,15 @@ ENDIF()
 FIND_LIBRARY(PROTOBUF_LIBRARY 
 			 NAMES "protobuf" "libprotobuf" "libprotobufd"
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/lib"
               "$ENV{HOME}/lib"
               "$ENV{HOME}/usr/lib"
               "$ENV{HOME}/protobuf"
               "$ENV{HOME}/protobuf/lib"
               "$ENV{PROTOBUF_ROOT}/lib"
               "${PROTOBUF_ROOT}/lib"
+              "/opt/protobuf"
+              "/opt/protobuf/lib"
               "/usr/lib"
               "/usr/local/lib"
               "/usr/local/lib/google"
@@ -290,12 +296,15 @@ FIND_LIBRARY(PROTOBUF_LIBRARY
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY 
 			 NAMES "protoc" "libprotoc" "libprotocd"
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/lib"
               "$ENV{HOME}/lib"
               "$ENV{HOME}/usr/lib"
               "$ENV{HOME}/protobuf"
               "$ENV{HOME}/protobuf/lib"
               "$ENV{PROTOBUF_ROOT}/lib"
               "${PROTOBUF_ROOT}/lib"
+              "/opt/protobuf"
+              "/opt/protobuf/lib"
               "/usr/lib"
               "/usr/local/lib"
               "/usr/local/lib/google"
@@ -304,12 +313,15 @@ FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE 
 			 NAMES protoc
              PATHS 
+              "${EXTERNAL_DEPS_ROOT}/bin"
               "$ENV{HOME}/bin"
               "$ENV{HOME}/usr/bin"
               "$ENV{HOME}/protobuf"
               "$ENV{HOME}/protobuf/bin"
               "$ENV{PROTOBUF_ROOT}/bin"
               "${PROTOBUF_ROOT}/bin"
+              "/opt/protobuf"
+              "/opt/protobuf/bin"
               "/bin"
               "/usr/bin"
               "/usr/local/bin"

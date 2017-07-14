@@ -3,7 +3,7 @@
 #include <string>
 #include <exception>
 #include <thread>
-
+/*
 #include "config.h"
 #include "cmysql_database.h"
 #include "cmysql_databasepool.h"
@@ -197,4 +197,4 @@ TEST(TestMySQL_Database, TestSQLEscape) {
 	EXPECT_EQ(Core::CMySQL_Database::escapeData("%test1"), "\\%test1");
 	EXPECT_EQ(Core::CMySQL_Database::escapeData("_test1"), "\\_test1");
 	EXPECT_EQ(Core::CMySQL_Database::escapeData(";test1"), "test1");
-}
+}*/

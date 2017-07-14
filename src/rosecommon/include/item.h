@@ -47,8 +47,18 @@ struct Item : public ISerialize {
     virtual uint16_t getHeader() const override;
     virtual uint32_t getData() const override;
 
-    virtual void saveToDatabase() const override;
-    virtual void loadFromDatabase(Core::IRow&) override;
+    template <typename T>
+    void loadFromRow(const T& row) {
+        id_ = row.itemid;
+        type_ = row.itemtype;
+        count_ = row.amount;
+        refine_ = row.refine;
+        gemOpt_ = row.gemOpt;
+        hasSocket_ = row.socket;
+        life_ = 1000; // FIXME : placeholder
+        durability_ = 10; // FIXME : placeholder
+        isAppraised_ = true; // FIXME : placeholder
+    }
 
     uint8_t type_;
     uint16_t id_;

@@ -13,7 +13,11 @@ CMakeFiles
 Makefile
 
 # dependencies
-3rd[Pp]arty
+3rd[Pp]arty/COPYING
+3rd[Pp]arty/README
+3rd[Pp]arty/docs
+3rd[Pp]arty/include
+3rd[Pp]arty/lib
 dep
 
 # configuration file
@@ -180,3 +184,4 @@ $RECYCLE.BIN/
 .DS_Store
 compile_commands.json
 .config
+.#*

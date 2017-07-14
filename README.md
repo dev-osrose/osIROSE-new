@@ -91,7 +91,7 @@ After downloading and installing the above applications, to compile the servers 
     ./ci/msvc_mysqlpp_install.bat
     ./ci/msvc_install.bat
     cd build
-    cmake -DBUILD_TYPE=Release -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
+    cmake -DBUILD_TYPE=Release -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
     cmake --build . --config Release
 
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).

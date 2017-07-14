@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
+include(FindProtocolBuffer)
+
 IF(ENABLE_TESTING_COVERAGE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
   set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
+
+IF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=900")
+ENDIF()
 
 IF(ENABLE_TESTING)
   find_package(ProtocolBuffer REQUIRED)
@@ -33,6 +39,8 @@ include_directories(
   SYSTEM ${LUA_INCLUDE_DIR}
   SYSTEM ${CXXOPT_ROOT}
   SYSTEM ${ENTITYX_INCLUDE_DIR}
+  SYSTEM ${SQLPP_INCLUDE_DIR}
+  SYSTEM ${DATE_INCLUDE_DIR}
 )
 
 link_directories(
@@ -40,19 +48,15 @@ link_directories(
 )
 
 IF(ENABLE_MYSQL)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_MYSQL")
   include_directories(
     SYSTEM ${MYSQL_INCLUDE_DIRS}
-    SYSTEM ${MYSQLpp_INCLUDE_DIR}
+    SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
   )
-  
+
   link_directories(
     ${MYSQL_LIBRARY_PATH}
-    ${MYSQLpp_LIBRARY_PATH}
   )
-  
-  IF (MSVC)
-    add_definitions(-DMYSQLPP_NO_DLL)
-  ENDIF()
 ENDIF()
 
 IF (MSVC)
@@ -66,6 +70,8 @@ add_subdirectory(rosecommon)
 add_subdirectory(login)
 add_subdirectory(char)
 add_subdirectory(map)
+
+add_subdirectory(bot)
 
 IF(ENABLE_TESTING)
   add_subdirectory(tests)

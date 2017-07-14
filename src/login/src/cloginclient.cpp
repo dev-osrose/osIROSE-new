@@ -15,7 +15,7 @@
 #include "cloginserver.h"
 #include "cloginisc.h"
 #include "cloginclient.h"
-#include "database.h"
+#include "connection.h"
 
 using namespace RoseCommon;
 
@@ -39,7 +39,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
 
   if (Result == 0) {
     login_state_ = eSTATE::LOGGEDIN;
-    packet->setRight(access_rights_);
+    packet->right() = access_rights_;
 
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
@@ -81,49 +81,46 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
     return true;
   }
 
-  username_ = Core::CMySQL_Database::escapeData(P->username());
-  std::string clientpass = Core::CMySQL_Database::escapeData(P->password());
+  username_ = Core::escapeData(P->username());
+  std::string clientpass = Core::escapeData(P->password());
 
-  std::unique_ptr<Core::IResult> res;
-  std::string query = fmt::format("CALL user_login('{0}', '{1}');", username_.c_str(), clientpass.c_str());
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountTable table;
+  try {
+      const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+              .from(table).where(table.username == username_
+                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
-  Core::IDatabase& database = Core::databasePool.getDatabase();
-  res = database.QStore(query);
+        if (!res.empty()) {
+            const auto &row = res.front();
+            if (!row.access.is_null())
+                access_rights_ = row.access;
 
-  if (res != nullptr) {  // Query the DB
-    if (res->size() != 0) {
-        uint32_t onlineStatus = 0, accessRights = 0;
-        res->getInt("online", onlineStatus);
-        if (res->getInt("access", accessRights)) {
-          access_rights_ = accessRights;
-        }
+            if (access_rights_ < 1) {
+                // Banned
+                SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
+                return false;
+            }
 
-        if (access_rights_ < 1) {
-          // Banned
-          SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
-          return false;
-        }
-
-        if (onlineStatus == 0) {
-          // Okay to login!!
-          res->getInt("id", userid_);
-          session_id_ = std::time(nullptr);
-          SendLoginReply(SrvLoginReply::OK);
+            if (!row.online) {
+                // Okay to login!!
+                userid_ = row.id;
+                session_id_ = std::time(nullptr);
+                SendLoginReply(SrvLoginReply::OK);
+            } else {
+                // Online already
+                SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+            }
         } else {
-          // Online already
-          SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+            const auto res = conn(sqlpp::select(table.id).from(table).where(table.username == username_));
+            if (!res.empty())
+                SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+            else
+                // The user doesn't exist or server is down.
+                SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
         }
-    } else {
-        if ((res = database.QStore(fmt::format("CALL user_exists('{}');", username_.c_str()))) && res->size())
-            SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-        else if (res)
-          // The user doesn't exist or server is down.
-          SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
-        else
-            SendLoginReply(SrvLoginReply::FAILED);
-    }
-  } else {
-    SendLoginReply(SrvLoginReply::FAILED);
+  } catch (sqlpp::exception&) {
+        SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
 }
@@ -146,9 +143,8 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
     }
     if (server->get_type() == iscPacket::ServerType::CHAR &&
         server->get_id() == ServerID) {
-      for (auto& obj : server->GetChannelList()) {
-        tChannelInfo info = obj;
-        { packet->addChannel(info.channelName, info.ChannelID+1, 0); }
+      for (tChannelInfo& info : server->GetChannelList()) {
+        packet->addChannel(info.channelName, info.ChannelID+1, 0);
       }
     }
   }
@@ -183,8 +179,8 @@ bool CLoginClient::ServerSelect(
       std::string query = fmt::format("CALL create_session({}, {}, {});",
                                       session_id_, userid_, channelID);
 
-      Core::IDatabase& database = Core::databasePool.getDatabase();
-      database.QExecute(query);
+        auto conn = Core::connectionPool.getConnection(Core::osirose);
+        conn->execute(query);
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
           SrvSrvSelectReply::OK, session_id_, 0, server->get_address(), server->get_port());

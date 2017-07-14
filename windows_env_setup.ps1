@@ -5,26 +5,6 @@ $unit_tests = "OFF"
 
 Import-Module .\ci\extrafunctions.psm1
 
-function Generate-MySQLpp-Files
-{
-	[CmdletBinding()]
-    Param(
-        [parameter(
-            Mandatory=$false,
-            ValueFromPipeline=$true
-        )]
-        [String]$relativePath=".\"
-    )
-    $current_path = Get-AbsolutePath;
-    $mysqlpp_root = Get-AbsolutePath($relativePath);
-    Write-Host "$mysqlpp_root"
-	
-    cd $mysqlpp_root\lib
-	perl querydef.pl
-	perl ssqls.pl
-    cd $current_path
-}
-
 function Install-MySQL-Connector-C
 {
 	$current_path = Get-AbsolutePath;
@@ -55,7 +35,7 @@ function GenerateProject {
     $global:config = "Release"
   }
 
-  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DBUILD_MYSQLPP=ON -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=' + $global:unit_tests + ' ..  2>&1'
+  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF -DENABLE_TESTING=' + $global:unit_tests + ' ..  2>&1'
   Write-Host "Running '$cmake_command'"
   cmd /c $cmake_command
 
@@ -97,11 +77,6 @@ if($update_submodules) {
 $install_mysql_connector = BinaryQuestion("Install MySQL Connector C");
 if($install_mysql_connector) {
     Install-MySQL-Connector-C
-}
-
-$generate_mysqlpp = BinaryQuestion("Create the mysqlpp files");
-if($generate_mysqlpp) {
-    Generate-MySQLpp-Files("$project_root\tools\mysqlpp")
 }
 
 Write-Host "Generating the project now..."

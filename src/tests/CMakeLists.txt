@@ -7,10 +7,6 @@ link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} 
 set(PROJECT_LIB osirose-lib)
 set(CMAKE_BUILD_TYPE "Debug")
 
-IF(ENABLE_MYSQL_ONE_INSTANCE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_MYSQL_ONE_INSTANCE")
-ENDIF()
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
 set(GCC_LINK_FLAGS "${GCC_LINK_FLAGS}")
 set(Clang_LINK_FLAGS "")
@@ -105,7 +101,7 @@ macro (compile_test name path)
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
   IF(ENABLE_MYSQL)
-    target_link_libraries(${TEST_NAME} mysqlpp)
+      target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
   ENDIF()
 
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})

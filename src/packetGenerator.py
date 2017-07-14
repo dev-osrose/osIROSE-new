@@ -1,3 +1,4 @@
+#!/bin/python3
 class Variable:
     def __init__(self, name, type, isSimple):
         self.name = name
@@ -72,8 +73,7 @@ class Class:
 
     def getHeaderConstructor(self):
         data = "\t{0}();".format(self.name)
-        if self.recv:
-            data += "\n\t\t{}(uint8_t buffer[MAX_PACKET_SIZE]);".format(self.name)
+        data += "\n\t\t{}(uint8_t buffer[MAX_PACKET_SIZE]);".format(self.name)
         if len(self.variables):
             data += "\n\t\t" + self.name + "(" + ", ".join([v.constructorHeader("&" if b else "", b) for v, b in self.variables]) + ");"
         data += "\n\n\t\tvirtual ~{}() = default;".format(self.name)
@@ -81,13 +81,12 @@ class Class:
 
     def getCppConstructor(self):
         data = "{0}::{0}() : CRosePacket(ePacketType::{1}) {{}}".format(self.name, self.ePacketType)
-        if self.recv:
-            data += "\n\n{0}::{0}(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {{\n".format(self.name)
-            data += '\tthrow_assert(type() == ePacketType::{}, "Not the right packet: " << to_underlying(type()));\n'.format(self.ePacketType)
-            if len(self.variables):
-                for v, b in self.variables:
-                    data += "\t{}\n".format(v.unpack())
-            data += "}"
+        data += "\n\n{0}::{0}(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {{\n".format(self.name)
+        data += '\tthrow_assert(type() == ePacketType::{}, "Not the right packet: " << to_underlying(type()));\n'.format(self.ePacketType)
+        if len(self.variables):
+            for v, b in self.variables:
+                data += "\t{}\n".format(v.unpack())
+        data += "}"
         if len(self.variables):
             data += "\n\n{0}::{0}(".format(self.name) + ", ".join([v.constructorHeader("&" if b else "", b) for v, b in self.variables]) + ") : CRosePacket(ePacketType::{}), ".format(self.ePacketType)
             data += ", ".join([v.constructorInitCpp() for v, b in self.variables])

@@ -27,6 +27,7 @@
 #include <iomanip>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 #ifdef _WIN32
   #include <spdlog/sinks/wincolor_sink.h>

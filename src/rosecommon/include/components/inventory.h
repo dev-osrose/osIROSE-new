@@ -34,6 +34,15 @@ struct Inventory {
 
     static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
 
+    template <typename T>
+    void loadFromResult(T& res) {
+        for (const auto &row : res) {
+            if (row.slot >= maxItems)
+                continue; // FIXME : error somewhere?
+            items_[row.slot].loadFromRow(row);
+        }
+    }
+
     using equipped_wrapper = array_wrapper<const std::array<RoseCommon::Item, maxItems>>;
 
     std::array<RoseCommon::Item, maxItems> items_;
