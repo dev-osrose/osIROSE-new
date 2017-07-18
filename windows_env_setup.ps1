@@ -1,5 +1,5 @@
 $mysql_version = "5.7";
-$mysql_connector_version = "6.1.6";
+$mysql_connector_version = "6.1.10";
 $config = "Release"
 $unit_tests = "OFF"
 
@@ -10,7 +10,7 @@ function Install-MySQL-Connector-C
 	$current_path = Get-AbsolutePath;
 
 	Write-Host "Downloading Mysql Connector-C v$global:mysql_connector_version x86 to the $current_path"
-	Start-FileDownload "http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-$global:mysql_connector_version-win32.msi" -FileName "$current_path/mysql-connector-c-$global:mysql_connector_version-winx32.msi"
+	Invoke-WebRequest -Uri "https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-$global:mysql_connector_version-win32.msi" -OutFile "$current_path/mysql-connector-c-$global:mysql_connector_version-winx32.msi"
 
     $installer = 'msiexec /i mysql-connector-c-' + $global:mysql_connector_version + '-winx32.msi /quiet /qn /norestart /log mysql-connector-c-' + $global:mysql_connector_version + '.log 2>&1';
 	
@@ -25,8 +25,8 @@ function Update-Submodules
 function GenerateProject {
   $current_path = Get-AbsolutePath;
 
-  cmd /c 'mkdir build 2>&1'
-  cd build
+  cmd /c 'mkdir cbuild 2>&1'
+  cd cbuild
 
   $global:debug_build = BinaryQuestion("Is this a debug build?");
   if($global:debug_build) {
