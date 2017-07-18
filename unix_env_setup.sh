@@ -1,39 +1,31 @@
 #!/bin/sh
 
-sudo apt-get install cmake
 sudo apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
 sudo apt-get update
-sudo apt-get install gcc-5
-sudo apt-get install g++-5
-sudo apt-get install unzip
-sudo apt-get install autoconf
-sudo apt-get install libtool
-sudo apt-get install libssl-dev
-sudo apt-get install python libmysqlclient-dev libmysqld-dev libmysqlclient20
+sudo apt-get install g++-6 unzip autoconf libtool libssl-dev python perl
 
-git submodule init
-git submodule update
+git submodule update --init --recursive
 
-# Install ruby
-wget https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
-tar -xf ruby-2.2.3.tar.gz
-cd ruby-2.2.3/
-./configure
-make && make install
-
-cd ..
+mkdir cmake_app
+wget --no-check-certificate --quiet -O - https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz | tar --strip-components=1 -xz -C cmake_app
 
 export PROOT=$(pwd)
-export GCC_VERSION="5"
-export GCOV_PATH=/usr/bin/gcov-${GCOV_VERSION}
-export LCOV_PATH=$HOME/usr/bin/lcov
-export GENHTML_PATH=$HOME/usr/bin/genhtml
-export PREFIX=$HOME
-export CXX="/usr/bin/g++-${GCC_VERSION}" CC="/usr/bin/gcc-${GCC_VERSION}"
-export BUILD_TYPE=Debug
-./ci/before_install.sh
-./ci/install.sh
+export PATH=`pwd`/cmake_app/bin:${PATH}
+cmake --version
+
+#install protobuf
+cd 3rdparty/protobuf
+./autogen.sh
+./configure --prefix=$PROOT/3rdparty
+make clean
+make -j 4 && make install
+cd ../..
+
+#install mysql connector
+./ci/install-mysql.sh
 
 mkdir build
 cd build
-cmake -DENABLE_TESTING=OFF -DENABLE_TESTING_COVERAGE=OFF -DBUILD_PROTOBUF=OFF ..
+CC=gcc-6 CXX=g++-6 cmake -DENABLE_TESTING=ON -DENABLE_TESTING_COVERAGE=OFF ..
+
+echo "Please add `pwd`/cmake_app/bin to your PATH env varaibles to ensure you will be able to compile in the future"

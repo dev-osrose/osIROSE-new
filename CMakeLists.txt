@@ -18,8 +18,10 @@ project("osIROSE")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(OsIROSECMakeTools)
-include(FindProtocolBuffer)
 
+#--------------------------------
+# Setup version info
+#--------------------------------
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 2)
 set(VERSION_PATCH 0)
@@ -32,10 +34,17 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 
+#--------------------------------
+# Setup output directories
+#--------------------------------
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+
+#--------------------------------
+# Setup options
+#--------------------------------
 option(PROJECT_DEBUG
   "Enable debugging messages support" ON)
 option(ENABLE_TESTING
@@ -55,6 +64,10 @@ option(DISABLE_CRYPT
 option(ENABLE_MYSQL
     "Use Mysql connection" ON)
 
+
+#--------------------------------
+# Build API Docs
+#--------------------------------
 #build API doc
 IF (BUILD_API_DOC)
   find_package(Doxygen)
@@ -64,7 +77,9 @@ IF (BUILD_API_DOC)
 ENDIF (BUILD_API_DOC)
 #build API doc
 
-
+#--------------------------------
+# Setup/build external libaries
+#--------------------------------
 set(EXTERNAL_DEPS_ROOT ${CMAKE_SOURCE_DIR}/3rdparty)
 
 IF(ENABLE_TESTING)
@@ -75,14 +90,14 @@ IF(ENABLE_TESTING)
 
   set(CMAKE_RULE_MESSAGES OFF)
 
-  IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    add_subdirectory(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+  add_subdirectory(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
+  
+  IF (MSVC)
     set(GMOCK_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googlemock/include)
     set(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
     set(GTEST_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/googletest/googletest/include)
     set(GTEST_BINARY_DIR ${gtest_SOURCE_DIR})
   ELSE()
-    add_subdirectory(${EXTERNAL_DEPS_ROOT}/googletest/googlemock)
     set(GMOCK_INCLUDE_DIR ${gmock_SOURCE_DIR}/include)
     set(GMOCK_BINARY_DIR ${gmock_SOURCE_DIR})
     set(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
@@ -92,7 +107,7 @@ IF(ENABLE_TESTING)
   set(CMAKE_RULE_MESSAGES ON)
 ENDIF()
 
-set(PROTOBUF_ROOT ${CMAKE_BINARY_DIR})
+set(PROTOBUF_ROOT ${EXTERNAL_DEPS_ROOT})
 set(SOL2_ROOT ${EXTERNAL_DEPS_ROOT}/sol2)
 set(PBJSON_ROOT ${EXTERNAL_DEPS_ROOT}/pbjson/src)
 set(LUA_INCLUDE_DIR ${EXTERNAL_DEPS_ROOT}/lua/src)
@@ -122,16 +137,8 @@ IF (MSVC)
     set(PROTOBUF_LIBRARY "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" CACHE STRING "${CMAKE_BINARY_DIR}/lib/${BUILD_TYPE}/libprotobuf.lib" FORCE)
   ENDIF()
 ELSE()
-  IF(ENABLE_MYSQL)
+  IF(ENABLE_MYSQL AND NOT MYSQL_INCLUDE_DIR)
     set(MYSQL_INCLUDE_DIR /usr/include/mysql)
-  ENDIF()
-
-  IF(BUILD_PROTOBUF)
-    set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/protoc)
-  ELSE()
-      #set(PROTOBUF_ROOT ${CMAKE_SOURCE_DIR}/protobuf)
-      #set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_SOURCE_DIR}/protobuf/bin/protoc)
-    #set(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" CACHE STRING "${CMAKE_SOURCE_DIR}/protobuf/lib/libprotobuf.a" FORCE)
   ENDIF()
 
   set(LINK_FLAGS "${LINK_FLAGS} -lnsl -lz -lm")
@@ -143,6 +150,7 @@ ENDIF()
 
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
+# We have to build lua for the project
 set(BUILD_LUA ON CACHE BOOL "" FORCE)
 add_subdirectory(3rdparty)
 add_subdirectory(src)

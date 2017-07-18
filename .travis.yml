@@ -1,3 +1,7 @@
+sudo: false
+dist: trusty
+group: edge
+
 env:
   global:
   - secure: s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs=
@@ -39,9 +43,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -68,17 +72,19 @@ matrix:
     - cmake --version
     #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh
+    
   - env: g++-6 BUILD_TYPE=Debug
     sudo: false
     language: cpp
@@ -98,9 +104,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -125,19 +131,18 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh
+    
   - env: g++-6 BUILD_TYPE=Release
     sudo: false
     language: cpp
@@ -154,9 +159,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       except:
       - coverity_scan
@@ -181,19 +186,20 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh;
+    after_success:
+    - bash <(curl -s https://codecov.io/bash)
+    
   - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
     sudo: false
     language: cpp
@@ -214,9 +220,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
       - llvm-3.8.0
     branches:
       except:
@@ -241,19 +247,18 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh;
+    
   - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Release
     sudo: false
     language: cpp
@@ -274,9 +279,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
       - llvm-3.8.0
     branches:
       except:
@@ -301,13 +306,11 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
     - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
@@ -331,9 +334,9 @@ matrix:
     cache:
       apt: true
       directories:
-      - $HOME/protobuf
-      - $HOME/bakefile
-      - $HOME/mysql
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
     branches:
       only:
       - coverity_scan
@@ -358,11 +361,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-protobuf.sh
-#    - bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
-#    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
     - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     script:
     - echo "coverity scan"
@@ -373,7 +372,6 @@ matrix:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
       name: "$TRAVIS_REPO_SLUG"
-    notification_email: christopher.torres@azgstudio.com
     build_command_prepend: cov-configure --comptype gcc --compiler gcc-6 --template;
       cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
       cmake ..;
