@@ -179,8 +179,8 @@ function(GENERATE_SQL_HEADER HDRS)
     ADD_CUSTOM_COMMAND(
       OUTPUT "${H_FILE}"
       COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
-      COMMAND ${SQLPP_INCLUDE_DIR}/../scripts/ddl2cpp
-      ARGS ${MATCH_PATH} "${OUTPATH}/${ARG_NAME}" ${ARG_NAME}
+      COMMAND "/usr/bin/env"
+      ARGS python ${SQLPP_INCLUDE_DIR}/../scripts/ddl2cpp ${MATCH_PATH} "${OUTPATH}/${ARG_NAME}" ${ARG_NAME}
       DEPENDS ${ABS_FILE}
       COMMENT "Running C++ sqlpp11 ddl12cpp compiler on ${MATCH_PATH} with root ${SQLROOT}, generating: ${H_FILE}"
       VERBATIM)
