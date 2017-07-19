@@ -30,7 +30,7 @@
 	url = https://github.com/L3nn0x/date
 [submodule "tools/sqlpp11"]
 	path = 3rdparty/sqlpp11
-	url = https://github.com/L3nn0x/sqlpp11
+	url = https://github.com/rbock/sqlpp11
 [submodule "tools/sqlpp11-connector-mysql"]
 	path = 3rdparty/sqlpp11-connector-mysql
 	url = https://github.com/RavenX8/sqlpp11-connector-mysql
