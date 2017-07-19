@@ -32,11 +32,11 @@ void EntitySystem::registerEntity(Entity entity) {
     idToEntity_[basic->id_] = entity;
 }
 
-Entity EntitySystem::getEntity(const std::string &name) {
+Entity EntitySystem::getEntity(const std::string &name) const {
     return nameToEntity_[name];
 }
 
-Entity EntitySystem::getEntity(uint32_t charId) {
+Entity EntitySystem::getEntity(uint32_t charId) const {
     return idToEntity_[charId];
 }
 
