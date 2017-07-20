@@ -31,7 +31,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - extras-precise
         - boost-latest
-        - llvm-toolchain-precise-3.8
+        - llvm-toolchain-trusty-4.0
         - deadsnakes
         packages:
         - lcov
