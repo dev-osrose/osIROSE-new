@@ -31,7 +31,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - extras-precise
         - boost-latest
-        - llvm-toolchain-precise-3.8
+        - llvm-toolchain-trusty-4.0
         - deadsnakes
         packages:
         - lcov
@@ -200,7 +200,7 @@ matrix:
     after_success:
     - bash <(curl -s https://codecov.io/bash)
     
-  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Debug
+  - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Debug
     sudo: false
     language: cpp
     addons:
@@ -210,10 +210,10 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.8
-        - llvm-3.8-dev
+        - llvm-4.0
+        - llvm-4.0-dev
         - llvm-runtime
-        - clang-3.8
+        - clang-4.0
         - libstdc++5
         - libstdc++6
         - python3.5
@@ -223,7 +223,6 @@ matrix:
       - $PROOT/3rdparty/bin
       - $PROOT/3rdparty/lib
       - $PROOT/3rdparty/include
-      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -232,7 +231,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
+    - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
@@ -259,7 +258,7 @@ matrix:
     - cd build
     - bash $TRAVIS_BUILD_DIR/ci/script.sh;
     
-  - env: clang-3.8 LIBCXX=1 BUILD_TYPE=Release
+  - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Release
     sudo: false
     language: cpp
     addons:
@@ -269,10 +268,10 @@ matrix:
         - lcov
         - libboost-dev
         - perl
-        - llvm-3.8
-        - llvm-3.8-dev
+        - llvm-4.0
+        - llvm-4.0-dev
         - llvm-runtime
-        - clang-3.8
+        - clang-4.0
         - libstdc++5
         - libstdc++6
         - python3.5
@@ -282,7 +281,6 @@ matrix:
       - $PROOT/3rdparty/bin
       - $PROOT/3rdparty/lib
       - $PROOT/3rdparty/include
-      - llvm-3.8.0
     branches:
       except:
       - coverity_scan
@@ -291,7 +289,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-3.8" CC="/usr/bin/clang-3.8";
+    - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
     - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
