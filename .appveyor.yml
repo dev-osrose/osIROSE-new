@@ -1,6 +1,6 @@
 version: '{branch}.ci.{build}'
 init:
-- ps: Update-AppveyorBuild -Version "$env:platform.$env:configuration.$(Get-Date -format yyyy.MM.dd.THH.mm.ss.ffff.Z).$env:appveyor_build_number"
+- ps: Update-AppveyorBuild -Version "$env:platform.$env:configuration.$(Get-Date -format yyyy.MM.dd.THH.mm.ss.ffffZ).$env:appveyor_build_number"
 
 os:
 - Visual Studio 2017
