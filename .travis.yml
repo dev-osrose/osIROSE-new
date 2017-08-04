@@ -214,8 +214,8 @@ matrix:
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
-        - libstdc++5
-        - libstdc++6
+        - gcc-6
+        - g++-6
         - python3.5
     cache:
       apt: true
@@ -272,8 +272,8 @@ matrix:
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
-        - libstdc++5
-        - libstdc++6
+        - gcc-6
+        - g++-6
         - python3.5
     cache:
       apt: true

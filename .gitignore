@@ -185,3 +185,4 @@ $RECYCLE.BIN/
 compile_commands.json
 .config
 .#*
+cbuild
