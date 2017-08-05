@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANGE_MAP_REQ, CliChangeMapReq)
 class CliChangeMapReq : public CRosePacket {
+private:
+	static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliChangeMapReq();
 		CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]);
@@ -25,5 +27,7 @@ class CliChangeMapReq : public CRosePacket {
 		uint8_t weightRate_;
 		uint16_t z_;
 };
+
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliChangeMapReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_CHANGE_MAP_REQ, &createPacket<CliChangeMapReq>);
 
 }

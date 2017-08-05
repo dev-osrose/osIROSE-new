@@ -37,6 +37,7 @@ set( SOURCES_HEADER
   include/platform_defines
   include/iscontainer
   include/makevector
+  include/factory
 )
 
 set( SOURCES_BASE
