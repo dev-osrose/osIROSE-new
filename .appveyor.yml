@@ -1,6 +1,8 @@
-version: '{branch}-ci-{build}'
+version: '{branch}.ci.{build}'
+init:
+- ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
+
 os:
-- Visual Studio 2015
 - Visual Studio 2017
 
 configuration:
@@ -77,7 +79,7 @@ before_test:
   - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.ini' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
 
 test_script:
-  - ctest -C %CONFIGURATION% --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
+  - ctest -C %CONFIGURATION% --output-on-failure --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
 
 deploy:
   release: osirose-win-v$(appveyor_build_version) # this is here to prevent appveyor from overwriting our release notes

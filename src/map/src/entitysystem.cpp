@@ -112,7 +112,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
 
     std::lock_guard<std::mutex> lock(access_);
     auto entity = create();
-    if (charRes.front().count != 1L) {
+    if (static_cast<long>(charRes.front().count) != 1L) {
         entity.destroy();
         return Entity();
     }

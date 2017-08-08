@@ -112,8 +112,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
             }
         } else {
-            const auto res = conn(sqlpp::select(table.id).from(table).where(table.username == username_));
-            if (!res.empty())
+            if (!conn(sqlpp::select(table.id).from(table).where(table.username == username_)).empty())
                 SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
             else
                 // The user doesn't exist or server is down.
