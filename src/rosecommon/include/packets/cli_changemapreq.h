@@ -28,6 +28,4 @@ private:
 		uint16_t z_;
 };
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliChangeMapReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_CHANGE_MAP_REQ, &createPacket<CliChangeMapReq>);
-
 }

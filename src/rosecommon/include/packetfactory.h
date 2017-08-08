@@ -26,7 +26,7 @@
 
 namespace RoseCommon {
 
-using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, std::hash<std::underlying_type_t<ePacketType>>>;
+using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
 template <typename T>
 inline std::unique_ptr<CRosePacket> createPacket(uint8_t buffer[MAX_PACKET_SIZE])

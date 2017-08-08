@@ -198,6 +198,13 @@ constexpr auto to_underlying(E e) noexcept {
   return static_cast<typename std::underlying_type_t<E>>(e);
 }
 
+struct EPacketTypeHash {
+   template <typename T>
+     std::size_t operator()(T t) const noexcept {
+     return to_underlying(t);
+   }
+ };
+
 
 struct tChannelInfo {
   uint16_t ChannelID;

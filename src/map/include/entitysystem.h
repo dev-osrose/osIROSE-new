@@ -74,8 +74,8 @@ class EntitySystem {
 
         void registerEntity(Entity entity);
 
-        Entity getEntity(const std::string &name) const;
-        Entity getEntity(uint32_t charId) const;
+        Entity getEntity(const std::string &name);
+        Entity getEntity(uint32_t charId);
 
         EntityManager &getEntityManager();
 
