@@ -186,3 +186,4 @@ compile_commands.json
 .config
 .#*
 cbuild
+__pycache__

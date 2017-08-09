@@ -26,7 +26,6 @@ set( SOURCES_HEADER
   include/logconsole
   include/cnetwork_asio
   include/config
-  ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
   include/network_thread_pool
   include/inetwork
@@ -43,7 +42,6 @@ set( SOURCES_BASE
   src/logconsole
   src/cnetwork_asio
   src/config
-  ${PBJSON_ROOT}/pbjson.cpp
   src/connection
 )
 

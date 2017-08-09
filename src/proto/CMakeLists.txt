@@ -20,7 +20,6 @@ include_directories(
 )
 
 set( ProtoFiles
-  configfile.proto
   iscpackets.proto
 )
 
