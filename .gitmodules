@@ -1,18 +1,12 @@
 [submodule "tools/googletest"]
 	path = 3rdparty/googletest
 	url = https://github.com/google/googletest
-[submodule "tools/protobuf"]
-	path = 3rdparty/protobuf
-	url = https://github.com/google/protobuf.git
 [submodule "tools/asio"]
 	path = 3rdparty/asio
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "tools/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "tools/pbjson"]
-	path = 3rdparty/pbjson
-	url = https://github.com/RavenX8/pbjson.git
 [submodule "tools/lua"]
 	path = 3rdparty/lua
 	url = https://github.com/RavenX8/lua.git

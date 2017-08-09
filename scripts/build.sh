@@ -20,7 +20,6 @@ fi
 cd build
 cmake -DENABLE_TESTING=OFF\
       -DENABLE_TESTING_COVERAGE=OFF\
-      -DBUILD_PROTOBUF=OFF\
       -DBUILD_MYSQLPP=OFF\
       ..
 

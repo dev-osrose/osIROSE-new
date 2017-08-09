@@ -1,6 +1,0 @@
-INCLUDE(Compiler)
-INCLUDE(ExternalProject)
-
-FUNCTION(SETUP_PROTOBUF)
-
-ENDFUNCTION()

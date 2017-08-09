@@ -112,10 +112,8 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
 
   IF (MSVC)
-    target_link_libraries(${TEST_NAME} libprotobuf)
     target_link_libraries(${TEST_NAME} wsock32.lib)
   ELSE()
-    target_link_libraries(${TEST_NAME} ${PROTOBUF_LIBRARY})
     target_link_libraries(${TEST_NAME} mysqlclient)
   ENDIF()
 
@@ -131,11 +129,6 @@ IF(ENABLE_TESTING_COVERAGE)
   set(COVERAGE_IGNORE_LIST
     'tools/*'
     '3rdparty/*'
-    'protobuf/*'
-    '*.pb.*'
-    'rapidjson/*'
-    'pbjson.*'
-    'bin2ascii.h'
   )
 
   SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
