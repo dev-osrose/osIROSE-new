@@ -77,7 +77,7 @@ bool CCharClient::JoinServerReply(
       const auto res = conn(sqlpp::select(sessions.userid, sessions.channelid)
               .from(sessions
               .join(accounts).on(sessions.userid == accounts.id))
-              .where(sessions.id == sessionID 
+              .where(sessions.id == sessionID
                   and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", password))));
       if (!res.empty()) {
           loginState_ = eSTATE::LOGGEDIN;
@@ -233,7 +233,7 @@ bool CCharClient::SendCharSelectReply(
 
   std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
   for (auto& server : CCharServer::GetISCList()) {
-    if (server->get_type() == iscPacket::ServerType::MAP_MASTER &&
+    if (server->get_type() == Isc::ServerType::MAP_MASTER &&
         server->get_id() == channelId_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
           server->get_port(), sessionId_,

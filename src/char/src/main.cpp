@@ -61,37 +61,37 @@ int main(int argc, char* argv[]) {
     log->info("Starting up server...");
 
   Core::Config& config = Core::Config::getInstance();
-  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
+  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
   DisplayTitle();
   CheckUser();
 
   if(auto log = console.lock()) {
-    log->set_level(static_cast<spdlog::level::level_enum>(config.char_server().log_level()));
+    log->set_level(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
     log->trace("Trace logs are enabled.");
     log->debug("Debug logs are enabled.");
   }
-  Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+  Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
   Core::connectionPool.addConnector(Core::osirose, std::bind(
-            Core::mysqlFactory, 
-            config.database().user(),
-            config.database().password(), 
-            config.database().database(),
-            config.database().host()));
+            Core::mysqlFactory,
+            config.database().user,
+            config.database().password,
+            config.database().database,
+            config.database().host));
 
   CCharServer clientServer;
   CCharServer iscServer(true);
   CCharISC* iscClient = new CCharISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.char_server().loginip(), config.char_server().loginiscport());
+  iscClient->init(config.charServer().loginIp, config.charServer().loginIscPort);
   iscClient->SetLogin(true);
   iscClient->connect();
   iscClient->start_recv();
 
-  clientServer.init(config.serverdata().ip(), config.char_server().clientport());
+  clientServer.init(config.serverData().ip, config.charServer().clientPort);
   clientServer.listen();
   clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
 
-  iscServer.init(config.serverdata().isclistenip(), config.char_server().iscport());
+  iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
   iscServer.listen();
 
   while (clientServer.is_active()) {

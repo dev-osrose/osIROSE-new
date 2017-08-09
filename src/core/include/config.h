@@ -62,6 +62,7 @@ class Config {
 
   std::string file_;
 
+ public:
   struct Database {
     std::string host = "127.0.0.1";
     std::string database = "osirose";
@@ -113,6 +114,7 @@ class Config {
     MapServer mapServer;
   };
 
+ private:
   Configuration config_;
 
  public:

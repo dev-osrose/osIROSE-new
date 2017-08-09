@@ -33,9 +33,9 @@ set( SOURCES_HEADER
   include/croseisc
   include/crosepacket
   include/epackettype
-  include/packetclasses
   include/charpackets
   include/mappackets
+  include/isccommon
   include/packets
   include/item
   include/partybase
@@ -66,6 +66,7 @@ SET(SOURCES_BASE
   src/mappackets
   src/item
   src/entitycomponents
+  src/isccommon
 )
 
 SET(SOURCES_PACKETS
@@ -174,6 +175,11 @@ SET(SOURCES_PACKETS
   include/packets/srv_loginreply
   src/packets/srv_channellistreply
   include/packets/srv_channellistreply
+  #---------------------------------------------------------
+  src/packets/isc_serverregister
+  include/packets/isc_serverregister
+  src/packets/isc_shutdown
+  include/packets/isc_shutdown
 )
 
 #AUX_SOURCE_DIRECTORY(src/packets SOURCES_PACKETS) # CMAKE docs say to not use this function as CMAKE will not know when to reload the project files
@@ -185,9 +191,3 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 
 target_link_libraries(${PROJECT} Core)
 target_link_libraries(${PROJECT} lua)
-
-
-IF (MSVC)
-#  ADD_DEPENDENCIES(${PROJECT} libprotobuf)
-#  ADD_DEPENDENCIES(${PROJECT} protoGen)
-ENDIF()

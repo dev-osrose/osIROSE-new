@@ -17,7 +17,7 @@
 
 #include "croseisc.h"
 #include "crosepacket.h"
-#include "packetclasses.h"
+#include "packets.h"
 
 class CCharISC : public RoseCommon::CRoseISC {
  public:

@@ -16,7 +16,7 @@
 #define __CMAPISC_H__
 
 #include "croseisc.h"
-#include "packetclasses.h"
+#include "packets.h"
 
 class CMapISC : public RoseCommon::CRoseISC {
  public:

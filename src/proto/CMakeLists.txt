@@ -20,7 +20,7 @@ include_directories(
 )
 
 set( ProtoFiles
-  iscpackets.proto
+    #  iscpackets.proto
 )
 
 set(args

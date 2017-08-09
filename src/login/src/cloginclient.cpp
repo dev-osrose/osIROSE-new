@@ -44,7 +44,7 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     // loop the server list here
     std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
     for (auto& server : CLoginServer::GetISCList())
-      if (server->get_type() == iscPacket::ServerType::CHAR) {
+      if (server->get_type() == Isc::ServerType::CHAR) {
         CLoginISC* svr = static_cast<CLoginISC*>(server.get());
         if (!svr) {
             continue;
@@ -69,7 +69,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   CLoginServer::GetISCListMutex().lock();
   for (auto& server : CLoginServer::GetISCList()) {
-    if (server && server->get_type() == iscPacket::ServerType::CHAR) serverCount++;
+    if (server && server->get_type() == Isc::ServerType::CHAR) serverCount++;
   }
   CLoginServer::GetISCListMutex().unlock();
 
@@ -140,7 +140,7 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
     if (!server) {
         continue;
     }
-    if (server->get_type() == iscPacket::ServerType::CHAR &&
+    if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == ServerID) {
       for (tChannelInfo& info : server->GetChannelList()) {
         packet->addChannel(info.channelName, info.ChannelID+1, 0);
@@ -173,7 +173,7 @@ bool CLoginClient::ServerSelect(
   std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
   for (auto& obj : CLoginServer::GetISCList()) {
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
-    if (server->get_type() == iscPacket::ServerType::CHAR &&
+    if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
       std::string query = fmt::format("CALL create_session({}, {}, {});",
                                       session_id_, userid_, channelID);

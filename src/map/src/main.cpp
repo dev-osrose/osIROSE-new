@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "iscpackets.pb.h"
 #include "cmapserver.h"
 #include "cmapisc.h"
 #include "config.h"
@@ -90,22 +89,22 @@ void ParseCommandLine(int argc, char** argv)
     // We are using if checks here because we only want to override the config file if the option was supplied
     // Since this is a login server startup function we can get away with a little bit of overhead
     if (options.count("level"))
-      config.mutable_login_server()->set_log_level(options["level"].as<int>());
+      config.loginServer().logLevel = options["level"].as<int>();
 
     if (options.count("ip"))
-      config.mutable_serverdata()->set_ip(options["ip"].as<std::string>());
+      config.serverData().ip = options["ip"].as<std::string>();
 
     if (options.count("port"))
-      config.mutable_login_server()->set_clientport(options["port"].as<int>());
+      config.loginServer().clientPort = options["port"].as<int>();
 
     if (options.count("iscip"))
-      config.mutable_serverdata()->set_isclistenip(options["iscip"].as<std::string>());
+      config.serverData().iscListenIp = options["iscip"].as<std::string>();
 
     if (options.count("iscport"))
-      config.mutable_login_server()->set_iscport(options["iscport"].as<int>());
+      config.loginServer().iscPort = options["iscport"].as<int>();
 
     if (options.count("maxthreads"))
-      config.mutable_serverdata()->set_maxthreads(options["maxthreads"].as<int>());
+      config.serverData().maxThreads = options["maxthreads"].as<int>();
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
@@ -124,36 +123,36 @@ int main(int argc, char* argv[]) {
       log->info( "Starting up server..." );
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CLog::SetLevel((spdlog::level::level_enum)config.map_server().log_level());
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.mapServer().logLevel);
     DisplayTitle();
     CheckUser();
 
     if(auto log = console.lock()) {
-      log->set_level((spdlog::level::level_enum)config.map_server().log_level());
+      log->set_level((spdlog::level::level_enum)config.mapServer().logLevel);
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
-    Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+    Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
   Core::connectionPool.addConnector(Core::osirose, std::bind(
-                Core::mysqlFactory, 
-                config.database().user(),
-                config.database().password(), 
-                config.database().database(),
-                config.database().host()));
+                Core::mysqlFactory,
+                config.database().user,
+                config.database().password,
+                config.database().database,
+                config.database().host));
 
 
     CMapServer clientServer;
     CMapServer iscServer(true);
   CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.map_server().charip(), config.map_server().chariscport());
-  iscClient->set_type(iscPacket::ServerType::CHAR);
+  iscClient->init(config.mapServer().charIp, config.mapServer().charIscPort);
+  iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
 
-  clientServer.init(config.serverdata().ip(), config.map_server().clientport());
+  clientServer.init(config.serverData().ip, config.mapServer().clientPort);
   clientServer.listen();
   clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
 
-  iscServer.init(config.serverdata().isclistenip(), config.map_server().iscport());
+  iscServer.init(config.serverData().iscListenIp, config.mapServer().iscPort);
   iscServer.listen();
   iscClient->connect();
   iscClient->start_recv();
