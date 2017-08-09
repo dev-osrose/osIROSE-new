@@ -11,22 +11,22 @@ TEST(Config, TestDefault) {
 
 TEST(Config, TestDatabase) {
   Core::Config &config = Core::Config::getInstance();
-  const ::configFile::Database &dbb = config.database();
-  EXPECT_EQ("127.0.0.1", dbb.host());
-  EXPECT_EQ("osirose", dbb.database());
-  EXPECT_EQ("root", dbb.user());
-  EXPECT_EQ("", dbb.password());
-  EXPECT_EQ(3306, dbb.port());
+  auto dbb = config.database();
+  EXPECT_EQ("127.0.0.1", dbb.host);
+  EXPECT_EQ("osirose", dbb.database);
+  EXPECT_EQ("root", dbb.user);
+  EXPECT_EQ("", dbb.password);
+  EXPECT_EQ(3306, dbb.port);
 }
 
 TEST(Config, TestServer) {
   Core::Config &config = Core::Config::getInstance();
-  const ::configFile::Server &sd = config.serverdata();
-  EXPECT_EQ(0, sd.id());
-  EXPECT_EQ("127.0.0.1", sd.ip());
-  EXPECT_EQ(1, sd.accesslevel());
-  EXPECT_EQ(0, sd.parentid());
-  EXPECT_EQ(0, sd.maxconnections());
-  EXPECT_EQ(true, sd.usethreads());
-  EXPECT_EQ(0, sd.mode());
+  auto &sd = config.serverData();
+  EXPECT_EQ(0, sd.id);
+  EXPECT_EQ("127.0.0.1", sd.ip);
+  EXPECT_EQ(1, sd.accessLevel);
+  EXPECT_EQ(0, sd.parentId);
+  EXPECT_EQ(0, sd.maxConnections);
+  EXPECT_EQ(true, sd.useThreads);
+  EXPECT_EQ(0, sd.mode);
 }
