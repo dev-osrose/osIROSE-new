@@ -10,6 +10,7 @@ REGISTER_SEND_PACKET(ePacketType::PAKCC_SWITCH_SERVER, SrvSwitchServer)
 class SrvSwitchServer : public CRosePacket {
 	public:
 		SrvSwitchServer();
+		SrvSwitchServer(uint8_t buffer[MAX_PACKET_SIZE]);
 		SrvSwitchServer(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string &ip);
 
 		virtual ~SrvSwitchServer() = default;

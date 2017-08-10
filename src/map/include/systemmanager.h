@@ -114,8 +114,8 @@ class SystemManager {
                     });
         }
 
-        Entity getEntity(const std::string &name);
-        Entity getEntity(uint32_t charId);
+        Entity getEntity(const std::string &name) const;
+        Entity getEntity(uint32_t charId) const;
 
         EntityManager &getEntityManager();
 

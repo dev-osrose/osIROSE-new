@@ -6,6 +6,7 @@
 #include "crosesocket.h"
 #include "cnetwork_asio.h"
 #include "network_thread_pool.h"
+#include "charpackets.h"
 
 #define SPDLOG_TRACE_ON
 
@@ -180,10 +181,29 @@ class LoginClient : public Client {
 class CharClient : public Client {
     public:
   CharClient(uint32_t sessionId, std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)), sessionId_(sessionId) {}
-        virtual ~CharClient() = default;
+      virtual ~CharClient() = default;
+
+  uint32_t sessionId() const {
+    return sessionId_;
+  }
+
+  uint16_t port() const {
+    return port_;
+  }
+
+  uint32_t sessionSeed() const {
+    return sessionSeed_;
+  }
+
+  const std::string &ip() const {
+    return ip_;
+  }
 
     private:
         uint32_t sessionId_;
+        uint16_t port_;
+        uint32_t sessionSeed_;
+        std::string ip_;
 
         virtual bool HandlePacket(uint8_t *buffer) override {
             logger_->trace("CharClient::HandlePacket");
@@ -202,14 +222,75 @@ class CharClient : public Client {
                 logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.result(), reply.id(), reply.payFlag());
                 if (reply.result() != SrvJoinServerReply::OK)
                   return false;
+                auto packet = CliCharListReq();
+                send(packet);
               }
               break;
+            case ePacketType::PAKCC_CHAR_LIST_REPLY:
+              logger_->info("Got character list");
+              {
+                auto reply = SrvCharacterListReply(buffer);
+                logger_->info("This account has {} characters", reply.getCharacterCount());
+                logger_->info("Character list:");
+                for (const auto &it : reply.getCharacters()) {
+                  logger_->info("name: {}", it.name_);
+                  logger_->info("level: {}", it.level_);
+                  logger_->info("job: {}", it.job_);
+                  logger_->info("race: {}", it.race_);
+                  logger_->info("face: {}", it.face_);
+                  logger_->info("hair: {}", it.hair_);
+                  logger_->info("platinium: {}", it.platinum_);
+                  logger_->info("seconds until delete: {}", it.remain_sec_unitl_delete_);
+                  logger_->info("items:");
+                  for (size_t i = 0; i < SrvCharacterListReply::MAX_EQUIPPED_ITEMS; ++i) {
+                    logger_->info("Item in position {}", i);
+                    const auto &item = it.items_[i];
+                    logger_->info("id: {}", item.id_);
+                    if (item.id_ == 0)
+                      continue;
+                    logger_->info("gemOpt: {}", item.gem_op_);
+                    logger_->info("socket: {}", item.socket_);
+                    logger_->info("grade: {}", item.grade_);
+                  }
+                }
+                auto packet = CliSelectCharReq(0, 0, 0, reply.getCharacters()[0].name_);
+                send(packet);
+              }
+              break;
+            case ePacketType::PAKCC_SWITCH_SERVER:
+              logger_->info("Got character select reply");
+              {
+                auto reply = SrvSwitchServer(buffer);
+                ip_ = reply.ip();
+                port_ = reply.port();
+                sessionId_ = reply.sessionId();
+                sessionSeed_ = reply.sessionSeed();
+              }
+              return false;
             default:
               logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
               return false;
             }
             return true;
         }
+};
+
+class MapClient : public Client {
+public:
+  MapClient(uint32_t sessionId, uint32_t sessionSeed, std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)), sessionId_(sessionId), sessionSeed_(sessionSeed) {}
+  virtual ~MapClient() = default;
+
+private:
+  uint32_t sessionId_;
+  uint32_t sessionSeed_;
+
+  virtual bool HandlePacket(uint8_t *buffer) override {
+    logger_->trace("MapClient::HandlePacket");
+    (void)buffer;
+    (void)sessionId_;
+    (void)sessionSeed_;
+    return false;
+  }
 };
 
 void ParseCommandLine(int argc, char** argv)
@@ -266,6 +347,17 @@ int main(int argc, char* argv[]) {
         charClient.start_recv();
         while (charClient.is_active())
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        if (charClient.ip().size()) {
+          log->info("Connecting to map server");
+          socket = std::make_unique<Core::CNetwork_Asio>();
+          socket->init(charClient.ip(), charClient.port());
+          MapClient mapClient{charClient.sessionId(), charClient.sessionSeed(), std::move(socket)};
+          mapClient.connect();
+          mapClient.start_recv();
+          while (mapClient.is_active())
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 
     log->info( "Client shutting down..." );

@@ -32,6 +32,7 @@ REGISTER_SEND_PACKET(ePacketType::PAKCC_CHAR_LIST_REPLY, SrvCharacterListReply)
 class SrvCharacterListReply : public CRosePacket {
  public:
   SrvCharacterListReply();
+  SrvCharacterListReply(uint8_t buffer[MAX_PACKET_SIZE]);
 
   virtual ~SrvCharacterListReply();
 
@@ -53,6 +54,18 @@ class SrvCharacterListReply : public CRosePacket {
     MAX_EQUIPPED_ITEMS
   };
   static equipped_position getPosition(uint32_t slot);
+
+  uint8_t getCharacterCount() const {
+    return character_count_;
+  }
+
+ private:
+  struct char_info;
+ public:
+
+  const std::vector<char_info> &getCharacters() const {
+    return character_list_;
+  }
 
  protected:
   void pack();
@@ -86,6 +99,7 @@ class SrvCharacterListReply : public CRosePacket {
     uint32_t face_;
     uint32_t hair_;
 
+    char_info() {}
     char_info(const std::string &name, uint8_t race = 0, uint16_t level = 0,
               uint16_t job = 0, uint32_t delete_time = 0, uint8_t platinum = 0, uint32_t face = 1, uint32_t hair = 0);
   };

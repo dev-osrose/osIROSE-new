@@ -8,11 +8,11 @@ void SystemManager::update(double dt) {
         it.second->update(entityManager, dt);
 }
 
-Entity SystemManager::getEntity(const std::string &name) {
+Entity SystemManager::getEntity(const std::string &name) const {
     return entitySystem_.getEntity(name);
 }
 
-Entity SystemManager::getEntity(uint32_t charId) {
+Entity SystemManager::getEntity(uint32_t charId) const {
     return entitySystem_.getEntity(charId);
 }
 
