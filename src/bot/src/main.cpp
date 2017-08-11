@@ -289,7 +289,19 @@ private:
     (void)buffer;
     (void)sessionId_;
     (void)sessionSeed_;
-    return false;
+    switch (CRosePacket::type(buffer)) {
+    case ePacketType::PAKSS_ACCEPT_REPLY:
+      logger_->info("asking for joinning server");
+      {
+        auto packet = CliJoinServerReq(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+        send(packet);
+      }
+      break;
+    default:
+      logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
+      return false;
+    }
+    return true;
   }
 };
 

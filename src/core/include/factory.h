@@ -22,7 +22,10 @@ namespace Core {
 
 		template <typename... Args>
 		static ReturnType create(const KeyType& key, Args&&... args) {
-			return getAssociations<Args...>()[key](std::forward<Args>(args)...);
+			const auto& res = getAssociations<Args...>().find(key);
+      if (res == getAssociations<Args...>().end())
+        return ReturnType{};
+      return res->second(std::forward<Args>(args)...);
 		}
 
 		template <typename... Args>

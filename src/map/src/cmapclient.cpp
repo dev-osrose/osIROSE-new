@@ -52,17 +52,16 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         default:
             break;
     }
-        auto packet = fetchPacket(_buffer);
+    auto packet = fetchPacket(_buffer);
     if (!packet) {
         logger_->warn("Couldn't build the packet");
             return CRoseClient::HandlePacket(_buffer);
     }
-
-        if (login_state_ != eSTATE::LOGGEDIN) {
+    if (login_state_ != eSTATE::LOGGEDIN) {
           logger_->warn("Client {} is attempting to execute an action before logging in.",
                         get_id());
-          return true;
-        }
+          return CRoseClient::HandlePacket(_buffer);
+    }
     if (!entitySystem_->dispatch(entity_, std::move(packet))) {
         logger_->warn("There is no system willing to deal with this packet");
             CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
