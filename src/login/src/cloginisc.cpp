@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "cloginisc.h"
-#include "iscpackets.pb.h"
 
 using namespace RoseCommon;
 
@@ -34,31 +33,20 @@ bool CLoginISC::HandlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return ServerRegister(CRosePacket(_buffer));
+      return ServerRegister(getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
-      return ServerShutdown(CRosePacket(_buffer));
+      return ServerShutdown(getPacket<ePacketType::ISC_SHUTDOWN>(_buffer));
     default: { return CRoseISC::HandlePacket(_buffer); }
   }
   return true;
 }
 
-bool CLoginISC::ServerRegister(const CRosePacket& P) {
-  uint16_t _size = P.size() - 6;
-
+bool CLoginISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
   logger_->trace("CLoginISC::ServerRegister(const CRosePacket& P)");
 
-  iscPacket::ServerReg pServerReg;
-  if (pServerReg.ParseFromArray(const_cast<CRosePacket&>(P).data(), _size) ==
-    false) {
-    logger_->error("Couldn't decode proto msg!!");
-    return false;  // m_Log.eicprintf( "Couldn't decode proto msg\n" );
-  }
-
-  int16_t _type = 0;
-
-  _type = pServerReg.type();
+  uint8_t _type = to_underlying(P->serverType());
 
   // 1 == char server
   // 2 == node server
@@ -67,18 +55,18 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
   // 4 == map workers/threads
 
   // todo: replace these numbers with the actual enum name
-  if (_type == iscPacket::ServerType::CHAR) {
-    server_name_ = pServerReg.name();
-    socket_->set_address(pServerReg.addr());
-    socket_->set_port(pServerReg.port());
-    min_right_ = pServerReg.accright();
+  if (_type == Isc::ServerType::CHAR) {
+    server_name_ = P->name();
+    socket_->set_address(P->addr());
+    socket_->set_port(P->port());
+    min_right_ = P->right();
     socket_->set_type(_type);
-  } else if (_type == iscPacket::ServerType::MAP_MASTER) {
+  } else if (_type == Isc::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
-    channel.channelName = pServerReg.name();
-    channel.ChannelID = pServerReg.id();
-    channel.MinRight = pServerReg.accright();
+    channel.channelName = P->name();
+    channel.ChannelID = P->id();
+    channel.MinRight = P->right();
     channel_list_.push_front(channel);
     channel_count_++;
   }
@@ -87,23 +75,15 @@ bool CLoginISC::ServerRegister(const CRosePacket& P) {
     socket_->get_type() );
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                  ServerType_Name(pServerReg.type()).c_str(),
-                  pServerReg.name().c_str(), pServerReg.addr().c_str(),
-                  pServerReg.port());
+                RoseCommon::Isc::serverTypeName(P->serverType()),
+                  P->name(), P->addr(),
+                  P->port());
   return true;
 }
 
-bool CLoginISC::ServerShutdown(const CRosePacket& P) {
-  (void)P;
-  uint16_t _size = P.size() - 6;
-
-  iscPacket::ServerShutdown pServerShutdown;
-  if (pServerShutdown.ParseFromArray(const_cast<CRosePacket&>(P).data(),
-                                     _size) == false)
-    return false;
-
-  channel_list_.remove_if([pServerShutdown](RoseCommon::tChannelInfo channel) {
-    return channel.ChannelID == pServerShutdown.id();
+bool CLoginISC::ServerShutdown(std::unique_ptr<IscShutdown> P) {
+  channel_list_.remove_if([&](RoseCommon::tChannelInfo channel) {
+    return channel.ChannelID == P->id();
   });
   return true;
 }

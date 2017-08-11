@@ -10,7 +10,8 @@ REGISTER_SEND_PACKET(ePacketType::PAKSS_ACCEPT_REPLY, SrvAcceptReply)
 class SrvAcceptReply : public CRosePacket {
 	public:
 		SrvAcceptReply();
-		SrvAcceptReply(uint32_t randValue, uint8_t result = 0x02);
+		SrvAcceptReply(uint8_t buffer[MAX_PACKET_SIZE]);
+		SrvAcceptReply(uint32_t randValue, uint8_t result = 0x2);
 
 		virtual ~SrvAcceptReply() = default;
 

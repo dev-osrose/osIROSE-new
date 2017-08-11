@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliDeleteCharReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_DELETE_CHAR_REQ, &createPacket<CliDeleteCharReq>);
+
 CliDeleteCharReq::CliDeleteCharReq() : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ) {}
 
 CliDeleteCharReq::CliDeleteCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_DELETE_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
-    *this >> charId_;
+	*this >> charId_;
 	*this >> isDelete_;
 	*this >> name_;
 }

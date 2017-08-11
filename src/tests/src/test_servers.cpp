@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "cnetwork_asio.h"
-#include "iscpackets.pb.h"
 #include "crosepacket.h"
 #include "cloginserver.h"
 #include "ccharserver.h"
@@ -30,7 +29,7 @@ TEST(TestFinalServers, TestISCConnections) {
 
   mapIsc.init("127.0.0.1", 29210);
   mapIscClient->init("127.0.0.1", 29110);
-  mapIscClient->set_type(iscPacket::ServerType::CHAR);
+  mapIscClient->set_type(to_underlying(Isc::ServerType::CHAR));
 
   loginIsc.listen();
   charIsc.listen();

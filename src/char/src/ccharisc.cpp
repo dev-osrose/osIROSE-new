@@ -1,11 +1,11 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
-#include "iscpackets.pb.h"
 #include "packets.h"
 #include "platform_defines.h"
 
@@ -55,45 +54,35 @@ bool CCharISC::ServerRegister(
     std::unique_ptr<RoseCommon::IscServerRegister> P) {
   logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
 
-  uint16_t _size = P->size() - 6;
-
-  iscPacket::ServerReg pMapServer;
-  if (pMapServer.ParseFromArray(P->data(), _size) == false) {
-    logger_->debug("pMapServer.ParseFromArray Failed!");
-    return false;
-  }
-  int16_t _type = 0;
-  _type = pMapServer.type();
-
   // 1 == char server
   // 2 == node server
   // 3 == map master server (This is the only type the login server will care
   // about)
   // 4 == map workers/threads
 
-  iscPacket::ServerReg pServerReg;
   std::string name;
-  int32_t type = 0, right = 0;
+  int32_t right = 0;
+  RoseCommon::Isc::ServerType type;
 
-  if (_type == iscPacket::ServerType::NODE) {
+  if (P->serverType() == RoseCommon::Isc::ServerType::NODE) {
     // This is a node and we need to figure out something to do with this
-  } else if (_type == iscPacket::ServerType::MAP_MASTER) {
-    name = pMapServer.name();
-    socket_->set_address(pMapServer.addr());
-    socket_->set_port(pMapServer.port());
-    type = pMapServer.type();
-    right = pMapServer.accright();
+  } else if (P->serverType() == RoseCommon::Isc::ServerType::MAP_MASTER) {
+    name = P->name();
+    socket_->set_address(P->addr());
+    socket_->set_port(P->port());
+    type = P->serverType();
+    right = P->right();
 
-    socket_->set_type(_type);
+    socket_->set_type(to_underlying(type));
   }
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                  ServerType_Name(pMapServer.type()).c_str(),
-                  pMapServer.name().c_str(), pMapServer.addr().c_str(),
-                  pMapServer.port());
+                RoseCommon::Isc::serverTypeName(P->serverType()),
+                  P->name(), P->addr(),
+                  P->port());
 
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, socket_->get_address(), get_id(),
-    socket_->get_port(), type, right);
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(type, name, socket_->get_address(),
+                                                             socket_->get_port(), right, get_id());
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
@@ -116,15 +105,17 @@ void CCharISC::OnConnected() {
 
   Core::Config& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      config.char_server().worldname(), config.serverdata().ip(), get_id(),
-      config.char_server().clientport(), iscPacket::ServerType::CHAR,
-      config.char_server().accesslevel());
+      RoseCommon::Isc::ServerType::CHAR,
+      config.charServer().worldName, config.serverData().ip,
+      config.charServer().clientPort,
+      config.charServer().accessLevel,
+      get_id());
 
   logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
                  packet->size(), (uint16_t)packet->type());
   send(*packet);
 
-  socket_->set_type(iscPacket::ServerType::LOGIN);
+  socket_->set_type(to_underlying(Isc::ServerType::LOGIN));
 
   if (socket_->process_thread_.joinable() == false) {
     socket_->process_thread_ = std::thread([this]() {
@@ -153,15 +144,13 @@ bool CCharISC::OnShutdown() {
   bool result = true;
 
   if (is_active() == true) {
-    if (get_type() == iscPacket::ServerType::LOGIN) {
+    if (get_type() == Isc::ServerType::LOGIN) {
       if (socket_->reconnect() == true) {
         logger_->info("Reconnected to login server.");
         result = false;
       }
     } else {
-    auto packet = std::unique_ptr<CRosePacket>(
-      new CRosePacket(ePacketType::ISC_SHUTDOWN));
-      //auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
+      auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
         CCharISC* svr = static_cast<CCharISC*>(server.get());
@@ -179,9 +168,9 @@ bool CCharISC::OnShutdown() {
 }
 
 bool CCharISC::IsLogin() const {
-  return (get_type() == iscPacket::ServerType::LOGIN);
+  return (get_type() == Isc::ServerType::LOGIN);
 }
 
 void CCharISC::SetLogin(bool val) {
-  if (val == true) socket_->set_type(iscPacket::ServerType::LOGIN);
+  if (val == true) socket_->set_type(to_underlying(Isc::ServerType::LOGIN));
 }

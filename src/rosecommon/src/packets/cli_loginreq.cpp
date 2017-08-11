@@ -3,6 +3,8 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliLoginReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_LOGIN_REQ, &createPacket<CliLoginReq>);
+
 CliLoginReq::CliLoginReq() : CRosePacket(ePacketType::PAKCS_LOGIN_REQ) {}
 
 CliLoginReq::CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
@@ -33,7 +35,7 @@ const std::string &CliLoginReq::username() const {
 
 
 void CliLoginReq::pack() {
-	*this << password_.c_str();
+    *this << password_.c_str();
 	*this << username_;
 }
 

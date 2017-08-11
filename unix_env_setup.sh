@@ -13,14 +13,6 @@ export PROOT=$(pwd)
 export PATH=`pwd`/cmake_app/bin:${PATH}
 cmake --version
 
-#install protobuf
-cd 3rdparty/protobuf
-./autogen.sh
-./configure --prefix=$PROOT/3rdparty
-make clean
-make -j 4 && make install
-cd ../..
-
 #install mysql connector
 ./ci/install-mysql.sh
 

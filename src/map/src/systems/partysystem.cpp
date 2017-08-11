@@ -157,8 +157,8 @@ void PartySystem::processPartyReply(CMapClient&, Entity entity, const RoseCommon
     }
     switch (packet.reply()) {
         // if the guy asked is busy or declined the invitation, we send it to the guy asking
-        case CliPartyReply::BUSY:
-        case CliPartyReply::REJECT:
+        case PartyReply::BUSY:
+        case PartyReply::REJECT:
             other.component<Party>()->isRequested_ = false;
             if (!other.component<Party>()->party_)
                 other.remove<Party>();
@@ -168,8 +168,8 @@ void PartySystem::processPartyReply(CMapClient&, Entity entity, const RoseCommon
             }
             return;
         // if the guy asked accepts, we send it to the guy asking and we update the party
-        case CliPartyReply::ACCEPT_MAKE:
-        case CliPartyReply::ACCEPT_JOIN:
+        case PartyReply::ACCEPT_MAKE:
+        case PartyReply::ACCEPT_JOIN:
             other.component<Party>()->isRequested_ = false;
             {
                 if (auto socket = getClient(other))

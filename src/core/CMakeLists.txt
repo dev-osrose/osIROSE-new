@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-link_directories(${EXTERNAL_BINARY_DIR} ${PROTOBUF_BINARY_DIR})
+link_directories(${EXTERNAL_BINARY_DIR})
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -26,7 +26,6 @@ set( SOURCES_HEADER
   include/logconsole
   include/cnetwork_asio
   include/config
-  ${PBJSON_ROOT}/pbjson.hpp
   include/logconsole
   include/network_thread_pool
   include/inetwork
@@ -37,13 +36,13 @@ set( SOURCES_HEADER
   include/platform_defines
   include/iscontainer
   include/makevector
+  include/factory
 )
 
 set( SOURCES_BASE
   src/logconsole
   src/cnetwork_asio
   src/config
-  ${PBJSON_ROOT}/pbjson.cpp
   src/connection
 )
 
@@ -68,7 +67,6 @@ GENERATE_SQL_HEADER(SQL_HEADER ${args})
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-target_link_libraries(${PROJECT} protoGen)
 IF (ENABLE_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()

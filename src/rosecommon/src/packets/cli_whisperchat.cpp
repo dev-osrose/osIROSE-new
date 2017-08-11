@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliWhisperChat::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_WHISPER_CHAT, &createPacket<CliWhisperChat>);
+
 CliWhisperChat::CliWhisperChat() : CRosePacket(ePacketType::PAKCS_WHISPER_CHAT) {}
 
 CliWhisperChat::CliWhisperChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_WHISPER_CHAT, "Not the right packet: " << to_underlying(type()));
-    *this >> targetId_;
+	*this >> targetId_;
 	*this >> message_;
 }
 

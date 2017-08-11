@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
 class CliJoinServerReq : public CRosePacket {
+	private:
+		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliJoinServerReq();
 		CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);

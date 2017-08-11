@@ -16,7 +16,6 @@
 #include "cmapisc.h"
 #include "crosepacket.h"
 #include "config.h"
-#include "iscpackets.pb.h"
 #include "packets.h"
 #include "platform_defines.h"
 
@@ -28,12 +27,12 @@ CMapISC::CMapISC() : CRoseISC() {
 
 CMapISC::CMapISC(std::unique_ptr<Core::INetwork> _sock)
     : CRoseISC(std::move(_sock)) {
-  socket_->set_type(iscPacket::ServerType::MAP_MASTER);
+  socket_->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
   socket_->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
   socket_->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
 }
 
-bool CMapISC::IsChar() const { return socket_->get_type() == iscPacket::ServerType::CHAR; }
+bool CMapISC::IsChar() const { return socket_->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -60,13 +59,6 @@ bool CMapISC::ServerRegister(
     std::unique_ptr<RoseCommon::IscServerRegister> P) {
   logger_->trace("CMapISC::ServerRegister(CRosePacket* P)");
 
-  uint16_t _size = P->size() - 6;
-
-  iscPacket::ServerReg pMapServer;
-  if (pMapServer.ParseFromArray(P->data(), _size) == false) {
-    logger_->debug("pMapServer.ParseFromArray Failed!");
-    return false;
-  }
 //  int16_t _type = 0;
 //  _type = pMapServer.type();
 
@@ -98,18 +90,20 @@ bool CMapISC::ServerRegister(
 //  }
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                  ServerType_Name(pMapServer.type()).c_str(),
-                  pMapServer.name().c_str(), pMapServer.addr().c_str(),
-                  pMapServer.port());
+                RoseCommon::Isc::serverTypeName(P->serverType()),
+                  P->name(), P->addr(),
+                  P->port());
   return false;
 }
 
 void CMapISC::OnConnected() {
   Core::Config& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      config.map_server().channelname(), config.serverdata().ip(), get_id(),
-      config.map_server().clientport(), iscPacket::ServerType::MAP_MASTER,
-      config.map_server().accesslevel());
+      RoseCommon::Isc::ServerType::MAP_MASTER,
+      config.mapServer().channelName, config.serverData().ip,
+      config.mapServer().clientPort,
+      config.mapServer().accessLevel,
+      get_id());
 
   logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
                  packet->size(), static_cast<uint16_t>(packet->type()));
@@ -141,21 +135,21 @@ bool CMapISC::OnShutdown() {
 	bool result = true;
 
 	if (is_active() == true) {
-		if (get_type() == iscPacket::ServerType::CHAR) {
+		if (get_type() == RoseCommon::Isc::ServerType::CHAR) {
 			if (socket_->reconnect() == true) {
 				logger_->info("Reconnected to character server.");
 				result = false;
 			}
 		}
 		else {
-			auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_id());
+			auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
 			std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
 			for (auto& server : CMapServer::GetISCList()) {
 				CMapISC* svr = static_cast<CMapISC*>(server.get());
                 if (!svr) {
                     continue;
                 }
-				if (svr->get_type() == iscPacket::ServerType::CHAR) {
+                if (svr->get_type() == RoseCommon::Isc::ServerType::CHAR) {
 					svr->send(*packet);
 					break;
 				}

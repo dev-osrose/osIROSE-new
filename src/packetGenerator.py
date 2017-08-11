@@ -8,7 +8,7 @@ class Variable:
         self.isSimple = isSimple
         self.unpackComplex = "TODO : implement unpack " + self.getName()
         self.packComplex = "TODO : implement pack " + self.getName()
-    
+
     def getName(self):
         return self.name + '_'
 
@@ -101,6 +101,7 @@ class Class:
         if self.recv:
             data += "REGISTER_RECV_PACKET(ePacketType::{1}, {0})\n".format(self.name, self.ePacketType)
             data += "class {0} : public CRosePacket {{".format(self.name, self.ePacketType)
+            data += "\n\tprivate:\n\t\tstatic const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;"
         else:
             data += "REGISTER_SEND_PACKET(ePacketType::{1}, {0})\nclass {0} : public CRosePacket {{".format(self.name, self.ePacketType)
         data += "\n\tpublic:\n\t"
@@ -115,9 +116,11 @@ class Class:
             for var, b in self.variables:
                 data += "\t\t" + var.getDeclaration() + "\n"
         return data + '};\n\n}'
-    
+
     def getCpp(self):
         data = '#include "{}.h"\n#include "throwassert.h"\n\nnamespace RoseCommon {{\n\n'.format(self.filename)
+        if self.recv:
+            data += "const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> {0}::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::{1}, &createPacket<{0}>);\n\n".format(self.name, self.ePacketType)
         data += self.getCppConstructor()
         for var, b in self.variables:
             if b:
@@ -229,11 +232,11 @@ def menu(obj):
 print("Welcome to the packet generator")
 print("""How to use:
         - enter the ePacketType name of the packet you will use
-        - you will then presented with a menu to choose between 3 options
+        - you will then be presented with a menu to choose between 3 options
         - the first one is really simple, enter your type and name just has you would in the header file. The trailing _ will be added if need be
         - the second one is the same as the first one, but the script won't implement the cpp part for you (except if it's an Entity, see below). If you add an Entity, the script will ask you some more information
         - the last option is if you need a special include. In this case please write the name of the file that would be enclosed between <> (or "")
-        
+
         - If you add an Entity, the script will ask you to specify which variables you want to extract from it. To do that you have multiple options
         - first one is a CRosePacket parsable type
         - second one is a ISerialize variable

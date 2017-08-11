@@ -6,15 +6,15 @@
 
 namespace RoseCommon {
 
-REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq)
-class CliAcceptReq : public CRosePacket {
+REGISTER_RECV_PACKET(ePacketType::PAKCS_CHAR_LIST_REQ, CliCharListReq)
+class CliCharListReq : public CRosePacket {
 	private:
 		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
-		CliAcceptReq();
-		CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliCharListReq();
+		CliCharListReq(uint8_t buffer[MAX_PACKET_SIZE]);
 
-		virtual ~CliAcceptReq() = default;
+		virtual ~CliCharListReq() = default;
 
 
 	protected:

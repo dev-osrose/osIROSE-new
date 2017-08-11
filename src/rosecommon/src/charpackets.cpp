@@ -14,6 +14,9 @@
 
 #include "charpackets.h"
 #include "components/inventory.h"
+#include "throwassert.h"
+
+using namespace RoseCommon;
 
 RoseCommon::SrvCharacterListReply::char_info::char_info(
     const std::string &name, uint8_t race /*= 0*/, uint16_t level /*= 0*/,
@@ -37,6 +40,23 @@ RoseCommon::SrvCharacterListReply::SrvCharacterListReply()
     : CRosePacket(ePacketType::PAKCC_CHAR_LIST_REPLY), character_count_(0) {}
 
 RoseCommon::SrvCharacterListReply::~SrvCharacterListReply() {}
+
+SrvCharacterListReply::SrvCharacterListReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
+  throw_assert(type() == ePacketType::PAKCC_CHAR_LIST_REPLY, "Not the right packet: " << to_underlying(type()));
+  *this >> character_count_;
+  for (size_t i = 0; i < character_count_; ++i) {
+    char_info character;
+    *this >> character.name_;
+    *this >> character.race_ >> character.level_ >> character.job_
+          >> character.remain_sec_unitl_delete_ >> character.platinum_;
+    *this >> character.face_ >> character.hair_;
+
+    for (int j = 0; j < MAX_EQUIPPED_ITEMS; ++j) {
+      *this >> character.items_[j].data;
+    }
+    character_list_.push_back(character);
+  }
+}
 
 void RoseCommon::SrvCharacterListReply::addCharacter(
     const std::string &name, uint8_t race, uint16_t level, uint16_t job, uint32_t face, uint32_t hair,
@@ -96,4 +116,3 @@ void RoseCommon::SrvCharacterListReply::pack() {
     }
   }
 }
-

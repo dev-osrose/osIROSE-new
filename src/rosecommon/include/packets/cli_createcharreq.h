@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq)
 class CliCreateCharReq : public CRosePacket {
+	private:
+		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliCreateCharReq();
 		CliCreateCharReq(uint8_t buffer[MAX_PACKET_SIZE]);

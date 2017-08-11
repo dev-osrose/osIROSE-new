@@ -20,47 +20,18 @@
  * \date october 2016
  */
 #pragma once
-#include "singleton.h"
+#include "factory.h"
 #include "epackettype.h"
 #include "crosepacket.h"
-#include <unordered_map>
-#include <functional>
 
 namespace RoseCommon {
-/*!
- * \class PacketFactory
- * \brief Contains the packet definitions for online translation.
- *
- * \author L3nn0x
- * \date october 2016
- */
-class PacketFactory : public Singleton<PacketFactory> {
-    public:
-        template <ePacketType Type, class Class>
-        void registerPacket() {
-            mapping_[to_underlying(Type)] = [](uint8_t buffer[MAX_PACKET_SIZE]) -> std::unique_ptr<CRosePacket> {
-                return std::unique_ptr<CRosePacket>(new Class(buffer));
-            };
-        }
 
-        std::unique_ptr<CRosePacket> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
-            try {
-                return mapping_.at(to_underlying(CRosePacket::type(buffer)))(buffer);
-            } catch (std::out_of_range) {
-                return nullptr;
-            }
-        }
+using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
-    private:
-        using Wrapper = std::function<std::unique_ptr<CRosePacket>(uint8_t[MAX_PACKET_SIZE])>;
-
-        std::unordered_map<std::underlying_type_t<ePacketType>, Wrapper> mapping_;
-};
-
-template <ePacketType Type, class Class>
-bool registerPacket() {
-    PacketFactory::getInstance().registerPacket<Type, Class>();
-    return true;
+template <typename T>
+inline std::unique_ptr<CRosePacket> createPacket(uint8_t buffer[MAX_PACKET_SIZE])
+{
+	return std::make_unique<T>(buffer);
 }
 
 template <ePacketType Type>
@@ -77,7 +48,7 @@ using find_recv_class_t = typename find_recv_class<Type>::type;
 
 #define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; };
 
-#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; }; static const bool __##Class = registerPacket<Type, Class>();
+#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; };
 
 /*!
  * \function fetchPacket
@@ -89,7 +60,7 @@ using find_recv_class_t = typename find_recv_class<Type>::type;
  * \date october 2016
  */
 inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
-    return PacketFactory::getInstance().getPacket(buffer);
+    return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
 }
 
 /*!

@@ -1,10 +1,10 @@
 // Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at 
+// You may obtain a copy of the License at
 // http ://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,12 +53,12 @@ void CheckUser()
 void ParseCommandLine(int argc, char** argv)
 {
   cxxopts::Options options(argv[0], "osIROSE login server");
-  
+
   try {
     std::string config_file_path = "";
     options.add_options()
     ("f,file",  "Config file path", cxxopts::value<std::string>(config_file_path)
-      ->default_value("server.ini"), "FILE_PATH")
+      ->default_value("server.json"), "FILE_PATH")
     ("l,level", "Logging level (0-9)", cxxopts::value<int>()
       ->default_value("3"), "LEVEL")
     ("ip", "Client listen IP Address", cxxopts::value<std::string>()
@@ -73,37 +73,37 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("512"), "COUNT")
     ("h,help",  "Print this help text")
     ;
-  
+
     options.parse(argc, argv);
-    
+
     // Check to see if the user wants to see the help text
     if (options.count("help"))
     {
       std::cout << options.help({"", "Group"}) << std::endl;
       exit(0);
     }
-    
+
     Core::Config& config = Core::Config::getInstance(config_file_path);
-    
+
     // We are using if checks here because we only want to override the config file if the option was supplied
     // Since this is a login server startup function we can get away with a little bit of overhead
     if( options.count("level") )
-      config.mutable_login_server()->set_log_level( options["level"].as<int>() );
-      
+      config.loginServer().logLevel = options["level"].as<int>();
+
     if( options.count("ip") )
-      config.mutable_serverdata()->set_ip( options["ip"].as<std::string>() );
-      
+      config.serverData().ip = options["ip"].as<std::string>();
+
     if( options.count("port") )
-      config.mutable_login_server()->set_clientport( options["port"].as<int>() );
-    
+      config.loginServer().clientPort = options["port"].as<int>();
+
     if( options.count("iscip") )
-      config.mutable_serverdata()->set_isclistenip( options["iscip"].as<std::string>() );  
-      
+      config.serverData().iscListenIp = options["iscip"].as<std::string>();
+
     if( options.count("iscport") )
-      config.mutable_login_server()->set_iscport( options["iscport"].as<int>() );
-    
+      config.loginServer().iscPort = options["iscport"].as<int>();
+
     if( options.count("maxthreads") )
-      config.mutable_serverdata()->set_maxthreads( options["maxthreads"].as<int>() );
+      config.serverData().maxThreads = options["maxthreads"].as<int>();
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
@@ -122,32 +122,32 @@ int main(int argc, char* argv[]) {
       log->info( "Starting up server..." );
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CLog::SetLevel((spdlog::level::level_enum)config.login_server().log_level());
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
     DisplayTitle();
     CheckUser();
-  
+
     if(auto log = console.lock()) {
-      log->set_level((spdlog::level::level_enum)config.login_server().log_level());
+      log->set_level((spdlog::level::level_enum)config.loginServer().logLevel);
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
 
-    Core::NetworkThreadPool::GetInstance(config.serverdata().maxthreads());
+    Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
     Core::connectionPool.addConnector(Core::osirose, std::bind(
-                Core::mysqlFactory, 
-                config.database().user(),
-                config.database().password(), 
-                config.database().database(),
-                config.database().host()));
+                Core::mysqlFactory,
+                config.database().user,
+                config.database().password,
+                config.database().database,
+                config.database().host));
 
     CLoginServer clientServer;
     CLoginServer iscServer(true);
 
-    clientServer.init(config.serverdata().ip(), config.login_server().clientport());
+    clientServer.init(config.serverData().ip, config.loginServer().clientPort);
     clientServer.listen();
 
-    iscServer.init(config.serverdata().isclistenip(), config.login_server().iscport());
+    iscServer.init(config.serverData().iscListenIp, config.loginServer().iscPort);
     iscServer.listen();
 
     while (clientServer.is_active()) {
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::drop_all();
-  
+
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;

@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
-include(FindProtocolBuffer)
 set(CMAKE_CXX_STANDARD 14)
 
 IF(ENABLE_TESTING_COVERAGE)
@@ -13,8 +12,6 @@ IF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
 ENDIF()
 
 IF(ENABLE_TESTING)
-  find_package(ProtocolBuffer REQUIRED)
-
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIR}
     SYSTEM ${GMOCK_INCLUDE_DIR}
@@ -31,10 +28,8 @@ IF( DISABLE_CRYPT )
 ENDIF()
 
 include_directories(
-  SYSTEM ${PROTOBUF_INCLUDE_DIR}
   SYSTEM ${ASIO_INCLUDE_DIR}
   SYSTEM ${EXTERNAL_INCLUDE_DIR}
-  SYSTEM ${PBJSON_ROOT}
   SYSTEM ${SPDLOG_ROOT}
   SYSTEM ${SOL2_ROOT}
   SYSTEM ${LUA_INCLUDE_DIR}
@@ -42,6 +37,8 @@ include_directories(
   SYSTEM ${ENTITYX_INCLUDE_DIR}
   SYSTEM ${SQLPP_INCLUDE_DIR}
   SYSTEM ${DATE_INCLUDE_DIR}
+  SYSTEM ${CONFIGURU}
+  SYSTEM ${VISIT_STRUCT}
 )
 
 link_directories(
@@ -65,7 +62,6 @@ IF (MSVC)
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /LTCG /ignore:4075")
 ENDIF()
 
-add_subdirectory(proto)
 add_subdirectory(core)
 add_subdirectory(rosecommon)
 add_subdirectory(login)

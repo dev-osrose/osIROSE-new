@@ -25,4 +25,13 @@ namespace RoseCommon {
 #define MAX_HOTBAR_ITEMS 32
 }
 
+namespace ReviveReq {
+    enum ReviveReq : uint8_t {
+        REVIVE_POS,
+        SAVE_POS,
+        START_POST,
+        CURRENT_POS
+    };
+}
+
 #endif
