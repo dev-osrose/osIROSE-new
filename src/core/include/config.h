@@ -90,7 +90,6 @@ class Config {
   struct CharServer {
     std::string worldName = "osIROSE";
     std::string loginIp = "127.0.0.1";
-    uint16_t loginIscPort = 29010;
     uint16_t clientPort = 29100;
     uint16_t iscPort = 29110;
     uint8_t accessLevel = 1;
@@ -99,7 +98,6 @@ class Config {
   struct MapServer {
     std::string channelName = "Athena";
     std::string charIp = "127.0.0.1";
-    uint16_t charIscPort = 29110;
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;
@@ -131,8 +129,8 @@ class Config {
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password);
 VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, accessLevel, parentId, maxConnections, useThreads, maxThreads, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginIscPort, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charIscPort, clientPort, iscPort, accessLevel, mapId, logLevel);
+VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
+VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, logLevel);
 VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer);
 
 #endif /* !_CONFIG_H_ */

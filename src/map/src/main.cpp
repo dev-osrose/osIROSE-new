@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
     CMapServer clientServer;
     CMapServer iscServer(true);
   CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.mapServer().charIp, config.mapServer().charIscPort);
+  iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
   iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
 
   clientServer.init(config.serverData().ip, config.mapServer().clientPort);

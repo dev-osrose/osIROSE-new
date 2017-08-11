@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
   CCharServer clientServer;
   CCharServer iscServer(true);
   CCharISC* iscClient = new CCharISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.charServer().loginIp, config.charServer().loginIscPort);
+  iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
   iscClient->SetLogin(true);
   iscClient->connect();
   iscClient->start_recv();

@@ -2,11 +2,11 @@
 #include "config.h"
 
 TEST(SetupTesting, TestDefault) {
-  EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("server.ini"));
+  EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("server.json"));
 }
 
 TEST(Config, TestDefault) {
-  EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("test.ini"));
+  EXPECT_NO_FATAL_FAILURE(Core::Config::getInstance("test.json"));
 }
 
 TEST(Config, TestDatabase) {
