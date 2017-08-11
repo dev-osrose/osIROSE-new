@@ -38,7 +38,6 @@ Config::Config(std::string filename) : file_(filename) {
     configuru::deserialize(&config_, cfg, [logger_](std::string error) {
         logger_->error(error);
     });
-    Config::Configuration config;
   }
 }
 

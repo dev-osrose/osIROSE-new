@@ -59,7 +59,7 @@ void ParseCommandLine(int argc, char** argv)
     std::string config_file_path = "";
     options.add_options()
       ("f,file", "Config file path", cxxopts::value<std::string>(config_file_path)
-        ->default_value("server.ini"), "FILE_PATH")
+        ->default_value("server.json"), "FILE_PATH")
       ("l,level", "Logging level (0-9)", cxxopts::value<int>()
         ->default_value("3"), "LEVEL")
       ("ip", "Client listen IP Address", cxxopts::value<std::string>()

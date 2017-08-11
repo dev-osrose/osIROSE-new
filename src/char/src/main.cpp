@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cxxopts.hpp>
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "config.h"
@@ -48,13 +49,73 @@ void CheckUser()
   }
 #endif
 }
+
+void ParseCommandLine(int argc, char** argv)
+{
+  cxxopts::Options options(argv[0], "osIROSE char server");
+
+  try {
+    std::string config_file_path = "";
+    options.add_options()
+    ("f,file",  "Config file path", cxxopts::value<std::string>(config_file_path)
+      ->default_value("server.json"), "FILE_PATH")
+    ("l,level", "Logging level (0-9)", cxxopts::value<int>()
+      ->default_value("3"), "LEVEL")
+    ("ip", "Client listen IP Address", cxxopts::value<std::string>()
+      ->default_value("0.0.0.0"), "IP")
+    ("port", "Client listen port", cxxopts::value<int>()
+      ->default_value("29000"), "PORT")
+    ("iscip", "ISC listen IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
+    ("iscport", "ISC listen port", cxxopts::value<int>()
+      ->default_value("29010"), "PORT")
+    ("t,maxthreads", "Max thread count", cxxopts::value<int>()
+      ->default_value("512"), "COUNT")
+    ("h,help",  "Print this help text")
+    ;
+
+    options.parse(argc, argv);
+
+    // Check to see if the user wants to see the help text
+    if (options.count("help"))
+    {
+      std::cout << options.help({"", "Group"}) << std::endl;
+      exit(0);
+    }
+
+    Core::Config& config = Core::Config::getInstance(config_file_path);
+
+    // We are using if checks here because we only want to override the config file if the option was supplied
+    // Since this is a login server startup function we can get away with a little bit of overhead
+    if( options.count("level") )
+      config.charServer().logLevel = options["level"].as<int>();
+
+    if( options.count("ip") )
+      config.serverData().ip = options["ip"].as<std::string>();
+
+    if( options.count("port") )
+      config.charServer().clientPort = options["port"].as<int>();
+
+    if( options.count("iscip") )
+      config.serverData().iscListenIp = options["iscip"].as<std::string>();
+
+    if( options.count("iscport") )
+      config.charServer().iscPort = options["iscport"].as<int>();
+
+    if( options.count("maxthreads") )
+      config.serverData().maxThreads = options["maxthreads"].as<int>();
+  }
+  catch (const cxxopts::OptionException& ex) {
+    std::cout << ex.what() << std::endl;
+    std::cout << options.help({"", "Group"}) << std::endl;
+    exit(1);
+  }
+}
 }
 
 int main(int argc, char* argv[]) {
-  (void)argc;
-  (void)argv;
-
   try {
+  ParseCommandLine(argc, argv);
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
 
   if(auto log = console.lock())

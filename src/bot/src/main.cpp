@@ -28,13 +28,13 @@ class Client : public CRoseSocket {
 
     protected:
         virtual void OnConnected() {
-            logger_->trace("LoginClient::OnConnected");
+            logger_->trace("Client::OnConnected");
             auto packet = CliAcceptReq();
             send(packet);
         }
 
         virtual bool OnSend(uint8_t *buffer) {
-            logger_->trace("LoginClient::OnSend");
+            logger_->trace("Client::OnSend");
             (void)buffer;
 #ifndef DISABLE_CRYPT
             crypt_.encodeClientPacket(buffer);
@@ -43,7 +43,7 @@ class Client : public CRoseSocket {
         }
 
         virtual bool OnReceived(uint16_t& packetSize, uint8_t *buffer) {
-            logger_->trace("LoginClient::OnReceived");
+            logger_->trace("Client::OnReceived");
             if (packetSize == 6) {
 #ifndef DISABLE_CRYPT
                 packetSize = crypt_.decodeServerHeader(reinterpret_cast<unsigned char*>(buffer));
