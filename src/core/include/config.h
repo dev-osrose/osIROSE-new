@@ -99,7 +99,7 @@ class Config {
   struct MapServer {
     std::string channelName = "Athena";
     std::string charIp = "127.0.0.1";
-    uint16_t charIscPort = 20110;
+    uint16_t charIscPort = 29110;
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;
