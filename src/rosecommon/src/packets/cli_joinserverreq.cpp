@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliJoinServerReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_JOIN_SERVER_REQ, &createPacket<CliJoinServerReq>);
+
 CliJoinServerReq::CliJoinServerReq() : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ) {}
 
 CliJoinServerReq::CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_JOIN_SERVER_REQ, "Not the right packet: " << to_underlying(type()));
-    *this >> sessionId_;
+	*this >> sessionId_;
     char pass[32];
     *this >> pass;
     password_ = std::string(pass, 32);
@@ -30,7 +32,7 @@ const std::string &CliJoinServerReq::password() const {
 
 void CliJoinServerReq::pack() {
 	*this << sessionId_;
-	*this << password_.c_str();
+    *this << password_.c_str();
 }
 
 }

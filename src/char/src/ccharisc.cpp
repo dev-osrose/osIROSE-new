@@ -81,8 +81,8 @@ bool CCharISC::ServerRegister(
                   P->name(), P->addr(),
                   P->port());
 
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(name, socket_->get_address(), get_id(),
-    socket_->get_port(), type, right);
+  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(type, name, socket_->get_address(),
+                                                             socket_->get_port(), right, get_id());
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
@@ -105,9 +105,11 @@ void CCharISC::OnConnected() {
 
   Core::Config& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      config.charServer().worldName, config.serverData().ip, get_id(),
-      config.charServer().clientPort, RoseCommon::Isc::ServerType::CHAR,
-      config.charServer().accessLevel);
+      RoseCommon::Isc::ServerType::CHAR,
+      config.charServer().worldName, config.serverData().ip,
+      config.charServer().clientPort,
+      config.charServer().accessLevel,
+      get_id());
 
   logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
                  packet->size(), (uint16_t)packet->type());

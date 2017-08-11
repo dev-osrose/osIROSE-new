@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem)
 class CliEquipItem : public CRosePacket {
+	private:
+		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliEquipItem();
 		CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]);

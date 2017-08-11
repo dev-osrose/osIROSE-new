@@ -3,28 +3,29 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> IscShutdown::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::ISC_SHUTDOWN, &createPacket<IscShutdown>);
+
 IscShutdown::IscShutdown() : CRosePacket(ePacketType::ISC_SHUTDOWN) {}
 
 IscShutdown::IscShutdown(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::ISC_SHUTDOWN, "Not the right packet: " << to_underlying(type()));
-	*this >> type_;
-	*this >> id_;
+  *this >> serverType_;
+  *this >> id_;
 }
 
-IscShutdown::IscShutdown(Isc::ServerType type, int32_t id) : CRosePacket(ePacketType::ISC_SHUTDOWN), type_(type), id_(id) {}
+IscShutdown::IscShutdown(Isc::ServerType serverType, int32_t id) : CRosePacket(ePacketType::ISC_SHUTDOWN), serverType_(serverType), id_(id) {}
 
-Isc::ServerType IscShutdown::serverType() const {
-	return type_;
-}
+  Isc::ServerType IscShutdown::serverType() const {
+    return serverType_;
+  }
 
-int32_t IscShutdown::id() const {
-	return id_;
-}
-
+  int32_t IscShutdown::id() const {
+    return id_;
+  }
 
 void IscShutdown::pack() {
-	*this << to_underlying(type_);
-	*this << id_;
+  *this << serverType_;
+  *this << id_;
 }
 
 }

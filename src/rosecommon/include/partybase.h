@@ -25,6 +25,39 @@
 #include <memory>
 #include <algorithm>
 
+#include "crosepacket.h"
+
+namespace PartyReply {
+enum PartyReply : uint8_t {
+    NOT_FOUND = 0,
+    BUSY = 1,
+    ACCEPT_MAKE,
+    ACCEPT_JOIN,
+    REJECT,
+    DESTROY,
+    FULL_MEMBERS,
+    INVALID_LEVEL,
+    CHANGE_OWNER,
+    CHANGE_OWNER_DISCONNECT,
+    NO_CHANGE_TARGET,
+    KICK = 0x80,
+    DISCONNECT,
+    REJOIN
+};
+
+}
+
+namespace PartyRequest {
+enum PartyRequest : uint8_t {
+    MAKE = 0,
+    JOIN = 1,
+    LEFT,
+    CHANGE_OWNER,
+    KICK = 0x81
+};
+
+}
+
 struct PartyBase {
     PartyBase() :
         xp_(0),

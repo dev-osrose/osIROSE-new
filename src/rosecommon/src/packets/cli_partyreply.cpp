@@ -3,17 +3,19 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliPartyReply::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_PARTY_REPLY, &createPacket<CliPartyReply>);
+
 CliPartyReply::CliPartyReply() : CRosePacket(ePacketType::PAKCS_PARTY_REPLY) {}
 
 CliPartyReply::CliPartyReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    throw_assert(type() == ePacketType::PAKCS_PARTY_REPLY, "Not the right packet: " << to_underlying(type()));
+	throw_assert(type() == ePacketType::PAKCS_PARTY_REPLY, "Not the right packet: " << to_underlying(type()));
 	*this >> reply_;
 	*this >> idXorTag_;
 }
 
-CliPartyReply::CliPartyReply(CliPartyReply::Reply reply, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REPLY), reply_(reply), idXorTag_(idXorTag) {}
+CliPartyReply::CliPartyReply(PartyReply::PartyReply reply, uint32_t idXorTag) : CRosePacket(ePacketType::PAKCS_PARTY_REPLY), reply_(reply), idXorTag_(idXorTag) {}
 
-CliPartyReply::Reply CliPartyReply::reply() const {
+PartyReply::PartyReply CliPartyReply::reply() const {
 	return reply_;
 }
 
@@ -23,7 +25,7 @@ uint32_t CliPartyReply::idXorTag() const {
 
 
 void CliPartyReply::pack() {
-	*this << to_underlying(reply_);
+	*this << reply_;
 	*this << idXorTag_;
 }
 

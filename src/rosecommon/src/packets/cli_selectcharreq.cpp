@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliSelectCharReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_SELECT_CHAR_REQ, &createPacket<CliSelectCharReq>);
+
 CliSelectCharReq::CliSelectCharReq() : CRosePacket(ePacketType::PAKCS_SELECT_CHAR_REQ) {}
 
 CliSelectCharReq::CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_SELECT_CHAR_REQ, "Not the right packet: " << to_underlying(type()));
-    *this >> charId_;
+	*this >> charId_;
 	*this >> runMode_;
 	*this >> rideMode_;
 	*this >> name_;

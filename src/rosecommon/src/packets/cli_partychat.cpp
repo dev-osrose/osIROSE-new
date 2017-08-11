@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliPartyChat::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_PARTY_CHAT, &createPacket<CliPartyChat>);
+
 CliPartyChat::CliPartyChat() : CRosePacket(ePacketType::PAKCS_PARTY_CHAT) {}
 
 CliPartyChat::CliPartyChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_PARTY_CHAT, "Not the right packet: " << to_underlying(type()));
-    *this >> message_;
+	*this >> message_;
 }
 
 CliPartyChat::CliPartyChat(const std::string &message) : CRosePacket(ePacketType::PAKCS_PARTY_CHAT), message_(message) {}

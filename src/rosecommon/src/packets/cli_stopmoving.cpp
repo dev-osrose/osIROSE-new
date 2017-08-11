@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliStopMoving::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_STOP_MOVING, &createPacket<CliStopMoving>);
+
 CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
 
 CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_STOP_MOVING, "Not the right packet: " << to_underlying(type()));
-    *this >> x_;
+	*this >> x_;
 	*this >> y_;
 	*this >> z_;
 }

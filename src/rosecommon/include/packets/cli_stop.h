@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP, CliStop)
 class CliStop : public CRosePacket {
+	private:
+		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliStop();
 		CliStop(uint8_t buffer[MAX_PACKET_SIZE]);

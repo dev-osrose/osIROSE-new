@@ -2,22 +2,24 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include "isccommon.h"
 #include <string>
+#include <isccommon.h>
 
 namespace RoseCommon {
 
 REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 class IscServerRegister : public CRosePacket {
+    private:
+        static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		IscServerRegister();
 		IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]);
-		IscServerRegister(const std::string &name, const std::string &ip, int32_t id, int32_t port, Isc::ServerType type, int32_t right);
+		IscServerRegister(Isc::ServerType serverType, const std::string &name, const std::string &addr, int32_t port, int32_t right, int32_t id);
 
 		virtual ~IscServerRegister() = default;
 
-    Isc::ServerType serverType() const;
+		Isc::ServerType serverType() const;
 		std::string &name();
 		const std::string &name() const;
 		std::string &addr();
@@ -30,7 +32,7 @@ class IscServerRegister : public CRosePacket {
 		virtual void pack() override;
 
 	private:
-    Isc::ServerType type_;
+		Isc::ServerType serverType_;
 		std::string name_;
 		std::string addr_;
 		int32_t port_;

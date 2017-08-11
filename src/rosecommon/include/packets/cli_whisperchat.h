@@ -8,6 +8,8 @@ namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat)
 class CliWhisperChat : public CRosePacket {
+	private:
+		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
 	public:
 		CliWhisperChat();
 		CliWhisperChat(uint8_t buffer[MAX_PACKET_SIZE]);

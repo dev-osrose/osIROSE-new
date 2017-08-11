@@ -3,11 +3,13 @@
 
 namespace RoseCommon {
 
+const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> IscServerRegister::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::ISC_SERVER_REGISTER, &createPacket<IscServerRegister>);
+
 IscServerRegister::IscServerRegister() : CRosePacket(ePacketType::ISC_SERVER_REGISTER) {}
 
 IscServerRegister::IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::ISC_SERVER_REGISTER, "Not the right packet: " << to_underlying(type()));
-	*this >> type_;
+	*this >> serverType_;
 	*this >> name_;
 	*this >> addr_;
 	*this >> port_;
@@ -15,10 +17,10 @@ IscServerRegister::IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePac
 	*this >> id_;
 }
 
-  IscServerRegister::IscServerRegister(const std::string &name, const std::string &ip, int32_t id, int32_t port, Isc::ServerType type, int32_t right) : CRosePacket(ePacketType::ISC_SERVER_REGISTER), type_(type), name_(name), addr_(ip), port_(port), right_(right), id_(id) {}
+IscServerRegister::IscServerRegister(Isc::ServerType serverType, const std::string &name, const std::string &addr, int32_t port, int32_t right, int32_t id) : CRosePacket(ePacketType::ISC_SERVER_REGISTER), serverType_(serverType), name_(name), addr_(addr), port_(port), right_(right), id_(id) {}
 
 Isc::ServerType IscServerRegister::serverType() const {
-	return type_;
+	return serverType_;
 }
 
 std::string &IscServerRegister::name() {
@@ -51,7 +53,7 @@ int32_t IscServerRegister::id() const {
 
 
 void IscServerRegister::pack() {
-	*this << to_underlying(type_);
+	*this << serverType_;
 	*this << name_;
 	*this << addr_;
 	*this << port_;

@@ -99,9 +99,11 @@ bool CMapISC::ServerRegister(
 void CMapISC::OnConnected() {
   Core::Config& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      config.mapServer().channelName, config.serverData().ip, get_id(),
-      config.mapServer().clientPort, RoseCommon::Isc::ServerType::MAP_MASTER,
-      config.mapServer().accessLevel);
+      RoseCommon::Isc::ServerType::MAP_MASTER,
+      config.mapServer().channelName, config.serverData().ip,
+      config.mapServer().clientPort,
+      config.mapServer().accessLevel,
+      get_id());
 
   logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
                  packet->size(), static_cast<uint16_t>(packet->type()));
