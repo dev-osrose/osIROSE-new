@@ -26,6 +26,7 @@
 template <typename T>
 class Singleton {
 	public:
+		friend class T;
 		static T& getInstance() {
 			static T instance;
 			return instance;
