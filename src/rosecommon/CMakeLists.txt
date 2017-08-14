@@ -38,6 +38,7 @@ set( SOURCES_HEADER
   include/isccommon
   include/packets
   include/item
+  include/itemdb
   include/partybase
   include/components/advancedinfo
   include/components/basicinfo
@@ -65,6 +66,7 @@ SET(SOURCES_BASE
   src/charpackets
   src/mappackets
   src/item
+  src/itemdb
   src/entitycomponents
   src/isccommon
 )
