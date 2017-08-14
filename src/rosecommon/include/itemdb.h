@@ -25,9 +25,18 @@
 
 #include "iserialize.h"
 #include "singleton.h"
+#include "osiroseDatabase.h"
 
 namespace RoseCommon
 {
+  /*!
+  * \class ItemDef
+  * \brief Describes an item.
+  * \sa
+  *
+  * \author Raven
+  * \date August 2016
+  */
   struct ItemDef {
     uint8_t type;
     uint8_t subtype;
@@ -55,17 +64,18 @@ namespace RoseCommon
 
   /*!
    * \class ItemDatabase
-   * \brief Describes an item.
-   * \sa ISerialize
+   * \brief Base item database manager class.
+   * \sa ItemDef
    *
-   * \author L3nn0x
-   * \date october 2016
+   * \author Raven
+   * \date August 2016
    */
-  class ItemDatabase {
+  class ItemDatabase : public Singleton<ItemDatabase> {
+    friend Singleton<ItemDatabase>;
   public:
     void initialize();
 
-  //private:
+  private:
     ItemDatabase();
     virtual ~ItemDatabase();
 

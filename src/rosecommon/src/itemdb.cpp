@@ -31,7 +31,7 @@ void ItemDatabase::initialize() {
 
   // Load the item db table
   auto conn = Core::connectionPool.getConnection( Core::osirose );
-  Core::ItemDBTable itemdb;
+  Core::ItemDBTable itemdb{};
   try {
     ItemDef newItem;
     for ( uint8_t itemType = 1; itemType < 15; ++itemType ) {

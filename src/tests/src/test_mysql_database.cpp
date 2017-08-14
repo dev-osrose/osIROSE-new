@@ -9,7 +9,7 @@
 #include "mysqlconnection.h"
 #include "connection.h"
 
-TEST(TestMySQL_Database, TestConstructor)
+TEST(TestMySQL_Database, TestItemDatabase)
 {
   Core::Config& config = Core::Config::getInstance();
 
@@ -20,8 +20,7 @@ TEST(TestMySQL_Database, TestConstructor)
                                       config.database().database,
                                       config.database().host));
 
-  RoseCommon::ItemDatabase itemDb;
-  EXPECT_NO_FATAL_FAILURE(itemDb.initialize());
+  EXPECT_NO_FATAL_FAILURE(RoseCommon::ItemDatabase::getInstance().initialize());
 }
 
 /*
