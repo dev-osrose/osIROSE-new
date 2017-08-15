@@ -71,6 +71,7 @@ namespace RoseCommon
    * \date August 2016
    */
   class ItemDatabase : public Singleton<ItemDatabase> {
+    friend Singleton<ItemDatabase>;
   public:
     void initialize();
 
