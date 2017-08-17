@@ -15,13 +15,12 @@
 #ifndef _CROSECLIENT_H_
 #define _CROSECLIENT_H_
 
-#include <spdlog/spdlog.h>
-#include "logconsole.h"
-#include "crosecrypt.h"
-#include "inetwork.h"
-#include "crosepacket.h"
 #include "entitycomponents.h"
 #include "crosesocket.h"
+
+namespace Core {
+class INetwork;
+}
 
 namespace RoseCommon {
 class CRoseServer;

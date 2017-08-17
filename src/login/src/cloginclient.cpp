@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "cloginclient.h"
 #include "cloginserver.h"
 #include "cloginisc.h"
-#include "cloginclient.h"
-#include "connection.h"
+#include "croseisc.h"
+#include "packetfactory.h"
+#include "isccommon.h"
+#include "isc_serverregister.h"
+#include "srv_loginreply.h"
+#include "cli_loginreq.h"
+#include "connectionpool.h"
+#include "croseserver.h"
+#include "cli_channellistreq.h"
+#include "cli_srvselectreq.h"
+#include "srv_srvselectreply.h"
+#include "epackettype.h"
+#include "srv_channellistreply.h"
 
 using namespace RoseCommon;
 

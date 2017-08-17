@@ -16,7 +16,14 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-#include "packets.h"
+
+namespace RoseCommon {
+
+class CliLoginReq;
+class CliChannelListReq;
+class CliSrvSelectReq;
+
+}
 
 class CLoginClient : public RoseCommon::CRoseClient {
  public:

@@ -17,7 +17,15 @@
 
 #include <forward_list>
 #include "croseisc.h"
-#include "packets.h"
+
+namespace Core {
+class INetwork;
+}
+
+namespace RoseCommon {
+class IscServerRegister;
+class IscShutdown;
+}
 
 class CLoginISC : public RoseCommon::CRoseISC {
  public:

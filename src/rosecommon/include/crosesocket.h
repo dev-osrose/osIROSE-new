@@ -20,6 +20,7 @@
 #include "crosecrypt.h"
 #include "inetwork.h"
 #include "crosepacket.h"
+#include "isccommon.h"
 #include <queue>
 
 namespace RoseCommon {
@@ -51,7 +52,7 @@ class CRoseSocket {
   void set_active(bool _val) { socket_->set_active(_val); }
   void set_type(uint32_t _val) { socket_->set_type(_val); }
   uint32_t get_id() const { return socket_->get_id(); }
-  uint32_t get_type() const { return socket_->get_type(); }
+  Isc::ServerType get_type() const { return static_cast<Isc::ServerType>(socket_->get_type()); }
   uint16_t get_port() const { return socket_->get_port(); }
   std::string get_address() const { return socket_->get_address(); }
   std::chrono::steady_clock::time_point get_update_time() const { return socket_->get_update_time(); }
