@@ -1,7 +1,7 @@
 #pragma once
 
-#include "item.h"
 #include <array>
+#include "item.h"
 
 template <typename T>
 struct array_wrapper { T& iterable; const size_t start; const size_t length; };

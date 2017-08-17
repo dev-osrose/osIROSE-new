@@ -1,5 +1,6 @@
 #pragma once
 
+// This should not be mandatory here. As a user I don't want to include the database connection when I need a position.
 #include "connection.h"
 
 struct Position {

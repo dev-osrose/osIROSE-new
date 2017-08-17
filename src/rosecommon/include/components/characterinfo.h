@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include "item.h"
 
 struct CharacterInfo {
     CharacterInfo() :

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "item.h"
 #include <array>
+#include "item.h"
 
 struct RidingItems {
     enum RidingPosition {
