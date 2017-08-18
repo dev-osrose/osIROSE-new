@@ -23,7 +23,6 @@
 #include <vector>
 #include "entitycomponents.h"
 #include "packetfactory.h"
-#include "packets.h"
 
 namespace RoseCommon {
 

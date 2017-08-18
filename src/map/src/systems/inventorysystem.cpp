@@ -2,6 +2,9 @@
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "makevector.h"
+#include "cli_equipitem.h"
+#include "srv_equipitem.h"
+#include "srv_setitem.h"
 
 using namespace Systems;
 using namespace RoseCommon;

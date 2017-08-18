@@ -1,6 +1,11 @@
 #include "systems/partysystem.h"
 #include "cmapclient.h"
 #include "makevector.h"
+#include "srv_partyreply.h"
+#include "srv_partymember.h"
+#include "cli_partyreq.h"
+#include "srv_partyreq.h"
+#include "cli_partyreply.h"
 
 using namespace Systems;
 using namespace RoseCommon;

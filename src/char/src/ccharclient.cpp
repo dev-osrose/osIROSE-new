@@ -15,8 +15,18 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
-#include "epackettype.h"
-#include "connection.h"
+#include "cli_joinserverreq.h"
+#include "cli_createcharreq.h"
+#include "cli_deletecharreq.h"
+#include "cli_selectcharreq.h"
+#include "connectionpool.h"
+#include "srv_joinserverreply.h"
+#include "srv_channellistreply.h"
+#include "srv_createcharreply.h"
+#include "srv_channellistreply.h"
+#include "srv_deletecharreply.h"
+#include "srv_switchserver.h"
+#include "srv_characterlistreply.h"
 
 using namespace RoseCommon;
 

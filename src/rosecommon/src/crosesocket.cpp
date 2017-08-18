@@ -15,7 +15,8 @@
 #include <ctime>
 #include "crosesocket.h"
 #include "epackettype.h"
-#include "packets.h"
+#include "srv_acceptreply.h"
+#include "srv_screenshottimereply.h"
 
 namespace RoseCommon {
 

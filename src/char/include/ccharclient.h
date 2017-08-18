@@ -16,9 +16,13 @@
 #define __CCHARCLIENT_H__
 
 #include "croseclient.h"
-#include "charpackets.h"
-#include "packets.h"
-#include "crosepacket.h"
+
+namespace RoseCommon {
+class CliJoinServerReq;
+class CliCreateCharReq;
+class CliDeleteCharReq;
+class CliSelectCharReq;
+}
 
 class CCharClient : public RoseCommon::CRoseClient {
  public:
