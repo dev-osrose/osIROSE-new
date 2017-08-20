@@ -126,7 +126,7 @@ class Config {
 
 }
 
-VISITABLE_STRUCT(Core::Config::Database, host, database, user, password);
+VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
 VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, accessLevel, parentId, maxConnections, useThreads, maxThreads, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
