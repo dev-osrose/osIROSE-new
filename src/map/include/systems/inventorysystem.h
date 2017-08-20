@@ -2,6 +2,10 @@
 
 #include "system.h"
 
+namespace RoseCommon {
+class CliEquipItem;
+}
+
 namespace Systems {
 
 class InventorySystem : public System {

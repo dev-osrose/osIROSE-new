@@ -8,6 +8,11 @@
 #include "mock/login/mock_cloginclient.h"
 #include "mock/login/mock_cloginisc.h"
 #include "cnetwork_asio.h"
+#include "cli_acceptreq.h"
+#include "cli_loginreq.h"
+#include "cli_channellistreq.h"
+#include "cli_srvselectreq.h"
+#include "cli_alive.h"
 
 using namespace RoseCommon;
 

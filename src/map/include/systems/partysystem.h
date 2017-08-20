@@ -4,6 +4,11 @@
 
 struct PartyBase;
 
+namespace RoseCommon {
+class CliPartyReq;
+class CliPartyReply;
+}
+
 namespace Systems {
 
 class PartySystem : public System {

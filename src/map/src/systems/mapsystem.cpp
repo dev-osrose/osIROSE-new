@@ -2,6 +2,9 @@
 #include "systems/chatsystem.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
+#include "cli_changemapreq.h"
+#include "srv_changemapreply.h"
+#include "srv_playerchar.h"
 
 using namespace Systems;
 using namespace RoseCommon;

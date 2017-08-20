@@ -17,7 +17,9 @@
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
-#include "packets.h"
+#include "isc_serverregister.h"
+#include "isc_shutdown.h"
+
 #include "platform_defines.h"
 
 using namespace RoseCommon;

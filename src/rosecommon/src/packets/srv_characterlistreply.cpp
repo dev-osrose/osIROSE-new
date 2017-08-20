@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "charpackets.h"
+#include "srv_characterlistreply.h"
 #include "components/inventory.h"
 #include "throwassert.h"
 

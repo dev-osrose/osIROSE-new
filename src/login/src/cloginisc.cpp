@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include "cloginisc.h"
+#include "isc_serverregister.h"
+#include "isc_shutdown.h"
 
 using namespace RoseCommon;
 

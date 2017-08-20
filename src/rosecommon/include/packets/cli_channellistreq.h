@@ -3,7 +3,6 @@
 #include "packetfactory.h"
 #include "entitycomponents.h"
 
-
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CHANNEL_LIST_REQ, CliChannelListReq)
