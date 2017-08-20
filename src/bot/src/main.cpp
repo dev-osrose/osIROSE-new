@@ -297,6 +297,21 @@ private:
         send(packet);
       }
       break;
+    case ePacketType::PAKSC_JOIN_SERVER_REPLY:
+      logger_->info("Logged in.");
+      break;
+    case ePacketType::PAKWC_SELECT_CHAR_REPLY:
+      logger_->info("Got char data reply");
+      break;
+    case ePacketType::PAKWC_INVENTORY_DATA:
+      logger_->info("Got inventory data reply");
+      break;
+    case ePacketType::PAKWC_QUEST_DATA:
+      logger_->info("Got quest data reply");
+      break;
+    case ePacketType::PAKWC_BILLING_MESSAGE:
+      logger_->info("Got billing message reply");
+      break;
     default:
       logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
       return false;
