@@ -1,12 +1,25 @@
 #include <cxxopts.hpp>
 #include "logconsole.h"
 #include <string>
-#include "packets.h"
+
 #include "packetfactory.h"
 #include "crosesocket.h"
 #include "cnetwork_asio.h"
 #include "network_thread_pool.h"
-#include "charpackets.h"
+#include "srv_characterlistreply.h"
+#include "cli_acceptreq.h"
+#include "cli_loginreq.h"
+#include "srv_loginreply.h"
+#include "cli_channellistreq.h"
+#include "srv_channellistreply.h"
+#include "cli_srvselectreq.h"
+#include "srv_srvselectreply.h"
+#include "cli_joinserverreq.h"
+#include "srv_joinserverreply.h"
+#include "cli_charlistreq.h"
+#include "cli_selectcharreq.h"
+#include "srv_switchserver.h"
+#include "cli_joinserverreq.h"
 
 #define SPDLOG_TRACE_ON
 

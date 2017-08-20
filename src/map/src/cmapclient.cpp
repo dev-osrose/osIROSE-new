@@ -18,7 +18,13 @@
 #include "epackettype.h"
 #include "connection.h"
 #include "entitycomponents.h"
+#include "cli_joinserverreq.h"
 #include <cmath>
+#include "srv_removeobject.h"
+#include "cli_joinserverreq.h"
+#include "srv_joinserverreply.h"
+#include "srv_inventorydata.h"
+#include "srv_selectcharreply.h"
 
 using namespace RoseCommon;
 

@@ -1,6 +1,12 @@
 #include "systems/chatsystem.h"
 #include "cmapserver.h"
 #include "cmapclient.h"
+#include "cli_normalchat.h"
+#include "cli_whisperchat.h"
+#include "srv_whisperchat.h"
+#include "cli_partychat.h"
+#include "srv_normalchat.h"
+#include "srv_partychat.h"
 
 using namespace Systems;
 using namespace RoseCommon;

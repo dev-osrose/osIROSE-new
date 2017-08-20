@@ -1,8 +1,7 @@
 #pragma once
 
-#include "item.h"
 #include <array>
-#include <initializer_list>
+#include "item.h"
 
 struct BulletItems {
     enum BulletType {

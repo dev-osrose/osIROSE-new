@@ -16,7 +16,6 @@
 
 #include "entitycomponents.h"
 #include "systemmanager.h"
-#include "packets.h"
 #include "logconsole.h"
 
 namespace Systems {

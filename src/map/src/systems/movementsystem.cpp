@@ -1,6 +1,10 @@
 #include "systems/movementsystem.h"
 #include "cmapserver.h"
 #include "packetfactory.h"
+#include "srv_stopmoving.h"
+#include "srv_mousecmd.h"
+#include "cli_mousecmd.h"
+#include "cli_stopmoving.h"
 #include <cmath>
 
 using namespace Systems;

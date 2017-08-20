@@ -18,9 +18,13 @@
 #include "croseclient.h"
 #include "mappackets.h"
 #include "crosepacket.h"
-#include "packets.h"
+
 #include "entitysystem.h"
 #include <atomic>
+
+namespace RoseCommon {
+class CliJoinServerReq;
+}
 
 class CMapClient : public RoseCommon::CRoseClient {
  public:

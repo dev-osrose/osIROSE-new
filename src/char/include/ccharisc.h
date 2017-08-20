@@ -16,8 +16,11 @@
 #define __CCHARISC_H__
 
 #include "croseisc.h"
-#include "crosepacket.h"
-#include "packets.h"
+
+namespace RoseCommon {
+class IscServerRegister;
+}
+
 
 class CCharISC : public RoseCommon::CRoseISC {
  public:
