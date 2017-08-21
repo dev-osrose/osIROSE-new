@@ -155,8 +155,8 @@ bool CMapClient::JoinServerReply(
               SrvJoinServerReply::INVALID_PASSWORD, 0);
           send(*packet);
         }
-  } catch (sqlpp::exception&) {
-      logger_->debug("Client {} auth FAILED.", get_id());
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::FAILED, 0);
       send(*packet);

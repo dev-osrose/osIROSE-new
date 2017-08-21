@@ -130,7 +130,8 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 // The user doesn't exist or server is down.
                 SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
         }
-  } catch (sqlpp::exception&) {
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
         SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
