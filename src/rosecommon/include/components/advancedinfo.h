@@ -1,7 +1,5 @@
 #pragma once
 
-#include "connection.h"
-
 struct AdvancedInfo {
     enum MoveMode {
         WALK = 0,
@@ -23,9 +21,9 @@ struct AdvancedInfo {
         mp_ = row.currentMp;
     }
 
-  template <typename T>
+  template <typename U, typename T>
   void commitToUpdate(T& update) const {
-    Core::CharacterTable chars;
+    U chars;
     update.assignments.add(chars.zuly = zuly_);
     update.assignments.add(chars.currentHp = hp_);
     update.assignments.add(chars.currentMp = mp_);

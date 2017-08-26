@@ -3,8 +3,6 @@
 #include <array>
 #include "item.h"
 
-#include "connection.h"
-
 struct CharacterInfo {
     CharacterInfo() :
         job_(0),
@@ -64,9 +62,9 @@ struct CharacterInfo {
         stamina_ = row.stamina;
     }
 
-  template <typename T>
+  template <typename U, typename T>
   void commitToUpdate(T& update) const {
-    Core::CharacterTable chars;
+    U chars;
     update.assignments.add(chars.job = job_);
     update.assignments.add(chars.statPoints = statPoints_);
     update.assignments.add(chars.skillPoints = skillPoints_);

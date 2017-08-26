@@ -161,12 +161,12 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
     using sqlpp::parameter;
 
     auto update = sqlpp::dynamic_update(conn.get(), characters).dynamic_set().where(characters.id == charId);
-    entity.component<Position>()->commitToUpdate(update);
-    entity.component<BasicInfo>()->commitToUpdate(update);
-    entity.component<Stats>()->commitToUpdate(update);
-    entity.component<AdvancedInfo>()->commitToUpdate(update);
+    entity.component<Position>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<BasicInfo>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<Stats>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<AdvancedInfo>()->commitToUpdate<decltype(characters)>(update);
     //entity.component<CharacterGraphics>()->commitToUpdate(update);
-    entity.component<CharacterInfo>()->commitToUpdate(update);
+    entity.component<CharacterInfo>()->commitToUpdate<decltype(characters)>(update);
     //entity.component<Hotbar>()->commitToUpdate(update);
     //entity.component<StatusEffects>()->commitToUpdate(update);
     //entity.component<RidingItems>()->commitToUpdate(update);

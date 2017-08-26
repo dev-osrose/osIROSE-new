@@ -3,8 +3,6 @@
 #include <string>
 #include <atomic>
 
-#include "connection.h"
-
 struct BasicInfo {
     enum Cmd {
         STOP = 0,
@@ -38,9 +36,9 @@ struct BasicInfo {
         xp_ = row.exp;
     }
 
-  template <typename T>
+  template <typename U, typename T>
   void commitToUpdate(T& update) const {
-    Core::CharacterTable chars;
+    U chars;
     update.assignments.add(chars.level = level_);
     update.assignments.add(chars.exp = xp_);
   }
