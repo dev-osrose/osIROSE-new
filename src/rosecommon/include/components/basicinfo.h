@@ -3,6 +3,8 @@
 #include <string>
 #include <atomic>
 
+#include "connection.h"
+
 struct BasicInfo {
     enum Cmd {
         STOP = 0,
@@ -35,6 +37,13 @@ struct BasicInfo {
         level_ = row.level;
         xp_ = row.exp;
     }
+
+  template <typename T>
+  void commitToUpdate(T& update) const {
+    Core::CharacterTable chars;
+    update.assignments.add(chars.level = level_);
+    update.assignments.add(chars.exp = xp_);
+  }
 
     std::string name_;
     uint16_t level_;

@@ -52,4 +52,3 @@ struct Inventory {
         return { items_, 1, maxVisibleEquippedItems };
     }
 };
-

@@ -3,6 +3,8 @@
 #include <array>
 #include "item.h"
 
+#include "connection.h"
+
 struct CharacterInfo {
     CharacterInfo() :
         job_(0),
@@ -62,6 +64,27 @@ struct CharacterInfo {
         stamina_ = row.stamina;
     }
 
+  template <typename T>
+  void commitToUpdate(T& update) const {
+    Core::CharacterTable chars;
+    update.assignments.add(chars.job = job_);
+    update.assignments.add(chars.statPoints = statPoints_);
+    update.assignments.add(chars.skillPoints = skillPoints_);
+    update.assignments.add(chars.penaltyExp = penaltyXp_);
+    update.assignments.add(chars.factionid = factionId_);
+    update.assignments.add(chars.factionRank = factionRank_);
+    update.assignments.add(chars.fame = fame_);
+    update.assignments.add(chars.factionFame1 = factionFame_[0]);
+    update.assignments.add(chars.factionFame2 = factionFame_[1]);
+    update.assignments.add(chars.factionPoints1 = factionPoints_[0]);
+    update.assignments.add(chars.factionPoints2 = factionPoints_[1]);
+    update.assignments.add(chars.factionPoints3 = factionPoints_[2]);
+    update.assignments.add(chars.clanid = guildId_);
+    update.assignments.add(chars.clanContribution = guildContribution_);
+    update.assignments.add(chars.pkFlag = pkFlag_);
+    update.assignments.add(chars.stamina = stamina_);
+  }
+
     uint16_t job_;
     uint8_t stone_;
     uint32_t statPoints_;
@@ -86,4 +109,3 @@ struct CharacterInfo {
     double dt_; // to keep track of seconds for patCoolDownTime_
     uint32_t charId_;
 };
-

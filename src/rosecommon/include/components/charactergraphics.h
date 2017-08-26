@@ -20,4 +20,3 @@ struct CharacterGraphics {
     uint8_t hair_;
     uint8_t race_;
 };
-

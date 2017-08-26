@@ -1,5 +1,7 @@
 #pragma once
 
+#include "connection.h"
+
 struct Stats {
     Stats() : maxHp_(0), maxMp_(0), str_(0), dex_(0), int_(0), con_(0), charm_(0), sense_(0), bodySize_(100), headSize_(100) {}
     template <typename T>
@@ -19,6 +21,19 @@ struct Stats {
         sense_ = row.sense;
     }
 
+  template <typename T>
+  void commitToUpdate(T& update) const {
+    Core::CharacterTable chars;
+    update.assignments.add(chars.maxHp = maxHp_);
+    update.assignments.add(chars.maxMp = maxMp_);
+    update.assignments.add(chars.str = str_);
+    update.assignments.add(chars.dex = dex_);
+    update.assignments.add(chars.int_ = int_);
+    update.assignments.add(chars.con = con_);
+    update.assignments.add(chars.charm = charm_);
+    update.assignments.add(chars.sense = sense_);
+  }
+
     int32_t maxHp_;
     int32_t maxMp_;
     uint16_t str_;
@@ -30,4 +45,3 @@ struct Stats {
     uint8_t bodySize_;
     uint8_t headSize_;
 };
-
