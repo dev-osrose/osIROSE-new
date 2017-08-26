@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliCreateCharReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_CREATE_CHAR_REQ, &createPacket<CliCreateCharReq>);
+const RecvPacketFactory::Initializer<uint8_t*> CliCreateCharReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_CREATE_CHAR_REQ, &createPacket<CliCreateCharReq>);
 
 CliCreateCharReq::CliCreateCharReq() : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ) {}
 

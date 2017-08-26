@@ -9,7 +9,7 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving)
 class CliStopMoving : public CRosePacket {
 	private:
-		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliStopMoving();
 		CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);

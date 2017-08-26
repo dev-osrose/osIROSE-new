@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> IscShutdown::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::ISC_SHUTDOWN, &createPacket<IscShutdown>);
+const RecvPacketFactory::Initializer<uint8_t*> IscShutdown::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::ISC_SHUTDOWN, &createPacket<IscShutdown>);
 
 IscShutdown::IscShutdown() : CRosePacket(ePacketType::ISC_SHUTDOWN) {}
 

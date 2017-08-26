@@ -54,8 +54,6 @@ void EntitySystem::update(double dt) {
             auto basic = it.component<BasicInfo>();
             nameToEntity_.erase(basic->name_);
             idToEntity_.erase(basic->id_);
-            if (auto client = getClient(it))
-                client->canBeDeleted();
             it.destroy();
         }
     }

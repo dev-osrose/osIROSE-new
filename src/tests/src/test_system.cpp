@@ -16,10 +16,10 @@ TEST(TestSystems, TestChatSystemSendMsg) {
     SystemManager_Mock mock(entitySystem);
     ChatSystem chat(mock);
     EntityManager man;
-    CMapClient_Mock cli(std::make_unique<Core::CNetwork_Asio>());
+    std::shared_ptr<CMapClient_Mock> cli = std::make_shared<CMapClient_Mock>(std::make_unique<Core::CNetwork_Asio>());
     Entity e = man.create();
-    e.assign<SocketConnector>((CMapClient*)&cli);
-    EXPECT_CALL(cli, send(_)).WillOnce(Return(true));
+    e.assign<SocketConnector>(cli);
+    EXPECT_CALL(*cli, send(_)).WillOnce(Return(true));
     chat.sendMsg(e, "test");
     e.remove<SocketConnector>();
     chat.sendMsg(e, "test");

@@ -31,8 +31,8 @@ void MapSystem::processChangeMapReq(CMapClient& client, Entity entity, const Ros
     auto &manager = manager_.getEntityManager();
     for (Entity e : manager.entities_with_components<BasicInfo>()) {
         basic = e.component<BasicInfo>();
-        if (e != entity && basic->loggedIn_.load())
+        if (e != entity && basic->isOnMap_.load())
             client.send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
     }
-    entity.component<BasicInfo>()->loggedIn_.store(true);
+    entity.component<BasicInfo>()->isOnMap_.store(true);
 }

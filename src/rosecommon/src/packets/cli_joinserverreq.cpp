@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliJoinServerReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_JOIN_SERVER_REQ, &createPacket<CliJoinServerReq>);
+const RecvPacketFactory::Initializer<uint8_t*> CliJoinServerReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_JOIN_SERVER_REQ, &createPacket<CliJoinServerReq>);
 
 CliJoinServerReq::CliJoinServerReq() : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ) {}
 

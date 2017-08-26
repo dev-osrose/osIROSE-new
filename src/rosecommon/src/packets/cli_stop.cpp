@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliStop::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_STOP, &createPacket<CliStop>);
+const RecvPacketFactory::Initializer<uint8_t*> CliStop::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_STOP, &createPacket<CliStop>);
 
 CliStop::CliStop() : CRosePacket(ePacketType::PAKCS_STOP) {}
 

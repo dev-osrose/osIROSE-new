@@ -9,7 +9,7 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_CHAT, CliPartyChat)
 class CliPartyChat : public CRosePacket {
 	private:
-		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliPartyChat();
 		CliPartyChat(uint8_t buffer[MAX_PACKET_SIZE]);

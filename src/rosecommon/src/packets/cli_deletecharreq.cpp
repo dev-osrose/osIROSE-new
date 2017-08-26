@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliDeleteCharReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_DELETE_CHAR_REQ, &createPacket<CliDeleteCharReq>);
+const RecvPacketFactory::Initializer<uint8_t*> CliDeleteCharReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_DELETE_CHAR_REQ, &createPacket<CliDeleteCharReq>);
 
 CliDeleteCharReq::CliDeleteCharReq() : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ) {}
 

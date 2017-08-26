@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliMouseCmd::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_MOUSE_CMD, &createPacket<CliMouseCmd>);
+const RecvPacketFactory::Initializer<uint8_t*> CliMouseCmd::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_MOUSE_CMD, &createPacket<CliMouseCmd>);
 
 CliMouseCmd::CliMouseCmd() : CRosePacket(ePacketType::PAKCS_MOUSE_CMD) {}
 

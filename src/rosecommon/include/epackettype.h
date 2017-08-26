@@ -203,7 +203,7 @@ struct EPacketTypeHash {
      std::size_t operator()(T t) const noexcept {
      return to_underlying(t);
    }
- };
+};
 
 
 struct tChannelInfo {

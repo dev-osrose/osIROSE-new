@@ -25,8 +25,8 @@
 
 namespace RoseCommon {
 
-std::forward_list<std::unique_ptr<CRoseClient>> CRoseServer::client_list_;
-std::forward_list<std::unique_ptr<CRoseClient>> CRoseServer::isc_list_;
+std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::client_list_;
+std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::isc_list_;
 std::mutex CRoseServer::client_list_mutex_;
 std::mutex CRoseServer::isc_list_mutex_;
 
@@ -39,7 +39,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
 
   socket_->process_thread_ = std::thread([this]() {
 
-    std::forward_list<std::unique_ptr<CRoseClient>>* list_ptr = nullptr;
+    std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
     std::string inactive_log = "";
     std::string timeout_log = "";
@@ -58,7 +58,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
 
     do {
       (*mutex_ptr).lock();
-        (*list_ptr).remove_if([this, inactive_log] (std::unique_ptr<CRoseClient> &i) {
+        (*list_ptr).remove_if([this, inactive_log] (auto &i) {
             if (i->is_active() == false) {
               logger_->debug(inactive_log.c_str(), i->get_id());
               return true;
@@ -157,7 +157,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     }
     case eSendType::EVERYONE_BUT_ME_ON_MAP:
         for (auto &client : client_list_)
-            if (client.get() != sender && isConnected(client->getEntity()))
+            if (client.get() != sender && isOnMap(client->getEntity()))
                 client->send(_buffer);
         break;
     case eSendType::NEARBY:
