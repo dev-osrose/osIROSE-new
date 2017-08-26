@@ -46,6 +46,10 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       entitySystem_(entitySystem)
       {}
 
+CMapClient::~CMapClient() {
+  entitySystem_->destroy(entity_);
+}
+
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
@@ -81,12 +85,8 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entitySystem_->destroy(entity_);
-}
-
-bool CMapClient::OnShutdown() {
-    set_update_time(std::chrono::steady_clock::time_point());
-    return true;
+    entity_.component<BasicInfo>()->isOnMap_.store(false);
+    CRoseClient::OnDisconnected();
 }
 
 bool CMapClient::JoinServerReply(
