@@ -34,8 +34,7 @@ CMapClient::CMapClient()
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0),
-      canBeDeleted_(true) {}
+      charid_(0) {}
 
 CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
@@ -44,9 +43,12 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       sessionId_(0),
       userid_(0),
       charid_(0),
-      entitySystem_(entitySystem),
-      canBeDeleted_(true)
+      entitySystem_(entitySystem)
       {}
+
+CMapClient::~CMapClient() {
+  entitySystem_->destroy(entity_);
+}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -58,7 +60,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
-            entity_.component<BasicInfo>()->loggedIn_.store(false);
+            entity_.component<BasicInfo>()->isOnMap_.store(false);
             break;
     default:
             break;
@@ -70,7 +72,8 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     auto packet = fetchPacket(_buffer);
     if (!packet) {
         logger_->warn("Couldn't build the packet");
-            return CRoseClient::HandlePacket(_buffer);
+             CRoseClient::HandlePacket(_buffer);
+             return true;
     }
     if (!entitySystem_->dispatch(entity_, std::move(packet))) {
         logger_->warn("There is no system willing to deal with this packet");
@@ -81,15 +84,9 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 
 void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
-    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entitySystem_->destroy(entity_);
-}
-
-bool CMapClient::OnShutdown() {
-    set_update_time(std::chrono::steady_clock::time_point());
-    if (!canBeDeleted_.load())
-        return false;
-    return true;
+    CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+    entity_.component<BasicInfo>()->isOnMap_.store(false);
+    CRoseClient::OnDisconnected();
 }
 
 bool CMapClient::JoinServerReply(
@@ -127,8 +124,7 @@ bool CMapClient::JoinServerReply(
           entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
           if (entity_) {
-            canBeDeleted_.store(false);
-            entity_.assign<SocketConnector>(this);
+            entity_.assign<SocketConnector>(shared_from_this());
 
             auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
                 SrvJoinServerReply::OK, std::time(nullptr));

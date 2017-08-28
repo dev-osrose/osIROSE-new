@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> IscServerRegister::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::ISC_SERVER_REGISTER, &createPacket<IscServerRegister>);
+const RecvPacketFactory::Initializer<uint8_t*> IscServerRegister::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::ISC_SERVER_REGISTER, &createPacket<IscServerRegister>);
 
 IscServerRegister::IscServerRegister() : CRosePacket(ePacketType::ISC_SERVER_REGISTER) {}
 

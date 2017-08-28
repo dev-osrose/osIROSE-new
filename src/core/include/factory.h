@@ -21,7 +21,7 @@ namespace Core {
 		Factory() = delete;
 
 		template <typename... Args>
-		static ReturnType create(const KeyType& key, Args&&... args) {
+		static ReturnType create(const KeyType& key, Args... args) {
 			const auto& res = getAssociations<Args...>().find(key);
       if (res == getAssociations<Args...>().end())
         return ReturnType{};
@@ -35,7 +35,6 @@ namespace Core {
 			}
 		};
 
-	private:
 		template <typename... Args>
 		static std::unordered_map<KeyType, std::function<ReturnType(Args...)>, Hash>& getAssociations() {
 			static std::unordered_map<KeyType, std::function<ReturnType(Args...)>, Hash> associations;

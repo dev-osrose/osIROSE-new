@@ -20,27 +20,25 @@
 #include "crosepacket.h"
 
 #include "entitysystem.h"
-#include <atomic>
+
+#include <memory>
 
 namespace RoseCommon {
 class CliJoinServerReq;
 }
 
-class CMapClient : public RoseCommon::CRoseClient {
+class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CMapClient> {
  public:
   CMapClient();
   CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem);
 
-  virtual ~CMapClient() = default;
+  virtual ~CMapClient();
 
   virtual bool is_nearby(const CRoseClient* _otherClient) const override;
-
-  void canBeDeleted() { canBeDeleted_.store(true); }
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual void OnDisconnected() override;
-  virtual bool OnShutdown() ;
 
   bool LogoutReply();
   bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
@@ -57,7 +55,6 @@ class CMapClient : public RoseCommon::CRoseClient {
   uint32_t charid_;
   std::shared_ptr<EntitySystem> entitySystem_;
 
-  std::atomic<bool> canBeDeleted_;
 };
 
 #endif

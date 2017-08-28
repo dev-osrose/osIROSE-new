@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliPartyChat::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_PARTY_CHAT, &createPacket<CliPartyChat>);
+const RecvPacketFactory::Initializer<uint8_t*> CliPartyChat::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_PARTY_CHAT, &createPacket<CliPartyChat>);
 
 CliPartyChat::CliPartyChat() : CRosePacket(ePacketType::PAKCS_PARTY_CHAT) {}
 

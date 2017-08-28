@@ -30,7 +30,7 @@ void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      std::unique_ptr<CLoginClient> nClient = std::make_unique<CLoginClient>(std::move(_sock));
+      std::shared_ptr<CLoginClient> nClient = std::make_shared<CLoginClient>(std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
@@ -40,7 +40,7 @@ void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      std::unique_ptr<CLoginISC> nClient = std::make_unique<CLoginISC>(std::move(_sock));
+      std::shared_ptr<CLoginISC> nClient = std::make_shared<CLoginISC>(std::move(_sock));
       nClient->set_id(server_count_++);
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);

@@ -9,7 +9,7 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq)
 class CliAcceptReq : public CRosePacket {
 	private:
-		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliAcceptReq();
 		CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]);

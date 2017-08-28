@@ -39,8 +39,8 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
   }
 }
 
-void CMapServer::SendPacket(const CMapClient* sender, CMapServer::eSendType type, CRosePacket &_buffer) {
-    CRoseServer::SendPacket(static_cast<const CRoseClient*>(sender), type, _buffer);
+void CMapServer::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServer::eSendType type, CRosePacket &_buffer) {
+  CRoseServer::SendPacket(sender.get(), type, _buffer);
 }
 
 void CMapServer::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket &_buffer) {
@@ -55,7 +55,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      std::unique_ptr<CMapClient> nClient = std::make_unique<CMapClient>(std::move(_sock), entitySystem_);
+      std::shared_ptr<CMapClient> nClient = std::make_shared<CMapClient>(std::move(_sock), entitySystem_);
       nClient->set_id(++client_count_);
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);
@@ -64,7 +64,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      std::unique_ptr<CMapISC> nClient = std::make_unique<CMapISC>(std::move(_sock));
+      std::shared_ptr<CMapISC> nClient = std::make_shared<CMapISC>(std::move(_sock));
       nClient->set_id( server_count_++ );
       nClient->set_update_time(Core::Time::GetTickCount());
       nClient->set_active(true);

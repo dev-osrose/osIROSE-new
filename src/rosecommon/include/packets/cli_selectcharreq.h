@@ -9,7 +9,7 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq)
 class CliSelectCharReq : public CRosePacket {
 	private:
-		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliSelectCharReq();
 		CliSelectCharReq(uint8_t buffer[MAX_PACKET_SIZE]);

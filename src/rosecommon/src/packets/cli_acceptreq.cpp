@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliAcceptReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_ACCEPT_REQ, &createPacket<CliAcceptReq>);
+const RecvPacketFactory::Initializer<uint8_t*> CliAcceptReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_ACCEPT_REQ, &createPacket<CliAcceptReq>);
 
 CliAcceptReq::CliAcceptReq() : CRosePacket(ePacketType::PAKCS_ACCEPT_REQ) {}
 

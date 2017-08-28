@@ -63,7 +63,7 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
       return SendCharSelectReply(
           getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
     default:
-      return CRoseClient::HandlePacket(_buffer);
+      CRoseClient::HandlePacket(_buffer);
   }
   return true;
 }
