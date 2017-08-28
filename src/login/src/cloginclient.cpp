@@ -29,6 +29,7 @@
 #include "srv_srvselectreply.h"
 #include "epackettype.h"
 #include "srv_channellistreply.h"
+#include "config.h"
 
 using namespace RoseCommon;
 
@@ -129,9 +130,16 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
         } else {
             if (!conn(sqlpp::select(table.id).from(table).where(table.username == username_)).empty())
                 SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-            else
+            else {
                 // The user doesn't exist or server is down.
+                auto& config = Core::Config::getInstance();
+                if (config.loginServer().createAccountOnFail) {
+                  logger_->debug("Creating account");
+                    std::string query = fmt::format("CALL create_account('{}', '{}');", username_, clientpass);
+                    conn->execute(query);
+                }
                 SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+            }
         }
   } catch (sqlpp::exception&) {
         SendLoginReply(SrvLoginReply::FAILED);
