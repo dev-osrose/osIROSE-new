@@ -25,6 +25,7 @@
 #include "srv_joinserverreply.h"
 #include "srv_inventorydata.h"
 #include "srv_selectcharreply.h"
+#include "config.h"
 
 using namespace RoseCommon;
 
@@ -126,6 +127,11 @@ bool CMapClient::JoinServerReply(
           entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
           if (entity_) {
+            Core::Config& config = Core::Config::getInstance();
+            conn(sqlpp::update(sessions)
+                 .set(sessions.worldip = config.serverData().ip,
+                      sessions.worldport = config.mapServer().clientPort)
+                 .where(sessions.id == sessionID));
             entity_.assign<SocketConnector>(shared_from_this());
 
             auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(

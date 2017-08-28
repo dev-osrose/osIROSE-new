@@ -119,6 +119,8 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 // Okay to login!!
                 userid_ = row.id;
                 session_id_ = std::time(nullptr);
+                conn(sqlpp::update(table).set(table.online = 1)
+                     .where(table.id == userid_));
                 SendLoginReply(SrvLoginReply::OK);
             } else {
                 // Online already
@@ -135,6 +137,18 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
         SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
+}
+
+void CLoginClient::OnDisconnected() {
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto res = conn(sqlpp::select(session.id).from(session)
+                  .where(session.id == session_id_));
+  if (res.empty()) {
+    Core::AccountTable account;
+    conn(sqlpp::update(account).set(account.online = 0)
+         .where(account.id == userid_));
+  }
 }
 
 bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P) {
@@ -189,15 +203,12 @@ bool CLoginClient::ServerSelect(
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
       Core::SessionTable session;
-      Core::AccountTable account;
       auto conn = Core::connectionPool.getConnection(Core::osirose);
       conn(sqlpp::insert_into(session).set(
                     session.id = session_id_,
                     session.userid = userid_,
                     session.channelid = channelID,
                     session.time = std::chrono::system_clock::now()));
-      conn(sqlpp::update(account).set(account.online = 1)
-          .where(account.id == userid_));
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
           SrvSrvSelectReply::OK, session_id_, 0,

@@ -40,6 +40,8 @@ class CLoginClient : public RoseCommon::CRoseClient {
 
   void SendLoginReply(uint8_t Result);
 
+  virtual void OnDisconnected() override;
+
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,

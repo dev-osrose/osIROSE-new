@@ -216,8 +216,8 @@ CREATE TABLE `sessions` (
   `channelid` int(11) DEFAULT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `charid` int(10) DEFAULT NULL,
-  `worldip` int(20) DEFAULT NULL,
-  `worldport` varchar(20) DEFAULT NULL,
+  `worldip` varchar(20) DEFAULT NULL,
+  `worldport` int(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
