@@ -54,19 +54,23 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
+      if (login_state_ != eSTATE::LOGGEDIN) {
+        logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
+        return true;
+      }
             entity_.component<BasicInfo>()->loggedIn_.store(false);
-        default:
+            break;
+    default:
             break;
     }
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to execute an action befire logging in.", get_id());
+    return CRoseClient::HandlePacket(_buffer);
+  }
     auto packet = fetchPacket(_buffer);
     if (!packet) {
         logger_->warn("Couldn't build the packet");
             return CRoseClient::HandlePacket(_buffer);
-    }
-    if (login_state_ != eSTATE::LOGGEDIN) {
-          logger_->warn("Client {} is attempting to execute an action before logging in.",
-                        get_id());
-          return CRoseClient::HandlePacket(_buffer);
     }
     if (!entitySystem_->dispatch(entity_, std::move(packet))) {
         logger_->warn("There is no system willing to deal with this packet");
