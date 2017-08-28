@@ -188,14 +188,20 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
-      std::string query = fmt::format("CALL create_session({}, {}, {});",
-                                      session_id_, userid_, channelID);
-
-        auto conn = Core::connectionPool.getConnection(Core::osirose);
-        conn->execute(query);
+      Core::SessionTable session;
+      Core::AccountTable account;
+      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      conn(sqlpp::insert_into(session).set(
+                    session.id = session_id_,
+                    session.userid = userid_,
+                    session.channelid = channelID,
+                    session.time = std::chrono::system_clock::now()));
+      conn(sqlpp::update(account).set(account.online = 1)
+          .where(account.id == userid_));
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          SrvSrvSelectReply::OK, session_id_, 0, server->get_address(), server->get_port());
+          SrvSrvSelectReply::OK, session_id_, 0,
+          server->get_address(), server->get_port());
       this->send(*packet);
       break;
     }

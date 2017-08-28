@@ -20,6 +20,7 @@
 #include "connection.h"
 #include "network_thread_pool.h"
 #include "cnetwork_asio.h"
+#include "ccharclient.h"
 
 namespace {
 void DisplayTitle()
@@ -111,6 +112,32 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
+
+/*void deleteStaleSessions() {
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn(sqlpp::remove_from(session)
+      .where(session.time <
+            std::chrono::system_clock::now() -
+            std::chrono::minutes(5)));
+}*/
+
+/*void updateSessions() {
+  static std::chrono::steady_clock::time_point time{};
+  if (std::chrono::duration_cast<std::chrono::minutes>
+      (Core::Time::GetTickCount() - time).count() < 5)
+    return;
+  time = Core::Time::GetTickCount();
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  for (const auto& it : CCharServer::GetClientList()) {
+    const auto* client = dynamic_cast<const CCharClient*>(it.get());
+    conn(sqlpp::update(session)
+         .set(session.time = std::chrono::system_clock::now())
+         .where(session.id == client->sessionId()));
+  }
+  //deleteStaleSessions();
+}*/
 }
 
 int main(int argc, char* argv[]) {
@@ -157,6 +184,7 @@ int main(int argc, char* argv[]) {
 
   while (clientServer.is_active()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //updateSessions();
   }
   if(auto log = console.lock())
     log->info( "Server shutting down..." );

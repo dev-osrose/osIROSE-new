@@ -111,6 +111,15 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
+
+void clearSessions() {
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::SessionTable session;
+  conn(sqlpp::remove_from(session).unconditionally()); // .where(session.time < floor<::sqlpp::chrono::minutes>(std::chrono::system_clock::now()) - 5m)
+  Core::AccountTable table;
+  conn(sqlpp::update(table).set(table.online = 0).unconditionally());
+}
+
 } // end namespace
 
 int main(int argc, char* argv[]) {
@@ -140,6 +149,8 @@ int main(int argc, char* argv[]) {
                 config.database().password,
                 config.database().database,
                 config.database().host));
+
+    clearSessions();
 
     CLoginServer clientServer;
     CLoginServer iscServer(true);

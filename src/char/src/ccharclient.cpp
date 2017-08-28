@@ -217,6 +217,16 @@ bool CCharClient::SendCharDeleteReply(
   return true;
 }
 
+void CCharClient::OnDisconnected() {
+  logger_->trace("CCharClient::OnDisconnected()");
+  Core::AccountTable table;
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn(sqlpp::update(table).set(table.online = 0)
+       .where(table.id == userId_));
+  conn(sqlpp::remove_from(session).where(session.userid == userId_));
+}
+
 bool CCharClient::SendCharSelectReply(
     std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
   logger_->trace("CharSelectReply\n");

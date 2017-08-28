@@ -31,6 +31,8 @@ class CCharClient : public RoseCommon::CRoseClient {
 
   bool is_nearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
 
+  uint32_t sessionId() const { return sessionId_; }
+
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
 
@@ -39,6 +41,8 @@ class CCharClient : public RoseCommon::CRoseClient {
   bool SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P);
   bool SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P);
   bool SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P);
+
+  virtual void OnDisconnected() override;
 
   enum class eSTATE {
     DEFAULT,
