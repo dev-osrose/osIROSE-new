@@ -13,13 +13,22 @@
 #include "cli_channellistreq.h"
 #include "cli_srvselectreq.h"
 #include "cli_alive.h"
+#include "connection.h"
+#include "config.h"
 
 using namespace RoseCommon;
 
 TEST(TestLoginServer, TestClientPacketPath) {
-  CLoginServer network;
-  std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
-  CLoginClient_Mock netConnect;
+  Core::Config& config = Core::Config::getInstance();
+  Core::connectionPool.addConnector(Core::osirose, std::bind(
+                                    Core::mysqlFactory,
+                                    config.database().user,
+                                    config.database().password,
+                                    config.database().database,
+                                    config.database().host));
+CLoginServer network;
+std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
+CLoginClient_Mock netConnect;
 
   iscServ->set_socket(std::make_unique<Core::CNetwork_Asio>());
   netConnect.set_socket(std::make_unique<Core::CNetwork_Asio>());
