@@ -101,7 +101,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable table;
   try {
-      const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+    const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.username == username_
                   and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
@@ -120,7 +120,10 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 // Okay to login!!
                 userid_ = row.id;
                 session_id_ = std::time(nullptr);
-                conn(sqlpp::update(table).set(table.online = 1)
+                conn(sqlpp::update(table).set(table.online = 1,
+                                              table.loginCount = row.loginCount + 1,
+                                              table.lastip = get_address(),
+                                              table.lasttime = std::chrono::system_clock::now())
                      .where(table.id == userid_));
                 SendLoginReply(SrvLoginReply::OK);
             } else {

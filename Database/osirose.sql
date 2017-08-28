@@ -33,7 +33,7 @@ CREATE TABLE `accounts` (
   `online` tinyint(1) DEFAULT '0',
   `login_count` int(11) DEFAULT '0',
   `lastip` varchar(15) DEFAULT '0.0.0.0',
-  `lasttime` int(11) DEFAULT '0',
+  `lasttime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE = utf8_unicode_ci;
