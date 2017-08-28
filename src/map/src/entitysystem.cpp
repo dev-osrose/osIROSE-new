@@ -8,6 +8,9 @@
 #include "connection.h"
 #include "cmapclient.h"
 
+#include <vector>
+#include <set>
+
 using namespace RoseCommon;
 EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::MovementSystem>();
@@ -51,10 +54,10 @@ void EntitySystem::update(double dt) {
     for (auto it : toDestroy_) {
         if (it) {
             saveCharacter(it.component<CharacterInfo>()->charId_, it);
-            auto basic = it.component<BasicInfo>();
-            nameToEntity_.erase(basic->name_);
-            idToEntity_.erase(basic->id_);
-            it.destroy();
+          auto basic = it.component<BasicInfo>();
+          nameToEntity_.erase(basic->name_);
+          idToEntity_.erase(basic->id_);
+          it.destroy();
         }
     }
     toDestroy_.clear();
@@ -153,20 +156,18 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
 void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
     if (!entity)
         return;
-    auto chat = systemManager_.get<Systems::ChatSystem>();
-    chat->sendMsg(entity, "Character saved");
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     Core::CharacterTable characters;
 
     using sqlpp::parameter;
 
     auto update = sqlpp::dynamic_update(conn.get(), characters).dynamic_set().where(characters.id == charId);
-    entity.component<Position>()->commitToUpdate(update);
-    //entity.component<BasicInfo>()->commitToUpdate(update);
-    //entity.component<Stats>()->commitToUpdate(update);
-    //entity.component<AdvancedInfo>()->commitToUpdate(update);
+    entity.component<Position>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<BasicInfo>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<Stats>()->commitToUpdate<decltype(characters)>(update);
+    entity.component<AdvancedInfo>()->commitToUpdate<decltype(characters)>(update);
     //entity.component<CharacterGraphics>()->commitToUpdate(update);
-    //entity.component<CharacterInfo>()->commitToUpdate(update);
+    entity.component<CharacterInfo>()->commitToUpdate<decltype(characters)>(update);
     //entity.component<Hotbar>()->commitToUpdate(update);
     //entity.component<StatusEffects>()->commitToUpdate(update);
     //entity.component<RidingItems>()->commitToUpdate(update);
@@ -176,5 +177,46 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
 
     //entity.component<Skills>()->commitToUpdate(updateSkills);
 
-    //entity.component<Inventory>()->commitToUpdate(updateInventory);
+    Core::InventoryTable inv;
+    auto invRes = conn(sqlpp::select(sqlpp::all_of(inv))
+                       .from(inv)
+                       .where(inv.charId == charId));
+
+    const auto& items = entity.component<Inventory>()->items_;
+
+    std::vector<size_t> toDelete;
+    std::vector<size_t> toUpdate;
+    std::set<size_t> modified;
+    std::vector<size_t> toInsert;
+
+    for (const auto& row : invRes) {
+      if (row.slot >= Inventory::maxItems)
+        toDelete.emplace_back(row.slot); //FIXME: that should never happen
+      else if (!items[row.slot])
+        toDelete.emplace_back(row.slot);
+      else if (items[row.slot] != Item(row))
+        toUpdate.emplace_back(row.slot);
+      modified.insert(row.slot);
+    }
+    size_t i = 0;
+    for (const auto& item : items) {
+      if (item && modified.find(i) == modified.end())
+        toInsert.emplace_back(i);
+      ++i;
+    }
+
+    for (auto it : toDelete)
+      conn(sqlpp::remove_from(inv).where(inv.charId == charId and inv.slot == it));
+    for (auto it : toUpdate) {
+      auto update = sqlpp::dynamic_update(conn.get(), inv).dynamic_set().where(inv.charId == charId and inv.slot == it);
+      items[it].commitToUpdate<decltype(inv)>(update);
+      conn->run(update);
+    }
+    for (auto it : toInsert) {
+      auto insert = sqlpp::dynamic_insert_into(conn.get(), inv).dynamic_set();
+      items[it].commitToInsert<decltype(inv)>(insert);
+      insert.insert_list.add(inv.slot = it);
+      insert.insert_list.add(inv.charId = charId);
+      conn->run(insert);
+    }
 }

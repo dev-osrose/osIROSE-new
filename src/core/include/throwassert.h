@@ -69,7 +69,7 @@ class AssertionFailureException : public std::exception {
                 report = outStream.str();
                 log_error();
             }
-        
+
         virtual const char *what() const throw() {
             return report.c_str();
         }

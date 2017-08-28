@@ -143,7 +143,6 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::EVERYONE:
     {
       for (auto& client : client_list_) {
-        if (isOnMap(client->getEntity()))
           client->send(_buffer);
       }
       break;
@@ -151,7 +150,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::EVERYONE_BUT_ME:
     {
       for (auto& client : client_list_) {
-        if( client.get() != sender && isOnMap(client->getEntity()))
+        if( client.get() != sender)
           client->send(_buffer);
       }
       break;
@@ -164,7 +163,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::NEARBY:
     {
       for (auto& client : client_list_) {
-        if( client->is_nearby(sender) == true )
+        if( client->is_nearby(sender) == true && isOnMap(client->getEntity()))
           client->send(_buffer);
       }
       break;
