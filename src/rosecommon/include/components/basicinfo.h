@@ -36,6 +36,13 @@ struct BasicInfo {
         xp_ = row.exp;
     }
 
+  template <typename U, typename T>
+  void commitToUpdate(T& update) const {
+    U chars;
+    update.assignments.add(chars.level = level_);
+    update.assignments.add(chars.exp = xp_);
+  }
+
     std::string name_;
     uint16_t level_;
     uint32_t xp_;

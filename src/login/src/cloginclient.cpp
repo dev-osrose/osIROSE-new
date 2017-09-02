@@ -21,6 +21,7 @@
 #include "isc_serverregister.h"
 #include "srv_loginreply.h"
 #include "cli_loginreq.h"
+#include "connection.h"
 #include "connectionpool.h"
 #include "croseserver.h"
 #include "cli_channellistreq.h"

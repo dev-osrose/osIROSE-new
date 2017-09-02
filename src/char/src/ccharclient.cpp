@@ -19,6 +19,7 @@
 #include "cli_createcharreq.h"
 #include "cli_deletecharreq.h"
 #include "cli_selectcharreq.h"
+#include "connection.h"
 #include "connectionpool.h"
 #include "srv_joinserverreply.h"
 #include "srv_channellistreply.h"

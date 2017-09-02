@@ -41,6 +41,10 @@ struct Item : public ISerialize {
     };
 
     Item();
+    template <typename T>
+    Item(const T& row) : Item() {
+      loadFromRow(row);
+    }
     virtual ~Item() = default;
 
     virtual uint32_t getVisible() const override;
@@ -58,6 +62,43 @@ struct Item : public ISerialize {
         life_ = 1000; // FIXME : placeholder
         durability_ = 10; // FIXME : placeholder
         isAppraised_ = true; // FIXME : placeholder
+    }
+
+    template <typename U, typename T>
+    void commitToUpdate(T& update) const {
+      U inv;
+      update.assignments.add(inv.itemid = id_);
+      update.assignments.add(inv.itemtype = type_);
+      update.assignments.add(inv.amount = count_);
+      update.assignments.add(inv.refine = refine_);
+      update.assignments.add(inv.gemOpt = gemOpt_);
+      update.assignments.add(inv.socket = static_cast<int>(hasSocket_));
+    }
+
+    template <typename U, typename T>
+    void commitToInsert(T& insert) const {
+      U inv;
+      insert.insert_list.add(inv.itemid = id_);
+      insert.insert_list.add(inv.itemtype = type_);
+      insert.insert_list.add(inv.amount = count_);
+      insert.insert_list.add(inv.refine = refine_);
+      insert.insert_list.add(inv.gemOpt = gemOpt_);
+      insert.insert_list.add(inv.socket = static_cast<int>(hasSocket_));
+    }
+
+    operator bool() const {
+      return id_ != 0;
+    }
+
+    bool operator==(const Item& other) const {
+      return type_ == other.type_ && id_ == other.id_ && isCreated_ == other.isCreated_ &&
+             gemOpt_ == other.gemOpt_ && durability_ == other.durability_ && life_ == other.life_ &&
+             hasSocket_ == other.hasSocket_ && isAppraised_ == other.isAppraised_ && refine_ == other.refine_ &&
+             count_ == other.count_ && isStackable_ == other.isStackable_;
+    }
+
+    bool operator!=(const Item& other) const {
+      return !(*this == other);
     }
 
     uint8_t type_;

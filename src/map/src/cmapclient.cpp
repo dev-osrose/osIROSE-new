@@ -83,10 +83,12 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 }
 
 void CMapClient::OnDisconnected() {
-    entitySystem_->saveCharacter(charid_, entity_);
-    CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entity_.component<BasicInfo>()->isOnMap_.store(false);
-    CRoseClient::OnDisconnected();
+    logger_->trace("CMapClient::OnDisconnected()");
+    if (isOnMap(entity_)) {
+      entitySystem_->saveCharacter(charid_, entity_);
+      CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+      entity_.component<BasicInfo>()->isOnMap_.store(false);
+    }
 }
 
 bool CMapClient::JoinServerReply(
