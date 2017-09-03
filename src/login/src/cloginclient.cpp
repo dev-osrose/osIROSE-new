@@ -100,6 +100,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable table;
+  Core::SessionTable session;
   try {
     const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.username == username_
@@ -107,6 +108,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
         if (!res.empty()) {
             const auto &row = res.front();
+            const auto ses = conn(sqlpp::select(session.id).from(session).where(session.userid == row.id));
             if (!row.access.is_null())
                 access_rights_ = row.access;
 
@@ -116,7 +118,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 return false;
             }
 
-            if (!row.online) {
+            if (!row.online && ses.empty()) {
                 // Okay to login!!
                 userid_ = row.id;
                 session_id_ = std::time(nullptr);
