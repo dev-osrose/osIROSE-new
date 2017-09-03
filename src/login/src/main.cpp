@@ -120,6 +120,7 @@ void deleteStaleSessions() {
   static std::chrono::steady_clock::time_point time{};
   if (Core::Time::GetTickCount() - time < 5min)
     return;
+  time = Core::Time::GetTickCount();
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::SessionTable session;
   Core::AccountTable table;

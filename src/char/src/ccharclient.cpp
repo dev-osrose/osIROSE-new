@@ -78,6 +78,11 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
 }
 
 void CCharClient::updateSession() {
+  using namespace std::chrono_literals;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 2min)
+    return;
+  time = Core::Time::GetTickCount();
   logger_->trace("CCharClient::updateSession()");
   Core::SessionTable session;
   auto conn = Core::connectionPool.getConnection(Core::osirose);
