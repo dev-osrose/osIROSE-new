@@ -44,6 +44,9 @@ class CCharClient : public RoseCommon::CRoseClient {
 
   virtual void OnDisconnected() override;
 
+ protected:
+  void updateSession();
+
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,
