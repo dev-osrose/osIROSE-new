@@ -21,6 +21,8 @@
 #include "connection.h"
 #include "mysqlconnection.h"
 
+#include <chrono>
+
 namespace {
 void DisplayTitle()
 {
@@ -112,12 +114,17 @@ void ParseCommandLine(int argc, char** argv)
   }
 }
 
-void clearSessions() {
+void deleteStaleSessions() {
+  using namespace std::chrono_literals;
+  using ::date::floor;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 5min)
+    return;
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::SessionTable session;
-  conn(sqlpp::remove_from(session).unconditionally()); // .where(session.time < floor<::sqlpp::chrono::minutes>(std::chrono::system_clock::now()) - 5m)
   Core::AccountTable table;
-  conn(sqlpp::update(table).set(table.online = 0).unconditionally());
+  conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
+  conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
 }
 
 } // end namespace
@@ -150,8 +157,6 @@ int main(int argc, char* argv[]) {
                 config.database().database,
                 config.database().host));
 
-    clearSessions();
-
     CLoginServer clientServer;
     CLoginServer iscServer(true);
 
@@ -163,6 +168,7 @@ int main(int argc, char* argv[]) {
 
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      deleteStaleSessions();
     }
 
     if(auto log = console.lock())
