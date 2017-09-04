@@ -112,32 +112,6 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
-
-/*void deleteStaleSessions() {
-  Core::SessionTable session;
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
-  conn(sqlpp::remove_from(session)
-      .where(session.time <
-            std::chrono::system_clock::now() -
-            std::chrono::minutes(5)));
-}*/
-
-/*void updateSessions() {
-  static std::chrono::steady_clock::time_point time{};
-  if (std::chrono::duration_cast<std::chrono::minutes>
-      (Core::Time::GetTickCount() - time).count() < 5)
-    return;
-  time = Core::Time::GetTickCount();
-  Core::SessionTable session;
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
-  for (const auto& it : CCharServer::GetClientList()) {
-    const auto* client = dynamic_cast<const CCharClient*>(it.get());
-    conn(sqlpp::update(session)
-         .set(session.time = std::chrono::system_clock::now())
-         .where(session.id == client->sessionId()));
-  }
-  //deleteStaleSessions();
-}*/
 }
 
 int main(int argc, char* argv[]) {
