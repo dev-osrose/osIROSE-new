@@ -40,6 +40,8 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual void OnDisconnected() override;
 
+  void updateSession();
+
   bool LogoutReply();
   bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
 

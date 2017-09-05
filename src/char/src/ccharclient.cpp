@@ -63,11 +63,32 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_SELECT_CHAR_REQ:
       return SendCharSelectReply(
           getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
+    case ePacketType::PAKCS_ALIVE:
+      if (loginState_ != eSTATE::LOGGEDIN) {
+        logger_->warn("Client {} is attempting to execute an action before loggin in.", userId_);
+        return true;
+      }
+      updateSession();
+      CRoseClient::HandlePacket(_buffer);
+      break;
     default:
       CRoseClient::HandlePacket(_buffer);
   }
   return true;
 }
+
+void CCharClient::updateSession() {
+  using namespace std::chrono_literals;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 2min)
+    return;
+  time = Core::Time::GetTickCount();
+  logger_->trace("CCharClient::updateSession()");
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == userId_));
+}
+
 bool CCharClient::JoinServerReply(
     std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
   logger_->trace("CCharClient::JoinServerReply");
@@ -216,6 +237,17 @@ bool CCharClient::SendCharDeleteReply(
       makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
   send(*packet);
   return true;
+}
+
+void CCharClient::OnDisconnected() {
+  logger_->trace("CCharClient::OnDisconnected()");
+  Core::SessionTable session;
+  Core::AccountTable table;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  const auto res = conn(sqlpp::select(table.online).from(table).where(table.id == userId_));
+  if (!res.empty())
+    if (!res.front().online)
+      conn(sqlpp::remove_from(session).where(session.userid == userId_));
 }
 
 bool CCharClient::SendCharSelectReply(

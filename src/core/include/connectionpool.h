@@ -44,7 +44,7 @@ class ConnectionPool : public Singleton<ConnectionPool<T>> {
         };
 
         template <typename U>
-        void addConnector(const std::string &name, U factory) { 
+        void addConnector(const std::string &name, const U& factory) {
             const std::function<std::unique_ptr<T>()> tmp = static_cast<decltype(tmp)>(factory);
             _factories[name] = tmp;
         }

@@ -82,6 +82,7 @@ class Config {
     uint8_t mode = 0;
   };
   struct LoginServer {
+    bool createAccountOnFail = false;
     uint16_t clientPort = 29000;
     uint16_t iscPort = 29010;
     uint8_t accessLevel = 1;
@@ -128,7 +129,7 @@ class Config {
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
 VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, accessLevel, parentId, maxConnections, useThreads, maxThreads, mode);
-VISITABLE_STRUCT(Core::Config::LoginServer, clientPort, iscPort, accessLevel, logLevel);
+VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, logLevel);
 VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer);

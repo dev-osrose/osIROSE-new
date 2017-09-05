@@ -21,6 +21,8 @@
 #include "connection.h"
 #include "mysqlconnection.h"
 
+#include <chrono>
+
 namespace {
 void DisplayTitle()
 {
@@ -111,6 +113,21 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
+
+void deleteStaleSessions() {
+  using namespace std::chrono_literals;
+  using ::date::floor;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 5min)
+    return;
+  time = Core::Time::GetTickCount();
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::SessionTable session;
+  Core::AccountTable table;
+  conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
+  conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
+}
+
 } // end namespace
 
 int main(int argc, char* argv[]) {
@@ -152,6 +169,7 @@ int main(int argc, char* argv[]) {
 
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      deleteStaleSessions();
     }
 
     if(auto log = console.lock())
