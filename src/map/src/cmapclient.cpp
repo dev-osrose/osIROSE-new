@@ -25,6 +25,7 @@
 #include "srv_joinserverreply.h"
 #include "srv_inventorydata.h"
 #include "srv_selectcharreply.h"
+#include "config.h"
 
 using namespace RoseCommon;
 
@@ -52,6 +53,13 @@ CMapClient::~CMapClient() {
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
+    case ePacketType::PAKCS_ALIVE:
+      if (login_state_ != eSTATE::LOGGEDIN) {
+        logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
+        return true;
+      }
+      updateSession();
+      break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
@@ -82,6 +90,18 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
+void CMapClient::updateSession() {
+  using namespace std::chrono_literals;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 2min)
+    return;
+  time = Core::Time::GetTickCount();
+  logger_->trace("CMapClient::updateSession()");
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == get_id()));
+}
+
 void CMapClient::OnDisconnected() {
     logger_->trace("CMapClient::OnDisconnected()");
     if (isOnMap(entity_)) {
@@ -89,6 +109,10 @@ void CMapClient::OnDisconnected() {
       CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
       entity_.component<BasicInfo>()->isOnMap_.store(false);
     }
+    Core::AccountTable table;
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    conn(sqlpp::update(table).set(table.online = 0)
+         .where(table.id == get_id()));
 }
 
 bool CMapClient::JoinServerReply(
@@ -126,6 +150,11 @@ bool CMapClient::JoinServerReply(
           entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
           if (entity_) {
+            Core::Config& config = Core::Config::getInstance();
+            conn(sqlpp::update(sessions)
+                 .set(sessions.worldip = config.serverData().ip,
+                      sessions.worldport = config.mapServer().clientPort)
+                 .where(sessions.id == sessionID));
             entity_.assign<SocketConnector>(shared_from_this());
 
             auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(

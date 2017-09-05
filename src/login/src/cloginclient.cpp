@@ -29,6 +29,7 @@
 #include "srv_srvselectreply.h"
 #include "epackettype.h"
 #include "srv_channellistreply.h"
+#include "config.h"
 
 using namespace RoseCommon;
 
@@ -99,13 +100,15 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable table;
+  Core::SessionTable session;
   try {
-      const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online)
+    const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.username == username_
                   and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
         if (!res.empty()) {
             const auto &row = res.front();
+            const auto ses = conn(sqlpp::select(session.id).from(session).where(session.userid == row.id));
             if (!row.access.is_null())
                 access_rights_ = row.access;
 
@@ -115,10 +118,15 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 return false;
             }
 
-            if (!row.online) {
+            if (!row.online && ses.empty()) {
                 // Okay to login!!
                 userid_ = row.id;
                 session_id_ = std::time(nullptr);
+                conn(sqlpp::update(table).set(table.online = 1,
+                                              table.loginCount = row.loginCount + 1,
+                                              table.lastip = get_address(),
+                                              table.lasttime = std::chrono::system_clock::now())
+                     .where(table.id == userid_));
                 SendLoginReply(SrvLoginReply::OK);
             } else {
                 // Online already
@@ -127,15 +135,34 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
         } else {
             if (!conn(sqlpp::select(table.id).from(table).where(table.username == username_)).empty())
                 SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
-            else
+            else {
                 // The user doesn't exist or server is down.
+                auto& config = Core::Config::getInstance();
+                if (config.loginServer().createAccountOnFail) {
+                  logger_->debug("Creating account");
+                    std::string query = fmt::format("CALL create_account('{}', '{}');", username_, clientpass);
+                    conn->execute(query);
+                }
                 SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+            }
         }
   } catch (const sqlpp::exception &e) {
     logger_->error("Error while accessing the database: {}", e.what());
         SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
+}
+
+void CLoginClient::OnDisconnected() {
+  Core::SessionTable session;
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto res = conn(sqlpp::select(session.id).from(session)
+                  .where(session.id == session_id_));
+  if (res.empty()) {
+    Core::AccountTable account;
+    conn(sqlpp::update(account).set(account.online = 0)
+         .where(account.id == userid_));
+  }
 }
 
 bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P) {
@@ -189,14 +216,17 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
-      std::string query = fmt::format("CALL create_session({}, {}, {});",
-                                      session_id_, userid_, channelID);
-
-        auto conn = Core::connectionPool.getConnection(Core::osirose);
-        conn->execute(query);
+      Core::SessionTable session;
+      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      conn(sqlpp::insert_into(session).set(
+                    session.id = session_id_,
+                    session.userid = userid_,
+                    session.channelid = channelID,
+                    session.time = std::chrono::system_clock::now()));
 
       auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-          SrvSrvSelectReply::OK, session_id_, 0, server->get_address(), server->get_port());
+          SrvSrvSelectReply::OK, session_id_, 0,
+          server->get_address(), server->get_port());
       this->send(*packet);
       break;
     }

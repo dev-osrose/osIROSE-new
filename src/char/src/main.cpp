@@ -20,6 +20,7 @@
 #include "connection.h"
 #include "network_thread_pool.h"
 #include "cnetwork_asio.h"
+#include "ccharclient.h"
 
 namespace {
 void DisplayTitle()
@@ -157,6 +158,7 @@ int main(int argc, char* argv[]) {
 
   while (clientServer.is_active()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //updateSessions();
   }
   if(auto log = console.lock())
     log->info( "Server shutting down..." );
