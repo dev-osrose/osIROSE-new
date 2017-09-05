@@ -9,7 +9,7 @@ namespace RoseCommon {
 REGISTER_RECV_PACKET(ePacketType::PAKCS_REVIVE_REQ, CliReviveReq)
 class CliReviveReq : public CRosePacket {
 	private:
-		static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliReviveReq();
 		CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);

@@ -73,7 +73,7 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 
 bool CNetwork_Asio::shutdown(bool _final) {
   bool rtnValue = false;
-  if ( !is_active() ) 
+  if ( !is_active() )
     return true;
 
   if (_final == true ||
@@ -251,7 +251,7 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
               shutdown();
             }
             else {
-              if (this->is_active()) 
+              if (this->is_active())
                 recv_data();
             }
           }

@@ -18,7 +18,13 @@
 #include "epackettype.h"
 #include "connection.h"
 #include "entitycomponents.h"
+#include "cli_joinserverreq.h"
 #include <cmath>
+#include "srv_removeobject.h"
+#include "cli_joinserverreq.h"
+#include "srv_joinserverreply.h"
+#include "srv_inventorydata.h"
+#include "srv_selectcharreply.h"
 
 using namespace RoseCommon;
 
@@ -28,8 +34,7 @@ CMapClient::CMapClient()
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0),
-      canBeDeleted_(true) {}
+      charid_(0) {}
 
 CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
@@ -38,9 +43,12 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       sessionId_(0),
       userid_(0),
       charid_(0),
-      entitySystem_(entitySystem),
-      canBeDeleted_(true)
+      entitySystem_(entitySystem)
       {}
+
+CMapClient::~CMapClient() {
+  entitySystem_->destroy(entity_);
+}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -48,19 +56,24 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(
           _buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
-            entity_.component<BasicInfo>()->loggedIn_.store(false);
-        default:
+      if (login_state_ != eSTATE::LOGGEDIN) {
+        logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
+        return true;
+      }
+            entity_.component<BasicInfo>()->isOnMap_.store(false);
+            break;
+    default:
             break;
     }
+  if (login_state_ != eSTATE::LOGGEDIN) {
+    logger_->warn("Client {} is attempting to execute an action befire logging in.", get_id());
+    return CRoseClient::HandlePacket(_buffer);
+  }
     auto packet = fetchPacket(_buffer);
     if (!packet) {
         logger_->warn("Couldn't build the packet");
-            return CRoseClient::HandlePacket(_buffer);
-    }
-    if (login_state_ != eSTATE::LOGGEDIN) {
-          logger_->warn("Client {} is attempting to execute an action before logging in.",
-                        get_id());
-          return CRoseClient::HandlePacket(_buffer);
+             CRoseClient::HandlePacket(_buffer);
+             return true;
     }
     if (!entitySystem_->dispatch(entity_, std::move(packet))) {
         logger_->warn("There is no system willing to deal with this packet");
@@ -70,16 +83,12 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 }
 
 void CMapClient::OnDisconnected() {
-    entitySystem_->saveCharacter(charid_, entity_);
-    CMapServer::SendPacket(this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entitySystem_->destroy(entity_);
-}
-
-bool CMapClient::OnShutdown() {
-    set_update_time(std::chrono::steady_clock::time_point());
-    if (!canBeDeleted_.load())
-        return false;
-    return true;
+    logger_->trace("CMapClient::OnDisconnected()");
+    if (isOnMap(entity_)) {
+      entitySystem_->saveCharacter(charid_, entity_);
+      CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+      entity_.component<BasicInfo>()->isOnMap_.store(false);
+    }
 }
 
 bool CMapClient::JoinServerReply(
@@ -117,8 +126,7 @@ bool CMapClient::JoinServerReply(
           entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
 
           if (entity_) {
-            canBeDeleted_.store(false);
-            entity_.assign<SocketConnector>(this);
+            entity_.assign<SocketConnector>(shared_from_this());
 
             auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
                 SrvJoinServerReply::OK, std::time(nullptr));
@@ -149,8 +157,8 @@ bool CMapClient::JoinServerReply(
               SrvJoinServerReply::INVALID_PASSWORD, 0);
           send(*packet);
         }
-  } catch (sqlpp::exception&) {
-      logger_->debug("Client {} auth FAILED.", get_id());
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(
               SrvJoinServerReply::FAILED, 0);
       send(*packet);

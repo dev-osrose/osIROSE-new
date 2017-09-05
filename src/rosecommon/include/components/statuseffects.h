@@ -1,6 +1,5 @@
 #pragma once
 
-#include "crosepacket.h"
 #include <vector>
 #include <initializer_list>
 

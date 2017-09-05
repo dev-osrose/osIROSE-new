@@ -12,10 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "cloginclient.h"
 #include "cloginserver.h"
 #include "cloginisc.h"
-#include "cloginclient.h"
+#include "croseisc.h"
+#include "packetfactory.h"
+#include "isccommon.h"
+#include "isc_serverregister.h"
+#include "srv_loginreply.h"
+#include "cli_loginreq.h"
 #include "connection.h"
+#include "connectionpool.h"
+#include "croseserver.h"
+#include "cli_channellistreq.h"
+#include "cli_srvselectreq.h"
+#include "srv_srvselectreply.h"
+#include "epackettype.h"
+#include "srv_channellistreply.h"
 
 using namespace RoseCommon;
 
@@ -118,7 +131,8 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                 // The user doesn't exist or server is down.
                 SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
         }
-  } catch (sqlpp::exception&) {
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
         SendLoginReply(SrvLoginReply::FAILED);
   }
   return true;

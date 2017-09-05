@@ -15,8 +15,19 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "ccharclient.h"
-#include "epackettype.h"
+#include "cli_joinserverreq.h"
+#include "cli_createcharreq.h"
+#include "cli_deletecharreq.h"
+#include "cli_selectcharreq.h"
 #include "connection.h"
+#include "connectionpool.h"
+#include "srv_joinserverreply.h"
+#include "srv_channellistreply.h"
+#include "srv_createcharreply.h"
+#include "srv_channellistreply.h"
+#include "srv_deletecharreply.h"
+#include "srv_switchserver.h"
+#include "srv_characterlistreply.h"
 
 using namespace RoseCommon;
 
@@ -53,7 +64,7 @@ bool CCharClient::HandlePacket(uint8_t* _buffer) {
       return SendCharSelectReply(
           getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
     default:
-      return CRoseClient::HandlePacket(_buffer);
+      CRoseClient::HandlePacket(_buffer);
   }
   return true;
 }
@@ -95,7 +106,8 @@ bool CCharClient::JoinServerReply(
               SrvJoinServerReply::INVALID_PASSWORD, 0);
           send(*packet);
         }
-  } catch (sqlpp::exception&) {
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
       auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
       send(*packet);
   }

@@ -2,6 +2,11 @@
 
 #include "system.h"
 
+namespace RoseCommon {
+class CliMouseCmd;
+class CliStopMoving;
+}
+
 namespace Systems {
 
 class MovementSystem : public System {

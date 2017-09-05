@@ -1,4 +1,5 @@
 #include "srv_joinserverreply.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 

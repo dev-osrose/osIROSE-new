@@ -2,7 +2,7 @@
 
 using namespace RoseCommon;
 
-Item::Item() : 
+Item::Item() :
     type_(Item::WEARABLE),
     id_(0),
     isCreated_(false),

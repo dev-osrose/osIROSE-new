@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliEquipItem::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_EQUIP_ITEM, &createPacket<CliEquipItem>);
+const RecvPacketFactory::Initializer<uint8_t*> CliEquipItem::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_EQUIP_ITEM, &createPacket<CliEquipItem>);
 
 CliEquipItem::CliEquipItem() : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM) {}
 

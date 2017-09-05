@@ -5,8 +5,7 @@
 class CMapClient;
 
 struct SocketConnector {
-    SocketConnector(CMapClient *client) : client_(client) {}
+SocketConnector(std::shared_ptr<CMapClient> client) : client_(client) {}
 
-    CMapClient *client_;
+  std::weak_ptr<CMapClient> client_;
 };
-

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include "mappackets.h"
+#include "srv_changemapreply.h"
+#include "srv_serverdata.h"
 
 namespace RoseCommon {
 

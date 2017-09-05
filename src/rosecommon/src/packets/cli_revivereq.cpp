@@ -3,7 +3,7 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> CliReviveReq::init = RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]>(ePacketType::PAKCS_REVIVE_REQ, &createPacket<CliReviveReq>);
+const RecvPacketFactory::Initializer<uint8_t*> CliReviveReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_REVIVE_REQ, &createPacket<CliReviveReq>);
 
 CliReviveReq::CliReviveReq() : CRosePacket(ePacketType::PAKCS_REVIVE_REQ) {}
 

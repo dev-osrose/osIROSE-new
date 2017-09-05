@@ -21,6 +21,7 @@
 #include "network_thread_pool.h"
 #include "platform_defines.h"
 #include "cnetwork_asio.h"
+#include "packetfactory.h"
 
 namespace {
 void DisplayTitle()

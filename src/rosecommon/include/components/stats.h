@@ -19,6 +19,19 @@ struct Stats {
         sense_ = row.sense;
     }
 
+  template <typename U, typename T>
+  void commitToUpdate(T& update) const {
+    U chars;
+    update.assignments.add(chars.maxHp = maxHp_);
+    update.assignments.add(chars.maxMp = maxMp_);
+    update.assignments.add(chars.str = str_);
+    update.assignments.add(chars.dex = dex_);
+    update.assignments.add(chars.int_ = int_);
+    update.assignments.add(chars.con = con_);
+    update.assignments.add(chars.charm = charm_);
+    update.assignments.add(chars.sense = sense_);
+  }
+
     int32_t maxHp_;
     int32_t maxMp_;
     uint16_t str_;
@@ -30,4 +43,3 @@ struct Stats {
     uint8_t bodySize_;
     uint8_t headSize_;
 };
-

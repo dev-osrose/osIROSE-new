@@ -17,7 +17,7 @@ struct BasicInfo {
         SIT = 10
     };
 
-    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP), loggedIn_(false) {}
+    BasicInfo() : level_(0), xp_(0), id_(0), tag_(0), teamId_(0), targetId_(0), command_(STOP), isOnMap_(false) {}
     template <typename T>
     BasicInfo(const T& row) : BasicInfo() {
         loadFromRow(row);
@@ -36,6 +36,13 @@ struct BasicInfo {
         xp_ = row.exp;
     }
 
+  template <typename U, typename T>
+  void commitToUpdate(T& update) const {
+    U chars;
+    update.assignments.add(chars.level = level_);
+    update.assignments.add(chars.exp = xp_);
+  }
+
     std::string name_;
     uint16_t level_;
     uint32_t xp_;
@@ -44,6 +51,5 @@ struct BasicInfo {
     int32_t teamId_;
     uint16_t targetId_;
     uint16_t command_;
-    mutable std::atomic_bool loggedIn_;
+    mutable std::atomic_bool isOnMap_;
 };
-

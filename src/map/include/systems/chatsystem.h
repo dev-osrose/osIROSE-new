@@ -2,6 +2,12 @@
 
 #include "system.h"
 
+namespace RoseCommon {
+class CliNormalChat;
+class CliWhisperChat;
+class CliPartyChat;
+}
+
 namespace Systems {
 
 class ChatSystem : public System {

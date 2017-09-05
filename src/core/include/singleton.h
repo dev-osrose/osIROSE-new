@@ -25,12 +25,20 @@
 
 template <typename T>
 class Singleton {
+<<<<<<< HEAD
   public:
     friend T;
     static T& getInstance() {
       static T instance;
       return instance;
     }
+=======
+	public:
+		static T& getInstance() {
+			static T instance;
+			return instance;
+		}
+>>>>>>> origin/trunk
 
   protected:
     virtual ~Singleton() = default;

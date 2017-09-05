@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE
    ${CMAKE_SOURCE_DIR}/cmake/c_flag_overrides.cmake)

@@ -11,7 +11,7 @@ REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 class IscServerRegister : public CRosePacket {
     private:
-        static const RecvPacketFactory::Initializer<uint8_t[MAX_PACKET_SIZE]> init;
+        static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		IscServerRegister();
 		IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]);

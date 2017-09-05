@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 IF(ENABLE_TESTING_COVERAGE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
@@ -8,7 +8,11 @@ IF(ENABLE_TESTING_COVERAGE)
 ENDIF() # ENABLE_TESTING_COVERAGE
 
 IF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=900 -Wno-expansion-to-defined")
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=900 -Wno-macro-redefined")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=900 -Wno-expansion-to-defined")
+  endif()
 ENDIF()
 
 IF(ENABLE_TESTING)
