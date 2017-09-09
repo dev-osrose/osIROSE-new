@@ -5,7 +5,7 @@
 #include <array>
 
 struct Wishlist {
-  static const maxWishes = 30;
+  static const uint8_t maxWishes = 30;
 
   std::array<RoseCommon::Item, maxWishes> wishlist_;
 };
