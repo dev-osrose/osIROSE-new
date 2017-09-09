@@ -13,14 +13,14 @@ struct Quest {
   uint32_t timer_{}; // unlimited if 0
   std::array<uint16_t, maxVars> vars_{};
   uint32_t switches_{};
-  std::array<RoseCommon::Item, maxItems> items_;
+  std::array<RoseCommon::Item, maxItems> items_{};
 
   friend
   RoseCommon::CRosePacket &operator<<(RoseCommon::CRosePacket& os, const Quest& q) {
     os << q.id_ << q.timer_;
     os << q.vars_;
     os << q.switches_;
-    for (auto &it : q.items_)
+    for (const auto &it : q.items_)
       os << it.getHeader() << it.getData();
     return os;
   }
@@ -38,7 +38,7 @@ struct Quests {
   std::array<uint16_t, maxConditionsJob> job_{};
   std::array<uint16_t, maxConditionsPlanet> planet_{};
   std::array<uint16_t, maxConditionsUnion> union_{};
-  std::array<Quest, maxQuests> quests_;
+  std::array<Quest, maxQuests> quests_{};
   std::array<uint32_t, maxSwitches> switches_{};
 
   friend

@@ -149,6 +149,9 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
 
     Systems::UpdateSystem::calculateSpeed(entity);
 
+    entity.assign<Quests>();
+    entity.assign<Wishlist>();
+
     registerEntity(entity);
     return entity;
 }
