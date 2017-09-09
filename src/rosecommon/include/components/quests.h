@@ -9,10 +9,10 @@ struct Quest {
   static const uint8_t maxVars = 10;
   static const uint8_t maxItems = 6;
 
-  uint16_t id_;
-  uint32_t timer_; // unlimited if 0
-  std::array<int16_t, maxVars> vars_;
-  uint32_t switches_;
+  uint16_t id_{};
+  uint32_t timer_{}; // unlimited if 0
+  std::array<uint16_t, maxVars> vars_{};
+  uint32_t switches_{};
   std::array<RoseCommon::Item, maxItems> items_;
 
   friend
@@ -34,12 +34,12 @@ struct Quests {
   static const uint8_t maxConditionsUnion = 10;
   static const uint8_t maxSwitches = 16;
 
-  std::array<uint16_t, maxConditionsEpisode> episode_;
-  std::array<uint16_t, maxConditionsJob> job_;
-  std::array<uint16_t, maxConditionsPlanet> planet_;
-  std::array<uint16_t, maxConditionsUnion> union_;
+  std::array<uint16_t, maxConditionsEpisode> episode_{};
+  std::array<uint16_t, maxConditionsJob> job_{};
+  std::array<uint16_t, maxConditionsPlanet> planet_{};
+  std::array<uint16_t, maxConditionsUnion> union_{};
   std::array<Quest, maxQuests> quests_;
-  std::array<uint32_t, maxSwitches> switches_;
+  std::array<uint32_t, maxSwitches> switches_{};
 
   friend
   RoseCommon::CRosePacket &operator<<(RoseCommon::CRosePacket& os, const Quests& q) {
