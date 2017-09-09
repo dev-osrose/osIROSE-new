@@ -139,7 +139,7 @@ CREATE TABLE `inventory` (
 
 -- Table structure for table `wishlist`
 
-DROP TABLE IF EXISTS `wishlish`;
+DROP TABLE IF EXISTS `wishlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wishlist` (
@@ -156,7 +156,7 @@ CREATE TABLE `wishlist` (
     PRIMARY KEY (`uid`),
     UNIQUE KEY `id_UNIQUE` (`uid`),
     KEY `char_id_idx` (`char_id`),
-    CONSTRAINT `char_id` FOREIGN_KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+    CONSTRAINT `wish_char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

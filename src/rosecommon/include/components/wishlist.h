@@ -15,4 +15,13 @@ struct Wishlist {
       os << it.getHeader() << it.getData();
     return os;
   }
+
+  template <typename T>
+  void loadFromResult(T& res) {
+    for (const auto& row : res) {
+      if (row.slot >= maxWishes)
+        continue; // FIXME : error somewhere?
+      wishlist_[row.slot].loadFromRow(row);
+    }
+  }
 };

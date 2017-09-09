@@ -150,7 +150,13 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     Systems::UpdateSystem::calculateSpeed(entity);
 
     entity.assign<Quests>();
-    entity.assign<Wishlist>();
+
+    Core::WishTable wish;
+    auto wishRes = conn(sqlpp::select(sqlpp::all_of(wish))
+                        .from(wish)
+                        .where(wish.charId == charId));
+    auto wishlist = entity.assign<Wishlist>();
+    wishlist->loadFromResult(wishRes);
 
     registerEntity(entity);
     return entity;
