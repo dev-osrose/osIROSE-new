@@ -53,6 +53,8 @@ set( SOURCES_HEADER
   include/components/socketconnector
   include/components/stats
   include/components/statuseffects
+  include/components/wishlist
+  include/components/quests
 )
 
 SET(SOURCES_BASE
@@ -175,6 +177,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_loginreply
   src/packets/srv_channellistreply
   include/packets/srv_channellistreply
+  src/packets/srv_questdata
+  include/packets/srv_questdata
   #---------------------------------------------------------
   src/packets/isc_serverregister
   include/packets/isc_serverregister
