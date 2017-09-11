@@ -25,6 +25,7 @@
 #include "srv_joinserverreply.h"
 #include "srv_inventorydata.h"
 #include "srv_selectcharreply.h"
+#include "srv_questdata.h"
 #include "config.h"
 
 using namespace RoseCommon;
@@ -168,7 +169,7 @@ bool CMapClient::JoinServerReply(
             auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
             send(*packet3);
 
-            auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>();
+            auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_);
             send(*packet4);
 
             auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();

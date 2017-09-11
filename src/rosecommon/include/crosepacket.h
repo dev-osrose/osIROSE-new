@@ -123,7 +123,7 @@ class CRosePacket {
         template <typename T>
         friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
             for (const auto &it : data)
-                os.writeNext<typename T::value_type>(it);
+                os << it;
             return os;
         }
 
@@ -136,14 +136,14 @@ class CRosePacket {
 
         friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
             while (*data)
-                os.writeNext<char>(*(data++));
+                os << *(data++);
             return os;
         }
 
         template <size_t count>
         friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
             for (size_t i = 0; i < count; ++i)
-                os.writeNext<char>(data[i]);
+                os << data[i];
             return os;
         }
 
@@ -156,14 +156,14 @@ class CRosePacket {
         template <typename T>
         friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
             for (auto &it : data)
-                it = os.readNext<typename T::value_type>();
+              os >> it;
             return os;
         }
 
         template <size_t count>
         friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
             for (size_t i = 0; i < count; ++i)
-                data[i] = os.readNext<char>();
+              os >> data[i];
             return os;
         }
 

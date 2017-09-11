@@ -137,6 +137,29 @@ CREATE TABLE `inventory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+-- Table structure for table `wishlist`
+
+DROP TABLE IF EXISTS `wishlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wishlist` (
+    `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `char_id` int(11) unsigned NOT NULL DEFAULT '0',
+    `itemid` int(11) unsigned NOT  NULL DEFAULT '0',
+    `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
+    `amount` int(11) unsigned NOT NULL DEFAULT '0',
+    `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
+    `slot` int(11) unsigned NOT NULL DEFAULT '0',
+    `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
+    `socket` int(10) unsigned NOT NULL DEFAULT '0',
+    `price` int(11) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (`uid`),
+    UNIQUE KEY `id_UNIQUE` (`uid`),
+    KEY `char_id_idx` (`char_id`),
+    CONSTRAINT `wish_char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `item_db`
 --
