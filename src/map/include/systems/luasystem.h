@@ -2,11 +2,7 @@
 
 #include "system.h"
 
-namespace RoseCommon {
-class CliNormalChat;
-class CliWhisperChat;
-class CliPartyChat;
-}
+#include <sol.hpp>
 
 namespace Systems {
 
@@ -16,6 +12,9 @@ class LuaSystem : public System {
         virtual ~LuaSystem() = default;
 
         virtual void update(EntityManager &es, double dt) {}
+    
+    private:
+        sol::state state_;
 };
 
 }
