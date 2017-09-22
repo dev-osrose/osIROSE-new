@@ -17,6 +17,12 @@ class LuaSystem : public System {
             callbacks_.insert({e, state_.load(luaFunc), dt});
         }
     
+        template <typename... Args>
+        void callLuaFunction(Entity e, const std::string& luaFunc, Args... args) {
+            auto func = state_.load(luaFunc);
+            func(e, args...);
+        }
+    
         virtual void update(EntityManager&, double dt) {
             for (auto &it : callbacks_) {
                 it.dt += dt;
@@ -32,7 +38,7 @@ class LuaSystem : public System {
         
         struct Callback {
             Entity e;
-            sol::load_result func;
+            sol::function func;
             double timeout;
             double dt = 0;
         };
