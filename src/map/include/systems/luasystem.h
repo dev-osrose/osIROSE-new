@@ -15,7 +15,7 @@ class LuaSystem : public System {
         virtual ~LuaSystem() = default;
 
         void registerLuaUpdate(Entity e, const std::string& luaFunc, double dt) {
-            auto *data = e.component<LuaData>();
+            auto data = e.component<LuaData>();
             throw_assert(data == nullptr, "The entity tried to register a lua function but doesn't have a lua component");
             if (!data->env_)
                 data->env_ = std::make_unique<sol::environment>(state_, sol::create);
@@ -24,7 +24,7 @@ class LuaSystem : public System {
     
         template <typename... Args>
         void callLuaFunction(Entity e, const std::string& luaFunc, Args... args) {
-            auto *data = e.component<LuaData>();
+            auto data = e.component<LuaData>();
             sol::function f;
             if (!data || !data->env_)
                 f = state_.load(luaFunc);
