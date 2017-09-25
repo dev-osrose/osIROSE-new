@@ -112,6 +112,8 @@ struct Item : public ISerialize {
     uint8_t refine_;
     uint32_t count_;
     bool isStackable_;
+    
+    std::string onEquip_ = "function onEquip(entity) print('test') end";
 };
 
 }
