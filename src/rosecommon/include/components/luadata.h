@@ -2,6 +2,8 @@
 
 #include <sol.hpp>
 
+#include <memory>
+
 struct LuaData {
-    sol::environment env_;
+    std::unique_ptr<sol::environment> env_;
 };
