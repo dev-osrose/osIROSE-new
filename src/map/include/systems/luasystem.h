@@ -33,6 +33,10 @@ class LuaSystem : public System {
             f(e, args...);
         }
     
+        void unregisterEntity(Entity e) {
+            callbacks_.erase({e});
+        }
+    
         virtual void update(EntityManager&, double dt) {
             for (auto &it : callbacks_) {
                 it.dt += dt;
@@ -51,6 +55,8 @@ class LuaSystem : public System {
             sol::function func;
             double timeout;
             double dt = 0;
+            
+            bool operator==(const Callback& c) const { return e == c.e; }
         };
         std::unordered_set<Callback> callbacks_;
 };
