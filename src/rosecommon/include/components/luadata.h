@@ -2,7 +2,9 @@
 
 #include <memory>
 
-class sol::environment;
+namespace sol {
+class environment;
+}
 
 struct LuaData {
     std::unique_ptr<sol::environment> env_;
