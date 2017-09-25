@@ -5,6 +5,7 @@
 #include "systems/inventorysystem.h"
 #include "systems/partysystem.h"
 #include "systems/mapsystem.h"
+#include "systems/luasystem.h"
 #include "connection.h"
 #include "cmapclient.h"
 
@@ -19,6 +20,7 @@ EntitySystem::EntitySystem() : systemManager_(*this) {
     systemManager_.add<Systems::InventorySystem>();
     systemManager_.add<Systems::PartySystem>();
     systemManager_.add<Systems::MapSystem>();
+    systemManager_.add<Systems::LuaSystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
@@ -57,6 +59,7 @@ void EntitySystem::update(double dt) {
           auto basic = it.component<BasicInfo>();
           nameToEntity_.erase(basic->name_);
           idToEntity_.erase(basic->id_);
+          systemManager_.get<Systems::LuaSystem>()->unregisterEntity(it);
           it.destroy();
         }
     }
