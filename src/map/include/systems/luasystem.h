@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system.h"
+#include "throwassert.h"
 
 #include <sol.hpp>
 
@@ -14,13 +15,22 @@ class LuaSystem : public System {
         virtual ~LuaSystem() = default;
 
         void registerLuaUpdate(Entity e, const std::string& luaFunc, double dt) {
-            callbacks_.insert({e, state_.load(luaFunc), dt});
+            auto *data = e.component<LuaData>();
+            throw_assert(data == nullptr, "The entity tried to register a lua function but doesn't have a lua component");
+            if (!data->env_)
+                data->env_ = std::make_unique<sol::environment>(state_, sol::create);
+            callbacks_.insert({e, state_.load(luaFunc, *data->env_), dt});
         }
     
         template <typename... Args>
         void callLuaFunction(Entity e, const std::string& luaFunc, Args... args) {
-            auto func = state_.load(luaFunc);
-            func(e, args...);
+            auto *data = e.component<LuaData>();
+            sol::function f;
+            if (!data || !data->env_)
+                f = state_.load(luaFunc);
+            else
+                f = state_.load(luaFunc, *data->env);
+            f(e, args...);
         }
     
         virtual void update(EntityManager&, double dt) {
