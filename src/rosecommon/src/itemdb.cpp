@@ -5,7 +5,7 @@ using namespace RoseCommon;
 
 ItemDatabase::ItemDatabase() {
   for ( int index = 1; index < 15; ++index ) {
-    _database[index].reserve( 1000 ); // We shouldn't need more then 1000 entries off the bat.
+    _database[index].reserve( 500 ); // We shouldn't need more then 1000 entries off the bat.
   }
 }
 
@@ -34,26 +34,22 @@ void ItemDatabase::initialize() {
   Core::ItemDBTable itemdb{};
   try {
     ItemDef newItem;
-    for ( uint8_t itemType = 1; itemType < 15; ++itemType ) {
-      for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).where( itemdb.type == itemType ) ) ) {
-        newItem.type = static_cast<uint8_t>(row.type);
-        newItem.subtype = static_cast<uint8_t>(row.subtype);
-        newItem.id = static_cast<uint16_t>(row.id);
-        newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
-        newItem.sell_price = static_cast<uint32_t>(row.priceSell);
-        newItem.weight = static_cast<uint16_t>(row.weight);
-        newItem.atk = static_cast<uint16_t>(row.attack);
-        newItem.def = static_cast<uint16_t>(row.defense);
-        newItem.slots = static_cast<uint8_t>(row.slots);
-        newItem.level = static_cast<uint8_t>(row.equipLevel);
-        newItem.view_id = static_cast<uint32_t>(row.viewId);
-
-        newItem.name = row.name;
-        newItem.desc = row.desc;
-        newItem.script = row.script;
-
-        _database[itemType].push_back(newItem);
-      }
+    for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).order_by(itemdb.type.asc()) ) ) {
+      newItem.type = static_cast<uint8_t>(row.type);
+      newItem.subtype = static_cast<uint8_t>(row.subtype);
+      newItem.id = static_cast<uint16_t>(row.id);
+      newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
+      newItem.sell_price = static_cast<uint32_t>(row.priceSell);
+      newItem.weight = static_cast<uint16_t>(row.weight);
+      newItem.atk = static_cast<uint16_t>(row.attack);
+      newItem.def = static_cast<uint16_t>(row.defense);
+      newItem.slots = static_cast<uint8_t>(row.slots);
+      newItem.level = static_cast<uint8_t>(row.equipLevel);
+      newItem.view_id = static_cast<uint32_t>(row.viewId)  
+      newItem.name = row.name;
+      newItem.desc = row.desc;
+      newItem.script = row.script  
+      _database[row.type].push_back(newItem);
     }
   }
   catch ( sqlpp::exception& ) { }
