@@ -91,7 +91,7 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
 IF (MSVC)
-    set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/w0")
+    set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w0")
 ENDIF()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
