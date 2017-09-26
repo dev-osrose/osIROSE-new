@@ -34,7 +34,7 @@ void ItemDatabase::initialize() {
   Core::ItemDBTable itemdb{};
   try {
     ItemDef newItem;
-    for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).order_by(itemdb.id.asc()) ) ) {
+    for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).where(itemdb.type != 0).order_by(itemdb.id.asc()) ) ) {
       newItem.type = static_cast<uint8_t>(row.type);
       newItem.subtype = static_cast<uint8_t>(row.subtype);
       newItem.id = static_cast<uint16_t>(row.id);
@@ -45,10 +45,12 @@ void ItemDatabase::initialize() {
       newItem.def = static_cast<uint16_t>(row.defense);
       newItem.slots = static_cast<uint8_t>(row.slots);
       newItem.level = static_cast<uint8_t>(row.equipLevel);
-      newItem.view_id = static_cast<uint32_t>(row.viewId)  
+      newItem.view_id = static_cast<uint32_t>(row.viewId);
+      
       newItem.name = row.name;
       newItem.desc = row.desc;
-      newItem.script = row.script  
+      newItem.script = row.script;
+      
       _database[row.type].push_back(newItem);
     }
   }
