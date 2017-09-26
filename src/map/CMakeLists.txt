@@ -66,7 +66,7 @@ target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
 
 IF (MSVC)
-  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
+  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)
 ELSE()
     IF (ENABLE_MYSQL)

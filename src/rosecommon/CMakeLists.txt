@@ -199,7 +199,7 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
 
 IF (MSVC)
-  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
+  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
 ENDIF()
 
 target_link_libraries(${PROJECT} Core)

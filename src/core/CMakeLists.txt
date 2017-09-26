@@ -78,7 +78,7 @@ add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${OSIROSE_HEADER
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 IF (MSVC)
-  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
+  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
 ENDIF()
 
 IF (ENABLE_MYSQL)
