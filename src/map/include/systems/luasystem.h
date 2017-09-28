@@ -5,7 +5,8 @@
 
 #include <sol.hpp>
 
-#include <unordered_set>
+#include <vector>
+#include <algorithm>
 
 namespace Systems {
 
@@ -14,51 +15,56 @@ class LuaSystem : public System {
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
-        void registerLuaUpdate(Entity e, const std::string& luaFunc, double dt) {
+        void registerLuaUpdate(Entity e, std::string_view name, std::string_view luaFunc, double dt) {
             auto data = e.component<LuaData>();
             throw_assert(data == nullptr, "The entity tried to register a lua function but doesn't have a lua component");
             if (!data->env_)
                 data->env_ = std::make_unique<sol::environment>(state_, sol::create);
-            callbacks_.insert({e, state_.load(luaFunc, *data->env_), dt});
+            state_.script(luaFunc, *data->env_);
+            callbacks_.push_back({e, name, dt});
         }
-    
+
         template <typename... Args>
-        void callLuaFunction(Entity e, const std::string& luaFunc, Args... args) {
+        void callLuaFunction(Entity e, std::string_view luaFunc, Args&&... args) {
             auto data = e.component<LuaData>();
             sol::function f;
             if (!data || !data->env_)
-                f = state_.load(luaFunc);
+                f = state_.script(luaFunc);
             else
-                f = state_.load(luaFunc, *data->env);
-            f(e, args...);
+              f = state_.script(luaFunc, *data->env_);
+            f(e, std::move(args)...);
         }
-    
+
         void unregisterEntity(Entity e) {
-            callbacks_.erase({e});
+          auto it = std::find(callbacks_.begin(), callbacks_.end(), Callback{e});
+            if (it != callbacks_.end())
+              callbacks_.erase(it);
         }
-    
+
         virtual void update(EntityManager&, double dt) {
             for (auto &it : callbacks_) {
                 it.dt += dt;
-                if (it.dt >= timeout) {
+                if (it.dt >= it.timeout) {
+                  //auto data = it.e.component<LuaData>();
+                    auto func = state_[it.name];
                     func(it.e, it.dt);
                     it.dt = 0.f;
                 }
             }
         }
-    
+
     private:
         sol::state state_;
-        
+
         struct Callback {
             Entity e;
-            sol::function func;
-            double timeout;
+            std::string_view name{};
+            double timeout = 0;
             double dt = 0;
-            
+
             bool operator==(const Callback& c) const { return e == c.e; }
         };
-        std::unordered_set<Callback> callbacks_;
+        std::vector<Callback> callbacks_;
 };
 
 }
