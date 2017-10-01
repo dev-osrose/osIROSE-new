@@ -56,7 +56,7 @@ class LuaSystem : public System {
 
         struct Callback {
             Entity e;
-            std::string_view name{};
+            std::string name{};
             double timeout = 0;
             double dt = 0;
 
