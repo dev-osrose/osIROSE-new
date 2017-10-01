@@ -62,11 +62,25 @@ set(args
   OUTPATH ${CMAKE_BINARY_DIR}/generated
 )
 
-GENERATE_SQL_HEADER(SQL_HEADER ${args})
+GENERATE_SQL_HEADER(OSIROSE_HEADER ${args})
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
+set(args
+  SQLFILE ${CMAKE_SOURCE_DIR}/Database/logs.sql
+  SQLROOT ${CMAKE_SOURCE_DIR}/Database
+  NAME logDatabase
+  OUTPATH ${CMAKE_BINARY_DIR}/generated
+)
+
+GENERATE_SQL_HEADER(LOGS_HEADER ${args})
+
+add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${OSIROSE_HEADER} ${LOGS_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+IF (MSVC)
+  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
+ENDIF()
+
 IF (ENABLE_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()
