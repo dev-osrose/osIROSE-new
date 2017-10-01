@@ -31,13 +31,13 @@ class Singleton {
 			return instance;
 		}
 
-	protected:
-		virtual ~Singleton() = default;
+  protected:
+    virtual ~Singleton() = default;
     explicit Singleton() = default;
 
-	private:
-		Singleton(const Singleton&) = delete;
-		Singleton& operator=(Singleton const&) = delete;
+  private:
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(Singleton const&) = delete;
 };
 
 #endif /* !_SINGLETON_H_ */

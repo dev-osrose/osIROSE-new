@@ -89,6 +89,11 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/char/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/map/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
+
+IF (MSVC)
+    set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w0")
+ENDIF()
+
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 
 
@@ -99,6 +104,7 @@ macro (compile_test name path)
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
   IF(ENABLE_MYSQL)
@@ -113,6 +119,7 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
 
   IF (MSVC)
+    set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
     target_link_libraries(${TEST_NAME} wsock32.lib)
   ELSE()
     target_link_libraries(${TEST_NAME} mysqlclient)
