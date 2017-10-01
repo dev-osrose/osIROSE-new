@@ -43,13 +43,13 @@
 #include "components/party.h"
 #include "components/wishlist.h"
 #include "components/quests.h"
-#include "components/luadata.h"
+#include "components/lua.h"
 
 using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      LuaData>;
+      Lua>;
 
 using Entity = EntityManager::Entity;
 
