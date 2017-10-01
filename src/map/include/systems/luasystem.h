@@ -15,7 +15,7 @@ class LuaSystem : public System {
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
-        void loadScript(Entity e, std::string_view luaScript) {
+        void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
           if (!lua->env_)
@@ -28,7 +28,7 @@ class LuaSystem : public System {
           state_.script(luaScript, *lua->env_);
         }
 
-        void callLuaFunction(Entity e, std::string_view name) {
+        void callLuaFunction(Entity e, const std::string name) {
           auto lua = e.component<Lua>();
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
           auto &env = *lua->env_;
