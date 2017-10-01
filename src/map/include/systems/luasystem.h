@@ -15,24 +15,25 @@ class LuaSystem : public System {
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
-        void registerLuaUpdate(Entity e, std::string_view name, std::string_view luaFunc, double dt) {
-            auto data = e.component<LuaData>();
-            throw_assert(data == nullptr, "The entity tried to register a lua function but doesn't have a lua component");
-            if (!data->env_)
-                data->env_ = std::make_unique<sol::environment>(state_, sol::create);
-            state_.script(luaFunc, *data->env_);
-            callbacks_.push_back({e, name, dt});
+        void loadScript(Entity e, std::string_view luaScript) {
+          auto lua = e.component<Lua>();
+          throw_assert(lua, "The entity doesn't have a lua table");
+          if (!lua->env_)
+            lua->env_ = std::make_unique<sol::environment>(state_, sol::create);
+          lua->env_->set_function("testCpp",
+                                [this, e](std::string data) {
+                                    auto basic = e.component<BasicInfo>();
+                                    logger_->warn("test lua: {}, entity: {}", data, basic->name_);
+                              });
+          state_.script(luaScript, *lua->env_);
         }
 
-        template <typename... Args>
-        void callLuaFunction(Entity e, std::string_view luaFunc, Args&&... args) {
-            auto data = e.component<LuaData>();
-            sol::function f;
-            if (!data || !data->env_)
-                f = state_.script(luaFunc);
-            else
-              f = state_.script(luaFunc, *data->env_);
-            f(e, std::move(args)...);
+        void callLuaFunction(Entity e, std::string_view name) {
+          auto lua = e.component<Lua>();
+          throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
+          auto &env = *lua->env_;
+          sol::function func = env[name];
+          func();
         }
 
         void unregisterEntity(Entity e) {
@@ -45,9 +46,6 @@ class LuaSystem : public System {
             for (auto &it : callbacks_) {
                 it.dt += dt;
                 if (it.dt >= it.timeout) {
-                  //auto data = it.e.component<LuaData>();
-                    auto func = state_[it.name];
-                    func(it.e, it.dt);
                     it.dt = 0.f;
                 }
             }

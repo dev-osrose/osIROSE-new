@@ -55,6 +55,7 @@ set( SOURCES_HEADER
   include/components/statuseffects
   include/components/wishlist
   include/components/quests
+  include/components/lua
 )
 
 SET(SOURCES_BASE
