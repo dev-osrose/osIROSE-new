@@ -82,8 +82,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/map/include
 )
 
-find_package( Threads REQUIRED )
-
 add_library(${PROJECT_LIB} STATIC ${SERVER_SOURCE} ${HEADERS})
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/login/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/char/include>)
@@ -91,7 +89,9 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 
-
+#-----------------------------------------------------------------------------
+# Helper Macro
+#-----------------------------------------------------------------------------
 macro (compile_test name path)
   set(TEST_NAME Test${name})
   project(${TEST_NAME})
@@ -101,15 +101,14 @@ macro (compile_test name path)
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  IF(ENABLE_MYSQL)
+  IF(WITH_MYSQL)
       target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
   ENDIF()
 
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} gtest)
-  target_link_libraries(${TEST_NAME} gmock)
+  link_with_gtest(${TEST_NAME} gtest)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
 
   IF (MSVC)
@@ -124,7 +123,7 @@ endmacro (compile_test)
 #---------------------------------
 #build the actual tests
 
-IF(ENABLE_TESTING_COVERAGE)
+IF(WITH_COVERAGE_REPORTS)
   include(CodeCoverage)
 
   set(COVERAGE_IGNORE_LIST
@@ -133,7 +132,7 @@ IF(ENABLE_TESTING_COVERAGE)
   )
 
   SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
-ENDIF() # ENABLE_TESTING_COVERAGE
+ENDIF() # WITH_COVERAGE_REPORTS
 
 compile_test(Config src/test_config)
 compile_test(Console src/test_logconsole)

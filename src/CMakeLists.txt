@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 17)
 
-IF(ENABLE_TESTING_COVERAGE)
+IF(WITH_COVERAGE_REPORTS)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
   set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
 ENDIF() # ENABLE_TESTING_COVERAGE
@@ -15,12 +15,12 @@ IF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
   endif()
 ENDIF()
 
-IF(ENABLE_TESTING)
+IF(BUILD_TESTS)
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIR}
     SYSTEM ${GMOCK_INCLUDE_DIR}
   )
-ENDIF() # ENABLE_TESTING
+ENDIF() # BUILD_TESTS
 
 IF( ENABLE_ASAN )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
@@ -49,7 +49,7 @@ link_directories(
   ${EXTERNAL_BINARY_DIR}
 )
 
-IF(ENABLE_MYSQL)
+IF(WITH_MYSQL)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_MYSQL")
   include_directories(
     SYSTEM ${MYSQL_INCLUDE_DIRS}
@@ -74,7 +74,7 @@ add_subdirectory(map)
 
 add_subdirectory(bot)
 
-IF(ENABLE_TESTING)
+IF(BUILD_TESTS)
   add_subdirectory(tests)
 ENDIF()
 
