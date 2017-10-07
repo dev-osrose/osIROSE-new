@@ -14,8 +14,8 @@ set(CMAKE_INSTALL_PREFIX ${DEFAULT_INSTALL_DIR}
     CACHE STRING "Install Prefix")
 
 if(WIN32)
-  set(BINDIR "${CMAKE_BUILD_TYPE}_Out")
-  set(RUNTIME_LIBDIR "${BINDIR}\\bin")
+  set(BINDIR "bin")
+  set(RUNTIME_LIBDIR "${BINDIR}\\${CMAKE_BUILD_TYPE}_Out")
   set(DATADIR "${BINDIR}\\data")
 else()
   set(BINDIR ""
@@ -24,8 +24,6 @@ else()
       CACHE STRING "Lib Dir")
   set(DATADIR ""
       CACHE STRING "Data Install Dir")
-  set(DESKTOPDIR "/usr/share/applications"
-      CACHE STRING "Desktop installation directory")
 endif()
 
 # set variables used by cmake
@@ -54,13 +52,5 @@ else()
     file(RELATIVE_PATH DATA_INSOURCE_DIR ${BIN_INSTALL_DIR} ${DATA_INSTALL_DIR})
   else()
     file(RELATIVE_PATH DATA_INSOURCE_DIR ${LIB_INSTALL_DIR} ${DATA_INSTALL_DIR})
-  endif()
-endif()
-
-if(UNIX AND NOT APPLE)
-  if(IS_ABSOLUTE ${DESKTOPDIR})
-    set(DESKTOP_INSTALL_DIR ${DESKTOPDIR})
-  else()
-    message(FATAL_ERROR "DESKTOPDIR has to be absolute, anything else doesn't make sense")
   endif()
 endif()

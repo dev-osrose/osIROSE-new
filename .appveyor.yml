@@ -52,7 +52,7 @@ build_script:
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
-- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\%CONFIGURATION%_Out\bin\
+- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%_Out
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
 
 artifacts:
@@ -75,7 +75,7 @@ before_test:
   - pip.exe install lxml
   - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
   - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
-  - C:/projects/osIROSE/build/bin/%CONFIGURATION%/TestConfig.exe --gtest_filter=SetupTesting.**
+  - C:/projects/osIROSE/build/bin/%CONFIGURATION%_Out/TestConfig.exe --gtest_filter=SetupTesting.**
   - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.json' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
 
 test_script:
