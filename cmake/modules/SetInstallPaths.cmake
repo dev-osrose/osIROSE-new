@@ -18,7 +18,7 @@ if(WIN32)
   set(RUNTIME_LIBDIR "${BINDIR}\\${CMAKE_BUILD_TYPE}_Out")
   set(DATADIR "${BINDIR}\\data")
 else()
-  set(BINDIR ""
+  set(BINDIR "bin"
       CACHE STRING "Bin Install Dir")
   set(RUNTIME_LIBDIR "lib"
       CACHE STRING "Lib Dir")
