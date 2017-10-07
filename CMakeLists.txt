@@ -23,6 +23,7 @@ set(CMAKE_TEST_PROJECTS_BIN "${CMAKE_BINARY_DIR}/cmake_test")
 
 set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
+
 set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)

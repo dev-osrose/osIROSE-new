@@ -1,3 +1,6 @@
+
+add_compiler_flags(-DASIO_STANDALONE)
+
 macro(use_unicode_here)
   add_definitions(-D_UNICODE -DUNICODE)
 endmacro()

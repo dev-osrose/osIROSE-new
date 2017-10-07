@@ -90,6 +90,7 @@ macro (compile_test name path)
   
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIRS}
+    SYSTEM ${GMOCK_INCLUDE_DIRS}
   )
 
   add_executable(${TEST_NAME} main ${path})
@@ -117,7 +118,6 @@ endmacro (compile_test)
 
 #---------------------------------
 #build the actual tests
-
 IF(WITH_COVERAGE_REPORTS)
   include(CodeCoverage)
 
