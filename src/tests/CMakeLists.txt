@@ -114,6 +114,8 @@ macro (compile_test name path)
   ENDIF()
 
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+  
+  install_executable(${TEST_NAME})
 endmacro (compile_test)
 
 #---------------------------------

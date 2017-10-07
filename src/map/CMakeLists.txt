@@ -62,3 +62,5 @@ ELSE()
       target_link_libraries(${PROJECT} mysqlclient)
     ENDIF()
 ENDIF()
+
+install_executable(${PROJECT})

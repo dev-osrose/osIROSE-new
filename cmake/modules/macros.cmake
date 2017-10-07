@@ -328,7 +328,7 @@ function(__internal_install_binary target category create_wrapper)
 endfunction()
 
 function(install_executable target)
-  __internal_install_binary(${target} "Executable" TRUE)
+  __internal_install_binary(${target} "Executable" FALSE)
 endfunction()
 
 function(install_tool target)

@@ -46,3 +46,4 @@ ELSE()
   ENDIF()
 ENDIF()
 
+install_executable(${PROJECT})
