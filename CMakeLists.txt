@@ -38,6 +38,10 @@ set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
+if(Debug)
+  set(DEBUG 1)
+endif()
+
 if(DEBUG)
   set(CMAKE_BUILD_TYPE Debug)
 else()
