@@ -4,6 +4,7 @@
 
 option(PROJECT_DEBUG "Enable debugging messages support" ON)
 
+OPTION(BUILD_LUA "Build Lua" ON)
 option(BUILD_TOOLS "Build server tools" ON)
 option(BUILD_API_DOC "Build doxygen documentation" OFF)
 

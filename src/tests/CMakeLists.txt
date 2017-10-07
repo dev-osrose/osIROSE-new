@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.6)
 
 # Prepare testing infrastructure.
 link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
@@ -7,23 +6,16 @@ link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} 
 set(PROJECT_LIB osirose-lib)
 set(CMAKE_BUILD_TYPE "Debug")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
-set(GCC_LINK_FLAGS "${GCC_LINK_FLAGS}")
-set(Clang_LINK_FLAGS "")
-set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
-
-IF (NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-ENDIF()
+#set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
+#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
-ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
+  add_compiler_flags(-Wl,-Map=${PROJECT}.map)
 ENDIF()
 
-add_definitions(-DSERVER_TESTING)
+add_compiler_flags(-DSERVER_TESTING)
 
+# Grab all other files that can be used in the tests
 file(GLOB_RECURSE LOGIN_HEADERS . ${CMAKE_SOURCE_DIR}/src/login/*.[h])
 file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
 file(GLOB_RECURSE MAP_HEADERS . ${CMAKE_SOURCE_DIR}/src/map/*.[h])
@@ -90,12 +82,15 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLU
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 
 #-----------------------------------------------------------------------------
-# Helper Macro
+# Unit test helper Macro
 #-----------------------------------------------------------------------------
 macro (compile_test name path)
   set(TEST_NAME Test${name})
   project(${TEST_NAME})
-  find_package( Threads REQUIRED )
+  
+  include_directories(
+    SYSTEM ${GTEST_INCLUDE_DIRS}
+  )
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
@@ -108,8 +103,8 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
-  link_with_gtest(${TEST_NAME} gtest)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+  link_with_gtest(${TEST_NAME} gtest)
 
   IF (MSVC)
     target_link_libraries(${TEST_NAME} wsock32.lib)

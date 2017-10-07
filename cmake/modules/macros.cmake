@@ -30,7 +30,7 @@ function(CREATE_VERSION_FILE)
   message(STATUS "Generating version.h")
   configure_file(
     ${CMAKE_SOURCE_DIR}/cmake/version.h.in
-    ${CMAKE_BINARY_DIR}/generated/version.h
+    ${CMAKE_GEN_SRC_DIR}/version.h
   )
   #end version file
 endfunction()
@@ -250,6 +250,7 @@ macro(add_linker_flags)
   foreach(flag ${ARGN})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${flag}")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${flag}")
+    set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${flag}")
   endforeach()
 endmacro()
 

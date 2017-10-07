@@ -1,25 +1,8 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 link_directories(${EXTERNAL_BINARY_DIR})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 set(PROJECT Core)
 project(${PROJECT})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
-
-IF (NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
-ENDIF()
-
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
-ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
-ENDIF()
 
 set( SOURCES_HEADER
   include/threadpool
@@ -46,7 +29,7 @@ set( SOURCES_BASE
   src/connection
 )
 
-IF (ENABLE_MYSQL)
+IF (WITH_MYSQL)
   list(APPEND SOURCES_HEADER
     include/mysqlconnection
   )
@@ -59,15 +42,15 @@ set(args
   SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
   SQLROOT ${CMAKE_SOURCE_DIR}/Database
   NAME osiroseDatabase
-  OUTPATH ${CMAKE_BINARY_DIR}/generated
+  OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
 GENERATE_SQL_HEADER(SQL_HEADER ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
-
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-IF (ENABLE_MYSQL)
+
+IF (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()
 
