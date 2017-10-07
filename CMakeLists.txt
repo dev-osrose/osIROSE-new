@@ -20,7 +20,6 @@ set(CMAKE_GEN_SRC_DIR "${CMAKE_BINARY_DIR}/gen")
 set(CMAKE_TEST_PROJECTS "${CMAKE_SOURCE_DIR}/src/tests")
 set(CMAKE_TEST_PROJECTS_BIN "${CMAKE_BINARY_DIR}/cmake_test")
 
-
 set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
@@ -62,6 +61,10 @@ include(macros)
 include(parsearguments)
 include(CheckCompiler)
 include(SetInstallPaths)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BIN_INSTALL_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BIN_INSTALL_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_INSTALL_DIR})
 
 
 #------------------------------------------------------------------------------

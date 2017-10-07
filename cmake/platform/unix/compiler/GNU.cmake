@@ -10,12 +10,11 @@ if(DEBUG)
     add_compiler_flags(-fsanitize=address -fno-omit-frame-pointer)
     add_linker_flags(-fsanitize=address)
   ENDIF()
-  
-  if (WITH_COVERAGE_REPORTS)
-    add_compiler_flags(-O0 -fprofile-arcs -ftest-coverage)
-  endif()
- 
   add_linker_flags(-rdynamic)
+endif()
+
+if (WITH_COVERAGE_REPORTS)
+  add_compiler_flags(-O0 -fprofile-arcs -ftest-coverage)
 endif()
 
 set(GCC TRUE)
