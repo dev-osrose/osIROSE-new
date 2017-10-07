@@ -39,4 +39,3 @@ IF (MSVC)
   target_link_libraries(${PROJECT} wsock32.lib)
 ENDIF()
 
-install_executable(${PROJECT})
