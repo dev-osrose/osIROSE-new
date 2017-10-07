@@ -48,7 +48,7 @@ build:
 
 build_script:
 - cd build
-- cmake -D%CONFIGURATION% ..
+- cmake -D%CONFIGURATION%=1 ..
 - cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
