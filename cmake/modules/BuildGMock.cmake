@@ -17,7 +17,6 @@ ExternalProject_Get_Property(
 )
 
 set(GMOCK_INCLUDE_DIRS "${source_dir}/include")
-set(GTEST_INCLUDE_DIRS "${source_dir}/gtest/include")
 
 if(WIN32)
   set(GMOCK_LIBRARIES "${source_dir}/${CMAKE_BUILD_TYPE}/gmock.lib")
