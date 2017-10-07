@@ -18,6 +18,7 @@ env:
   - SUITE=tests
   - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
   - LD_LIBRARY_PATH=$HOME/bakefile/lib:$HOME/mysql/lib:$LD_LIBRARY_PATH
+  - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/script
 services:
 - mysql
 matrix:
@@ -56,7 +57,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=tests
     - export CXX="g++-5" CC="gcc-5";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -70,19 +71,19 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    #- bash $CI_DIRECTORY/install-cmake.sh
+    #- bash $CI_DIRECTORY/install-ninja.sh
+    - bash $CI_DIRECTORY/install-lcov.sh
+    #- bash $CI_DIRECTORY/install-bakefile.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    - bash $CI_DIRECTORY/before_script.sh
     script:
     - cd build
-    - bash $TRAVIS_BUILD_DIR/ci/script.sh
+    - bash $CI_DIRECTORY/script.sh
     
   - env: g++-6 BUILD_TYPE=Debug
     sudo: false
@@ -116,7 +117,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=tests
     - export CXX="g++-6" CC="gcc-6";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -130,16 +131,16 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $CI_DIRECTORY/install-lcov.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    - bash $CI_DIRECTORY/before_script.sh
     script:
     - cd build
-    - bash $TRAVIS_BUILD_DIR/ci/script.sh
+    - bash $CI_DIRECTORY/script.sh
     
   - env: g++-6 BUILD_TYPE=Release
     sudo: false
@@ -170,7 +171,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -184,16 +185,16 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $CI_DIRECTORY/install-lcov.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    - bash $CI_DIRECTORY/before_script.sh
     script:
     - cd build
-    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
+    - bash $CI_DIRECTORY/script.sh;
     after_success:
     - bash <(curl -s https://codecov.io/bash)
     
@@ -229,7 +230,7 @@ matrix:
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -243,16 +244,16 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $CI_DIRECTORY/install-lcov.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    - bash $CI_DIRECTORY/before_script.sh
     script:
     - cd build
-    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
+    - bash $CI_DIRECTORY/script.sh;
     
   - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Release
     sudo: false
@@ -286,7 +287,7 @@ matrix:
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -300,16 +301,16 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $CI_DIRECTORY/install-lcov.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    - bash $CI_DIRECTORY/before_script.sh
     script:
     - cd build
-    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
+    - bash $CI_DIRECTORY/script.sh;
 
   - env: g++-6 coverity_scan
     sudo: false
@@ -340,7 +341,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
-    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -354,7 +355,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    - bash $CI_DIRECTORY/install-mysql.sh
     script:
     - echo "coverity scan"
     after_success:
