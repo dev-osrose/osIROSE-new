@@ -100,9 +100,9 @@ endif()
 # build some external projects
 #------------------------------------------------------------------------------
 
-#if(NOT BREAKPAD_EXCEPTION_HANDLER_FOUND)
-#  include(BuildGoogleBreakpad)
-#endif()
+if(NOT BREAKPAD_EXCEPTION_HANDLER_FOUND)
+  include(BuildGoogleBreakpad)
+endif()
 
 if(NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
