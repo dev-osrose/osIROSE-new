@@ -53,6 +53,17 @@ function(OVERWRITE_COMPILER_SETTINGS)
 # --------------------------
 endfunction()
 
+function(generate_symbol_data target)
+  if(UNIX)
+    add_custom_command(TARGET ${target}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols
+      COMMAND ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms $<TARGET_FILE:${target}> > ${CMAKE_BINARY_DIR}/bin/symbols/${target}.sym
+      #TODO Generate symbol folders
+      VERBATIM
+    )
+  endif()
+endfunction()
 
 function(GENERATE_SQL_HEADER HDRS)
   PARSE_ARGUMENTS(ARG "SQLROOT;SQLFILE;OUTPATH;NAME;TARGET;EXPORT_MACRO" "DEBUG" ${ARGN})

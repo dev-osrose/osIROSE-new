@@ -59,7 +59,6 @@ if(WIN32 AND NOT MINGW)
 	set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES_S "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR_S}/exception_handler.lib")	
   set_property(TARGET breakpad_s PROPERTY FOLDER "ThirdParty")
 else()
-
   ExternalProject_Add(
     breakpad
     GIT_SUBMODULES breakpad
@@ -75,33 +74,6 @@ else()
     DEPENDEES download
     DEPENDERS configure
   )
-  
-#  ExternalProject_Add_Step(
-#    breakpad
-#    patch-bug-158
-#    COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/bug-158.patch
-#    WORKING_DIRECTORY <SOURCE_DIR>
-#    DEPENDEES download
-#    DEPENDERS configure
-#  )
-#  if(MINGW)
-#    ExternalProject_Add_Step(
-#      breakpad
-#      patch-mingw
-#      COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/breakpad-mingw.patch
-#      WORKING_DIRECTORY <SOURCE_DIR>
-#      DEPENDEES download
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(
-#      breakpad
-#      patch-windows
-#      COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/breakpad.patch
-#      WORKING_DIRECTORY <SOURCE_DIR>
-#      DEPENDEES download
-#      DEPENDERS configure
-#    )
-#  endif()
 endif()
 
 ExternalProject_Get_Property(

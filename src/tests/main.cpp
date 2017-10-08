@@ -1,5 +1,5 @@
 // Unit test driver
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "network_thread_pool.h"
 #include "logconsole.h"
 
@@ -9,8 +9,27 @@ using ::testing::TestCase;
 using ::testing::TestInfo;
 using ::testing::UnitTest;
 
+#ifndef _WIN32
+#include <client/linux/handler/exception_handler.h>
+static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
+void* context, bool succeeded) {
+  printf("Dump path: %s\n", descriptor.path());
+  return succeeded;
+}
+
+void crash() { volatile int* a = (int*)(NULL); *a = 1; }
+#endif
+
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
+  
+#ifndef _WIN32
+  google_breakpad::MinidumpDescriptor descriptor("/tmp");
+  google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
+#else
+  // Windows
+  
+#endif
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);

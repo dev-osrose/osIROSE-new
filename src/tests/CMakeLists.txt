@@ -91,6 +91,7 @@ macro (compile_test name path)
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIRS}
     SYSTEM ${GMOCK_INCLUDE_DIRS}
+    SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
   )
 
   add_executable(${TEST_NAME} main ${path})
@@ -105,6 +106,7 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+  target_link_libraries(${TEST_NAME} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
   link_with_gtest(${TEST_NAME} gtest)
 
   IF (MSVC)
@@ -114,6 +116,8 @@ macro (compile_test name path)
   ENDIF()
 
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+  
+  generate_symbol_data(${TEST_NAME})
   
 endmacro (compile_test)
 
