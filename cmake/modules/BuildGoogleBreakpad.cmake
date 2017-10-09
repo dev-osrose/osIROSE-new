@@ -69,7 +69,8 @@ else()
   ExternalProject_Add_Step(
     breakpad
     download-lss
-    COMMAND git clone https://chromium.googlesource.com/linux-syscall-support src/third_party/lss;
+    COMMAND rm -rf src/third_party/lss
+    COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support src/third_party/lss
     WORKING_DIRECTORY <SOURCE_DIR>
     DEPENDEES download
     DEPENDERS configure

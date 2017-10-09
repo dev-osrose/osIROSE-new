@@ -63,22 +63,9 @@ function(generate_symbol_data target)
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/test
       COMMAND ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms $<TARGET_FILE:${target}> > ${TARGET_PATH}
       COMMAND head -n1 ${TARGET_PATH} > /tmp/${target}.str
-#      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/
+      COMMAND bash ${CMAKE_SCRIPT_PATH}/create_breakpad_directories.sh ${CMAKE_BINARY_DIR}/bin/symbols/test /tmp/${target}.str ${TARGET_PATH}
       VERBATIM
     )
-    
-    #add_custom_command(TARGET ${target}
-    #  POST_BUILD
-    #  COMMAND cat /tmp/${target}.str | awk '{ print $4 }'
-    #)
-    
-    #add_custom_command(TARGET ${target}
-    #  POST_BUILD
-    #  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/${SYMBOL_DRIECTORY}
-    #  COMMAND ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms $<TARGET_FILE:${target}> > ${CMAKE_BINARY_DIR}/bin/symbols/${SYMBOL_DRIECTORY}/${target}.sym
-    #  #TODO Generate symbol folders
-    #  VERBATIM
-    #)
   endif()
 endfunction()
 

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
 #ifndef _WIN32
-  google_breakpad::MinidumpDescriptor descriptor("/tmp");
+  google_breakpad::MinidumpDescriptor descriptor("./");
   google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
 #else
   // Windows
