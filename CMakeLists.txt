@@ -80,6 +80,12 @@ IF(WITH_MYSQL)
   find_package(MySQL REQUIRED)
 ENDIF()
 
+find_package(PythonInterp REQUIRED)
+
+if(WIN32)
+  find_package(PythonLibs REQUIRED)
+endif()
+
 find_package(Threads REQUIRED)
 
 if(WITH_GTEST)

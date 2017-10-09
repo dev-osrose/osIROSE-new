@@ -12,6 +12,8 @@ if(WIN32 AND NOT MINGW)
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     UPDATE_COMMAND ""
+    CONFIGURE_COMMAND "rm -r ./src/tools/gyp"
+    CONFIGURE_COMMAND "git clone https://github.com/bnoordhuis/gyp.git ./src/tools/gyp"
     CONFIGURE_COMMAND ${PYTHON_EXECUTABLE} ../breakpad/src/tools/gyp/gyp ../breakpad/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
     INSTALL_COMMAND ""
@@ -38,6 +40,8 @@ if(WIN32 AND NOT MINGW)
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     UPDATE_COMMAND ""
+    CONFIGURE_COMMAND "rm -r ./src/tools/gyp"
+    CONFIGURE_COMMAND "git clone https://github.com/bnoordhuis/gyp.git ./src/tools/gyp"
     CONFIGURE_COMMAND ${PYTHON_EXECUTABLE} ../breakpad_s/src/tools/gyp/gyp ../breakpad_s/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
     INSTALL_COMMAND ""
