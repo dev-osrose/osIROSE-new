@@ -1,7 +1,7 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/breakpad)
 
 if(WIN32 AND NOT MINGW)
-  if(DEBUG)
+  if(DEBUG or Debug)
     set(CONFIGURATION_TYPE Debug)
   else()
     set(CONFIGURATION_TYPE Release)
@@ -101,7 +101,7 @@ else()
   ExternalProject_Add_Step(
     breakpad
     download-lss
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+    COMMAND ${CMAKE_COMMAND} -E remove_directory src/third_party/lss
     COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support src/third_party/lss
     WORKING_DIRECTORY <SOURCE_DIR>
     DEPENDEES download
