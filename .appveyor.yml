@@ -48,8 +48,8 @@ build:
 
 build_script:
 - cd build
-- cmake -D%CONFIGURATION%=1 ..
-- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmake -D %CONFIGURATION%:BOOL=TRUE ..
+- cmake --build . --clean-first --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
 - cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%
