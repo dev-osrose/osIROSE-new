@@ -16,20 +16,20 @@ if(WIN32 AND NOT MINGW)
     INSTALL_COMMAND ""
   )
   
-  ExternalProject_Add_Step(
-    breakpad
-    download-gyp
-    DEPENDEES download
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-    COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-  )
+  #ExternalProject_Add_Step(
+  #  breakpad
+  #  download-gyp
+  #  DEPENDEES download
+  #  COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+  #  COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+  #)
   
-  ExternalProject_Add_Step(
-    breakpad
-    generate-gyp
-    DEPENDEES download
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
-  )
+  #ExternalProject_Add_Step(
+  #  breakpad
+  #  generate-gyp
+  #  DEPENDEES download
+  #  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
+  #)
   
   ExternalProject_Add_Step(
     breakpad
