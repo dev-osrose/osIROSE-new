@@ -12,6 +12,7 @@ if(WIN32 AND NOT MINGW)
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     UPDATE_COMMAND ""
+    CONFIGURE_COMMAND ""
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
     INSTALL_COMMAND ""
   )
@@ -28,7 +29,7 @@ if(WIN32 AND NOT MINGW)
   #  breakpad
   #  generate-gyp
   #  DEPENDEES download
-  #  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
+  #  COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
   #)
   
   ExternalProject_Add_Step(
