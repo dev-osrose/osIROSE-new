@@ -19,6 +19,8 @@ add_compiler_flags(/wd4503)
 add_compiler_flags(/MP) # build with multi processors
 add_compiler_flags(/FS) # build with multi processors
 
+add_compiler_flags(/EHsc)
+
 #add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
 
 set(WIN_TARGET 0x0601) # Windows XP SP2
