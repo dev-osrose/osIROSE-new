@@ -63,3 +63,4 @@ ELSE()
     ENDIF()
 ENDIF()
 
+generate_symbol_data(${PROJECT})

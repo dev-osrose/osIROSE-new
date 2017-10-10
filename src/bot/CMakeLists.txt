@@ -39,3 +39,4 @@ IF (MSVC)
   target_link_libraries(${PROJECT} wsock32.lib)
 ENDIF()
 
+generate_symbol_data(${PROJECT})
