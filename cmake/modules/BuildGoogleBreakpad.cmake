@@ -1,7 +1,7 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/breakpad)
 
 if(WIN32 AND NOT MINGW)
-  if(DEBUG or Debug)
+  if(DEBUG OR Debug)
     set(CONFIGURATION_TYPE Debug)
   else()
     set(CONFIGURATION_TYPE Release)
