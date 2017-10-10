@@ -32,22 +32,23 @@ if(WIN32 AND NOT MINGW)
   #  COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
   #)
   
-  ExternalProject_Add_Step(
-    breakpad
-    update_project_files
-    DEPENDEES configure
-    DEPENDERS build
-    COMMAND vcupgrade <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcproj
-  )
+  #ExternalProject_Add_Step(
+  #  breakpad
+  #  update_project_files
+  #  DEPENDEES configure
+  #  DEPENDERS build
+  #  COMMAND vcupgrade <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcproj
+  #)
+  
   # Breakpad builds with /MT by default but we need /MD. This patch makes it build with /MD
-  ExternalProject_Add_Step(
-    breakpad
-    patch_project_files
-    DEPENDEES update_project_files
-    DEPENDERS build
-    WORKING_DIRECTORY <SOURCE_DIR>
-    COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
-  )
+  #ExternalProject_Add_Step(
+  #  breakpad
+  #  patch_project_files
+  #  DEPENDEES update_project_files
+  #  DEPENDERS build
+  #  WORKING_DIRECTORY <SOURCE_DIR>
+  #  COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
+  #)
 
   # ExternalProject_Add(
     # breakpad_s
