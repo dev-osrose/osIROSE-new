@@ -18,17 +18,30 @@ void* context, bool succeeded) {
 }
 
 void crash() { volatile int* a = (int*)(NULL); *a = 1; }
+#elif _WIN32
+#include "exception_handler.h"
+
+
+
 #endif
 
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
 #ifndef _WIN32
-  google_breakpad::MinidumpDescriptor descriptor("./");
+  system("mkdir -p /tmp/dumps")
+  google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
   google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
 #else
-  // Windows
-  
+  //// Windows
+  //google_breakpad::ExceptionHandler *handler = new google_breakpad::ExceptionHandler(L"dumps\\",
+  //                                DmpFilter,
+  //                                DmpCallback,
+  //                                0,
+  //                                HandlerType::HANDLER_ALL,
+  //                                google_breakpad::ExceptionHandler::HANDLER_ALL,
+  //                                L"",
+  //                                nullptr);
 #endif
 
   UnitTest &unit_test = *UnitTest::GetInstance();
