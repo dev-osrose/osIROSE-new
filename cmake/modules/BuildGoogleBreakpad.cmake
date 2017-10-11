@@ -12,86 +12,28 @@ if(WIN32 AND NOT MINGW)
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ""
+    CONFIGURE_COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat --no-circular-check ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
     INSTALL_COMMAND ""
   )
   
-  #ExternalProject_Add_Step(
-  #  breakpad
-  #  download-gyp
-  #  DEPENDEES download
-  #  COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-  #  COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-  #)
-  
-  #ExternalProject_Add_Step(
-  #  breakpad
-  #  generate-gyp
-  #  DEPENDEES download
-  #  COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
-  #)
-  
-  #ExternalProject_Add_Step(
-  #  breakpad
-  #  update_project_files
-  #  DEPENDEES configure
-  #  DEPENDERS build
-  #  COMMAND vcupgrade <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcproj
-  #)
+  ExternalProject_Add_Step(
+    breakpad
+    download-gyp
+    DEPENDEES download
+	  DEPENDERS configure
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+    COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+  )
   
   # Breakpad builds with /MT by default but we need /MD. This patch makes it build with /MD
-  #ExternalProject_Add_Step(
-  #  breakpad
-  #  patch_project_files
-  #  DEPENDEES update_project_files
-  #  DEPENDERS build
-  #  WORKING_DIRECTORY <SOURCE_DIR>
-  #  COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
-  #)
-
-  # ExternalProject_Add(
-    # breakpad_s
-    # GIT_SUBMODULES breakpad
-    # SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
-    # UPDATE_COMMAND ""
-    # CONFIGURE_COMMAND ${PYTHON_EXECUTABLE} ../breakpad_s/src/tools/gyp/gyp ../breakpad_s/src/client/windows/breakpad_client.gyp
-    # BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
-    # INSTALL_COMMAND ""
-  # )
-  
-  # ExternalProject_Add_Step(
-    # breakpad_s
-    # download-gyp
-    # DEPENDEES download
-    # COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-    # COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-  # )
-  
-  # ExternalProject_Add_Step(
-    # breakpad_s
-    # generate-gyp
-    # DEPENDEES download
-    # COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
-  # )
-  
-  
-  # ExternalProject_Add_Step(
-    # breakpad_s
-    # update_project_files
-    # DEPENDEES configure
-    # DEPENDERS build
-    # COMMAND vcupgrade <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcproj
-  # )
-  
-	# ExternalProject_Get_Property(
-	  # breakpad_s
-	  # source_dir
-	# )
-	# set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR_S ${source_dir}/src)  
-	# set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR_S ${source_dir}/src/client/windows/handler/${CONFIGURATION_TYPE}/lib)
-	# set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES_S "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR_S}/exception_handler.lib")	
-  # set_property(TARGET breakpad_s PROPERTY FOLDER "ThirdParty")
+  ExternalProject_Add_Step(
+    breakpad
+    patch_project_files
+    DEPENDERS build
+    WORKING_DIRECTORY <SOURCE_DIR>
+    COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
+  )
 else()
   ExternalProject_Add(
     breakpad
