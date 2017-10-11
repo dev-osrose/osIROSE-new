@@ -13,9 +13,11 @@ if(WIN32 AND NOT MINGW)
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat --no-circular-check ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
-    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE}
+    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE} /property:WindowsTargetPlatformVersion=10.0.14393.0
     INSTALL_COMMAND ""
   )
+  
+  #TODO figure out how to build this without the "/property:WindowsTargetPlatformVersion=10.0.14393.0" setting
   
   ExternalProject_Add_Step(
     breakpad
