@@ -19,9 +19,7 @@ void* context, bool succeeded) {
 
 void crash() { volatile int* a = (int*)(NULL); *a = 1; }
 #elif _WIN32
-#include "exception_handler.h"
-
-
+#include <client/windows/handler/exception_handler.h>
 
 #endif
 
@@ -29,7 +27,7 @@ int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
 #ifndef _WIN32
-  system("mkdir -p /tmp/dumps")
+  system("mkdir -p /tmp/dumps");
   google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
   google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
 #else
