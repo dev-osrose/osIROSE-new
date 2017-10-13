@@ -5,8 +5,8 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
-	git clone https://github.com/ninja-build/ninja.git
-	cd ninja
+	git clone https://github.com/ninja-build/ninja.git && cd ninja
+	git checkout release
 	./configure.py --bootstrap
 	cd ..
 else
