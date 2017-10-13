@@ -56,6 +56,8 @@ endfunction()
 function(generate_symbol_data target)
   if(UNIX)
     set(TARGET_PATH ${CMAKE_BINARY_DIR}/bin/symbols/${target}.sym)
+    
+    add_dependencies(${target} breakpad)
   
     add_custom_command(TARGET ${target}
       POST_BUILD
