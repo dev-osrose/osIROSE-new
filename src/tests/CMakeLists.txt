@@ -74,6 +74,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/map/include
 )
 
+
 add_library(${PROJECT_LIB} STATIC ${SERVER_SOURCE} ${HEADERS})
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/login/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/char/include>)

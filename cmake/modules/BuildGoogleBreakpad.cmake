@@ -38,10 +38,18 @@ if(WIN32 AND NOT MINGW)
     COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
   )
 else()
+
+  # This is a workaround for Ninja not allowing us to build if these libs weren't built before
+  set(_byproducts
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad.a
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad_client.a
+  )
+  
   ExternalProject_Add(
     breakpad
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
+    BUILD_BYPRODUCTS ${_byproducts}
     CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --enable-shared=no --enable-static=yes --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
   )
   
