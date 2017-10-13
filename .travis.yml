@@ -20,7 +20,7 @@ env:
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
+  - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
   - LD_LIBRARY_PATH=$HOME/bakefile/lib:$HOME/mysql/lib:$LD_LIBRARY_PATH
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
 services:
@@ -75,10 +75,8 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    #- bash $CI_DIRECTORY/install-cmake.sh
-    #- bash $CI_DIRECTORY/install-ninja.sh
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-lcov.sh
-    #- bash $CI_DIRECTORY/install-bakefile.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
@@ -119,7 +117,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=tests
+    - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
     - bash $CI_DIRECTORY/before_install.sh
     install:
@@ -135,6 +133,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-lcov.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
@@ -173,7 +172,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=coverage
+    - export SUITE=tests
     - export CXX="g++-6" CC="gcc-6";
     - bash $CI_DIRECTORY/before_install.sh
     install:
@@ -189,6 +188,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-lcov.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
@@ -248,6 +248,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-lcov.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
@@ -305,6 +306,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-lcov.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     before_script:
@@ -359,6 +361,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
+    - bash $CI_DIRECTORY/install-ninja.sh
     - bash $CI_DIRECTORY/install-mysql.sh
     script:
     - echo "coverity scan"
