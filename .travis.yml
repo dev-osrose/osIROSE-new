@@ -34,9 +34,6 @@ matrix:
       apt:
         sources: &sources
         - ubuntu-toolchain-r-test
-        - extras-precise
-        - boost-latest
-        - llvm-toolchain-trusty-4.0
         - deadsnakes
         packages:
         - lcov
@@ -90,15 +87,10 @@ matrix:
       apt:
         sources:
         - ubuntu-toolchain-r-test
-        - boost-latest
         - deadsnakes
         packages:
         - lcov
-        - libboost-dev
-        - perl
-        - gcc-6
         - g++-6
-        - python3.5
     cache:
       apt: true
       directories:
@@ -149,11 +141,7 @@ matrix:
         sources: *sources
         packages:
         - lcov
-        - libboost-dev
-        - perl
-        - gcc-6
         - g++-6
-        - python3.5
     cache:
       apt: true
       directories:
@@ -203,18 +191,17 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources: *sources
+        sources:
+        - deadsnakes
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-4.0
         packages:
         - lcov
-        - libboost-dev
-        - perl
         - llvm-4.0
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
-        - gcc-6
         - g++-6
-        - python3.5
     cache:
       apt: true
       directories:
@@ -261,18 +248,17 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources: *sources
+        sources:
+        - deadsnakes
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-4.0
         packages:
         - lcov
-        - libboost-dev
-        - perl
         - llvm-4.0
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
-        - gcc-6
         - g++-6
-        - python3.5
     cache:
       apt: true
       directories:
@@ -322,11 +308,7 @@ matrix:
         sources: *sources
         packages:
         - lcov
-        - libboost-dev
-        - perl
-        - gcc-6
         - g++-6
-        - python3.5
     cache:
       apt: true
       directories:
@@ -371,7 +353,7 @@ matrix:
     build_command_prepend: cov-configure --comptype gcc --compiler gcc-6 --template;
       cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
       cmake ..;
-    build_command: make
+    build_command: cmake --build . -- -j 4
     branch_pattern: coverity_scan
 notifications:
   webhooks:
