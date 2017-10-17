@@ -20,14 +20,6 @@ void* context, bool succeeded) {
 
 void crash() { volatile int* a = (int*)(NULL); *a = 1; }
 
-
-void SetupMiniDump()
-{
-  system("mkdir -p /tmp/dumps");
-  google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
-  google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
-}
-
 #elif _WIN32
 
 #include <client/windows/handler/exception_handler.h>
@@ -48,7 +40,11 @@ void SetupMiniDump()
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
-  SetupMiniDump();
+  #ifndef _WIN32
+    google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
+    google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
+  #elif _WIN32
+  #endif
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);
