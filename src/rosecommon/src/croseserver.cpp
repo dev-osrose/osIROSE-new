@@ -72,7 +72,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
                            update - client->get_update_time())
                            .count();
-          if (dt > (1000 * 60) * 5)  // wait 5 minutes before time out
+          if (dt > (1000 * 60) * 1)  // wait 1 minute before time out
           {
             logger_->info(timeout_log.c_str(), client->get_id());
             client->shutdown();

@@ -6,6 +6,8 @@ add_compiler_flags(CXX -std=c++17)
 add_compiler_flags(-Wno-packed-bitfield-compat)
 
 if(DEBUG)
+  add_compiler_flags(-O0)
+  
   IF( ENABLE_ASAN )
     add_compiler_flags(-fsanitize=address -fno-omit-frame-pointer)
     add_linker_flags(-fsanitize=address)

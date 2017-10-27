@@ -80,10 +80,10 @@ IF(WITH_MYSQL)
   find_package(MySQL REQUIRED)
 ENDIF()
 
-find_package(PythonInterp REQUIRED)
+find_package(PythonInterp 2.7 REQUIRED)
 
 if(WIN32)
-  find_package(PythonLibs REQUIRED)
+  find_package(PythonLibs 2.7 REQUIRED)
 endif()
 
 find_package(Threads REQUIRED)
