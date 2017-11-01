@@ -98,8 +98,6 @@ macro (compile_test name path)
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
-  
-  add_dependencies(${TEST_NAME} breakpad)
 
   IF(WITH_MYSQL)
       target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
@@ -109,7 +107,6 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  target_link_libraries(${TEST_NAME} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
   link_with_gtest(${TEST_NAME} gtest)
 
   IF (MSVC)
