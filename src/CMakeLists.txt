@@ -16,8 +16,6 @@ include_directories(
   SYSTEM ${DATE_INCLUDE_DIR}
   SYSTEM ${CONFIGURU}
   SYSTEM ${VISIT_STRUCT}
-  
-  SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
 )
 
 IF(WITH_MYSQL)
@@ -32,6 +30,14 @@ IF(WITH_MYSQL)
     ${MYSQL_LIBRARY_PATH}
   )
 ENDIF()
+
+if(WITH_CRASH_REPORTS)
+  add_compiler_flags(-DENABLE_CRASH_REPORTS)
+  
+  include_directories(
+    SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
+  )
+endif()
 
 add_subdirectory(core)
 add_subdirectory(rosecommon)
