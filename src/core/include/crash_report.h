@@ -12,8 +12,8 @@ namespace Core {
   };
 }
 
-#ifndef _WIN32
+#ifdef _WIN32
+  #include "win32/crash_report.h"
+#else
   #include "unix/crash_report.h"
-#elif _WIN32
-  //#include "win32/crash_report.h"
 #endif

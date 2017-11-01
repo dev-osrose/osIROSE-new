@@ -30,7 +30,7 @@ set( SOURCES_BASE
   src/connection
 )
 
-if( GCC )
+if( GCC OR CLANG )
   list(APPEND SOURCES_HEADER
     include/unix/crash_report
   )
@@ -39,10 +39,10 @@ if( GCC )
     src/unix/crash_report
   )
 else()
-#  list(APPEND SOURCES_HEADER
-#    include/win32/crash_report
-#  )
-#
+  list(APPEND SOURCES_HEADER
+    include/win32/crash_report
+  )
+
 #  list(APPEND SOURCES_BASE
 #    src/win32/crash_report
 #  )
