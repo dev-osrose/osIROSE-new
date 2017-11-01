@@ -106,7 +106,7 @@ endif()
 # build some external projects
 #------------------------------------------------------------------------------
 
-if(WITH_CRASH_REPORTS AND NOT BREAKPAD_EXCEPTION_HANDLER_FOUND)
+if(NOT BREAKPAD_EXCEPTION_HANDLER_FOUND AND WITH_CRASH_REPORTS)
   include(BuildGoogleBreakpad)
 endif()
 

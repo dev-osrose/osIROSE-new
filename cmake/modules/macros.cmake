@@ -71,7 +71,7 @@ function(generate_symbol_data target)
       )
     endif()
   else()
-    MESSAGE(INFO "--generate_symbol_data() crash reporting is disabled")
+    MESSAGE("-- crash reports are disabled. skipping symbol generation for ${target}")
   endif()
 endfunction()
 
