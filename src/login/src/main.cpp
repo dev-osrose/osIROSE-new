@@ -11,20 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _WIN32
-#include <client/linux/handler/exception_handler.h>
-static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
-void* context, bool succeeded) {
-  printf("Dump path: %s\n", descriptor.path());
-  return succeeded;
-}
-
-void crash() { volatile int* a = (int*)(NULL); *a = 1; }
-
-#elif _WIN32
-#endif
-
 #include <cxxopts.hpp>
+#include "crash_report.h"
 #include "cloginserver.h"
 #include "config.h"
 #include "logconsole.h"
@@ -145,13 +133,8 @@ void deleteStaleSessions() {
 
 int main(int argc, char* argv[]) {
   try {
-    #ifndef _WIN32
-      google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
-      google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
-    #elif _WIN32
-    #endif
-  
     ParseCommandLine(argc, argv);
+    Core::CrashReport("/tmp/dumps");
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())

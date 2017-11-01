@@ -20,6 +20,7 @@ set( SOURCES_HEADER
   include/iscontainer
   include/makevector
   include/factory
+  include/crash_report
 )
 
 set( SOURCES_BASE
@@ -28,6 +29,25 @@ set( SOURCES_BASE
   src/config
   src/connection
 )
+
+if( GCC )
+  list(APPEND SOURCES_HEADER
+    include/unix/crash_report
+  )
+  
+  list(APPEND SOURCES_BASE
+    src/unix/crash_report
+  )
+else()
+#  list(APPEND SOURCES_HEADER
+#    include/win32/crash_report
+#  )
+#
+#  list(APPEND SOURCES_BASE
+#    src/win32/crash_report
+#  )
+endif()
+
 
 IF (WITH_MYSQL)
   list(APPEND SOURCES_HEADER
@@ -49,6 +69,8 @@ GENERATE_SQL_HEADER(SQL_HEADER ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
 
 IF (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)

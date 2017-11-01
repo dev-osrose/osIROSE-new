@@ -1,5 +1,6 @@
 // Unit test driver
 #include <gtest/gtest.h>
+#include "crash_report.h"
 #include "network_thread_pool.h"
 #include "logconsole.h"
 
@@ -9,42 +10,10 @@ using ::testing::TestCase;
 using ::testing::TestInfo;
 using ::testing::UnitTest;
 
-// TODO: Move the minidump functions into their own header in core.
-#ifndef _WIN32
-#include <client/linux/handler/exception_handler.h>
-static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
-void* context, bool succeeded) {
-  printf("Dump path: %s\n", descriptor.path());
-  return succeeded;
-}
-
-void crash() { volatile int* a = (int*)(NULL); *a = 1; }
-
-#elif _WIN32
-
-#include <client/windows/handler/exception_handler.h>
-void SetupMiniDump()
-{
-  //google_breakpad::ExceptionHandler *handler = new google_breakpad::ExceptionHandler(L"dumps\\",
-  //                                DmpFilter,
-  //                                DmpCallback,
-  //                                0,
-  //                                HandlerType::HANDLER_ALL,
-  //                                google_breakpad::ExceptionHandler::HANDLER_ALL,
-  //                                L"",
-  //                                nullptr);
-}
-
-#endif
-
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
-  #ifndef _WIN32
-    google_breakpad::MinidumpDescriptor descriptor("/tmp/dumps");
-    google_breakpad::ExceptionHandler eh(descriptor, NULL, dumpCallback, NULL, true, -1);
-  #elif _WIN32
-  #endif
+  Core::CrashReport crashHandler("/tmp/dumps");
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);

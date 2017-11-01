@@ -65,7 +65,7 @@ function(generate_symbol_data target)
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/${target}
       COMMAND ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms $<TARGET_FILE:${target}> > ${TARGET_PATH}
       COMMAND head -n1 ${TARGET_PATH} > /tmp/${target}.str
-      COMMAND bash ${CMAKE_SCRIPT_PATH}/create_breakpad_directories.sh ${CMAKE_BINARY_DIR}/bin/symbols/${target}.pdb /tmp/${target}.str ${TARGET_PATH}
+      COMMAND bash ${CMAKE_SCRIPT_PATH}/create_breakpad_directories.sh ${CMAKE_BINARY_DIR}/bin/symbols/${target} /tmp/${target}.str ${TARGET_PATH}
       VERBATIM
     )
   endif()
