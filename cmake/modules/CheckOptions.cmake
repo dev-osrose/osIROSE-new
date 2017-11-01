@@ -16,6 +16,7 @@ if(BUILD_TESTS OR WITH_GTEST)
   enable_testing()
 endif()
 
+option(WITH_CRASH_REPORTS, "Enable crash dump generation" ON)
 option(WITH_COVERAGE_REPORTS, "Enable generating code coverage report" OFF)
 option(WITH_MYSQL "Use MySQL connection" ON)
 

@@ -30,22 +30,24 @@ set( SOURCES_BASE
   src/connection
 )
 
-if( GCC OR CLANG )
-  list(APPEND SOURCES_HEADER
-    include/unix/crash_report
-  )
+if(WITH_CRASH_REPORTS)
+  if( GCC OR CLANG )
+    list(APPEND SOURCES_HEADER
+      include/unix/crash_report
+    )
   
-  list(APPEND SOURCES_BASE
-    src/unix/crash_report
-  )
-else()
-  list(APPEND SOURCES_HEADER
-    include/win32/crash_report
-  )
+    list(APPEND SOURCES_BASE
+      src/unix/crash_report
+    )
+  else()
+    list(APPEND SOURCES_HEADER
+      include/win32/crash_report
+    )
 
-#  list(APPEND SOURCES_BASE
-#    src/win32/crash_report
-#  )
+#    list(APPEND SOURCES_BASE
+#      src/win32/crash_report
+#    )
+  endif()
 endif()
 
 
@@ -70,7 +72,10 @@ GENERATE_SQL_HEADER(SQL_HEADER ${args})
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${SQL_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
+if(WITH_CRASH_REPORTS)
+  add_dependencies(${PROJECT} breakpad)
+  target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
+endif()
 
 IF (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
