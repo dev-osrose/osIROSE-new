@@ -42,9 +42,9 @@ else()
   list(APPEND SOURCES_HEADER
     include/win32/crash_report
   )
-  list(APPEND SOURCES_BASE
-    src/win32/crash_report
-  )
+#  list(APPEND SOURCES_BASE
+#    src/win32/crash_report
+#  )
 endif()
 
 
