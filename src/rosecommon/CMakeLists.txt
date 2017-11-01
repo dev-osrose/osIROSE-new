@@ -25,6 +25,7 @@ set( SOURCES_HEADER
   include/isccommon
   include/packets
   include/item
+  include/itemdb
   include/partybase
   include/components/advancedinfo
   include/components/basicinfo
@@ -53,6 +54,7 @@ SET(SOURCES_BASE
   src/croseisc
   src/mappackets
   src/item
+  src/itemdb
   src/entitycomponents
   src/isccommon
 )
@@ -181,6 +183,10 @@ add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADE
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
+
+IF (MSVC)
+  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
+ENDIF()
 
 target_link_libraries(${PROJECT} Core)
 target_link_libraries(${PROJECT} lua)
