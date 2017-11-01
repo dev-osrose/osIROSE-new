@@ -40,19 +40,19 @@ install:
 - cmd: cd %PROJECT_PATH%
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx32.msi
 - cmd: git submodule update --init --recursive
-- cmd: "./ci/msvc_mysqlpp_install.bat"
-- cmd: "./ci/msvc_install.bat"
+- cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
+- cmd: "./cmake/scripts/msvc_install.bat"
 
 build:
   parallel: true
 
 build_script:
 - cd build
-- cmake -DBUILD_TYPE=%CONFIGURATION% -DENABLE_TESTING=ON ..
-- cmake --build . --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmake -D %CONFIGURATION%:BOOL=TRUE ..
+- cmake --build . --clean-first --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
-- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%"
+- cp "%MYSQL_CONNECTOR_PATH%\lib\libmysql.dll" "%PROJECT_PATH%\build\bin\%CONFIGURATION%
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
 
 artifacts:

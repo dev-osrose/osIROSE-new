@@ -1,25 +1,8 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 link_directories(${EXTERNAL_BINARY_DIR})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 set(PROJECT Core)
 project(${PROJECT})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
-
-IF (NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
-ENDIF()
-
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
-ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
-ENDIF()
 
 set( SOURCES_HEADER
   include/threadpool
@@ -37,6 +20,7 @@ set( SOURCES_HEADER
   include/iscontainer
   include/makevector
   include/factory
+  include/crash_report
 )
 
 set( SOURCES_BASE
@@ -46,7 +30,25 @@ set( SOURCES_BASE
   src/connection
 )
 
-IF (ENABLE_MYSQL)
+if( GCC OR CLANG )
+  list(APPEND SOURCES_HEADER
+    include/unix/crash_report
+  )
+
+  list(APPEND SOURCES_BASE
+    src/unix/crash_report
+  )
+else()
+  list(APPEND SOURCES_HEADER
+    include/win32/crash_report
+  )
+#  list(APPEND SOURCES_BASE
+#    src/win32/crash_report
+#  )
+endif()
+
+
+IF (WITH_MYSQL)
   list(APPEND SOURCES_HEADER
     include/mysqlconnection
   )
@@ -59,7 +61,7 @@ set(args
   SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
   SQLROOT ${CMAKE_SOURCE_DIR}/Database
   NAME osiroseDatabase
-  OUTPATH ${CMAKE_BINARY_DIR}/generated
+  OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
 GENERATE_SQL_HEADER(OSIROSE_HEADER ${args})
@@ -74,14 +76,14 @@ set(args
 GENERATE_SQL_HEADER(LOGS_HEADER ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${OSIROSE_HEADER} ${LOGS_HEADER})
-
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-IF (MSVC)
-  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
-ENDIF()
+if(WITH_CRASH_REPORTS)
+  add_dependencies(${PROJECT} breakpad)
+  target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
+endif()
 
-IF (ENABLE_MYSQL)
+IF (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()
 
