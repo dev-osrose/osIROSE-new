@@ -21,6 +21,7 @@
  */
 #pragma once
 #include "iserialize.h"
+#include "components/lua.h"
 
 namespace RoseCommon {
 
@@ -113,7 +114,7 @@ struct Item : public ISerialize {
     uint32_t count_;
     bool isStackable_;
     
-    std::string onEquip_ = "function onEquip(entity) print('test') end";
+    Lua lua_;
 };
 
 }
