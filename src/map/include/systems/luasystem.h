@@ -12,31 +12,52 @@ namespace Systems {
 
 class LuaSystem : public System {
     public:
+        enum class luaFunctions {
+            onInit,
+            onCreate,
+            onRemove,
+            onEquip,
+            onUnEquip,
+            onDrop,
+            onPickup,
+            onUse,
+            other
+        };
+    
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          if (!lua->env_)
-            lua->env_ = std::make_unique<sol::environment>(state_, sol::create);
-          lua->env_->set_function("testCpp",
+          loadScript(*lua, luaScript);
+        }
+    
+        void loadScript(Lua& luaEnv, const std::string& luaScript) {
+            if (!luaEnv.env_)
+                luaEnv.env_ = std::make_unique<sol::environment>(state_, sol::create);
+            luaEnv.env_->set_function("testCpp",
                                 [this, e](std::string data) {
                                     auto basic = e.component<BasicInfo>();
                                     logger_->warn("test lua: {}, entity: {}", data, basic->name_);
                               });
-          state_.script(luaScript, *lua->env_);
+          state_.script(luaScript, *luaEnv.env_);
         }
 
-        void callLuaFunction(Entity e, const std::string name) {
+        void callLuaFunction(Entity e, luaFunctions function) {
           auto lua = e.component<Lua>();
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
-          auto &env = *lua->env_;
-          sol::function func = env[name];
-          func();
+          callLuaFunction(*lua, function);
+        }
+    
+        template <typename... Args>
+        auto callLuaFunction(Lua& luaEnv, luaFunctions function, Args... args) -> std::result_of<decltype(getFunctionType(function))::type>::type {
+            auto& env = *luaEnv.env_;
+            sol::function func = env[name];
+            return func(args...);
         }
 
-        void unregisterEntity(Entity e) {
+        /*void unregisterEntity(Entity e) {
           auto it = std::find(callbacks_.begin(), callbacks_.end(), Callback{e});
             if (it != callbacks_.end())
               callbacks_.erase(it);
@@ -49,12 +70,12 @@ class LuaSystem : public System {
                     it.dt = 0.f;
                 }
             }
-        }
+        }*/
 
     private:
         sol::state state_;
 
-        struct Callback {
+        /*struct Callback {
             Entity e;
             std::string name{};
             double timeout = 0;
@@ -62,7 +83,36 @@ class LuaSystem : public System {
 
             bool operator==(const Callback& c) const { return e == c.e; }
         };
-        std::vector<Callback> callbacks_;
+        std::vector<Callback> callbacks_;*/
+            
+        static constexpr auto getFunctionName(luaFunctions func) {
+            switch (func) {
+                case onInit: return "onInit";
+                case onCreate: return "onCreate";
+                case onRemove: return "onRemove";
+                case onEquip: return "onEquip";
+                case onUnEquip: return "onUnEquip";
+                case onDrop: return "onDrop";
+                case onPickup: return "onPickup";
+                case onUse: return "onUse";
+                default: return "";
+            }
+        }
+    
+        struct voidvoid { using type = void(*)(); };
+        struct boolvoid { using type = bool(*)(); };
+        
+        static constexpr auto getFunctionType(luaFunctions func) {
+            if constexpr (func == onInit) return voidvoid{};
+            else if constexpr (func == onCreate) return voidvoid{};
+            else if constexpr (func == onRemove) return voidvoid{};
+            else if constexpr (func == onEquip) return boolvoid{};
+            else if constexpr (func == onUnEquip) return boolvoid{};
+            else if constexpr (func == onDrop) return boolvoid{};
+            else if constexpr (func == onPickup) return voidvoid{};
+            else if constexpr (func == onUse) return voidvoid{};
+            else return voidvoid{};
+        }
 };
 
 }
