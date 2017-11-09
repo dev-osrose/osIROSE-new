@@ -2,6 +2,7 @@
 
 #include "system.h"
 #include "throwassert.h"
+#include "function_trait.h"
 
 #include <sol.hpp>
 
@@ -50,10 +51,12 @@ class LuaSystem : public System {
           callLuaFunction(*lua, function);
         }
     
-        template <typename... Args>
-        auto callLuaFunction(Lua& luaEnv, luaFunctions function, Args... args) -> std::result_of<decltype(getFunctionType(function))::type>::type {
+        template <luaFunctions func, typename... Args>
+        auto callLuaFunction(Lua& luaEnv, Args... args) {
             auto& env = *luaEnv.env_;
-            sol::function func = env[name];
+            sol::function func = env[getFunctionName(func)];
+            using FuncType = decltype(getFunctionType<func>())::type;
+            static_assert(std::is_same<FuncType::arguments, decltype(std::make_tuple(args...))>::value, "Incorrect parameters for the lua function");
             return func(args...);
         }
 
@@ -101,8 +104,9 @@ class LuaSystem : public System {
     
         struct voidvoid { using type = void(*)(); };
         struct boolvoid { using type = bool(*)(); };
-        
-        static constexpr auto getFunctionType(luaFunctions func) {
+    
+        template <luaFunctions func>
+        static constexpr auto getFunctionType() {
             if constexpr (func == onInit) return voidvoid{};
             else if constexpr (func == onCreate) return voidvoid{};
             else if constexpr (func == onRemove) return voidvoid{};
@@ -111,7 +115,7 @@ class LuaSystem : public System {
             else if constexpr (func == onDrop) return boolvoid{};
             else if constexpr (func == onPickup) return voidvoid{};
             else if constexpr (func == onUse) return voidvoid{};
-            else return voidvoid{};
+            else voidvoid{};
         }
 };
 
