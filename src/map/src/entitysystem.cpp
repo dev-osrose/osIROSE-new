@@ -59,7 +59,6 @@ void EntitySystem::update(double dt) {
           auto basic = it.component<BasicInfo>();
           nameToEntity_.erase(basic->name_);
           idToEntity_.erase(basic->id_);
-          systemManager_.get<Systems::LuaSystem>()->unregisterEntity(it);
           it.destroy();
         }
     }
