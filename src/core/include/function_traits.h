@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 template <class T>
 struct function_traits;
 
@@ -8,12 +10,12 @@ template <class R, class... Args>
 struct function_traits<R(*)(Args...)> : public function_traits<R(Args...)> {};
 
 template <class R, class... Args>
-struct function_tarts<R(Args...)> {
+struct function_traits<R(Args...)> {
   using return_type = R;
   
   using arguments = std::tuple<Args...>;
   
-  static constexpr std::size_t arity = sizoef...(Args);
+  static constexpr std::size_t arity = sizeof...(Args);
   
   template <std::size_t N>
   struct argument {
