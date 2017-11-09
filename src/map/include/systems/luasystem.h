@@ -55,9 +55,9 @@ class LuaSystem : public System {
         auto callLuaFunction(Lua& luaEnv, Args... args) {
             auto& env = *luaEnv.env_;
             sol::function f = env[getFunctionName(func)];
-            using FuncType = typename decltype(getFunctionType<func>())::type;
-            static_assert(std::is_same<FuncType::typename arguments, decltype(std::make_tuple(args...))>::value, "Incorrect parameters for the lua function");
-            return f(args...);
+            using FuncType = function_traits<typename decltype(getFunctionType<func>())::type>;
+            static_assert(std::is_same<typename FuncType::arguments, std::tuple<Args...>>::value, "Incorrect parameters for the lua function");
+            return static_cast<typename FuncType::return_type>(f(args...));
         }
     
     virtual void update(EntityManager&, double) {}
@@ -104,8 +104,8 @@ class LuaSystem : public System {
             }
         }
     
-        struct voidvoid { using type = void(*)(); };
-        struct boolvoid { using type = bool(*)(); };
+        struct voidvoid { using type = void(); };
+        struct boolvoid { using type = bool(); };
     
         template <luaFunctions func>
         static constexpr auto getFunctionType() {
