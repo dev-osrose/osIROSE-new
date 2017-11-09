@@ -45,10 +45,11 @@ class LuaSystem : public System {
           state_.script(luaScript, *luaEnv.env_);
         }
 
-        void callLuaFunction(Entity e, luaFunctions function) {
+        template <luaFunction func, typename... Args>
+        void callLuaFunction(Entity e, Args... args) {
           auto lua = e.component<Lua>();
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
-          callLuaFunction(*lua, function);
+          callLuaFunction<func>(*lua, args...);
         }
     
         template <luaFunctions func, typename... Args>
