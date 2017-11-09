@@ -1,6 +1,6 @@
 #pragma once
 
-temaplte <class T>
+template <class T>
 struct function_traits;
 
 // function pointer
