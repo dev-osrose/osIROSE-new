@@ -60,6 +60,8 @@ class LuaSystem : public System {
             static_assert(std::is_same<FuncType::arguments, decltype(std::make_tuple(args...))>::value, "Incorrect parameters for the lua function");
             return func(args...);
         }
+    
+    virtual void update(EntityManager&, double) {}
 
         /*void unregisterEntity(Entity e) {
           auto it = std::find(callbacks_.begin(), callbacks_.end(), Callback{e});
@@ -91,14 +93,14 @@ class LuaSystem : public System {
             
         static constexpr auto getFunctionName(luaFunctions func) {
             switch (func) {
-                case onInit: return "onInit";
-                case onCreate: return "onCreate";
-                case onRemove: return "onRemove";
-                case onEquip: return "onEquip";
-                case onUnEquip: return "onUnEquip";
-                case onDrop: return "onDrop";
-                case onPickup: return "onPickup";
-                case onUse: return "onUse";
+                case luaFunctions::onInit: return "onInit";
+                case luaFunctions::onCreate: return "onCreate";
+                case luaFunctions::onRemove: return "onRemove";
+                case luaFunctions::onEquip: return "onEquip";
+                case luaFunctions::onUnEquip: return "onUnEquip";
+                case luaFunctions::onDrop: return "onDrop";
+                case luaFunctions::onPickup: return "onPickup";
+                case luaFunctions::onUse: return "onUse";
                 default: return "";
             }
         }
@@ -108,14 +110,14 @@ class LuaSystem : public System {
     
         template <luaFunctions func>
         static constexpr auto getFunctionType() {
-            if constexpr (func == onInit) return voidvoid{};
-            else if constexpr (func == onCreate) return voidvoid{};
-            else if constexpr (func == onRemove) return voidvoid{};
-            else if constexpr (func == onEquip) return boolvoid{};
-            else if constexpr (func == onUnEquip) return boolvoid{};
-            else if constexpr (func == onDrop) return boolvoid{};
-            else if constexpr (func == onPickup) return voidvoid{};
-            else if constexpr (func == onUse) return voidvoid{};
+            if constexpr (func == luaFunctions::onInit) return voidvoid{};
+            else if constexpr (func == luaFunctions::onCreate) return voidvoid{};
+            else if constexpr (func == luaFunctions::onRemove) return voidvoid{};
+            else if constexpr (func == luaFunctions::onEquip) return boolvoid{};
+            else if constexpr (func == luaFunctions::onUnEquip) return boolvoid{};
+            else if constexpr (func == luaFunctions::onDrop) return boolvoid{};
+            else if constexpr (func == luaFunctions::onPickup) return voidvoid{};
+            else if constexpr (func == luaFunctions::onUse) return voidvoid{};
             else voidvoid{};
         }
 };
