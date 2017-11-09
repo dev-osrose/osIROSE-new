@@ -44,7 +44,7 @@ class LuaSystem : public System {
           state_.script(luaScript, *luaEnv.env_);
         }
 
-        template <luaFunction func, typename... Args>
+        template <luaFunctions func, typename... Args>
         void callLuaFunction(Entity e, Args... args) {
           auto lua = e.component<Lua>();
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
@@ -54,10 +54,10 @@ class LuaSystem : public System {
         template <luaFunctions func, typename... Args>
         auto callLuaFunction(Lua& luaEnv, Args... args) {
             auto& env = *luaEnv.env_;
-            sol::function func = env[getFunctionName(func)];
+            sol::function f = env[getFunctionName(func)];
             using FuncType = decltype(getFunctionType<func>())::type;
             static_assert(std::is_same<FuncType::arguments, decltype(std::make_tuple(args...))>::value, "Incorrect parameters for the lua function");
-            return func(args...);
+            return f(args...);
         }
     
     virtual void update(EntityManager&, double) {}
