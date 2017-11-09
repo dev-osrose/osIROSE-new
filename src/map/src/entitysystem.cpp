@@ -163,7 +163,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     entity.assign<Lua>();
 
     systemManager_.get<Systems::LuaSystem>()->loadScript(entity, "function onInit()\ntestCpp('test')\nend");
-    systemManager_.get<Systems::LuaSystem>()->callLuaFunction<Systems::LuaSystem::onInit>(entity);
+    systemManager_.get<Systems::LuaSystem>()->callLuaFunction<Systems::LuaSystem::luaFunctions::onInit>(entity);
 
     registerEntity(entity);
     return entity;

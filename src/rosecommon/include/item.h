@@ -46,6 +46,22 @@ struct Item : public ISerialize {
     Item(const T& row) : Item() {
       loadFromRow(row);
     }
+
+    Item(Item&& other) : type_(std::move(other.type_)),
+                        id_(std::move(other.id_)),
+                        isCreated_(std::move(other.isCreated_)),
+                        gemOpt_(std::move(other.gemOpt_)),
+                        durability_(std::move(other.durability_)),
+                        life_(std::move(other.life_)),
+                        hasSocket_(std::move(other.hasSocket_)),
+                        isAppraised_(std::move(other.isAppraised_)),
+                        refine_(std::move(other.refine_)),
+                        count_(std::move(other.count_)),
+                        isStackable_(std::move(other.isStackable_)),
+                        lua_(std::move(other.lua_)) {}
+
+    Item& operator=(Item&& other) { Item tmp(std::move(other)); std::swap(*this, tmp); return *this; }
+
     virtual ~Item() = default;
 
     virtual uint32_t getVisible() const override;
