@@ -55,7 +55,7 @@ class LuaSystem : public System {
         auto callLuaFunction(Lua& luaEnv, Args... args) {
             auto& env = *luaEnv.env_;
             sol::function f = env[getFunctionName(func)];
-            using FuncType = decltype(getFunctionType<func>())::type;
+            using FuncType = typename decltype(getFunctionType<func>())::type;
             static_assert(std::is_same<FuncType::arguments, decltype(std::make_tuple(args...))>::value, "Incorrect parameters for the lua function");
             return f(args...);
         }
