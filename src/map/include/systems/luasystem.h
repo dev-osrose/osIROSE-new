@@ -53,6 +53,7 @@ class LuaSystem : public System {
     
         template <luaFunctions func, typename... Args>
         auto callLuaFunction(Lua& luaEnv, Args... args) {
+            static_assert(func != luaFunctions::other, "No lua API defined for other");
             auto& env = *luaEnv.env_;
             sol::function f = env[getFunctionName(func)];
             using FuncType = function_traits<typename decltype(getFunctionType<func>())::type>;
@@ -117,7 +118,7 @@ class LuaSystem : public System {
             else if constexpr (func == luaFunctions::onDrop) return boolvoid{};
             else if constexpr (func == luaFunctions::onPickup) return voidvoid{};
             else if constexpr (func == luaFunctions::onUse) return voidvoid{};
-            else voidvoid{};
+            else return voidvoid{};
         }
 };
 
