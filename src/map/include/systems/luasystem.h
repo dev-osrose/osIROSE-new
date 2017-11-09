@@ -2,7 +2,7 @@
 
 #include "system.h"
 #include "throwassert.h"
-#include "function_trait.h"
+#include "function_traits.h"
 
 #include <sol.hpp>
 
