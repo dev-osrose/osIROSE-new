@@ -38,9 +38,8 @@ class LuaSystem : public System {
             if (!luaEnv.env_)
                 luaEnv.env_ = std::make_unique<sol::environment>(state_, sol::create);
             luaEnv.env_->set_function("testCpp",
-                                [this, e](std::string data) {
-                                    auto basic = e.component<BasicInfo>();
-                                    logger_->warn("test lua: {}, entity: {}", data, basic->name_);
+                                [this](std::string data) {
+                                    logger_->warn("test lua: {}", data);
                               });
           state_.script(luaScript, *luaEnv.env_);
         }
