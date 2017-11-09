@@ -11,6 +11,8 @@ template <class R, class... Args>
 struct function_tarts<R(Args...)> {
   using return_type = R;
   
+  using arguments = std::tuple<Args...>;
+  
   static constexpr std::size_t arity = sizoef...(Args);
   
   template <std::size_t N>
