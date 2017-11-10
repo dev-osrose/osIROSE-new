@@ -3,7 +3,8 @@ init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
 
 os:
-- Visual Studio 2015
+#- Visual Studio 2015
+- Visual Studio 2017
 
 configuration:
 - Debug
