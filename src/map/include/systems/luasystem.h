@@ -3,6 +3,7 @@
 #include "system.h"
 #include "throwassert.h"
 #include "function_traits.h"
+#include "luaapi.h"
 
 #include <sol.hpp>
 
@@ -10,6 +11,20 @@
 #include <algorithm>
 
 namespace Systems {
+
+class EntityApi {
+    public:
+        EntityApi(Entity e) : entity_(e) {}
+        virtual void setupApi(sol::environment& env) {
+            env.set_function("testCpp", [this] () {
+                        auto basic = entity_.component<BasicInfo>();
+                        return basic->name_;
+                    });
+        }
+
+    private:
+        Entity entity_;
+};
 
 class LuaSystem : public System {
     public:
@@ -30,16 +45,19 @@ class LuaSystem : public System {
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          loadScript(*lua, luaScript);
+          loadScript(*lua, luaScript, [e]() { return std::unique_ptr{new EntityApi(e)}; });
         }
-    
-        void loadScript(Lua& luaEnv, const std::string& luaScript) {
+ 
+        template <typename Lambda>
+        void loadScript(Lua& luaEnv, const std::string& luaScript, Lambda&& apiBuilder) {
             if (!luaEnv.env_)
                 luaEnv.env_ = std::make_unique<sol::environment>(state_, sol::create);
-            luaEnv.env_->set_function("testCpp",
-                                [this](std::string data) {
-                                    logger_->warn("test lua: {}", data);
-                              });
+            if (!luaEnv.env_)
+                luaEnv.api_ = apiBuilder();
+            luaEnv.api_->setupApi(*luaEnv.env_);
+            luaEnv.env_->set_function("display", [this] (std::string data) {
+                    logger_->warn("lua display call: {}", data);
+                    });
           state_.script(luaScript, *luaEnv.env_);
         }
 
@@ -87,14 +105,14 @@ class LuaSystem : public System {
 
 namespace {
 template <LuaSystem::luaFunctions> struct LuaFunction {};
-template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr auto name = "onInit"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr auto name = "onCreate"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr auto name = "onRemove"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr auto name = "onEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr auto name = "onUnEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr auto name = "onDrop"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr auto name = "onPickup"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr auto name = "onUse"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr const char*const name = "onInit"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr const char*const name = "onCreate"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr const char*const name = "onRemove"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr const char*const name = "onEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr const char*const name = "onUnEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr const char*const name = "onDrop"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr const char*const name = "onPickup"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr const char*const name = "onUse"; using type = void(); };
 }
 
 template <LuaSystem::luaFunctions func, typename... Args>
