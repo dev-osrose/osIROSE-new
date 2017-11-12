@@ -21,8 +21,7 @@ class LuaSystem : public System {
             onUnEquip,
             onDrop,
             onPickup,
-            onUse,
-            other
+            onUse
         };
     
         LuaSystem(SystemManager &manager) : System(manager) {}
@@ -52,13 +51,7 @@ class LuaSystem : public System {
         }
     
         template <luaFunctions func, typename... Args>
-        auto callLuaFunction(Lua& luaEnv, Args... args) {
-            auto& env = *luaEnv.env_;
-            sol::function f = env[getFunctionName(func)];
-            using FuncType = function_traits<typename decltype(getFunctionType<func>())::type>;
-            static_assert(std::is_same<typename FuncType::arguments, std::tuple<Args...>>::value, "Incorrect parameters for the lua function");
-            return static_cast<typename FuncType::return_type>(f(args...));
-        }
+        auto callLuaFunction(Lua& luaEnv, Args... args);
     
     virtual void update(EntityManager&, double) {}
 
@@ -90,35 +83,29 @@ class LuaSystem : public System {
         };
         std::vector<Callback> callbacks_;*/
             
-        static constexpr auto getFunctionName(luaFunctions func) {
-            switch (func) {
-                case luaFunctions::onInit: return "onInit";
-                case luaFunctions::onCreate: return "onCreate";
-                case luaFunctions::onRemove: return "onRemove";
-                case luaFunctions::onEquip: return "onEquip";
-                case luaFunctions::onUnEquip: return "onUnEquip";
-                case luaFunctions::onDrop: return "onDrop";
-                case luaFunctions::onPickup: return "onPickup";
-                case luaFunctions::onUse: return "onUse";
-                default: return "";
-            }
-        }
-    
-        struct voidvoid { using type = void(); };
-        struct boolvoid { using type = bool(); };
-    
-        template <luaFunctions func>
-        static constexpr auto getFunctionType() {
-            if constexpr (func == luaFunctions::onInit) return voidvoid{};
-            else if constexpr (func == luaFunctions::onCreate) return voidvoid{};
-            else if constexpr (func == luaFunctions::onRemove) return voidvoid{};
-            else if constexpr (func == luaFunctions::onEquip) return boolvoid{};
-            else if constexpr (func == luaFunctions::onUnEquip) return boolvoid{};
-            else if constexpr (func == luaFunctions::onDrop) return boolvoid{};
-            else if constexpr (func == luaFunctions::onPickup) return voidvoid{};
-            else if constexpr (func == luaFunctions::onUse) return voidvoid{};
-            else voidvoid{};
-        }
+
 };
 
+
+namespace {
+template <LuaSystem::luaFunctions> struct LuaFunction {};
+template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr char name[] = "onInit"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr char name[] = "onCreate"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr char name[] = "onRemove"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr char name[] = "onEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr char name[] = "onUnEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr char name[] = "onDrop"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr char name[] = "onPickup"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr char name[] = "onUse"; using type = void(); };
+}
+
+template <LuaSystem::luaFunctions func, typename... Args>
+auto LuaSystem::callLuaFunction(Lua& luaEnv, Args... args) {
+    auto& env = *luaEnv.env_;
+    using Func = LuaFunction<func>;
+    sol::function f = env[Func::name];
+    using FuncType = function_traits<typename Func::type>;
+    static_assert(std::is_same<typename FuncType::arguments, std::tuple<Args...>>::value, "Incorrect parameters for the lua function");
+    return static_cast<typename FuncType::return_type>(f(args...));
+}
 }
