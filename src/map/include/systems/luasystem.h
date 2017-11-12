@@ -87,14 +87,14 @@ class LuaSystem : public System {
 
 namespace {
 template <LuaSystem::luaFunctions> struct LuaFunction {};
-template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr char name[] = "onInit"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr char name[] = "onCreate"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr char name[] = "onRemove"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr char name[] = "onEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr char name[] = "onUnEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr char name[] = "onDrop"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr char name[] = "onPickup"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr char name[] = "onUse"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr auto name = "onInit"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr auto name = "onCreate"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr auto name = "onRemove"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr auto name = "onEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr auto name = "onUnEquip"; using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr auto name = "onDrop"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr auto name = "onPickup"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr auto name = "onUse"; using type = void(); };
 }
 
 template <LuaSystem::luaFunctions func, typename... Args>
