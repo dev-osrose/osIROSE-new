@@ -3,9 +3,6 @@
 #include "system.h"
 #include "throwassert.h"
 #include "function_traits.h"
-#include "luaapi.h"
-#include "entityapi.h"
-#include "itemapi.h"
 
 #include <sol.hpp>
 
@@ -26,27 +23,19 @@ class LuaSystem : public System {
             onPickup,
             onUse
         };
-    
+
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          loadScript(*lua, luaScript, [e]() { return std::unique_ptr<LuaApi>{new EntityApi(e)}; });
+          loadScript(*lua, luaScript);
         }
 
-        void loadScript(RoseCommon::Item& e, const std::string& luaScript) {
-            loadScript(e.lua_, luaScript, [&e]() { return std::unique_ptr<LuaApi>{new ItemApi(e)}; });
-        }
- 
-        template <typename Lambda>
-        void loadScript(Lua& luaEnv, const std::string& luaScript, Lambda&& apiBuilder) {
+        void loadScript(Lua& luaEnv, const std::string& luaScript) {
             if (!luaEnv.env_)
                 luaEnv.env_ = std::make_unique<sol::environment>(state_, sol::create);
-            if (!luaEnv.env_)
-                luaEnv.api_ = apiBuilder();
-            luaEnv.api_->setupApi(*luaEnv.env_);
             luaEnv.env_->set_function("display", [this] (std::string data) {
                     logger_->warn("lua display call: {}", data);
                     });
@@ -59,10 +48,10 @@ class LuaSystem : public System {
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
           callLuaFunction<func>(*lua, args...);
         }
-    
+
         template <luaFunctions func, typename... Args>
         auto callLuaFunction(Lua& luaEnv, Args... args);
-    
+
     virtual void update(EntityManager&, double) {}
 
         /*void unregisterEntity(Entity e) {
