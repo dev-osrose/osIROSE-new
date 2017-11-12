@@ -4,6 +4,8 @@
 #include "throwassert.h"
 #include "function_traits.h"
 #include "luaapi.h"
+#include "entityapi.h"
+#include "itemapi.h"
 
 #include <sol.hpp>
 
@@ -11,20 +13,6 @@
 #include <algorithm>
 
 namespace Systems {
-
-class EntityApi {
-    public:
-        EntityApi(Entity e) : entity_(e) {}
-        virtual void setupApi(sol::environment& env) {
-            env.set_function("testCpp", [this] () {
-                        auto basic = entity_.component<BasicInfo>();
-                        return basic->name_;
-                    });
-        }
-
-    private:
-        Entity entity_;
-};
 
 class LuaSystem : public System {
     public:
@@ -45,7 +33,11 @@ class LuaSystem : public System {
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          loadScript(*lua, luaScript, [e]() { return std::unique_ptr{new EntityApi(e)}; });
+          loadScript(*lua, luaScript, [e]() { return std::unique_ptr<LuaApi>{new EntityApi(e)}; });
+        }
+
+        void loadScript(RoseCommon::Item& e, const std::string& luaScript) {
+            loadScript(e.lua_, luaScript, [&e]() { return std::unique_ptr<LuaApi>{new ItemApi(e)}; });
         }
  
         template <typename Lambda>
