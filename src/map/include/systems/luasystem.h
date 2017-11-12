@@ -86,21 +86,21 @@ class LuaSystem : public System {
 
 namespace {
 template <LuaSystem::luaFunctions> struct LuaFunction {};
-template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr const char*const name = "onInit"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr const char*const name = "onCreate"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr const char*const name = "onRemove"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr const char*const name = "onEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr const char*const name = "onUnEquip"; using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr const char*const name = "onDrop"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr const char*const name = "onPickup"; using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr const char*const name = "onUse"; using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr const char* name() { return "onInit"; } using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr const char* name() { return "onCreate"; } using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr const char* name() { return "onRemove"; } using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr const char* name() { return "onEquip"; } using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr const char* name() { return "onUnEquip"; } using type = bool(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr const char* name() { return "onDrop"; } using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr const char* name() { return "onPickup"; } using type = void(); };
+template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr const char* name() { return "onUse"; } using type = void(); };
 }
 
 template <LuaSystem::luaFunctions func, typename... Args>
 auto LuaSystem::callLuaFunction(Lua& luaEnv, Args... args) {
     auto& env = *luaEnv.env_;
     using Func = LuaFunction<func>;
-    sol::function f = env[Func::name];
+    sol::function f = env[Func::name()];
     using FuncType = function_traits<typename Func::type>;
     static_assert(std::is_same<typename FuncType::arguments, std::tuple<Args...>>::value, "Incorrect parameters for the lua function");
     return static_cast<typename FuncType::return_type>(f(args...));
