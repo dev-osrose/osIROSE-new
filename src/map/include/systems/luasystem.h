@@ -82,8 +82,6 @@ class LuaSystem : public System {
             bool operator==(const Callback& c) const { return e == c.e; }
         };
         std::vector<Callback> callbacks_;*/
-            
-
 };
 
 
