@@ -31,4 +31,5 @@ struct Position {
     uint16_t z_;
     uint16_t map_;
     uint16_t spawn_;
+    float angle_ = 0.f;
 };
