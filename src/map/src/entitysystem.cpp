@@ -235,7 +235,12 @@ Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float d
 }
 
 Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
-  return {};
+    Entity e = create();
+    e.assign<Npc>(npc_id);
+    auto pos = e.assign<Position>(x, y, z, map_id, 0);
+    pos->angle_ = angle;
+    //e.assign<EntityApi>();
+  return e;
 }
 
 Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count,

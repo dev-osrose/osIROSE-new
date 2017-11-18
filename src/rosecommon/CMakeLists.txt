@@ -46,6 +46,7 @@ set( SOURCES_HEADER
   include/components/statuseffects.h
   include/components/wishlist.h
   include/components/quests.h
+  include/components/npc.h
 )
 
 SET(SOURCES_BASE
@@ -176,6 +177,10 @@ SET(SOURCES_PACKETS
   include/packets/srv_questdata.h
   src/packets/srv_dropitem.cpp
   include/packets/srv_dropitem.h
+  src/packets/srv_mobchar.cpp
+  include/packets/srv_mobchar.h
+  src/packets/srv_npcchar.cpp
+  include/packets/srv_npcchar.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h

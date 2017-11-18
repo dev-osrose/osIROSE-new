@@ -48,8 +48,6 @@ add_compiler_flags(/FS) # build with multi processors
 add_compiler_flags(/std:c++17)
 add_compiler_flags(/EHsc)
 
-#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
-
 set(WIN_TARGET 0x0601) # Windows XP SP2
 set(WIN_SDK_MIN 0x0601) # Windows Vista
 add_definitions(-DWINVER=${WIN_TARGET}
@@ -78,3 +76,5 @@ macro(SetStaticRuntime target)
     set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/MT")
   endif()
 endmacro()
+
+set(MSVC TRUE)
