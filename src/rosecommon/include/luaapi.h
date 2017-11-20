@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sol/environment.hpp>
+#include <sol.hpp>
 
 namespace RoseCommon {
 
