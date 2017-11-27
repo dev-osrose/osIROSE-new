@@ -131,7 +131,7 @@ struct Item : public ISerialize {
     uint32_t count_;
     bool isStackable_;
     
-    std::unique_ptr<Lua<ItemAPI>> lua_;
+    Lua<ItemAPI> lua_;
 };
 
 }
