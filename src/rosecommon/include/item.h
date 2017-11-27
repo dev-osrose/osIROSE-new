@@ -22,6 +22,7 @@
 #pragma once
 #include "iserialize.h"
 #include "components/lua.h"
+#include "itemapi.h"
 
 namespace RoseCommon {
 
@@ -130,7 +131,7 @@ struct Item : public ISerialize {
     uint32_t count_;
     bool isStackable_;
     
-    Lua lua_;
+    Lua<ItemAPI> lua_;
 };
 
 }
