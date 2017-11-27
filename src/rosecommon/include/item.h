@@ -131,7 +131,7 @@ struct Item : public ISerialize {
     uint32_t count_;
     bool isStackable_;
     
-    Lua<ItemAPI> lua_;
+    LuaComponent<ItemAPI> lua_;
 };
 
 }
