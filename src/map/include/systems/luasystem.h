@@ -25,7 +25,7 @@ class LuaSystem : public System {
         template <typename LuaAPI>
         Lua<LuaAPI> loadScript(const std::string& luaScript) {
           sol::environment env{state_, sol::create};
-          Lua<LuaAPI> lua{std::move(LuaAPI{std::move(std::make_unique(env))})};
+          Lua<LuaAPI> lua{std::move(LuaAPI{std::move(env)})};
           state_.script(luaScript, *lua.api_.getEnv());
           return lua;
         }
