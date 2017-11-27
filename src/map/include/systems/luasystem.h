@@ -24,16 +24,10 @@ class LuaSystem : public System {
 
         template <typename LuaAPI>
         Lua<LuaAPI> loadScript(const std::string& luaScript) {
-          Lua<LuaAPI> lua{{{state_, sol::create}}};
-          state_.script(luaScript, lua.api_.getEnv());
+          sol::environment env{state_, sol::create};
+          Lua<LuaAPI> lua{std::move(LuaAPI{std::move(std::make_unique(env))})};
+          state_.script(luaScript, *lua.api_.getEnv());
           return lua;
-        }
-
-        template <luaFunctions func, typename... Args>
-        void callLuaFunction(Entity e, Args... args) {
-          auto lua = e.component<Lua>();
-          throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
-          callLuaFunction<func>(*lua, args...);
         }
 
     virtual void update(EntityManager&, double) {}
