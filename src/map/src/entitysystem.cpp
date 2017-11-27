@@ -160,7 +160,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     auto wishlist = entity.assign<Wishlist>();
     wishlist->loadFromResult(wishRes);
 
-    entity.assign<Lua>();
+    entity.assign<Lua<EntityAPI>>();
 
     systemManager_.get<Systems::LuaSystem>()->loadScript(entity, "function onInit()\ndisplay('test')\nend");
 
