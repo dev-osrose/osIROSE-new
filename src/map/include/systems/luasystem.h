@@ -13,33 +13,20 @@ namespace Systems {
 
 class LuaSystem : public System {
     public:
-        enum class luaFunctions {
-            onInit,
-            onCreate,
-            onRemove,
-            onEquip,
-            onUnEquip,
-            onDrop,
-            onPickup,
-            onUse
-        };
-
         LuaSystem(SystemManager &manager) : System(manager) {}
         virtual ~LuaSystem() = default;
 
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          loadScript(*lua, luaScript);
+          *lua = std::move(loadScript(luaScript));
         }
 
-        void loadScript(Lua& luaEnv, const std::string& luaScript) {
-            if (!luaEnv.env_)
-                luaEnv.env_ = std::make_unique<sol::environment>(state_, sol::create);
-            luaEnv.env_->set_function("display", [this] (std::string data) {
-                    logger_->warn("lua display call: {}", data);
-                    });
-          state_.script(luaScript, *luaEnv.env_);
+        template <typename LuaAPI>
+        Lua<LuaAPI> loadScript(const std::string& luaScript) {
+          Lua<LuaAPI> lua{{{state_, sol::create}}};
+          state_.script(luaScript, lua.api_.getEnv());
+          return lua;
         }
 
         template <luaFunctions func, typename... Args>
@@ -48,9 +35,6 @@ class LuaSystem : public System {
           throw_assert(lua && lua->env_, "The entity doesn't have a lua table");
           callLuaFunction<func>(*lua, args...);
         }
-
-        template <luaFunctions func, typename... Args>
-        auto callLuaFunction(Lua& luaEnv, Args... args);
 
     virtual void update(EntityManager&, double) {}
 
@@ -83,26 +67,4 @@ class LuaSystem : public System {
         std::vector<Callback> callbacks_;*/
 };
 
-
-namespace {
-template <LuaSystem::luaFunctions> struct LuaFunction {};
-template <> struct LuaFunction<LuaSystem::luaFunctions::onInit> { static constexpr const char* name() { return "onInit"; } using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onCreate> { static constexpr const char* name() { return "onCreate"; } using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onRemove> { static constexpr const char* name() { return "onRemove"; } using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onEquip> { static constexpr const char* name() { return "onEquip"; } using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUnEquip> { static constexpr const char* name() { return "onUnEquip"; } using type = bool(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onDrop> { static constexpr const char* name() { return "onDrop"; } using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onPickup> { static constexpr const char* name() { return "onPickup"; } using type = void(); };
-template <> struct LuaFunction<LuaSystem::luaFunctions::onUse> { static constexpr const char* name() { return "onUse"; } using type = void(); };
-}
-
-template <LuaSystem::luaFunctions func, typename... Args>
-auto LuaSystem::callLuaFunction(Lua& luaEnv, Args... args) {
-    auto& env = *luaEnv.env_;
-    using Func = LuaFunction<func>;
-    sol::function f = env[Func::name()];
-    using FuncType = function_traits<typename Func::type>;
-    static_assert(std::is_same<typename FuncType::arguments, std::tuple<Args...>>::value, "Incorrect parameters for the lua function");
-    return static_cast<typename FuncType::return_type>(f(args...));
-}
 }
