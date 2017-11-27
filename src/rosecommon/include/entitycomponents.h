@@ -47,11 +47,13 @@
 
 #include "entityapi.h"
 
+using Lua = LuaComponent<EntityAPI>;
+
 using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      Lua<EntityAPI>>;
+      Lua>;
 
 using Entity = EntityManager::Entity;
 
