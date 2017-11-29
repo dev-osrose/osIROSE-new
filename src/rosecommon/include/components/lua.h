@@ -2,6 +2,7 @@
 
 template <typename LuaAPI>
 struct LuaComponent {
+    LuaComponent() = default;
     LuaComponent(LuaAPI&& api) : api_(std::move(api)) {}
     LuaComponent(const LuaComponent&) = delete;
     LuaComponent(LuaComponent&& other) : api_(std::move(other.api_)) {}

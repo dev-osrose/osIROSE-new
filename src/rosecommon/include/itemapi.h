@@ -1,23 +1,15 @@
 #pragma once
 
-#include "sol/environment.hpp"
-#include "logconsole.h"
-#include <memory>
+#include "luaapi.h"
 
 namespace RoseCommon {
 
-class ItemAPI {
+class ItemAPI : public LuaAPI {
   public:
     ItemAPI() = default;
-    ItemAPI(sol::environment&& env) : env_(std::make_unique(std::move(env))), logger_(Core::CLog::GetLogger(Core::log_type::SYSTEM).lock()) {
+    ItemAPI(sol::environment&& env) : LuaAPI(std::move(env)) {
       // build the C++/lua connectors here
     }
-  
-    sol::environment* getEnv() { return env_.get(); }
-    const sol::environment* getEnv() const { return env_.get(); }
-  private:
-    std::unique_ptr<sol::environment> env_;
-    std::shared_ptr<spdlog::logger> logger_;
 };
 
 }
