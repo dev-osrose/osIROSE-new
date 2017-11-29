@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <sol.hpp>
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "cmapisc.h"
@@ -23,11 +22,6 @@ using namespace RoseCommon;
 
 CMapServer::CMapServer(bool _isc, int16_t mapidx)
     : CRoseServer(_isc), map_idx_(mapidx), client_count_(0), server_count_(0), entitySystem_(std::make_shared<EntitySystem>()) {
-
-  sol::state lua;
-  lua.open_libraries(sol::lib::base);
-  lua.set_function("log", [this](std::string str) { logger_->info(str.c_str()); });
-  //lua.script_file("./scripts/main.lua");
 
   if (mapidx >= 0) {
     // We are a worker thread/process

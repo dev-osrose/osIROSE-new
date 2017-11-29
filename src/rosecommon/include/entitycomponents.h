@@ -47,7 +47,7 @@
 
 #include "entityapi.h"
 
-using Lua = LuaComponent<EntityAPI>;
+using Lua = LuaComponent<RoseCommon::EntityAPI>;
 
 using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
