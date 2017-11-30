@@ -1,17 +1,9 @@
 #include "itemdb.h"
+#include "osiroseDatabase.h"
 #include "connection.h"
+#include "throwassert.h"
 
 using namespace RoseCommon;
-
-ItemDatabase::ItemDatabase() {
-  for ( int index = 1; index < 15; ++index ) {
-    _database[index].reserve( 500 ); // We shouldn't need more then 1000 entries off the bat.
-  }
-}
-
-ItemDatabase::~ItemDatabase() {
-  _database.clear();
-}
 
 ItemDef::ItemDef(): type( 0 ),
                     subtype( 0 ),
@@ -51,8 +43,13 @@ void ItemDatabase::initialize() {
       newItem.desc = row.desc;
       newItem.script = row.script;
       
-      _database[row.type].push_back(newItem);
+      _database[row.id] = newItem;
     }
   }
   catch ( sqlpp::exception& ) { }
+}
+
+const ItemDef& ItemDatabase::getItemDef(uint8_t id) const {
+    throw_assert(_database.count(id), "No way to create item n" << id);
+    return _database.at(id);
 }

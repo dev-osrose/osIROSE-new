@@ -21,11 +21,10 @@
  */
 #pragma once
 #include <vector>
-#include <map>
+#include <unordered_map>
 
-#include "iserialize.h"
 #include "singleton.h"
-#include "osiroseDatabase.h"
+#include "item.h"
 
 namespace RoseCommon
 {
@@ -73,12 +72,13 @@ namespace RoseCommon
   class ItemDatabase : public Singleton<ItemDatabase> {
     friend Singleton<ItemDatabase>;
   public:
-    void initialize();
+    const ItemDef& getItemDef(uint8_t id) const;
 
   private:
-    ItemDatabase();
-    virtual ~ItemDatabase();
+    void initialize();
+    ItemDatabase() { initialize(); }
+    virtual ~ItemDatabase() = default;
 
-    std::map<uint8_t, std::vector<ItemDef>> _database;
+    std::unordered_map<uint8_t, ItemDef> _database;
   };
 }

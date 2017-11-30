@@ -130,7 +130,11 @@ struct Item : public ISerialize {
     uint8_t refine_;
     uint32_t count_;
     bool isStackable_;
-    
+
+    uint16_t atk_;
+    uint16_t def_;
+    uint16_t range_;
+ 
     LuaComponent<ItemAPI> lua_;
 };
 
