@@ -5,6 +5,9 @@
 #include "cli_equipitem.h"
 #include "srv_equipitem.h"
 #include "srv_setitem.h"
+#include "itemdb.h"
+#include "systems/luasystem.h"
+#include "itemapi.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -56,4 +59,18 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
     client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
+}
+
+RoseCommon::Item InventorySystem::buildItem(uint16_t id) {
+    auto &itemDb = ItemDatabase::getInstance();
+    auto def = itemDb.getItemDef(id);
+    RoseCommon::Item item;
+    item.type_ = def.type;
+    item.id_ = id;
+    item.atk_ = def.atk;
+    item.def_ = def.def;
+    item.range_ = def.range;
+    auto luaSystem = manager_.get<LuaSystem>();
+    item.lua_ = luaSystem->loadScript<RoseCommon::ItemAPI>(def.script);
+    return item;
 }

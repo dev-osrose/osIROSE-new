@@ -19,7 +19,7 @@ class LuaSystem : public System {
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<Lua>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          *lua = std::move(loadScript<RoseCommon::EntityAPI>(luaScript));
+          *lua = loadScript<RoseCommon::EntityAPI>(luaScript);
         }
 
         template <typename LuaAPI>
