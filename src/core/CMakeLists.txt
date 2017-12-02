@@ -37,6 +37,7 @@ set( SOURCES_HEADER
   include/iscontainer
   include/makevector
   include/factory
+  include/hash
 )
 
 set( SOURCES_BASE
