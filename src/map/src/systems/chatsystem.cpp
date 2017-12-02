@@ -8,6 +8,7 @@
 #include "srv_normalchat.h"
 #include "srv_partychat.h"
 #include "systems/inventorysystem.h"
+#include "itemdb.h"
 
 #include <sstream>
 
@@ -41,15 +42,18 @@ void ChatSystem::normalChat(CMapClient& client, Entity entity, const CliNormalCh
         std::string command;
         ss >> command;
         if (command == "/item") {
-            uint8_t type = 0, subtype = 0;
+            uint16_t type = 0, subtype = 0;
             uint16_t id = 0;
             ss >> type >> subtype >> id;
             if (!type || !subtype || !id) {
                 logger_->info("Wrong number of arguments for GM command {} from {}", packet.message(), getId(entity));
                 client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Usage: /item <type> <subtype> <id>"));
                 return;
+            } else if (auto &itemDb = ItemDatabase::getInstance(); !itemDb.itemExists(type, subtype, id)) {
+                logger_->info("Wrong type, subtype, id: {}, {}, {}", type, subtype, id);
+                client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} {} doesn't exists", type, subtype, id)));
+                return;
             }
-            logger_->info("{} {} {}", type, subtype, id);
             auto invSys = manager_.get<InventorySystem>();
             auto item = invSys->buildItem(type, subtype, id);
             if (!InventorySystem::addItem(entity, std::move(item))) {
