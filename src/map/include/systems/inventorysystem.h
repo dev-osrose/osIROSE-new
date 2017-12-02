@@ -20,7 +20,9 @@ class InventorySystem : public System {
         static uint8_t findNextEmptySlot(Entity entity);
         static bool swapItems(Entity entity, uint8_t &a, uint8_t &b);
 
-        RoseCommon::Item buildItem(uint16_t id);
+        static bool addItem(Entity entity, RoseCommon::Item&& item);
+
+        RoseCommon::Item buildItem(uint8_t type, uint8_t subtype, uint16_t id);
 
         void processEquip(CMapClient& client, Entity entity, const RoseCommon::CliEquipItem &packet);
 };

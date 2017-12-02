@@ -142,6 +142,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     entity.assign<BulletItems>();
 
     // TODO : write the inventory code
+    //auto luaSystem = systemManager_.get<Systems::LuaSystem>();
     auto inventory = entity.assign<Inventory>();
 
     auto invRes = conn(sqlpp::select(sqlpp::all_of(inventoryTable))
@@ -160,10 +161,10 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     auto wishlist = entity.assign<Wishlist>();
     wishlist->loadFromResult(wishRes);
 
-    auto lua = entity.assign<Lua>();
+    //auto lua = entity.assign<EntityAPI>();
 
-    systemManager_.get<Systems::LuaSystem>()->loadScript(entity, "function onInit()\ndisplay('test')\nend");
-    lua->api_.onInit();
+    //luaSystem->loadScript(entity, "function onInit()\ndisplay('test')\nend");
+    //lua->onInit();
 
     registerEntity(entity);
     return entity;

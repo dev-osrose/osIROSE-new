@@ -13,7 +13,7 @@ class EntityAPI : public LuaAPI {
          logger_->warn("lua display call: {}", data);
       });
     }
-  
+
     void onInit() { auto f = env_["onInit"]; f(); }
 };
 

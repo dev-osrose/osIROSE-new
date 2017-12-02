@@ -7,6 +7,9 @@
 #include "cli_partychat.h"
 #include "srv_normalchat.h"
 #include "srv_partychat.h"
+#include "systems/inventorysystem.h"
+
+#include <sstream>
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -15,6 +18,7 @@ ChatSystem::ChatSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_NORMAL_CHAT, &ChatSystem::normalChat);
     manager.registerDispatcher(ePacketType::PAKCS_WHISPER_CHAT, &ChatSystem::whisperChat);
     manager.registerDispatcher(ePacketType::PAKCS_PARTY_CHAT, &ChatSystem::partyChat);
+
 }
 
 void ChatSystem::update(EntityManager&, double) {}
@@ -31,6 +35,33 @@ void ChatSystem::normalChat(CMapClient& client, Entity entity, const CliNormalCh
     logger_->trace("ChatSystem::normalChat");
     if (!entity.component<BasicInfo>())
         return;
+    if (packet.message()[0] == '/') {
+        logger_->info("GM command from {} : {}", getId(entity), packet.message());
+        std::stringstream ss(packet.message());
+        std::string command;
+        ss >> command;
+        if (command == "/item") {
+            uint8_t type = 0, subtype = 0;
+            uint16_t id = 0;
+            ss >> type >> subtype >> id;
+            if (!type || !subtype || !id) {
+                logger_->info("Wrong number of arguments for GM command {} from {}", packet.message(), getId(entity));
+                client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Usage: /item <type> <subtype> <id>"));
+                return;
+            }
+            logger_->info("{} {} {}", type, subtype, id);
+            auto invSys = manager_.get<InventorySystem>();
+            auto item = invSys->buildItem(type, subtype, id);
+            if (!InventorySystem::addItem(entity, std::move(item))) {
+                logger_->info("Inventory full for {}", getId(entity));
+                client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
+            } else {
+                logger_->info("Item {} added to {}", id, getId(entity));
+                client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {} added", id)));
+            }
+        }
+        return;
+    }
     CMapServer::SendPacket(client, CMapServer::eSendType::NEARBY, 
             *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }
