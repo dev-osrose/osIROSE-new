@@ -49,6 +49,10 @@ void ItemDatabase::initialize() {
   catch ( sqlpp::exception& ) { }
 }
 
+bool ItemDatabase::itemExists(uint8_t type, uint8_t subtype, uint16_t id) const {
+    return _database.count({type, subtype, id}) != 0;
+}
+
 const ItemDef& ItemDatabase::getItemDef(uint8_t type, uint8_t subtype, uint16_t id) const {
     throw_assert(_database.count({type, subtype, id}), "No default for item " << type << " " << subtype << " " << id);
     return _database.at({type, subtype, id});

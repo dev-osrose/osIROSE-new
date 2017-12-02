@@ -76,6 +76,8 @@ namespace RoseCommon
   public:
     const ItemDef& getItemDef(uint8_t type, uint8_t subtype, uint16_t id) const;
 
+    bool itemExists(uint8_t type, uint8_t subtype, uint16_t id) const;
+
   private:
     void initialize();
     ItemDatabase() { initialize(); }
