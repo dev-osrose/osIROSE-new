@@ -27,6 +27,9 @@ set( SOURCES_HEADER
   include/item
   include/itemdb
   include/partybase
+  include/luaapi
+  include/itemapi
+  include/entityapi
   include/components/advancedinfo
   include/components/basicinfo
   include/components/bulletitems
@@ -44,7 +47,6 @@ set( SOURCES_HEADER
   include/components/statuseffects
   include/components/wishlist
   include/components/quests
-  include/components/lua
 )
 
 SET(SOURCES_BASE
