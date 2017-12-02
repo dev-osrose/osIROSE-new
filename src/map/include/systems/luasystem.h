@@ -17,16 +17,16 @@ class LuaSystem : public System {
         virtual ~LuaSystem() = default;
 
         void loadScript(Entity e, const std::string& luaScript) {
-          auto lua = e.component<Lua>();
+          auto lua = e.component<RoseCommon::EntityAPI>();
           throw_assert(lua, "The entity doesn't have a lua table");
           *lua = loadScript<RoseCommon::EntityAPI>(luaScript);
         }
 
         template <typename LuaAPI>
-        LuaComponent<LuaAPI> loadScript(const std::string& luaScript) {
+        LuaAPI loadScript(const std::string& luaScript) {
           sol::environment env{state_, sol::create};
-          LuaComponent<LuaAPI> lua{std::move(LuaAPI{std::move(env)})};
-          state_.script(luaScript, lua.api_.getEnv());
+          LuaAPI lua{std::move(env)};
+          state_.script(luaScript, lua.getEnv());
           return lua;
         }
 

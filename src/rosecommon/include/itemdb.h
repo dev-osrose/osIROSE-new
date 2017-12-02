@@ -22,9 +22,11 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
+#include <tuple>
 
 #include "singleton.h"
 #include "item.h"
+#include "hash.h"
 
 namespace RoseCommon
 {
@@ -72,13 +74,20 @@ namespace RoseCommon
   class ItemDatabase : public Singleton<ItemDatabase> {
     friend Singleton<ItemDatabase>;
   public:
-    const ItemDef& getItemDef(uint8_t id) const;
+    const ItemDef& getItemDef(uint8_t type, uint8_t subtype, uint16_t id) const;
 
   private:
     void initialize();
     ItemDatabase() { initialize(); }
     virtual ~ItemDatabase() = default;
 
-    std::unordered_map<uint8_t, ItemDef> _database;
+    using key_t = std::tuple<uint8_t, uint8_t, uint16_t>;
+    struct key_hash : public std::unary_function<key_t, std::size_t> {
+        std::size_t operator()(const key_t& k) const {
+            return Core::hash_val(std::get<0>(k), std::get<1>(k), std::get<2>(k));
+        }
+    };
+
+    std::unordered_map<key_t, ItemDef, key_hash> _database;
   };
 }

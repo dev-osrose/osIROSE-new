@@ -246,8 +246,9 @@ void CCharClient::OnDisconnected() {
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   const auto res = conn(sqlpp::select(table.online).from(table).where(table.id == userId_));
   if (!res.empty())
-    if (!res.front().online)
+    if (res.front().online)
       conn(sqlpp::remove_from(session).where(session.userid == userId_));
+  conn(sqlpp::update(table).set(table.online = 0).where(table.id == userId_));
 }
 
 bool CCharClient::SendCharSelectReply(

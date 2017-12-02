@@ -43,17 +43,14 @@
 #include "components/party.h"
 #include "components/wishlist.h"
 #include "components/quests.h"
-#include "components/lua.h"
 
 #include "entityapi.h"
-
-using Lua = LuaComponent<RoseCommon::EntityAPI>;
 
 using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      Lua>;
+      RoseCommon::EntityAPI>;
 
 using Entity = EntityManager::Entity;
 
