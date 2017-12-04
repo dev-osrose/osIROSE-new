@@ -43,17 +43,17 @@ void ItemDatabase::initialize() {
       newItem.desc = row.desc;
       newItem.script = row.script;
       
-      _database[{row.type, row.subtype, row.id}] = newItem;
+      _database[ItemDatabase::key_t{row.type, row.subtype, row.id}] = newItem;
     }
   }
   catch ( sqlpp::exception& ) { }
 }
 
 bool ItemDatabase::itemExists(uint8_t type, uint8_t subtype, uint16_t id) const {
-    return _database.count(std::tuple{type, subtype, id}) != 0;
+    return _database.count(ItemDatabase::key_t{type, subtype, id}) != 0;
 }
 
 const ItemDef& ItemDatabase::getItemDef(uint8_t type, uint8_t subtype, uint16_t id) const {
-    throw_assert(_database.count(std::tuple{type, subtype, id}), "No default for item " << type << " " << subtype << " " << id);
-    return _database.at(std::tuple{type, subtype, id});
+    throw_assert(_database.count(ItemDatabase::key_t{type, subtype, id}), "No default for item " << type << " " << subtype << " " << id);
+    return _database.at(ItemDatabase::key_t{type, subtype, id});
 }
