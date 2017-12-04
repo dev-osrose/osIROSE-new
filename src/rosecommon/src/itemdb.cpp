@@ -55,5 +55,5 @@ bool ItemDatabase::itemExists(uint8_t type, uint8_t subtype, uint16_t id) const 
 
 const ItemDef& ItemDatabase::getItemDef(uint8_t type, uint8_t subtype, uint16_t id) const {
     throw_assert(_database.count(std::tuple{type, subtype, id}), "No default for item " << type << " " << subtype << " " << id);
-    return _database.at({type, subtype, id});
+    return _database.at(std::tuple{type, subtype, id});
 }
