@@ -49,7 +49,7 @@ void ChatSystem::normalChat(CMapClient& client, Entity entity, const CliNormalCh
                 logger_->info("Wrong number of arguments for GM command {} from {}", packet.message(), getId(entity));
                 client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Usage: /item <type> <subtype> <id>"));
                 return;
-            } else if (auto &itemDb = ItemDatabase::getInstance(); !itemDb.itemExists(type, subtype, id)) {
+            } else if (!ItemDatabase::getInstance().itemExists(type, subtype, id)) {
                 logger_->info("Wrong type, subtype, id: {}, {}, {}", type, subtype, id);
                 client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} {} doesn't exists", type, subtype, id)));
                 return;
