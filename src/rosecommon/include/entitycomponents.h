@@ -51,7 +51,7 @@ using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::Feature
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      RoseCommon::EntityAPI, Item>;
+      RoseCommon::EntityAPI, RoseCommon::Item>;
 
 using Entity = EntityManager::Entity;
 
