@@ -61,7 +61,7 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
     client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }
 
-bool InventorySystem::addItem(Entity e, RoseCommon::Item&& item) {
+bool InventorySystem::addItem(Entity e, Item&& item) {
     uint8_t slot = findNextEmptySlot(e);
     if (!slot) return false;
     auto inv = e.component<Inventory>();
@@ -73,10 +73,18 @@ bool InventorySystem::addItem(Entity e, RoseCommon::Item&& item) {
     return true;
 }
 
-RoseCommon::Item InventorySystem::buildItem(uint8_t type, uint8_t subtype, uint16_t id) {
+Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
+    if (!slot || slot >= Inventory::maxItems) return {};
+    auto inv = entity.component<Inventory>();
+    Item item{std::move(inv->items_[slot])};
+    inv->items_[slot] = {};
+    return item;
+}
+
+Item InventorySystem::buildItem(uint8_t type, uint8_t subtype, uint16_t id) {
     auto &itemDb = ItemDatabase::getInstance();
     auto def = itemDb.getItemDef(type, subtype, id);
-    RoseCommon::Item item(def);
+    Item item(def);
     auto luaSystem = manager_.get<LuaSystem>();
     item.lua_ = luaSystem->loadScript<RoseCommon::ItemAPI>("");
     return item;
