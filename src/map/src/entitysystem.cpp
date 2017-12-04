@@ -31,7 +31,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     Entity e = create();
     e.assign<Item>(std::move(item));
     auto pos = creator.component<Position>();
-    e.assign<Position>(pos.x_, pos.y_, pos.map_, 0);
+    e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
     return e;
 }
 
