@@ -53,7 +53,7 @@ class EntitySystem {
 
         Entity create();
     
-        Entity buildItemEntity(RoseCommon::Item&&);
+        Entity buildItemEntity(Entity creator, RoseCommon::Item&& item);
 
         template <typename T>
         T& get() {
