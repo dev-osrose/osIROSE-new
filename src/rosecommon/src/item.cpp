@@ -30,7 +30,7 @@ Item::Item(const ItemDef& def) :
     isAppraised_(false),
     refine_(0),
     count_(1),
-    isStackable_(def.type == Item::CONSUMABLE ? true : false),
+    isStackable_(def.type >= 10 && def.type <= 13 ? true : false),
     atk_(0),
     def_(0),
     range_(0)
