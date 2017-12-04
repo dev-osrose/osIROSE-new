@@ -34,5 +34,8 @@ void MapSystem::processChangeMapReq(CMapClient& client, Entity entity, const Ros
         if (e != entity && basic->isOnMap_.load())
             client.send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
     }
+    for (Entity e : manager.entities_with_components<Item>()) {
+        // send item on ground packet
+    }
     entity.component<BasicInfo>()->isOnMap_.store(true);
 }
