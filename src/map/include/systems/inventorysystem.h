@@ -21,6 +21,7 @@ class InventorySystem : public System {
         static bool swapItems(Entity entity, uint8_t &a, uint8_t &b);
 
         static bool addItem(Entity entity, RoseCommon::Item&& item);
+        static RoseCommon::Item removeItem(Entity entity, uint8_t slot);
 
         RoseCommon::Item buildItem(uint8_t type, uint8_t subtype, uint16_t id);
 
