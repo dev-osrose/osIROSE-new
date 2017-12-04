@@ -30,6 +30,7 @@
 #include <unordered_map>
 #include <mutex>
 #include <queue>
+#include "item.h"
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000 // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -51,6 +52,8 @@ class EntitySystem {
         void destroy(Entity entity);
 
         Entity create();
+    
+        Entity buildItemEntity(RoseCommon::Item&&);
 
         template <typename T>
         T& get() {
