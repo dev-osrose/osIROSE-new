@@ -23,6 +23,7 @@
 #include <vector>
 #include <unordered_map>
 #include <tuple>
+#include <functional>
 
 #include "singleton.h"
 #include "item.h"
@@ -86,7 +87,7 @@ namespace RoseCommon
     using key_t = std::tuple<uint8_t, uint16_t>;
     struct key_hash : public std::unary_function<key_t, std::size_t> {
         std::size_t operator()(const key_t& k) const {
-            return Core::hash_val(std::get<0>(k), std::get<1>(k));
+            return std::apply(Core::hash_val, k);
         }
     };
 
