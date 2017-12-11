@@ -7,12 +7,7 @@ namespace RoseCommon {
 class ItemAPI : public LuaAPI {
   public:
     ItemAPI() = default;
-    ItemAPI(sol::environment&& env) : LuaAPI(std::move(env)) {
-      // build the C++/lua connectors here
-      env_.set_function("getAttr", [this](uint16_t id, std::string attr) {
-        logger_->info("getAttr called for client {} and attr {}", id, attr);
-      });
-    }
+    ItemAPI(EntitySystem& es, sol::environment&& env);
 
     void onInit() { env_["onInit"](); }
     void onDelete() { env_["onDelete"](); }
