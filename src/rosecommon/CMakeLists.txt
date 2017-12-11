@@ -60,6 +60,7 @@ SET(SOURCES_BASE
   src/itemdb
   src/entitycomponents
   src/isccommon
+  src/itemapi
 )
 
 SET(SOURCES_PACKETS
