@@ -3,38 +3,22 @@
 #include <tuple>
 #include <memory>
 #include <type_traits>
+#include <utility>
+
+#include "invoke.h"
 
 namespace Core {
 
-template <class F, std::size_t... Is>
-constexpr auto index_apply_impl(F f, std::index_sequence<Is...>) {
-    return f(std::integral_constant<std::size_t, Is>{}...);
+namespace detail {
+template <class F, class Tuple, std::size_t... I>
+constexpr decltype(auto) apply_impl(F&& f, Tuple&& t, std::index_sequence<I...>) {
+    return invoke(std::forward<F>(f), std::get<I>(std::forward<Tuple>(t))...);
+}
 }
 
-template <std::size_t N, class F>
-constexpr auto index_apply(F f) {
-    return index_apply_impl(std::forward<F>(f), std::make_index_sequence<N>{});
-}
-
-template <std::size_t N, class Tuple>
-constexpr auto take_front(Tuple &t) {
-    return index_apply<N>([&](auto... Is) {
-            return std::make_tuple(std::get<Is>(t)...);
-            });
-}
-
-template <class Tuple, class F>
-constexpr auto apply(Tuple &t, F &&f) {
-    return index_apply<std::tuple_size<Tuple>{}>([&](auto... Is) {
-            return f(std::get<Is>(t)...);
-            });
-}
-
-template <class Tuple>
-constexpr auto reverse(Tuple &t) {
-    return index_apply<std::tuple_size<Tuple>{}>([&](auto... Is) {
-            return std::make_tuple(std::get<std::tuple_size<Tuple>{} - 1 - Is>(t)...);
-            });
+template <class F, class Tuple>
+constexpr decltype(auto) apply(F &&f, Tuple&& t) {
+    return detail::apply_impl(std::forward<F>(f), std::forward<Tuple>(t), std::make_index_sequence<std::tuple_size_v<std::remove_reference_t<Tuple>>>{});
 }
 
 template <class F, class... Ts, std::size_t... Is>
