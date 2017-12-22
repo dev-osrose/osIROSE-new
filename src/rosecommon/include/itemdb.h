@@ -27,7 +27,6 @@
 #include "singleton.h"
 #include "item.h"
 #include "hash.h"
-#include "iterate.h"
 
 namespace RoseCommon
 {
@@ -87,7 +86,7 @@ namespace RoseCommon
     using key_t = std::tuple<uint8_t, uint16_t>;
     struct key_hash : public std::unary_function<key_t, std::size_t> {
         std::size_t operator()(const key_t& k) const {
-            return Core::apply(k, Core::hash_val);
+            return std::apply(Core::hash_val, k);
         }
     };
 
