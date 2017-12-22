@@ -7,15 +7,15 @@ namespace RoseCommon {
 class ItemAPI : public LuaAPI {
   public:
     ItemAPI() = default;
-    ItemAPI(EntitySystem& es, sol::environment&& env);
+    ItemAPI(sol::environment&& env);
 
     void onInit() { env_["onInit"](); }
     void onDelete() { env_["onDelete"](); }
-    bool onEquip(uint32_t id) { return env_["onEquip"](id); }
-    bool onUnequip(uint32_t id) { return env_["onUnEquip"](id); }
-    bool onDrop(uint32_t id) { return env_["onDrop"](id); }
-    bool onPickup(uint32_t id) { return env_["onPickup"](id); }
-    bool onUse(uint32_t id) { return env_["onUse"](id); }
+    bool onEquip(void* entity) { return env_["onEquip"](entity); }
+    bool onUnequip(void* entity) { return env_["onUnEquip"](entity); }
+    bool onDrop(void* entity) { return env_["onDrop"](entity); }
+    bool onPickup(void* entity) { return env_["onPickup"](entity); }
+    bool onUse(void* entity) { return env_["onUse"](entity); }
 };
 
 }
