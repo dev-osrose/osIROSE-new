@@ -7,6 +7,7 @@ namespace RoseCommon {
 class ItemAPI : public LuaAPI {
   public:
     ItemAPI() = default;
+    virtual ~ItemAPI() { onDelete(); }
     ItemAPI(sol::environment&& env);
 
     void onInit() { env_["onInit"](); }
