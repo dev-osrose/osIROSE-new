@@ -1,5 +1,6 @@
 // Unit test driver
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
+#include "crash_report.h"
 #include "network_thread_pool.h"
 #include "logconsole.h"
 
@@ -11,6 +12,8 @@ using ::testing::UnitTest;
 
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
+  
+  Core::CrashReport crashHandler("/tmp/dumps");
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);
