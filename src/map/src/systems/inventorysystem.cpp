@@ -57,9 +57,9 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
         return;
     }
     if (from < Inventory::MAX_EQUIP_ITEMS)
-        entity.component<Inventory>()->items_[to].onUnequip(&entity);
+        entity.component<Inventory>()->items_[to].lua_.onUnequip(&entity);
     if (to < Inventory::MAX_EQUIP_ITEMS)
-        entity.component<Inventory>()->items_[from].onEquip(&entity);
+        entity.component<Inventory>()->items_[from].lua_.onEquip(&entity);
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
     client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
@@ -68,7 +68,7 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
 bool InventorySystem::addItem(Entity e, Item&& item) {
     uint8_t slot = findNextEmptySlot(e);
     if (!slot) return false;
-    item.lua_.onPickup();
+    item.lua_.onPickup(&e);
     auto inv = e.component<Inventory>();
     inv->items_[slot] = std::move(item);
 
@@ -83,7 +83,7 @@ Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
     auto inv = entity.component<Inventory>();
     Item item{std::move(inv->items_[slot])};
     inv->items_[slot] = {};
-    item.lua_.onDrop();
+    item.lua_.onDrop(&entity);
     return item;
 }
 
