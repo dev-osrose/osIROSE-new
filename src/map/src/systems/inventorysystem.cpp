@@ -84,6 +84,7 @@ Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
     Item item{std::move(inv->items_[slot])};
     inv->items_[slot] = {};
     item.lua_.onDrop(&entity);
+    client->send(*makePacket<ePacketType::PAKWC_SET_ITEM>(e, Core::make_vector(slot)));
     return item;
 }
 
