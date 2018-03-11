@@ -25,7 +25,7 @@ CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), ser
 CLoginServer::~CLoginServer() { socket_->shutdown(true); }
 
 void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
-  //if (is_active()) {
+  //if (_sock->is_active()) {
     // Do Something?
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {

@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 link_directories(${EXTERNAL_BINARY_DIR})
 
@@ -5,13 +6,19 @@ set(PROJECT Bot)
 
 project(${PROJECT})
 
-#set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
-#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
+set(GCC_LINK_FLAGS "")
+set(Clang_LINK_FLAGS "")
+set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
+
+IF (NOT MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+ENDIF()
 
 IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  add_compiler_flags(-Wno-packed-bitfield-compat -Wl,-Map=${PROJECT}.map)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat -Wl,-Map=${PROJECT}.map")
 ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
-  add_compiler_flags(-Wno-keyword-compat)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
 ENDIF()
 
 SET( SOURCES_MAIN
@@ -23,12 +30,13 @@ SET( SOURCES_HEADER
 SET( SOURCES_BASE
     )
 
+find_package( Threads REQUIRED )
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-IF(WITH_MYSQL)
+IF(ENABLE_MYSQL)
   target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES})
 ENDIF()
 
@@ -39,5 +47,3 @@ IF (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)
 ENDIF()
-
-generate_symbol_data(${PROJECT})

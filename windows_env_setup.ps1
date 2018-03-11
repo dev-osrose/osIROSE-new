@@ -22,11 +22,6 @@ function Update-Submodules
 	cmd /c 'git submodule update --init --recursive 2>&1'
 }
 
-function Install-Pyparsing
-{
-	cmd /c 'pip install pyparsing 2>&1'
-}
-
 function GenerateProject {
   $current_path = Get-AbsolutePath;
 
@@ -40,7 +35,7 @@ function GenerateProject {
     $global:config = "Release"
   }
 
-  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DBUILD_TESTS=' + $global:unit_tests + ' ..  2>&1'
+  $cmake_command = 'cmake -DBUILD_TYPE=' + $global:config + ' -DENABLE_TESTING=' + $global:unit_tests + ' ..  2>&1'
   Write-Host "Running '$cmake_command'"
   cmd /c $cmake_command
 
@@ -74,7 +69,7 @@ if($build_unit_tests) {
     $global:unit_tests = "ON";
 }
 
-$update_submodules = BinaryQuestion("Update submodules (needed at least once for compile)");
+$update_submodules = BinaryQuestion("Update submodules (needed for compile)");
 if($update_submodules) {
     Update-Submodules
 }
@@ -83,8 +78,6 @@ $install_mysql_connector = BinaryQuestion("Install MySQL Connector C");
 if($install_mysql_connector) {
     Install-MySQL-Connector-C
 }
-
-Install-Pyparsing
 
 Write-Host "Generating the project now..."
 GenerateProject

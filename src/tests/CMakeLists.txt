@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.6)
 
 # Prepare testing infrastructure.
 link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
@@ -6,16 +7,23 @@ link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} 
 set(PROJECT_LIB osirose-lib)
 set(CMAKE_BUILD_TYPE "Debug")
 
-#set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
-#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE")
+set(GCC_LINK_FLAGS "${GCC_LINK_FLAGS}")
+set(Clang_LINK_FLAGS "")
+set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  add_compiler_flags(-Wl,-Map=${PROJECT}.map)
+IF (NOT MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 ENDIF()
 
-add_compiler_flags(-DSERVER_TESTING)
+IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-packed-bitfield-compat")
+ELSEIF( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-keyword-compat")
+ENDIF()
 
-# Grab all other files that can be used in the tests
+add_definitions(-DSERVER_TESTING)
+
 file(GLOB_RECURSE LOGIN_HEADERS . ${CMAKE_SOURCE_DIR}/src/login/*.[h])
 file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
 file(GLOB_RECURSE MAP_HEADERS . ${CMAKE_SOURCE_DIR}/src/map/*.[h])
@@ -74,6 +82,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/map/include
 )
 
+find_package( Threads REQUIRED )
 
 add_library(${PROJECT_LIB} STATIC ${SERVER_SOURCE} ${HEADERS})
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/login/include>)
@@ -87,33 +96,27 @@ ENDIF()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 
-#-----------------------------------------------------------------------------
-# Unit test helper Macro
-#-----------------------------------------------------------------------------
+
 macro (compile_test name path)
   set(TEST_NAME Test${name})
   project(${TEST_NAME})
-  
-  include_directories(
-    SYSTEM ${GTEST_INCLUDE_DIRS}
-    SYSTEM ${GMOCK_INCLUDE_DIRS}
-    SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
-  )
+  find_package( Threads REQUIRED )
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  IF(WITH_MYSQL)
+  IF(ENABLE_MYSQL)
       target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
   ENDIF()
 
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
+  target_link_libraries(${TEST_NAME} gtest)
+  target_link_libraries(${TEST_NAME} gmock)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  link_with_gtest(${TEST_NAME} gtest)
 
   IF (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
@@ -123,14 +126,12 @@ macro (compile_test name path)
   ENDIF()
 
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-  
-  generate_symbol_data(${TEST_NAME})
-  
 endmacro (compile_test)
 
 #---------------------------------
 #build the actual tests
-IF(WITH_COVERAGE_REPORTS)
+
+IF(ENABLE_TESTING_COVERAGE)
   include(CodeCoverage)
 
   set(COVERAGE_IGNORE_LIST
@@ -139,7 +140,7 @@ IF(WITH_COVERAGE_REPORTS)
   )
 
   SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
-ENDIF() # WITH_COVERAGE_REPORTS
+ENDIF() # ENABLE_TESTING_COVERAGE
 
 compile_test(Config src/test_config)
 compile_test(Console src/test_logconsole)

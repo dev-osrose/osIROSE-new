@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "crash_report.h"
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "config.h"
@@ -118,8 +117,6 @@ void ParseCommandLine(int argc, char** argv)
 int main(int argc, char* argv[]) {
   try {
   ParseCommandLine(argc, argv);
-  Core::CrashReport("/tmp/dumps");
-  
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
 
   if(auto log = console.lock())

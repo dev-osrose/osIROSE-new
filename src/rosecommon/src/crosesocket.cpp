@@ -59,7 +59,7 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 #ifndef DISABLE_CRYPT
     packet_size_ = crypt_.decodeClientHeader(reinterpret_cast<unsigned char*>(buffer_));
 #else
-    packet_size_ = reinterpret_cast<uint16_t*>(buffer_)[0];
+    packet_size_ = buffer_[0];
 #endif
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {

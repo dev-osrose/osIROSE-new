@@ -13,16 +13,11 @@ env:
   - ARTIFACTS_BUCKET=osirose-builds
   - secure: "tDTFSzBd6ASR8BM/pZMLMQy1jjlbxA81WaLfZ70OgTZE6KZ+X+mSdu/i5SyXzhdZSl62tVDo2jIjGupGLtzWjMtRJiN2zNHscYS+V4BbSfk97zKXs+fH96aDlGJBIqJSxT3aRqgvTCLFXzEWyZEQxzYX7u9I5P0ftMBOalkxfcU1JrBerJBdsXLFuGjKfyGfCOzvRBCjzpAhKHTsD4ecJyqqTk3XqDqE4P+8ibJXw0fWj6D0K2XTNq4krol+Vmcw2qZEGp3gVAy6blOM1ggopFRr/gTZjyA6Q/twnS07DH7w1v2RnCMjc12rTlR8usVrHYo73FUO47PMuWy/UhOhziuJy9Zu6GxcenRS/JmVYVY3cDcuczkrHX4JIn/qtwNROd8vhos+rOMFv04KsZYOkILrJmSmrwELldTw1/VkKMuk7rjcS+lcGbm2K+XZ9xUXefNGNnYbWlpQ6v8anAgOFU0/eOY3y2PknhH/2tUxX+hHq1AFMv63cGkSoRLPSXKz8gdKKN1dEIb8/ZLrz5glvv6rsLRqfvO6K3U1jyM5Sb2YCpIRd2x8CEv09QwVHWVjXdmBSVURdfY3p41G16wvMT3GCH7/VCJ6rGz1WmFzMEDX2ua5P+SFXagL0iBZNmF1HWVxkpwE1MGPkq/WlpSw//cY+2PNBktDjClluzE3w9s="
   - secure: "CgXInxIv08nvVBQY9UgP9ZeBMlDyuQ9wr0DmoB61UGMGNaJps11Shuikz0tDcJxqFsSapJPkXc03B6rK7Bhckdz3MKYp0RLNsEv0984QkKiseYnqFc6h6qJGV2AgsbHLBKZoqxVxeDV2biKvYqDkG3ylTSSaL7+eMvTguc2aK9zUhcFKoBdsRBECTdte2Nd/GVUIJIuUaFMncuTscZLR5VwNaN8xf6BTG5oitKbBje304/soMgHL9WdGuzeBT42QtE8yJ82SmlPvV/dAjGaSwLENmehpc3XIlaevrJg4Ptti8XBazjwvCR9bF5HVnP5uADqmLcznl1PQXDLjNeVryLjnFvAf4wveLxHeW13olMnZsgV84ABWEHTcUuz4z5KM+BKvLGjQB3R9msVr2YKn0KJfqeCPSdnctKAgKlYyRFKOIuohuHsVu+PJzq6NOFWs6c3IrEE+YgqSXhpgFcARt/Z1BTfVm9sAlHEY5I9Hlzxfl+F9HvjvQXtzhwt3fMB6dCeQfnGp/k660Q4wpo7zWHPc7o2OskeZwrTKzaSovFYXltGRQxDKOPZEjA1aLpK8Dnk46x+p9Kd+ClsV+WeOOG+u3xjR90NIjhOziurtMgMy/m/XluIvbMDCChZF8ecvo5+qEWeB9fAp3dSrkn4xInbTG+747P3hL2FxRLflwdo="
-  # other artifacts upload
-  - secure: "xBpVz5i5Cr2E47irPh4tbe4ytOAxIEN3vz68h0xDjRrFg+ZhYNarZsjTAHOgZuGyzMhoDmI3Ld8VvI5Qqx00giK+zkJ2SSqDx2UvAvn6cE8+Td9GyQ9wM8yNysU96l+mHpxwhDUabin6DG0Ea9XO4Qzc2qtWURkZxvymmzH5mEpklp8LoBjrr42e3Mo3J0h4C94wO/y6TenjjP8r0y2spUakxTC84u1T11zysKm/C16w3GECDNqaTMVO7zi9ctVjsTBPSqTA9PwuecUfMnB0B4f906U6B45xlVT0fXu76gEed7EeB8/YUHXU68BaTxP9pM9ytxiWZ6Wb+WPIPHS5cp4JuB7JTv4vmBlznBZdFkijhiQmoSloVtWhF6lBh0ke6ecP3/Wp0xuR4Qf+BdkbH9m13JzkDXKIeYnDbIJZ2XSCgo/Z7DQ23Xa2KB3SEvXT1LCbaZOwtxVxEVLBwlcYtH34CTmdG8gSvso4ZM4q6hSjTWjcXRY7zmgkJLRjtdPA+yaWmyXfYKz50CJ5QTmJj65LglIO3GszaEVvRwdy35SDiiEhnF8XNKJ5lFYTNgaGzY+o0gL0ZE1fAHI6GahBiY5a+9r2vHvMQ9QIOei3Ny1w2dZ/8ATZyZbXXjBmBLIwf0iY36pXzbTpRgZQi2fe0nGl2lg11Il4rtfyBL5hQfs="
-  - secure: "HuHas8zjvhptDPYZtq8bq2Zp54iqlZ5vuVZx859fPr42nqn9UoGWUlAhBlT7MDb9zPPGTtkHPRgoH85jTqxEKt+XmC4IvPkTch64N45G8qE06Kp+wKjzDyrSWn9OiMkk/Dfx/ppALBKmOGWNYoAHVSs1uM/iW3lniCXGAjKawf6eTZ56rQu59dLki723hugVFnLHou2lv/aAqAjJF4BydnHPHGZWthegjo2NDSaTJs3jtxTAMvYoUTPFVXumfNfS8/NlCFY5//YPOtVpTlHdfI8xmr89CuRdy/tuti7Dhbll+GVeRmFfUwSIREFp9mUZDiaDk3df1KBdND1pmmDEdEGZ0O3sKNpXGfHKAGxcHfKAPgSowlcRRPuqnZVcOfVtwgJOR+0JhV/WuUqZMqkHArYhHnudvojZ5euTAKKNdxrn8hYHw+jpHkHvCHmt+4KA4TR/OhoW6fxSKQNkcpTc4eREt53FoKOWhF3zJNx+YM/8/E07mu3j7zxbZHDspNtD5HrfU36WfxprAj62uvujKaqfhYjKBjq/k0THAcUPpQ8KoH75zjUMtn0k2sVpUlumci/1JErLipBtAWyOWwhcbFgMzX7I0UqbMuZ3mOivvjjX+3m6tntR2FReh8CUoh8dfhOsoAp3Fgm8mskuJLQ0/ry+YXe4+tIKyAHYu6Qhibk="
-  - secure: "rhEt4Tgu1txNXU//wxmxZCTiIbFeZMZpCWUt5kmQDJN8pn1Phykr1cdoHG9uMQ0BYmo+aGyt/IdFlNiPP5LWNHYTMRj0SlQu2RsYQzQqAkQ6ZbKdWOcBddeDZehSwiDNllIx7qMcpjrqeKdsf6NyEzlhp+Zb9wkfS0ghpWa2OhXMMxLmVSZngWQByh+SzCdkuuDXNXJZdDUh9bKovowvngW+AyqMpn1lJzC671zX8o/f2reedHp/SbEvz0DIHNK6euWC7Qr1BhkOGxuaBtNvbtbtyCzpsc+NoWRbYFhlsEVvkA3jSD7bqOpda1/cqfbGRVTk/vUU+I5n02gpC5rqvX65aLtsGWeWYFvuxVHPqE5UAgMk0+6WdSEWotBhjnrGN3U8zNKG9TxrTIHn24EUVMDmGNcxujtoFpEeUrU8gp5TCKb4rwi0S722YhcnkKqZuPcQ8GMdr0sme+C5zWQev+6UuUpW1UJnrBDTMDgK/vScRU4l6WGB7Gkvxyd+yxwoCEe8l3WKBbNv0v1TcKqnoYIDiIhSkWMHtOQBC7b88bJI/uiKNZ2qEakiNlcuuVkCow1nC0jlJTSiOlzDRdS5sWYlTS7TaKqwSrnN7SR3SMWO10hw18ACY1wbwGk9BTwaLSX625Dm54OJI8AtWjrI0ASvrkd/B3INLww7UYO8xdQ="
   # end artifacts
   - PROOT=$TRAVIS_BUILD_DIR
   - SUITE=tests
-  - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
+  - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:$TRAVIS_BUILD_DIR/ninja:$HOME/bakefile/bin:$HOME/bakefile/lib:$HOME/usr/bin:$HOME/mysql/bin:$HOME/mysql/lib:$PATH
   - LD_LIBRARY_PATH=$HOME/bakefile/lib:$HOME/mysql/lib:$LD_LIBRARY_PATH
-  - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
 services:
 - mysql
 matrix:
@@ -34,10 +29,17 @@ matrix:
       apt:
         sources: &sources
         - ubuntu-toolchain-r-test
+        - extras-precise
+        - boost-latest
+        - llvm-toolchain-trusty-4.0
         - deadsnakes
         packages:
         - lcov
+        - libboost-dev
+        - perl
+        - gcc-5
         - g++-5
+        - python3.5
     cache:
       apt: true
       directories:
@@ -54,7 +56,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=tests
     - export CXX="g++-5" CC="gcc-5";
-    - bash $CI_DIRECTORY/before_install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -68,17 +70,19 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-cmake.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-ninja.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    #- bash $TRAVIS_BUILD_DIR/ci/install-bakefile.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - bash $CI_DIRECTORY/script.sh
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh
     
   - env: g++-6 BUILD_TYPE=Debug
     sudo: false
@@ -87,61 +91,15 @@ matrix:
       apt:
         sources:
         - ubuntu-toolchain-r-test
+        - boost-latest
         - deadsnakes
         packages:
         - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
         - g++-6
-    cache:
-      apt: true
-      directories:
-      - $PROOT/3rdparty/bin
-      - $PROOT/3rdparty/lib
-      - $PROOT/3rdparty/include
-    branches:
-      except:
-      - coverity_scan
-    before_install:
-    - export GCOV_EXEC=gcov-6
-    - export LCOV_PATH=$HOME/usr/bin/lcov
-    - export GENHTML_PATH=$HOME/usr/bin/genhtml
-    - export PREFIX=$HOME
-    - export SUITE=coverage
-    - export CXX="g++-6" CC="gcc-6";
-    - bash $CI_DIRECTORY/before_install.sh
-    install:
-    ############################################################################
-    # Install a recent CMake
-    ############################################################################
-    - |
-      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-        CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz"
-        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
-        export PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${PATH}
-      else
-        brew upgrade cmake || brew install cmake
-      fi
-    - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
-    before_script:
-    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-    - mysql --user="root" -e 'create database osirose;'
-    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
-    script:
-    - cd build
-    - bash $CI_DIRECTORY/script.sh
-    
-  - env: g++-6 BUILD_TYPE=Release
-    sudo: false
-    language: cpp
-    addons:
-      apt:
-        sources: *sources
-        packages:
-        - lcov
-        - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -158,7 +116,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=tests
     - export CXX="g++-6" CC="gcc-6";
-    - bash $CI_DIRECTORY/before_install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -172,17 +130,70 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - bash $CI_DIRECTORY/script.sh;
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh
+    
+  - env: g++-6 BUILD_TYPE=Release
+    sudo: false
+    language: cpp
+    addons:
+      apt:
+        sources: *sources
+        packages:
+        - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
+        - g++-6
+        - python3.5
+    cache:
+      apt: true
+      directories:
+      - $PROOT/3rdparty/bin
+      - $PROOT/3rdparty/lib
+      - $PROOT/3rdparty/include
+    branches:
+      except:
+      - coverity_scan
+    before_install:
+    - export GCOV_EXEC=gcov-6
+    - export LCOV_PATH=$HOME/usr/bin/lcov
+    - export GENHTML_PATH=$HOME/usr/bin/genhtml
+    - export PREFIX=$HOME
+    - export SUITE=coverage
+    - export CXX="g++-6" CC="gcc-6";
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
+    install:
+    ############################################################################
+    # Install a recent CMake
+    ############################################################################
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz"
+        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+        export PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${PATH}
+      else
+        brew upgrade cmake || brew install cmake
+      fi
+    - cmake --version
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
+    before_script:
+    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+    - mysql --user="root" -e 'create database osirose;'
+    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
+    script:
+    - cd build
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
     after_success:
     - bash <(curl -s https://codecov.io/bash)
     
@@ -191,17 +202,18 @@ matrix:
     language: cpp
     addons:
       apt:
-        sources:
-        - deadsnakes
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-4.0
+        sources: *sources
         packages:
         - lcov
+        - libboost-dev
+        - perl
         - llvm-4.0
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
+        - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -217,7 +229,7 @@ matrix:
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
-    - bash $CI_DIRECTORY/before_install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -231,34 +243,34 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - bash $CI_DIRECTORY/script.sh;
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
     
   - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Release
     sudo: false
     language: cpp
     addons:
       apt:
-        sources:
-        - deadsnakes
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-4.0
+        sources: *sources
         packages:
         - lcov
+        - libboost-dev
+        - perl
         - llvm-4.0
         - llvm-4.0-dev
         - llvm-runtime
         - clang-4.0
+        - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -274,7 +286,7 @@ matrix:
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
-    - bash $CI_DIRECTORY/before_install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -288,17 +300,16 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-lcov.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     before_script:
     - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
     - mysql --user="root" -e 'create database osirose;'
     - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_script.sh
     script:
     - cd build
-    - bash $CI_DIRECTORY/script.sh;
+    - bash $TRAVIS_BUILD_DIR/ci/script.sh;
 
   - env: g++-6 coverity_scan
     sudo: false
@@ -308,7 +319,11 @@ matrix:
         sources: *sources
         packages:
         - lcov
+        - libboost-dev
+        - perl
+        - gcc-6
         - g++-6
+        - python3.5
     cache:
       apt: true
       directories:
@@ -325,7 +340,7 @@ matrix:
     - export PREFIX=$HOME
     - export SUITE=coverage
     - export CXX="g++-6" CC="gcc-6";
-    - bash $CI_DIRECTORY/before_install.sh
+    - bash $TRAVIS_BUILD_DIR/ci/before_install.sh
     install:
     ############################################################################
     # Install a recent CMake
@@ -339,8 +354,7 @@ matrix:
         brew upgrade cmake || brew install cmake
       fi
     - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
+    - bash $TRAVIS_BUILD_DIR/ci/install-mysql.sh
     script:
     - echo "coverity scan"
     after_success:
@@ -353,7 +367,7 @@ matrix:
     build_command_prepend: cov-configure --comptype gcc --compiler gcc-6 --template;
       cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
       cmake ..;
-    build_command: cmake --build . -- -j 4
+    build_command: make
     branch_pattern: coverity_scan
 notifications:
   webhooks:
@@ -364,19 +378,10 @@ notifications:
     on_start: never
   slack:
     secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
-#    template:
-#      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} by %{author} %{result} in %{elapsed_time}"
-
 
 after_success:
   - mkdir ${PROOT}/public
   - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
-#  - curl --ftp-create-dirs -T ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
-  
-after_failure:
-  - mkdir ${PROOT}/public
-  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database /tmp/dumps
-  - curl --ftp-create-dirs -T ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
 
 deploy:
 #  - provider: s3

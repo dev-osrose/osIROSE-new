@@ -12,7 +12,6 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "crash_report.h"
 #include "cloginserver.h"
 #include "config.h"
 #include "logconsole.h"
@@ -134,7 +133,6 @@ void deleteStaleSessions() {
 int main(int argc, char* argv[]) {
   try {
     ParseCommandLine(argc, argv);
-    Core::CrashReport("/tmp/dumps");
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
