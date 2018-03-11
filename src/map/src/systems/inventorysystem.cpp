@@ -108,8 +108,7 @@ Item InventorySystem::buildItem(uint8_t type, uint16_t id, uint16_t life, bool i
     item.life_ = life;
     item.isAppraised_ = isAppraised;
     auto luaSystem = manager_.get<LuaSystem>();
-    // TODO : replace with actual lua code from database
-    item.lua_ = luaSystem->loadScript<RoseCommon::ItemAPI>("");
+    item.lua_ = luaSystem->loadScript<RoseCommon::ItemAPI>(def.script);
     //const auto& env = item.lua_.getEnv();
     // TODO: get durability from lua env
     item.lua_.onInit();
