@@ -16,12 +16,12 @@ struct Wishlist {
     return os;
   }
 
-  template <typename T>
-  void loadFromResult(T& res) {
+  template <typename T, typename U>
+  void loadFromResult(T& res, U& builder) {
     for (const auto& row : res) {
       if (row.slot >= maxWishes)
         continue; // FIXME : error somewhere?
-      wishlist_[row.slot].loadFromRow(row);
+      wishlist_[row.slot].loadFromRow(row, builder);
     }
   }
 };

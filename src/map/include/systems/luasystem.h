@@ -13,7 +13,12 @@ namespace Systems {
 
 class LuaSystem : public System {
     public:
-        LuaSystem(SystemManager &manager) : System(manager) {}
+        LuaSystem(SystemManager &manager) : System(manager) {
+            // FIXME: this loads every library available. We should check if all of them are useful
+            state_.open_libraries();
+            // really inneficient ipair() function
+            state_.script("function iter (a, i)\ni = i + 1\nlocal v = a[i]\nif v then\nreturn i, v\nend\nend\n\nfunction ipairs (a)\nreturn iter, a, 0\nend");
+        }
         virtual ~LuaSystem() = default;
 
         void loadScript(Entity e, const std::string& luaScript) {

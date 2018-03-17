@@ -52,21 +52,26 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
     }
     uint8_t to = packet.slotTo();
     uint8_t from = packet.slotFrom();
+
+    bool unequip = false;
+    bool equip = false;
+    auto inv = entity.component<Inventory>();
+    // if the slot we are moving to was an equipped item, we unequip it
+    if (to < Inventory::MAX_EQUIP_ITEMS && inv->items_[to])
+        unequip = entity.component<Inventory>()->items_[to].lua_.onUnequip(&entity);
+    // if the slot we are moving to is an equipped item, we equip it
+    if (to < Inventory::MAX_EQUIP_ITEMS && inv->items_[from])
+        equip = entity.component<Inventory>()->items_[from].lua_.onEquip(&entity);
+    
+    if (!equip || !unequip) return; // we couldn't equip / unequip an item
+
     if (!swapItems(entity, to, from)) {
         logger_->warn("There was an error while swapping items for client {}", getId(entity));
         return;
     }
-    bool unequip = false;
-    bool equip = false;
-    if (from < Inventory::MAX_EQUIP_ITEMS)
-        unequip = entity.component<Inventory>()->items_[to].lua_.onUnequip(&entity);
-    if (to < Inventory::MAX_EQUIP_ITEMS)
-        equip = entity.component<Inventory>()->items_[from].lua_.onEquip(&entity);
-    if (equip || unequip) {
-        CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-                *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-        client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
-    }
+    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+            *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
+    client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }
 
 bool InventorySystem::addItem(Entity e, Item&& item) {
