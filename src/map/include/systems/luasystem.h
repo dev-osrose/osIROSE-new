@@ -16,8 +16,6 @@ class LuaSystem : public System {
         LuaSystem(SystemManager &manager) : System(manager) {
             // FIXME: this loads every library available. We should check if all of them are useful
             state_.open_libraries();
-            // really inneficient ipair() function
-            state_.script("function iter (a, i)\ni = i + 1\nlocal v = a[i]\nif v then\nreturn i, v\nend\nend\n\nfunction ipairs (a)\nreturn iter, a, 0\nend");
         }
         virtual ~LuaSystem() = default;
 
@@ -29,9 +27,11 @@ class LuaSystem : public System {
 
         template <typename LuaAPI>
         LuaAPI loadScript(const std::string& luaScript) {
+          // really inefficient ipairs() function
+          const auto ipairs = "function iter (a, i)\ni = i + 1\nlocal v = a[i]\nif v then\nreturn i, v\nend\nend\n\nfunction ipairs (a)\nreturn iter, a, 0\nend";
           sol::environment env{state_, sol::create};
           LuaAPI lua{std::move(env)};
-          state_.script(luaScript, lua.getEnv());
+          state_.script(ipairs + luaScript, lua.getEnv());
           return lua;
         }
 
