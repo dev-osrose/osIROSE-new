@@ -44,9 +44,9 @@ struct Item : public ISerialize {
     };
 
     Item();
-    template <typename T>
-    Item(const T& row) : Item() {
-      loadFromRow(row);
+    template <typename T, typename U>
+    Item(const T& row, U& builder) : Item() {
+      loadFromRow(row, builder);
     }
 
     Item(const ItemDef& def);
@@ -61,17 +61,15 @@ struct Item : public ISerialize {
     virtual uint16_t getHeader() const override;
     virtual uint32_t getData() const override;
 
-    template <typename T>
-    void loadFromRow(const T& row) {
-        id_ = row.itemid;
-        type_ = row.itemtype;
+    template <typename T, typename U>
+    void loadFromRow(const T& row, U& builder) {
+        // type, id, life, isAppraised
+        auto item = builder.buildItem(row.itemtype, row.itemid, 1000, true);
+        std::swap(*this, item);
         count_ = row.amount;
         refine_ = row.refine;
         gemOpt_ = row.gemOpt;
         hasSocket_ = row.socket;
-        life_ = 1000; // FIXME : placeholder
-        durability_ = 10; // FIXME : placeholder
-        isAppraised_ = true; // FIXME : placeholder
     }
 
     template <typename U, typename T>

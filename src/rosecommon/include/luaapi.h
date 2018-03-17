@@ -9,7 +9,7 @@ namespace RoseCommon {
 
 class LuaAPI {
     public:
-        LuaAPI() = default;
+        LuaAPI() : isCreated_(false) {}
         virtual ~LuaAPI() = default;
         LuaAPI(sol::environment&& env) : isCreated_(true), env_(std::move(env)), logger_(Core::CLog::GetLogger(Core::log_type::SYSTEM)) {}
 
@@ -23,8 +23,8 @@ class LuaAPI {
             return env_;
         }
 
+        bool isCreated_;
     protected:
-        bool isCreated_ = false;
         sol::environment env_;
         std::shared_ptr<spdlog::logger> logger_;
 };

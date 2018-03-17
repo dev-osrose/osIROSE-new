@@ -156,7 +156,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     auto invRes = conn(sqlpp::select(sqlpp::all_of(inventoryTable))
                 .from(inventoryTable)
                 .where(inventoryTable.charId == charId));
-    inventory->loadFromResult(invRes);
+    inventory->loadFromResult(invRes, get<Systems::InventorySystem>());
 
     Systems::UpdateSystem::calculateSpeed(entity);
 
@@ -167,7 +167,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
                         .from(wish)
                         .where(wish.charId == charId));
     auto wishlist = entity.assign<Wishlist>();
-    wishlist->loadFromResult(wishRes);
+    wishlist->loadFromResult(wishRes, get<Systems::InventorySystem>());
 
     //auto lua = entity.assign<EntityAPI>();
 
@@ -219,7 +219,7 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
         toDelete.emplace_back(row.slot); //FIXME: that should never happen
       else if (!items[row.slot])
         toDelete.emplace_back(row.slot);
-      else if (items[row.slot] != Item(row))
+      else if (items[row.slot] != Item(row, get<Systems::InventorySystem>()))
         toUpdate.emplace_back(row.slot);
       modified.insert(row.slot);
     }
