@@ -53,15 +53,15 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
     uint8_t to = packet.slotTo();
     uint8_t from = packet.slotFrom();
 
-    bool unequip = false;
-    bool equip = false;
+    int unequip = -1;
+    int equip = -1;
     auto inv = entity.component<Inventory>();
     // if the slot we are moving to was an equipped item, we unequip it
     if (to < Inventory::MAX_EQUIP_ITEMS && inv->items_[to])
-        unequip = entity.component<Inventory>()->items_[to].lua_.onUnequip(&entity);
+        unequip = static_cast<bool>(entity.component<Inventory>()->items_[to].lua_.onUnequip(&entity));
     // if the slot we are moving to is an equipped item, we equip it
     if (to < Inventory::MAX_EQUIP_ITEMS && inv->items_[from])
-        equip = entity.component<Inventory>()->items_[from].lua_.onEquip(&entity);
+        equip = static_cast<bool>(entity.component<Inventory>()->items_[from].lua_.onEquip(&entity));
     
     if (!equip || !unequip) return; // we couldn't equip / unequip an item
 
