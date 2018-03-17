@@ -27,11 +27,9 @@ class LuaSystem : public System {
 
         template <typename LuaAPI>
         LuaAPI loadScript(const std::string& luaScript) {
-          // really inefficient ipairs() function
-          const auto ipairs = "function iter (a, i)\ni = i + 1\nlocal v = a[i]\nif v then\nreturn i, v\nend\nend\n\nfunction ipairs (a)\nreturn iter, a, 0\nend";
-          sol::environment env{state_, sol::create};
+          sol::environment env{state_, sol::create, state_.globals()};
           LuaAPI lua{std::move(env)};
-          state_.script(ipairs + luaScript, lua.getEnv());
+          state_.script(luaScript, lua.getEnv());
           return lua;
         }
 
