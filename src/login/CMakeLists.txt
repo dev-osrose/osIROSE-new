@@ -40,3 +40,5 @@ IF (MSVC)
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+
+install_executable(${PROJECT})
