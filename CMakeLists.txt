@@ -37,6 +37,8 @@ set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
+include(CheckOptions)
+
 if(Debug)
   set(DEBUG 1)
 endif()
@@ -55,7 +57,6 @@ if(OFFICIAL_DEBUG_BUILD)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-include(CheckOptions)
 include(ExternalProject)
 include(macros)
 include(parsearguments)
