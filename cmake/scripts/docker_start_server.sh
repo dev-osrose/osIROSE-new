@@ -4,9 +4,9 @@
 if [ -n $SERVER ]; then
   if [ -e $SERVER ]; then
     if [ -n $CONFIG_FILE ]; then
-      `./$SERVER -f $CONFIG_FILE`
+      ./$SERVER -f $CONFIG_FILE
     else
-      `./$SERVER -f /config/login-server.json`
+      ./$SERVER -f /config/login-server.json
     fi
   else
     echo "$SERVER does not exist."
