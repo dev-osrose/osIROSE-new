@@ -3,21 +3,21 @@ PROJECT(tools)
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-IF(BUILD_TOOLS)
+if(BUILD_TOOLS)
   INCLUDE_DIRECTORIES(
     SYSTEM ${SPDLOG_ROOT}
   )
 
-  IF(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
+  if(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  ENDIF() # ENABLE_TESTING_COVERAGE
+  endif() # ENABLE_TESTING_COVERAGE
 
-  IF( ENABLE_ASAN )
+  if( ENABLE_ASAN )
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
     SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
-  ENDIF()
+  endif()
 
-  IF(BUILD_STRESS)
+  if(BUILD_STRESS)
 	  ADD_SUBDIRECTORY(stress)
-  ENDIF()
-ENDIF()
+  endif()
+endif()
