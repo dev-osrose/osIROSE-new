@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "NodeServer.h"
-#include "NodeClient.h"
-#include "NodeISC.h"
+#include "nodeserver.h"
+#include "nodeclient.h"
+#include "nodeisc.h"
 #include "epackettype.h"
 #include "config.h"
 #include "platform_defines.h"

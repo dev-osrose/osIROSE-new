@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _NodeISC_H_
-#define _NodeISC_H_
+#ifndef _NODEISC_H_
+#define _NODEISC_H_
 
 #include <forward_list>
 #include "croseisc.h"

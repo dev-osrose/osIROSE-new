@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _NodeClient_H_
-#define _NodeClient_H_
+#ifndef _NODECLIENT_H_
+#define _NODECLIENT_H_
 
 #include "croseclient.h"
 #include "srv_srvselectreply.h"
