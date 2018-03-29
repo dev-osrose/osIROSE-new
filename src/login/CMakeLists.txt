@@ -34,6 +34,10 @@ ENDIF()
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
 
+if(UNIX)
+  target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
+endif()
+
 IF (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)
