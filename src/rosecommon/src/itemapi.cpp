@@ -23,6 +23,4 @@ ItemAPI::ItemAPI(sol::environment&& env) : LuaAPI(std::move(env)) {
         Entity e = *(Entity*)entity;
         logger_->info("removeBonusAttr called for client {} and attr {} value {}", getId(e), attr, value);
     });
-
-    onInit();
 }

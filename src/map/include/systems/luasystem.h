@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <optional>
 
 namespace Systems {
 
@@ -22,14 +23,23 @@ class LuaSystem : public System {
         void loadScript(Entity e, const std::string& luaScript) {
           auto lua = e.component<RoseCommon::EntityAPI>();
           throw_assert(lua, "The entity doesn't have a lua table");
-          *lua = loadScript<RoseCommon::EntityAPI>(luaScript);
+          auto loadedLua = loadScript<RoseCommon::EntityAPI>(luaScript);
+          if (!loadedLua) {
+              return;
+          }
+          *lua = std::move(loadedLua.value());
         }
 
         template <typename LuaAPI>
-        LuaAPI loadScript(const std::string& luaScript) {
+        std::optional<LuaAPI> loadScript(const std::string& luaScript) {
           sol::environment env{state_, sol::create, state_.globals()};
           LuaAPI lua{std::move(env)};
-          state_.script(luaScript, lua.getEnv());
+          try {
+              state_.script(luaScript, lua.getEnv());
+          } catch (const sol::error& e) {
+              logger_->error("Lua error while loading the script: {}", e.what());
+              return {};
+          }
           return lua;
         }
 
