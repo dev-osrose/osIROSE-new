@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <curl/curl.h>
 #include <cxxopts.hpp>
 #include "crash_report.h"
 #include "nodeserver.h"
@@ -53,9 +54,75 @@ void CheckUser()
 #endif
 }
 
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+ 
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+ 
+  mem->memory = reinterpret_cast<char*>(realloc(mem->memory, mem->size + realsize + 1));
+  if(mem->memory == NULL) {
+    // out of memory!
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+ 
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+ 
+  return realsize;
+}
+
+std::string get_current_net_address()
+{
+  CURL* curl;
+  CURLcode res;
+  std::string address = "";
+  
+  struct MemoryStruct chunk;
+ 
+  chunk.memory = reinterpret_cast<char*>(malloc(1));  // will be grown as needed by the realloc above
+  chunk.size = 0;    // no data at this point
+  
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  
+  curl = curl_easy_init();
+  
+  if(curl) 
+  {
+    Core::Config& config = Core::Config::getInstance();
+    curl_easy_setopt(curl, CURLOPT_URL, config.serverData().autoConfigureUrl.c_str());
+    
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "osirose-node-server/1.0");
+    
+    res = curl_easy_perform(curl);
+    
+    // Check for errors
+    if(res == CURLE_OK)
+      address = chunk.memory;
+ 
+    // always cleanup
+    curl_easy_cleanup(curl);
+  }
+ 
+  curl_global_cleanup();
+  
+  free(chunk.memory);
+  
+  return address;
+}
+
 void ParseCommandLine(int argc, char** argv)
 {
-  cxxopts::Options options(argv[0], "osIROSE login server");
+  cxxopts::Options options(argv[0], "osIROSE node server");
 
   try {
     std::string config_file_path = "";
@@ -74,6 +141,8 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("29010"), "PORT")
     ("t,maxthreads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
+    ("url", "Auto configure url", cxxopts::value<std::string>()
+      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
     ("h,help",  "Print this help text")
     ;
 
@@ -104,7 +173,13 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("iscport") )
       config.loginServer().iscPort = options["iscport"].as<int>();
-
+      
+    if( options.count("url") )
+    {
+      config.serverData().autoConfigureAddress = true;
+      config.serverData().autoConfigureUrl = options["url"].as<std::string>();
+    }
+    
     if( options.count("maxthreads") )
       config.serverData().maxThreads = options["maxthreads"].as<int>();
   }
@@ -114,21 +189,6 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
-
-void deleteStaleSessions() {
-  using namespace std::chrono_literals;
-  using ::date::floor;
-  static std::chrono::steady_clock::time_point time{};
-  if (Core::Time::GetTickCount() - time < 5min)
-    return;
-  time = Core::Time::GetTickCount();
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::SessionTable session;
-  Core::AccountTable table;
-  conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
-  conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
-}
-
 } // end namespace
 
 int main(int argc, char* argv[]) {
@@ -152,23 +212,31 @@ int main(int argc, char* argv[]) {
     }
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    std::string ip_addr = config.serverData().ip;
+    if( true == config.serverData().autoConfigureAddress )
+    {
+      ip_addr = get_current_net_address();
+      ip_addr.replace(ip_addr.end()-1, ip_addr.end(), '\n', '\0');
+      if(auto log = console.lock()) {
+        log->info( "IP address is \"{}\"", ip_addr );
+      }
+    }
 
     NodeServer loginServer;
     NodeServer charServer;
     NodeServer mapServer;
 
-    loginServer.init(config.serverData().ip, config.loginServer().clientPort);
+    loginServer.init(ip_addr, config.loginServer().clientPort);
     loginServer.listen();
 
-    charServer.init(config.serverData().ip, config.charServer().clientPort);
+    charServer.init(ip_addr, config.charServer().clientPort);
     charServer.listen();
 
-    mapServer.init(config.serverData().ip, config.mapServer().clientPort);
+    mapServer.init(ip_addr, config.mapServer().clientPort);
     mapServer.listen();
 
     while (loginServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      deleteStaleSessions();
     }
 
     if(auto log = console.lock())
