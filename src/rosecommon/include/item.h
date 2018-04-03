@@ -65,7 +65,8 @@ struct Item : public ISerialize {
     void loadFromRow(const T& row, U& builder) {
         // type, id, life, isAppraised
         auto item = builder.buildItem(row.itemtype, row.itemid, 1000, true);
-        std::swap(*this, item);
+        if (item)
+            std::swap(*this, item.value());
         count_ = row.amount;
         refine_ = row.refine;
         gemOpt_ = row.gemOpt;

@@ -55,7 +55,10 @@ void ChatSystem::normalChat(CMapClient& client, Entity entity, const CliNormalCh
             }
             auto invSys = manager_.get<InventorySystem>();
             auto item = invSys->buildItem(type, id);
-            if (!InventorySystem::addItem(entity, std::move(item))) {
+            if (!item) {
+                client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Error while building the object, check the logs"));
+            }
+            else if (!InventorySystem::addItem(entity, std::move(item.value()))) {
                 logger_->info("Inventory full for {}", getId(entity));
                 client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
             } else {
