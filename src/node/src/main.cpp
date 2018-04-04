@@ -143,6 +143,8 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("512"), "COUNT")
     ("url", "Auto configure url", cxxopts::value<std::string>()
       ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
+    ("c,core_path", "Auto configure url", cxxopts::value<std::string>()
+      ->default_value("/tmp/dumps"), "CORE")
     ("h,help",  "Print this help text")
     ;
 
@@ -151,7 +153,7 @@ void ParseCommandLine(int argc, char** argv)
     // Check to see if the user wants to see the help text
     if (options.count("help"))
     {
-      std::cout << options.help({"", "Group"}) << std::endl;
+      std::cout << options.help({""}) << std::endl;
       exit(0);
     }
 
@@ -182,10 +184,13 @@ void ParseCommandLine(int argc, char** argv)
     
     if( options.count("maxthreads") )
       config.serverData().maxThreads = options["maxthreads"].as<int>();
+    
+    if( options.count("core_path") )
+      config.serverData().core_dump_path = options["core_path"].as<std::string>();
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
-    std::cout << options.help({"", "Group"}) << std::endl;
+    std::cout << options.help({""}) << std::endl;
     exit(1);
   }
 }
@@ -194,13 +199,14 @@ void ParseCommandLine(int argc, char** argv)
 int main(int argc, char* argv[]) {
   try {
     ParseCommandLine(argc, argv);
-    Core::CrashReport("/tmp/dumps");
+    
+    Core::Config& config = Core::Config::getInstance();
+    Core::CrashReport(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
       log->info( "Starting up server..." );
 
-    Core::Config& config = Core::Config::getInstance();
     Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
     DisplayTitle();
     CheckUser();
