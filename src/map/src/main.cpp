@@ -60,22 +60,24 @@ void ParseCommandLine(int argc, char** argv)
   try {
     std::string config_file_path = "";
     options.add_options()
-      ("f,file", "Config file path", cxxopts::value<std::string>(config_file_path)
-        ->default_value("server.json"), "FILE_PATH")
-      ("l,level", "Logging level (0-9)", cxxopts::value<int>()
-        ->default_value("3"), "LEVEL")
-      ("ip", "Client listen IP Address", cxxopts::value<std::string>()
-        ->default_value("0.0.0.0"), "IP")
-      ("port", "Client listen port", cxxopts::value<int>()
-        ->default_value("29000"), "PORT")
-      ("iscip", "ISC listen IP Address", cxxopts::value<std::string>()
-        ->default_value("127.0.0.1"), "IP")
-      ("iscport", "ISC listen port", cxxopts::value<int>()
-        ->default_value("29010"), "PORT")
-      ("t,maxthreads", "Max thread count", cxxopts::value<int>()
-        ->default_value("512"), "COUNT")
-      ("h,help", "Print this help text")
-      ;
+    ("f,file", "Config file path", cxxopts::value<std::string>(config_file_path)
+      ->default_value("server.json"), "FILE_PATH")
+    ("l,level", "Logging level (0-9)", cxxopts::value<int>()
+      ->default_value("3"), "LEVEL")
+    ("ip", "Client listen IP Address", cxxopts::value<std::string>()
+      ->default_value("0.0.0.0"), "IP")
+    ("port", "Client listen port", cxxopts::value<int>()
+      ->default_value("29000"), "PORT")
+    ("iscip", "ISC listen IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
+    ("iscport", "ISC listen port", cxxopts::value<int>()
+      ->default_value("29010"), "PORT")
+    ("t,maxthreads", "Max thread count", cxxopts::value<int>()
+      ->default_value("512"), "COUNT")
+    ("url", "Auto configure url", cxxopts::value<std::string>()
+      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
+    ("h,help", "Print this help text")
+    ;
 
     options.parse(argc, argv);
 
@@ -104,6 +106,12 @@ void ParseCommandLine(int argc, char** argv)
 
     if (options.count("iscport"))
       config.loginServer().iscPort = options["iscport"].as<int>();
+      
+    if( options.count("url") )
+    {
+      config.serverData().autoConfigureAddress = true;
+      config.serverData().autoConfigureUrl = options["url"].as<std::string>();
+    }
 
     if (options.count("maxthreads"))
       config.serverData().maxThreads = options["maxthreads"].as<int>();

@@ -73,6 +73,8 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("29010"), "PORT")
     ("t,maxthreads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
+    ("url", "Auto configure url", cxxopts::value<std::string>()
+      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
     ("h,help",  "Print this help text")
     ;
 
@@ -103,6 +105,12 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("iscport") )
       config.charServer().iscPort = options["iscport"].as<int>();
+      
+    if( options.count("url") )
+    {
+      config.serverData().autoConfigureAddress = true;
+      config.serverData().autoConfigureUrl = options["url"].as<std::string>();
+    }
 
     if( options.count("maxthreads") )
       config.serverData().maxThreads = options["maxthreads"].as<int>();
