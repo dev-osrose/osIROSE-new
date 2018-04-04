@@ -6,7 +6,7 @@ else
   CONFIG_FILE="-f /config/login-server.json"
 fi
 
-if [ -n $AUTOCONFIG_URL ]; then
+if [ -n $URL ]; then
   AUTOCONFIG_URL="--url $URL"
 else
   AUTOCONFIG_URL=""
