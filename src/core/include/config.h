@@ -75,12 +75,13 @@ class Config {
     std::string ip = "127.0.0.1";
     std::string iscListenIp = "127.0.0.1";
     std::string autoConfigureUrl = "http://ipv4.myexternalip.com/raw";
+    std::string core_dump_path = "/tmp/dumps";
     uint32_t parentId = 0;
     uint32_t maxConnections = 0;
     uint32_t maxThreads = 512;
     bool useThreads = true;
     bool autoConfigureAddress = false;
-    uint8_t accessLevel = 0;
+    uint8_t accessLevel = 1;
     uint8_t mode = 0;
   };
   struct LoginServer {
@@ -130,7 +131,7 @@ class Config {
 }
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
-VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
+VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, logLevel);
