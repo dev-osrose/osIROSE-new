@@ -79,6 +79,19 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("/tmp/dumps"), "CORE")
     ("h,help",  "Print this help text")
     ;
+    
+    options.add_options("Database")
+    ("db_host", "", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "DB_HOST")
+    ("db_port", "", cxxopts::value<int>()
+      ->default_value("3306"), "DB_PORT")
+    ("db_name", "", cxxopts::value<std::string>()
+      ->default_value("osirose"), "DB_NAME")
+    ("db_user", "", cxxopts::value<std::string>()
+      ->default_value("root"), "DB_USER")
+    ("db_pass", "", cxxopts::value<std::string>()
+      ->default_value(""), "DB_PASS")
+    ;
 
     options.parse(argc, argv);
 
@@ -119,6 +132,17 @@ void ParseCommandLine(int argc, char** argv)
       
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();
+      
+    if( options.count("db_host") )
+      config.database().host = options["db_host"].as<std::string>();
+    if( options.count("db_port") )
+      config.database().port = options["db_port"].as<int>();
+    if( options.count("db_name") )
+      config.database().database = options["db_name"].as<std::string>();
+    if( options.count("db_user") )
+      config.database().user = options["db_user"].as<std::string>();
+    if( options.count("db_pass") )
+      config.database().password = options["db_pass"].as<std::string>();
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
