@@ -142,7 +142,8 @@ int main(int argc, char* argv[]) {
             config.database().user,
             config.database().password,
             config.database().database,
-            config.database().host));
+            config.database().host,
+            0));
 
   CCharServer clientServer;
   CCharServer iscServer(true);
