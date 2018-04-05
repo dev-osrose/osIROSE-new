@@ -60,25 +60,28 @@ void ParseCommandLine(int argc, char** argv)
   try {
     std::string config_file_path = "";
     options.add_options()
-    ("f,file", "Config file path", cxxopts::value<std::string>(config_file_path)
+    ("f,config_file",  "Config file path", cxxopts::value<std::string>(config_file_path)
       ->default_value("server.json"), "FILE_PATH")
-    ("l,level", "Logging level (0-9)", cxxopts::value<int>()
+    ("l,log_level", "Logging level (0-9)", cxxopts::value<int>()
       ->default_value("3"), "LEVEL")
-    ("ip", "Client listen IP Address", cxxopts::value<std::string>()
+    ("c,core_path", "Path to place minidumps when the app crashes", cxxopts::value<std::string>()
+      ->default_value("/tmp/dumps"), "CORE")
+    ("h,help",  "Print this help text")
+    ;
+    
+    options.add_options("Networking")
+    ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
       ->default_value("0.0.0.0"), "IP")
-    ("port", "Client listen port", cxxopts::value<int>()
+    ("client_port", "Client listen port", cxxopts::value<int>()
       ->default_value("29000"), "PORT")
-    ("iscip", "ISC listen IP Address", cxxopts::value<std::string>()
+    ("isc_ip", "ISC listen IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
-    ("iscport", "ISC listen port", cxxopts::value<int>()
+    ("isc_port", "ISC listen port", cxxopts::value<int>()
       ->default_value("29010"), "PORT")
-    ("t,maxthreads", "Max thread count", cxxopts::value<int>()
+    ("t,max_threads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
     ("url", "Auto configure url", cxxopts::value<std::string>()
       ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
-    ("c,core_path", "Auto configure url", cxxopts::value<std::string>()
-      ->default_value("/tmp/dumps"), "CORE")
-    ("h,help", "Print this help text")
     ;
     
     options.add_options("Database")
@@ -99,7 +102,7 @@ void ParseCommandLine(int argc, char** argv)
     // Check to see if the user wants to see the help text
     if (options.count("help"))
     {
-      std::cout << options.help({ "" }) << std::endl;
+      std::cout << options.help({"", "Database", "Networking"}) << std::endl;
       exit(0);
     }
 
@@ -107,30 +110,33 @@ void ParseCommandLine(int argc, char** argv)
 
     // We are using if checks here because we only want to override the config file if the option was supplied
     // Since this is a login server startup function we can get away with a little bit of overhead
-    if (options.count("level"))
-      config.loginServer().logLevel = options["level"].as<int>();
+    if( options.count("log_level") )
+      config.loginServer().logLevel = options["log_level"].as<int>();
 
-    if (options.count("ip"))
-      config.serverData().ip = options["ip"].as<std::string>();
+    if( options.count("client_ip") )
+      config.serverData().ip = options["client_ip"].as<std::string>();
 
-    if (options.count("port"))
-      config.loginServer().clientPort = options["port"].as<int>();
+    if( options.count("client_port") )
+      config.loginServer().clientPort = options["client_port"].as<int>();
 
-    if (options.count("iscip"))
-      config.serverData().iscListenIp = options["iscip"].as<std::string>();
+    if( options.count("isc_ip") )
+      config.serverData().iscListenIp = options["isc_ip"].as<std::string>();
 
-    if (options.count("iscport"))
-      config.loginServer().iscPort = options["iscport"].as<int>();
+    if( options.count("isc_port") )
+      config.loginServer().iscPort = options["isc_port"].as<int>();
       
     if( options.count("url") )
     {
       config.serverData().autoConfigureAddress = true;
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
-
-    if (options.count("maxthreads"))
-      config.serverData().maxThreads = options["maxthreads"].as<int>();
-      
+    
+    if( options.count("max_threads") ) 
+    {
+      config.serverData().maxThreads = options["max_threads"].as<int>();
+      Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    }
+    
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();
       
@@ -147,7 +153,7 @@ void ParseCommandLine(int argc, char** argv)
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
-    std::cout << options.help({ "" }) << std::endl;
+    std::cout << options.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
   }
 }

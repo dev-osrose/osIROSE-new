@@ -12,6 +12,12 @@ else
   AUTOCONFIG_URL=""
 fi
 
+if [ -n $CORE_PATH ]; then
+  CORE_PATH="--core_path $CORE_PATH"
+else
+  CORE_PATH=""
+fi
+
 if [ -n $DB_HOST ]; then
   DB_HOST="--db_host $DB_HOST"
 else
