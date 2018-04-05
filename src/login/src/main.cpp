@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
                 config.database().password,
                 config.database().database,
                 config.database().host,
-                0));
+                config.database().port));
 
     CLoginServer clientServer;
     CLoginServer iscServer(true);
