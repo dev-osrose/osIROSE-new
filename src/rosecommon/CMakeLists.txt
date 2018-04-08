@@ -110,6 +110,8 @@ SET(SOURCES_PACKETS
   include/packets/cli_partychat
   src/packets/cli_charlistreq
   include/packets/cli_charlistreq
+  src/packets/cli_dropitem
+  include/packets/cli_dropitem
   #------------------------------------------------
   src/packets/srv_acceptreply
   include/packets/srv_acceptreply
