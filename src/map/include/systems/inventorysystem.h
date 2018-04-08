@@ -7,6 +7,7 @@
 
 namespace RoseCommon {
 class CliEquipItem;
+class CliDropItem;
 }
 
 namespace Systems {
@@ -27,6 +28,7 @@ class InventorySystem : public System {
         std::optional<RoseCommon::Item> buildItem(uint8_t type, uint16_t id, uint16_t life = 1000, bool isAppraised = true);
 
         void processEquip(CMapClient& client, Entity entity, const RoseCommon::CliEquipItem &packet);
+        void dropItem(CMapClient& client, Entity entity, const RoseCommon::CliDropItem &packet);
 };
 
 }

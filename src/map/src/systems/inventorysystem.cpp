@@ -3,6 +3,7 @@
 #include "cmapclient.h"
 #include "makevector.h"
 #include "cli_equipitem.h"
+#include "cli_dropitem.h"
 #include "srv_equipitem.h"
 #include "srv_setitem.h"
 #include "itemdb.h"
@@ -14,6 +15,7 @@ using namespace RoseCommon;
 
 InventorySystem::InventorySystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_EQUIP_ITEM, &InventorySystem::processEquip);
+    manager.registerDispatcher(ePacketType::PAKCS_DROP_ITEM, &InventorySystem::dropItem);
 }
 
 void InventorySystem::update(EntityManager&, double) {}
@@ -72,6 +74,34 @@ void InventorySystem::processEquip(CMapClient& client, Entity entity, const Rose
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
             *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
     client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
+}
+
+void InventorySystem::dropItem(CMapClient& client, Entity entity, const RoseCommon::CliDropItem &packet) {
+    logger_->trace("InventorySystem::dropItem");
+    if (packet.item() == 0 || packet.item() >= Inventory::maxItems) {
+        logger_->warn("Wrong item to be dropped");
+        return;
+    }
+    auto inv = entity.component<Inventory>();
+    const uint32_t held = inv->items_[packet.item()].count_;
+    uint32_t count = packet.quantity();
+    if (held < count) {
+        logger_->warn("The quantity is above what the character has");
+        count = held;
+    }
+    Item droppedItem;
+    if (count < held) {
+        Item& item = inv->items_[packet.item()];
+        item.count_ -= count;
+        droppedItem = item;
+        droppedItem.count_ = count;
+        client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(packet.item())));
+    } else {
+        droppedItem = removeItem(entity, packet.item());
+    }
+    Entity item = manager_.buildItem(entity, std::move(droppedItem));
+    (void)item;
+    // TODO: send the packet to show the item being dropped
 }
 
 bool InventorySystem::addItem(Entity e, Item&& item) {

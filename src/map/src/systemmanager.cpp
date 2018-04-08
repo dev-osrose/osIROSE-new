@@ -19,3 +19,7 @@ Entity SystemManager::getEntity(uint32_t charId) const {
 EntityManager &SystemManager::getEntityManager() {
     return entitySystem_.getEntityManager();
 }
+
+Entity SystemManager::buildItem(Entity creator, RoseCommon::Item&& item) {
+    return entitySystem_.buildItemEntity(creator, std::move(item));
+}

@@ -55,6 +55,8 @@ struct Item : public ISerialize {
 
     Item& operator=(Item&&) = default;
 
+    Item& operator=(const Item&) = default;
+
     virtual ~Item() = default;
 
     virtual uint32_t getVisible() const override;
