@@ -32,11 +32,14 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     e.assign<Item>(std::move(item));
     auto pos = creator.component<Position>();
     e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
-    e.assign<Owner>(creator.component<BasicInfo>()->id_);
+    auto basic = e.assign<BasicInfo>();
+    basic.ownerId_ = creator.component<BasicInfo>()->id_;
+    basic.id_ = nextId_++;
     return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
+    ++nextId_;
     if (!entity)
         return;
     auto basic = entity.component<BasicInfo>();
