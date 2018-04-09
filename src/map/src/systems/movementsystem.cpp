@@ -13,12 +13,16 @@ using namespace RoseCommon;
 MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
     manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
-    manager.getEntityManager().on_component_removed<Destination>([](Entity entity, Destination*) {
+    manager.getEntityManager().on_component_removed<Destination>([this](Entity entity, Destination *dest) {
             if (!entity)
                 return;
             if (auto client = getClient(entity))
                 CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
                         *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+            if (dest->target_) {
+                logger_->warn("picking up the item");
+                //TODO: pickup item
+            }
             });
     // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
@@ -45,7 +49,7 @@ void MovementSystem::update(EntityManager &es, double dt) {
     }
 }
 
-void MovementSystem::move(Entity entity, float x, float y) {
+void MovementSystem::move(Entity entity, float x, float y, uint16_t target) {
     if (!entity)
         return;
     auto dest = entity.component<Destination>();
@@ -57,8 +61,9 @@ void MovementSystem::move(Entity entity, float x, float y) {
         dest->x_ = x;
         dest->y_ = y;
         dest->dist_ = dist;
+        dest->target_ = target;
     } else {
-        entity.assign<Destination>(x, y, dist);
+        entity.assign<Destination>(x, y, dist, target);
     }
     // FIXME: what happens if the entity is an NPC or a monster?
     if (auto client = getClient(entity))
@@ -87,7 +92,7 @@ void MovementSystem::processMove(CMapClient&, Entity entity, const CliMouseCmd &
     logger_->trace("MovementSystem::processMove");
     if (!entity.component<Position>() || !entity.component<BasicInfo>())
         return;
-    move(entity, packet.x(), packet.y());
+    move(entity, packet.x(), packet.y(), packet.targetId());
 }
 
 void MovementSystem::stopMoving(CMapClient&, Entity entity, const CliStopMoving &packet) {

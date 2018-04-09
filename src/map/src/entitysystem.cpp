@@ -34,7 +34,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
     auto basic = e.assign<BasicInfo>();
     basic->ownerId_ = creator.component<BasicInfo>()->id_;
-    basic->id_ = nextId_++;
+    basic->id_ = 5000 + nextId_++; //FIXME: find a better solution than a hard coded one
     itemToEntity_[basic->id_] = e;
     return e;
 }

@@ -18,6 +18,9 @@ SrvDropItem::SrvDropItem(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) 
 	*this >> basicInfo->id_;
 	*this >> basicInfo->ownerId_;
 
+    uint16_t remainTime;
+    *this >> remainTime;
+
 }
 
 SrvDropItem::SrvDropItem(Entity entity) : CRosePacket(ePacketType::PAKWC_DROP_ITEM), entity_(entity) {}
@@ -38,6 +41,7 @@ void SrvDropItem::pack() {
     *this << item->getData();
 	*this << basicInfo->id_;
 	*this << basicInfo->ownerId_;
+    *this << (uint16_t)5; // TODO: encode the remaining time somehow
 
 }
 
