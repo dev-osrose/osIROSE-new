@@ -33,13 +33,15 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     auto pos = creator.component<Position>();
     e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
     auto basic = e.assign<BasicInfo>();
-    basic.ownerId_ = creator.component<BasicInfo>()->id_;
-    basic.id_ = nextId_++;
+    basic->ownerId_ = creator.component<BasicInfo>()->id_;
+    basic->id_ = 5000; //FIXME: ugly hack that doesn't allow more than 4999 users, please fix
+    while (idToEntity.at(basic->id_) != idToEntity.end())
+        ++basic->id_;
+    idToEntity[basic->id_] = e;
     return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
-    ++nextId_;
     if (!entity)
         return;
     auto basic = entity.component<BasicInfo>();
