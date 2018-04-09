@@ -43,6 +43,7 @@
 #include "components/party.h"
 #include "components/wishlist.h"
 #include "components/quests.h"
+#include "components/owner.h"
 
 #include "entityapi.h"
 #include "item.h"
@@ -51,7 +52,7 @@ using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::Feature
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      RoseCommon::EntityAPI, RoseCommon::Item>;
+      RoseCommon::EntityAPI, RoseCommon::Item, Owner>;
 
 using Entity = EntityManager::Entity;
 
