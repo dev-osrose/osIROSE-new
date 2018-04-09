@@ -187,6 +187,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_channellistreply
   src/packets/srv_questdata
   include/packets/srv_questdata
+  src/packets/srv_dropitem
+  include/packets/srv_dropitem
   #---------------------------------------------------------
   src/packets/isc_serverregister
   include/packets/isc_serverregister
