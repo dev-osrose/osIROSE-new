@@ -32,6 +32,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     e.assign<Item>(std::move(item));
     auto pos = creator.component<Position>();
     e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
+    e.assign<Owner>(creator.component<BasicInfo>()->id_);
     return e;
 }
 
