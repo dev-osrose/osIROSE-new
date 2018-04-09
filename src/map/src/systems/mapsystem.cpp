@@ -5,6 +5,7 @@
 #include "cli_changemapreq.h"
 #include "srv_changemapreply.h"
 #include "srv_playerchar.h"
+#include "srv_dropitem.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -34,8 +35,8 @@ void MapSystem::processChangeMapReq(CMapClient& client, Entity entity, const Ros
         if (e != entity && basic->isOnMap_.load())
             client.send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
     }
-    //for (Entity e : manager.entities_with_components<Item>()) {
-        // send item on ground packet
-    //}
+    for (Entity e : manager.entities_with_components<Item>()) {
+        client.send(*makePacket<ePacketType::PAKWC_DROP_ITEM>(e));
+    }
     entity.component<BasicInfo>()->isOnMap_.store(true);
 }

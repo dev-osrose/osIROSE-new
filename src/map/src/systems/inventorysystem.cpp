@@ -6,6 +6,7 @@
 #include "cli_dropitem.h"
 #include "srv_equipitem.h"
 #include "srv_setitem.h"
+#include "srv_dropitem.h"
 #include "itemdb.h"
 #include "systems/luasystem.h"
 #include "itemapi.h"
@@ -100,8 +101,8 @@ void InventorySystem::dropItem(CMapClient& client, Entity entity, const RoseComm
         droppedItem = removeItem(entity, packet.item());
     }
     Entity item = manager_.buildItem(entity, std::move(droppedItem));
-    (void)item;
-    // TODO: send the packet to show the item being dropped
+    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+            *makePacket<ePacketType::PAKWC_DROP_ITEM>(item));
 }
 
 bool InventorySystem::addItem(Entity e, Item&& item) {
