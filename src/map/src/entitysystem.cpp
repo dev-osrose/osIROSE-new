@@ -13,7 +13,7 @@
 #include <set>
 
 using namespace RoseCommon;
-EntitySystem::EntitySystem() : systemManager_(*this) {
+EntitySystem::EntitySystem() : systemManager_(*this), nextId_(0) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
@@ -35,7 +35,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     auto basic = e.assign<BasicInfo>();
     basic->ownerId_ = creator.component<BasicInfo>()->id_;
     basic->id_ = nextId_++;
-    itemToEntity[basic->id_] = e;
+    itemToEntity_[basic->id_] = e;
     return e;
 }
 
@@ -47,6 +47,10 @@ void EntitySystem::registerEntity(Entity entity) {
         return;
     nameToEntity_[basic->name_] = entity;
     idToEntity_[basic->id_] = entity;
+}
+
+Entity EntitySystem::getItemEntity(uint32_t id) {
+    return itemToEntity_[id];
 }
 
 Entity EntitySystem::getEntity(const std::string &name) {
