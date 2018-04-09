@@ -90,7 +90,6 @@ class EntitySystem {
         std::unordered_map<std::string, Entity> nameToEntity_;
         std::unordered_map<uint32_t, Entity> idToEntity_;
         std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
-        uint32_t nextId_ = 0;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */
