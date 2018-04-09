@@ -34,10 +34,8 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
     e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
     auto basic = e.assign<BasicInfo>();
     basic->ownerId_ = creator.component<BasicInfo>()->id_;
-    basic->id_ = 5000; //FIXME: ugly hack that doesn't allow more than 4999 users, please fix
-    while (idToEntity.at(basic->id_) != idToEntity.end())
-        ++basic->id_;
-    idToEntity[basic->id_] = e;
+    basic->id_ = nextId_++;
+    itemToEntity[basic->id_] = e;
     return e;
 }
 
