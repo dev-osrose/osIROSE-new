@@ -190,8 +190,8 @@ int main(int argc, char* argv[]) {
                 config.database().port));
 
 
-    CMapServer clientServer;
-    CMapServer iscServer(true);
+  CMapServer clientServer;
+  CMapServer iscServer(true);
   CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
   iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
   iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
