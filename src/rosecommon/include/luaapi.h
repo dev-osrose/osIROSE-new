@@ -31,7 +31,7 @@ class LuaAPI {
         std::shared_ptr<spdlog::logger> logger_;
 
         template <typename T, typename... Args>
-        decltype(auto) safeLuaCall(const std::string& func, const Args&... args) {
+        T safeLuaCall(const std::string& func, const Args&... args) {
             logger_->trace("Calling lua function {}", func);
             if (!isCreated_) {
                 logger_->warn("Trying to call lua function {}() when the lua environment hasn't been created", func);
