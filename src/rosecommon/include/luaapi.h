@@ -22,6 +22,8 @@ class LuaAPI {
             throw_assert(isCreated_, "Error, trying to access the sol environment before creating it");
             return env_;
         }
+    
+        operator bool() const noexcept { return isCreated_; }
 
     protected:
         bool isCreated_;
