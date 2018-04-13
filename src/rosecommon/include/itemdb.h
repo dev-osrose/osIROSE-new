@@ -23,6 +23,7 @@
 #include <vector>
 #include <unordered_map>
 #include <tuple>
+#include <functional>
 
 #include "singleton.h"
 #include "item.h"
