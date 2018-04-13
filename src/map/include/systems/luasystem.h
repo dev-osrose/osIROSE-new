@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <optional>
 
 namespace Systems {
 
@@ -30,7 +31,7 @@ class LuaSystem : public System {
         }
 
         template <typename LuaAPI>
-        LuaAPI loadScript(const std::string& luaScript) {
+        std::optional<LuaAPI> loadScript(const std::string& luaScript) {
           sol::environment env{state_, sol::create, state_.globals()};
           LuaAPI lua{std::move(env)};
           try {
@@ -39,7 +40,7 @@ class LuaSystem : public System {
               logger_->error("Lua error while loading the script: {}", e.what());
               return {};
           }
-          return lua;
+          return std::make_optional(std::move(lua));
         }
 
     virtual void update(EntityManager&, double) {}
