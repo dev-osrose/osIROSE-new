@@ -137,7 +137,7 @@ Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
     return item;
 }
 
-std::optional<Item> InventorySystem::buildItem(uint8_t type, uint16_t id, uint16_t life, bool isAppraised) {
+Item InventorySystem::buildItem(uint8_t type, uint16_t id, uint16_t life, bool isAppraised) {
     const auto &itemDb = ItemDatabase::getInstance();
     const auto def = itemDb.getItemDef(type, id);
     Item item{def};
@@ -151,5 +151,5 @@ std::optional<Item> InventorySystem::buildItem(uint8_t type, uint16_t id, uint16
     //const auto& env = item.lua_.getEnv();
     // TODO: get durability from lua env
     item.lua_.onInit();
-    return std::make_optional(std::move(item));
+    return item;
 }
