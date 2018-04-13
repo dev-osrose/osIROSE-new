@@ -72,40 +72,6 @@ class LuaSystem : public System {
             bool operator==(const Callback& c) const { return e == c.e; }
         };
         std::vector<Callback> callbacks_;*/
-            
-<<<<<<< HEAD
-
-=======
-        static constexpr auto getFunctionName(luaFunctions func) {
-            switch (func) {
-                case luaFunctions::onInit: return "onInit";
-                case luaFunctions::onCreate: return "onCreate";
-                case luaFunctions::onRemove: return "onRemove";
-                case luaFunctions::onEquip: return "onEquip";
-                case luaFunctions::onUnEquip: return "onUnEquip";
-                case luaFunctions::onDrop: return "onDrop";
-                case luaFunctions::onPickup: return "onPickup";
-                case luaFunctions::onUse: return "onUse";
-                default: return "";
-            }
-        }
-    
-        struct voidvoid { using type = void(); };
-        struct boolvoid { using type = bool(); };
-    
-        template <luaFunctions func>
-        static constexpr auto getFunctionType() {
-            if constexpr (func == luaFunctions::onInit) return voidvoid{};
-            else if constexpr (func == luaFunctions::onCreate) return voidvoid{};
-            else if constexpr (func == luaFunctions::onRemove) return voidvoid{};
-            else if constexpr (func == luaFunctions::onEquip) return boolvoid{};
-            else if constexpr (func == luaFunctions::onUnEquip) return boolvoid{};
-            else if constexpr (func == luaFunctions::onDrop) return boolvoid{};
-            else if constexpr (func == luaFunctions::onPickup) return voidvoid{};
-            else if constexpr (func == luaFunctions::onUse) return voidvoid{};
-            else return voidvoid{};
-        }
->>>>>>> 7a6728df... Update luasystem.h
 };
 
 }
