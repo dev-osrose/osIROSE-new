@@ -8,7 +8,6 @@
 
 #include <vector>
 #include <algorithm>
-#include <optional>
 
 namespace Systems {
 
@@ -31,7 +30,7 @@ class LuaSystem : public System {
         }
 
         template <typename LuaAPI>
-        std::optional<LuaAPI> loadScript(const std::string& luaScript) {
+        LuaAPI loadScript(const std::string& luaScript) {
           sol::environment env{state_, sol::create, state_.globals()};
           LuaAPI lua{std::move(env)};
           try {
