@@ -45,7 +45,7 @@ bool NodeClient::ServerSelect(
   auto& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
     P->result(), P->sessionId(), P->cryptVal(),
-    config.serverData().ip, config.loginServer().clientPort); // Replace this with MY ip address
+    config.serverData().ip, config.loginServer().clientPort); // Replace this with MY current ip address
   this->send( *packet );
   return true;
 }
