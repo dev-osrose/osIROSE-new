@@ -6,10 +6,7 @@ pipeline {
     stage('Preparation') {
       steps {
         checkout scm
-        dir('osIROSE-new') {
-          sh 'git submodule update --init --recursive'
-          sh 'mkdir build'
-        }
+        sh 'mkdir build'
       }
     }
     stage('Build on Linux') { 
@@ -17,24 +14,27 @@ pipeline {
         label 'linux'
       }
       steps {
-        dir('osIROSE-new/build') {
-          sh 'cmake --build .'
+        dir('build') {
+          sh 'cd build && cmake ..'
+          sh 'cd build && cmake --build . -- -j'
         }
       }
     }
-    //stage('Build on Windows') { 
-    //  agent {
-    //    label 'windows'
-    //  }
-    //  steps {
-    //    dir('osIROSE-new/build') {
-    //      bat 'cmake --build .'
-    //    }
-    //  }
-    //}
+    stage('Build on Windows') { 
+      agent {
+        label 'windows'
+      }
+      steps {
+        dir('build') {
+          bat 'cd build && cmake --build .'
+        }
+      }
+    }
     stage('Test') { 
       steps {
-        sh 'ctest .'
+        dir('build') {
+          sh 'cd build && ctest'
+        }
       }
     }
   }
