@@ -18,7 +18,8 @@ TEST(TestMySQL_Database, TestItemDatabase)
                                       config.database().user,
                                       config.database().password,
                                       config.database().database,
-                                      config.database().host));
+                                      config.database().host,
+                                      config.database().port));
 
   EXPECT_NO_FATAL_FAILURE(RoseCommon::ItemDatabase::getInstance());
 }
