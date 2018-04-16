@@ -44,10 +44,14 @@
 #include "components/wishlist.h"
 #include "components/quests.h"
 
+#include "entityapi.h"
+#include "item.h"
+
 using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::FeatureFlags::OBSERVABLE,
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
-  RidingItems, BulletItems, Inventory, Party, Wishlist, Quests>;
+      RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
+      RoseCommon::EntityAPI, RoseCommon::Item>;
 
 using Entity = EntityManager::Entity;
 

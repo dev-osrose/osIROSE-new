@@ -5,6 +5,7 @@
 #include "systems/inventorysystem.h"
 #include "systems/partysystem.h"
 #include "systems/mapsystem.h"
+#include "systems/luasystem.h"
 #include "connection.h"
 #include "cmapclient.h"
 
@@ -12,17 +13,30 @@
 #include <set>
 
 using namespace RoseCommon;
-EntitySystem::EntitySystem() : systemManager_(*this) {
+EntitySystem::EntitySystem() : systemManager_(*this), nextId_(0) {
     systemManager_.add<Systems::MovementSystem>();
     systemManager_.add<Systems::UpdateSystem>();
     systemManager_.add<Systems::ChatSystem>();
     systemManager_.add<Systems::InventorySystem>();
     systemManager_.add<Systems::PartySystem>();
     systemManager_.add<Systems::MapSystem>();
+    systemManager_.add<Systems::LuaSystem>();
 }
 
 EntityManager &EntitySystem::getEntityManager() {
     return entityManager_;
+}
+
+Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
+    Entity e = create();
+    e.assign<Item>(std::move(item));
+    auto pos = creator.component<Position>();
+    e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
+    auto basic = e.assign<BasicInfo>();
+    basic->ownerId_ = creator.component<BasicInfo>()->id_;
+    basic->id_ = 5000 + nextId_++; //FIXME: find a better solution than a hard coded one
+    itemToEntity_[basic->id_] = e;
+    return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
@@ -33,6 +47,10 @@ void EntitySystem::registerEntity(Entity entity) {
         return;
     nameToEntity_[basic->name_] = entity;
     idToEntity_[basic->id_] = entity;
+}
+
+Entity EntitySystem::getItemEntity(uint32_t id) {
+    return itemToEntity_[id];
 }
 
 Entity EntitySystem::getEntity(const std::string &name) {
@@ -140,12 +158,13 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
     entity.assign<BulletItems>();
 
     // TODO : write the inventory code
+    //auto luaSystem = systemManager_.get<Systems::LuaSystem>();
     auto inventory = entity.assign<Inventory>();
 
     auto invRes = conn(sqlpp::select(sqlpp::all_of(inventoryTable))
                 .from(inventoryTable)
                 .where(inventoryTable.charId == charId));
-    inventory->loadFromResult(invRes);
+    inventory->loadFromResult(invRes, get<Systems::InventorySystem>());
 
     Systems::UpdateSystem::calculateSpeed(entity);
 
@@ -156,7 +175,12 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
                         .from(wish)
                         .where(wish.charId == charId));
     auto wishlist = entity.assign<Wishlist>();
-    wishlist->loadFromResult(wishRes);
+    wishlist->loadFromResult(wishRes, get<Systems::InventorySystem>());
+
+    //auto lua = entity.assign<EntityAPI>();
+
+    //luaSystem->loadScript(entity, "function onInit()\ndisplay('test')\nend");
+    //lua->onInit();
 
     registerEntity(entity);
     return entity;
@@ -203,7 +227,7 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
         toDelete.emplace_back(row.slot); //FIXME: that should never happen
       else if (!items[row.slot])
         toDelete.emplace_back(row.slot);
-      else if (items[row.slot] != Item(row))
+      else if (items[row.slot] != Item(row, get<Systems::InventorySystem>()))
         toUpdate.emplace_back(row.slot);
       modified.insert(row.slot);
     }

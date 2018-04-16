@@ -21,8 +21,11 @@
  */
 #pragma once
 #include "iserialize.h"
+#include "itemapi.h"
 
 namespace RoseCommon {
+
+struct ItemDef;
 
 /*!
  * \class Item
@@ -41,27 +44,35 @@ struct Item : public ISerialize {
     };
 
     Item();
-    template <typename T>
-    Item(const T& row) : Item() {
-      loadFromRow(row);
+    template <typename T, typename U>
+    Item(const T& row, U& builder) : Item() {
+      loadFromRow(row, builder);
     }
+
+    Item(const ItemDef& def);
+
+    Item(Item&& other) = default;
+
+    Item& operator=(Item&&) = default;
+
+    Item& operator=(const Item&) = default;
+
     virtual ~Item() = default;
 
     virtual uint32_t getVisible() const override;
     virtual uint16_t getHeader() const override;
     virtual uint32_t getData() const override;
 
-    template <typename T>
-    void loadFromRow(const T& row) {
-        id_ = row.itemid;
-        type_ = row.itemtype;
+    template <typename T, typename U>
+    void loadFromRow(const T& row, U& builder) {
+        // type, id, life, isAppraised
+        auto item = builder.buildItem(row.itemtype, row.itemid, 1000, true);
+        if (item)
+            std::swap(*this, item.value());
         count_ = row.amount;
         refine_ = row.refine;
         gemOpt_ = row.gemOpt;
         hasSocket_ = row.socket;
-        life_ = 1000; // FIXME : placeholder
-        durability_ = 10; // FIXME : placeholder
-        isAppraised_ = true; // FIXME : placeholder
     }
 
     template <typename U, typename T>
@@ -112,6 +123,12 @@ struct Item : public ISerialize {
     uint8_t refine_;
     uint32_t count_;
     bool isStackable_;
+
+    uint16_t atk_;
+    uint16_t def_;
+    uint16_t range_;
+ 
+    ItemAPI lua_;
 };
 
 }
