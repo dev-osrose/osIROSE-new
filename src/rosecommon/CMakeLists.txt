@@ -27,6 +27,9 @@ set( SOURCES_HEADER
   include/item
   include/itemdb
   include/partybase
+  include/luaapi
+  include/itemapi
+  include/entityapi
   include/components/advancedinfo
   include/components/basicinfo
   include/components/bulletitems
@@ -57,6 +60,7 @@ SET(SOURCES_BASE
   src/itemdb
   src/entitycomponents
   src/isccommon
+  src/itemapi
 )
 
 SET(SOURCES_PACKETS
@@ -106,6 +110,8 @@ SET(SOURCES_PACKETS
   include/packets/cli_partychat
   src/packets/cli_charlistreq
   include/packets/cli_charlistreq
+  src/packets/cli_dropitem
+  include/packets/cli_dropitem
   #------------------------------------------------
   src/packets/srv_acceptreply
   include/packets/srv_acceptreply
@@ -169,6 +175,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_channellistreply
   src/packets/srv_questdata
   include/packets/srv_questdata
+  src/packets/srv_dropitem
+  include/packets/srv_dropitem
   #---------------------------------------------------------
   src/packets/isc_serverregister
   include/packets/isc_serverregister

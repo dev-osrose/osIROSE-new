@@ -21,6 +21,7 @@ set( SOURCES_HEADER
   include/makevector
   include/factory
   include/crash_report
+  include/hash
 )
 
 set( SOURCES_BASE

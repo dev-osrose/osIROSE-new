@@ -27,7 +27,7 @@ services:
 - mysql
 matrix:
   include:
-  - env: g++-5 BUILD_TYPE=Release
+  - env: g++-7 BUILD_TYPE=Release
     sudo: false
     language: cpp
     addons:
@@ -37,7 +37,7 @@ matrix:
         - deadsnakes
         packages:
         - lcov
-        - g++-5
+        - g++-7
     cache:
       apt: true
       directories:
@@ -48,12 +48,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-    - export GCOV_EXEC=gcov-5
+    - export GCOV_EXEC=gcov-7
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export SUITE=tests
-    - export CXX="g++-5" CC="gcc-5";
+    - export CXX="g++-7" CC="gcc-7";
     - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
@@ -80,7 +80,7 @@ matrix:
     - cd build
     - bash $CI_DIRECTORY/script.sh
     
-  - env: g++-6 BUILD_TYPE=Debug
+  - env: g++-7 BUILD_TYPE=Debug
     sudo: false
     language: cpp
     addons:
@@ -90,7 +90,7 @@ matrix:
         - deadsnakes
         packages:
         - lcov
-        - g++-6
+        - g++-7
     cache:
       apt: true
       directories:
@@ -101,12 +101,12 @@ matrix:
       except:
       - coverity_scan
     before_install:
-    - export GCOV_EXEC=gcov-6
+    - export GCOV_EXEC=gcov-7
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export SUITE=tests
-    - export CXX="g++-6" CC="gcc-6";
+    - export SUITE=coverage
+    - export CXX="g++-7" CC="gcc-7";
     - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
@@ -132,61 +132,8 @@ matrix:
     script:
     - cd build
     - bash $CI_DIRECTORY/script.sh
-    
-  - env: g++-6 BUILD_TYPE=Release
-    sudo: false
-    language: cpp
-    addons:
-      apt:
-        sources: *sources
-        packages:
-        - lcov
-        - g++-6
-    cache:
-      apt: true
-      directories:
-      - $PROOT/3rdparty/bin
-      - $PROOT/3rdparty/lib
-      - $PROOT/3rdparty/include
-    branches:
-      except:
-      - coverity_scan
-    before_install:
-    - export GCOV_EXEC=gcov-6
-    - export LCOV_PATH=$HOME/usr/bin/lcov
-    - export GENHTML_PATH=$HOME/usr/bin/genhtml
-    - export PREFIX=$HOME
-    - export SUITE=tests
-    - export CXX="g++-6" CC="gcc-6";
-    - bash $CI_DIRECTORY/before_install.sh
-    install:
-    ############################################################################
-    # Install a recent CMake
-    ############################################################################
-    - |
-      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-        CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz"
-        mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
-        export PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${PATH}
-      else
-        brew upgrade cmake || brew install cmake
-      fi
-    - cmake --version
-    - bash $CI_DIRECTORY/install-ninja.sh
-    - bash $CI_DIRECTORY/install-lcov.sh
-    - bash $CI_DIRECTORY/install-mysql.sh
-    before_script:
-    - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-    - mysql --user="root" -e 'create database osirose;'
-    - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
-    - bash $CI_DIRECTORY/before_script.sh
-    script:
-    - cd build
-    - bash $CI_DIRECTORY/script.sh;
-    after_success:
-    - bash <(curl -s https://codecov.io/bash)
-    
-  - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Debug
+
+  - env: clang-5.0 LIBCXX=1 BUILD_TYPE=Debug
     sudo: false
     language: cpp
     addons:
@@ -194,14 +141,14 @@ matrix:
         sources:
         - deadsnakes
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-4.0
+        - llvm-toolchain-trusty-5.0
         packages:
         - lcov
-        - llvm-4.0
-        - llvm-4.0-dev
+        - llvm-5.0
+        - llvm-5.0-dev
         - llvm-runtime
-        - clang-4.0
-        - g++-6
+        - clang-5.0
+        - g++-7
     cache:
       apt: true
       directories:
@@ -216,7 +163,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
+    - export CXX="/usr/bin/clang++-5.0" CC="/usr/bin/clang-5.0";
     - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
@@ -243,7 +190,7 @@ matrix:
     - cd build
     - bash $CI_DIRECTORY/script.sh;
     
-  - env: clang-4.0 LIBCXX=1 BUILD_TYPE=Release
+  - env: clang-5.0 LIBCXX=1 BUILD_TYPE=Release
     sudo: false
     language: cpp
     addons:
@@ -251,14 +198,14 @@ matrix:
         sources:
         - deadsnakes
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-4.0
+        - llvm-toolchain-trusty-5.0
         packages:
         - lcov
-        - llvm-4.0
-        - llvm-4.0-dev
+        - llvm-5.0
+        - llvm-5.0-dev
         - llvm-runtime
-        - clang-4.0
-        - g++-6
+        - clang-5.0
+        - g++-7
     cache:
       apt: true
       directories:
@@ -273,7 +220,7 @@ matrix:
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
-    - export CXX="/usr/bin/clang++-4.0" CC="/usr/bin/clang-4.0";
+    - export CXX="/usr/bin/clang++-5.0" CC="/usr/bin/clang-5.0";
     - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
@@ -300,7 +247,7 @@ matrix:
     - cd build
     - bash $CI_DIRECTORY/script.sh;
 
-  - env: g++-6 coverity_scan
+  - env: g++-7 coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -308,7 +255,7 @@ matrix:
         sources: *sources
         packages:
         - lcov
-        - g++-6
+        - g++-7
     cache:
       apt: true
       directories:
@@ -319,12 +266,12 @@ matrix:
       only:
       - coverity_scan
     before_install:
-    - export GCOV_EXEC=gcov-6
+    - export GCOV_EXEC=gcov-7
     - export LCOV_PATH=$HOME/usr/bin/lcov
     - export GENHTML_PATH=$HOME/usr/bin/genhtml
     - export PREFIX=$HOME
     - export SUITE=coverage
-    - export CXX="g++-6" CC="gcc-6";
+    - export CXX="g++-7" CC="gcc-7";
     - bash $CI_DIRECTORY/before_install.sh
     install:
     ############################################################################
@@ -350,7 +297,7 @@ matrix:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
       name: "$TRAVIS_REPO_SLUG"
-    build_command_prepend: cov-configure --comptype gcc --compiler gcc-6 --template;
+    build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
       cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
       cmake ..;
     build_command: cmake --build . -- -j 4
@@ -402,5 +349,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-      condition: $CXX = "g++-6"
+      condition: $CXX = "g++-7"
       tags: true

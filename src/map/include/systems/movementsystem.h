@@ -16,7 +16,7 @@ class MovementSystem : public System {
 
         virtual void update(EntityManager &es, double dt);
 
-        void move(Entity entity, float x, float y);
+        void move(Entity entity, float x, float y, uint16_t target = 0);
 
         void stop(Entity entity, float x, float y);
 
