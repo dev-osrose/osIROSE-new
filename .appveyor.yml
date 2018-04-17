@@ -38,7 +38,7 @@ services: mysql
 
 install:
 - cmd: cd %PROJECT_PATH%
-- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-6.1.6-winx32.msi
+- ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-winx32.msi
 - cmd: git submodule update --init --recursive
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
