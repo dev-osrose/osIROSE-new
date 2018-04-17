@@ -1,11 +1,11 @@
 if(WIN32)
-#  ExternalProject_Add(
-#    curl
-#    GIT_REPOSITORY https://github.com/curl/curl.git
-#    GIT_TAG curl-7_59_0
-#    CMAKE_ARGS -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
-#    BUILD_IN_SOURCE 1
-#  )
+  ExternalProject_Add(
+    curl
+    GIT_REPOSITORY https://github.com/curl/curl.git
+    GIT_TAG curl-7_59_0
+    CMAKE_ARGS -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+    BUILD_IN_SOURCE 1
+  )
 else()
   ExternalProject_Add(
     curl
