@@ -20,16 +20,16 @@ pipeline {
         }
       }
     }
-    stage('Build on Windows') { 
-      agent {
-        label 'windows'
-      }
-      steps {
-        dir('build') {
-          bat 'cd build && cmake --build .'
-        }
-      }
-    }
+//    stage('Build on Windows') { 
+//      agent {
+//        label 'windows'
+//      }
+//      steps {
+//        dir('build') {
+//          bat 'cd build && cmake --build .'
+//        }
+//      }
+//    }
     stage('Test') { 
       steps {
         dir('build') {
