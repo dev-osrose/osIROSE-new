@@ -9,31 +9,52 @@ pipeline {
         sh 'mkdir build'
       }
     }
-    stage('Build on Linux') { 
-      agent {
-        label 'linux'
-      }
-      steps {
-        dir('build') {
-          sh 'cd build && cmake ..'
-          sh 'cd build && cmake --build . -- -j2'
+    stage('Run Build') {
+      parallel {
+        stage('Build on Linux') { 
+          agent {
+            label 'linux'
+          }
+          steps {
+            dir('build') {
+              sh 'cd build && cmake ..'
+              sh 'cd build && cmake --build . -- -j2'
+            }
+          }
+        }
+        stage('Build on Windows') { 
+          agent {
+            label 'windows'
+          }
+          steps {
+            dir('build') {
+              bat 'cd build && cmake --build .'
+            }
+          }
         }
       }
     }
-//    stage('Build on Windows') { 
-//      agent {
-//        label 'windows'
-//      }
-//      steps {
-//        dir('build') {
-//          bat 'cd build && cmake --build .'
-//        }
-//      }
-//    }
-    stage('Test') { 
-      steps {
-        dir('build') {
-          sh 'cd build && ctest'
+    stage('Run Tests') {
+      parallel {
+        stage('Tests on Linux') {
+          agent {
+            label 'linux'
+          }
+          steps {
+            dir('build') {
+              sh 'cd build && ctest'
+            }
+          }
+        }
+        stage('Tests on Windows') {
+          agent {
+            label 'windows'
+          }
+          steps {
+            dir('build') {
+              sh 'cd build && ctest'
+            }
+          }
         }
       }
     }
