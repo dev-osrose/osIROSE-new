@@ -25,7 +25,8 @@ TEST(TestLoginServer, TestClientPacketPath) {
                                     config.database().user,
                                     config.database().password,
                                     config.database().database,
-                                    config.database().host));
+                                    config.database().host,
+                                    config.database().port));
 CLoginServer network;
 std::unique_ptr<CLoginISC> iscServ = std::make_unique<CLoginISC>();
 CLoginClient_Mock netConnect;
