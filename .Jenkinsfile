@@ -16,7 +16,7 @@ pipeline {
       steps {
         dir('build') {
           sh 'cd build && cmake ..'
-          sh 'cd build && cmake --build . -- -j'
+          sh 'cd build && cmake --build . -- -j2'
         }
       }
     }
