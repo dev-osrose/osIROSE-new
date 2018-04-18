@@ -44,27 +44,6 @@ set(HEADERS
   ${PROJECT_TESTING_HEADERS}
 )
 
-set(SOURCE_MAIN main)
-
-set(SOURCES_BASE
-  src/test_config
-  src/test_logconsole
-  src/test_mysql_database
-  src/test_network_asio
-  src/test_crosecrypt
-  src/test_crose_network
-  src/test_login
-  src/test_char
-  src/test_servers
-  src/test_crosepacket
-  #src/test_system
-)
-
-set(SOURCES
-  ${SOURCE_MAIN}
-  ${SOURCES_BASE}
-)
-
 #build the lib
 project(${PROJECT_LIB})
 
@@ -151,4 +130,4 @@ compile_test(LoginServer src/test_login)
 compile_test(CharServer src/test_char)
 compile_test(AllServers src/test_servers)
 compile_test(RosePackets src/test_crosepacket)
-compile_test(Systems src/test_system)
+#compile_test(Systems src/test_system)
