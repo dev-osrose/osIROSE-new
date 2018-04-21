@@ -10,17 +10,17 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 ENDIF()
 
 SET( SOURCES_MAIN
-  src/main.cpp )
+  src/main )
 
 SET( SOURCES_HEADER
-  include/cloginserver
-  include/cloginclient
-  include/cloginisc )
+  include/cloginserver.h
+  include/cloginclient.h
+  include/cloginisc.h )
 
 SET( SOURCES_BASE
-  src/cloginserver
-  src/cloginclient
-  src/cloginisc )
+  src/cloginserver.cpp
+  src/cloginclient.cpp
+  src/cloginisc.cpp )
   
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
@@ -44,3 +44,6 @@ IF (MSVC)
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()

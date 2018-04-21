@@ -73,6 +73,10 @@ if(NOT WIN32)
   set(REQUIRED_ON_UNIX REQUIRED)
 endif()
 
+if(WITH_COTIRE)
+  include(cotire OPTIONAL)
+endif()
+
 IF(WITH_MYSQL)
   set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11-connector-mysql/include)
   find_package(MySQL REQUIRED)

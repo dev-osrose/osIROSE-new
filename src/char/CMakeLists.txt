@@ -16,14 +16,14 @@ set( SOURCES_MAIN
 )
 
 set( SOURCES_HEADER
-  include/ccharserver
-  include/ccharclient
-  include/ccharisc )
+  include/ccharserver.h
+  include/ccharclient.h
+  include/ccharisc.h )
 
 set( SOURCES_BASE
-  src/ccharserver
-  src/ccharclient
-  src/ccharisc
+  src/ccharserver.cpp
+  src/ccharclient.cpp
+  src/ccharisc.cpp
 )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
@@ -48,3 +48,6 @@ ELSE()
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()

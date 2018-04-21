@@ -65,6 +65,9 @@ IF (MSVC)
 ENDIF()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
+if (COMMAND cotire)
+  cotire(${PROJECT_LIB})
+endif()
 
 #-----------------------------------------------------------------------------
 # Unit test helper Macro
@@ -104,6 +107,9 @@ macro (compile_test name path)
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
   
   generate_symbol_data(${TEST_NAME})
+  if (COMMAND cotire)
+    cotire(${TEST_NAME})
+  endif()
   
 endmacro (compile_test)
 

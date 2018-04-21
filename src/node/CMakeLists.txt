@@ -10,17 +10,17 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 endif()
 
 set( SOURCES_MAIN
-  src/main.cpp )
+  src/main )
 
 set( SOURCES_HEADER
-  include/nodeserver
-  include/nodeclient
-  include/nodeisc )
+  include/nodeserver.h
+  include/nodeclient.h
+  include/nodeisc.h )
 
 set( SOURCES_BASE
-  src/nodeserver
-  src/nodeclient
-  src/nodeisc )
+  src/nodeserver.cpp
+  src/nodeclient.cpp
+  src/nodeisc.cpp )
   
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
@@ -40,3 +40,6 @@ if (MSVC)
 endif()
 
 generate_symbol_data(${PROJECT})
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()
