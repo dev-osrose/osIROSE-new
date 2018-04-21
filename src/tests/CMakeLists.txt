@@ -103,13 +103,13 @@ macro (compile_test name path)
   ELSE()
     target_link_libraries(${TEST_NAME} mysqlclient)
   ENDIF()
-
-  add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-  
-  generate_symbol_data(${TEST_NAME})
   if (COMMAND cotire)
     cotire(${TEST_NAME})
   endif()
+
+  add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+  
+  generate_symbol_data(${TEST_NAME})
   
 endmacro (compile_test)
 
