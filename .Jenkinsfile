@@ -33,21 +33,10 @@ pipeline {
             }
           }
         }
-        //stage('Build on Windows') { 
-        //  agent {
-        //    label 'windows'
-        //  }
-        //  steps {
-        //    dir('build') {
-        //      bat 'cd build && cmake --build .'
-        //    }
-        //  }
-        //}
       }
     }
     stage('Run Tests') {
-//      parallel {
-        stage('Tests on Linux') {
+        //stage('Tests on Linux') {
           agent {
             label 'linux'
           }
@@ -56,17 +45,7 @@ pipeline {
               sh 'cd build && ctest'
             }
           }
-        }
-//        stage('Tests on Windows') {
-//          agent {
-//            label 'windows'
-//          }
-//          steps {
-//            dir('build') {
-//              sh 'cd build && ctest'
-//            }
-//          }
-//        }
+        //}
       }
     }
   }
