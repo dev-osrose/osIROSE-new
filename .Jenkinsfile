@@ -17,7 +17,7 @@ pipeline {
           }
           steps {
             dir('build') {
-              sh 'cd build && cmake -DDebug ..'
+              sh 'cd build && cmake -DDebug=ON ..'
               sh 'cd build && cmake --build . -- -j2'
             }
           }
