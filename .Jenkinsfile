@@ -36,16 +36,13 @@ pipeline {
       }
     }
     stage('Run Tests') {
-        //stage('Tests on Linux') {
-          agent {
-            label 'linux'
-          }
-          steps {
-            dir('build') {
-              sh 'cd build && ctest'
-            }
-          }
-        //}
+      agent {
+        label 'linux'
+      }
+      steps {
+        dir('build') {
+          sh 'cd build && ctest'
+        }
       }
     }
   }
