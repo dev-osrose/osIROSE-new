@@ -11,31 +11,42 @@ pipeline {
     }
     stage('Run Build') {
       parallel {
-        stage('Build on Linux') { 
+        stage('Build on Linux - Debug') {
           agent {
             label 'linux'
           }
           steps {
             dir('build') {
-              sh 'cd build && cmake ..'
+              sh 'cd build && cmake -DDebug ..'
               sh 'cd build && cmake --build . -- -j2'
             }
           }
         }
-        stage('Build on Windows') { 
+        stage('Build on Linux - Official Build') {
           agent {
-            label 'windows'
+            label 'linux'
           }
           steps {
             dir('build') {
-              bat 'cd build && cmake --build .'
+              sh 'cd build && cmake -DOFFICIAL_BUILD=ON ..'
+              sh 'cd build && cmake --build . -- -j2'
             }
           }
         }
+        //stage('Build on Windows') { 
+        //  agent {
+        //    label 'windows'
+        //  }
+        //  steps {
+        //    dir('build') {
+        //      bat 'cd build && cmake --build .'
+        //    }
+        //  }
+        //}
       }
     }
     stage('Run Tests') {
-      parallel {
+//      parallel {
         stage('Tests on Linux') {
           agent {
             label 'linux'
@@ -46,17 +57,17 @@ pipeline {
             }
           }
         }
-        stage('Tests on Windows') {
-          agent {
-            label 'windows'
-          }
-          steps {
-            dir('build') {
-              sh 'cd build && ctest'
-            }
-          }
-        }
-      }
+//        stage('Tests on Windows') {
+//          agent {
+//            label 'windows'
+//          }
+//          steps {
+//            dir('build') {
+//              sh 'cd build && ctest'
+//            }
+//          }
+//        }
+//      }
     }
   }
   

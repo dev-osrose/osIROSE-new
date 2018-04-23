@@ -24,11 +24,12 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(CMakeParseArguments)
 include(ExternalProject)
-include(CheckOptions)
 
 if(Debug)
   set(DEBUG 1)
 endif()
+
+include(CheckOptions)
 
 if(OFFICIAL_BUILD)
   set(CMAKE_BUILD_TYPE RelWithDebInfo)
