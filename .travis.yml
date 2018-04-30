@@ -42,9 +42,7 @@ jobs:
   include:
     - &osinit
       stage: prepare cache
-      env: 
-       - CXX=g++-7 CC=gcc-7
-       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       addons:
         apt:
           sources:
@@ -80,7 +78,7 @@ jobs:
     - <<: *osinit
       stage: compile
       if: branch != coverity_scan
-      env: CXX=g++-7 CC=gcc-7 SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
       addons:
         apt:
           sources:
@@ -90,15 +88,16 @@ jobs:
           - lcov
           - g++-7
       before_install:
-      - bash $CI_DIRECTORY/before_install.sh
+        - eval "${MATRIX_EVAL}"
+        - bash $CI_DIRECTORY/before_install.sh
       before_script:
-      - export GCOV_EXEC=gcov-7
-      - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-      - mysql --user="root" -e 'create database osirose;'
-      - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-      - export CXX=g++-7
-      - export CC=gcc-7
-      - bash $CI_DIRECTORY/before_script.sh
+        - export GCOV_EXEC=gcov-7
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+        - export CXX=g++-7
+        - export CC=gcc-7
+        - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
     
     - <<: *osinit
@@ -114,21 +113,20 @@ jobs:
           - g++-7
       env: CXX=g++-7 CC=gcc-7 SUITE=tests BUILD_TYPE=Release
       before_install:
-      - bash $CI_DIRECTORY/before_install.sh
+        - bash $CI_DIRECTORY/before_install.sh
       before_script:
-      - export GCOV_EXEC=gcov-7
-      - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-      - mysql --user="root" -e 'create database osirose;'
-      - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-      - export CXX=g++-7
-      - export CC=gcc-7
-      - bash $CI_DIRECTORY/before_script.sh
+        - export GCOV_EXEC=gcov-7
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+        - export CXX=g++-7
+        - export CC=gcc-7
+        - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - <<: *osinit
-      stage: compile
+    - stage: compile
       if: branch != coverity_scan
-      env: CXX=clang++-5.0 CC=clang-5.0 SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
       addons:
         apt:
           sources:
@@ -143,21 +141,21 @@ jobs:
           - llvm-runtime
           - clang-5.0
       before_install:
-      - bash $CI_DIRECTORY/before_install.sh
+        - eval "${MATRIX_EVAL}"
+        - bash $CI_DIRECTORY/before_install.sh
       before_script:
-      - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
-      - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-      - mysql --user="root" -e 'create database osirose;'
-      - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-      - export CXX=clang++-5.0
-      - export CC=clang-5.0
-      - bash $CI_DIRECTORY/before_script.sh
+        - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+        - export CXX=clang++-5.0
+        - export CC=clang-5.0
+        - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - <<: *osinit
-      stage: compile
+    - stage: compile
       if: branch != coverity_scan
-      env: CXX=clang++-5.0 CC=clang-5.0 SUITE=tests BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
       addons:
         apt:
           sources:
@@ -172,18 +170,18 @@ jobs:
           - llvm-runtime
           - clang-5.0
       before_install:
-      - bash $CI_DIRECTORY/before_install.sh
+        - eval "${MATRIX_EVAL}"
+        - bash $CI_DIRECTORY/before_install.sh
       before_script:
-      - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
-      - export CXX=clang++-5.0
-      - export CC=clang-5.0
-      - bash $CI_DIRECTORY/before_script.sh
+        - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - export CXX=clang++-5.0
+        - export CC=clang-5.0
+        - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - <<: *osinit
-      stage: compile
+    - stage: compile
       if: branch = coverity_scan
-      env: CXX=g++-7 CC=gcc-7 SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       addons:
         apt:
           sources:
@@ -194,9 +192,8 @@ jobs:
           - g++-7
           - gcc-7
       before_install:
-      - bash $CI_DIRECTORY/before_install.sh
-      - export CXX=g++-7
-      - export CC=gcc-7
+        - eval "${MATRIX_EVAL}"
+        - bash $CI_DIRECTORY/before_install.sh
       script: true
       addons:
         coverity_scan:
