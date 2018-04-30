@@ -26,10 +26,10 @@ env:
 services:
 - mysql
 
+language: cpp
 jobs:
   include:
     - stage: prepare cache
-      script: true
       addons:
         apt:
           sources: &sources
@@ -38,8 +38,31 @@ jobs:
           packages:
           - lcov
           - g++-7
+      install:
+      ############################################################################
+      # Install a recent CMake
+      ############################################################################
+      - |
+        if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+          CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz"
+          mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake_app
+          export PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${PATH}
+        else
+          brew upgrade cmake || brew install cmake
+        fi
+      - cmake --version
+      - bash $CI_DIRECTORY/install-ninja.sh
+      - bash $CI_DIRECTORY/install-lcov.sh
+      - bash $CI_DIRECTORY/install-mysql.sh
+      before_script:
+      - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+      - mysql --user="root" -e 'create database osirose;'
+      - mysql --user="root" --database="osirose" --password="" < "$PROOT/Database/osirose.sql"
+      - bash $CI_DIRECTORY/before_script.sh
+      script: true
+      
     - stage: compile
-      script: echo something
+      script: cd build && bash $CI_DIRECTORY/script.sh
 
 addons:
   coverity_scan:
