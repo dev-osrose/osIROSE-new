@@ -54,6 +54,11 @@ jobs:
       - bash $CI_DIRECTORY/install-ninja.sh
       - bash $CI_DIRECTORY/install-lcov.sh
       - bash $CI_DIRECTORY/install-mysql.sh
+      env:
+      - export GCOV_EXEC=gcov-7
+      - export LCOV_PATH=$HOME/usr/bin/lcov
+      - export GENHTML_PATH=$HOME/usr/bin/genhtml
+      - export PREFIX=$HOME
       before_script:
       - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
       - mysql --user="root" -e 'create database osirose;'
