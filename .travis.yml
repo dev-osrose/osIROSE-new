@@ -26,6 +26,7 @@ env:
 services:
 - mysql
 
+cache: bundler
 language: cpp
 jobs:
   include:
