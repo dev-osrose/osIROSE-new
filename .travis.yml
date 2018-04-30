@@ -52,7 +52,7 @@ jobs:
         fi
       - cmake --version
       - bash $CI_DIRECTORY/install-ninja.sh
-      - bash $CI_DIRECTORY/install-lcov.sh
+      #- bash $CI_DIRECTORY/install-lcov.sh
       - bash $CI_DIRECTORY/install-mysql.sh
       before_script:
       - export GCOV_EXEC=gcov-7
@@ -66,6 +66,15 @@ jobs:
       script: true
       
     - stage: compile
+      env: CXX=g++-7 CC=gcc-7 SUITE=tests BUILD_TYPE=Debug
+      script: cd build && bash $CI_DIRECTORY/script.sh
+    
+    - stage: compile
+      env: CXX=g++-7 CC=gcc-7 SUITE=tests BUILD_TYPE=Release
+      script: cd build && bash $CI_DIRECTORY/script.sh
+      
+    - stage: compile
+      env: CXX=clang++-5.0 CC=clang-5.0 SUITE=tests BUILD_TYPE=Debug
       script: cd build && bash $CI_DIRECTORY/script.sh
 
 addons:
