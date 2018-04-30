@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-  if [ ! -f "$PROOT/ninja/ninja" ]; then
+  if [ ! -f "$TRAVIS_BUILD_DIR/ninja/ninja" ]; then
 	  git clone https://github.com/ninja-build/ninja.git && cd ninja
 	  git checkout release
 	  ./configure.py --bootstrap

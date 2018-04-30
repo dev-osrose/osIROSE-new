@@ -8,7 +8,7 @@ echo 'Building and installing mysql.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     pip install --user pyparsing
-	if [ ! -f "$PROOT/3rdparty/lib/libmysqlclient.so" ]; then
+	if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/lib/libmysqlclient.so" ]; then
 		echo 'Setting up mysql...';
     
         wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
