@@ -42,7 +42,9 @@ jobs:
   include:
     - &osinit
       stage: prepare cache
-      env: CXX=g++-7 CC=gcc-7
+      env: 
+       - CXX=g++-7 CC=gcc-7
+       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       addons:
         apt:
           sources:
@@ -57,6 +59,8 @@ jobs:
           - llvm-5.0-dev
           - llvm-runtime
           - clang-5.0
+      before_install:
+        - eval "${MATRIX_EVAL}"
       install:
       ############################################################################
       # Install a recent CMake
