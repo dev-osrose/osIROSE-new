@@ -28,7 +28,6 @@ services:
 matrix:
   include:
   - env: g++-7 BUILD_TYPE=Release
-    if: branch != coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -82,7 +81,6 @@ matrix:
     - bash $CI_DIRECTORY/script.sh
     
   - env: g++-7 BUILD_TYPE=Debug
-    if: branch != coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -136,7 +134,6 @@ matrix:
     - bash $CI_DIRECTORY/script.sh
 
   - env: clang-5.0 LIBCXX=1 BUILD_TYPE=Debug
-    if: branch != coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -194,7 +191,6 @@ matrix:
     - bash $CI_DIRECTORY/script.sh;
     
   - env: clang-5.0 LIBCXX=1 BUILD_TYPE=Release
-    if: branch != coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -252,7 +248,6 @@ matrix:
     - bash $CI_DIRECTORY/script.sh;
 
   - env: g++-7 coverity_scan
-    if: branch = coverity_scan
     sudo: false
     language: cpp
     addons:
@@ -297,7 +292,7 @@ matrix:
     - echo "coverity scan"
     after_success:
     - echo "coverity scan success"
-addons:
+
   coverity_scan:
     build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
     project:
