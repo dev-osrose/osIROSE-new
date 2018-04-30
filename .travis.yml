@@ -33,11 +33,16 @@ jobs:
       addons:
         apt:
           sources: &sources
-          - ubuntu-toolchain-r-test
           - deadsnakes
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-5.0
           packages:
           - lcov
           - g++-7
+          - llvm-5.0
+          - llvm-5.0-dev
+          - llvm-runtime
+          - clang-5.0
       install:
       ############################################################################
       # Install a recent CMake
@@ -66,6 +71,7 @@ jobs:
       script: true
       
     - stage: compile
+      if: branch != coverity_scan
       env: CXX=g++-7 CC=gcc-7 SUITE=tests BUILD_TYPE=Debug
       script: cd build && bash $CI_DIRECTORY/script.sh
     
