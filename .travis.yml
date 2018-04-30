@@ -82,17 +82,20 @@ jobs:
     - stage: compile
       env: CXX=clang++-5.0 CC=clang-5.0 SUITE=tests BUILD_TYPE=Debug
       script: cd build && bash $CI_DIRECTORY/script.sh
-
-addons:
-  coverity_scan:
-    build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
-    project:
-      name: "$TRAVIS_REPO_SLUG"
-    build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
-      cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
-      cmake ..;
-    build_command: cmake --build . -- -j 4
-    branch_pattern: coverity_scan
+      
+    - stage: compile
+      if: branch = coverity_scan
+      env: CXX=g++-7 CC=gcc-7 SUITE=coverage BUILD_TYPE=Release
+      script: echo "coverity scan"
+      coverity_scan:
+        build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
+        project:
+          name: "$TRAVIS_REPO_SLUG"
+        build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
+          cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
+          cmake ..;
+        build_command: cmake --build . -- -j 4
+        branch_pattern: coverity_scan
     
 
 notifications:
