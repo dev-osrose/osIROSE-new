@@ -92,6 +92,8 @@ jobs:
       - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
       - mysql --user="root" -e 'create database osirose;'
       - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+      - export CXX=g++-7
+      - export CC=gcc-7
       - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
     
@@ -114,6 +116,8 @@ jobs:
       - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
       - mysql --user="root" -e 'create database osirose;'
       - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+      - export CXX=g++-7
+      - export CC=gcc-7
       - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
@@ -141,6 +145,8 @@ jobs:
       - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
       - mysql --user="root" -e 'create database osirose;'
       - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+      - export CXX=clang++-5.0
+      - export CC=clang-5.0
       - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
@@ -165,6 +171,8 @@ jobs:
       - bash $CI_DIRECTORY/before_install.sh
       before_script:
       - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+      - export CXX=clang++-5.0
+      - export CC=clang-5.0
       - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
@@ -183,6 +191,8 @@ jobs:
           - gcc-7
       before_install:
       - bash $CI_DIRECTORY/before_install.sh
+      - export CXX=g++-7
+      - export CC=gcc-7
       script: true
       addons:
         coverity_scan:
