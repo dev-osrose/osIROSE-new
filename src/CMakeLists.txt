@@ -18,6 +18,10 @@ include_directories(
   SYSTEM ${VISIT_STRUCT}
 )
 
+link_directories(
+  ${CMAKE_EXTERNAL_BINARY_DIR}
+)
+
 IF(WITH_MYSQL)
   add_compiler_flags(-DENABLE_MYSQL)
   
