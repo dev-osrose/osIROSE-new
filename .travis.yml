@@ -75,7 +75,8 @@ jobs:
       - bash $CI_DIRECTORY/install-mysql.sh
       script: true
       
-    - stage: compile
+    - <<: *osinit
+      stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
       before_install:
@@ -89,7 +90,8 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
     
-    - stage: compile
+    - <<: *osinit
+      stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Release
       before_install:
@@ -103,7 +105,8 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - stage: compile
+    - <<: *osinit
+      stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
       before_install:
@@ -117,7 +120,8 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - stage: compile
+    - <<: *osinit
+      stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
       before_install:
@@ -128,7 +132,8 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
-    - stage: compile
+    - <<: *osinit
+      stage: compile
       if: branch = coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       before_install:
