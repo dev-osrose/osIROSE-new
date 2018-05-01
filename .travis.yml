@@ -32,6 +32,7 @@ services:
 
 cache: 
   apt: true
+  ccache: true
   directories:
   - ${TRAVIS_BUILD_DIR}/3rdparty/bin
   - ${TRAVIS_BUILD_DIR}/3rdparty/lib
