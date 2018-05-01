@@ -63,6 +63,7 @@ jobs:
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=$HOME
+        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
       install:
         ############################################################################
         # Install a recent CMake
@@ -75,11 +76,12 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
+        - bash $CI_DIRECTORY/install-ccache.sh
+        - ccache --version
+        - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
         - bash $CI_DIRECTORY/install-mysql.sh
-        - ccache --version
-        - ccache --show-stats
       script: true
       
     - <<: *osinit
