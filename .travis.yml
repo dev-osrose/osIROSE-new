@@ -129,6 +129,9 @@ jobs:
       before_script:
         - export CC=clang-5.0 CXX=clang++-5.0
         - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
         - bash $CI_DIRECTORY/before_script.sh
       script: cd build && bash $CI_DIRECTORY/script.sh
       
