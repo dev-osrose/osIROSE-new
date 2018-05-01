@@ -21,6 +21,7 @@ env:
   # end artifacts
   - SUITE=tests
   - PREFIX=$HOME
+  - DESTDIR=$HOME
   - PROOT=echo ""
   - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$PATH
   - LCOV_PATH=$HOME/usr/bin/lcov

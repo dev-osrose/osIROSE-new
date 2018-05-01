@@ -4,7 +4,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
     TRAVIS_OS_NAME=linux
 fi
 
-if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
+if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 	wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
 	tar -xf lcov-1.13.tar.gz
 	rm lcov-1.13.tar.gz
