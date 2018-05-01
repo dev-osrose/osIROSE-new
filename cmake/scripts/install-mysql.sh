@@ -15,7 +15,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
         tar -xf mysql-connector-c-6.1.6-src.tar.gz
         rm mysql-connector-c-6.1.6-src.tar.gz
         cd mysql-connector-c-6.1.6-src
-        cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$PROOT/3rdparty
+        cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/3rdparty
         make
         make install 
         cd .. && rm -r mysql-connector-c-6.1.6-src

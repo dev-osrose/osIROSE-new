@@ -145,7 +145,6 @@ jobs:
       before_script:
         - export CC=gcc-7 CXX=g++-7
         - export GCOV_EXEC=gcov-7
-        - bash $CI_DIRECTORY/before_script.sh
       script: true
       addons:
         coverity_scan:
@@ -187,5 +186,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-      condition: $CXX = "g++-7"
+      condition: $CXX = "g++-7" && $BUILD_TYPE = "Release"
       tags: true
