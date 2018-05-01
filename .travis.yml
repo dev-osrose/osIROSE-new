@@ -33,7 +33,9 @@ services:
 
 cache: 
   apt: true
+  pip: true
   ccache: true
+  bundler: true
   directories:
   - ${TRAVIS_BUILD_DIR}/3rdparty/bin
   - ${TRAVIS_BUILD_DIR}/3rdparty/lib
