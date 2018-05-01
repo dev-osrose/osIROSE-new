@@ -16,7 +16,7 @@ if(DEBUG)
 endif()
 
 if (WITH_COVERAGE_REPORTS)
-  add_compiler_flags(-O0 -fprofile-arcs -ftest-coverage)
+  add_compiler_flags(--coverage)
 endif()
 
 set(GCC TRUE)
