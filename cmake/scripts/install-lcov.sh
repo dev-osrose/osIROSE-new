@@ -5,13 +5,13 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then	
-	wget https://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
-	tar -xf lcov-1.12.tar.gz
-	rm lcov-1.12.tar.gz
-	cd lcov-1.12
+	wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
+	tar -xf lcov-1.13.tar.gz
+	rm lcov-1.13.tar.gz
+	cd lcov-1.13
 	make install
 	cd ..
-	rm -r lcov-1.12
+	rm -r lcov-1.13
 	gem install coveralls-lcov
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
