@@ -68,7 +68,7 @@ ExternalProject_Get_Property(
   breakpad
   source_dir
 )
-set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
+set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${CMAKE_EXTERNAL_INCLUDE_DIR}/breakpad)
 
 if(WIN32 AND NOT MINGW)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR ${source_dir}/src/client/windows/handler/${CONFIGURATION_TYPE}/lib)

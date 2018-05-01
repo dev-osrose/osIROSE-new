@@ -62,8 +62,8 @@ jobs:
           - clang-5.0
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=${HOME}
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
+        - export PREFIX=$HOME
+        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
       install:
         ############################################################################
         # Install a recent CMake
@@ -77,9 +77,7 @@ jobs:
           fi
         - cmake --version
         - bash $CI_DIRECTORY/install-ccache.sh
-        - |
-          export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
-          ccache --version
+        - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
@@ -92,8 +90,6 @@ jobs:
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=$HOME
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
       before_script:
         - export CC=gcc-7 CXX=g++-7
         - export GCOV_EXEC=gcov-7
@@ -109,7 +105,6 @@ jobs:
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
       before_script:
         - export CC=gcc-7 CXX=g++-7
         - export GCOV_EXEC=gcov-7
@@ -125,7 +120,6 @@ jobs:
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
       before_script:
         - export CC=clang-5.0 CXX=clang++-5.0
         - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
@@ -141,7 +135,6 @@ jobs:
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
       before_script:
         - export CC=clang-5.0 CXX=clang++-5.0
         - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
@@ -157,7 +150,6 @@ jobs:
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${PATH}
       before_script:
         - export CC=gcc-7 CXX=g++-7
         - export GCOV_EXEC=gcov-7
