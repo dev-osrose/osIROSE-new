@@ -52,10 +52,9 @@ jobs:
           packages:
           - lcov
           - g++-7
-          - gcc-7
-          - llvm-5.0
-          - llvm-5.0-dev
-          - llvm-runtime
+#          - llvm-5.0
+#          - llvm-5.0-dev
+#          - llvm-runtime
           - clang-5.0
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -93,7 +92,7 @@ jobs:
     - <<: *osinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -143,7 +142,7 @@ jobs:
         - eval "${MATRIX_EVAL}"
       before_script:
         - export CC=gcc-7 CXX=g++-7
-        - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - export GCOV_EXEC=gcov-7
         - bash $CI_DIRECTORY/before_script.sh
       script: true
       addons:
