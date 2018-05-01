@@ -19,6 +19,7 @@ include_directories(
 )
 
 link_directories(
+  ${CMAKE_BINARY_DIR}
   ${CMAKE_EXTERNAL_BINARY_DIR}
 )
 
