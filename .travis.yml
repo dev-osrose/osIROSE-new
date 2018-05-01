@@ -141,7 +141,7 @@ jobs:
     - <<: *osinit
       stage: compile
       if: branch = coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
