@@ -1,6 +1,6 @@
 
 # Prepare testing infrastructure.
-link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
+link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
 set(PROJECT_LIB osirose-lib)

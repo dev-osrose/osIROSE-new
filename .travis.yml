@@ -78,6 +78,8 @@ jobs:
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
         - bash $CI_DIRECTORY/install-mysql.sh
+        - ccache --version
+        - ccache --show-stats
       script: true
       
     - <<: *osinit
