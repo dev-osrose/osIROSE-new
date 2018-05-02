@@ -164,6 +164,7 @@ jobs:
         - ccache --show-stats
         - cmake --build . --target coverage -- -v
         - coveralls-lcov coverage.info.cleaned
+        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
       
     - <<: *clanginit
       stage: compile
