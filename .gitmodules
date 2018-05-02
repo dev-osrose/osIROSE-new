@@ -34,6 +34,3 @@
 [submodule "3rdparty/visit_struct"]
 	path = 3rdparty/visit_struct
 	url = https://github.com/cbeck88/visit_struct
-[submodule "3rdparty/breakpad"]
-	path = 3rdparty/breakpad
-	url = https://github.com/google/breakpad.git

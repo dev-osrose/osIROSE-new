@@ -9,10 +9,11 @@ if(WIN32 AND NOT MINGW)
   
   ExternalProject_Add(
     breakpad
-    GIT_SUBMODULES breakpad
-    SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
+    GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
+    GIT_TAG origin/chrome_64
+    GIT_SHALLOW true
     UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp/gyp.bat --no-circular-check ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/client/windows/breakpad_client.gyp
+    CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE} /property:WindowsTargetPlatformVersion=10.0.14393.0
     INSTALL_COMMAND ""
   )
@@ -24,8 +25,8 @@ if(WIN32 AND NOT MINGW)
     download-gyp
     DEPENDEES download
 	  DEPENDERS configure
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
-    COMMAND git clone https://github.com/bnoordhuis/gyp.git ${CMAKE_THIRD_PARTY_DIR}/breakpad/src/tools/gyp
+    COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/tools/gyp
+    COMMAND git clone https://github.com/bnoordhuis/gyp.git <SOURCE_DIR>/src/tools/gyp
   )
   
   # Breakpad builds with /MT by default but we need /MD. This patch makes it build with /MD
@@ -47,20 +48,19 @@ else()
   
   ExternalProject_Add(
     breakpad
-    GIT_SUBMODULES breakpad
-    SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
+    GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
+    GIT_TAG origin/chrome_64
+    GIT_SHALLOW true
+    CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    LOG TRUE
-    CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
   )
   
   ExternalProject_Add_Step(
     breakpad
     download-lss
-    COMMAND ${CMAKE_COMMAND} -E remove_directory src/third_party/lss
-    COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support src/third_party/lss
-    WORKING_DIRECTORY <SOURCE_DIR>
+    COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/third_party/lss
+    COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support <SOURCE_DIR>/src/third_party/lss
     DEPENDEES download
     DEPENDERS configure
   )
