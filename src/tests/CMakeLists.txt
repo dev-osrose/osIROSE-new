@@ -139,8 +139,11 @@ IF(WITH_COVERAGE_REPORTS)
     'tools/*'
     '3rdparty/*'
   )
-
-  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
+  SETUP_TARGET_FOR_COVERAGE(
+    NAME coverage 
+    EXECUTABLE ctest coverage "--output-on-failure"
+    EXCLUDES "tests/*;/usr/*;3rdparty"
+  )
 ENDIF() # WITH_COVERAGE_REPORTS
 
 compile_test(Config src/test_config)
