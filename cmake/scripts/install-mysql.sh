@@ -19,7 +19,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
           #The DESTDIR env var isn't set.
           cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/3rdparty
         else
-          cmake -G "Unix Makefiles"
+          cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=""
         fi
         make
         make install 
