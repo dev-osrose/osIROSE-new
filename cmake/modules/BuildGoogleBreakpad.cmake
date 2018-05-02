@@ -54,7 +54,7 @@ else()
     CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    INSTALL_COMMAND mkdir -p <INSTALL_DIR>/include/breakpad && cp -fr <SOURCE_DIR>/src <INSTALL_DIR>/include/breakpad && cp -f <BINARY_DIR>/src/libbreakpad.a <BINARY_DIR>/src/client/linux/libbreakpad_client.a <INSTALL_DIR>/lib && cp -f <BINARY_DIR>/src/tools/linux/dump_syms/dump_syms <INSTALL_DIR>/bin
+    #INSTALL_COMMAND mkdir -p <INSTALL_DIR>/include/breakpad && cp -fr <SOURCE_DIR>/src <INSTALL_DIR>/include/breakpad && cp -f <BINARY_DIR>/src/libbreakpad.a <BINARY_DIR>/src/client/linux/libbreakpad_client.a <INSTALL_DIR>/lib && cp -f <BINARY_DIR>/src/tools/linux/dump_syms/dump_syms <INSTALL_DIR>/bin
   )
   
   ExternalProject_Add_Step(
@@ -71,7 +71,7 @@ ExternalProject_Get_Property(
   breakpad
   source_dir
 )
-set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include)
+set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
 
 if(WIN32 AND NOT MINGW)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR ${source_dir}/src/client/windows/handler/${CONFIGURATION_TYPE}/lib)

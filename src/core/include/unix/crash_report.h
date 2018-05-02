@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef ENABLE_CRASH_REPORTS
-  #include <breakpad/client/linux/handler/exception_handler.h>
+  #include <client/linux/handler/exception_handler.h>
 #endif
 
 namespace Core {

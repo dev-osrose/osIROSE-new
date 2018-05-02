@@ -29,7 +29,7 @@ if( WIN32 )
 	SET(BINDIR32_ENV_NAME "Program Files (x86)")
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
-		PATHS "${EXTERNAL_INCLUDE_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/include"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/include"
@@ -65,7 +65,7 @@ if( WIN32 )
 else()
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
-		PATHS "${EXTERNAL_INCLUDE_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
 			  "$ENV{HOME}/mysql/include"
 			  "/usr/include/mysql"
 			  "/usr/local/include/mysql"
