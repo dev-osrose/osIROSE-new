@@ -5,14 +5,18 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
-	tar -xf lcov-1.13.tar.gz
-	rm lcov-1.13.tar.gz
-	cd lcov-1.13
-	make install
-	cd ..
-	rm -r lcov-1.13
-	gem install coveralls-lcov
+  if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/bin/lcov" ]; then
+    wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
+    tar -xf lcov-1.13.tar.gz
+    rm lcov-1.13.tar.gz
+    cd lcov-1.13
+    make install
+    cd ..
+    rm -r lcov-1.13
+  else
+    echo 'Using cached lcov directory.';
+  fi
+  gem install coveralls-lcov
 else
     echo "Unknown OS ($TRAVIS_OS_NAME). Stopping build ..."
     exit 1
