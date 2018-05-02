@@ -49,7 +49,7 @@ jobs:
     - &gccinit
       stage: prepare cache
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-      compiler: gcc
+      compiler: g++
       addons:
         apt:
           sources:
@@ -86,7 +86,7 @@ jobs:
     - &clanginit
       stage: prepare cache
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
-      compiler: clang
+      compiler: clang++
       addons:
         apt:
           sources:
