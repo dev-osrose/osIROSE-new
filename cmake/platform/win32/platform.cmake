@@ -18,7 +18,7 @@ add_linker_flags(/ignore:4075)
 add_compiler_flags(/wd4503)
 add_compiler_flags(/MP) # build with multi processors
 add_compiler_flags(/FS) # build with multi processors
-
+add_compiler_flags(/std:c++17)
 add_compiler_flags(/EHsc)
 
 #add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)

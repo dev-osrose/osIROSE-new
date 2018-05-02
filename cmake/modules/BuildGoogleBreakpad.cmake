@@ -50,8 +50,9 @@ else()
     GIT_SUBMODULES breakpad
     SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/breakpad
     BUILD_BYPRODUCTS ${_byproducts}
+    INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
+    LOG TRUE
     CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    INSTALL_COMMAND make install
   )
   
   ExternalProject_Add_Step(
