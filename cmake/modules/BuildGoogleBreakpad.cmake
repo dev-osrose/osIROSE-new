@@ -81,4 +81,6 @@ else()
   endif()
 endif()
 
+message(STATUS "Breakpad include dir - ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
+
 SET_PROPERTY(TARGET breakpad                PROPERTY FOLDER "ThirdParty")
