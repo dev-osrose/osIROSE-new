@@ -28,7 +28,7 @@ env:
   - PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
   - LCOV_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/lcov
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
-  - GENHTML_PATH=$HOME/usr/bin/genhtml
+  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/genhtml
   
 services:
   mysql
@@ -162,7 +162,7 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - cmake --build . --target coverage -- -v
+        - ctest coverage
         - coveralls-lcov coverage.info.cleaned
         - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
       
