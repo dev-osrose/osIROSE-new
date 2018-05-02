@@ -184,7 +184,7 @@ notifications:
 #  
 after_failure:
   - mkdir ${TRAVIS_BUILD_DIR}/public
-  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database /tmp/dumps
+  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR} /tmp/dumps
   - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
 
 deploy:
