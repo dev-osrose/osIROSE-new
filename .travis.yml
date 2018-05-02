@@ -21,7 +21,7 @@ env:
   # end artifacts
   - SUITE=tests
   - PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-  - DESTDIR=${TRAVIS_BUILD_DIR}/3rdparty
+  #- DESTDIR=${TRAVIS_BUILD_DIR}/3rdparty
   - PROOT=echo ""
   - WITH_CRASH_REPORTS=OFF
   - BUILD_JOB_COUNT=4
@@ -46,9 +46,45 @@ cache:
 
 jobs:
   include:
-    - &osinit
+    - &gccinit
       stage: prepare cache
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons:
+        apt:
+          sources:
+          - deadsnakes
+          - ubuntu-toolchain-r-test
+          packages:
+          - lcov
+          - g++-7
+          - ccache
+      before_install:
+        - eval "${MATRIX_EVAL}"
+        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+      install:
+        ############################################################################
+        # Install a recent CMake
+        ############################################################################
+        - |
+          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+            CMAKE_URL="https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz"
+            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
+          else
+            brew upgrade cmake || brew install cmake
+          fi
+        - cmake --version
+        - bash $CI_DIRECTORY/install-ccache.sh
+        - ccache --version
+        - ccache --show-stats
+        - bash $CI_DIRECTORY/install-lcov.sh
+        - bash $CI_DIRECTORY/install-ninja.sh
+        - bash $CI_DIRECTORY/install-mysql.sh
+      script: true
+      
+    - &clanginit
+      stage: prepare cache
+      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
       addons:
         apt:
           sources:
@@ -59,9 +95,6 @@ jobs:
           - lcov
           - g++-7
           - ccache
-#          - llvm-5.0
-#          - llvm-5.0-dev
-#          - llvm-runtime
           - clang-5.0
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -87,7 +120,7 @@ jobs:
         - bash $CI_DIRECTORY/install-mysql.sh
       script: true
       
-    - <<: *osinit
+    - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
@@ -107,7 +140,7 @@ jobs:
       after_script:
         - ctest --output-on-failure
     
-    - <<: *osinit
+    - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
@@ -128,7 +161,7 @@ jobs:
         - cmake --build . --target coverage
         - coveralls-lcov coverage.info.cleaned
       
-    - <<: *osinit
+    - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
@@ -148,7 +181,7 @@ jobs:
       after_script:
         - ctest --output-on-failure
       
-    - <<: *osinit
+    - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
@@ -168,7 +201,7 @@ jobs:
       after_script:
         - ctest --output-on-failure
       
-    - <<: *osinit
+    - <<: *gccinit
       stage: compile
       if: branch = coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"

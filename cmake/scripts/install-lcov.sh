@@ -6,6 +6,7 @@ fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/bin/lcov" ]; then
+    export DESTDIR=${TRAVIS_BUILD_DIR}/3rdparty
     wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
     tar -xf lcov-1.13.tar.gz
     rm lcov-1.13.tar.gz
