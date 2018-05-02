@@ -157,7 +157,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - cmake --build . --target coverage
@@ -221,7 +221,7 @@ jobs:
           build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
             cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
             cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF ..;
-          build_command: cmake --build . -- -j 4
+          build_command: cmake --build . -- -j ${BUILD_JOB_COUNT}
           branch_pattern: coverity_scan
     
 
