@@ -20,7 +20,7 @@ env:
   - secure: "rhEt4Tgu1txNXU//wxmxZCTiIbFeZMZpCWUt5kmQDJN8pn1Phykr1cdoHG9uMQ0BYmo+aGyt/IdFlNiPP5LWNHYTMRj0SlQu2RsYQzQqAkQ6ZbKdWOcBddeDZehSwiDNllIx7qMcpjrqeKdsf6NyEzlhp+Zb9wkfS0ghpWa2OhXMMxLmVSZngWQByh+SzCdkuuDXNXJZdDUh9bKovowvngW+AyqMpn1lJzC671zX8o/f2reedHp/SbEvz0DIHNK6euWC7Qr1BhkOGxuaBtNvbtbtyCzpsc+NoWRbYFhlsEVvkA3jSD7bqOpda1/cqfbGRVTk/vUU+I5n02gpC5rqvX65aLtsGWeWYFvuxVHPqE5UAgMk0+6WdSEWotBhjnrGN3U8zNKG9TxrTIHn24EUVMDmGNcxujtoFpEeUrU8gp5TCKb4rwi0S722YhcnkKqZuPcQ8GMdr0sme+C5zWQev+6UuUpW1UJnrBDTMDgK/vScRU4l6WGB7Gkvxyd+yxwoCEe8l3WKBbNv0v1TcKqnoYIDiIhSkWMHtOQBC7b88bJI/uiKNZ2qEakiNlcuuVkCow1nC0jlJTSiOlzDRdS5sWYlTS7TaKqwSrnN7SR3SMWO10hw18ACY1wbwGk9BTwaLSX625Dm54OJI8AtWjrI0ASvrkd/B3INLww7UYO8xdQ="
   # end artifacts
   - SUITE=tests
-  - PREFIX=$HOME
+  - PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
   - DESTDIR=$HOME
   - PROOT=echo ""
   - PATH=${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$PATH
@@ -63,7 +63,7 @@ jobs:
           - clang-5.0
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=$HOME
+        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
         - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
       install:
         ############################################################################
