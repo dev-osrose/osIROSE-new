@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_OS_NAME" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-  if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/bin/lcov" ]; then
+  if [ ! -f "$LCOV_PATH" ]; then
     export DESTDIR=${TRAVIS_BUILD_DIR}/3rdparty
     wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
     tar -xf lcov-1.13.tar.gz
