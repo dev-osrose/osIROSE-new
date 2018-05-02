@@ -21,9 +21,8 @@ env:
   # end artifacts
   - SUITE=tests
   - PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-  #- DESTDIR=${TRAVIS_BUILD_DIR}/3rdparty
-  - PROOT=echo ""
-  - WITH_CRASH_REPORTS=OFF
+  - PROOT=echo "ERRROOORRRR STILL USING PROOT!@!@!@!@!@"
+  - WITH_CRASH_REPORTS=ON
   - BUILD_JOB_COUNT=4
   - PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
   - LCOV_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/lcov
@@ -33,8 +32,7 @@ env:
 services:
   mysql
 
-cache: 
-  apt: true
+cache:
   pip: true
   ccache: true
   bundler: true
@@ -157,12 +155,12 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest coverage
+        - cmake --build . --target coverage
         - coveralls-lcov coverage.info.cleaned
         - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
       
