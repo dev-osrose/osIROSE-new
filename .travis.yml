@@ -178,20 +178,20 @@ notifications:
     secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
 
 #after_success:
-#  - mkdir ${PROOT}/public
-#  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database
-##  - curl --ftp-create-dirs -T ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
+#  - mkdir ${TRAVIS_BUILD_DIR}/public
+#  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
+##  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
 #  
-#after_failure:
-#  - mkdir ${PROOT}/public
-#  - tar -czvf ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${PROOT}/build/bin ${PROOT}/build/lib ${PROOT}/Database /tmp/dumps
-#  - curl --ftp-create-dirs -T ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
+after_failure:
+  - mkdir ${TRAVIS_BUILD_DIR}/public
+  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database /tmp/dumps
+  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
 
 deploy:
   - provider: releases
     api_key:
       secure: "BeGzqO3xstU53ChZHaEd0tx94UnOFE8mhD/47jLlBWy2MM1pxFfI9zYSfGaBAa0FBY4SjSxPyA8ChZcoHWVxSv0j59LxhI+sOyTS5Rak3UT1Nlm3WqmvRIEx5E9kuF4Z28nXQuJYPvMqdXwx7F4Qk2wRLuQHmrvllwnuEJouelR54EiAcF6h5Gk7G1j8Yvpn7kyJIJL8+a3zwEt8u4UEw8S9R4akti6EINmyYbKldVny4i8uzSas1fjeJmZlXLGvykjlcGFl4X5OEmShowRcHNjhyK7Awprbycbf7rV2es0V/UFIr+xYX/6z7sdtGiXpoBYTQksilE3IcYAt5WcvgxPnSgG12njcTHjhX+MQFW+bbYWr21OA9DQn+KfRMTI00DB3huv1KCFh5IawSjijY9j8scijMofb58vYj960yUJfoOnZeicp3raM4/eVRKCtEdk7UwWNLqqB3o1Cfug8ZohhSbUHeGUQfyCBtYWSrE6/xb5mQmOUQI54ocSUKcmvv59G58nZic0Nl29cj9aYyu1lc093gSxnQ9cCtwbNkKCHiA+Z5MGScJ5jwydylckzeQysUzOK/ISFU4O0vX48GhSBOb3D6O9K4AoVG43vBu9E895tktDuj0BQ4uvtT7fN8xDJc6vg2uAEQst0yfWJZ/qDzKJIEoFYnvbMQh0JCwA="
-    file: ${PROOT}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz
+    file: ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz
     skip_cleanup: true
     on:
       branch: master

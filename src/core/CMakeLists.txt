@@ -71,7 +71,7 @@ set(args
   SQLFILE ${CMAKE_SOURCE_DIR}/Database/logs.sql
   SQLROOT ${CMAKE_SOURCE_DIR}/Database
   NAME logDatabase
-  OUTPATH ${CMAKE_BINARY_DIR}/generated
+  OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
 GENERATE_SQL_HEADER(LOGS_HEADER ${args})
