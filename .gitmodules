@@ -1,6 +1,3 @@
-[submodule "tools/googletest"]
-	path = 3rdparty/googletest
-	url = https://github.com/google/googletest
 [submodule "tools/asio"]
 	path = 3rdparty/asio
 	url = https://github.com/chriskohlhoff/asio.git

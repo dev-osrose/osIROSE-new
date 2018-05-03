@@ -160,9 +160,6 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        #- cmake --build . --target coverage
-        #- coveralls-lcov coverage.info.cleaned
-        #- bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin lib

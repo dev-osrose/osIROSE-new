@@ -23,7 +23,7 @@ else()
     CMAKE_ARGS -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -Dgmock_force_shared_crt=ON -Dgtest_force_shared_crt=ON
     BUILD_BYPRODUCTS ${_byproducts}
     BUILD_IN_SOURCE 1
-    INSTALL_COMMAND "cp ${_byproducts} ${CMAKE_THIRD_PARTY_DIR}/bin"
+    INSTALL_COMMAND "cp <BINARY_DIR>/libgmock.so ${CMAKE_THIRD_PARTY_DIR}/bin"
   )
 endif()
 

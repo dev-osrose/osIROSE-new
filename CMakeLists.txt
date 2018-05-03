@@ -23,9 +23,6 @@ set(CMAKE_TEST_PROJECTS "${CMAKE_SOURCE_DIR}/src/tests")
 set(CMAKE_TEST_PROJECTS_BIN "${CMAKE_BINARY_DIR}/cmake_test")
 set(CMAKE_THIRD_PARTY_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/include)
 
-set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
-set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
-
 set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
@@ -36,7 +33,6 @@ set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
 set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
 set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
-
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -60,7 +56,9 @@ if(OFFICIAL_DEBUG_BUILD)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+include(GNUInstallDirs)
 include(ExternalProject)
+
 include(macros)
 include(parsearguments)
 include(CheckCompiler)
@@ -94,12 +92,12 @@ find_package(Threads REQUIRED)
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})
-    add_definitions(-DGTEST_LINKED_AS_SHARED_LIBRARY -DWITH_GTEST)
+    add_definitions(-DWITH_GTEST)
 endif()
 
 if(WITH_GTEST AND WITH_GMOCK)
   find_package(GMock ${REQUIRED_IF_OPTION})
-  add_definitions(-DGMOCK_LINKED_AS_SHARED_LIBRARY -DWITH_GMOCK) 
+  add_definitions(-DWITH_GMOCK) 
 endif()
 
 if (WITH_TRACING)
@@ -117,10 +115,6 @@ endif()
 if(NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
 endif()
-
-if(NOT GMOCK_FOUND AND WITH_GTEST AND WITH_GMOCK)
-  include(BuildGMock)
-endif() 
 
 add_subdirectory(3rdparty)
 
