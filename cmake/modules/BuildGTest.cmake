@@ -28,13 +28,13 @@ else()
   # This is a workaround for Ninja not allowing us to build if these libs weren't built before
   if(${BUILD_SHARED_LIBS})
     set(_byproducts
-      ${GTEST_INSTALL_DIR}/lib/libgtest.a
-      ${GTEST_INSTALL_DIR}/lib/libgmock.a
+      ${GTEST_INSTALL_DIR}/lib/libgtest.so
+      ${GTEST_INSTALL_DIR}/lib/libgmock.so
     )
   else()
     set(_byproducts
-      ${GTEST_INSTALL_DIR}/lib/libgtest.so
-      ${GTEST_INSTALL_DIR}/lib/libgmock.so
+      ${GTEST_INSTALL_DIR}/lib/libgtest.a
+      ${GTEST_INSTALL_DIR}/lib/libgmock.a
     )
   endif()
   
