@@ -165,7 +165,7 @@ jobs:
         #- bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
-        - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/${TRAVIS_OS_NAME}/${BUILD_TYPE}/${TRAVIS_OS_NAME}-${BUILD_TYPE}.tar.gz
       
     - <<: *clanginit
@@ -246,7 +246,7 @@ jobs:
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
         - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_OS_NAME}/${BUILD_TYPE}/${TRAVIS_OS_NAME}-${BUILD_TYPE}.tar.gz
       script:
-        - tar -xvf ${TRAVIS_OS_NAME}-${BUILD_TYPE}.tar.gz
+        - tar -zxvf ${TRAVIS_OS_NAME}-${BUILD_TYPE}.tar.gz
         - cd build
         - ${LCOV_PATH} --directory . --zerocounters
         - ${LCOV_PATH} -c -i -d . -o coverage.base
