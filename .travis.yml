@@ -224,6 +224,13 @@ jobs:
         - export GCOV_EXEC=gcov-7
       script: true
       addons:
+        apt:
+          sources:
+          - deadsnakes
+          - ubuntu-toolchain-r-test
+          packages:
+          - lcov
+          - g++-7
         coverity_scan:
           build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
