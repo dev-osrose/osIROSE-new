@@ -238,7 +238,7 @@ jobs:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler c++ --template && cov-configure --comptype gcc --compiler ccache --template && cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache .."
           build_command: "ninja -j3"
           branch_pattern: coverity_scan
 
@@ -290,7 +290,8 @@ jobs:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -Q 'DELE ${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz'
+        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - curl -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz  -Q '-DELE ${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz'
         - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
       script:
         - cd build
