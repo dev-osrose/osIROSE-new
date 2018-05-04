@@ -1,23 +1,23 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
-PROJECT(tools)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+project(tools)
 
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-IF(BUILD_TOOLS)
-  INCLUDE_DIRECTORIES(
+if(BUILD_TOOLS)
+  include_directories(
     SYSTEM ${SPDLOG_ROOT}
   )
 
-  IF(ENABLE_TESTING AND ENABLE_TESTING_COVERAGE)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  ENDIF() # ENABLE_TESTING_COVERAGE
+  if(BUILD_TESTS AND WITH_COVERAGE_REPORTS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+  endif() # WITH_COVERAGE_REPORTS
 
-  IF( ENABLE_ASAN )
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
-    SET(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
-  ENDIF()
+  if( ENABLE_ASAN )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
+    set(LINK_FLAGS "${LINK_FLAGS} -g -fsanitize=address")
+  endif()
 
-  IF(BUILD_STRESS)
-	  ADD_SUBDIRECTORY(stress)
-  ENDIF()
-ENDIF()
+  if(BUILD_STRESS)
+	  add_subdirectory(stress)
+  endif()
+endif()

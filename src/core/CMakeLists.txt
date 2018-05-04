@@ -1,7 +1,7 @@
 
 link_directories(${EXTERNAL_BINARY_DIR})
 
-set(PROJECT Core)
+set(PROJECT Core VERSION ${VERSION})
 project(${PROJECT})
 
 set( SOURCES_HEADER
