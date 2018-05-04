@@ -235,7 +235,7 @@ jobs:
           - lcov
           - g++-7
         coverity_scan:
-          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
+          #build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
@@ -244,7 +244,7 @@ jobs:
             cov-configure --comptype gcc --compiler g++-7 --template;
             cov-configure --comptype gcc --compiler cmake --template;
             cmake -DOFFICIAL_BUILD=ON ..;
-          build_command: cov-build "make -j 2"
+          build_command: cov-build --dir cov-int "make -j 2"
           branch_pattern: coverity_scan
 
 #    - <<: *gccinit
