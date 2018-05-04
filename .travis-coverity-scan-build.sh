@@ -14,7 +14,7 @@ PLATFORM=`uname`
 TOOL_ARCHIVE=/tmp/cov-analysis-${PLATFORM}.tgz
 TOOL_URL=https://scan.coverity.com/download/cxx/${PLATFORM}
 TOOL_BASE=/tmp/coverity-scan-analysis
-UPLOAD_URL="https://scan.coverity.com/builds?project=RavenX8%2FosIROSE-new"
+UPLOAD_URL="https://scan.coverity.com/builds?project=dev-osrose%2FosIROSE-new"
 SCAN_URL="https://scan.coverity.com"
 
 # Verify Coverity Scan run condition
