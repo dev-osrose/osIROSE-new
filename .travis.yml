@@ -274,6 +274,14 @@ jobs:
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       cache: false
+      addons:
+        apt:
+          sources:
+          - deadsnakes
+          - ubuntu-toolchain-r-test
+          packages:
+          - lcov
+          - g++-7
       before_install:
         - eval "${MATRIX_EVAL}"
       install: 
