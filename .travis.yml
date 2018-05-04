@@ -244,7 +244,7 @@ jobs:
             cov-configure --comptype gcc --compiler g++-7 --template;
             cov-configure --comptype gcc --compiler cmake --template;
             cmake -DOFFICIAL_BUILD=ON ..;
-          build_command: cov-build --dir cov-int "make -j 2"
+          build_command: cov-build "make -j 2"
           branch_pattern: coverity_scan
 
 #    - <<: *gccinit
