@@ -315,7 +315,7 @@ jobs:
         - coveralls-lcov coverage.info.cleaned
         - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
         - rm coverage.base coverage.total coverage.info.cleaned
-          
+
 notifications:
   webhooks:
     urls:
