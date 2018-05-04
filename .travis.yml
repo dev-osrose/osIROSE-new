@@ -7,6 +7,7 @@ env:
   global:
   - coverity_scan_script_test_mode=false
   - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
+  - secure: "s3nV+bCZyiJFhubZgq1SjP+6DUQgT0fzeTTvaPytYTvFuyYWrTzMPdqdhLXc5MZ3mQ/3PMvn3ZjU0AlT7YypLjyGY0LM8tFD4HD608DWR3qRDnlPKsB4nTCQVCp30FhlFSzlVt4E6ZZCtbbu3X92Q+B4UGjGBnX0T4ePsJMk+CfFKGxbF6Hyo6rThXTfRvGWQtu3pI5pmHksyDyCTtX/m5ljslVy84WTLWREX6m7GSeVu3MB+D9hWR+SGkxbjzxtwSfGmUp2893/xxac+BJNTXqJfKDJA7y98/jB65VASfos3T3Bkdq4nl1e5D4jAmcWE6ZsPpjvem4iZGUZwYbdUNhCk2iGDUjnJYU18z+3R+A4LChmXJlSmtG9AcLU+MT1rJeTQCUqq9pBXAG+keOdBu4J+CvBS5KrhmbG6pXHfUMY0UAqcAHdkgZo26JNnm9kIGcz+IrFOPERUe/naFM+27QGDZ0RfYkbWGbiqaTQ2SptMIOn7/zEqkWWOoT4CImtbSjjOETStIPzIWzR/I+bWFuNL/RL7K1UimqrfQFYG/W1WWXi8ZYqSE+DJX/ejWAytvvq6FWNhXOLe7+0fc/ZzhFTQqusdg0G3wNXKLSNVzuC1MyYXwoJEw33397GsPaK2E5tKlwi12txun5uWAzagHuYVTuHNHKt4qV8+e3AIjw="
   - secure: "lCkzkfbDqElSZogmvXbG+KVQa2CZX9haWabUTfBjeATY53WHu+3sw8b5QQtRnk6tZSa/v+aOGP/sF6gu8jY9Jp3cMp7ubgjuNmDoiVsdhsym44HA2dgVjKmxJhSNLJDqS1s0OvbzjgiWXzW62f0l8LxR2rEpXQ1M2621KSdxx4jLA91IFp2kdg3rDqPBE4mJNw3yHXMacs7QFn9AW4D5MFxZcGG9jLzzGMlHE7j4vtGVbODrFCZ3iHVVkZ3T2cyp6Xo3LmXQkqRd2LM63B2A7EJhXOJvn2uHjL8ZL8oQnKqS0gpMZGYtV2EJraUegHiFBZDqqLR8+MqUaTNWi2tPLERdkYMUUuq64vpC+KxtlWLi/ipdtClaUPD9kiyzMIh5Wkw1LtWFejRm6KBcf7T++88mureC/G1iJjHBvXkubolK6pffQMLueuvTMM6f+7OGRS4GpHwG3iGL1hgcUlWtnmEuglb7Z/PMxmEhtdo4Ret2O+UKWh4AVlf1yqfbH3INSjuGFMcS085GZoFiTN0amDZigSVcMpWU82+tHIjI3KWqfJeCCjzBO5LDJ5yIdCo7A/4+pzROlWmy4Ed/De1JxCO1rujDyY26xeg12G3SO3qj4bxSjnnyykPWIfnj8pkJX9g9m3fTmQzVXEZOxQAb+2qf5igWvKVsSxgrcMLCYIY="
   - secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="
   - secure: "JuSus/BqBJ2RTj7oJ3tn6dfFqnNWmWdM6/+PBId8YT52fUJTQp0eLmYbqZhq04OFvCKLgzeiObggfFZk5VOXAB/bfhlQEKSprso6C0WxKzFnftr085rcr5mW2ux+RSWTeE9KT1bpsjtpSrQTOniQhPGD6u704DdIzKuOnSngU8TXRAHFujXtUA0SHU8Oft8OpysaTDVWbFehBemg6BeOssklw2LrScGT3AWm8+qNdyAV+ynko4s8CzdOJqueCNWnkYFQyNtWN67uasveg3j+zgOfstjgyYSEoYh6deCNy8BjmWzX2tUkpzxh7h4w/VlyVjvyMG524UdMDmFZNNo7CMn1/qla6zjli3xDV/kk2Dfzj1JCn2WsesOY8+p4bdYoUU4lR0PuYraEuBAOCiVb3V7VLzU5FyV3clY8+MwifVHvNLxUbyD2ygZfPrS8LQJ/7jJSPeEARUIngvNkY9L8Jr6olw3Xg7DoDHLWAFBMtBi/sZG3CvXDyeIUX8rkh4hY6QlnO/xrql5KxDupsAwqj+rMdhzYeCnyRY6HvqBIoIrpi47uPGutxiIFgjrzwr28eL+XrrkwHfbM+pFDUITdWjm79/EyEPgGsEMM8IxXcpSGNmMDDhpHu1oZE4L3gdKli6hdS5fo6CEDV3x1nvk/SsY52WhEWIT/RwQPl4qL3YQ="
@@ -237,6 +238,7 @@ jobs:
           build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
+          notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
           build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
             cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
             cmake -DOFFICIAL_BUILD=ON ..;
@@ -291,7 +293,7 @@ jobs:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -Q 'DELE ${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz'
         - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
       script:
         - cd build
