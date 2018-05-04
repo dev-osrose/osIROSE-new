@@ -218,7 +218,7 @@ jobs:
 
     - <<: *gccinit
       stage: compile
-      if: branch = coverity_scan
+      if: branch = coverity_scan OR (type = cron AND branch = trunk)
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -238,7 +238,7 @@ jobs:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler cmake --template && cmake -DOFFICIAL_BUILD=ON .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler cmake --template && cmake .."
           build_command: "make"
           branch_pattern: coverity_scan
 
