@@ -217,6 +217,14 @@ jobs:
       stage: compile
       if: branch = coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons:
+        apt:
+          sources:
+          - deadsnakes
+          - ubuntu-toolchain-r-test
+          packages:
+          - lcov
+          - g++-7
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -230,7 +238,6 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
           build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
             cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
-            export CC=gcc-7 CXX=g++-7;
             cmake -DOFFICIAL_BUILD=ON ..;
           build_command: cmake --build . -- -j ${BUILD_JOB_COUNT}
           branch_pattern: coverity_scan
@@ -274,14 +281,6 @@ jobs:
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
       cache: false
-      addons:
-        apt:
-          sources:
-          - deadsnakes
-          - ubuntu-toolchain-r-test
-          packages:
-          - lcov
-          - g++-7
       before_install:
         - eval "${MATRIX_EVAL}"
       install: 
