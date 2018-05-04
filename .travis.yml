@@ -82,6 +82,7 @@ jobs:
 
     - &clanginit
       stage: prepare cache
+      if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
       compiler: clang++
       addons:
@@ -274,6 +275,8 @@ jobs:
       cache: false
       before_install:
         - eval "${MATRIX_EVAL}"
+      install: 
+        - bash $CI_DIRECTORY/install-lcov.sh
       before_script:
         - export GCOV_EXEC=gcov-7
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
