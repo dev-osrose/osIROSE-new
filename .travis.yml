@@ -238,13 +238,14 @@ jobs:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-7 && cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DOFFICIAL_BUILD=ON .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler ccache --template && cmake -GNinja -DOFFICIAL_BUILD=ON .."
           build_command: "ninja -j3"
           branch_pattern: coverity_scan
       after_success:
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/build-log.txt -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/coverity-build-log.txt
       after_failure:
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/build-log.txt -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/coverity-build-log.txt
+
 #    - <<: *gccinit
 #      stage: testing
 #      if: branch != coverity_scan
