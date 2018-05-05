@@ -238,7 +238,7 @@ jobs:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler ccache --template && cmake -GNinja -DOFFICIAL_BUILD=ON .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-7 && cmake -GNinja -DOFFICIAL_BUILD=ON .."
           build_command: "ninja -j3"
           branch_pattern: coverity_scan
       after_success:
