@@ -3,7 +3,6 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
 // http ://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -12,16 +11,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <curl/curl.h>
 #include <cxxopts.hpp>
 #include "crash_report.h"
-#include "ccharserver.h"
-#include "ccharisc.h"
+#include "nodeserver.h"
 #include "config.h"
+#include "logconsole.h"
 #include "version.h"
-#include "connection.h"
 #include "network_thread_pool.h"
-#include "cnetwork_asio.h"
-#include "ccharclient.h"
+
+#include "connection.h"
+#include "mysqlconnection.h"
+
+#include <chrono>
 
 namespace {
 void DisplayTitle()
@@ -52,9 +54,75 @@ void CheckUser()
 #endif
 }
 
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+ 
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+ 
+  mem->memory = reinterpret_cast<char*>(realloc(mem->memory, mem->size + realsize + 1));
+  if(mem->memory == NULL) {
+    // out of memory!
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+ 
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+ 
+  return realsize;
+}
+
+std::string get_current_net_address()
+{
+  CURL* curl;
+  CURLcode res;
+  std::string address = "";
+  
+  struct MemoryStruct chunk;
+ 
+  chunk.memory = reinterpret_cast<char*>(malloc(1));  // will be grown as needed by the realloc above
+  chunk.size = 0;    // no data at this point
+  
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  
+  curl = curl_easy_init();
+  
+  if(curl) 
+  {
+    Core::Config& config = Core::Config::getInstance();
+    curl_easy_setopt(curl, CURLOPT_URL, config.serverData().autoConfigureUrl.c_str());
+    
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "osirose-node-server/1.0");
+    
+    res = curl_easy_perform(curl);
+    
+    // Check for errors
+    if(res == CURLE_OK)
+      address = chunk.memory;
+ 
+    // always cleanup
+    curl_easy_cleanup(curl);
+  }
+ 
+  curl_global_cleanup();
+  
+  free(chunk.memory);
+  
+  return address;
+}
+
 void ParseCommandLine(int argc, char** argv)
 {
-  cxxopts::Options options(argv[0], "osIROSE char server");
+  cxxopts::Options options(argv[0], "osIROSE node server");
 
   try {
     std::string config_file_path = "";
@@ -156,62 +224,62 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
-}
+} // end namespace
 
 int main(int argc, char* argv[]) {
   try {
-  ParseCommandLine(argc, argv);
-  
-  Core::Config& config = Core::Config::getInstance();
-  Core::CrashReport(config.serverData().core_dump_path);
-  
-  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+    ParseCommandLine(argc, argv);
+    
+    Core::Config& config = Core::Config::getInstance();
+    Core::CrashReport(config.serverData().core_dump_path);
 
-  if(auto log = console.lock())
-    log->info("Starting up server...");
+    auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+    if(auto log = console.lock())
+      log->info( "Starting up server..." );
 
-  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
-  DisplayTitle();
-  CheckUser();
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
+    DisplayTitle();
+    CheckUser();
 
-  if(auto log = console.lock()) {
-    log->set_level(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
-    log->trace("Trace logs are enabled.");
-    log->debug("Debug logs are enabled.");
-  }
-  Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    if(auto log = console.lock()) {
+      log->set_level((spdlog::level::level_enum)config.loginServer().logLevel);
+      log->trace("Trace logs are enabled.");
+      log->debug("Debug logs are enabled.");
+    }
 
-  Core::connectionPool.addConnector(Core::osirose, std::bind(
-            Core::mysqlFactory,
-            config.database().user,
-            config.database().password,
-            config.database().database,
-            config.database().host,
-            config.database().port));
+    Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    std::string ip_addr = config.serverData().ip;
+    if( true == config.serverData().autoConfigureAddress )
+    {
+      ip_addr = get_current_net_address();
+      ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
+      if(auto log = console.lock()) {
+        log->info( "IP address is \"{}\"", ip_addr );
+      }
+    }
 
-  CCharServer clientServer;
-  CCharServer iscServer(true);
-  CCharISC* iscClient = new CCharISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
-  iscClient->SetLogin(true);
-  iscClient->connect();
-  iscClient->start_recv();
+    NodeServer loginServer;
+    NodeServer charServer;
+    NodeServer mapServer;
 
-  clientServer.init(config.serverData().ip, config.charServer().clientPort);
-  clientServer.listen();
-  clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
+    loginServer.init(ip_addr, config.loginServer().clientPort);
+    loginServer.listen();
 
-  iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
-  iscServer.listen();
+    charServer.init(ip_addr, config.charServer().clientPort);
+    charServer.listen();
 
-  while (clientServer.is_active()) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    //updateSessions();
-  }
-  if(auto log = console.lock())
-    log->info( "Server shutting down..." );
-  Core::NetworkThreadPool::DeleteInstance();
-  spdlog::drop_all();
+    mapServer.init(ip_addr, config.mapServer().clientPort);
+    mapServer.listen();
+
+    while (loginServer.is_active()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    if(auto log = console.lock())
+      log->info( "Server shutting down..." );
+    Core::NetworkThreadPool::DeleteInstance();
+    spdlog::drop_all();
+
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;
