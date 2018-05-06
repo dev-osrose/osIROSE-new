@@ -172,7 +172,7 @@ jobs:
         - cp lib/*.so bin
         - cd ..
         - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include
-        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *clanginit
       stage: compile
@@ -218,7 +218,7 @@ jobs:
 
     - <<: *gccinit
       stage: compile
-      if: branch = coverity_scan
+      if: branch = coverity_scan OR (type = cron AND branch = trunk)
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -235,15 +235,16 @@ jobs:
           - lcov
           - g++-7
         coverity_scan:
-          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: cov-configure --comptype gcc --compiler gcc-7 --template;
-            cov-configure --comptype gcc --compiler cmake --template; mkdir build; cd build;
-            cmake -DOFFICIAL_BUILD=ON ..;
-          build_command: cmake --build . -- -j ${BUILD_JOB_COUNT}
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/bin/g++-7 && cmake -GNinja -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
+          build_command: "cmake --build . -- -j2"
           branch_pattern: coverity_scan
+      after_success:
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/build-log.txt -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/coverity-build-log.txt
+      after_failure:
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/build-log.txt -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/coverity-build-log.txt
 
 #    - <<: *gccinit
 #      stage: testing
@@ -293,7 +294,8 @@ jobs:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - curl -O -u $FTP_USER:$FTP_PASSWORD --remote-name $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - curl -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz  -Q '-DELE success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz'
         - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
       script:
         - cd build
