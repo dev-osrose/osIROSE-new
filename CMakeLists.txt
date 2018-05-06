@@ -36,11 +36,12 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(CMakeParseArguments)
 include(ExternalProject)
-include(CheckOptions)
 
 if(Debug)
   set(DEBUG 1)
 endif()
+
+include(CheckOptions)
 
 if(OFFICIAL_BUILD)
   set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -86,6 +87,10 @@ set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
 
 if(NOT WIN32)
   set(REQUIRED_ON_UNIX REQUIRED)
+endif()
+
+if(WITH_COTIRE)
+  include(cotire OPTIONAL)
 endif()
 
 IF(WITH_MYSQL)

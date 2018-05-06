@@ -4,6 +4,7 @@
 
 option(PROJECT_DEBUG "Enable debugging messages support" ON)
 
+option(WITH_COTIRE "Enable cotire pch and unity build targets" ON)
 option(OFFICIAL_BUILD "do you want to compile an official build?" OFF)
 option(BUILD_LUA "Build Lua" ON)
 option(BUILD_API_DOC "Build doxygen documentation" OFF)

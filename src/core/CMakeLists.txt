@@ -5,30 +5,30 @@ set(PROJECT Core)
 project(${PROJECT})
 
 set( SOURCES_HEADER
-  include/threadpool
-  include/logconsole
-  include/cnetwork_asio
-  include/config
-  include/logconsole
-  include/network_thread_pool
-  include/inetwork
-  include/connectionpool
-  include/connection
-  include/singleton
-  include/riterator
-  include/platform_defines
-  include/iscontainer
-  include/makevector
-  include/factory
-  include/crash_report
-  include/hash
+  include/threadpool.h
+  include/logconsole.h
+  include/cnetwork_asio.h
+  include/config.h
+  include/logconsole.h
+  include/network_thread_pool.h
+  include/inetwork.h
+  include/connectionpool.h
+  include/connection.h
+  include/singleton.h
+  include/riterator.h
+  include/platform_defines.h
+  include/iscontainer.h
+  include/makevector.h
+  include/factory.h
+  include/crash_report.h
+  include/hash.h
 )
 
 set( SOURCES_BASE
-  src/logconsole
-  src/cnetwork_asio
-  src/config
-  src/connection
+  src/logconsole.cpp
+  src/cnetwork_asio.cpp
+  src/config.cpp
+  src/connection.cpp
 )
 
 if( GCC OR CLANG )
@@ -51,10 +51,10 @@ endif()
 
 IF (WITH_MYSQL)
   list(APPEND SOURCES_HEADER
-    include/mysqlconnection
+    include/mysqlconnection.h
   )
   list(APPEND SOURCES_BASE
-    src/mysqlconnection
+    src/mysqlconnection.cpp
   )
 ENDIF()
 
@@ -88,3 +88,6 @@ IF (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 ENDIF()
 
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()
