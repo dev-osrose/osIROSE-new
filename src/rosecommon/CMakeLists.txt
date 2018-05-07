@@ -199,12 +199,8 @@ target_link_libraries(${PROJECT} Core)
 target_link_libraries(${PROJECT} lua)
 
 if(WIN32)
-  set(ProgramFilesX86 "Program Files (x86)")
-  file(TO_CMAKE_PATH "$ENV{${ProgramFilesX86}}" ProgramFilesX86)
-  set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH "${ProgramFilesX86}")
-  unset(ProgramFilesX86)
+  set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH "winsock2.h")
   #set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-  #set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH "winsock2.h")
 endif()
 
 if (COMMAND cotire)
