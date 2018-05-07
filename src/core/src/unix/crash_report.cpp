@@ -18,16 +18,16 @@ namespace Core {
   
 #ifdef ENABLE_CRASH_REPORTS
   static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
-    void* context, bool succeeded) {
+    [[maybe_unused]] void* context, bool succeeded) {
     printf("Dump path: %s\n", descriptor.path());
     return succeeded;
   }
   
-  CrashReport::CrashReport(std::string path, std::string pipe /*= ""*/) : _exception_handler(google_breakpad::MinidumpDescriptor(path), NULL, dumpCallback, NULL, true, -1)
+  CrashReport::CrashReport(std::string path, [[maybe_unused]] std::string pipe /*= ""*/) : _exception_handler(google_breakpad::MinidumpDescriptor(path), NULL, dumpCallback, NULL, true, -1)
   {
   }
 #else
-  CrashReport::CrashReport(std::string path, std::string pipe /*= ""*/)
+  CrashReport::CrashReport([[maybe_unused]] std::string path, [[maybe_unused]] std::string pipe /*= ""*/)
   {
   }
 #endif
