@@ -33,15 +33,15 @@ set( SOURCES_BASE
 
 if( GCC OR CLANG )
   list(APPEND SOURCES_HEADER
-    include/unix/crash_report
+    include/unix/crash_report.h
   )
 
   list(APPEND SOURCES_BASE
-    src/unix/crash_report
+    src/unix/crash_report.cpp
   )
 else()
   list(APPEND SOURCES_HEADER
-    include/win32/crash_report
+    include/win32/crash_report.h
   )
 #  list(APPEND SOURCES_BASE
 #    src/win32/crash_report
@@ -49,14 +49,14 @@ else()
 endif()
 
 
-IF (WITH_MYSQL)
+if (WITH_MYSQL)
   list(APPEND SOURCES_HEADER
     include/mysqlconnection.h
   )
   list(APPEND SOURCES_BASE
     src/mysqlconnection.cpp
   )
-ENDIF()
+endif()
 
 set(args
   SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
@@ -84,9 +84,13 @@ if(WITH_CRASH_REPORTS)
   target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
 endif()
 
-IF (WITH_MYSQL)
+if (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
-ENDIF()
+endif()
+
+if(WIN32)
+  set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+endif()
 
 if (COMMAND cotire)
   cotire(${PROJECT})

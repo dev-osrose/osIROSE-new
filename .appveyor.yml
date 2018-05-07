@@ -48,7 +48,7 @@ build:
 
 build_script:
 - cd build
-- cmake -D%CONFIGURATION%=TRUE -DCOTIRE_ENABLE_PRECOMPILED_HEADER=FALSE -DCOTIRE_ADD_UNITY_BUILD=FALSE ..
+- cmake -D%CONFIGURATION%=TRUE ..
 - cmake --build . --clean-first --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
