@@ -197,6 +197,11 @@ ENDIF()
 
 target_link_libraries(${PROJECT} Core)
 target_link_libraries(${PROJECT} lua)
+
+if(WIN32)
+  set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+endif()
+
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
