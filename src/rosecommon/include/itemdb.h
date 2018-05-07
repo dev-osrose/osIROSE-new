@@ -85,7 +85,7 @@ namespace RoseCommon
     virtual ~ItemDatabase() = default;
 
     using key_t = std::tuple<uint8_t, uint16_t>;
-    struct key_hash : public std::unary_function<key_t, std::size_t> {
+    struct key_hash {
         std::size_t operator()(const key_t& k) const {
             return Core::hash_val(std::get<0>(k), std::get<1>(k));
         }
