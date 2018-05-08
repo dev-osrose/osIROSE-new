@@ -1,0 +1,62 @@
+
+if( DISABLE_CRYPT )
+  add_compiler_flags(-DDISABLE_CRYPT)
+endif()
+
+include_directories(
+  SYSTEM ${GTEST_INCLUDE_DIRS}
+  SYSTEM ${ASIO_INCLUDE_DIR}
+  SYSTEM ${CMAKE_THIRD_PARTY_INCLUDE_DIR}
+  SYSTEM ${CMAKE_EXTERNAL_INCLUDE_DIR}
+  SYSTEM ${SPDLOG_ROOT}
+  SYSTEM ${SOL2_ROOT}
+  SYSTEM ${LUA_INCLUDE_DIR}
+  SYSTEM ${CXXOPT_ROOT}
+  SYSTEM ${ENTITYX_INCLUDE_DIR}
+  SYSTEM ${SQLPP_INCLUDE_DIR}
+  SYSTEM ${DATE_INCLUDE_DIR}
+  SYSTEM ${CONFIGURU}
+  SYSTEM ${VISIT_STRUCT}
+  SYSTEM ${CURL_INCLUDE_DIRS}
+)
+
+link_directories(
+  ${CMAKE_EXTERNAL_LIBRARY_DIR}
+)
+
+IF(WITH_MYSQL)
+  add_compiler_flags(-DENABLE_MYSQL)
+  
+  include_directories(
+    SYSTEM ${MYSQL_INCLUDE_DIRS}
+    SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
+  )
+
+  link_directories(
+    ${MYSQL_LIBRARY_PATH}
+  )
+endif()
+
+if(WITH_CRASH_REPORTS)
+  add_compiler_flags(-DENABLE_CRASH_REPORTS)
+  
+  include_directories(
+    SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
+  )
+endif()
+
+add_subdirectory(core)
+add_subdirectory(rosecommon)
+#add_subdirectory(node)
+add_subdirectory(login)
+add_subdirectory(char)
+add_subdirectory(map)
+
+if(BUILD_TOOLS)
+  add_subdirectory(bot)
+endif()
+
+if(BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
+
