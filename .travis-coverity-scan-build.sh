@@ -6,7 +6,7 @@ set -e
 echo -e "\033[33;1mNote: PROJECT_NAME and COVERITY_SCAN_TOKEN are available on Project Settings page on scan.coverity.com\033[0m"
 [ -z "$COVERITY_SCAN_PROJECT_NAME" ] && echo "ERROR: COVERITY_SCAN_PROJECT_NAME must be set" && exit 1
 #[ -z "$COVERITY_SCAN_NOTIFICATION_EMAIL" ] && echo "ERROR: COVERITY_SCAN_NOTIFICATION_EMAIL must be set" && exit 1
-[ -z "$COVERITY_SCAN_BRANCH_PATTERN" ] && echo "ERROR: COVERITY_SCAN_BRANCH_PATTERN must be set" && exit 1
+#[ -z "$COVERITY_SCAN_BRANCH_PATTERN" ] && echo "ERROR: COVERITY_SCAN_BRANCH_PATTERN must be set" && exit 1
 [ -z "$COVERITY_SCAN_BUILD_COMMAND" ] && echo "ERROR: COVERITY_SCAN_BUILD_COMMAND must be set" && exit 1
 [ -z "$COVERITY_SCAN_TOKEN" ] && echo "ERROR: COVERITY_SCAN_TOKEN must be set" && exit 1
 
@@ -14,18 +14,18 @@ PLATFORM=`uname`
 TOOL_ARCHIVE=/tmp/cov-analysis-${PLATFORM}.tgz
 TOOL_URL=https://scan.coverity.com/download/cxx/${PLATFORM}
 TOOL_BASE=/tmp/coverity-scan-analysis
-UPLOAD_URL="https://scan.coverity.com/builds?project=RavenX8%2FosIROSE-new"
+UPLOAD_URL="https://scan.coverity.com/builds?project=dev-osrose%2FosIROSE-new"
 SCAN_URL="https://scan.coverity.com"
 
 # Verify Coverity Scan run condition
-COVERITY_SCAN_RUN_CONDITION=${coverity_scan_run_condition:-true}
-echo -ne "\033[33;1mTesting '${COVERITY_SCAN_RUN_CONDITION}' condition... "
-if eval [ $COVERITY_SCAN_RUN_CONDITION ]; then
-  echo -e "True.\033[0m"
-else
-  echo -e "False. Exit.\033[0m"
-  exit 1
-fi
+#COVERITY_SCAN_RUN_CONDITION=${coverity_scan_run_condition:-true}
+#echo -ne "\033[33;1mTesting '${COVERITY_SCAN_RUN_CONDITION}' condition... "
+#if eval [ $COVERITY_SCAN_RUN_CONDITION ]; then
+#  echo -e "True.\033[0m"
+#else
+#  echo -e "False. Exit.\033[0m"
+#  exit 1
+#fi
 
 # Do not run on pull requests
 if [ "${TRAVIS_PULL_REQUEST}" = "true" ]; then
@@ -34,13 +34,13 @@ if [ "${TRAVIS_PULL_REQUEST}" = "true" ]; then
 fi
 
 # Verify this branch should run
-IS_COVERITY_SCAN_BRANCH=`ruby -e "puts '${TRAVIS_BRANCH}' =~ /\\A$COVERITY_SCAN_BRANCH_PATTERN\\z/ ? 1 : 0"`
-if [ "$IS_COVERITY_SCAN_BRANCH" = "1" ]; then
-  echo -e "\033[33;1mCoverity Scan configured to run on branch ${TRAVIS_BRANCH}\033[0m"
-else
-  echo -e "\033[33;1mCoverity Scan NOT configured to run on branch ${TRAVIS_BRANCH}\033[0m"
-  exit 1
-fi
+#IS_COVERITY_SCAN_BRANCH=`ruby -e "puts '${TRAVIS_BRANCH}' =~ /\\A$COVERITY_SCAN_BRANCH_PATTERN\\z/ ? 1 : 0"`
+#if [ "$IS_COVERITY_SCAN_BRANCH" = "1" ]; then
+#  echo -e "\033[33;1mCoverity Scan configured to run on branch ${TRAVIS_BRANCH}\033[0m"
+#else
+#  echo -e "\033[33;1mCoverity Scan NOT configured to run on branch ${TRAVIS_BRANCH}\033[0m"
+#  exit 1
+#fi
 
 # Verify upload is permitted
 AUTH_RES=`curl -s --form project="$COVERITY_SCAN_PROJECT_NAME" --form token="$COVERITY_SCAN_TOKEN" $SCAN_URL/api/upload_permitted`

@@ -101,7 +101,7 @@ find_path(LUA_INCLUDE_DIR lua.h
     ENV LUA_DIR
   PATH_SUFFIXES ${_lua_include_subdirs} include/lua include
   PATHS
-  ${EXTERNAL_INCLUDE_DIR}
+  ${CMAKE_THIRD_PARTY_INCLUDE_DIR}
   ~/Library/Frameworks
   /Library/Frameworks
   /sw # Fink

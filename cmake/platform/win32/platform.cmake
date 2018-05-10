@@ -1,6 +1,8 @@
 
 add_compiler_flags(-DASIO_STANDALONE)
 
+add_compiler_flags(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS) # Remove all of the really annoying c++17 deprection warnings
+
 macro(use_unicode_here)
   add_definitions(-D_UNICODE -DUNICODE)
 endmacro()
@@ -18,7 +20,7 @@ add_linker_flags(/ignore:4075)
 add_compiler_flags(/wd4503)
 add_compiler_flags(/MP) # build with multi processors
 add_compiler_flags(/FS) # build with multi processors
-
+add_compiler_flags(/std:c++17)
 add_compiler_flags(/EHsc)
 
 #add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)

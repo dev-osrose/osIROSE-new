@@ -5,6 +5,8 @@ add_compiler_flags(RELEASE -O2)
 add_compiler_flags(CXX -std=c++17)
 add_compiler_flags(-Wno-packed-bitfield-compat)
 
+add_compiler_flags(-pipe)
+
 if(DEBUG)
   add_compiler_flags(-O0)
   
@@ -16,7 +18,7 @@ if(DEBUG)
 endif()
 
 if (WITH_COVERAGE_REPORTS)
-  add_compiler_flags(-O0 -fprofile-arcs -ftest-coverage)
+  add_compiler_flags(--coverage)
 endif()
 
 set(GCC TRUE)

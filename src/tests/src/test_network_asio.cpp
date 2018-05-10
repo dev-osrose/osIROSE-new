@@ -33,7 +33,7 @@ TEST(TestAsioNetworking, TestInitHostLessThanTwo) {
 TEST(TestAsioNetworking, TestConnectIp) {
   Core::CNetwork_Asio network;
   EXPECT_EQ(true,
-            network.init("63.117.14.24",
+            network.init("google.com",
                          80));  // We are going to connect to google's website
   EXPECT_NO_FATAL_FAILURE(network.connect());
   EXPECT_NO_FATAL_FAILURE(network.shutdown());
@@ -41,7 +41,7 @@ TEST(TestAsioNetworking, TestConnectIp) {
 
 TEST(TestAsioNetworking, TestRecv) {
   Core::CNetwork_Asio network;
-  EXPECT_EQ(true, network.init("63.117.14.24", 80));
+  EXPECT_EQ(true, network.init("google.com", 80));
   EXPECT_NO_FATAL_FAILURE(network.connect());
   EXPECT_NO_FATAL_FAILURE(network.shutdown());
 }
@@ -49,7 +49,7 @@ TEST(TestAsioNetworking, TestRecv) {
 TEST(TestAsioNetworking, TestReconnect) {
   Core::CNetwork_Asio network;
   EXPECT_EQ(true,
-            network.init("63.117.14.24",
+            network.init("google.com",
                          80));  // We are going to connect to google's website
   EXPECT_NO_FATAL_FAILURE(network.connect());
   EXPECT_NO_FATAL_FAILURE(network.disconnect());

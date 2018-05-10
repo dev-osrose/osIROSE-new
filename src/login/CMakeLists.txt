@@ -10,17 +10,17 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 ENDIF()
 
 SET( SOURCES_MAIN
-  src/main.cpp )
+  src/main )
 
 SET( SOURCES_HEADER
-  include/cloginserver
-  include/cloginclient
-  include/cloginisc )
+  include/cloginserver.h
+  include/cloginclient.h
+  include/cloginisc.h )
 
 SET( SOURCES_BASE
-  src/cloginserver
-  src/cloginclient
-  src/cloginisc )
+  src/cloginserver.cpp
+  src/cloginclient.cpp
+  src/cloginisc.cpp )
   
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
@@ -34,9 +34,16 @@ ENDIF()
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
 
+if(UNIX)
+  target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
+endif()
+
 IF (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()

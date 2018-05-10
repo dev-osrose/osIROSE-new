@@ -31,7 +31,7 @@ using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket
 template <typename T>
 inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
 {
-	return std::make_unique<T>(buffer);
+  return std::make_unique<T>(buffer);
 }
 
 template <ePacketType Type>

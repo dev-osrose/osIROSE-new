@@ -7,7 +7,7 @@
 namespace Core {
   class CrashReport : ICrashReport {
   public:
-    CrashReport(std::string path, std::string pipe = "");
+    CrashReport(std::string path, [[maybe_unused]] std::string pipe = "");
     
   private:
 #ifdef ENABLE_CRASH_REPORTS

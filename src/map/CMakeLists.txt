@@ -12,35 +12,35 @@ IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 ENDIF()
 
 SET( SOURCES_HEADER
-	include/cmapserver
-	include/cmapclient
-	include/cmapisc
-  include/entitysystem
-  include/systemmanager
-  include/systems/system
-  include/systems/movementsystem
-  include/systems/timesystem
-  include/systems/updatesystem
-  include/systems/chatsystem
-  include/systems/inventorysystem
-  include/systems/partysystem
-  include/systems/mapsystem
+	include/cmapserver.h
+	include/cmapclient.h
+	include/cmapisc.h
+  include/entitysystem.h
+  include/systemmanager.h
+  include/systems/system.h
+  include/systems/movementsystem.h
+  include/systems/timesystem.h
+  include/systems/updatesystem.h
+  include/systems/chatsystem.h
+  include/systems/inventorysystem.h
+  include/systems/partysystem.h
+  include/systems/mapsystem.h
   )
 
 SET( SOURCES_MAIN
-	src/main.cpp
-	src/cmapserver
-	src/cmapclient
-	src/cmapisc
-  src/entitysystem
-  src/systemmanager
-  src/systems/movementsystem
-  src/systems/timesystem
-  src/systems/updatesystem
-  src/systems/chatsystem
-  src/systems/inventorysystem
-  src/systems/partysystem
-  src/systems/mapsystem
+	src/main
+	src/cmapserver.cpp
+	src/cmapclient.cpp
+	src/cmapisc.cpp
+  src/entitysystem.cpp
+  src/systemmanager.cpp
+  src/systems/movementsystem.cpp
+  src/systems/timesystem.cpp
+  src/systems/updatesystem.cpp
+  src/systems/chatsystem.cpp
+  src/systems/inventorysystem.cpp
+  src/systems/partysystem.cpp
+  src/systems/mapsystem.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
@@ -65,3 +65,6 @@ ELSE()
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+if (COMMAND cotire)
+  cotire(${PROJECT})
+endif()

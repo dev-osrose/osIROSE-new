@@ -38,7 +38,7 @@ TEST(TestRoseNetwork, TestConnectIp) {
 
   CRoseServer network;
   EXPECT_EQ(true,
-            network.init("63.117.14.24",
+            network.init("google.com",
                          80));  // We are going to connect to google's website
   EXPECT_NO_FATAL_FAILURE(network.connect());
   //	EXPECT_CALL( network, OnConnect() )
@@ -73,7 +73,7 @@ TEST(TestRoseNetwork, TestConnectIp) {
 
 TEST(TestRoseNetwork, TestRecv) {
   CRoseServer network;
-  EXPECT_EQ(true, network.init("63.117.14.24", 80));
+  EXPECT_EQ(true, network.init("google.com", 80));
   EXPECT_NO_FATAL_FAILURE(network.connect());
   std::this_thread::sleep_for(std::chrono::milliseconds(
       500));  // Make sure we wait a little for data to come in
@@ -82,7 +82,7 @@ TEST(TestRoseNetwork, TestRecv) {
 
 TEST(TestRoseNetwork, TestReconnect) {
   //	CRoseClient network;
-  //	EXPECT_EQ( true, network.Init( "63.117.14.24", 80 ) ); // We are going
+  //	EXPECT_EQ( true, network.Init( "google.com", 80 ) ); // We are going
   //to connect to google's website
   //	EXPECT_NO_FATAL_FAILURE( network.connect( ) );
   // EXPECT_NO_FATAL_FAILURE( network.disconnect( ) );

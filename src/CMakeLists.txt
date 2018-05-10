@@ -1,12 +1,13 @@
 
-IF( DISABLE_CRYPT )
+if( DISABLE_CRYPT )
   add_compiler_flags(-DDISABLE_CRYPT)
-ENDIF()
+endif()
 
 include_directories(
   SYSTEM ${GTEST_INCLUDE_DIRS}
   SYSTEM ${ASIO_INCLUDE_DIR}
-  SYSTEM ${EXTERNAL_INCLUDE_DIR}
+  SYSTEM ${CMAKE_THIRD_PARTY_INCLUDE_DIR}
+  SYSTEM ${CMAKE_EXTERNAL_INCLUDE_DIR}
   SYSTEM ${SPDLOG_ROOT}
   SYSTEM ${SOL2_ROOT}
   SYSTEM ${LUA_INCLUDE_DIR}
@@ -16,6 +17,11 @@ include_directories(
   SYSTEM ${DATE_INCLUDE_DIR}
   SYSTEM ${CONFIGURU}
   SYSTEM ${VISIT_STRUCT}
+  SYSTEM ${CURL_INCLUDE_DIRS}
+)
+
+link_directories(
+  ${CMAKE_EXTERNAL_LIBRARY_DIR}
 )
 
 IF(WITH_MYSQL)
@@ -29,7 +35,7 @@ IF(WITH_MYSQL)
   link_directories(
     ${MYSQL_LIBRARY_PATH}
   )
-ENDIF()
+endif()
 
 if(WITH_CRASH_REPORTS)
   add_compiler_flags(-DENABLE_CRASH_REPORTS)
@@ -41,13 +47,16 @@ endif()
 
 add_subdirectory(core)
 add_subdirectory(rosecommon)
+#add_subdirectory(node)
 add_subdirectory(login)
 add_subdirectory(char)
 add_subdirectory(map)
 
-add_subdirectory(bot)
+if(BUILD_TOOLS)
+  add_subdirectory(bot)
+endif()
 
-IF(BUILD_TESTS)
+if(BUILD_TESTS)
   add_subdirectory(tests)
-ENDIF()
+endif()
 

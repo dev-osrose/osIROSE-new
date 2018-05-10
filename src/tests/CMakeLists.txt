@@ -1,6 +1,6 @@
 
 # Prepare testing infrastructure.
-link_directories(${EXTERNAL_BINARY_DIR} ${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
+link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
 set(PROJECT_LIB osirose-lib)
@@ -44,27 +44,6 @@ set(HEADERS
   ${PROJECT_TESTING_HEADERS}
 )
 
-set(SOURCE_MAIN main)
-
-set(SOURCES_BASE
-  src/test_config
-  src/test_logconsole
-  src/test_mysql_database
-  src/test_network_asio
-  src/test_crosecrypt
-  src/test_crose_network
-  src/test_login
-  src/test_char
-  src/test_servers
-  src/test_crosepacket
-  #src/test_system
-)
-
-set(SOURCES
-  ${SOURCE_MAIN}
-  ${SOURCES_BASE}
-)
-
 #build the lib
 project(${PROJECT_LIB})
 
@@ -86,6 +65,9 @@ IF (MSVC)
 ENDIF()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
+if (COMMAND cotire)
+  cotire(${PROJECT_LIB})
+endif()
 
 #-----------------------------------------------------------------------------
 # Unit test helper Macro
@@ -113,7 +95,9 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  link_with_gtest(${TEST_NAME} gtest)
+  target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
+  target_link_libraries(${TEST_NAME} ${GTEST_LIBRARIES})
+  #link_with_gtest(${TEST_NAME})
 
   IF (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
@@ -121,8 +105,11 @@ macro (compile_test name path)
   ELSE()
     target_link_libraries(${TEST_NAME} mysqlclient)
   ENDIF()
+  if (COMMAND cotire)
+    cotire(${TEST_NAME})
+  endif()
 
-  add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+  add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
   
   generate_symbol_data(${TEST_NAME})
   
@@ -137,18 +124,21 @@ IF(WITH_COVERAGE_REPORTS)
     'tools/*'
     '3rdparty/*'
   )
-
-  SETUP_TARGET_FOR_COVERAGE(coverage ctest coverage "--output-on-failure")
+  SETUP_TARGET_FOR_COVERAGE(
+    NAME coverage 
+    EXECUTABLE ctest coverage "--output-on-failure"
+    EXCLUDES "tests/*;/usr/*;3rdparty"
+  )
 ENDIF() # WITH_COVERAGE_REPORTS
 
-compile_test(Config src/test_config)
-compile_test(Console src/test_logconsole)
-compile_test(MySQLDB src/test_mysql_database)
-compile_test(ASIONetwork src/test_network_asio)
-compile_test(RoseCrypt src/test_crosecrypt)
-compile_test(RoseNetwork src/test_crose_network)
-compile_test(LoginServer src/test_login)
-compile_test(CharServer src/test_char)
-compile_test(AllServers src/test_servers)
-compile_test(RosePackets src/test_crosepacket)
-compile_test(Systems src/test_system)
+compile_test(Config src/test_config.cpp)
+compile_test(Console src/test_logconsole.cpp)
+compile_test(MySQLDB src/test_mysql_database.cpp)
+compile_test(ASIONetwork src/test_network_asio.cpp)
+compile_test(RoseCrypt src/test_crosecrypt.cpp)
+compile_test(RoseNetwork src/test_crose_network.cpp)
+compile_test(LoginServer src/test_login.cpp)
+compile_test(CharServer src/test_char.cpp)
+compile_test(AllServers src/test_servers.cpp)
+compile_test(RosePackets src/test_crosepacket.cpp)
+#compile_test(Systems src/test_system.cpp)
