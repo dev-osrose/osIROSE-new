@@ -18,7 +18,7 @@ if(WIN32)
   ExternalProject_Add(
     gtest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG 278aba369c41e90e9e77a6f51443beb3692919cf
+    GIT_TAG release-1.8.0
     GIT_SHALLOW true
     
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF
@@ -41,7 +41,7 @@ else()
   ExternalProject_Add(
     gtest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG 278aba369c41e90e9e77a6f51443beb3692919cf
+    GIT_TAG release-1.8.0
     GIT_SHALLOW true
     
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF
