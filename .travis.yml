@@ -239,7 +239,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
           build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-7 && cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
-          build_command: "cmake --build . --target all_unity -- -j4"
+          build_command: "cmake --build . -- -j4"
           branch_pattern: coverity_scan
       after_success:
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/*-log.txt  -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
