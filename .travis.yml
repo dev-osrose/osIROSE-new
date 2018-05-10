@@ -242,9 +242,9 @@ jobs:
           build_command: "cmake --build . -- -j4"
           branch_pattern: coverity_scan
       after_success:
-        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/*-log.txt  -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/*log.txt  -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
       after_failure:
-        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/*-log.txt  -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/build/cov-int/*log.txt  -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
 
 #    - <<: *gccinit
 #      stage: testing
