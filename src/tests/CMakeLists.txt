@@ -121,13 +121,15 @@ IF(WITH_COVERAGE_REPORTS)
   include(CodeCoverage)
 
   set(COVERAGE_IGNORE_LIST
+    'usr/*'
     'tools/*'
     '3rdparty/*'
+    'src/tests/*'
   )
   SETUP_TARGET_FOR_COVERAGE(
     NAME coverage 
     EXECUTABLE ctest coverage "--output-on-failure"
-    EXCLUDES "tests/*;/usr/*;3rdparty"
+    EXCLUDES ${COVERAGE_IGNORE_LIST}
   )
 ENDIF() # WITH_COVERAGE_REPORTS
 
