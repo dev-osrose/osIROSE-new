@@ -124,10 +124,11 @@ IF(WITH_COVERAGE_REPORTS)
   include(CodeCoverage)
 
   set(COVERAGE_IGNORE_LIST
-    "usr/*"
-    "tools/*"
-    "3rdparty/*"
-    "src/tests/*"
+    "/usr/*"
+    "${CMAKE_SOURCE_DIR}/tools/*"
+    "${CMAKE_SOURCE_DIR}/3rdparty/*"
+    "${CMAKE_SOURCE_DIR}/src/tests/*"
+    "${CMAKE_SOURCE_DIR}/src/rosecommon/*/packets/*"
   )
   SETUP_TARGET_FOR_COVERAGE(
     NAME coverage 
