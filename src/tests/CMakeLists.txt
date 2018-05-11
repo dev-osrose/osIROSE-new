@@ -122,9 +122,9 @@ IF(WITH_COVERAGE_REPORTS)
 
   set(COVERAGE_IGNORE_LIST
     'usr/*'
-    'tools/*'
-    '3rdparty/*'
-    'src/tests/*'
+    '*/tools/*'
+    '*/3rdparty/*'
+    '*/src/tests/*'
   )
   SETUP_TARGET_FOR_COVERAGE(
     NAME coverage 
