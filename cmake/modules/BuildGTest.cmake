@@ -1,7 +1,7 @@
 set(GTEST_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(MSVC11)
-  set(ADD_CXX_FLAGS "/D_VARIADIC_MAX=10")
+if(WIN32)
+  set(GTEST_ADD_CXX_FLAGS "/w")
 endif()
 
 if(NOT BUILD_SHARED_LIBS)
@@ -18,10 +18,10 @@ if(WIN32)
   ExternalProject_Add(
     gtest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG release-1.8.0
+    #GIT_TAG 045e7f9ee4f969ac1a3fe428f79c4b880f0aff43
     GIT_SHALLOW true
     
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${GTEST_ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF -Dgtest_force_shared_crt=ON
     INSTALL_DIR ${GTEST_INSTALL_DIR}
   )
 else()
@@ -44,7 +44,7 @@ else()
     GIT_TAG release-1.8.0
     GIT_SHALLOW true
     
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL_DIR} -DCMAKE_CXX_FLAGS=${GTEST_ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GMOCK=${BUILD_GMOCK} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -Dgmock_build_tests=OFF
     BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${GTEST_INSTALL_DIR}
   )
@@ -57,8 +57,12 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(GTEST_LIBRARIES "${install_dir}/${CMAKE_BUILD_TYPE}/gtest.lib")
-  set(GTEST_INSTALL_LIBS "${install_dir}/${CMAKE_BUILD_TYPE}/gtest.dll")
+  set(GTEST_LIBRARIES "$<$<CONFIG:Release>:${install_dir}/lib/gtest.lib>$<$<CONFIG:Debug>:${install_dir}/lib/gtestd.lib>")
+  set(GTEST_INSTALL_LIBS "${install_dir}/lib/gtest.dll")
+  if(BUILD_GMOCK)
+    set(GTEST_LIBRARIES "$<$<CONFIG:Release>:${install_dir}/lib/gmock.lib>$<$<CONFIG:Debug>:${install_dir}/lib/gmockd.lib>;${GTEST_LIBRARIES}")
+    set(GTEST_INSTALL_LIBS "${install_dir}/lib/gmock.dll;${GTEST_INSTALL_LIBS}")
+  endif()
 else()
   if(${BUILD_SHARED_LIBS})
     set(GTEST_LIBRARIES "${install_dir}/lib/libgtest.so")
@@ -77,9 +81,6 @@ else()
   endif()
 endif()
 
-set(GTEST_INCLUDE_DIRS "${install_dir}/include/gtest")
-if(BUILD_GMOCK)
-  set(GTEST_INCLUDE_DIRS "${install_dir}/include/gmock;${GTEST_INCLUDE_DIRS}")
-endif()
+set(GTEST_INCLUDE_DIRS "${install_dir}/include")
 
 set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})

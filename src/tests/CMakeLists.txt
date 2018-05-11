@@ -61,7 +61,7 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
 IF (MSVC)
-    set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w0")
+    set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
 ENDIF()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
@@ -97,9 +97,10 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+  
+  add_dependencies(${TEST_NAME} gtest)
   target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
   target_link_libraries(${TEST_NAME} ${GTEST_LIBRARIES})
-  #link_with_gtest(${TEST_NAME})
 
   IF (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
