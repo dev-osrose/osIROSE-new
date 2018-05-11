@@ -81,9 +81,6 @@ else()
   endif()
 endif()
 
-set(GTEST_INCLUDE_DIRS "${install_dir}/include/gtest")
-if(BUILD_GMOCK)
-  set(GTEST_INCLUDE_DIRS "${install_dir}/include/gmock;${GTEST_INCLUDE_DIRS}")
-endif()
+set(GTEST_INCLUDE_DIRS "${install_dir}/include")
 
 set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
