@@ -13,6 +13,8 @@ else()
     add_definitions(-DNDEBUG -D_NDEBUG)
 endif()
 
+add_definitions(-DNOMINMAX)
+
 #add_linker_flags(/LTCG /INCREMENTAL:NO)
 
 # ignore some warnings
