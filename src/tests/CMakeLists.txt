@@ -69,6 +69,8 @@ if (COMMAND cotire)
   cotire(${PROJECT_LIB})
 endif()
 
+SET_PROPERTY(TARGET ${PROJECT_LIB}                PROPERTY FOLDER "Tests")
+
 #-----------------------------------------------------------------------------
 # Unit test helper Macro
 #-----------------------------------------------------------------------------
@@ -112,7 +114,8 @@ macro (compile_test name path)
   add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
   
   generate_symbol_data(${TEST_NAME})
-  
+
+  SET_PROPERTY(TARGET ${TEST_NAME}                PROPERTY FOLDER "Tests")
 endmacro (compile_test)
 
 #---------------------------------

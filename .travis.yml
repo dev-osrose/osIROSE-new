@@ -318,7 +318,7 @@ jobs:
         #- ./bin/TestSystems
         - ${LCOV_PATH} --directory . --capture --output-file coverage.info
         - ${LCOV_PATH} -a coverage.base -a coverage.info --output-file coverage.total
-        - ${LCOV_PATH} --remove coverage.total 'tests/*' '/usr/*' '3rdparty' --output-file coverage.info.cleaned
+        - ${LCOV_PATH} --remove coverage.total "usr/*" "tools/*" "3rdparty/*" "src/tests/*" --output-file coverage.info.cleaned
         - ${GENHTML_PATH} -o coverage coverage.info.cleaned
         - coveralls-lcov coverage.info.cleaned
         - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"

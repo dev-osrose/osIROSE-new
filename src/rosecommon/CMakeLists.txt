@@ -206,3 +206,5 @@ endif()
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
+
+SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

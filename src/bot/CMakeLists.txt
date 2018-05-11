@@ -41,3 +41,5 @@ IF (MSVC)
 ENDIF()
 
 generate_symbol_data(${PROJECT})
+
+SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Tools")

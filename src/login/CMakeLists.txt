@@ -47,3 +47,5 @@ generate_symbol_data(${PROJECT})
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
+
+SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")
