@@ -84,7 +84,7 @@ void CCharClient::updateSession() {
     return;
   time = Core::Time::GetTickCount();
   logger_->trace("CCharClient::updateSession()");
-  Core::SessionTable session;
+  Core::SessionTable session{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == userId_));
 }
@@ -103,8 +103,8 @@ bool CCharClient::JoinServerReply(
   std::string password = Core::escapeData(P->password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::AccountTable accounts;
-  Core::SessionTable sessions;
+  Core::AccountTable accounts{};
+  Core::SessionTable sessions{};
   try {
       const auto res = conn(sqlpp::select(sessions.userid, sessions.channelid)
               .from(sessions
@@ -146,7 +146,7 @@ bool CCharClient::SendCharListReply() {
   }
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::CharacterTable table;
+  Core::CharacterTable  table{};
 
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   uint32_t id = 0;
@@ -163,7 +163,7 @@ bool CCharClient::SendCharListReply() {
             row.deleteDate
             );
     characterRealId_.push_back(row.id);
-    Core::InventoryTable inv;
+    Core::InventoryTable    inv{};
     for (const auto &iv : conn(sqlpp::select(inv.slot, inv.itemid)
                 .from(inv).where(inv.charId == row.id and inv.slot < 10)))
         packet->addEquipItem(
@@ -241,8 +241,8 @@ bool CCharClient::SendCharDeleteReply(
 
 void CCharClient::OnDisconnected() {
   logger_->trace("CCharClient::OnDisconnected()");
-  Core::SessionTable session;
-  Core::AccountTable table;
+  Core::SessionTable session{};
+  Core::AccountTable table{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   const auto res = conn(sqlpp::select(table.online).from(table).where(table.id == userId_));
   if (!res.empty())

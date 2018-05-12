@@ -126,7 +126,7 @@ void CCharISC::OnConnected() {
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
           update - get_update_time())
           .count();
-        if (dt > (1000 * 60) * 1)  // wait 4 minutes before pinging
+        if (dt > (1000 * 60) * 1)  // wait 1 minutes before pinging
         {
           logger_->trace("Sending ISC_ALIVE");
           auto packet = std::unique_ptr<CRosePacket>(
@@ -134,7 +134,7 @@ void CCharISC::OnConnected() {
           send(*packet);
         }
         std::this_thread::sleep_for(
-          std::chrono::milliseconds(500));  // sleep for 30 seconds
+          std::chrono::milliseconds(1000));
       }
       return 0;
     });

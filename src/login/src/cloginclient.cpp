@@ -98,9 +98,11 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   username_ = Core::escapeData(P->username());
   std::string clientpass = Core::escapeData(P->password());
 
+  logger_->debug("Client sent '{}' as the password", clientpass);
+
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::AccountTable table;
-  Core::SessionTable session;
+  Core::AccountTable table{};
+  Core::SessionTable session{};
   try {
     const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.username == username_
@@ -154,12 +156,12 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 }
 
 void CLoginClient::OnDisconnected() {
-  Core::SessionTable session;
+  Core::SessionTable session{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   auto res = conn(sqlpp::select(session.id).from(session)
                   .where(session.id == session_id_));
   if (res.empty()) {
-    Core::AccountTable account;
+    Core::AccountTable account{};
     conn(sqlpp::update(account).set(account.online = 0)
          .where(account.id == userid_));
   }
@@ -216,7 +218,7 @@ bool CLoginClient::ServerSelect(
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
-      Core::SessionTable session;
+      Core::SessionTable session{};
       auto conn = Core::connectionPool.getConnection(Core::osirose);
       conn(sqlpp::insert_into(session).set(
                     session.id = session_id_,

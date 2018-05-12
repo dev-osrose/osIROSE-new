@@ -98,7 +98,7 @@ void CMapClient::updateSession() {
     return;
   time = Core::Time::GetTickCount();
   logger_->trace("CMapClient::updateSession()");
-  Core::SessionTable session;
+  Core::SessionTable session{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == get_id()));
 }
@@ -110,7 +110,7 @@ void CMapClient::OnDisconnected() {
       CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME, *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
       entity_.component<BasicInfo>()->isOnMap_.store(false);
     }
-    Core::AccountTable table;
+    Core::AccountTable table{};
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     conn(sqlpp::update(table).set(table.online = 0)
          .where(table.id == get_id()));
@@ -130,8 +130,8 @@ bool CMapClient::JoinServerReply(
   std::string password = Core::escapeData(P->password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::AccountTable accounts;
-  Core::SessionTable sessions;
+  Core::AccountTable accounts{};
+  Core::SessionTable sessions{};
   try {
       const auto res = conn(sqlpp::select(sessions.userid, sessions.charid, accounts.platinium)
               .from(sessions.join(accounts)
