@@ -166,8 +166,8 @@ void deleteStaleSessions() {
     return;
   time = Core::Time::GetTickCount();
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  Core::SessionTable session;
-  Core::AccountTable table;
+  Core::SessionTable session{};
+  Core::AccountTable table{};
   conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
   conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
 }
