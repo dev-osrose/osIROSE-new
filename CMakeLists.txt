@@ -44,7 +44,6 @@ endif()
 include(CheckOptions)
 
 if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "CMAKE_BUILD_TYPE not set")
   if(OFFICIAL_BUILD)
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
   elseif(DEBUG)
