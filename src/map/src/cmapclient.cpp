@@ -69,24 +69,24 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
-            entity_.component<BasicInfo>()->isOnMap_.store(false);
-            break;
+      entity_.component<BasicInfo>()->isOnMap_.store(false);
+      break;
     default:
             break;
-    }
+  }
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to execute an action befire logging in.", get_id());
     return CRoseClient::HandlePacket(_buffer);
   }
-    auto packet = fetchPacket(_buffer);
-    if (!packet) {
-             CRoseClient::HandlePacket(_buffer);
-             return true;
-    }
-    if (!entitySystem_->dispatch(entity_, std::move(packet))) {
-        logger_->warn("There is no system willing to deal with this packet");
-            CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
-    }
+  auto packet = fetchPacket(_buffer);
+  if (!packet) {
+           CRoseClient::HandlePacket(_buffer);
+           return true;
+  }
+  if (!entitySystem_->dispatch(entity_, std::move(packet))) {
+      logger_->warn("There is no system willing to deal with this packet");
+          CRoseClient::HandlePacket(_buffer); // FIXME : removed the return because I want to be able to mess around with unkown packets for the time being
+  }
   return true;
 }
 
