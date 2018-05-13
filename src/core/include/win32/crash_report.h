@@ -5,7 +5,7 @@
 #endif
 
 namespace Core {
-  class CrashReport : ICrashReport {
+  class CrashReport : public ICrashReport {
   public:
     CrashReport(std::string path, [[maybe_unused]] std::string pipe = "");
     
