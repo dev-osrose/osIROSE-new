@@ -63,7 +63,7 @@ class CRosePacket {
         }
 
         CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
-          std::memcpy(buffer_, buffer, size(buffer_));
+          std::memcpy(buffer_, buffer, CRosePacket::size(buffer));
           *this >> size_ >> type_ >> CRC_;
         }
         virtual ~CRosePacket() {}
