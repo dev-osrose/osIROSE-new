@@ -45,6 +45,9 @@ if(WITH_CRASH_REPORTS)
   )
 endif()
 
+set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/3rdparty")
+set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH "/usr/")
+
 add_subdirectory(core)
 add_subdirectory(rosecommon)
 #add_subdirectory(node)
