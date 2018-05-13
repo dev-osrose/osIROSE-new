@@ -80,7 +80,6 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
   }
     auto packet = fetchPacket(_buffer);
     if (!packet) {
-        logger_->warn("Couldn't build the packet");
              CRoseClient::HandlePacket(_buffer);
              return true;
     }
