@@ -53,18 +53,18 @@ namespace RoseCommon {
 class CRosePacket {
     public:
         CRosePacket(ePacketType type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
-            (void)reserved;
-            *this << size_ << (uint16_t)type_ << CRC;
+          (void)reserved;
+          *this << size_ << (uint16_t)type_ << CRC;
         }
 
         CRosePacket(uint16_t type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
-            (void)reserved;
-            *this << size_ << (uint16_t)type_ << CRC;
+          (void)reserved;
+          *this << size_ << (uint16_t)type_ << CRC;
         }
 
         CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
-            std::memcpy(buffer_, buffer, sizeof(buffer_));
-            *this >> size_ >> type_ >> CRC_;
+          std::memcpy(buffer_, buffer, size(buffer_));
+          *this >> size_ >> type_ >> CRC_;
         }
         virtual ~CRosePacket() {}
 
