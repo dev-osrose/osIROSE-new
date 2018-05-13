@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <cxxopts.hpp>
 #include "crash_report.h"
 #include "cloginserver.h"
@@ -21,8 +22,6 @@
 
 #include "connection.h"
 #include "mysqlconnection.h"
-
-#include <chrono>
 
 namespace {
 void DisplayTitle()

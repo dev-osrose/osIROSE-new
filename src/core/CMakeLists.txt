@@ -88,10 +88,6 @@ if (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 endif()
 
-if(WIN32)
-  set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-endif()
-
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()

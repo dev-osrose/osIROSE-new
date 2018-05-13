@@ -9,9 +9,9 @@ set(CMAKE_BUILD_TYPE "Debug")
 #set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
 #add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
-ENDIF()
+endif()
 
 add_compiler_flags(-DSERVER_TESTING)
 
@@ -60,9 +60,9 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/map/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
-IF (MSVC)
+if (MSVC)
     set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
-ENDIF()
+endif()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 if (COMMAND cotire)
@@ -89,9 +89,9 @@ macro (compile_test name path)
   
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  IF(WITH_MYSQL)
+  if(WITH_MYSQL)
       target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
-  ENDIF()
+  endif()
 
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
@@ -102,12 +102,12 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
   target_link_libraries(${TEST_NAME} ${GTEST_LIBRARIES})
 
-  IF (MSVC)
+  if (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
     target_link_libraries(${TEST_NAME} wsock32.lib)
-  ELSE()
+  else()
     target_link_libraries(${TEST_NAME} mysqlclient)
-  ENDIF()
+  endif()
   if (COMMAND cotire)
     cotire(${TEST_NAME})
   endif()
@@ -121,7 +121,7 @@ endmacro (compile_test)
 
 #---------------------------------
 #build the actual tests
-IF(WITH_COVERAGE_REPORTS)
+if(WITH_COVERAGE_REPORTS)
   include(CodeCoverage)
 
   set(COVERAGE_IGNORE_LIST
@@ -136,7 +136,7 @@ IF(WITH_COVERAGE_REPORTS)
     EXECUTABLE ctest coverage "--output-on-failure"
     EXCLUDES ${COVERAGE_IGNORE_LIST}
   )
-ENDIF() # WITH_COVERAGE_REPORTS
+endif() # WITH_COVERAGE_REPORTS
 
 compile_test(Config src/test_config.cpp)
 compile_test(Console src/test_logconsole.cpp)

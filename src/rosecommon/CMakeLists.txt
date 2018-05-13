@@ -5,9 +5,9 @@ set(PROJECT RoseCommon)
 project(${PROJECT})
 
 
-IF (NOT MSVC)
+if (NOT MSVC)
   add_compiler_flags(-Werror)
-ENDIF()
+endif()
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include/packets
@@ -191,16 +191,12 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
 
-IF (MSVC)
+if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
-ENDIF()
+endif()
 
 target_link_libraries(${PROJECT} Core)
 target_link_libraries(${PROJECT} lua)
-
-if(WIN32)
-  set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH "WinSock2.h")
-endif()
 
 if (COMMAND cotire)
   cotire(${PROJECT})

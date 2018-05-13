@@ -35,8 +35,6 @@ CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock) : crypt_(), sock
 
 CRoseSocket::~CRoseSocket() {
   CRoseSocket::shutdown(true);
-
-  //socket_.release();
   logger_.reset();
 }
 

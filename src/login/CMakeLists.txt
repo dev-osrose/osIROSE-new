@@ -5,9 +5,9 @@ set(PROJECT LoginServer)
 
 project(${PROJECT})
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
-ENDIF()
+endif()
 
 SET( SOURCES_MAIN
   src/main )
@@ -27,9 +27,9 @@ add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-IF(WITH_MYSQL)
+if(WITH_MYSQL)
   target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES})
-ENDIF()
+endif()
 
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
@@ -38,10 +38,12 @@ if(UNIX)
   target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
 endif()
 
-IF (MSVC)
+if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)
-ENDIF()
+endif()
+
+set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER TRUE)
 
 generate_symbol_data(${PROJECT})
 if (COMMAND cotire)

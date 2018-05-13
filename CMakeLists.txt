@@ -146,12 +146,12 @@ add_subdirectory(3rdparty)
 #--------------------------------
 # Build API Docs
 #--------------------------------
-IF (BUILD_API_DOC)
+if (BUILD_API_DOC)
   find_package(Doxygen REQUIRED)
-  IF (DOXYGEN_FOUND)
+  if (DOXYGEN_FOUND)
     add_subdirectory(doc)
-  ENDIF (DOXYGEN_FOUND)
-ENDIF (BUILD_API_DOC)
+  endif (DOXYGEN_FOUND)
+endif (BUILD_API_DOC)
 
 #--------------------------------
 # Setup version info

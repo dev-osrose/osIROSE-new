@@ -15,6 +15,7 @@ if(WIN32 AND NOT MINGW)
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${CONFIGURATION_TYPE} /property:WindowsTargetPlatformVersion=10.0.14393.0
+    #BUILD_BYPRODUCTS "exception_handler.lib"
     INSTALL_COMMAND ""
   )
   
@@ -71,12 +72,13 @@ ExternalProject_Get_Property(
   breakpad
   source_dir
 )
-set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
 
 if(WIN32 AND NOT MINGW)
-  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR ${source_dir}/src/client/windows/handler/${CONFIGURATION_TYPE}/lib)
+  set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${source_dir}/src)
+  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR $<$<CONFIG:Release>:${source_dir}/src/client/windows/handler/Release/lib>$<$<CONFIG:Debug>:${source_dir}/src/client/windows/handler/Debug/lib>)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/exception_handler.lib")
 else()
+  set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/libbreakpad.a")
   if(NOT MINGW)
