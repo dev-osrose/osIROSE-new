@@ -46,7 +46,7 @@ if(WIN32 AND NOT MINGW)
     breakpad
     patch_project_files
     DEPENDEES configure
-    DEPENDERS build build-crash-generation-client
+    DEPENDERS build build-common build-crash-generation-client
     WORKING_DIRECTORY <SOURCE_DIR>
     COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/common.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
     COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
