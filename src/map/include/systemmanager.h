@@ -68,7 +68,7 @@ class SystemManager {
         T* get() {
             try {
                 return dynamic_cast<T*>(systems_.at(typeid(T)).get());
-            } catch (std::out_of_range) {}
+            } catch (const std::out_of_range&) {}
             return nullptr;
         }
 
