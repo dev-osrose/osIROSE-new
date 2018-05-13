@@ -1,8 +1,9 @@
 // Unit test driver
 #include <gtest/gtest.h>
-#include "crash_report.h"
-#include "network_thread_pool.h"
+
 #include "logconsole.h"
+#include "network_thread_pool.h"
+#include "crash_report.h"
 
 using ::testing::InitGoogleTest;
 using ::testing::Test;

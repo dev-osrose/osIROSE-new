@@ -13,15 +13,16 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "crash_report.h"
-#include "ccharserver.h"
-#include "ccharisc.h"
 #include "config.h"
 #include "version.h"
 #include "connection.h"
 #include "network_thread_pool.h"
 #include "cnetwork_asio.h"
+#include "crash_report.h"
+
 #include "ccharclient.h"
+#include "ccharserver.h"
+#include "ccharisc.h"
 
 namespace {
 void DisplayTitle()

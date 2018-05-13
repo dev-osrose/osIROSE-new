@@ -13,9 +13,6 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "crash_report.h"
-#include "cmapserver.h"
-#include "cmapisc.h"
 #include "config.h"
 #include "version.h"
 #include "connection.h"
@@ -23,6 +20,10 @@
 #include "platform_defines.h"
 #include "cnetwork_asio.h"
 #include "packetfactory.h"
+#include "crash_report.h"
+
+#include "cmapisc.h"
+#include "cmapserver.h"
 
 namespace {
 void DisplayTitle()

@@ -61,7 +61,7 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
 if (MSVC)
-    set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
+#  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
 endif()
 
 target_link_libraries(${PROJECT_LIB} RoseCommon)

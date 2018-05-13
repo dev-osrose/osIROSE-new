@@ -13,15 +13,15 @@
 
 #include <chrono>
 #include <cxxopts.hpp>
-#include "crash_report.h"
-#include "cloginserver.h"
 #include "config.h"
-#include "logconsole.h"
 #include "version.h"
+#include "logconsole.h"
 #include "network_thread_pool.h"
-
 #include "connection.h"
 #include "mysqlconnection.h"
+#include "crash_report.h"
+
+#include "cloginserver.h"
 
 namespace {
 void DisplayTitle()

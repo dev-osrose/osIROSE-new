@@ -61,6 +61,11 @@ else()
     endif()
 endif()
 
+if(WITH_CRASH_REPORTS)
+  add_dependencies(${PROJECT} breakpad)
+  target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
+endif()
+
 set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER TRUE)
 
 generate_symbol_data(${PROJECT})
