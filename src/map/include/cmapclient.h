@@ -16,8 +16,8 @@
 #define __CMAPCLIENT_H__
 
 #include "croseclient.h"
-#include "mappackets.h"
 #include "crosepacket.h"
+#include "mappackets.h"
 
 #include "entitysystem.h"
 
@@ -43,7 +43,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   void updateSession();
 
   bool LogoutReply();
-  bool JoinServerReply( std::unique_ptr<RoseCommon::CliJoinServerReq> P );
+  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
 
   enum class eSTATE {
     DEFAULT,
@@ -56,7 +56,6 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   uint32_t userid_;
   uint32_t charid_;
   std::shared_ptr<EntitySystem> entitySystem_;
-
 };
 
 #endif

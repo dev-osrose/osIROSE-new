@@ -16,7 +16,7 @@ BreakBeforeBinaryOperators: false
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 BinPackParameters: true
-ColumnLimit:     80
+ColumnLimit:     120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 DerivePointerAlignment: true
 ExperimentalAutoDetectBinPacking: false
@@ -39,7 +39,7 @@ SpacesBeforeTrailingComments: 2
 Cpp11BracedListStyle: true
 Standard:        Cpp11
 IndentWidth:     2
-TabWidth:        8
+TabWidth:        2
 UseTab:          Never
 BreakBeforeBraces: Attach
 SpacesInParentheses: false
@@ -53,5 +53,10 @@ CommentPragmas:  '^ IWYU pragma:'
 ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH ]
 SpaceBeforeParens: ControlStatements
 DisableFormat:   false
+IncludeCategories:
+  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+    Priority:        1
+  - Regex:           '.*'
+    Priority:        2
 ...
 
