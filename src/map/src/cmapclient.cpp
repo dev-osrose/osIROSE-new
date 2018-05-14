@@ -13,13 +13,14 @@
 // limitations under the License.
 
 #include <cmath>
-#include "cmapclient.h"#include "cli_joinserverreq.h"
+#include "cmapclient.h"
 #include "cmapisc.h"
 #include "cmapserver.h"
 #include "config.h"
 #include "connection.h"
 #include "entitycomponents.h"
 #include "epackettype.h"
+#include "cli_joinserverreq.h"
 #include "srv_inventorydata.h"
 #include "srv_joinserverreply.h"
 #include "srv_questdata.h"
