@@ -36,7 +36,7 @@ if(WIN32 AND NOT MINGW)
     breakpad
     download-gyp
     DEPENDEES download
-	  DEPENDERS configure
+    DEPENDERS configure
     COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/tools/gyp
     COMMAND git clone https://github.com/bnoordhuis/gyp.git <SOURCE_DIR>/src/tools/gyp
   )

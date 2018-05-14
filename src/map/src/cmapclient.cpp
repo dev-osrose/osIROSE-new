@@ -13,8 +13,7 @@
 // limitations under the License.
 
 #include <cmath>
-#include "cmapclient.h"
-#include "cli_joinserverreq.h"
+#include "cmapclient.h"#include "cli_joinserverreq.h"
 #include "cmapisc.h"
 #include "cmapserver.h"
 #include "config.h"
@@ -47,13 +46,19 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE:
       if (login_state_ != eSTATE::LOGGEDIN) {
-        logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
+        // logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
       updateSession();
       break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
+    case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
+      logger_->warn("Change character hasn't been implmented yet.");
+      // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
+      // change their character
+      return true;
+    }
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
       if (login_state_ != eSTATE::LOGGEDIN) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
