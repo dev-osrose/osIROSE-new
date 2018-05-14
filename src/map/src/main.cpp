@@ -13,49 +13,44 @@
 // limitations under the License.
 
 #include <cxxopts.hpp>
-#include "config.h"
-#include "version.h"
-#include "connection.h"
-#include "network_thread_pool.h"
-#include "platform_defines.h"
 #include "cnetwork_asio.h"
-#include "packetfactory.h"
+#include "config.h"
+#include "connection.h"
 #include "crash_report.h"
+#include "network_thread_pool.h"
+#include "packetfactory.h"
+#include "platform_defines.h"
+#include "version.h"
 
 #include "cmapisc.h"
 #include "cmapserver.h"
 
 namespace {
-void DisplayTitle()
-{
+void DisplayTitle() {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  if(auto log = console.lock())
-  {
-    log->info( "--------------------------------" );
-    log->info( "        osIROSE 2 Alpha         " );
-    log->info( "  http://forum.dev-osrose.com/  " );
-    log->info( "--------------------------------" );
-    log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+  if (auto log = console.lock()) {
+    log->info("--------------------------------");
+    log->info("        osIROSE 2 Alpha         ");
+    log->info("  http://forum.dev-osrose.com/  ");
+    log->info("--------------------------------");
+    log->info("Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH);
   }
 }
 
-void CheckUser()
-{
+void CheckUser() {
 #ifndef _WIN32
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  if(auto log = console.lock())
-  {
+  if (auto log = console.lock()) {
     if ((getuid() == 0) && (getgid() == 0)) {
-      log->warn( "You are running as the root superuser." );
-      log->warn( "It is unnecessary and unsafe to run with root privileges." );
+      log->warn("You are running as the root superuser.");
+      log->warn("It is unnecessary and unsafe to run with root privileges.");
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   }
 #endif
 }
 
-void ParseCommandLine(int argc, char** argv)
-{
+void ParseCommandLine(int argc, char** argv) {
   cxxopts::Options options(argv[0], "osIROSE login server");
 
   try {
@@ -101,8 +96,7 @@ void ParseCommandLine(int argc, char** argv)
     options.parse(argc, argv);
 
     // Check to see if the user wants to see the help text
-    if (options.count("help"))
-    {
+    if (options.count("help")) {
       std::cout << options.help({"", "Database", "Networking"}) << std::endl;
       exit(0);
     }
@@ -111,116 +105,94 @@ void ParseCommandLine(int argc, char** argv)
 
     // We are using if checks here because we only want to override the config file if the option was supplied
     // Since this is a login server startup function we can get away with a little bit of overhead
-    if( options.count("log_level") )
-      config.loginServer().logLevel = options["log_level"].as<int>();
+    if (options.count("log_level")) config.loginServer().logLevel = options["log_level"].as<int>();
 
-    if( options.count("client_ip") )
-      config.serverData().ip = options["client_ip"].as<std::string>();
+    if (options.count("client_ip")) config.serverData().ip = options["client_ip"].as<std::string>();
 
-    if( options.count("client_port") )
-      config.loginServer().clientPort = options["client_port"].as<int>();
+    if (options.count("client_port")) config.loginServer().clientPort = options["client_port"].as<int>();
 
-    if( options.count("isc_ip") )
-      config.serverData().iscListenIp = options["isc_ip"].as<std::string>();
+    if (options.count("isc_ip")) config.serverData().iscListenIp = options["isc_ip"].as<std::string>();
 
-    if( options.count("isc_port") )
-      config.loginServer().iscPort = options["isc_port"].as<int>();
-      
-    if( options.count("url") )
-    {
+    if (options.count("isc_port")) config.loginServer().iscPort = options["isc_port"].as<int>();
+
+    if (options.count("url")) {
       config.serverData().autoConfigureAddress = true;
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
-    
-    if( options.count("max_threads") ) 
-    {
+
+    if (options.count("max_threads")) {
       config.serverData().maxThreads = options["max_threads"].as<int>();
       Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
     }
-    
-    if( options.count("core_path") )
-      config.serverData().core_dump_path = options["core_path"].as<std::string>();
-      
-    if( options.count("db_host") )
-      config.database().host = options["db_host"].as<std::string>();
-    if( options.count("db_port") )
-      config.database().port = options["db_port"].as<int>();
-    if( options.count("db_name") )
-      config.database().database = options["db_name"].as<std::string>();
-    if( options.count("db_user") )
-      config.database().user = options["db_user"].as<std::string>();
-    if( options.count("db_pass") )
-      config.database().password = options["db_pass"].as<std::string>();
-  }
-  catch (const cxxopts::OptionException& ex) {
+
+    if (options.count("core_path")) config.serverData().core_dump_path = options["core_path"].as<std::string>();
+
+    if (options.count("db_host")) config.database().host = options["db_host"].as<std::string>();
+    if (options.count("db_port")) config.database().port = options["db_port"].as<int>();
+    if (options.count("db_name")) config.database().database = options["db_name"].as<std::string>();
+    if (options.count("db_user")) config.database().user = options["db_user"].as<std::string>();
+    if (options.count("db_pass")) config.database().password = options["db_pass"].as<std::string>();
+  } catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
     std::cout << options.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
   }
 }
-}
+}  // namespace
 
 int main(int argc, char* argv[]) {
   try {
     ParseCommandLine(argc, argv);
-    
+
     Core::Config& config = Core::Config::getInstance();
     Core::CrashReport(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-    if(auto log = console.lock())
-      log->info( "Starting up server..." );
+    if (auto log = console.lock()) log->info("Starting up server...");
 
     Core::CLog::SetLevel((spdlog::level::level_enum)config.mapServer().logLevel);
     DisplayTitle();
     CheckUser();
 
-    if(auto log = console.lock()) {
+    if (auto log = console.lock()) {
       log->set_level((spdlog::level::level_enum)config.mapServer().logLevel);
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
-  Core::connectionPool.addConnector(Core::osirose, std::bind(
-                Core::mysqlFactory,
-                config.database().user,
-                config.database().password,
-                config.database().database,
-                config.database().host,
-                config.database().port));
+    Core::connectionPool.addConnector(
+        Core::osirose, std::bind(Core::mysqlFactory, config.database().user, config.database().password,
+                                 config.database().database, config.database().host, config.database().port));
 
+    CMapServer clientServer;
+    CMapServer iscServer(true);
+    CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
+    iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
+    iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
 
-  CMapServer clientServer;
-  CMapServer iscServer(true);
-  CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
-  iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
+    clientServer.init(config.serverData().ip, config.mapServer().clientPort);
+    clientServer.listen();
+    clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
 
-  clientServer.init(config.serverData().ip, config.mapServer().clientPort);
-  clientServer.listen();
-  clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
+    iscServer.init(config.serverData().iscListenIp, config.mapServer().iscPort);
+    iscServer.listen();
+    iscClient->connect();
+    iscClient->start_recv();
 
-  iscServer.init(config.serverData().iscListenIp, config.mapServer().iscPort);
-  iscServer.listen();
-  iscClient->connect();
-  iscClient->start_recv();
-
-  auto start = Core::Time::GetTickCount();
-  while (clientServer.is_active()) {
-        std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
+    auto start = Core::Time::GetTickCount();
+    while (clientServer.is_active()) {
+      std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
       clientServer.update(diff.count());
       start = Core::Time::GetTickCount();
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    if(auto log = console.lock())
-      log->info( "Server shutting down..." );
+    if (auto log = console.lock()) log->info("Server shutting down...");
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::drop_all();
-  }
-  catch (const spdlog::spdlog_ex& ex) {
-     std::cout << "Log failed: " << ex.what() << std::endl;
+  } catch (const spdlog::spdlog_ex& ex) {
+    std::cout << "Log failed: " << ex.what() << std::endl;
   }
   return 0;
 }

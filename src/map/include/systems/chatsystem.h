@@ -6,22 +6,22 @@ namespace RoseCommon {
 class CliNormalChat;
 class CliWhisperChat;
 class CliPartyChat;
-}
+}  // namespace RoseCommon
 
 namespace Systems {
 
 class ChatSystem : public System {
-    public:
-        ChatSystem(SystemManager &manager);
-        virtual ~ChatSystem() = default;
+ public:
+  ChatSystem(SystemManager &manager);
+  virtual ~ChatSystem() = default;
 
-        virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, double dt);
 
-        void sendMsg(Entity entity, const std::string &msg);
+  void sendMsg(Entity entity, const std::string &msg);
 
-        void normalChat(CMapClient& client, Entity entity, const RoseCommon::CliNormalChat &packet);
-        void whisperChat(CMapClient& client, Entity entity, const RoseCommon::CliWhisperChat &packet);
-        void partyChat(CMapClient& client, Entity entity, const RoseCommon::CliPartyChat &packet);
+  void normalChat(CMapClient &client, Entity entity, const RoseCommon::CliNormalChat &packet);
+  void whisperChat(CMapClient &client, Entity entity, const RoseCommon::CliWhisperChat &packet);
+  void partyChat(CMapClient &client, Entity entity, const RoseCommon::CliPartyChat &packet);
 };
 
-}
+}  // namespace Systems

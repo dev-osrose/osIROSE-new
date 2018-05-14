@@ -10,13 +10,13 @@ class CliChangeMapReq;
 namespace Systems {
 
 class MapSystem : public System {
-    public:
-        MapSystem(SystemManager&);
-        virtual ~MapSystem() = default;
+ public:
+  MapSystem(SystemManager&);
+  virtual ~MapSystem() = default;
 
-        virtual void update(EntityManager&, double);
+  virtual void update(EntityManager&, double);
 
-        void processChangeMapReq(CMapClient& client, Entity entity, const RoseCommon::CliChangeMapReq &packet);
+  void processChangeMapReq(CMapClient& client, Entity entity, const RoseCommon::CliChangeMapReq& packet);
 };
 
-}
+}  // namespace Systems
