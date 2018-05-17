@@ -61,7 +61,7 @@ set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH ${CO
 
 add_subdirectory(core)
 add_subdirectory(rosecommon)
-#add_subdirectory(node)
+add_subdirectory(node)
 add_subdirectory(login)
 add_subdirectory(char)
 add_subdirectory(map)
