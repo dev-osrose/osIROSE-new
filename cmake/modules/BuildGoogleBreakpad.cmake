@@ -68,7 +68,6 @@ else()
     CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    #INSTALL_COMMAND mkdir -p <INSTALL_DIR>/include/breakpad && cp -fr <SOURCE_DIR>/src <INSTALL_DIR>/include/breakpad && cp -f <BINARY_DIR>/src/libbreakpad.a <BINARY_DIR>/src/client/linux/libbreakpad_client.a <INSTALL_DIR>/lib && cp -f <BINARY_DIR>/src/tools/linux/dump_syms/dump_syms <INSTALL_DIR>/bin
   )
   
   ExternalProject_Add_Step(
