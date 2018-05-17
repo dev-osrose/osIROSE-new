@@ -27,6 +27,7 @@
 namespace RoseCommon {
 
 using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
+using SendPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
 template <typename T>
 inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
@@ -46,7 +47,7 @@ struct find_recv_class;
 template <ePacketType Type>
 using find_recv_class_t = typename find_recv_class<Type>::type;
 
-#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; };
+#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; }; static const SendPacketFactory::Initializer<uint8_t*> __##Class = SendPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
 
 #define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; }; static const RecvPacketFactory::Initializer<uint8_t*> __##Class = RecvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
 
@@ -59,8 +60,16 @@ using find_recv_class_t = typename find_recv_class<Type>::type;
  * \author L3nn0x
  * \date october 2016
  */
-inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
+inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) { // kept for compatibility
   return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+}
+
+inline std::unique_ptr<CRosePacket> fetchRecvPacket(uint8_t *buffer) {
+  return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+}
+  
+inline std::unique_ptr<CRosePacket> fetchSendPacket(uint8_t *buffer) {
+  return SendPacketFactory::create(CRosePacket::type(buffer), buffer);
 }
 
 /*!
