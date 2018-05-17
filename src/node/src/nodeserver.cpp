@@ -28,11 +28,11 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   std::string _address = _sock->get_address();
 
   std::lock_guard<std::mutex> lock(isc_list_mutex_);
-  std::shared_ptr<NodeISC> nClient = std::make_shared<NodeISC>(std::move(_sock));
+  std::shared_ptr<NodeClient> nClient = std::make_shared<NodeClient>(std::move(_sock));
   nClient->set_id(server_count_++);
   nClient->set_update_time(Core::Time::GetTickCount());
   nClient->set_active(true);
   nClient->start_recv();
-  logger_->info("Server connected from: {}", _address.c_str());
+  logger_->info("Client connected from: {}", _address.c_str());
   isc_list_.push_front(std::move(nClient));
 }
