@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 # Prepare testing infrastructure.
 link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
@@ -90,17 +91,15 @@ macro (compile_test name path)
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
   if(WITH_MYSQL)
-      target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
+      target_link_libraries(${TEST_NAME} mysql::mysql)
   endif()
 
   target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  
-  add_dependencies(${TEST_NAME} gtest)
   target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
-  target_link_libraries(${TEST_NAME} ${GTEST_LIBRARIES})
+  target_link_libraries(${TEST_NAME} GTest::GTest)
 
   if (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
@@ -112,7 +111,8 @@ macro (compile_test name path)
     cotire(${TEST_NAME})
   endif()
 
-  add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+  gtest_discover_tests(${TEST_NAME})
+  #add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
   
   generate_symbol_data(${TEST_NAME})
 

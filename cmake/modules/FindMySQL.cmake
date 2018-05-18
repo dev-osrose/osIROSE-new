@@ -121,5 +121,11 @@ find_package_handle_standard_args( MYSQL DEFAULT_MSG
 set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
 set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
 
+if(MYSQL_FOUND AND NOT TARGET mysql::mysql)
+    add_library(mysql::mysql UNKNOWN IMPORTED)
+    set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
+    set_property(TARGET mysql::mysql APPEND PROPERTY IMPORTED_LOCATION "${MYSQL_LIBRARY}")
+endif()
+
 mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY MYSQL_LIBRARY_PATH )
 
