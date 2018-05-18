@@ -29,10 +29,7 @@ set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_I
 
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-
-if(UNIX)
-  target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
-endif()
+target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
 
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
