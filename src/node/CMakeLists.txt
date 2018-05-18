@@ -29,6 +29,8 @@ set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_I
 
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
+
+add_dependencies(${PROJECT} curl)
 target_link_libraries(${PROJECT} ${CURL_LIBRARIES})
 
 if (MSVC)
