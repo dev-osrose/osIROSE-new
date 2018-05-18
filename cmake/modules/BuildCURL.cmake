@@ -9,11 +9,15 @@ if(WIN32)
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 else()
+  set(_byproducts
+    ${CURL_INSTALL_DIR}/lib/libcurl.a
+  )
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git
     GIT_TAG curl-7_59_0
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+    BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 endif()
