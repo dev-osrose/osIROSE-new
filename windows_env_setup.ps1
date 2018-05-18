@@ -1,9 +1,9 @@
 $mysql_version = "5.7";
-$mysql_connector_version = "6.1.10";
+$mysql_connector_version = "6.1.11";
 $config = "Release"
 $unit_tests = "OFF"
 
-Import-Module .\ci\extrafunctions.psm1
+Import-Module .\cmake\scripts\extrafunctions.psm1
 
 function Install-MySQL-Connector-C
 {
