@@ -1,6 +1,5 @@
 #pragma once
 
-#include <packets/cli_changemapreq.h>
 #include "system.h"
 
 namespace RoseCommon {
