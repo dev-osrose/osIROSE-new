@@ -85,7 +85,7 @@ set(GTEST_INCLUDE_DIRS "${install_dir}/include")
 set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 
 if(NOT TARGET GTest::GTest)
-    add_library(GTest::GTest UNKNOWN EXPORT)
+    add_library(GTest::GTest UNKNOWN IMPORTED)
     set_target_properties(GTest::GTest PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${GTEST_INCLUDE_DIRS}")
     set_property(TARGET GTest::GTest APPEND PROPERTY IMPORTED_LOCATION "${GTEST_LIBRARIES}")
 endif()
