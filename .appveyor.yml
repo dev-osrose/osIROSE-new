@@ -38,6 +38,7 @@ services: mysql
 
 install:
 - cmd: cd %PROJECT_PATH%
+- cmd: "cmake -version"
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-winx32.msi
 - cmd: git submodule update --init --recursive
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
@@ -48,7 +49,6 @@ build:
 
 build_script:
 - cd build
-- cmake --verison
 - cmake -D%CONFIGURATION%=TRUE -DCMAKE_BUILD_TYPE=%CONFIGURATION% ..
 - cmake --build . --clean-first --config %CONFIGURATION% -- /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
