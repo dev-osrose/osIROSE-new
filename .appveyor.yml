@@ -43,6 +43,7 @@ install:
 - cmd: git submodule update --init --recursive
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
+- cmd: "mkdir 3rdparty/include"
 
 build:
   parallel: true
