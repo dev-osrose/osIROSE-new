@@ -1,7 +1,5 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
-
 if(WIN32 AND NOT MINGW)
   if(DEBUG OR Debug)
     set(CONFIGURATION_TYPE Debug)
@@ -15,23 +13,30 @@ if(WIN32 AND NOT MINGW)
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
+    LOG_INSTALL TRUE
     
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
-    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG> /property:WindowsTargetPlatformVersion=10.0.14393.0
-    #INSTALL_COMMAND "cp -r <SOURCE_DIR>/src/*.h <INSTALL_DIR>/include/breakpad"
+    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
+    INSTALL_COMMAND ""
   )
   
   ExternalProject_Add_Step(
     breakpad
     build-crash-generation-client
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG> /property:WindowsTargetPlatformVersion=10.0.14393.0
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
   )
   
   ExternalProject_Add_Step(
     breakpad
     build-common
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG> /property:WindowsTargetPlatformVersion=10.0.14393.0
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
+  )
+  
+  ExternalProject_Get_Property(
+    breakpad
+    source_dir
+    install_dir
   )
   
   #TODO figure out how to build this without the "/property:WindowsTargetPlatformVersion=10.0.14393.0" setting
@@ -91,7 +96,7 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32 AND NOT MINGW)
-  set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${source_dir}/src)
+  set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
   set(BREAKPAD_COMMON_LIBRARY_DIR "${source_dir}/src/client/windows/$<CONFIG>/lib")
   set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${source_dir}/src/client/windows/crash_generation/$<CONFIG>/lib")
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${source_dir}/src/client/windows/handler/$<CONFIG>/lib")
@@ -105,6 +110,9 @@ else()
     set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES} "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/libbreakpad_client.a")
   endif()
 endif()
+
+file(MAKE_DIRECTORY ${source_dir}/src)
+file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
     add_library(Breakpad::Breakpad UNKNOWN IMPORTED)

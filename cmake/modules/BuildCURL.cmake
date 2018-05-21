@@ -11,6 +11,7 @@ if(WIN32)
 else()
   set(_byproducts
     ${CURL_INSTALL_DIR}/lib/libcurl.a
+    ${CURL_INSTALL_DIR}/lib/libcurl.so
   )
   ExternalProject_Add(
     curl
