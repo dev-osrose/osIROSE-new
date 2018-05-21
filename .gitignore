@@ -20,6 +20,7 @@ Makefile
 3rd[Pp]arty/lib
 3rd[Pp]arty/share
 3rd[Pp]arty/include
+3rd[Pp]arty/man
 dep
 
 # configuration file

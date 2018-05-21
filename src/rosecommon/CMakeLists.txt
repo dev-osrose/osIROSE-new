@@ -196,7 +196,7 @@ if (MSVC)
 endif()
 
 target_link_libraries(${PROJECT} Core)
-target_link_libraries(${PROJECT} lua)
+target_link_libraries(${PROJECT} lua::lua)
 
 if (COMMAND cotire)
   cotire(${PROJECT})

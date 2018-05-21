@@ -109,6 +109,8 @@ endif()
 
 find_package(Threads REQUIRED)
 
+find_package(Lua ${REQUIRED_IF_OPTION})
+
 find_package(CURL ${REQUIRED_IF_OPTION})
 
 if(WITH_GTEST)
@@ -133,16 +135,20 @@ endif()
 # build some external projects
 #------------------------------------------------------------------------------
 
+if(NOT LUA_FOUND)
+  include(BuildLua)
+endif()
+
+if(NOT CURL_FOUND)
+  include(BuildCURL)
+endif()
+
 if(NOT BREAKPAD_EXCEPTION_HANDLER_FOUND AND WITH_CRASH_REPORTS)
   include(BuildGoogleBreakpad)
 endif()
 
 if(NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
-endif()
-
-if(NOT CURL_FOUND)
-  include(BuildCURL)
 endif()
 
 add_subdirectory(3rdparty)
