@@ -1,5 +1,7 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
+file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
+
 if(WIN32 AND NOT MINGW)
   if(DEBUG OR Debug)
     set(CONFIGURATION_TYPE Debug)
@@ -12,10 +14,12 @@ if(WIN32 AND NOT MINGW)
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
+    INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
+    
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG> /property:WindowsTargetPlatformVersion=10.0.14393.0
-    INSTALL_COMMAND ""
+    #INSTALL_COMMAND "cp -r <SOURCE_DIR>/src/*.h <INSTALL_DIR>/include/breakpad"
   )
   
   ExternalProject_Add_Step(

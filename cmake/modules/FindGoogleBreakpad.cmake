@@ -67,21 +67,16 @@ else ()
     set(BREAKPAD_EXCEPTION_HANDLER_FOUND "NO")
 endif ()
 
-if (BREAKPAD_EXCEPTION_HANDLER_FOUND)
-   if (NOT BREAKPAD_EXCEPTION_HANDLER_FIND_QUIETLY)
-      message(STATUS "Found Google BreakPad: ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
-      message(STATUS "Found Google BreakPad dump_syms: ${BREAKPAD_DUMP_SYMS_EXEC}")
-   endif (NOT BREAKPAD_EXCEPTION_HANDLER_FIND_QUIETLY)
-else ()
-   if (BREAKPAD_EXCEPTION_HANDLER_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find Google BreakPad library")
-   else()
-      message(STATUS "Could not find Google BreakPad library")
-   endif (BREAKPAD_EXCEPTION_HANDLER_FIND_REQUIRED)
-endif (BREAKPAD_EXCEPTION_HANDLER_FOUND)
+
+include(FindPackageHandleStandardArgs)
+# handle the QUIETLY and REQUIRED arguments and set BREAKPAD_FOUND to TRUE if
+# all listed variables are TRUE
+find_package_handle_standard_args(breakpad
+                                  REQUIRED_VARS BREAKPAD_EXCEPTION_HANDLER_LIBRARIES BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR)
 
 mark_as_advanced(
   BREAKPAD_EXCEPTION_HANDLER_LIBRARY
+  BREAKPAD_EXCEPTION_HANDLER_LIBRARIES
   BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR
   )
   

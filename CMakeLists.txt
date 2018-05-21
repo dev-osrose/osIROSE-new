@@ -25,7 +25,6 @@ set(CMAKE_PREFIX_PATH "${CMAKE_THIRD_PARTY_DIR}")
 set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(LUA_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/lua/src)
 set(CXXOPT_ROOT ${CMAKE_THIRD_PARTY_DIR}/cxxopts/include)
 set(SPDLOG_ROOT ${CMAKE_THIRD_PARTY_DIR}/spdlog/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
@@ -34,6 +33,13 @@ set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# Create folders
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/bin)
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR})
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/lib)
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/share)
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR}/breakpad)
 
 include(CMakeParseArguments)
 include(ExternalProject)
@@ -69,20 +75,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
+set(SPDLOG_ROOT ${CMAKE_THIRD_PARTY_DIR}/spdlog/include)
+set(CXXOPT_ROOT ${CMAKE_THIRD_PARTY_DIR}/cxxopts/include)
 set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
-set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
-set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(LUA_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/lua/src)
-set(CXXOPT_ROOT ${CMAKE_THIRD_PARTY_DIR}/cxxopts/include)
-set(SPDLOG_ROOT ${CMAKE_THIRD_PARTY_DIR}/spdlog/include)
-set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
-set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
-set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
-set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
+set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
+set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
+set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
+set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
+set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed
@@ -111,7 +116,7 @@ find_package(Threads REQUIRED)
 
 find_package(Lua ${REQUIRED_IF_OPTION})
 
-find_package(CURL ${REQUIRED_IF_OPTION})
+#find_package(CURL ${REQUIRED_IF_OPTION})
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})

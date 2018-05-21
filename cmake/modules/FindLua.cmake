@@ -117,7 +117,7 @@ find_library(LUA_LIBRARY
     ENV LUA_DIR
   PATH_SUFFIXES lib
   PATHS
-  ${EXTERNAL_BINARY_DIR}
+  ${CMAKE_EXTERNAL_LIBRARY_DIR}
   ~/Library/Frameworks
   /Library/Frameworks
   /sw
@@ -170,7 +170,7 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Lua
                                   REQUIRED_VARS LUA_LIBRARIES LUA_INCLUDE_DIR
                                   VERSION_VAR LUA_VERSION_STRING)
 
-if(NOT TARGET lua::lua)
+if(LUA_FOUND AND NOT TARGET lua::lua)
     add_library(lua::lua UNKNOWN IMPORTED)
     set_target_properties(lua::lua PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
     set_property(TARGET lua::lua APPEND PROPERTY IMPORTED_LOCATION "${LUA_LIBRARIES}")
