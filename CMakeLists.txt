@@ -118,6 +118,7 @@ endif()
 
 find_package(Threads REQUIRED)
 
+set(ENV{LUA_DIR} ${CMAKE_THIRD_PARTY_DIR})
 find_package(Lua ${REQUIRED_IF_OPTION})
 
 find_package(CURL ${REQUIRED_IF_OPTION})
