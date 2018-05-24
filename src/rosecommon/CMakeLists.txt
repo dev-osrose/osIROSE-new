@@ -195,6 +195,7 @@ if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
 endif()
 
+add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)
 
 add_dependencies(${PROJECT} lua::lua)

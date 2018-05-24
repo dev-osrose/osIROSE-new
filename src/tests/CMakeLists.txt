@@ -65,6 +65,7 @@ if (MSVC)
 #  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
 endif()
 
+add_dependencies(${PROJECT_LIB} RoseCommon)
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 if (COMMAND cotire)
   cotire(${PROJECT_LIB})
@@ -87,17 +88,20 @@ macro (compile_test name path)
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
+
+  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
 
   if(WITH_MYSQL)
       target_link_libraries(${TEST_NAME} mysql::mysql)
   endif()
 
-  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+  add_dependencies(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
+
+  add_dependencies(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
   target_link_libraries(${TEST_NAME} GTest::GTest)
 
   if (MSVC)
@@ -106,12 +110,12 @@ macro (compile_test name path)
   else()
     target_link_libraries(${TEST_NAME} mysqlclient)
   endif()
+
   if (COMMAND cotire)
     cotire(${TEST_NAME})
   endif()
 
   gtest_discover_tests(${TEST_NAME})
-  #add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
   generate_symbol_data(${TEST_NAME})
 
