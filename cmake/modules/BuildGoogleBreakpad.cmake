@@ -32,14 +32,13 @@ if(WIN32 AND NOT MINGW)
     build-common
     COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
   )
-
-  ExternalProject_Get_Property(
+  
+  ExternalProject_Add_Step(
     breakpad
-    source_dir
-    install_dir
+    copy-breakpad
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.h"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.hpp"
   )
-
-  #TODO figure out how to build this without the "/property:WindowsTargetPlatformVersion=10.0.14393.0" setting
 
   ExternalProject_Add_Step(
     breakpad

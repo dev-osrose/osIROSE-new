@@ -16,6 +16,12 @@ if(WIN32)
     INSTALL_COMMAND ""
     BUILD_BYPRODUCTS ${_byproducts}
   )
+  
+  ExternalProject_Add_Step(
+    lua
+    copy-lua
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/" "*.h"
+  )
 else()
   find_library(LUA_DL_LIBRARY dl)
   find_library(LUA_MATH_LIBRARY m)

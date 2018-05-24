@@ -79,8 +79,19 @@ GENERATE_SQL_HEADER(LOGS_HEADER ${args})
 add_library(${PROJECT} STATIC ${OSIROSE_HEADER} ${LOGS_HEADER} ${SOURCES_BASE} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
+if(NOT LUA_FOUND)
+  add_dependencies(${PROJECT} lua)
+endif()
+
+if(NOT CURL_FOUND)
+  add_dependencies(${PROJECT} curl)
+endif()
+
 if(WITH_CRASH_REPORTS)
-  add_dependencies(${PROJECT} Breakpad::Breakpad)
+  if(NOT BREAKPAD_FOUND)
+    add_dependencies(${PROJECT} breakpad)
+  endif()
+  
   target_link_libraries(${PROJECT} Breakpad::Breakpad)
 endif()
 

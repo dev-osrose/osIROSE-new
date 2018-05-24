@@ -198,7 +198,9 @@ endif()
 add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)
 
-add_dependencies(${PROJECT} lua::lua)
+if(NOT LUA_FOUND)
+  add_dependencies(${PROJECT} lua)
+endif()
 target_link_libraries(${PROJECT} lua::lua)
 
 
