@@ -3,6 +3,10 @@ project("osIROSE")
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
 
+if(CMAKE_CXX_COMPILER_LAUNCHER)
+  set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+endif()
+
 #------------------------------------------------------------------------------
 # some global variables
 #------------------------------------------------------------------------------
@@ -58,7 +62,7 @@ if(NOT CMAKE_BUILD_TYPE)
   else()
     set(CMAKE_BUILD_TYPE Release)
   endif()
-  
+
   if(OFFICIAL_DEBUG_BUILD)
     set(CMAKE_BUILD_TYPE Debug)
   endif()
@@ -116,7 +120,7 @@ find_package(Threads REQUIRED)
 
 find_package(Lua ${REQUIRED_IF_OPTION})
 
-#find_package(CURL ${REQUIRED_IF_OPTION})
+find_package(CURL ${REQUIRED_IF_OPTION})
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})
@@ -125,7 +129,7 @@ endif()
 
 if(WITH_GTEST AND WITH_GMOCK)
   find_package(GMock ${REQUIRED_IF_OPTION})
-  add_definitions(-DWITH_GMOCK) 
+  add_definitions(-DWITH_GMOCK)
 endif()
 
 if(WITH_CRASH_REPORTS)

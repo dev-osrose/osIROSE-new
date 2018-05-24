@@ -131,7 +131,8 @@ if (LUA_LIBRARY)
     # include the math library for Unix
     if (UNIX AND NOT APPLE AND NOT BEOS)
         find_library(LUA_MATH_LIBRARY m)
-        set(LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY}")
+        find_library(LUA_DL_LIBRARY dl)
+        set(LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY};${LUA_DL_LIBRARY}")
     # For Windows and Mac, don't need to explicitly include the math library
     else ()
         set(LUA_LIBRARIES "${LUA_LIBRARY}")
@@ -170,10 +171,10 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Lua
                                   REQUIRED_VARS LUA_LIBRARIES LUA_INCLUDE_DIR
                                   VERSION_VAR LUA_VERSION_STRING)
 
-if(LUA_FOUND AND NOT TARGET lua::lua)
-    add_library(lua::lua UNKNOWN IMPORTED)
-    set_target_properties(lua::lua PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
-    set_property(TARGET lua::lua APPEND PROPERTY IMPORTED_LOCATION "${LUA_LIBRARIES}")
-endif()
-
 mark_as_advanced(LUA_INCLUDE_DIR LUA_LIBRARY LUA_MATH_LIBRARY)
+
+if(LUA_FOUND AND NOT TARGET lua::lua)
+    add_library(lua::lua INTERFACE IMPORTED)
+    set_target_properties(lua::lua PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
+    set_target_properties(lua::lua PROPERTIES INTERFACE_LINK_LIBRARIES "${LUA_LIBRARIES}")
+endif()

@@ -42,6 +42,7 @@ endif()
 
 if(NOT TARGET CURL::CURL)
     add_library(CURL::CURL UNKNOWN IMPORTED)
+    add_dependencies(CURL::CURL curl)
     set_target_properties(CURL::CURL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
     set_property(TARGET CURL::CURL APPEND PROPERTY IMPORTED_LOCATION "${CURL_LIBRARY}")
 endif()

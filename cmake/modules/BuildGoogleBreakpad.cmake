@@ -6,7 +6,7 @@ if(WIN32 AND NOT MINGW)
   else()
     set(CONFIGURATION_TYPE Release)
   endif()
-  
+
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
@@ -14,33 +14,33 @@ if(WIN32 AND NOT MINGW)
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
     LOG_INSTALL TRUE
-    
+
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
     BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
     INSTALL_COMMAND ""
   )
-  
+
   ExternalProject_Add_Step(
     breakpad
     build-crash-generation-client
     COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
   )
-  
+
   ExternalProject_Add_Step(
     breakpad
     build-common
     COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=$<CONFIG>
   )
-  
+
   ExternalProject_Get_Property(
     breakpad
     source_dir
     install_dir
   )
-  
+
   #TODO figure out how to build this without the "/property:WindowsTargetPlatformVersion=10.0.14393.0" setting
-  
+
   ExternalProject_Add_Step(
     breakpad
     download-gyp
@@ -49,7 +49,7 @@ if(WIN32 AND NOT MINGW)
     COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/tools/gyp
     COMMAND git clone https://github.com/bnoordhuis/gyp.git <SOURCE_DIR>/src/tools/gyp
   )
-  
+
   # Breakpad builds with /MT by default but we need /MD. This patch makes it build with /MD
   ExternalProject_Add_Step(
     breakpad
@@ -68,7 +68,7 @@ else()
     ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad.a
     ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad_client.a
   )
-  
+
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
@@ -79,7 +79,7 @@ else()
     BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
   )
-  
+
   ExternalProject_Add_Step(
     breakpad
     download-lss
@@ -97,13 +97,19 @@ ExternalProject_Get_Property(
 
 if(WIN32 AND NOT MINGW)
   set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
+
   set(BREAKPAD_COMMON_LIBRARY_DIR "${source_dir}/src/client/windows/$<CONFIG>/lib")
   set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${source_dir}/src/client/windows/crash_generation/$<CONFIG>/lib")
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${source_dir}/src/client/windows/handler/$<CONFIG>/lib")
-  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES "${BREAKPAD_COMMON_LIBRARY_DIR}/common.lib;${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/exception_handler.lib;${BREAKPAD_CRASH_CLIENT_LIBRARY_DIR}/crash_generation_client.lib")
+  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES
+    "${BREAKPAD_COMMON_LIBRARY_DIR}/common.lib"
+    "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/exception_handler.lib"
+    "${BREAKPAD_CRASH_CLIENT_LIBRARY_DIR}/crash_generation_client.lib"
+  )
 else()
   set(BREAKPAD_DUMP_SYMS_EXEC ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms)
   set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
+
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib)
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/libbreakpad.a")
   if(NOT MINGW)
@@ -115,7 +121,8 @@ file(MAKE_DIRECTORY ${source_dir}/src)
 file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
-    add_library(Breakpad::Breakpad UNKNOWN IMPORTED)
-    set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
-    set_property(TARGET Breakpad::Breakpad APPEND PROPERTY IMPORTED_LOCATION "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
+  add_library(Breakpad::Breakpad INTERFACE IMPORTED)
+  add_dependencies(Breakpad::Breakpad breakpad)
+  set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
+  set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()

@@ -35,10 +35,10 @@ if( WIN32 )
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/include"
 			  "$ENV{PROGRAMFILES}/MySQL/*/include"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/include" 
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/include"
 			  "C:/Program Files/MySQL/*/include"
 			  )
-			  
+
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient_r.lib"
 		PATHS "${EXTERNAL_BINARY_DIR}"
@@ -47,10 +47,10 @@ if( WIN32 )
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
 			  "C:/Program Files/MySQL/*/lib"
 			  )
-	
+
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient_r"
 		PATHS "${EXTERNAL_BINARY_DIR}"
@@ -59,7 +59,7 @@ if( WIN32 )
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib" 
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
 			  "C:/Program Files/MySQL/*/lib"
 			  )
 else()
@@ -70,10 +70,10 @@ else()
 			  "/usr/include/mysql"
 			  "/usr/local/include/mysql"
 			  "/usr/mysql/include/mysql" )
-			  
+
 	find_path( MYSQL_LIBRARY_PATH
-		NAMES libmysqlclient_r.a libmysqlclient_r.so
-		PATHS "${EXTERNAL_BINARY_DIR}"
+		NAMES libmysqlclient.a libmysqlclient.so libmysqlclient_r.a libmysqlclient_r.so
+		PATHS "${CMAKE_THIRD_PARTY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
@@ -84,10 +84,10 @@ else()
 			  "/usr/mysql/lib/mysql"
 			  "/usr/mysql/lib64/mysql"
               "/usr/lib/x86_64-linux-gnu" )
-	
+
 	find_library( MYSQL_LIBRARY
 		NAMES mysqlclient mysqlclient_r
-		PATHS "${EXTERNAL_BINARY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"

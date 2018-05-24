@@ -78,7 +78,7 @@ SET_PROPERTY(TARGET ${PROJECT_LIB}                PROPERTY FOLDER "Tests")
 macro (compile_test name path)
   set(TEST_NAME Test${name})
   project(${TEST_NAME})
-  
+
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIRS}
     SYSTEM ${GMOCK_INCLUDE_DIRS}
@@ -87,7 +87,7 @@ macro (compile_test name path)
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-  
+
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
   if(WITH_MYSQL)
@@ -98,7 +98,6 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
   target_link_libraries(${TEST_NAME} GTest::GTest)
 
   if (MSVC)
@@ -113,7 +112,7 @@ macro (compile_test name path)
 
   gtest_discover_tests(${TEST_NAME})
   #add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
-  
+
   generate_symbol_data(${TEST_NAME})
 
   SET_PROPERTY(TARGET ${TEST_NAME}                PROPERTY FOLDER "Tests")
@@ -132,7 +131,7 @@ if(WITH_COVERAGE_REPORTS)
     "${CMAKE_SOURCE_DIR}/src/rosecommon/*/packets/*"
   )
   SETUP_TARGET_FOR_COVERAGE(
-    NAME coverage 
+    NAME coverage
     EXECUTABLE ctest coverage "--output-on-failure"
     EXCLUDES ${COVERAGE_IGNORE_LIST}
   )
