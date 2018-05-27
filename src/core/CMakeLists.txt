@@ -100,7 +100,7 @@ if (WITH_MYSQL)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 endif()
 
-#set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
