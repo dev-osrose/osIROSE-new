@@ -21,6 +21,7 @@ if(WIN32)
     lua
     copy-lua
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/" "*.h"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/" "*.hpp"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)
