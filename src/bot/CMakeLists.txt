@@ -29,6 +29,12 @@ if(WITH_MYSQL)
   target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES})
 endif()
 
+if(WITH_CRASH_REPORTS)
+  if(NOT BREAKPAD_FOUND)
+    add_dependencies(${PROJECT} breakpad-build)
+  endif()
+endif()
+
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
