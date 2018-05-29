@@ -2,9 +2,9 @@ set(LUA_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
   set(_byproducts
-    ${LUA_INSTALL_DIR}/lib/lua51.dll
+    ${LUA_INSTALL_DIR}/bin/lua51.dll
     ${LUA_INSTALL_DIR}/lib/lua51.lib
-    ${LUA_INSTALL_DIR}/lib/lua5.1.dll
+    ${LUA_INSTALL_DIR}/bin/lua5.1.dll
     ${LUA_INSTALL_DIR}/lib/lua5.1.lib
   )
   
@@ -29,7 +29,8 @@ if(WIN32)
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.hpp"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/lib/" "*.lib"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/lib/" "*.dll"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/bin/" "*.dll"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/" "*.dll"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)

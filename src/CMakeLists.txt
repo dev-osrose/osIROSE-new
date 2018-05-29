@@ -32,6 +32,9 @@ if(WITH_MYSQL)
   link_directories(
     ${MYSQL_LIBRARY_PATH}
   )
+  
+  file(COPY ${MYSQL_LIBRARY} 
+       DESTINATION ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/)
 endif()
 
 if(WITH_CRASH_REPORTS)
@@ -40,7 +43,6 @@ endif()
 
 set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty")
 set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad")
-#set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/src/rosecommon/include/packets")
 set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "asio.hpp")
 
 if(WIN32)
