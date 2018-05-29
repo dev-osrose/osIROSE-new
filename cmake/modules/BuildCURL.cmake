@@ -31,9 +31,10 @@ ExternalProject_Get_Property(
 set(CURL_INCLUDE_DIRS "${install_dir}/include")
 
 if(WIN32)
-  set(CURL_LIBRARY "$<$<CONFIG:Release>:${install_dir}/lib/libcurl_imp.lib>$<$<CONFIG:Debug>:${install_dir}/lib/libcurl-d_imp.lib>")
+  set(CURL_LIBRARY_POSTFIX "$<$<CONFIG:Debug>:-d>")
+  set(CURL_LIBRARY "${install_dir}/lib/libcurl${CURL_LIBRARY_POSTFIX}_imp.lib>")
   set(CURL_LIBRARIES "${CURL_LIBRARY}")
-  set(CURL_INSTALL_LIBS "$<$<CONFIG:Release>:${install_dir}/bin/libcurl.dll>$<$<CONFIG:Debug>:${install_dir}/bin/libcurl-d.dll>")
+  set(CURL_INSTALL_LIBS "${install_dir}/bin/libcurl${CURL_LIBRARY_POSTFIX}.dll")
 else()
   set(CURL_LIBRARY "${install_dir}/lib/libcurl.so")
   set(CURL_LIBRARIES "${CURL_LIBRARY}")
