@@ -26,6 +26,7 @@ env:
   - PROOT=echo "ERRROOORRRR STILL USING PROOT!@!@!@!@!@"
   - WITH_CRASH_REPORTS=ON
   - BUILD_JOB_COUNT=4
+  - CCACHE_SLOPPINESS="pch_defines,time_macros"
   - PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
   - LCOV_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/lcov
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
