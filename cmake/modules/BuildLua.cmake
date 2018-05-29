@@ -20,6 +20,7 @@ if(WIN32)
   ExternalProject_Add_Step(
     lua
     copy-lua
+    DEPENDERS build
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/" "*.hpp"
   )
