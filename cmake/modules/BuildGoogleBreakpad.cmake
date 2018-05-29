@@ -13,7 +13,6 @@ if(WIN32 AND NOT MINGW)
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    LOG_INSTALL TRUE
 
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
