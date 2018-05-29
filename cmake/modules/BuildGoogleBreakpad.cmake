@@ -134,7 +134,7 @@ file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
   add_library(Breakpad::Breakpad INTERFACE IMPORTED)
-  add_dependencies(Breakpad::Breakpad breakpad-build)
+  add_dependencies(Breakpad::Breakpad breakpad-install)
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()

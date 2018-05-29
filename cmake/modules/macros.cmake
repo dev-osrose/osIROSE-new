@@ -55,9 +55,13 @@ endfunction()
 
 function(generate_symbol_data target)
   if(WITH_CRASH_REPORTS)
+    if(NOT BREAKPAD_FOUND)
+      add_dependencies(${target} breakpad-install)
+    endif()
+  
     if(UNIX)
       set(TARGET_PATH ${CMAKE_BINARY_DIR}/bin/symbols/${target}.sym)
-  
+
       add_custom_command(TARGET ${target}
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols
