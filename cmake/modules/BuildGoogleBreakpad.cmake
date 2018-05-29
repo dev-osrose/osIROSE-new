@@ -13,7 +13,7 @@ if(WIN32 AND NOT MINGW)
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    STEP_TARGETS   build
+    STEP_TARGETS build install
 
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
@@ -62,6 +62,15 @@ if(WIN32 AND NOT MINGW)
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.hpp"
   )
+  
+  ExternalProject_Add_Step(
+    breakpad
+    install-breakpad
+    DEPENDEES build
+    DEPENDERS install
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/lib" "*.lib"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/bin" "*.dll"
+  )
 else()
 
   # This is a workaround for Ninja not allowing us to build if these libs weren't built before
@@ -76,7 +85,7 @@ else()
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    STEP_TARGETS   build
+    STEP_TARGETS build install
     
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR} --quiet --config-cache
@@ -101,9 +110,9 @@ ExternalProject_Get_Property(
 if(WIN32 AND NOT MINGW)
   set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
 
-  set(BREAKPAD_COMMON_LIBRARY_DIR "${source_dir}/src/client/windows/$<CONFIG>/lib")
-  set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${source_dir}/src/client/windows/crash_generation/$<CONFIG>/lib")
-  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${source_dir}/src/client/windows/handler/$<CONFIG>/lib")
+  set(BREAKPAD_COMMON_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/breakpad/client/windows/$<CONFIG>/lib")
+  set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/breakpad/client/windows/crash_generation/$<CONFIG>/lib")
+  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/breakpad/client/windows/handler/$<CONFIG>/lib")
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES
     "${BREAKPAD_COMMON_LIBRARY_DIR}/common.lib"
     "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/exception_handler.lib"
