@@ -7,7 +7,6 @@ if(WIN32)
     GIT_TAG cb529b713f4882ac65a074ae8d87faa41d19168e
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
     INSTALL_DIR ${CURL_INSTALL_DIR}
-    BUILD_BYPRODUCTS ${CURL_INSTALL_DIR}/lib/libcurl$<$<CONFIG:Debug>:-d>_imp.lib
   )
 else()
   set(_byproducts
@@ -27,13 +26,12 @@ endif()
 ExternalProject_Get_Property(
   curl
   install_dir
-  build_byproducts
 )
 
 set(CURL_INCLUDE_DIRS "${install_dir}/include")
 
 if(WIN32)
-  set(CURL_LIBRARY "${build_byproducts}")
+  set(CURL_LIBRARY "${install_dir}/lib/libcurl$<$<CONFIG:Debug>:-d>_imp.lib")
   set(CURL_LIBRARIES "${CURL_LIBRARY}")
   set(CURL_INSTALL_LIBS "${install_dir}/bin/libcurl.dll")
 else()
@@ -43,8 +41,8 @@ else()
 endif()
 
 if(NOT TARGET CURL::CURL)
-    add_library(CURL::CURL UNKNOWN IMPORTED)
+    add_library(CURL::CURL INTERFACE IMPORTED)
     add_dependencies(CURL::CURL curl)
     set_target_properties(CURL::CURL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
-    set_property(TARGET CURL::CURL APPEND PROPERTY IMPORTED_LOCATION "${CURL_LIBRARY}")
+    set_target_properties(CURL::CURL PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
 endif()
