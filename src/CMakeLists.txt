@@ -33,8 +33,10 @@ if(WITH_MYSQL)
     ${MYSQL_LIBRARY_PATH}
   )
   
-  file(COPY ${MYSQL_LIBRARY} 
-       DESTINATION ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/)
+  file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+       DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
+  file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+       DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
 endif()
 
 if(WITH_CRASH_REPORTS)
