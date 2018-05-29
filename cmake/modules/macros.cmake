@@ -55,10 +55,6 @@ endfunction()
 
 function(generate_symbol_data target)
   if(WITH_CRASH_REPORTS)
-    if(NOT BREAKPAD_FOUND)
-      add_dependencies(${target} breakpad-install)
-    endif()
-  
     if(UNIX)
       set(TARGET_PATH ${CMAKE_BINARY_DIR}/bin/symbols/${target}.sym)
 
