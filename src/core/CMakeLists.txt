@@ -89,7 +89,7 @@ endif()
 
 if(WITH_CRASH_REPORTS)
   if(NOT BREAKPAD_FOUND)
-    add_dependencies(${PROJECT} breakpad)
+    add_dependencies(${PROJECT} breakpad-build)
   endif()
   
   target_link_libraries(${PROJECT} Breakpad::Breakpad)

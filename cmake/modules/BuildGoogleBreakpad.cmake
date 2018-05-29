@@ -13,6 +13,7 @@ if(WIN32 AND NOT MINGW)
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
+    STEP_TARGETS   build
 
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
@@ -56,6 +57,7 @@ if(WIN32 AND NOT MINGW)
   ExternalProject_Add_Step(
     breakpad
     copy-breakpad
+    DEPENDEES download
     DEPENDERS patch_project_files
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.hpp"
@@ -73,10 +75,12 @@ else()
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
+    INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
+    STEP_TARGETS   build
+    
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR} --quiet --config-cache
     BUILD_BYPRODUCTS ${_byproducts}
-    INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
   )
 
   ExternalProject_Add_Step(
@@ -121,7 +125,7 @@ file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
   add_library(Breakpad::Breakpad INTERFACE IMPORTED)
-  add_dependencies(Breakpad::Breakpad breakpad)
+  add_dependencies(Breakpad::Breakpad breakpad-build)
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()
