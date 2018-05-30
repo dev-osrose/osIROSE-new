@@ -1,7 +1,6 @@
 version: '{branch}.ci.{build}'
 init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 image: 
 - Visual Studio 2017
@@ -52,6 +51,7 @@ install:
 - ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\3rdparty\bin
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 build:
   parallel: true
