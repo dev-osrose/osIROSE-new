@@ -56,8 +56,8 @@ build:
   parallel: true
 
 build_script:
-- cd build
-- cmd: "./cmake/scripts/msvc_build.bat"
+- cmd: cd build
+- cmd: %PROJECT_PATH%/cmake/scripts/msvc_build.bat
 
 after_build:
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database
