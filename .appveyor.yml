@@ -1,6 +1,7 @@
 version: '{branch}.ci.{build}'
 init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 image: 
 - Visual Studio 2017
@@ -105,8 +106,5 @@ test_script:
 #    branch: master                 # release from master branch only
 #    appveyor_repo_tag: true        # deploy on tag push only
 
-
-init:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
