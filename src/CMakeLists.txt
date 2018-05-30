@@ -34,6 +34,8 @@ if(WITH_MYSQL)
   )
   if(WIN32)
     file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+       DESTINATION "${CMAKE_BINARY_DIR}/bin/")
+    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
     file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")

@@ -1,11 +1,16 @@
 set(CURL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
+  set(_byproducts
+    ${CURL_INSTALL_DIR}/lib/libcurl_imp.lib
+    ${CURL_INSTALL_DIR}/lib/libcurl-d_imp.lib
+  )
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git
     GIT_TAG cb529b713f4882ac65a074ae8d87faa41d19168e
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+	BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 else()
@@ -31,7 +36,11 @@ ExternalProject_Get_Property(
 set(CURL_INCLUDE_DIRS "${install_dir}/include")
 
 if(WIN32)
-  set(CURL_LIBRARY "${install_dir}/lib/libcurl$<$<CONFIG:Debug>:-d>_imp.lib")
+  if("${BUILD_TYPE}" STREQUAL "Debug")
+    set(CURL_LIBRARY "${install_dir}/lib/libcurl-d_imp.lib")
+  else()
+    set(CURL_LIBRARY "${install_dir}/lib/libcurl_imp.lib")
+  endif()
   set(CURL_LIBRARIES "${CURL_LIBRARY}")
   set(CURL_INSTALL_LIBS "${install_dir}/bin/libcurl.dll")
 else()
