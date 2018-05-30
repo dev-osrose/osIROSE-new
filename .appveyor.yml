@@ -48,7 +48,7 @@ install:
 - cmd: git submodule update --init --recursive
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-win32.msi -FileName C:\projects\osIROSE\mysql-connector-c-winx32.msi
 - ps: Start-FileDownload https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName C:\projects\osIROSE\ninja-win.zip
-- ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\3rdparty\bin
+- ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\3rdparty\bin -Force
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
 
