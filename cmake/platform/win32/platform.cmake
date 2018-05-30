@@ -3,19 +3,19 @@ add_compiler_flags(-DASIO_STANDALONE)
 
 add_compiler_flags(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS) # Remove all of the really annoying c++17 deprection warnings
 
-if("$<CONFIG>" STREQUAL ".")
+if("${CMAKE_CFG_INTDIR}" STREQUAL ".")
   set(MAKEFILES TRUE)
 else()
   set(MSBUILD TRUE)
 endif()
 
 if(MAKEFILES AND "${BUILD_TYPE}" STREQUAL "Release")
-  set(OFFICIAL_BUILD ON)
-  set(BUILD_TOOLS OFF)
-  set(BUILD_TESTS OFF)
-  set(WITH_GTEST OFF)
-  set(WITH_GMOCK OFF)
-  set(DEBUG OFF)
+  set(OFFICIAL_BUILD ON CACHE BOOL "" FORCE)
+  set(BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+  set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(WITH_GTEST OFF CACHE BOOL "" FORCE )
+  set(WITH_GMOCK OFF CACHE BOOL "" FORCE )
+  set(DEBUG OFF CACHE BOOL "" FORCE)
 endif()
 
 macro(use_unicode_here)
