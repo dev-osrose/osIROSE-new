@@ -34,7 +34,6 @@ environment:
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
-  PATH: %PROJECT_PATH%\3rdparty\bin;%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
 
 matrix:
   fast_finish: true
