@@ -76,17 +76,17 @@ notifications:
   on_build_failure: true
   on_build_status_changed: false
 
-before_test:
-  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
-  - SET STATIC_DEPS=true
-  - pip.exe install lxml
-  - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
-  - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
-  - C:/projects/osIROSE/build/bin/TestConfig.exe --gtest_filter=SetupTesting.**
-  - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.json' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
+#before_test:
+#  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
+#  - SET STATIC_DEPS=true
+#  - pip.exe install lxml
+#  - mysqladmin --host=%MYSQL_HOST% --user=%MYSQL_USER% --password=%MYSQL_PWD% create %MYSQL_DATABASE%
+#  - mysql --user=%MYSQL_USER% --password=%MYSQL_PWD% --database=%MYSQL_DATABASE% < "%PROJECT_PATH%/Database/osirose.sql"
+#  - C:/projects/osIROSE/build/bin/TestConfig.exe --gtest_filter=SetupTesting.**
+#  - ps: $a = Get-Content 'C:\projects\osIROSE\build\server.json' -raw | ConvertFrom-Json; $a.database | % {if($_.user -eq 'root'){$_.password='Password12!'}}; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\test.ini'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\server.json'; $a | ConvertTo-Json  | set-content 'C:\projects\osIROSE\build\src\tests\test.ini';
 
-test_script:
-  - ctest -C %CONFIGURATION% --output-on-failure --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
+#test_script:
+#  - ctest -C %CONFIGURATION% --output-on-failure --no-compress-output -T Test -E "TestConfig|SetupTesting" || verify > NUL
 
 #deploy:
 #  release: osirose-win-v$(appveyor_build_version) # this is here to prevent appveyor from overwriting our release notes
