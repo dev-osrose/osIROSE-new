@@ -47,11 +47,6 @@ file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR}/breakpad)
 
 include(CMakeParseArguments)
 include(ExternalProject)
-
-if(Debug)
-  set(DEBUG 1)
-endif()
-
 include(CheckOptions)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -67,6 +62,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
   endif()
 endif()
+
+set(BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 
 include(GNUInstallDirs)
 include(ExternalProject)
