@@ -1,21 +1,18 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(WIN32 AND NOT MINGW)
-  if(DEBUG OR Debug)
-    set(CONFIGURATION_TYPE Debug)
-  else()
-    set(CONFIGURATION_TYPE Release)
+if(WIN32 AND NOT MINGW)  
+  set(_byproducts)
+  if(NOT MSVC)
+    set(_byproducts
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/lib/common.lib
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/lib/crash_generation_client.lib
+      
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib/common.lib
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib/exception_handler.lib
+      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib/crash_generation_client.lib
+    )
   endif()
-  
-  set(_byproducts
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/lib/common.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/lib/crash_generation_client.lib
-    
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib/common.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib/exception_handler.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib/crash_generation_client.lib
-  )
 
   ExternalProject_Add(
     breakpad
@@ -23,7 +20,7 @@ if(WIN32 AND NOT MINGW)
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    STEP_TARGETS build install
+    STEP_TARGETS build
     BUILD_BYPRODUCTS ${_byproducts}
 
     UPDATE_COMMAND ""
@@ -91,7 +88,7 @@ else()
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    STEP_TARGETS build install
+    STEP_TARGETS build
     
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR} --quiet --config-cache
@@ -140,7 +137,7 @@ file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
   add_library(Breakpad::Breakpad INTERFACE IMPORTED)
-  add_dependencies(Breakpad::Breakpad breakpad-install)
+  add_dependencies(Breakpad::Breakpad breakpad-build)
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()

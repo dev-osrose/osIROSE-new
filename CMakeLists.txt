@@ -55,6 +55,10 @@ endif()
 
 set(BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 
+if(MSVC)
+  set(BUILD_TYPE "$<CONFIG>")
+endif()
+
 include(GNUInstallDirs)
 include(ExternalProject)
 
