@@ -106,10 +106,10 @@ void CMapClient::OnDisconnected() {
   logger_->trace("CMapClient::OnDisconnected() start");
   if (isOnMap(entity_)) {
     logger_->trace("CMapClient::OnDisconnected() entered if");
+    entity_.component<BasicInfo>()->isOnMap_.store(false);
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entity_.component<BasicInfo>()->isOnMap_.store(false);
     logger_->trace("CMapClient::OnDisconnected() exiting if");
   }
   Core::AccountTable table{};
