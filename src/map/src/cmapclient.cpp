@@ -103,16 +103,19 @@ void CMapClient::updateSession() {
 }
 
 void CMapClient::OnDisconnected() {
-  logger_->trace("CMapClient::OnDisconnected()");
+  logger_->trace("CMapClient::OnDisconnected() start");
   if (isOnMap(entity_)) {
+    logger_->trace("CMapClient::OnDisconnected() entered if");
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
     entity_.component<BasicInfo>()->isOnMap_.store(false);
+    logger_->trace("CMapClient::OnDisconnected() exiting if");
   }
   Core::AccountTable table{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
+  logger_->trace("CMapClient::OnDisconnected() end");
 }
 
 bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
