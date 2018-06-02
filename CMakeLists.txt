@@ -1,6 +1,6 @@
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project("osIROSE")
 
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_CXX_COMPILER_LAUNCHER)
@@ -36,6 +36,7 @@ file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/share)
 file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR}/breakpad)
 
 include(CMakeParseArguments)
+include(GNUInstallDirs)
 include(ExternalProject)
 include(CheckOptions)
 
@@ -59,15 +60,12 @@ if(MSVC)
   set(BUILD_TYPE "$<CONFIG>")
 endif()
 
-include(GNUInstallDirs)
-include(ExternalProject)
-
 include(macros)
 include(CheckPlatform)
 include(SetInstallPaths)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)

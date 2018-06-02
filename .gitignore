@@ -190,3 +190,4 @@ compile_commands.json
 .#*
 cbuild
 __pycache__
+/3rdparty/CMake
