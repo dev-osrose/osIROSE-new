@@ -56,7 +56,7 @@ endif()
 
 set(BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 
-if(MSVC)
+if("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
   set(BUILD_TYPE "$<CONFIG>")
 endif()
 

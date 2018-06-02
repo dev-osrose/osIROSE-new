@@ -3,9 +3,11 @@ add_compiler_flags(-DASIO_STANDALONE)
 
 add_compiler_flags(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS) # Remove all of the really annoying c++17 deprection warnings
 
-if("${CMAKE_CFG_INTDIR}" STREQUAL ".")
+if("${CMAKE_GENERATOR}" MATCHES "Ninja")
+  set(NINJA TRUE)
+elseif("${CMAKE_GENERATOR}" MATCHES "Make")
   set(MAKEFILES TRUE)
-else()
+elseif("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
   set(MSBUILD TRUE)
 endif()
 
