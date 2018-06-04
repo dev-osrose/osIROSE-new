@@ -141,7 +141,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
       sessionId_ = sessionID;
       bool platinium = false;
       platinium = row.platinium;
-      entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
+      entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
       if (entity_) {
         Core::Config& config = Core::Config::getInstance();
