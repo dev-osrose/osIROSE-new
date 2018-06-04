@@ -80,9 +80,10 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     return true;
   }
   if (!entitySystem_->dispatch(entity_, std::move(packet))) {
-    logger_->warn("There is no system willing to deal with this packet");
-    CRoseClient::HandlePacket(_buffer);  // FIXME : removed the return because I want to be able to
+    if(false == CRoseClient::HandlePacket(_buffer)) {  // FIXME : removed the return because I want to be able to
                                          // mess around with unkown packets for the time being
+      logger_->warn("There is no system willing to deal with this packet");
+    }
   }
   return true;
 }
