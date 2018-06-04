@@ -75,7 +75,11 @@ class Config {
     std::string ip = "127.0.0.1";
     std::string iscListenIp = "127.0.0.1";
     std::string autoConfigureUrl = "http://ipv4.myexternalip.com/raw";
+#ifndef _WIN32
     std::string core_dump_path = "/tmp/dumps";
+#else
+    std::string core_dump_path = ".";
+#endif
     uint32_t parentId = 0;
     uint32_t maxConnections = 0;
     uint32_t maxThreads = 512;

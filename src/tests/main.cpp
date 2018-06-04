@@ -13,8 +13,11 @@ using ::testing::UnitTest;
 
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
-  
+#ifndef _WIN32
   Core::CrashReport crash_reporter("./tmp/dumps");
+#else
+  Core::CrashReport crash_reporter(".");
+#endif
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);
