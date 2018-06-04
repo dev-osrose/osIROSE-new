@@ -63,7 +63,7 @@ class EntitySystem {
 
   bool dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet);
 
-  Entity loadCharacter(uint32_t charId, bool platinium, uint32_t id);
+  Entity loadCharacter(uint32_t charId, bool platinium);
   void saveCharacter(uint32_t charId, Entity entity);
 
   static bool isNearby(Entity a, Entity b);
