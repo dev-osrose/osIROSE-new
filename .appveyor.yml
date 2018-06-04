@@ -51,7 +51,7 @@ install:
 - ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\3rdparty\bin -Force
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
-- cmd: "$(appveyor_build_folder)/cmake/scripts/robocopy.bat $(appveyor_build_folder)\scripts $(appveyor_build_folder)\build\bin\scripts *.lua"
+- cmd: "$(appveyor_build_folder)/cmake/scripts/robocopy.bat $(appveyor_build_folder)/scripts $(appveyor_build_folder)/build/bin/scripts *.lua"
 
 build:
   parallel: true
