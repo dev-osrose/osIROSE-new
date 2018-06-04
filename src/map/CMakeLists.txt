@@ -14,6 +14,7 @@ SET( SOURCES_HEADER
   include/cmapisc.h
   include/entitysystem.h
   include/systemmanager.h
+  include/id_manager.h
   include/systems/system.h
   include/systems/movementsystem.h
   include/systems/timesystem.h
@@ -31,6 +32,7 @@ SET( SOURCES_MAIN
   src/cmapisc.cpp
   src/entitysystem.cpp
   src/systemmanager.cpp
+  src/id_manager.cpp
   src/systems/movementsystem.cpp
   src/systems/timesystem.cpp
   src/systems/updatesystem.cpp
