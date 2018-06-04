@@ -101,10 +101,10 @@ void CMapClient::updateSession() {
 void CMapClient::OnDisconnected() {
   logger_->trace("CMapClient::OnDisconnected()");
   if (isOnMap(entity_)) {
+    entity_.component<BasicInfo>()->isOnMap_.store(false);
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
-    entity_.component<BasicInfo>()->isOnMap_.store(false);
   }
   Core::AccountTable table{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
