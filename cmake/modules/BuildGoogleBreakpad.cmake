@@ -2,7 +2,7 @@ set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32 AND NOT MINGW)  
   set(_byproducts)
-  if(NOT MSVC)
+  if(NOT MSBUILD)
     set(_byproducts
       ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/lib/common.lib
       ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
