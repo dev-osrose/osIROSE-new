@@ -6,7 +6,7 @@ class IdManager {
     public:
         IdManager() = default;
         IdManager(const IdManager&) = delete;
-        IdManager(const IdManager&&) = default;
+        IdManager(IdManager&&) = default;
         ~IdManager() = default;
         
         uint16_t get_free_id();
