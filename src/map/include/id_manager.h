@@ -4,7 +4,7 @@
 
 class IdManager {
     public:
-        IdManager();
+        IdManager() = default;
         IdManager(const IdManager&) = delete;
         IdManager(const IdManager&&) = default;
         ~IdManager() = default;
@@ -14,5 +14,5 @@ class IdManager {
     
     private:
         std::unordered_set<uint16_t> _free_ids;
-        uint16_t _max_id;
+        uint16_t _max_id = 0;
 };
