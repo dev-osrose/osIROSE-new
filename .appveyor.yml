@@ -13,10 +13,9 @@ platform:
 - Win32
 
 cache:
-  - 3rdparty\bin -> .appveyor.yml
-  - 3rdparty\lib -> .appveyor.yml
-  - 3rdparty\usr -> .appveyor.yml
-  - 3rdparty\include -> .appveyor.yml
+  - 3rdparty\bin -> cmake/scripts/msvc_build.bat
+  - 3rdparty\lib -> cmake/scripts/msvc_build.bat
+  - 3rdparty\include -> cmake/scripts/msvc_build.bat
 
 branches:
   except:
@@ -61,11 +60,21 @@ build_script:
 - cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
-- 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/ %APPVEYOR_BUILD_FOLDER%/Database %APPVEYOR_BUILD_FOLDER%\scripts
+- cmd: md %APPVEYOR_BUILD_FOLDER%/package
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/package/scripts *.lua"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.exe"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.dll"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
+- 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
+- 7z a %APPVEYOR_BUILD_FOLDER%/win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
 - path: win32-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
+- path: win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+  name: osirose-debug-symbols
 
 notifications:
 - provider: Slack
