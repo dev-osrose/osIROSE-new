@@ -25,9 +25,15 @@ macro(use_unicode_here)
 endmacro()
 
 if(DEBUG)
-    add_definitions(-DDEBUG -D_DEBUG)
+  add_definitions(-DDEBUG -D_DEBUG)
 else()
-    add_definitions(-DNDEBUG -D_NDEBUG)
+  add_definitions(-DNDEBUG -D_NDEBUG)
+  
+  #This is needed if we want a pdb file to be generated
+  if(WITH_CRASH_REPORTS)
+    add_compile_options(/Zi)
+    add_linker_flags(/DEBUG /OPT:REF /OPT:ICF)
+  endif()
 endif()
 
 add_definitions(-DNOMINMAX)
