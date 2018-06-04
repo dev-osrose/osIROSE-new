@@ -32,13 +32,16 @@ if(WITH_MYSQL)
   link_directories(
     ${MYSQL_LIBRARY_PATH}
   )
+  
   if(WIN32)
     file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/")
-    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+    if(MSBUILD)
+      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
+    endif()
   endif()
 endif()
 

@@ -16,7 +16,7 @@ if(OFFICIAL_BUILD)
   set(DEV_SETTING OFF)
 endif()
 
-option(BUILD_TOOLS "Build server tools" ${DEV_SETTING})
+option(BUILD_TOOLS "Build server tools" OFF)
 option(BUILD_TESTS "Build various unit tests." ${DEV_SETTING})
 option(WITH_GTEST "Add GTest support" ${DEV_SETTING})
 option(WITH_GMOCK "Add GMock support" ${DEV_SETTING})
