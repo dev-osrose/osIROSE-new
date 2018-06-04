@@ -5,10 +5,6 @@ link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
 set(PROJECT_LIB osirose-lib)
-set(CMAKE_BUILD_TYPE "Debug")
-
-#set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
-#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)

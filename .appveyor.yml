@@ -13,10 +13,10 @@ platform:
 - Win32
 
 cache:
-  - 3rdparty\bin
-  - 3rdparty\lib
-  - 3rdparty\usr
-  - 3rdparty\include
+  - 3rdparty\bin -> .appveyor.yml
+  - 3rdparty\lib -> .appveyor.yml
+  - 3rdparty\usr -> .appveyor.yml
+  - 3rdparty\include -> .appveyor.yml
 
 branches:
   except:
