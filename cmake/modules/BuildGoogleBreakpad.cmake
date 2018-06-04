@@ -73,6 +73,7 @@ if(WIN32 AND NOT MINGW)
     DEPENDERS patch_project_files
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/include/breakpad" "*.hpp"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/tools/windows/binaries/" "<INSTALL_DIR>/bin" "*.exe"
   )
 else()
 
@@ -111,6 +112,7 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32 AND NOT MINGW)
+  set(BREAKPAD_DUMP_SYMS_EXEC ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms.exe)
   set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
 
   set(BREAKPAD_COMMON_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib")
