@@ -48,6 +48,10 @@ struct Item : public ISerialize {
     Item(const T& row, U& builder) : Item() {
       loadFromRow(row, builder);
     }
+    template <typename T>
+    Item(const T& row) : Item() {
+      loadFromRow(row);
+    }
 
     Item(const ItemDef& def);
 
@@ -69,6 +73,18 @@ struct Item : public ISerialize {
         auto item = builder.buildItem(row.itemtype, row.itemid, 1000, true);
         if (item)
             std::swap(*this, item.value());
+        count_ = row.amount;
+        refine_ = row.refine;
+        gemOpt_ = row.gemOpt;
+        hasSocket_ = row.socket;
+    }
+
+    template <typename T>
+    void loadFromRow(const T& row) {
+        type_ = row.itemtype;
+        id_ = row.itemid;
+        life_ = 1000;
+        isApraised_ = true;
         count_ = row.amount;
         refine_ = row.refine;
         gemOpt_ = row.gemOpt;
