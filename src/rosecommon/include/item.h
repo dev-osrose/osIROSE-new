@@ -84,7 +84,7 @@ struct Item : public ISerialize {
         type_ = row.itemtype;
         id_ = row.itemid;
         life_ = 1000;
-        isApraised_ = true;
+        isAppraised_ = true;
         count_ = row.amount;
         refine_ = row.refine;
         gemOpt_ = row.gemOpt;
