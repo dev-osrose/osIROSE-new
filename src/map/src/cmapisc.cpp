@@ -121,7 +121,7 @@ void CMapISC::OnConnected() {
 }
 
 bool CMapISC::OnShutdown() {
-  logger_->trace("CCharISC::OnDisconnected()");
+  logger_->trace("CMapISC::OnDisconnected()");
   bool result = true;
 
   if (is_active() == true) {

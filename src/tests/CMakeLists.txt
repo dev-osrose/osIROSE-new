@@ -1,13 +1,10 @@
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 # Prepare testing infrastructure.
 link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 
 # Configure some handy variables.
 set(PROJECT_LIB osirose-lib)
-set(CMAKE_BUILD_TYPE "Debug")
-
-#set(MSVC_LINK_FLAGS " /NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT")
-#add_linker_flags(/NODEFAULTLIB:MSVCRTD /NODEFAULTLIB:MSVCRT)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
@@ -64,6 +61,7 @@ if (MSVC)
 #  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
 endif()
 
+add_dependencies(${PROJECT_LIB} RoseCommon)
 target_link_libraries(${PROJECT_LIB} RoseCommon)
 if (COMMAND cotire)
   cotire(${PROJECT_LIB})
@@ -77,7 +75,7 @@ SET_PROPERTY(TARGET ${PROJECT_LIB}                PROPERTY FOLDER "Tests")
 macro (compile_test name path)
   set(TEST_NAME Test${name})
   project(${TEST_NAME})
-  
+
   include_directories(
     SYSTEM ${GTEST_INCLUDE_DIRS}
     SYSTEM ${GMOCK_INCLUDE_DIRS}
@@ -86,21 +84,21 @@ macro (compile_test name path)
 
   add_executable(${TEST_NAME} main ${path})
   target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-  
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
+  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+
   if(WITH_MYSQL)
-      target_link_libraries(${TEST_NAME} ${MYSQL_LIBRARIES})
+      target_link_libraries(${TEST_NAME} mysql::mysql)
   endif()
 
-  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+  add_dependencies(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
+
+  add_dependencies(${TEST_NAME} RoseCommon)
   target_link_libraries(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
-  
-  add_dependencies(${TEST_NAME} gtest)
-  target_link_libraries(${TEST_NAME} ${GMOCK_LIBRARIES})
-  target_link_libraries(${TEST_NAME} ${GTEST_LIBRARIES})
+  target_link_libraries(${TEST_NAME} GTest::GTest)
 
   if (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
@@ -108,12 +106,13 @@ macro (compile_test name path)
   else()
     target_link_libraries(${TEST_NAME} mysqlclient)
   endif()
+
   if (COMMAND cotire)
     cotire(${TEST_NAME})
   endif()
 
-  add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
-  
+  gtest_discover_tests(${TEST_NAME})
+
   generate_symbol_data(${TEST_NAME})
 
   SET_PROPERTY(TARGET ${TEST_NAME}                PROPERTY FOLDER "Tests")
@@ -132,7 +131,7 @@ if(WITH_COVERAGE_REPORTS)
     "${CMAKE_SOURCE_DIR}/src/rosecommon/*/packets/*"
   )
   SETUP_TARGET_FOR_COVERAGE(
-    NAME coverage 
+    NAME coverage
     EXECUTABLE ctest coverage "--output-on-failure"
     EXCLUDES ${COVERAGE_IGNORE_LIST}
   )

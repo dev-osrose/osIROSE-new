@@ -1,11 +1,11 @@
-#include "systems/mapsystem.h"
 #include "cli_changemapreq.h"
-#include "cmapclient.h"
-#include "cmapserver.h"
 #include "srv_changemapreply.h"
 #include "srv_dropitem.h"
 #include "srv_playerchar.h"
+#include "cmapclient.h"
+#include "cmapserver.h"
 #include "systems/chatsystem.h"
+#include "systems/mapsystem.h"
 
 using namespace Systems;
 using namespace RoseCommon;

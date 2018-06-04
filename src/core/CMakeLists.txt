@@ -76,18 +76,31 @@ set(args
 
 GENERATE_SQL_HEADER(LOGS_HEADER ${args})
 
-add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_HEADER} ${OSIROSE_HEADER} ${LOGS_HEADER})
+add_library(${PROJECT} STATIC ${OSIROSE_HEADER} ${LOGS_HEADER} ${SOURCES_BASE} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
+if(NOT LUA_FOUND)
+  add_dependencies(${PROJECT} lua)
+endif()
+
+if(NOT CURL_FOUND)
+  add_dependencies(${PROJECT} curl)
+endif()
+
 if(WITH_CRASH_REPORTS)
-  add_dependencies(${PROJECT} breakpad)
-  target_link_libraries(${PROJECT} ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES})
+  if(NOT BREAKPAD_FOUND)
+    add_dependencies(${PROJECT} breakpad-build)
+  endif()
+  
+  target_link_libraries(${PROJECT} Breakpad::Breakpad)
 endif()
 
 if (WITH_MYSQL)
+  add_dependencies(${PROJECT} sqlpp-mysql)
   target_link_libraries(${PROJECT} sqlpp-mysql)
 endif()
 
+set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()

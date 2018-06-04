@@ -52,7 +52,7 @@ unset(_lua_library_names)
 
 # this is a function only to have all the variables inside go away automatically
 function(set_lua_version_vars)
-    set(LUA_VERSIONS5 5.3 5.2 5.1 5.0)
+    set(LUA_VERSIONS5 5.4 5.3 5.2 5.1 5.0)
 
     if (Lua_FIND_VERSION_EXACT)
         if (Lua_FIND_VERSION_COUNT GREATER 1)
@@ -117,7 +117,7 @@ find_library(LUA_LIBRARY
     ENV LUA_DIR
   PATH_SUFFIXES lib
   PATHS
-  ${EXTERNAL_BINARY_DIR}
+  ${CMAKE_EXTERNAL_LIBRARY_DIR}
   ~/Library/Frameworks
   /Library/Frameworks
   /sw
@@ -131,7 +131,8 @@ if (LUA_LIBRARY)
     # include the math library for Unix
     if (UNIX AND NOT APPLE AND NOT BEOS)
         find_library(LUA_MATH_LIBRARY m)
-        set(LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY}")
+        find_library(LUA_DL_LIBRARY dl)
+        set(LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY};${LUA_DL_LIBRARY}")
     # For Windows and Mac, don't need to explicitly include the math library
     else ()
         set(LUA_LIBRARIES "${LUA_LIBRARY}")
@@ -171,3 +172,9 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Lua
                                   VERSION_VAR LUA_VERSION_STRING)
 
 mark_as_advanced(LUA_INCLUDE_DIR LUA_LIBRARY LUA_MATH_LIBRARY)
+
+if(LUA_FOUND AND NOT TARGET lua::lua)
+    add_library(lua::lua INTERFACE IMPORTED)
+    set_target_properties(lua::lua PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}")
+    set_target_properties(lua::lua PROPERTIES INTERFACE_LINK_LIBRARIES "${LUA_LIBRARIES}")
+endif()

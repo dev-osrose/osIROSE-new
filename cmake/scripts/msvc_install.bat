@@ -1,4 +1,7 @@
 mkdir build
+mkdir build\bin
+mkdir build\bin\%CONFIGURATION%
+mkdir 3rdparty\include
 REM mkdir 3rdparty\build
 REM Robocopy "./3rdparty/spdlog/include" "./3rdparty/include" /E /MT:2 /R:0 /DCOPY:T
 pip install pyparsing

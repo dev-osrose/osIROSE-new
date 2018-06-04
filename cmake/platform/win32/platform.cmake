@@ -3,20 +3,37 @@ add_compiler_flags(-DASIO_STANDALONE)
 
 add_compiler_flags(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS) # Remove all of the really annoying c++17 deprection warnings
 
-if(CMAKE_CFG_INTDIR)
-  set(${CMAKE_CFG_INTDIR} TRUE)
-  set(CMAKE_BUILD_TYPE ${CMAKE_CFG_INTDIR})
+if("${CMAKE_GENERATOR}" MATCHES "Ninja")
+  set(NINJA TRUE)
+elseif("${CMAKE_GENERATOR}" MATCHES "Make")
+  set(MAKEFILES TRUE)
+elseif("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+  set(MSBUILD TRUE)
 endif()
 
+if(MAKEFILES AND "${BUILD_TYPE}" STREQUAL "Release")
+  set(OFFICIAL_BUILD ON CACHE BOOL "" FORCE)
+  set(BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+  set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(WITH_GTEST OFF CACHE BOOL "" FORCE )
+  set(WITH_GMOCK OFF CACHE BOOL "" FORCE )
+  set(DEBUG OFF CACHE BOOL "" FORCE)
+endif()
 
 macro(use_unicode_here)
   add_definitions(-D_UNICODE -DUNICODE)
 endmacro()
 
 if(DEBUG)
-    add_definitions(-DDEBUG -D_DEBUG)
+  add_definitions(-DDEBUG -D_DEBUG)
 else()
-    add_definitions(-DNDEBUG -D_NDEBUG)
+  add_definitions(-DNDEBUG -D_NDEBUG)
+  
+  #This is needed if we want a pdb file to be generated
+  if(WITH_CRASH_REPORTS)
+    add_compile_options(/Zi)
+    add_linker_flags(/DEBUG /OPT:REF /OPT:ICF)
+  endif()
 endif()
 
 add_definitions(-DNOMINMAX)

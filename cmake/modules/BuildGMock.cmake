@@ -20,10 +20,21 @@ else()
     gmock
     GIT_SUBMODULES googletest...
   	SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock
+  	INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR}
     CMAKE_ARGS -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -Dgmock_force_shared_crt=ON -Dgtest_force_shared_crt=ON
     BUILD_BYPRODUCTS ${_byproducts}
     BUILD_IN_SOURCE 1
-    INSTALL_COMMAND "cp <BINARY_DIR>/libgmock.so ${CMAKE_THIRD_PARTY_DIR}/bin"
+    INSTALL_COMMAND "cp <BINARY_DIR>/libgmock.so <INSTALL_DIR>/bin"
+  )
+  
+  ExternalProject_Add_Step(
+    gmock
+    make-dirs
+    DEPENDEES download
+    DEPENDERS configure
+    COMMAND ${CMAKE_COMMAND} -E make_directory <INSTALL_DIR>/include
+    COMMAND ${CMAKE_COMMAND} -E make_directory <INSTALL_DIR>/lib
+    COMMAND ${CMAKE_COMMAND} -E make_directory <INSTALL_DIR>/bin
   )
 endif()
 

@@ -61,7 +61,11 @@ void ParseCommandLine(int argc, char** argv) {
     ("l,log_level", "Logging level (0-9)", cxxopts::value<int>()
       ->default_value("3"), "LEVEL")
     ("c,core_path", "Path to place minidumps when the app crashes", cxxopts::value<std::string>()
+#ifndef _WIN32
       ->default_value("/tmp/dumps"), "CORE")
+#else
+      ->default_value("."), "CORE")
+#endif
     ("h,help",  "Print this help text")
     ;
     
@@ -145,7 +149,7 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport(config.serverData().core_dump_path);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if (auto log = console.lock()) log->info("Starting up server...");

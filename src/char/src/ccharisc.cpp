@@ -152,7 +152,7 @@ bool CCharISC::OnShutdown() {
         result = false;
       }
     } else {
-      auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
+      auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_type(), get_id());
       std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
       for (auto& server : CCharServer::GetISCList()) {
         CCharISC* svr = static_cast<CCharISC*>(server.get());
@@ -161,7 +161,6 @@ bool CCharISC::OnShutdown() {
         }
         if (svr->IsLogin()) {
           svr->send(*packet);
-          break;
         }
       }
     }

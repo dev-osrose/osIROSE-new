@@ -1,19 +1,29 @@
 set(CURL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
+  set(_byproducts
+    ${CURL_INSTALL_DIR}/lib/libcurl_imp.lib
+    ${CURL_INSTALL_DIR}/lib/libcurl-d_imp.lib
+  )
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git
-    GIT_TAG curl-7_59_0
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+    GIT_TAG cb529b713f4882ac65a074ae8d87faa41d19168e
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+	BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 else()
+  set(_byproducts
+    ${CURL_INSTALL_DIR}/lib/libcurl.a
+    ${CURL_INSTALL_DIR}/lib/libcurl.so
+  )
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git
-    GIT_TAG curl-7_59_0
+    GIT_TAG cb529b713f4882ac65a074ae8d87faa41d19168e
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
+    BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 endif()
@@ -26,10 +36,22 @@ ExternalProject_Get_Property(
 set(CURL_INCLUDE_DIRS "${install_dir}/include")
 
 if(WIN32)
-  set(CURL_LIBRARIES "$<$<CONFIG:Release>:${install_dir}/lib/libcurl_imp.lib>$<$<CONFIG:Debug>:${install_dir}/lib/libcurl-d_imp.lib>")
-  set(CURL_INSTALL_LIBS "$<$<CONFIG:Release>:${install_dir}/bin/libcurl.dll>$<$<CONFIG:Debug>:${install_dir}/bin/libcurl-d.dll>")
+  if("${BUILD_TYPE}" STREQUAL "Debug")
+    set(CURL_LIBRARY "${install_dir}/lib/libcurl-d_imp.lib")
+  else()
+    set(CURL_LIBRARY "${install_dir}/lib/libcurl_imp.lib")
+  endif()
+  set(CURL_LIBRARIES "${CURL_LIBRARY}")
+  set(CURL_INSTALL_LIBS "${install_dir}/bin/libcurl.dll")
 else()
-  set(CURL_LIBRARIES "${install_dir}/lib/libcurl.so")
+  set(CURL_LIBRARY "${install_dir}/lib/libcurl.so")
+  set(CURL_LIBRARIES "${CURL_LIBRARY}")
   set(CURL_INSTALL_LIBS "${install_dir}/lib/libcurl.so")
 endif()
 
+if(NOT TARGET CURL::CURL)
+    add_library(CURL::CURL INTERFACE IMPORTED)
+    add_dependencies(CURL::CURL curl)
+    set_target_properties(CURL::CURL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
+    set_target_properties(CURL::CURL PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
+endif()

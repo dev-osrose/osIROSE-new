@@ -8,7 +8,7 @@ git submodule update --init --recursive
 
 if [ ! -d cmake_app ]; then
   mkdir cmake_app
-  wget --no-check-certificate --quiet -O - https://cmake.org/files/v3.9/cmake-3.9.4-Linux-x86_64.tar.gz | tar --strip-components=1 -xz -C cmake_app
+  wget --no-check-certificate --quiet -O - https://cmake.org/files/v3.11/cmake-3.11.2-Linux-x86_64.tar.gz | tar --strip-components=1 -xz -C cmake_app
 else
   echo "cmake installed already"
 fi
