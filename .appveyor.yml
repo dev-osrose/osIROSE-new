@@ -60,7 +60,7 @@ build_script:
 - cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
-- cmd: md %APPVEYOR_BUILD_FOLDER%/package
+- cmd: mkdir %APPVEYOR_BUILD_FOLDER%/package
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/package/scripts *.lua"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.exe"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.dll"
