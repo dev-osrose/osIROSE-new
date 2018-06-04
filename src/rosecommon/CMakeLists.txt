@@ -195,8 +195,14 @@ if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
 endif()
 
+add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)
-target_link_libraries(${PROJECT} lua)
+
+if(NOT LUA_FOUND)
+  add_dependencies(${PROJECT} lua)
+endif()
+target_link_libraries(${PROJECT} lua::lua)
+
 
 if (COMMAND cotire)
   cotire(${PROJECT})

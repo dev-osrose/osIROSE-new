@@ -15,6 +15,7 @@
 #ifndef __SRV_CHANGEMAP_H__
 #define __SRV_CHANGEMAP_H__
 
+#include "dataconsts.h"
 #include "epackettype.h"
 #include "crosepacket.h"
 #include "packetfactory.h"

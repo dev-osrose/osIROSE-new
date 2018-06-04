@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "cnetwork_asio.h"
 #include "nodeclient.h"
 #include "packetfactory.h"
 #include "croseserver.h"
@@ -30,34 +31,55 @@ NodeClient::NodeClient()
     access_rights_( 0 ),
     login_state_( eSTATE::DEFAULT ),
     userid_( 0 ),
-    session_id_( 0 ) {}
+    session_id_( 0 ),
+    server_connection_() {}
 
 NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
   : CRoseClient( move( _sock ) ),
     access_rights_( 0 ),
     login_state_( eSTATE::DEFAULT ),
     userid_( 0 ),
-    session_id_( 0 ) {}
+    session_id_( 0 ),
+    server_connection_(std::make_unique<Core::CNetwork_Asio>()) {}
 
-bool NodeClient::ServerSelect(
+bool NodeClient::ServerSelectReply(
   std::unique_ptr<SrvSrvSelectReply> P) {
 
   auto& config = Core::Config::getInstance();
   auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
     P->result(), P->sessionId(), P->cryptVal(),
     config.serverData().ip, config.loginServer().clientPort); // Replace this with MY current ip address
-  this->send( *packet );
+  send( *packet );
   return true;
 }
 
 bool NodeClient::HandlePacket(uint8_t* _buffer) {
   logger_->trace( "NodeClient::HandlePacket start" );
   switch ( CRosePacket::type( _buffer ) ) {
+    default:
+    {
+      // Send the packet to the server
+      auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
+      std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
+      send( std::move(res), true );
+      return true;
+    }
+  }
+}
+
+bool NodeClient::HandleServerPacket(uint8_t* _buffer) {
+  logger_->trace( "NodeClient::HandleServerPacket start" );
+  switch ( CRosePacket::type( _buffer ) ) {
     case ePacketType::PAKLC_SRV_SELECT_REPLY:
-      return ServerSelect(
+      return ServerSelectReply(
         getPacket<ePacketType::PAKLC_SRV_SELECT_REPLY>( _buffer ) );
     default:
-      return CRoseClient::HandlePacket( _buffer );
+    {
+      auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
+      std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
+      send( std::move(res), false );
+      return true;
+    }
   }
 }
 

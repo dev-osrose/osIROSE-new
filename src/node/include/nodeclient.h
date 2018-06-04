@@ -33,9 +33,10 @@ class NodeClient : public RoseCommon::CRoseClient {
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual bool HandleServerPacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
-  bool ServerSelect(std::unique_ptr<RoseCommon::SrvSrvSelectReply> P);
+  bool ServerSelectReply(std::unique_ptr<RoseCommon::SrvSrvSelectReply> P);
 
   enum class eSTATE {
     DEFAULT,
@@ -48,6 +49,7 @@ class NodeClient : public RoseCommon::CRoseClient {
   eSTATE login_state_;
   uint32_t userid_;
   uint32_t session_id_;
+  CRoseSocket server_connection_;
 };
 
 #endif
