@@ -51,7 +51,7 @@ void CheckUser() {
 }
 
 void ParseCommandLine(int argc, char** argv) {
-  cxxopts::Options options(argv[0], "osIROSE login server");
+  cxxopts::Options options(argv[0], "osIROSE map server");
 
   try {
     std::string config_file_path = "";
