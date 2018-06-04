@@ -32,7 +32,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
   e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
   auto basic = e.assign<BasicInfo>();
   basic->ownerId_ = creator.component<BasicInfo>()->id_;
-  basic->id_ = 5000 + nextId_++;  // FIXME: find a better solution than a hard coded one
+  basic->id_ = id_manager_.get_free_id();
   itemToEntity_[basic->id_] = e;
   return e;
 }
@@ -65,6 +65,7 @@ void EntitySystem::update(double dt) {
       auto basic = it.component<BasicInfo>();
       nameToEntity_.erase(basic->name_);
       idToEntity_.erase(basic->id_);
+      id_manager_.release_id(basic->id_);
       it.destroy();
     }
   }
@@ -101,7 +102,7 @@ bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePack
   return false;
 }
 
-Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id) {
+Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::CharacterTable characters{};
   Core::InventoryTable inventoryTable{};
@@ -120,7 +121,7 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium, uint32_t id)
   const auto& charRow = charRes.front();
 
   entity.assign<Position>(charRow);
-  entity.assign<BasicInfo>(charRow, id);
+  entity.assign<BasicInfo>(charRow, id_manager_.get_free_id());
   entity.assign<Stats>(charRow);
   entity.assign<AdvancedInfo>(charRow);
   entity.assign<CharacterGraphics>(charRow);
