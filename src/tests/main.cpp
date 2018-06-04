@@ -14,7 +14,7 @@ using ::testing::UnitTest;
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
   
-  auto crash_reporter = Core::CrashReport("./tmp/dumps");
+  Core::CrashReport crash_reporter("./tmp/dumps");
 
   UnitTest &unit_test = *UnitTest::GetInstance();
   Core::CLog::SetLevel(spdlog::level::trace);

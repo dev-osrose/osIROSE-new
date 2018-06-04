@@ -231,7 +231,7 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
     
     Core::Config& config = Core::Config::getInstance();
-    auto crash_logger = Core::CrashReport(config.serverData().core_dump_path);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
