@@ -22,11 +22,20 @@ if(WIN32)
         ${GTEST_INSTALL_DIR}/lib/gtestd.lib
         ${GTEST_INSTALL_DIR}/lib/gmockd.lib
         
+        ${GTEST_INSTALL_DIR}/lib/gtest.lib
+        ${GTEST_INSTALL_DIR}/lib/gmock.lib
+        
         ${GTEST_INSTALL_DIR}/bin/gtestd.dll
         ${GTEST_INSTALL_DIR}/bin/gmockd.dll
+        
+        ${GTEST_INSTALL_DIR}/bin/gtest.dll
+        ${GTEST_INSTALL_DIR}/bin/gmock.dll
       )
     else()
       set(_byproducts
+        ${GTEST_INSTALL_DIR}/lib/gtestd.lib
+        ${GTEST_INSTALL_DIR}/lib/gmockd.lib
+        
         ${GTEST_INSTALL_DIR}/lib/gtest.lib
         ${GTEST_INSTALL_DIR}/lib/gmock.lib
       )
