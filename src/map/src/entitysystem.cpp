@@ -202,7 +202,7 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
       toDelete.emplace_back(row.slot);  // FIXME: that should never happen
     else if (!items[row.slot])
       toDelete.emplace_back(row.slot);
-    else if (items[row.slot] != Item(row, get<Systems::InventorySystem>()))
+    else if (items[row.slot] != Item(row))
       toUpdate.emplace_back(row.slot);
     modified.insert(row.slot);
   }
