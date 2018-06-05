@@ -13,12 +13,12 @@ void explore(sol::state& state, fs::path path) {
   for (auto &item : fs::directory_iterator(path)) {
     if (item.is_directory()) {
       explore(state, item.path());
-    } else if (item.is_regular_file()) {
+    } else if (item.is_regular_file() && item.path().extension() == ".lua") {
       try {
-        state.script(item.string());
-        logger->info("Loaded script '{}'", item.script());
+        state.script(item.path().string());
+        logger->info("Loaded script '{}'", item.path().string());
       } catch (const sol::error& e) {
-        logger->error("Lua error while loading script '{}': {}", item.string(), e.what());
+        logger->error("Lua error while loading script '{}': {}", item.path().string(), e.what());
       }
     }
   }
