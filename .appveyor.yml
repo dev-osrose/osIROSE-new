@@ -72,7 +72,7 @@ after_build:
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-- SET PATH=PROJECT_PATH%\3rdparty\bin;%PATH%
+- SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
 - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
 - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
 - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
