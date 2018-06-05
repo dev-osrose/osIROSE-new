@@ -110,6 +110,7 @@ class Config {
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;
     uint16_t mapId = 0;
+    std::string scriptsPath = "scripts";
     uint8_t logLevel = 2;
   };
   struct Configuration {
@@ -138,7 +139,7 @@ VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
 VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, logLevel);
+VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, scriptsPath, logLevel);
 VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer);
 
 #endif /* !_CONFIG_H_ */
