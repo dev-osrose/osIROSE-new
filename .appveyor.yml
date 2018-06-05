@@ -34,7 +34,7 @@ environment:
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
   BREAKPAD_SERVER: 
-    secure: r8/D8WoMC6x/7MIkXxLkscu822k2CwUafwZSgMpuzAE=
+    secure: bBamT/tFSX89djwel0YeWZZWAmu+kULX8NCKBHZ6M+Q=
 
 matrix:
   fast_finish: true
