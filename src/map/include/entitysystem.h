@@ -83,6 +83,14 @@ class EntitySystem {
   Entity getItemEntity(uint32_t id);
 
   EntityManager& getEntityManager();
+ 
+  void create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z,
+                      int map_id, float x, float y, float z, float angle,
+                      float x_scale, float y_scale, float z_scale) {}
+  void create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {}
+  void create_spawner(std::string alias, int mob_id, int mob_count,
+                     int spawner_limit, int spawner_interval, int spawner_range,
+                     int map_id, float x, float y, float z) {}
 
  private:
   EntityManager entityManager_;
