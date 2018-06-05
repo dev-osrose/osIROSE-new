@@ -339,6 +339,7 @@ notifications:
 
 after_success:
   - mkdir ${TRAVIS_BUILD_DIR}/public
+  - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
   - curl -F symfile=@LoginServer.sym $BREAKPAD_SERVER/symfiles
   - curl -F symfile=@CharServer.sym $BREAKPAD_SERVER/symfiles
   - curl -F symfile=@MapServer.sym $BREAKPAD_SERVER/symfiles
