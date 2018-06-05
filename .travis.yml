@@ -12,6 +12,7 @@ env:
   - secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="
   - secure: "JuSus/BqBJ2RTj7oJ3tn6dfFqnNWmWdM6/+PBId8YT52fUJTQp0eLmYbqZhq04OFvCKLgzeiObggfFZk5VOXAB/bfhlQEKSprso6C0WxKzFnftr085rcr5mW2ux+RSWTeE9KT1bpsjtpSrQTOniQhPGD6u704DdIzKuOnSngU8TXRAHFujXtUA0SHU8Oft8OpysaTDVWbFehBemg6BeOssklw2LrScGT3AWm8+qNdyAV+ynko4s8CzdOJqueCNWnkYFQyNtWN67uasveg3j+zgOfstjgyYSEoYh6deCNy8BjmWzX2tUkpzxh7h4w/VlyVjvyMG524UdMDmFZNNo7CMn1/qla6zjli3xDV/kk2Dfzj1JCn2WsesOY8+p4bdYoUU4lR0PuYraEuBAOCiVb3V7VLzU5FyV3clY8+MwifVHvNLxUbyD2ygZfPrS8LQJ/7jJSPeEARUIngvNkY9L8Jr6olw3Xg7DoDHLWAFBMtBi/sZG3CvXDyeIUX8rkh4hY6QlnO/xrql5KxDupsAwqj+rMdhzYeCnyRY6HvqBIoIrpi47uPGutxiIFgjrzwr28eL+XrrkwHfbM+pFDUITdWjm79/EyEPgGsEMM8IxXcpSGNmMDDhpHu1oZE4L3gdKli6hdS5fo6CEDV3x1nvk/SsY52WhEWIT/RwQPl4qL3YQ="
   - secure: "tvFQn4BjO/DG0yE5NEdZsmY73qsxhN5CsXl+C4GkCzz8KgtOGyVFij5R18+IP3X44CKOz54dLy9pE3lCY2v9wvvLnnv1hV3kH2EvV5Ccv2zw8jozz7OpxK2GMSoqPvHK/FAEo3mbuwhnOS2fEV3+hWSF9/piwSAmFhnjH7VHZnnx8yVfpzEl0Oq4JLM1fEx400Z+Glvn9uDfjY8cvzRVp8HqHTuPNNRLmNvGPAYqstpKAxEh6Tml6eUrCxbndbcvtTt7vlshW9OuU5LVh2Y63ftZpsKCWfpu5K4MfgD4oLineo+2zz3jfv/Hs8vTVLzRQph6OkxLiZBqUgUyoZzZ/r4bMQbbS6wmbWwZOaIQyjFRr68FZ/yW4JJ/KkUhMB3LA7it2rNhhI6+jTQqvLO+VAucuUmFJ0xIsbULBTo7cyL7X40rDLFxhXNLTjcqPT1nUzKCrmFxrDh7utegggN0UtXVAWl6KN8f003TVlunM+BrB8r08kX/JU0modFzXS0sMDF/tuzMd9dd/R4CtoHAuP20J7LZ81EA8IbKJ5j6dsc8l+Ti5/LwLrEtxXnD6MSSNDoSZszeyLA78+zGzKLNNvHGdnHTFgFd3Q/gVYJgH6AWAVCJeSnwXbI78azIFohPwsT/JsJS092Ck6rgRKpbZNNmOVfpn6WsXoQBrLpcg0A="
+  - secure: "LlExqKgh62XHAgZEECsTueF5eV5Hz3T9A32C80L+Y+qN4S/n7lggAiIl5n/WM0Uinl+fLRuP50w9jG58tpzzl6NEcRSYWyOsZduV1T66Qnd5PVbIgvzmvLJLigQTvdLT4OLnfaEKrQGSdoiXEAbiME7KCTvSOQxDdyGOMeL3xDDyIeGf6tvkmhK8xtoEy+mbXT9dCQb4BgsmMoKnnxR4X+6WsMcavEN0QnKfupQYf5kwSNvpj4GY2+OhwUgs/jRp1m4PYPvKNTjURQ5v2rHWXmtqM0uTs8SAvlfjAUSnN3S2czUb3fRGKJle23X6Ei34A9N2+fOGUji7Hp15JvuDycU+WlBKt9NfBloss2nI/eUXsPIMjmvbNdp2+2tMS7hpa0tppZSJTtgzGyiNSzfsficrbAeoK4XLYQjLFFScomx3OrfN9hfCcjWKTeHwalxO1IV6OOH/lRLV9dAFEi9D9x+F3qYl3cK2Q7TlkPOcPDnc+BYNyd6ymTJTGZPd7NsM2NX/96IW7ZdN6QZS5rC3sKx9E2WteDU/2HT/YH2EaCEAz+0RC8SdMXS3qsNVvPfnMSHoPRWIdYWSFJOzukTi21jjTIlayO4vxBenoG7ALTrK+ZvA74BtkMijFE9lYRoAqZfN91Js8MW+baIn4xCDBLue814s5zqhMdh8SQLfM8Y="
   # start artifacts
   - ARTIFACTS_BUCKET=osirose-builds
   - secure: "tDTFSzBd6ASR8BM/pZMLMQy1jjlbxA81WaLfZ70OgTZE6KZ+X+mSdu/i5SyXzhdZSl62tVDo2jIjGupGLtzWjMtRJiN2zNHscYS+V4BbSfk97zKXs+fH96aDlGJBIqJSxT3aRqgvTCLFXzEWyZEQxzYX7u9I5P0ftMBOalkxfcU1JrBerJBdsXLFuGjKfyGfCOzvRBCjzpAhKHTsD4ecJyqqTk3XqDqE4P+8ibJXw0fWj6D0K2XTNq4krol+Vmcw2qZEGp3gVAy6blOM1ggopFRr/gTZjyA6Q/twnS07DH7w1v2RnCMjc12rTlR8usVrHYo73FUO47PMuWy/UhOhziuJy9Zu6GxcenRS/JmVYVY3cDcuczkrHX4JIn/qtwNROd8vhos+rOMFv04KsZYOkILrJmSmrwELldTw1/VkKMuk7rjcS+lcGbm2K+XZ9xUXefNGNnYbWlpQ6v8anAgOFU0/eOY3y2PknhH/2tUxX+hHq1AFMv63cGkSoRLPSXKz8gdKKN1dEIb8/ZLrz5glvv6rsLRqfvO6K3U1jyM5Sb2YCpIRd2x8CEv09QwVHWVjXdmBSVURdfY3p41G16wvMT3GCH7/VCJ6rGz1WmFzMEDX2ua5P+SFXagL0iBZNmF1HWVxkpwE1MGPkq/WlpSw//cY+2PNBktDjClluzE3w9s="
@@ -172,9 +173,15 @@ jobs:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin
-        - cd ..
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin ${TRAVIS_BUILD_DIR}/scripts
+        - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
+        - curl -F symfile=@LoginServer.sym $BREAKPAD_SERVER/symfiles
+        - curl -F symfile=@CharServer.sym $BREAKPAD_SERVER/symfiles
+        - curl -F symfile=@MapServer.sym $BREAKPAD_SERVER/symfiles
+        - curl -F symfile=@NodeServer.sym $BREAKPAD_SERVER/symfiles
+        - rm *.sym
+        - cd ${TRAVIS_BUILD_DIR}
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include scripts
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *clanginit
@@ -340,7 +347,7 @@ notifications:
 #  - mkdir ${TRAVIS_BUILD_DIR}/public
 #  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
 ##  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
-#  
+  
 after_failure:
   - mkdir ${TRAVIS_BUILD_DIR}/public
   - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/3rdparty ${TRAVIS_BUILD_DIR}/build ${TRAVIS_BUILD_DIR}/src ${TRAVIS_BUILD_DIR}/Database /tmp/dumps

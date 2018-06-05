@@ -70,6 +70,8 @@ endif()
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon)
 
+set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+
 generate_symbol_data(${PROJECT})
 if (COMMAND cotire)
   cotire(${PROJECT})

@@ -110,10 +110,11 @@ void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+
+    Core::AccountTable table{};
+    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
-  Core::AccountTable table{};
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
-  conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   logger_->trace("CMapClient::OnDisconnected() end");
 }
 
