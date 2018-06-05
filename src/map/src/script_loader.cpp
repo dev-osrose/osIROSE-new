@@ -1,4 +1,5 @@
 #include "script_loader.h"
+#include "logconsole.h"
 
 #include <sol.hpp>
 
@@ -8,11 +9,17 @@ namespace fs = std::filesystem;
 namespace {
 
 void explore(sol::state& state, fs::path path) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
   for (auto &item : fs::directory_iterator(path)) {
     if (item.is_directory()) {
       explore(state, item.path());
     } else if (item.is_regular_file()) {
-      state.script(item.string());
+      try {
+        state.script(item.string());
+        logger->info("Loaded script '{}'", item.script());
+      } catch (const sol::error& e) {
+        logger->error("Lua error while loading script '{}': {}", item.string(), e.what());
+      }
     }
   }
 }
