@@ -174,14 +174,14 @@ jobs:
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin ${TRAVIS_BUILD_DIR}/scripts
-        - cd ..
         - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
         - curl -F symfile=@LoginServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@CharServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@MapServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@NodeServer.sym $BREAKPAD_SERVER/symfiles
         - rm *.sym
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include
+        - cd ${TRAVIS_BUILD_DIR}
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include scripts
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *clanginit
