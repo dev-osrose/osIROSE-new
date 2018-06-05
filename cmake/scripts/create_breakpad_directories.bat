@@ -12,7 +12,7 @@ set debug_id=%4
 set final_path=%root_path%/%debug_id%/
 
 md "%final_path%"
-mv "%sym_path%" "%final_path%"
+copy "%sym_path%" "%final_path%"
 exit 0
 
 :eof

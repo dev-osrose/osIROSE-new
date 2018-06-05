@@ -33,6 +33,8 @@ environment:
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
+  BREAKPAD_SERVER: 
+    secure: r8/D8WoMC6x/7MIkXxLkscu822k2CwUafwZSgMpuzAE=
 
 matrix:
   fast_finish: true
@@ -69,6 +71,12 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+- cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+- SET PATH=PROJECT_PATH%\3rdparty\bin;%PATH%
+- curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
+- curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
+- curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
+- curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
 
 artifacts:
 - path: win32-$(appveyor_build_version)-$(configuration).zip

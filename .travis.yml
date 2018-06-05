@@ -336,11 +336,15 @@ notifications:
   slack:
     secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
 
-#after_success:
-#  - mkdir ${TRAVIS_BUILD_DIR}/public
-#  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
-##  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
-#  
+after_success:
+  - mkdir ${TRAVIS_BUILD_DIR}/public
+  - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
+  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
+#  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
+  
 after_failure:
   - mkdir ${TRAVIS_BUILD_DIR}/public
   - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/3rdparty ${TRAVIS_BUILD_DIR}/build ${TRAVIS_BUILD_DIR}/src ${TRAVIS_BUILD_DIR}/Database /tmp/dumps

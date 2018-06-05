@@ -71,9 +71,9 @@ function(generate_symbol_data target)
       add_custom_command(TARGET ${target}
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/${target}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/symbols/${target}.pdb
         COMMAND ${BREAKPAD_DUMP_SYMS_EXEC} $<TARGET_FILE:${target}> > ${TARGET_PATH}
-        COMMAND ${CMAKE_SCRIPT_PATH}/create_breakpad_directories.bat ${CMAKE_BINARY_DIR}/bin/symbols/${target} ${TARGET_PATH}
+        COMMAND ${CMAKE_SCRIPT_PATH}/create_breakpad_directories.bat ${CMAKE_BINARY_DIR}/bin/symbols/${target}.pdb ${TARGET_PATH}
         VERBATIM
       )# TODO create the correct breakpad directories for the symbols
     endif()
