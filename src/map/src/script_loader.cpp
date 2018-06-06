@@ -13,10 +13,9 @@ logger_(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()),
 path_(path), map_id_(map_id) {
     state_.open_libraries(); //FIXME: check if we need all libs
 
-    state_.set_function("include", this->reload_scripts);
-    state_.set_function("warp_gate", entity_system->create_warpgate);
-    state_.set_function("npc", entity_system->create_npc);
-    state_.set_function("mob", entity_system->create_spawner);
+    state_.set_function("include", [](std::string path) {
+        load_script(path);
+    });
 }
 
 void ScriptLoader::reload_scripts() {
@@ -24,29 +23,49 @@ void ScriptLoader::reload_scripts() {
 }
 
 void ScriptLoader::reload_npcs() {
-    for (auto& file : npc_files_)
-        file.replace_entities(reload_scripts(file.path()));
+    for (auto& [file, entities] : npc_files_) {
+        entity_system_->bulk_destroy(entities);
+        entities.clear();
+        load_script(file.path_);
+    }
 }
 
 void ScriptLoader::reload_warpgates() {
-    for (auto& file : warpgate_files_)
-        file.replace_entities(reload_scripts(file.path()));
+    for (auto& [file, entities] : warpgate_files_) {
+        entity_system_->bulk_destroy(entities);
+        entities.clear();
+        load_script(file.path_);
+    }
 }
 
-void ScriptLoader::reload_spawners() {
-    for (auto& file : spawner_files_)
-        file.replace_entities(reload_scripts(file.path()));
+void ScriptLoader::load_spawners() {
+    for (auto& [file, entities] : spawner_files_) {
+        entity_system_->bulk_destroy(entities);
+        entities.clear();
+        load_script(file.path_);
+    }
 }
 
-void ScriptLoader::reload_scripts(std::string const& path) {
+void ScriptLoader::load_script(std::string const& path) {
     try {
-        if (auto it = npc_files_.find(File(path)); it != npc_files_.end())
-            entity_system_->bulk_destroy(it->entities());
-        if (auto it = warpgate_files_.find(File(path)); it != warpgate_files_.end())
-            entity_system_->bulk_destroy(it->entities());
-        if (auto it = spawner_files_.find(File(path)); it != spawner_files_.end())
-            entity_system_->bulk_destroy(it->entities());
-        state_.script(path);
+        sol::environment env{state_, sol::create, state_.globals()};
+        
+        auto warpgate_file = warpgate_files_.insert(File{path}, {});
+        env.set_function("warp_gate", [warpgate_file]() {
+            wargate_file->second.push_back(entity_system_->create_warpgate());
+        });
+        
+        auto npc_file = npc_files_.insert(File{path}, {});
+        env.set_function("npc", [npc_file]() {
+            npc_file->second.push_back(entity_system_->create_npc());
+        });
+        
+        auto spawner_file = spawner_files_.insert(File{path}, {});
+        env.set_function("mob", [spawner_file]() {
+            spawner_file->second.push_back(entity_system->create_spawner());
+        });
+        
+        state_.script(path, env);
         logger_->info("Finished (re)loading scripts from '{}'", path);
     } catch (const sol::error& e) {
         logger_->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
