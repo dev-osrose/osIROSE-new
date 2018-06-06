@@ -10,43 +10,22 @@
 namespace LuaScript {
 
 class ScriptLoader {
-    class File {
-        public:
-            File() = default;
-            File(std::string const& path);
-
-            bool has_filename(std::string const& filename) const noexcept {
-                return filename_ == filename;
-            }
-
-            bool operator==(File const& other) const noexcept {
-                return path_ == other.path_;
-            }
-
-            const std::string& path() const noexcept { return path_; }
-
-            void replace_entities(std::set<Entity> const& s) {
-                entities_ = s;
-            }
-
-            const std::set<Entity>& entities() const noexcept {
-                return entities_;
-            }
-
-        private:
-            std::string filename_;
-            std::string path_;
-            std::set<Entity> entities_;
+    struct File {
+        File() = default;
+        File(std::string const& path);
+        
+        std::string filename_;
+        std::string path_;
     };
 
     public:
-        ScriptLoader(std::shared_ptr<EntitySystem> entity_system,uint16_t map_id, std::string const& path);
+        ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path);
 
-        void reload_scripts();
-        void reload_scripts(std::string const& path);
-        void reload_npcs();
-        void reload_warpgates();
-        void reload_spawners();
+        void load_script();
+        void load_script(std::string const& path);
+        void load_npcs();
+        void load_warpgates();
+        void load_spawners();
 
     private:
         std::shared_ptr<EntitySystem> entity_system_;
@@ -55,11 +34,9 @@ class ScriptLoader {
         sol::state state_;
         uint16_t map_id_;
 
-        std::set<File> npc_files_;
-        std::set<File> warpgate_files_;
-        std::set<File> spawner_files_;
-    
-        File current_file_;
+        std::unordered_map<File, std::vector<Entity>> npc_files_;
+        std::unordered_map<File, std::vector<Entity>> warpgate_files_;
+        std::unordered_map<File, std::vector<Entity>> spawner_files_;
 };
 
 }
