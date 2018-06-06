@@ -12,6 +12,7 @@ namespace LuaScript {
 class ScriptLoader {
     class File {
         public:
+            File() = default;
             File(std::string const& path);
 
             bool has_filename(std::string const& filename) const noexcept {
@@ -57,6 +58,8 @@ class ScriptLoader {
         std::set<File> npc_files_;
         std::set<File> warpgate_files_;
         std::set<File> spawner_files_;
+    
+        File current_file_;
 };
 
 }
