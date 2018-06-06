@@ -48,25 +48,42 @@ void ScriptLoader::load_spawners() {
 
 void ScriptLoader::load_script(std::string const& path) {
     try {
+        File file = File{path};
         sol::environment env{state_, sol::create, state_.globals()};
         
-        auto [warpgate_file, ok] = warpgate_files_.insert(File{path}, {});
-        env.set_function("warp_gate", [warpgate_file](std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, int map_id, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
-            wargate_file->second.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
+        auto warpgate_file = warpgate_files_.find(files);
+        std::vector<Entity> warpgates;
+        if (warpgate_file != warpgate_files_.end()) {
+            warpgates = std::move(warpgate_file->second);
+        }
+        env.set_function("warp_gate", [warpgates](std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, int map_id, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
+            warpgates.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
         });
         
-        auto [npc_file, ok] = npc_files_.insert(File{path}, {});
+        auto npc_file = npc_files_.find(file);
+        std::vector<Entity> npcs;
+        if (npc_file != npc_files_.end()) {
+            npcs = std::move(npc_file->second);
+        }
         env.set_function("npc", [npc_file](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
             npc_file->second.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
-        auto [spawner_file, ok] = spawner_files_.insert(File{path}, {});
-        env.set_function("mob", [spawner_file](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
-            spawner_file->second.push_back(entity_system->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
+        auto spawner_file = spawner_files_.find(file);
+        std::vector<Entity> spawners;
+        if (spawner_file != spawner_files_.end()) {
+            spawners = std::move(spawners_file->second);
+        }
+        env.set_function("mob", [spawners](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+            spawners.push_back(entity_system->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
         
         state_.script(path, env);
         logger_->info("Finished (re)loading scripts from '{}'", path);
+        
+        if (warpgates.size()) warpgate_files_.insert_or_assign(std::make_pair(file, std::move(warpgates)));
+        if (npcs.size()) npc_files_.insert_or_assign(std::make_pair(file, std::move(npcs)));
+        if (spawners.size()) spawner_files_.insert_or_assign(std::make_pair(file, std::move(spawners)));
     } catch (const sol::error& e) {
         logger_->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
     }
