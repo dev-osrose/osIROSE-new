@@ -26,6 +26,10 @@ class ScriptLoader {
         void load_npcs();
         void load_warpgates();
         void load_spawners();
+    
+        using warpgate_args = std::tuple<std::string, int, float, float, float, int, float, float, float, float, float, float, float>;
+        using npc_args = std::tuple<std::string, int, int, float, float, float, float>;
+        using spawner_args = std::tuple<std::stringm int, int, int, int, int, int, float, float, float>;
 
     private:
         std::shared_ptr<EntitySystem> entity_system_;
