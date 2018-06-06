@@ -28,7 +28,6 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
-#include <set>
 #include "crosepacket.h"
 #include "item.h"
 #include "systems/system.h"
@@ -86,7 +85,7 @@ class EntitySystem {
                      int spawner_limit, int spawner_interval, int spawner_range,
                      int map_id, float x, float y, float z);
 
-  void bulk_destroy(const std::set<Entity>& s);
+  void bulk_destroy(const std::vector<Entity>& s);
 
  private:
   EntityManager entityManager_;
