@@ -75,7 +75,7 @@ void ScriptLoader::load_script(std::string const& path) {
             spawners = std::move(spawners_file->second);
         }
         env.set_function("mob", [spawners](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
-            spawners.push_back(entity_system->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
+            spawners.push_back(entity_system_->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
         
         state_.script(path, env);
