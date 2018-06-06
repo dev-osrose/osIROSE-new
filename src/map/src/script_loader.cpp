@@ -46,36 +46,24 @@ void ScriptLoader::load_spawners() {
     }
 }
 
-namespace {
-
-template <typename Func, typename Args...>
-constexpr void caller(std::vector<Entity>& entities, EntitySystem& entity_system, Args&&... args) {
-    entities.push_back(entity_system.*Func(args...);
-}
-
-template <typename Func, typename Tuple, std::size_t... Is>
-constexpr void factory_helper(sol::environment& env, std::string const& name, std::vector<Entity>& e, EntitySystem& s, Tuple tuple, std::index_sequence<Is...>) {
-    env.set_function(name, caller<Func, decltype(std::get<Is>(tuple))...>, e, s); 
-}
-
-template <typename Func, typename... Args>
-constexpr void factory(sol::environment& env, std::string const& name, std::vector<Entity>& e, EntitySystem& s, std::tuple<Args...> tuple) {
-    factory_helper<Func>(env, name, e, s, tuple, std::index_sequence_for<Args...>{});
-
-}
-
 void ScriptLoader::load_script(std::string const& path) {
     try {
         sol::environment env{state_, sol::create, state_.globals()};
         
         auto warpgate_file = warpgate_files_.insert(File{path}, {});
-        factory<EntitySystem::create_warpgate>(env, "warp_gate", warpgate_file->second, *entity_system_, ScriptLoader::warpgate_args{});
+        env.set_function("warp_gate", [warpgate_file](std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, int map_id, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
+            wargate_file->second.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
+        });
         
         auto npc_file = npc_files_.insert(File{path}, {});
-        factory<EntitySystem::create_npc>(env, "npc", npc_file->second, *entity_system_, ScriptLoader::npc_args{});
-  
+        env.set_function("npc", [npc_file](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
+            npc_file->second.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
+        });
+        
         auto spawner_file = spawner_files_.insert(File{path}, {});
-        factory<EntitySystem::create_spawner>(env, "spawner", spawner_file->second, *entity_system_, ScriptLoader::spawner_args{});
+        env.set_function("mob", [spawner_file](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+            spawner_file->second.push_back(entity_system->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
+        });
         
         state_.script(path, env);
         logger_->info("Finished (re)loading scripts from '{}'", path);
