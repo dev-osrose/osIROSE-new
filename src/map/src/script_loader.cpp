@@ -13,16 +13,16 @@ logger_(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()),
 path_(path), map_id_(map_id) {
     state_.open_libraries(); //FIXME: check if we need all libs
 
-    state_.set_function("include", [](std::string path) {
+    state_.set_function("include", [this](std::string path) {
         load_script(path);
     });
 }
 
-void ScriptLoader::reload_scripts() {
+void ScriptLoader::load_script() {
     reload_scripts(path_);
 }
 
-void ScriptLoader::reload_npcs() {
+void ScriptLoader::load_npcs() {
     for (auto& [file, entities] : npc_files_) {
         entity_system_->bulk_destroy(entities);
         entities.clear();
@@ -30,7 +30,7 @@ void ScriptLoader::reload_npcs() {
     }
 }
 
-void ScriptLoader::reload_warpgates() {
+void ScriptLoader::load_warpgates() {
     for (auto& [file, entities] : warpgate_files_) {
         entity_system_->bulk_destroy(entities);
         entities.clear();
