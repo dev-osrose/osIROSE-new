@@ -43,6 +43,7 @@ enum class log_type {
   DATABASE,
   SYSTEM,
   ASSERT,
+  SCRIPTLOADER,
 };
 
 class CLog {

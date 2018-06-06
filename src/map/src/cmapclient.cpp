@@ -193,5 +193,5 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
 
 bool CMapClient::is_nearby(const CRoseClient* _otherClient) const {
   logger_->trace("CMapClient::is_nearby()");
-  return EntitySystem::isNearby(entity_, _otherClient->getEntity());
+  return entitySystem_->isNearby(entity_, _otherClient->getEntity());
 }
