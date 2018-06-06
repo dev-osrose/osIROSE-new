@@ -46,24 +46,36 @@ void ScriptLoader::load_spawners() {
     }
 }
 
+namespace {
+
+template <typename Func, typename Args...>
+constexpr void caller(std::vector<Entity>& entities, EntitySystem& entity_system, Args&&... args) {
+    entities.push_back(entity_system.*Func(args...);
+}
+
+template <typename Func, typename Tuple, std::size_t... Is>
+constexpr void factory_helper(sol::environment& env, std::string const& name, std::vector<Entity>& e, EntitySystem& s, Tuple tuple, std::index_sequence<Is...>) {
+    env.set_function(name, caller<Func, decltype(std::get<Is>(tuple))...>, e, s); 
+}
+
+template <typename Func, typename... Args>
+constexpr void factory(sol::environment& env, std::string const& name, std::vector<Entity>& e, EntitySystem& s, std::tuple<Args...> tuple) {
+    factory_helper<Func>(env, name, e, s, tuple, std::index_sequence_for<Args...>{});
+
+}
+
 void ScriptLoader::load_script(std::string const& path) {
     try {
         sol::environment env{state_, sol::create, state_.globals()};
         
         auto warpgate_file = warpgate_files_.insert(File{path}, {});
-        env.set_function("warp_gate", [warpgate_file]() {
-            wargate_file->second.push_back(entity_system_->create_warpgate());
-        });
+        factory<EntitySystem::create_warpgate>(env, "warp_gate", warpgate_file->second, *entity_system_, ScriptLoader::warpgate_args{});
         
         auto npc_file = npc_files_.insert(File{path}, {});
-        env.set_function("npc", [npc_file]() {
-            npc_file->second.push_back(entity_system_->create_npc());
-        });
-        
+        factory<EntitySystem::create_npc>(env, "npc", npc_file->second, *entity_system_, ScriptLoader::npc_args{});
+  
         auto spawner_file = spawner_files_.insert(File{path}, {});
-        env.set_function("mob", [spawner_file]() {
-            spawner_file->second.push_back(entity_system->create_spawner());
-        });
+        factory<EntitySystem::create_spawner>(env, "spawner", spawner_file->second, *entity_system_, ScriptLoader::spawner_args{});
         
         state_.script(path, env);
         logger_->info("Finished (re)loading scripts from '{}'", path);
