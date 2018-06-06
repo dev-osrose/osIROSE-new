@@ -240,6 +240,7 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
                    int map_id, float x, float y, float z) {
 }
 
-void EntitySystem::bulk_destroy(const std::set<Entity>& s) {
-    for (Entity e : s) if (e) destroy(e);
+void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
+  std::lock_guard<std::mutex> lock(access_);
+  toDestroy_.insert(toDestroy_.end(), s.begin(), s.end());
 }
