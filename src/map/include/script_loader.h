@@ -5,7 +5,8 @@
 
 #include <sol.hpp>
 
-#include <set>
+#include <unordered_map>
+#include <vector>
 
 namespace LuaScript {
 
@@ -14,8 +15,18 @@ class ScriptLoader {
         File() = default;
         File(std::string const& path);
         
+        bool operator==(File const& other) const noexcept {
+            return path_ == other.path_;
+        }
+        
         std::string filename_;
         std::string path_;
+    };
+    
+    struct hash {
+        size_t operator()(const File& x) const {
+            return std::hash<std::string>()(x.path_);
+        }
     };
 
     public:
@@ -34,9 +45,9 @@ class ScriptLoader {
         sol::state state_;
         uint16_t map_id_;
 
-        std::unordered_map<File, std::vector<Entity>> npc_files_;
-        std::unordered_map<File, std::vector<Entity>> warpgate_files_;
-        std::unordered_map<File, std::vector<Entity>> spawner_files_;
+        std::unordered_map<File, std::vector<Entity>, hash> npc_files_;
+        std::unordered_map<File, std::vector<Entity>, hash> warpgate_files_;
+        std::unordered_map<File, std::vector<Entity>, hash> spawner_files_;
 };
 
 }
