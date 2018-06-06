@@ -1,38 +1,54 @@
 #include "script_loader.h"
-#include "logconsole.h"
 
-#include <sol.hpp>
+using namespace LuaScript;
 
-using namespace ScriptLoader;
-namespace fs = std::filesystem;
+ScriptLoader::File::File(std::string const& path) : path_(path) {
+    //TODO: find filename
+    //prob split on '/' and take latest, then split on '.' and take everything but the last one if there's more than one
+}
 
-namespace {
+ScriptLoader::ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path):
+entity_system_(entity_system),
+logger_(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()),
+path_(path), map_id_(map_id) {
+    state_.open_libraries(); //FIXME: check if we need all libs
 
-void explore(sol::state& state, fs::path path) {
-  auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
-  for (auto &item : fs::directory_iterator(path)) {
-    if (item.is_directory()) {
-      explore(state, item.path());
-    } else if (item.is_regular_file() && item.path().extension() == ".lua") {
-      try {
-        state.script(item.path().string());
-        logger->info("Loaded script '{}'", item.path().string());
-      } catch (const sol::error& e) {
-        logger->error("Lua error while loading script '{}': {}", item.path().string(), e.what());
-      }
+    state_.set_function("include", this->reload_scripts);
+    state_.set_function("warp_gate", entity_system->create_warpgate);
+    state_.set_function("npc", entity_system->create_npc);
+    state_.set_function("mob", entity_system->create_spawner);
+}
+
+void ScriptLoader::reload_scripts() {
+    reload_scripts(path_);
+}
+
+void ScriptLoader::reload_npcs() {
+    for (auto& file : npc_files_)
+        file.replace_entities(reload_scripts(file.path()));
+}
+
+void ScriptLoader::reload_warpgates() {
+    for (auto& file : warpgate_files_)
+        file.replace_entities(reload_scripts(file.path()));
+}
+
+void ScriptLoader::reload_spawners() {
+    for (auto& file : spawner_files_)
+        file.replace_entities(reload_scripts(file.path()));
+}
+
+void ScriptLoader::reload_scripts(std::string const& path) {
+    try {
+        if (auto it = npc_files_.find(File(path)); it != npc_files_.end())
+            entity_system_->bulk_destroy(it->entities());
+        if (auto it = warpgate_files_.find(File(path)); it != warpgate_files_.end())
+            entity_system_->bulk_destroy(it->entities());
+        if (auto it = spawner_files_.find(File(path)); it != spawner_files_.end())
+            entity_system_->bulk_destroy(it->entities());
+        state_.script(path);
+        logger_->info("Finished (re)loading scripts from '{}'", path);
+    } catch (const sol::error& e) {
+        logger_->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
     }
-  }
-}
-
-}
-
-void load_scripts(EntitySystem& entity_system, fs::path path) {
-  sol::state state;
-  state.open_libraries();
-
-  state.set_function("warp_gate", entity_system.create_warpgate);
-  state.set_function("npc", entity_system.create_npc);
-  state_set_function("mob", entity_system.create_spawner);
-  
-  explore(state, path);
 }

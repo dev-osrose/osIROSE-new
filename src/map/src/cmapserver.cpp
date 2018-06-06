@@ -25,7 +25,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
       map_idx_(mapidx),
       client_count_(0),
       server_count_(0),
-      entitySystem_(std::make_shared<EntitySystem>()) {
+      entity_system_(std::make_shared<EntitySystem>()) {
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
@@ -53,7 +53,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   std::string _address = _sock->get_address();
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
-    std::shared_ptr<CMapClient> nClient = std::make_shared<CMapClient>(std::move(_sock), entitySystem_);
+    std::shared_ptr<CMapClient> nClient = std::make_shared<CMapClient>(std::move(_sock), entity_system_);
     nClient->set_id(++client_count_);
     nClient->set_update_time(Core::Time::GetTickCount());
     nClient->set_active(true);
@@ -73,4 +73,4 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //}
 }
 
-void CMapServer::update(double dt) { entitySystem_->update(dt); }
+void CMapServer::update(double dt) { entity_system_->update(dt); }

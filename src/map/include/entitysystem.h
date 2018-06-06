@@ -28,6 +28,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <set>
 #include "crosepacket.h"
 #include "item.h"
 #include "systems/system.h"
@@ -66,14 +67,7 @@ class EntitySystem {
   Entity loadCharacter(uint32_t charId, bool platinium);
   void saveCharacter(uint32_t charId, Entity entity);
 
-  static bool isNearby(Entity a, Entity b);
-
-  template <typename... T>
-  void processEntities(std::function<bool(Entity)>&& func) {
-    std::lock_guard<std::mutex> lock(access_);
-    for (Entity entity : entityManager_.entities_with_components<T...>())
-      if (!func(entity)) return;
-  }
+  bool isNearby(Entity a, Entity b);
 
   void registerEntity(Entity entity);
 
@@ -86,11 +80,13 @@ class EntitySystem {
  
   void create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z,
                       int map_id, float x, float y, float z, float angle,
-                      float x_scale, float y_scale, float z_scale) {}
-  void create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {}
+                      float x_scale, float y_scale, float z_scale);
+  void create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle);
   void create_spawner(std::string alias, int mob_id, int mob_count,
                      int spawner_limit, int spawner_interval, int spawner_range,
-                     int map_id, float x, float y, float z) {}
+                     int map_id, float x, float y, float z);
+
+  void bulk_destroy(const std::set<Entity>& s);
 
  private:
   EntityManager entityManager_;
