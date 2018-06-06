@@ -50,17 +50,17 @@ void ScriptLoader::load_script(std::string const& path) {
     try {
         sol::environment env{state_, sol::create, state_.globals()};
         
-        auto warpgate_file = warpgate_files_.insert(File{path}, {});
+        auto [warpgate_file, ok] = warpgate_files_.insert(File{path}, {});
         env.set_function("warp_gate", [warpgate_file](std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, int map_id, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
             wargate_file->second.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
         });
         
-        auto npc_file = npc_files_.insert(File{path}, {});
+        auto [npc_file, ok] = npc_files_.insert(File{path}, {});
         env.set_function("npc", [npc_file](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
             npc_file->second.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
-        auto spawner_file = spawner_files_.insert(File{path}, {});
+        auto [spawner_file, ok] = spawner_files_.insert(File{path}, {});
         env.set_function("mob", [spawner_file](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
             spawner_file->second.push_back(entity_system->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
