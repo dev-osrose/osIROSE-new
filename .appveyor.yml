@@ -36,7 +36,7 @@ environment:
   BREAKPAD_SERVER: 
     secure: bBamT/tFSX89djwel0YeWZZWAmu+kULX8NCKBHZ6M+Q=
   WEBHOOK_URL:
-    secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubYuMh1G3GQXOrT3TtOSPoXYpVyjCiiKdMoMaMY/nFPt+gbEuuCDzsV8U79ZdPKHLbT9ynhP7gCJMF+wx3YhqZxL+FuTvekWiUcNYZoi/L3nuZjiETHbqzLqKxY1lpcQGVzUFEBEMfOeWX3rkAZqY9no
+    secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubbSHS0vamu/iQXzSX1OQjyXD4FpHUwXc4+buQcjjzRbluSLW2T+99xxfqNHUTTj4pPRYqcUxIFED5E7j/vvR+TMefSuKS2RUUkxifaUAujs39Z/Ual/2kBLBabMHboK8eE=
 
 matrix:
   fast_finish: true
