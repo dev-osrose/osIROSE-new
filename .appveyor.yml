@@ -85,6 +85,12 @@ artifacts:
   name: osirose-debug-symbols
 
 notifications:
+- provider: Webhook
+  url: 
+    secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubYuMh1G3GQXOrT3TtOSPoXYpVyjCiiKdMoMaMY/nFPt+gbEuuCDzsV8U79ZdPKHLbT9ynhP7gCJMF+wx3YhqZxL+FuTvekWiUcNYZoi/L3nuZjiETHbqzLqKxY1lpcQGVzUFEBEMfOeWX3rkAZqY9no
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: false
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
   auth_token:
