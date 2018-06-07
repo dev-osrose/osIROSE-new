@@ -35,6 +35,8 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   virtual ~CMapClient();
 
   virtual bool is_nearby(const CRoseClient* _otherClient) const override;
+ 
+  constexpr std::shared_ptr<EntitySystem> get_entity_system() noexcept { return entitySystem_; }
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
