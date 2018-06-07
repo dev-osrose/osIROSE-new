@@ -169,7 +169,7 @@ int main(int argc, char* argv[]) {
         Core::osirose, std::bind(Core::mysqlFactory, config.database().user, config.database().password,
                                  config.database().database, config.database().host, config.database().port));
 
-    CMapServer clientServer;
+    CMapServer clientServer(false, 2); // FIXME: use the config file option (hardcoded to zant for now)
     CMapServer iscServer(true);
     CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
     iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
