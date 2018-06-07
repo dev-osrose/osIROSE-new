@@ -37,6 +37,8 @@
 #define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
 #define POSITION_CHEATING 1000 * 1000
 
+class CMapServer;
+
 /*!
  * \class EntitySystem
  * \brief The world model that contains the systems and the entities
@@ -46,7 +48,7 @@
  */
 class EntitySystem {
  public:
-  EntitySystem();
+  EntitySystem(CMapServer *server);
 
   void update(double dt);
 
@@ -98,6 +100,7 @@ class EntitySystem {
   uint32_t nextId_;
   std::unordered_map<uint32_t, Entity> itemToEntity_;
   IdManager id_manager_;
+  CMapServer *server_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */
