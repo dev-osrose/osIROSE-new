@@ -45,7 +45,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   uint32_t client_count_;
   uint32_t server_count_;
   std::shared_ptr<EntitySystem> entity_system_;
-  std::Optional<LuaScript::ScriptLoader> script_loader_;
+  std::optional<LuaScript::ScriptLoader> script_loader_;
 };
 
 #endif
