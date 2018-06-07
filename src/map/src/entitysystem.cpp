@@ -249,6 +249,6 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
   toDestroy_.insert(toDestroy_.end(), s.begin(), s.end());
 }
 
-LuaScript::ScriptLoader& EntitySystem::get_script_loader() {
+LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
   return server_->get_script_loader();
 }
