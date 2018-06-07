@@ -32,6 +32,7 @@
 #include "item.h"
 #include "systems/system.h"
 #include "id_manager.h"
+#include "script_loader.h"
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -88,6 +89,8 @@ class EntitySystem {
                      int map_id, float x, float y, float z);
 
   void bulk_destroy(const std::vector<Entity>& s);
+ 
+  constexpr LuaScript::ScriptLoader& get_script_loader() const noexcept;
 
  private:
   EntityManager entityManager_;
