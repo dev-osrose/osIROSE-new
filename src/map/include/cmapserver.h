@@ -17,6 +17,7 @@
 
 #include "croseserver.h"
 #include "entitysystem.h"
+#include "script_loader.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
@@ -40,6 +41,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   uint32_t client_count_;
   uint32_t server_count_;
   std::shared_ptr<EntitySystem> entity_system_;
+  LuaScript::ScriptLoader script_loader_;
 };
 
 #endif
