@@ -34,6 +34,8 @@ class CMapServer : public RoseCommon::CRoseServer {
                          RoseCommon::CRosePacket& _buffer);
   static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
                          RoseCommon::CRosePacket& _buffer);
+ 
+  constexpr LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_; }
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
