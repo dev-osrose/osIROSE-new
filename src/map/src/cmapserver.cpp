@@ -25,7 +25,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
       map_idx_(mapidx),
       client_count_(0),
       server_count_(0),
-      entity_system_(std::make_shared<EntitySystem>()) {
+      entity_system_(std::make_shared<EntitySystem>(this)) {
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
