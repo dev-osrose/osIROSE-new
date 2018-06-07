@@ -258,6 +258,9 @@ jobs:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/cov-int
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
+        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh failure $WEBHOOK_URL
 
 #    - <<: *gccinit
 #      stage: testing
@@ -332,12 +335,15 @@ jobs:
         - coveralls-lcov coverage.info.cleaned
         - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
         - rm coverage.base coverage.total coverage.info.cleaned
+      after_success:
+        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
 
 notifications:
   webhooks:
     urls:
     - https://webhooks.gitter.im/e/0363885535a5495e8f8f
-    - https://discordapp.com/api/webhooks/454368548077174784/Eea52JUww_CXyFf10VXfXFrFHAqxwH93wQ4QKYixuyezdl_qLx0s3HP_k1rfFUs8pBtd/travis
     on_success: change
     on_failure: always
     on_start: never
@@ -353,6 +359,9 @@ after_failure:
   - mkdir ${TRAVIS_BUILD_DIR}/public
   - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/3rdparty ${TRAVIS_BUILD_DIR}/build ${TRAVIS_BUILD_DIR}/src ${TRAVIS_BUILD_DIR}/Database /tmp/dumps
   - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
+  - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
 
 deploy:
   provider: releases
