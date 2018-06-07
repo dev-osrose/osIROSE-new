@@ -337,6 +337,7 @@ notifications:
   webhooks:
     urls:
     - https://webhooks.gitter.im/e/0363885535a5495e8f8f
+    - https://discordapp.com/api/webhooks/454368548077174784/Eea52JUww_CXyFf10VXfXFrFHAqxwH93wQ4QKYixuyezdl_qLx0s3HP_k1rfFUs8pBtd/travis
     on_success: change
     on_failure: always
     on_start: never
