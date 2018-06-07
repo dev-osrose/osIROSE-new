@@ -19,7 +19,7 @@ path_(path), map_id_(map_id) {
 }
 
 void ScriptLoader::load_script() {
-    reload_scripts(path_);
+    load_script(path_);
 }
 
 void ScriptLoader::load_npcs() {
@@ -51,7 +51,7 @@ void ScriptLoader::load_script(std::string const& path) {
         File file = File{path};
         sol::environment env{state_, sol::create, state_.globals()};
         
-        auto warpgate_file = warpgate_files_.find(files);
+        auto warpgate_file = warpgate_files_.find(file);
         std::vector<Entity> warpgates;
         if (warpgate_file != warpgate_files_.end()) {
             warpgates = std::move(warpgate_file->second);
