@@ -13,7 +13,7 @@
 #include "systems/updatesystem.h"
 
 using namespace RoseCommon;
-EntitySystem::EntitySystem() : systemManager_(*this), nextId_(0) {
+EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(server) {
   systemManager_.add<Systems::MovementSystem>();
   systemManager_.add<Systems::UpdateSystem>();
   systemManager_.add<Systems::ChatSystem>();
