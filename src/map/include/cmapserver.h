@@ -15,6 +15,8 @@
 #ifndef _CMAPSERVER_H_
 #define _CMAPSERVER_H_
 
+#include <optional>
+
 #include "croseserver.h"
 #include "entitysystem.h"
 #include "script_loader.h"
@@ -41,7 +43,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   uint32_t client_count_;
   uint32_t server_count_;
   std::shared_ptr<EntitySystem> entity_system_;
-  LuaScript::ScriptLoader script_loader_;
+  std::Optional<LuaScript::ScriptLoader> script_loader_;
 };
 
 #endif
