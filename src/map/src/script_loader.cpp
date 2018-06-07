@@ -72,7 +72,7 @@ void ScriptLoader::load_script(std::string const& path) {
         auto spawner_file = spawner_files_.find(file);
         std::vector<Entity> spawners;
         if (spawner_file != spawner_files_.end()) {
-            spawners = std::move(spawners_file->second);
+            spawners = std::move(spawner_file->second);
         }
         env.set_function("mob", [&spawners, this](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
             spawners.push_back(entity_system_->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
@@ -81,9 +81,9 @@ void ScriptLoader::load_script(std::string const& path) {
         state_.script(path, env);
         logger_->info("Finished (re)loading scripts from '{}'", path);
         
-        if (warpgates.size()) warpgate_files_.insert_or_assign(std::make_pair(file, std::move(warpgates)));
-        if (npcs.size()) npc_files_.insert_or_assign(std::make_pair(file, std::move(npcs)));
-        if (spawners.size()) spawner_files_.insert_or_assign(std::make_pair(file, std::move(spawners)));
+        if (warpgates.size()) warpgate_files_.insert_or_assign(file, std::move(warpgates));
+        if (npcs.size()) npc_files_.insert_or_assign(file, std::move(npcs));
+        if (spawners.size()) spawner_files_.insert_or_assign(file, std::move(spawners));
     } catch (const sol::error& e) {
         logger_->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
     }
