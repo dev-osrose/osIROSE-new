@@ -30,7 +30,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx)
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
     script_loader_ = LuaScript::ScriptLoader(entity_system_, mapidx, Core::Config::getInstance().mapServer().luaScript);
-    script_loader_.load_script();
+    script_loader_.value().load_script();
   } else {
     // We are a master/node process
     // We accept player connections and redirect their packet data to the
