@@ -35,6 +35,8 @@ environment:
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
   BREAKPAD_SERVER: 
     secure: bBamT/tFSX89djwel0YeWZZWAmu+kULX8NCKBHZ6M+Q=
+  WEBHOOK_URL:
+    secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubYuMh1G3GQXOrT3TtOSPoXYpVyjCiiKdMoMaMY/nFPt+gbEuuCDzsV8U79ZdPKHLbT9ynhP7gCJMF+wx3YhqZxL+FuTvekWiUcNYZoi/L3nuZjiETHbqzLqKxY1lpcQGVzUFEBEMfOeWX3rkAZqY9no
 
 matrix:
   fast_finish: true
@@ -84,13 +86,14 @@ artifacts:
 - path: win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
   name: osirose-debug-symbols
 
+on_success:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 success $env:WEBHOOK_URL
+on_failure:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 failure $env:WEBHOOK_URL
+
 notifications:
-- provider: Webhook
-  url: 
-    secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubYuMh1G3GQXOrT3TtOSPoXYpVyjCiiKdMoMaMY/nFPt+gbEuuCDzsV8U79ZdPKHLbT9ynhP7gCJMF+wx3YhqZxL+FuTvekWiUcNYZoi/L3nuZjiETHbqzLqKxY1lpcQGVzUFEBEMfOeWX3rkAZqY9no
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: false
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
   auth_token:
