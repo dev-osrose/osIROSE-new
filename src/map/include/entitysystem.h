@@ -90,7 +90,7 @@ class EntitySystem {
 
   void bulk_destroy(const std::vector<Entity>& s);
  
-  constexpr LuaScript::ScriptLoader& get_script_loader() const noexcept;
+  constexpr LuaScript::ScriptLoader& get_script_loader() noexcept;
 
  private:
   EntityManager entityManager_;
