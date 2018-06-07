@@ -3,6 +3,7 @@
 
 #include "entitysystem.h"
 #include "cmapclient.h"
+#include "cmapserver.h"
 #include "connection.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
@@ -246,4 +247,8 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
   std::lock_guard<std::mutex> lock(access_);
   toDestroy_.insert(toDestroy_.end(), s.begin(), s.end());
+}
+
+LuaScript::ScriptLoader& EntitySystem::get_script_loader() {
+  return server_->get_script_loader();
 }
