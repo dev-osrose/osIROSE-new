@@ -16,6 +16,7 @@ void SrvMobChar::pack() {
 	auto characterInfo = entity_.component<CharacterInfo>();
 	auto position = entity_.component<Position>();
 	auto destination = entity_.component<Destination>();
+    auto npc = entity_.component<Npc>();
   float destX = position->x_, destY = position->y_;
   if (destination) {
     destX = destination->x_;
@@ -25,8 +26,8 @@ void SrvMobChar::pack() {
 	*this << basicInfo->id_;
 	*this << position->x_;
 	*this << position->y_;
-  *this << destX;
-  *this << destY;
+    *this << destX;
+    *this << destY;
 	*this << basicInfo->command_;
 	*this << basicInfo->targetId_;
 	*this << advancedInfo->moveMode_;
@@ -36,8 +37,8 @@ void SrvMobChar::pack() {
 	
 	// If the ID below is less then 0, we hide the MOB/NPC
 	// MOB & NPC
-	*this << uint16_t(100); // ID
-	*this << uint16_t(0); // QUEST ID
+	*this << npc.npc_id_;
+	*this << npc.quest_id_;
 }
 
 }

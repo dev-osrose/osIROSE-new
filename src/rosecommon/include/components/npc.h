@@ -1,7 +1,8 @@
 #pragma once
 
 struct Npc {
-    Npc(int id) : npc_id_(id) {}
+    Npc(uint16_t id) : npc_id_(id) {}
 
-    int npc_id_;
+    uint16_t npc_id_;
+    uint16_t quest_id_ = 0;
 };

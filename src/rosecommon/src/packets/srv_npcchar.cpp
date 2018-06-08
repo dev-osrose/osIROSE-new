@@ -14,9 +14,11 @@ void SrvNpcChar::pack() {
   
   // Since the npcs are the same as mobs, just call mob's pack then add NPC's data on top of it
 	SrvMobChar::pack();
+
+    auto pos = entity_.component<Position>();
 	
 	// NPC only fields
-	*this << float(0); // NPC DIRECTION
+	*this << pos.angle_;
 	*this << uint16_t(0); // Event status
 }
 
