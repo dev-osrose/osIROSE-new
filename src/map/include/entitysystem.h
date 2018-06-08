@@ -31,6 +31,7 @@
 #include "crosepacket.h"
 #include "item.h"
 #include "systems/system.h"
+#include "id_manager.h"
 
 // FIXME : set those values in the config file/database ?
 #define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
@@ -62,7 +63,7 @@ class EntitySystem {
 
   bool dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet);
 
-  Entity loadCharacter(uint32_t charId, bool platinium, uint32_t id);
+  Entity loadCharacter(uint32_t charId, bool platinium);
   void saveCharacter(uint32_t charId, Entity entity);
 
   static bool isNearby(Entity a, Entity b);
@@ -93,6 +94,7 @@ class EntitySystem {
   std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
   uint32_t nextId_;
   std::unordered_map<uint32_t, Entity> itemToEntity_;
+  IdManager id_manager_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

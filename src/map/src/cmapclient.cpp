@@ -110,6 +110,7 @@ void CMapClient::OnDisconnected() {
     entitySystem_->saveCharacter(charid_, entity_);
     CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+
     Core::AccountTable table{};
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
@@ -147,7 +148,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
       sessionId_ = sessionID;
       bool platinium = false;
       platinium = row.platinium;
-      entity_ = entitySystem_->loadCharacter(charid_, platinium, get_id());
+      entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
       if (entity_) {
         Core::Config& config = Core::Config::getInstance();
