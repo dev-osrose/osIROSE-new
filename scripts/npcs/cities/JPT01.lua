@@ -1,7 +1,5 @@
-
-
 --[[ NPC SPAWN LIST
-npc(<npc_lua_ile>, <npc_id>, <map_id>, <x_pos>, <y_pos>, <z_pos>, <angle>);
+npc(<npc_lua_file>, <npc_id>, <map_id>, <x_pos>, <y_pos>, <z_pos>, <angle>);
 --]]
 npc("", 1107, 2, 5818.02, 5487.59, -4.82, 3.403394);
 npc("", 1090, 2, 5334.58, 5353.91, 3.99, 4.76475);
