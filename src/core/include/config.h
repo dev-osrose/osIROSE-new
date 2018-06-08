@@ -109,7 +109,7 @@ class Config {
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;
-    std::vector<uint16_t> mapId;
+    std::vector<uint16_t> mapId = {1};
     std::string luaScript = "scripts/root.lua";
     uint8_t logLevel = 2;
   };
