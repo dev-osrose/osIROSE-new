@@ -236,8 +236,13 @@ Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float d
 
 Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
     Entity e = create();
+    e.assign<BasicInfo>(id_manager_.get_free_id());
+    e.assign<AdvancedInfo>();
+    e.assign<CharacterInfo>();
     e.assign<Npc>(npc_id);
-    auto pos = e.assign<Position>(x, y, z, map_id, 0);
+    auto pos = e.assign<Position>(x, y, map_id, 0);
+
+    pos->z_ = static_cast<uint16_t>(z); //FIXME: that's weird
     pos->angle_ = angle;
     //e.assign<EntityApi>();
   return e;
