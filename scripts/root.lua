@@ -1,1 +1,1 @@
-include("npcs/cities/EJT01.lua");
+include("npcs/cities/JPT01.lua");
