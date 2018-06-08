@@ -97,6 +97,9 @@ void ParseCommandLine(int argc, char** argv) {
       ->default_value(""), "DB_PASS")
     ;
 
+    options.add_options("Map server")
+    ("map_ids", "Map ids this server runs", cxxopts::value<std::vector<uint16_t>>(), "MAP_IDS");
+
     options.parse(argc, argv);
 
     // Check to see if the user wants to see the help text
@@ -136,6 +139,8 @@ void ParseCommandLine(int argc, char** argv) {
     if (options.count("db_name")) config.database().database = options["db_name"].as<std::string>();
     if (options.count("db_user")) config.database().user = options["db_user"].as<std::string>();
     if (options.count("db_pass")) config.database().password = options["db_pass"].as<std::string>();
+
+    if (options.count("map_ids")) config.mapServer().mapId = options["map_ids"].as<std::vector<uint16_t>>();
   } catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
     std::cout << options.help({"", "Database", "Networking"}) << std::endl;
@@ -169,7 +174,7 @@ int main(int argc, char* argv[]) {
         Core::osirose, std::bind(Core::mysqlFactory, config.database().user, config.database().password,
                                  config.database().database, config.database().host, config.database().port));
 
-    CMapServer clientServer(false, 2); // FIXME: use the config file option (hardcoded to zant for now)
+    CMapServer clientServer(false, config.mapServer().mapId[0]);
     CMapServer iscServer(true);
     CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
     iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
