@@ -2,6 +2,7 @@
 #include "srv_changemapreply.h"
 #include "srv_dropitem.h"
 #include "srv_playerchar.h"
+#include "srv_npcchar.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
 #include "systems/chatsystem.h"
