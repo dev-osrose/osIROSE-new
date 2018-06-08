@@ -239,10 +239,10 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
     e.assign<BasicInfo>(id_manager_.get_free_id());
     e.assign<AdvancedInfo>();
     e.assign<CharacterInfo>();
-    e.assign<Npc>(npc_id);
+    e.assign<Npc>(npc_id, 153);
     auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
 
-    pos->z_ = static_cast<uint16_t>(z); //FIXME: that's weird
+    pos->z_ = static_cast<uint16_t>(z);
     pos->angle_ = angle;
     //e.assign<EntityApi>();
   return e;
