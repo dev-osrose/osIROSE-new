@@ -62,6 +62,7 @@ void ScriptLoader::load_script(std::string const& path) {
             warpgates = std::move(warpgate_file->second);
         }
         env.set_function("warp_gate", [&warpgates, this](std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, int map_id, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
+            if (map_id != map_id_) return;
             warpgates.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
         });
         
@@ -71,6 +72,7 @@ void ScriptLoader::load_script(std::string const& path) {
             npcs = std::move(npc_file->second);
         }
         env.set_function("npc", [&npcs, this](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
+            if (map_id != map_id_) return;
             npcs.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
@@ -80,6 +82,7 @@ void ScriptLoader::load_script(std::string const& path) {
             spawners = std::move(spawner_file->second);
         }
         env.set_function("mob", [&spawners, this](std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+            if (map_id != map_id_) return;
             spawners.push_back(entity_system_->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
         
