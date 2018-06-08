@@ -18,7 +18,7 @@ void SrvNpcChar::pack() {
     auto pos = entity_.component<Position>();
 	
 	// NPC only fields
-	*this << pos.angle_;
+	*this << pos->angle_;
 	*this << uint16_t(0); // Event status
 }
 

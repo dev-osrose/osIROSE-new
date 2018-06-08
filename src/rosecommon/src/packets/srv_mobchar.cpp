@@ -37,8 +37,8 @@ void SrvMobChar::pack() {
 	
 	// If the ID below is less then 0, we hide the MOB/NPC
 	// MOB & NPC
-	*this << npc.npc_id_;
-	*this << npc.quest_id_;
+	*this << npc->npc_id_;
+	*this << npc->quest_id_;
 }
 
 }
