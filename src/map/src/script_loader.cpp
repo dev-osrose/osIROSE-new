@@ -1,4 +1,5 @@
 #include "script_loader.h"
+#include "throwassert.h"
 
 using namespace LuaScript;
 
@@ -13,8 +14,12 @@ logger_(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()),
 path_(path), map_id_(map_id) {
     state_.open_libraries(); //FIXME: check if we need all libs
 
-    state_.set_function("include", [this](std::string path) {
-        load_script(path);
+    std::size_t pos = path.find_last_of('/');
+    throw_assert(pos != std::string::npos, "Error, default path '" << path << "' is not valid");
+    std::string base = path.substr(0, pos + 1);
+
+    state_.set_function("include", [this, base](std::string path) {
+        ScriptLoader::load_script(base + path);
     });
 }
 
@@ -65,8 +70,8 @@ void ScriptLoader::load_script(std::string const& path) {
         if (npc_file != npc_files_.end()) {
             npcs = std::move(npc_file->second);
         }
-        env.set_function("npc", [&npc_file, this](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
-            npc_file->second.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
+        env.set_function("npc", [&npcs, this](std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
+            npcs.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
         auto spawner_file = spawner_files_.find(file);
@@ -78,9 +83,13 @@ void ScriptLoader::load_script(std::string const& path) {
             spawners.push_back(entity_system_->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
         
-        state_.script(path, env);
+        logger_->info("(Re)loading scripts from '{}'", path);
+        state_.script_file(path, env);
+        logger_->info("Loaded {} warpgates", warpgates.size());
+        logger_->info("Loaded {} npcs", npcs.size());
+        logger_->info("Loaded {} spawners", spawners.size());
         logger_->info("Finished (re)loading scripts from '{}'", path);
-        
+
         if (warpgates.size()) warpgate_files_.insert_or_assign(file, std::move(warpgates));
         if (npcs.size()) npc_files_.insert_or_assign(file, std::move(npcs));
         if (spawners.size()) spawner_files_.insert_or_assign(file, std::move(spawners));

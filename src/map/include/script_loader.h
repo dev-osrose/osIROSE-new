@@ -31,6 +31,9 @@ class ScriptLoader {
 
     public:
         ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path);
+        ScriptLoader(const ScriptLoader&) = delete;
+        ScriptLoader(ScriptLoader&&) = delete;
+        ScriptLoader& operator=(const ScriptLoader&) = delete;
 
         void load_script();
         void load_script(std::string const& path);
