@@ -19,7 +19,7 @@ void SrvNpcChar::pack() {
 	
 	// NPC only fields
 	*this << pos->angle_;
-	*this << uint16_t(0); // Event status
+	*this << uint16_t(153); // Event status
 }
 
 }

@@ -4,8 +4,8 @@
 using namespace LuaScript;
 
 ScriptLoader::File::File(std::string const& path) : path_(path) {
-    //TODO: find filename
-    //prob split on '/' and take latest, then split on '.' and take everything but the last one if there's more than one
+    std::size_t pos = path.find_last_of('/');
+    filename_ = path.substr(pos + 1, path.find('.', pos + 1));
 }
 
 ScriptLoader::ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path):
