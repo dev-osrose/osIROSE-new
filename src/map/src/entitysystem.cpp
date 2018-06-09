@@ -3,6 +3,7 @@
 
 #include "entitysystem.h"
 #include "cmapclient.h"
+#include "cmapserver.h"
 #include "connection.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
@@ -13,7 +14,7 @@
 #include "systems/updatesystem.h"
 
 using namespace RoseCommon;
-EntitySystem::EntitySystem() : systemManager_(*this), nextId_(0) {
+EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(server) {
   systemManager_.add<Systems::MovementSystem>();
   systemManager_.add<Systems::UpdateSystem>();
   systemManager_.add<Systems::ChatSystem>();
@@ -22,7 +23,6 @@ EntitySystem::EntitySystem() : systemManager_(*this), nextId_(0) {
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
 }
-
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }
 
 Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
@@ -226,4 +226,44 @@ void EntitySystem::saveCharacter(uint32_t charId, Entity entity) {
     insert.insert_list.add(inv.charId = charId);
     conn->run(insert);
   }
+}
+
+Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z,
+                    int map_id, float x, float y, float z, float angle,
+                    float x_scale, float y_scale, float z_scale) {
+  return {};
+}
+
+Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
+    Entity e = create();
+    e.assign<BasicInfo>(id_manager_.get_free_id());
+    e.assign<AdvancedInfo>();
+    e.assign<CharacterInfo>();
+
+    uint16_t dialog_id = 0;
+    if (!npc_lua.empty()) {
+      dialog_id = std::stoi(npc_lua);
+    }
+    e.assign<Npc>(npc_id, dialog_id);
+    auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
+
+    pos->z_ = static_cast<uint16_t>(z);
+    pos->angle_ = angle;
+    //e.assign<EntityApi>();
+  return e;
+}
+
+Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count,
+                   int spawner_limit, int spawner_interval, int spawner_range,
+                   int map_id, float x, float y, float z) {
+  return {};
+}
+
+void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
+  std::lock_guard<std::mutex> lock(access_);
+  toDestroy_.insert(toDestroy_.end(), s.begin(), s.end());
+}
+
+LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
+  return server_->get_script_loader();
 }

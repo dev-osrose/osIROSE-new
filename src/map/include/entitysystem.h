@@ -37,6 +37,12 @@
 #define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
 #define POSITION_CHEATING 1000 * 1000
 
+class CMapServer;
+
+namespace LuaScript {
+class ScriptLoader;
+}
+
 /*!
  * \class EntitySystem
  * \brief The world model that contains the systems and the entities
@@ -46,7 +52,7 @@
  */
 class EntitySystem {
  public:
-  EntitySystem();
+  EntitySystem(CMapServer *server);
 
   void update(double dt);
 
@@ -66,14 +72,7 @@ class EntitySystem {
   Entity loadCharacter(uint32_t charId, bool platinium);
   void saveCharacter(uint32_t charId, Entity entity);
 
-  static bool isNearby(Entity a, Entity b);
-
-  template <typename... T>
-  void processEntities(std::function<bool(Entity)>&& func) {
-    std::lock_guard<std::mutex> lock(access_);
-    for (Entity entity : entityManager_.entities_with_components<T...>())
-      if (!func(entity)) return;
-  }
+  bool isNearby(Entity a, Entity b);
 
   void registerEntity(Entity entity);
 
@@ -83,6 +82,18 @@ class EntitySystem {
   Entity getItemEntity(uint32_t id);
 
   EntityManager& getEntityManager();
+ 
+  Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z,
+                      int map_id, float x, float y, float z, float angle,
+                      float x_scale, float y_scale, float z_scale);
+  Entity create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle);
+  Entity create_spawner(std::string alias, int mob_id, int mob_count,
+                     int spawner_limit, int spawner_interval, int spawner_range,
+                     int map_id, float x, float y, float z);
+
+  void bulk_destroy(const std::vector<Entity>& s);
+ 
+  LuaScript::ScriptLoader& get_script_loader() noexcept;
 
  private:
   EntityManager entityManager_;
@@ -92,9 +103,9 @@ class EntitySystem {
   std::unordered_map<std::string, Entity> nameToEntity_;
   std::unordered_map<uint32_t, Entity> idToEntity_;
   std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
-  uint32_t nextId_;
   std::unordered_map<uint32_t, Entity> itemToEntity_;
   IdManager id_manager_;
+  CMapServer *server_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

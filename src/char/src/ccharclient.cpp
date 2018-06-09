@@ -134,6 +134,7 @@ bool CCharClient::SendCharListReply() {
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   uint32_t id = 0;
 
+  characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
     packet->addCharacter(row.name, row.race, row.level, row.job, row.face, row.hair, row.deleteDate);
     characterRealId_.push_back(row.id);

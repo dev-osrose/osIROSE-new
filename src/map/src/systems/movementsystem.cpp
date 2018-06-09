@@ -19,7 +19,7 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
       CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
                              *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
     if (dest->target_) {
-      logger_->warn("picking up the item");
+      //logger_->warn("picking up the item");
       // TODO: pickup item
     }
   });

@@ -61,6 +61,8 @@ void ChatSystem::normalChat(CMapClient &client, Entity entity, const CliNormalCh
         logger_->info("Item {}:{} added to {}", type, id, getId(entity));
         client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {}:{} added", type, id)));
       }
+    } else if (command == "/load_npc") {
+      client.get_entity_system()->get_script_loader().load_npcs(); //FIXME : temporary to show how we could do it
     }
     return;
   }

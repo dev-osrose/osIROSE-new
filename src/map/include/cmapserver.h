@@ -15,15 +15,18 @@
 #ifndef _CMAPSERVER_H_
 #define _CMAPSERVER_H_
 
+#include <optional>
+
 #include "croseserver.h"
 #include "entitysystem.h"
+#include "script_loader.h"
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
   CMapServer(bool _isc = false, int16_t mapidx = -1);
   virtual ~CMapServer();
 
-  int32_t GetMapIDX() const { return map_idx_; }
+  int16_t GetMapIDX() const { return map_idx_; }
 
   void update(double dt);
 
@@ -31,15 +34,18 @@ class CMapServer : public RoseCommon::CRoseServer {
                          RoseCommon::CRosePacket& _buffer);
   static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
                          RoseCommon::CRosePacket& _buffer);
+ 
+  inline LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_.value(); }
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
 
   enum class ServerType : int8_t { MASTER_NODE = -1, WORKER_THREAD };
-  int32_t map_idx_;
+  int16_t map_idx_;
   uint32_t client_count_;
   uint32_t server_count_;
-  std::shared_ptr<EntitySystem> entitySystem_;
+  std::shared_ptr<EntitySystem> entity_system_;
+  std::optional<LuaScript::ScriptLoader> script_loader_;
 };
 
 #endif
