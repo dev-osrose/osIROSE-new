@@ -10,7 +10,7 @@ if(WIN32)
     GIT_REPOSITORY https://github.com/curl/curl.git
     GIT_TAG cb529b713f4882ac65a074ae8d87faa41d19168e
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR} -DBUILD_TESTING=OFF -DHTTP_ONLY=ON
-	BUILD_BYPRODUCTS ${_byproducts}
+    BUILD_BYPRODUCTS ${_byproducts}
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 else()
@@ -34,10 +34,11 @@ ExternalProject_Get_Property(
 )
 
 set(CURL_INCLUDE_DIRS "${install_dir}/include")
-
 if(WIN32)
   if("${BUILD_TYPE}" STREQUAL "Debug")
     set(CURL_LIBRARY "${install_dir}/lib/libcurl-d_imp.lib")
+  elseif("${BUILD_TYPE}" STREQUAL "$<CONFIG>")
+    set(CURL_LIBRARY "${install_dir}/lib/libcurl$<$<CONFIG:Debug>:-d>_imp.lib")
   else()
     set(CURL_LIBRARY "${install_dir}/lib/libcurl_imp.lib")
   endif()
