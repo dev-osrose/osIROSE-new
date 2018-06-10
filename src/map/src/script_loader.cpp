@@ -19,7 +19,7 @@ path_(path), map_id_(map_id) {
     });
 }
 
-std::vector<std::string> ScriptLoader::get_fuzzy_files(const std::string& pattern, size_t max_res) {
+std::vector<std::string> ScriptLoader::get_fuzzy_files(const std::string& pattern, size_t max_res) const {
     std::vector<Core::FuzzyMatch> res = Core::fuzzy_match(files_, pattern);
 
     std::vector<std::string> ret{max_res};
@@ -102,7 +102,7 @@ void ScriptLoader::load_script(std::string const& path) {
 
         if (warpgates.size()) warpgate_files_.insert_or_assign(path, std::move(warpgates));
         if (npcs.size()) npc_files_.insert_or_assign(path, std::move(npcs));
-        if (spawners.size()) spawner_files_.insert_or_assign(math, std::move(spawners));
+        if (spawners.size()) spawner_files_.insert_or_assign(path, std::move(spawners));
 
         if (warpgates.size() || npcs.size() || spawners.size()) {
             for (auto& f : files_) if (f == path) return;

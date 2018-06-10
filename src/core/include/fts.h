@@ -39,6 +39,7 @@
 
 // Public interface
 namespace fts {
+    [[maybe_unused]]
     static bool fuzzy_match_simple(char const * pattern, char const * str);
     static bool fuzzy_match(char const * pattern, char const * str, int & outScore);
     static bool fuzzy_match(char const * pattern, char const * str, int & outScore, uint8_t * matches, int maxMatches);

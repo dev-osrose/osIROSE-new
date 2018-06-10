@@ -22,6 +22,7 @@ set( SOURCES_HEADER
   include/factory.h
   include/crash_report.h
   include/hash.h
+  include/fuzzy_matching.h
 )
 
 set( SOURCES_BASE
@@ -29,6 +30,7 @@ set( SOURCES_BASE
   src/cnetwork_asio.cpp
   src/config.cpp
   src/connection.cpp
+  src/fuzzy_matching.cpp
 )
 
 if( GCC OR CLANG )

@@ -6,7 +6,7 @@
 namespace Core {
 
 struct FuzzyMatch {
-    int index;
+    size_t index;
     int score;
 };
 
