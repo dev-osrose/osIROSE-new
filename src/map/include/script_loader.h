@@ -11,24 +11,6 @@
 namespace LuaScript {
 
 class ScriptLoader {
-    struct File {
-        File() = default;
-        File(std::string const& path);
-        
-        bool operator==(File const& other) const noexcept {
-            return path_ == other.path_;
-        }
-        
-        std::string filename_;
-        std::string path_;
-    };
-    
-    struct hash {
-        size_t operator()(const File& x) const {
-            return std::hash<std::string>()(x.path_);
-        }
-    };
-
     public:
         ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path);
         ScriptLoader(const ScriptLoader&) = delete;
@@ -41,6 +23,8 @@ class ScriptLoader {
         void load_warpgates();
         void load_spawners();
 
+        std::vector<std::string> get_fuzzy_files(const std::string& pattern, size_t max_res = 3) const;
+
     private:
         std::shared_ptr<EntitySystem> entity_system_;
         std::shared_ptr<spdlog::logger> logger_;
@@ -48,9 +32,11 @@ class ScriptLoader {
         sol::state state_;
         uint16_t map_id_;
 
-        std::unordered_map<File, std::vector<Entity>, hash> npc_files_;
-        std::unordered_map<File, std::vector<Entity>, hash> warpgate_files_;
-        std::unordered_map<File, std::vector<Entity>, hash> spawner_files_;
+        std::vector<std::string> files_;
+
+        std::unordered_map<std::string, std::vector<Entity>> npc_files_;
+        std::unordered_map<std::string, std::vector<Entity>> warpgate_files_;
+        std::unordered_map<std::string, std::vector<Entity>> spawner_files_;
 };
 
 }
