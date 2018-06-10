@@ -1,12 +1,8 @@
 #include "script_loader.h"
 #include "throwassert.h"
+#include "fuzzy_matching.h"
 
 using namespace LuaScript;
-
-ScriptLoader::File::File(std::string const& path) : path_(path) {
-    std::size_t pos = path.find_last_of('/');
-    filename_ = path.substr(pos + 1, path.find('.', pos + 1));
-}
 
 ScriptLoader::ScriptLoader(std::shared_ptr<EntitySystem> entity_system, uint16_t map_id, std::string const& path):
 entity_system_(entity_system),
@@ -23,6 +19,18 @@ path_(path), map_id_(map_id) {
     });
 }
 
+std::vector<std::string> ScriptLoader::get_fuzzy_files(const std::string& pattern, size_t max_res) {
+    std::vector<Core::FuzzyMatch> res = Core::fuzzy_match(files_, pattern);
+
+    std::vector<std::string> ret{max_res};
+
+    size_t i = 0;
+    while (max_res--) {
+        ret.push_back(files_[res[i++].index]);
+    }
+    return ret;
+}
+
 void ScriptLoader::load_script() {
     load_script(path_);
 }
@@ -31,7 +39,7 @@ void ScriptLoader::load_npcs() {
     for (auto& [file, entities] : npc_files_) {
         entity_system_->bulk_destroy(entities);
         entities.clear();
-        load_script(file.path_);
+        load_script(file);
     }
 }
 
@@ -39,7 +47,7 @@ void ScriptLoader::load_warpgates() {
     for (auto& [file, entities] : warpgate_files_) {
         entity_system_->bulk_destroy(entities);
         entities.clear();
-        load_script(file.path_);
+        load_script(file);
     }
 }
 
@@ -47,16 +55,15 @@ void ScriptLoader::load_spawners() {
     for (auto& [file, entities] : spawner_files_) {
         entity_system_->bulk_destroy(entities);
         entities.clear();
-        load_script(file.path_);
+        load_script(file);
     }
 }
 
 void ScriptLoader::load_script(std::string const& path) {
     try {
-        File file = File{path};
         sol::environment env{state_, sol::create, state_.globals()};
         
-        auto warpgate_file = warpgate_files_.find(file);
+        auto warpgate_file = warpgate_files_.find(path);
         std::vector<Entity> warpgates;
         if (warpgate_file != warpgate_files_.end()) {
             warpgates = std::move(warpgate_file->second);
@@ -66,7 +73,7 @@ void ScriptLoader::load_script(std::string const& path) {
             warpgates.push_back(entity_system_->create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, map_id, x, y, z, angle, x_scale, y_scale, z_scale));
         });
         
-        auto npc_file = npc_files_.find(file);
+        auto npc_file = npc_files_.find(path);
         std::vector<Entity> npcs;
         if (npc_file != npc_files_.end()) {
             npcs = std::move(npc_file->second);
@@ -76,7 +83,7 @@ void ScriptLoader::load_script(std::string const& path) {
             npcs.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
-        auto spawner_file = spawner_files_.find(file);
+        auto spawner_file = spawner_files_.find(path);
         std::vector<Entity> spawners;
         if (spawner_file != spawner_files_.end()) {
             spawners = std::move(spawner_file->second);
@@ -93,9 +100,14 @@ void ScriptLoader::load_script(std::string const& path) {
         logger_->info("Loaded {} spawners", spawners.size());
         logger_->info("Finished (re)loading scripts from '{}'", path);
 
-        if (warpgates.size()) warpgate_files_.insert_or_assign(file, std::move(warpgates));
-        if (npcs.size()) npc_files_.insert_or_assign(file, std::move(npcs));
-        if (spawners.size()) spawner_files_.insert_or_assign(file, std::move(spawners));
+        if (warpgates.size()) warpgate_files_.insert_or_assign(path, std::move(warpgates));
+        if (npcs.size()) npc_files_.insert_or_assign(path, std::move(npcs));
+        if (spawners.size()) spawner_files_.insert_or_assign(math, std::move(spawners));
+
+        if (warpgates.size() || npcs.size() || spawners.size()) {
+            for (auto& f : files_) if (f == path) return;
+            files_.push_back(path);
+        }
     } catch (const sol::error& e) {
         logger_->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
     }
