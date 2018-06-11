@@ -18,10 +18,7 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     if (auto client = getClient(entity))
       CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
                              *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
-    if (dest->target_) {
-      //logger_->warn("picking up the item");
-      // TODO: pickup item
-    }
+    // TODO: check what type entity.component<BasicInfo>()->targetId_ is and execute corresponding action (npc talk, attack, item pickup...)
   });
   // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
@@ -59,10 +56,10 @@ void MovementSystem::move(Entity entity, float x, float y, uint16_t target) {
     dest->x_ = x;
     dest->y_ = y;
     dest->dist_ = dist;
-    dest->target_ = target;
   } else {
-    entity.assign<Destination>(x, y, dist, target);
+    entity.assign<Destination>(x, y, dist);
   }
+  entity.component<BasicInfo>()->targetId_ = target;
   // FIXME: what happens if the entity is an NPC or a monster?
   if (auto client = getClient(entity))
     CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));

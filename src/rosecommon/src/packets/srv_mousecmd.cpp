@@ -17,7 +17,7 @@ void SrvMouseCmd::pack() {
   auto position = entity_.component<Position>();
 
   *this << basicInfo->id_;
-  *this << destination->target_;
+  *this << basicInfo->targetId_;
   *this << destination->dist_;
   *this << destination->x_;
   *this << destination->y_;
