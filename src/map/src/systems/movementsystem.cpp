@@ -18,10 +18,7 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
     if (auto client = getClient(entity))
       CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
                              *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
-    if (dest->target_) {
-      //logger_->warn("picking up the item");
-      // TODO: pickup item
-    }
+    // TODO: check what type entity.component<BasicInfo>()->targetId_ is and execute corresponding action (npc talk, attack, item pickup...)
   });
   // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
 }
