@@ -106,6 +106,25 @@ class EntitySystem {
   std::unordered_map<uint32_t, Entity> itemToEntity_;
   IdManager id_manager_;
   CMapServer *server_;
+
+ private:
+  struct CommandBase {
+      virtual ~CommandBase() = default;
+      virtual void execute(EntitySystem&) = 0;
+  };
+
+  template <typename Func>
+  struct Command : public CommandBase {
+      Command(Func&& f) : func_(std::move(f)) {}
+      virtual ~Command() = default;
+      virtual void execute(EntitySystem& e) override {
+          func_(e);
+      }
+      private:
+        Func func_;
+  };
+
+  std::vector<std::unique_ptr<CommandBase>> create_commands_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

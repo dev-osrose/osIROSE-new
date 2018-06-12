@@ -53,6 +53,10 @@ Entity EntitySystem::getEntity(uint32_t charId) { return idToEntity_[charId]; }
 
 void EntitySystem::update(double dt) {
   std::lock_guard<std::mutex> lock(access_);
+  for (auto& it : create_commands_) {
+    it->execute(*this);
+  }
+  create_commands_.clear();
   while (toDispatch_.size()) {
     auto tmp = std::move(toDispatch_.front());
     systemManager_.dispatch(tmp.first, *tmp.second);
@@ -236,21 +240,25 @@ Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float d
 
 Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, float x, float y, float z, float angle) {
     Entity e = create();
-    e.assign<BasicInfo>(id_manager_.get_free_id());
-    e.assign<AdvancedInfo>();
-    e.assign<CharacterInfo>();
+    std::unique_ptr<CommandBase> ptr{new Command([npc_lua, npc_id, map_id, x, y, z, angle, e] (EntitySystem &es) mutable {
+      if (!e) return;
+      e.assign<BasicInfo>(es.id_manager_.get_free_id());
+      e.assign<AdvancedInfo>();
+      e.assign<CharacterInfo>();
 
-    uint16_t dialog_id = 0;
-    if (!npc_lua.empty()) {
-      dialog_id = std::stoi(npc_lua);
-    }
-    e.assign<Npc>(npc_id, dialog_id);
-    auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
+      uint16_t dialog_id = 0;
+      if (!npc_lua.empty()) {
+        dialog_id = std::stoi(npc_lua);
+      }
+      e.assign<Npc>(npc_id, dialog_id);
+      auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
 
-    pos->z_ = static_cast<uint16_t>(z);
-    pos->angle_ = angle;
-    //e.assign<EntityApi>();
-  return e;
+      pos->z_ = static_cast<uint16_t>(z);
+      pos->angle_ = angle;
+      //e.assign<EntityApi>();
+    })};
+    create_commands_.emplace_back(std::move(ptr));
+    return e;
 }
 
 Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count,
