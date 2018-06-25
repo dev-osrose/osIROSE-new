@@ -1,11 +1,10 @@
 pipeline {
-  agent {
-    docker { image 'ravenx8/ubuntu-dev' }
-  }
+  agent any
   stages {
     stage('Preparation') {
       steps {
         checkout scm
+        sh 'git submodule update --init --recursive'
         sh 'mkdir build'
       }
     }
@@ -17,8 +16,8 @@ pipeline {
           }
           steps {
             dir('build') {
-              sh 'cd build && cmake -DDebug=ON ..'
-              sh 'cd build && cmake --build . -- -j2'
+              sh 'cmake -GNinja -DDebug=ON ..'
+              sh 'cmake --build . -- -j2'
             }
           }
         }
@@ -28,8 +27,8 @@ pipeline {
           }
           steps {
             dir('build') {
-              sh 'cd build && cmake -DOFFICIAL_BUILD=ON ..'
-              sh 'cd build && cmake --build . -- -j2'
+              sh 'cmake -GNinja -DOFFICIAL_BUILD=ON ..'
+              sh 'cmake --build . -- -j2'
             }
           }
         }
@@ -41,7 +40,7 @@ pipeline {
       }
       steps {
         dir('build') {
-          sh 'cd build && ctest'
+          sh 'ctest'
         }
       }
     }
