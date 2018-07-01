@@ -47,9 +47,10 @@ class CRoseServer : public CRoseSocket {
   static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
   static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
-  void set_socket(std::unique_ptr<Core::INetwork> _val, [[maybe_unused]] bool is_server = false) override {
-   socket_ = std::move(_val);
-   socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
+  void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
+                  [[maybe_unused]] bool is_server = false) override {
+    socket_[socket_id] = std::move(_val);
+    socket_[socket_id]->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
   };
 
  protected:

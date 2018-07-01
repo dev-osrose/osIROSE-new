@@ -22,7 +22,7 @@
 NodeServer::NodeServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }
 
-NodeServer::~NodeServer() { socket_->shutdown(true); }
+NodeServer::~NodeServer() { socket_[RoseCommon::SocketType::Client]->shutdown(true); }
 
 void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   std::string _address = _sock->get_address();

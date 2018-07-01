@@ -35,9 +35,9 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
 
   std::function<void(std::unique_ptr<Core::INetwork>)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
 
-  socket_->registerOnAccepted(fnOnAccepted);
+  socket_[0]->registerOnAccepted(fnOnAccepted);
 
-  socket_->process_thread_ = std::thread([this]() {
+  socket_[0]->process_thread_ = std::thread([this]() {
 
     std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;

@@ -21,12 +21,12 @@ CRoseISC::CRoseISC() : CRoseClient() {
 }
 
 CRoseISC::CRoseISC(std::unique_ptr<Core::INetwork> _sock) : CRoseClient(std::move(_sock)) {
-  socket_->registerOnReceived(std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-  socket_->registerOnSend(std::bind(&CRoseISC::OnSend, this, std::placeholders::_1));
-  socket_->registerOnConnected(std::bind(&CRoseISC::OnConnected, this));
-  socket_->registerOnShutdown(std::bind(&CRoseISC::OnShutdown, this));
+  socket_[SocketType::Client]->registerOnReceived(std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_[SocketType::Client]->registerOnSend(std::bind(&CRoseISC::OnSend, this, std::placeholders::_1));
+  socket_[SocketType::Client]->registerOnConnected(std::bind(&CRoseISC::OnConnected, this));
+  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CRoseISC::OnShutdown, this));
 
-  socket_->reset_internal_buffer();
+  socket_[SocketType::Client]->reset_internal_buffer();
 }
 
 CRoseISC::~CRoseISC() {}
@@ -42,7 +42,7 @@ bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
     packet_size_ = (uint16_t)buffer_[0];
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      socket_->reset_internal_buffer();
+      socket_[SocketType::Client]->reset_internal_buffer();
       return false;
     }
 
@@ -62,8 +62,8 @@ bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
 
-  socket_->dispatch([this]() {
-    if (true == socket_->is_active()) {
+  socket_[SocketType::Client]->dispatch([this]() {
+    if (true == socket_[SocketType::Client]->is_active()) {
       recv_mutex_.lock();
       bool recv_empty = recv_queue_.empty();
 
@@ -79,14 +79,14 @@ bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
         if (rtnVal == false) {
           // Abort connection
           logger_->debug("HandlePacket returned false, disconnecting client.");
-          socket_->shutdown();
+          socket_[SocketType::Client]->shutdown();
         }
       }
       recv_mutex_.unlock();
     }
   });
 
-  socket_->reset_internal_buffer();
+  socket_[SocketType::Client]->reset_internal_buffer();
   return rtnVal;
 }
 
