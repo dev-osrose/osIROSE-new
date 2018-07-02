@@ -73,6 +73,8 @@ bool CLoginISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
     channel_count_++;
   }
 
+  this->set_name(server_name_);
+
   logger_->debug( "ISC Server Type: [{}]\n", socket_[SocketType::Client]->get_type());
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",

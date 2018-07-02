@@ -100,7 +100,13 @@ class CRoseSocket {
   std::chrono::steady_clock::time_point get_update_time(int socket_id = static_cast<int>(SocketType::Client)) const {
     return socket_[socket_id]->get_update_time();
   }
+  std::string get_name(int socket_id = static_cast<int>(SocketType::Client)) const {
+    return socket_[socket_id]->get_name();
+  }
 
+  virtual void set_name(const std::string _val, int socket_id = static_cast<int>(SocketType::Client)) {
+    socket_[socket_id]->set_name(_val);
+  }
 
   virtual void set_id(uint32_t _val) { socket_[static_cast<int>(SocketType::Client)]->set_id(_val); }
   virtual void set_update_time(std::chrono::steady_clock::time_point _val,

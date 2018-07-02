@@ -129,6 +129,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                                               table.lastip = get_address(),
                                               table.lasttime = std::chrono::system_clock::now())
                      .where(table.id == userid_));
+                this->set_name(username_);
                 SendLoginReply(SrvLoginReply::OK);
             } else {
                 // Online already
