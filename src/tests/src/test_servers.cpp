@@ -42,8 +42,8 @@ TEST(TestFinalServers, TestISCConnections) {
   CMapISC *map = mapIscClient.get();
   CCharISC *charc = charIscClient.get();
 
-  CCharServer::GetISCList().push_front(std::move(charIscClient));
-  CMapServer::GetISCList().push_front(std::move(mapIscClient));
+  charIsc.GetISCList().push_front(std::move(charIscClient));
+  mapIsc.GetISCList().push_front(std::move(mapIscClient));
 
   std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
