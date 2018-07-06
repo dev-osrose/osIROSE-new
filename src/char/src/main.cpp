@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
 
   CCharServer clientServer;
   CCharServer iscServer(true);
-  CCharISC* iscClient = new CCharISC(&clientServer, std::make_unique<Core::CNetwork_Asio>());
+  CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
   iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
   iscClient->SetLogin(true);
   iscClient->connect();

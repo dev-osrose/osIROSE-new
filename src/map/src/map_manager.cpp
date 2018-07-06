@@ -1,36 +1,39 @@
+#include "cnetwork_asio.h"
 #include "map_manager.h"
 #include "platform_defines.h"
-#include "cmapisc.h"
 #include "config.h"
 
-MapManager::MapManager(std::vector<i16> maps):
-    isc_server_{true}, maps_{maps.size()}, stop_(false) {
+MapManager::MapManager(std::vector<uint16_t> maps):
+    isc_server_{true}, 
+    isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()},
+    maps_{maps.size()},
+    stop_(false) {
     Core::Config& config = Core::Config::getInstance();
     isc_server_.init(config.serverData().iscListenIp, config.mapServer().iscPort);
     isc_server_.listen();
-    for (i16 id : maps) {
-        auto server = std::make_unique<CMapServer>(false, id);
-        CMapISC* iscClient = new CMapISC(server.get(), std::make_unique<Core::CNetwork_Asio>());
-        iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
-        iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
-        server->init(config.serverData().ip, config.mapServer().clientPort + id);
-        server->listen();
-        server->GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
-        iscClient->connect();
-        iscClient->start_recv();
-        maps_.emplace_back([this, std::move(server)] () {
+
+    isc_client_.init(config.mapServer().charIp, config.charServer().iscPort);
+    isc_client_.set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
+    isc_client_.connect();
+    isc_client_.start_recv();
+
+    for (uint16_t id : maps) {
+        auto map = std::make_unique<CMapServer>(false, id);
+        map->init(config.serverData().ip, config.mapServer().clientPort + id);
+        map->listen();
+        maps_.emplace_back([this, map = std::move(map)] () {
             auto start = Core::Time::GetTickCount();
-            while (!stop_.load() && server.is_active()) {
+            while (!stop_.load() && map->is_active()) {
                 std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
-                server.update(diff.count());
+                map->update(diff.count());
                 start = Core::Time::GetTickCount();
-                std::this_thread__sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         });
     }
 }
 
-void MapManager::~MapManager() {
+MapManager::~MapManager() {
     stop_.store(true);
     for (auto& map : maps_) {
         map.join();
