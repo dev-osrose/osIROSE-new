@@ -22,7 +22,7 @@
 CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }
 
-CLoginServer::~CLoginServer() { socket_->shutdown(true); }
+CLoginServer::~CLoginServer() { socket_[static_cast<int>(RoseCommon::SocketType::Client)]->shutdown(true); }
 
 void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (is_active()) {

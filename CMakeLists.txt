@@ -97,6 +97,8 @@ endif()
 IF(WITH_MYSQL)
   set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11-connector-mysql/include)
   find_package(MySQL REQUIRED)
+  
+  include(SQLPPGenerator)
 ENDIF()
 
 find_package(PythonInterp 2.7 REQUIRED)
@@ -124,6 +126,7 @@ endif()
 
 if(WITH_CRASH_REPORTS)
   find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
+  include(BreakpadSymbolGeneration)
 endif()
 
 if (WITH_TRACING)
@@ -177,7 +180,6 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 include_directories(${CMAKE_GEN_SRC_DIR})
-
 
 add_subdirectory(src)
 add_subdirectory(tools)

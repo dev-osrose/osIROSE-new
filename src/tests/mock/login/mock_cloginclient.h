@@ -15,7 +15,7 @@ class CLoginClient_Mock : public CLoginClient {
    virtual void set_socket(std::unique_ptr<Core::INetwork> _val) {
     CLoginClient::set_socket(std::move(_val));
 
-    socket_->registerOnSend(std::bind(&CLoginClient_Mock::OnSend, this, std::placeholders::_1));
+    socket_[0]->registerOnSend(std::bind(&CLoginClient_Mock::OnSend, this, std::placeholders::_1));
    }
 
  protected:
