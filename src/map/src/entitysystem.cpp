@@ -63,23 +63,28 @@ void EntitySystem::update(double dt) {
     toDispatch_.pop();
   }
   systemManager_.update(dt);
-  for (auto it : toDestroy_) {
-    if (it) {
-      saveCharacter(it.component<CharacterInfo>()->charId_, it);
-      auto basic = it.component<BasicInfo>();
-      nameToEntity_.erase(basic->name_);
-      idToEntity_.erase(basic->id_);
-      id_manager_.release_id(basic->id_);
-      it.destroy();
-    }
+  for (auto& it : delete_commands_) {
+    it->execute(*this);
   }
-  toDestroy_.clear();
+  delete_commands_.clear();
 }
 
 void EntitySystem::destroy(Entity entity) {
   if (!entity) return;
+  std::unique_ptr<CommandBase> ptr{new Command([entity] (EntitySystem &) {
+      if (!entity) return;
+      if (auto client = getClient(entity))
+        CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
+                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+      saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
+      auto basic = entity.component<BasicInfo>();
+      nameToEntity_.erase(basic->name_);
+      idToEntity_.erase(basic->id_);
+      id_manager_.release_id(basic->id_);
+      it.destroy();
+    })};
   std::lock_guard<std::mutex> lock(access_);
-  toDestroy_.push_back(entity);
+  create_commands_.emplace_back(std::move(ptr));
 }
 
 Entity EntitySystem::create() { return entityManager_.create(); }
