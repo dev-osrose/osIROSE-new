@@ -234,7 +234,7 @@ bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharR
   conn->execute(query);
 
   Core::CharacterTable table{};
-  auto charRes = conn(sqlpp::select(table.mapId).from(table).where(table.id == characterRealId_[selected_id]));
+  auto charRes = conn(sqlpp::select(table.map).from(table).where(table.id == characterRealId_[selected_id]));
   uint16_t map_id = charRes.front().map;
 
   std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
