@@ -44,8 +44,8 @@ class CRoseServer : public CRoseSocket {
     NEARBY_BUT_ME,
   };
 
-  static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
-  static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
+  void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
+  void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
 
   void set_socket(std::unique_ptr<Core::INetwork> _val, [[maybe_unused]] bool is_server = false) override {
    socket_ = std::move(_val);
