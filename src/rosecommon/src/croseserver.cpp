@@ -25,11 +25,6 @@
 
 namespace RoseCommon {
 
-std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::client_list_;
-std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::isc_list_;
-std::mutex CRoseServer::client_list_mutex_;
-std::mutex CRoseServer::isc_list_mutex_;
-
 CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::CNetwork_Asio>()),
   isc_server_(_iscServer) {
 
