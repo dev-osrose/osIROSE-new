@@ -66,7 +66,7 @@ void ChatSystem::normalChat(CMapClient &client, Entity entity, const CliNormalCh
     }
     return;
   }
-  CMapServer::SendPacket(client, CMapServer::eSendType::NEARBY,
+  manager_.SendPacket(client, CMapServer::eSendType::NEARBY,
                          *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }
 

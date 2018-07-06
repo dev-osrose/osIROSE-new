@@ -71,23 +71,23 @@ void EntitySystem::update(double dt) {
 
 void EntitySystem::destroy(Entity entity) {
   if (!entity) return;
-  std::unique_ptr<CommandBase> ptr{new Command([entity] (EntitySystem &) {
+  std::unique_ptr<CommandBase> ptr{new Command([this, entity] (EntitySystem &) mutable {
       if (!entity) return;
       if (auto client = getClient(entity); client)
-        CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
-                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+        SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
+                           *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
       else
-        CMapServer::SendPacket({}, CMapServer::eSendType::EVERYONE,
-                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+        SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
+                       *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
       saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
       auto basic = entity.component<BasicInfo>();
       nameToEntity_.erase(basic->name_);
       idToEntity_.erase(basic->id_);
       id_manager_.release_id(basic->id_);
-      it.destroy();
+      entity.destroy();
     })};
   std::lock_guard<std::mutex> lock(access_);
-  create_commands_.emplace_back(std::move(ptr));
+  delete_commands_.emplace_back(std::move(ptr));
 }
 
 Entity EntitySystem::create() { return entityManager_.create(); }
@@ -276,8 +276,16 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
 }
 
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
+  std::unique_ptr<CommandBase> ptr{new Command([this, s] (EntitySystem &) mutable {
+    for (auto entity : s) {
+        if (!entity) continue;
+        SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
+                   *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+        entity.destroy();
+    }
+  })};
   std::lock_guard<std::mutex> lock(access_);
-  toDestroy_.insert(toDestroy_.end(), s.begin(), s.end());
+  delete_commands_.emplace_back(std::move(ptr));
 }
 
 LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {

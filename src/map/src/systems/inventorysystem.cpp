@@ -65,7 +65,7 @@ void InventorySystem::processEquip(CMapClient &client, Entity entity, const Rose
     logger_->warn("There was an error while swapping items for client {}", getId(entity));
     return;
   }
-  CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
+  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE,
                          *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
   client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }
@@ -94,7 +94,7 @@ void InventorySystem::dropItem(CMapClient &client, Entity entity, const RoseComm
     droppedItem = removeItem(entity, packet.item());
   }
   Entity item = manager_.buildItem(entity, std::move(droppedItem));
-  CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_DROP_ITEM>(item));
+  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_DROP_ITEM>(item));
 }
 
 bool InventorySystem::addItem(Entity e, Item &&item) {
@@ -123,8 +123,8 @@ Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
   if (slot < Inventory::MAX_EQUIP_ITEMS) {
     // if the item removed was equipped, we send the update to everybody in range
     // this can happen if the equipment is destroyed while in combat or something
-    CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE,
-                           *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, slot));
+    manager_.SendPacket(client, CMapServer::eSendType::EVERYONE,
+                                           *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, slot));
   }
   return item;
 }

@@ -23,7 +23,7 @@ class InventorySystem : public System {
   static bool swapItems(Entity entity, uint8_t &a, uint8_t &b);
 
   static bool addItem(Entity entity, RoseCommon::Item &&item);
-  static RoseCommon::Item removeItem(Entity entity, uint8_t slot);
+  RoseCommon::Item removeItem(Entity entity, uint8_t slot);
 
   std::optional<RoseCommon::Item> buildItem(uint8_t type, uint16_t id, uint16_t life = 1000, bool isAppraised = true);
 

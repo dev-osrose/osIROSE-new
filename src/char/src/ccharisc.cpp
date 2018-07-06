@@ -24,9 +24,9 @@
 
 using namespace RoseCommon;
 
-CCharISC::CCharISC() : CRoseISC() {}
+CCharISC::CCharISC() : CRoseISC(), server_(nullptr) {}
 
-CCharISC::CCharISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {
+CCharISC::CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
   socket_->registerOnConnected(std::bind(&CCharISC::OnConnected, this));
   socket_->registerOnShutdown(std::bind(&CCharISC::OnShutdown, this));
 }
@@ -88,8 +88,8 @@ bool CCharISC::ServerRegister(
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
-  std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
-  for (auto& server : CCharServer::GetISCList()) {
+  std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+  for (auto& server : server_->GetISCList()) {
     CCharISC* svr = static_cast<CCharISC*>(server.get());
     if (!svr) {
         continue;
@@ -153,8 +153,8 @@ bool CCharISC::OnShutdown() {
       }
     } else {
       auto packet = makePacket<ePacketType::ISC_SHUTDOWN>(get_type(), get_id());
-      std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
-      for (auto& server : CCharServer::GetISCList()) {
+      std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+      for (auto& server : server_->GetISCList()) {
         CCharISC* svr = static_cast<CCharISC*>(server.get());
         if (!svr) {
             continue;

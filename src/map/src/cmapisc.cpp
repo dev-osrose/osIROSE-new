@@ -22,11 +22,11 @@
 
 using namespace RoseCommon;
 
-CMapISC::CMapISC() : CRoseISC() {
+CMapISC::CMapISC() : CRoseISC(), server_(nullptr) {
   //  socket_->set_type(iscPacket::ServerType::MAP_MASTER);
 }
 
-CMapISC::CMapISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {
+CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
   socket_->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
   socket_->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
   socket_->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
@@ -132,8 +132,8 @@ bool CMapISC::OnShutdown() {
       }
     } else {
       auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
-      std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
-      for (auto& server : CMapServer::GetISCList()) {
+      std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+      for (auto& server : server_->GetISCList()) {
         CMapISC* svr = static_cast<CMapISC*>(server.get());
         if (!svr) {
           continue;

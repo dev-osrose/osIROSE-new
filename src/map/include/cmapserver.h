@@ -30,9 +30,9 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   void update(double dt);
 
-  static void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
+  void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
                          RoseCommon::CRosePacket& _buffer);
-  static void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
+  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
                          RoseCommon::CRosePacket& _buffer);
  
   inline LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_.value(); }

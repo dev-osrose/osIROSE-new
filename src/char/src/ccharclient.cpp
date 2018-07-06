@@ -33,7 +33,7 @@ using namespace RoseCommon;
 CCharClient::CCharClient()
     : CRoseClient(), accessRights_(0), loginState_(eSTATE::DEFAULT), sessionId_(0), userId_(0), channelId_(0), server_(nullptr) {}
 
-CCharClient::CCharClient(CCharClient *server, std::unique_ptr<Core::INetwork> _sock)
+CCharClient::CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       accessRights_(0),
       loginState_(eSTATE::DEFAULT),

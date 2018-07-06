@@ -21,10 +21,12 @@ namespace RoseCommon {
 class IscServerRegister;
 }
 
+class CMapServer;
+
 class CMapISC : public RoseCommon::CRoseISC {
  public:
   CMapISC();
-  CMapISC(std::unique_ptr<Core::INetwork> _sock);
+  CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock);
 
   bool IsChar() const;
 
@@ -34,6 +36,9 @@ class CMapISC : public RoseCommon::CRoseISC {
 
   virtual void OnConnected() override;
   virtual bool OnShutdown() override;
+
+ private:
+  CMapServer *server_;
 };
 
 #endif
