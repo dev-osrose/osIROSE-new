@@ -73,8 +73,11 @@ void EntitySystem::destroy(Entity entity) {
   if (!entity) return;
   std::unique_ptr<CommandBase> ptr{new Command([entity] (EntitySystem &) {
       if (!entity) return;
-      if (auto client = getClient(entity))
+      if (auto client = getClient(entity); client)
         CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
+                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+      else
+        CMapServer::SendPacket({}, CMapServer::eSendType::EVERYONE,
                                *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
       saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
       auto basic = entity.component<BasicInfo>();
