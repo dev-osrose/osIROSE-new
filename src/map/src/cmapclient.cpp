@@ -41,7 +41,7 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       charid_(0),
       entitySystem_(entitySystem) {}
 
-CMapClient::~CMapClient() { entitySystem_->destroy(entity_); }
+CMapClient::~CMapClient() {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -108,8 +108,7 @@ void CMapClient::OnDisconnected() {
   if (isOnMap(entity_)) {
     entity_.component<BasicInfo>()->isOnMap_.store(false);
     entitySystem_->saveCharacter(charid_, entity_);
-    CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
-                           *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+    entitySystem_->destroy(entity_);
 
     Core::AccountTable table{};
     auto conn = Core::connectionPool.getConnection(Core::osirose);
