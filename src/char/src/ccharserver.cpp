@@ -31,7 +31,7 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      std::shared_ptr<CCharClient> nClient = std::make_shared<CCharClient>(std::move(_sock));
+      std::shared_ptr<CCharClient> nClient = std::make_shared<CCharClient>(this, std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
