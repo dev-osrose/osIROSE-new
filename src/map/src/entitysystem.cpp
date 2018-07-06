@@ -283,3 +283,12 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
 LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
   return server_->get_script_loader();
 }
+
+void EntitySystem::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServer::eSendType type,
+                            CRosePacket& _buffer) {
+  server_->SendPacket(sender, type, _buffer);
+}
+
+void EntitySystem::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket& _buffer) {
+  server_->SendPacket(sender, type, _buffer);
+}
