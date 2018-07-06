@@ -29,12 +29,12 @@ class CRoseServer : public CRoseSocket {
 
   bool IsISCServer() const { return isc_server_; }
 
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetClientList() {
+  std::forward_list<std::shared_ptr<CRoseClient>>& GetClientList() {
     return client_list_;
   }
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
-  static std::mutex& GetClientListMutex() { return client_list_mutex_; }
-  static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
+  std::forward_list<std::shared_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
+  std::mutex& GetClientListMutex() { return client_list_mutex_; }
+  std::mutex& GetISCListMutex() { return isc_list_mutex_; }
 
   enum class eSendType : uint8_t {
     EVERYONE,
@@ -57,10 +57,10 @@ class CRoseServer : public CRoseSocket {
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) ;
 
   bool isc_server_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> client_list_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> isc_list_;
-  static std::mutex client_list_mutex_;
-  static std::mutex isc_list_mutex_;
+  std::forward_list<std::shared_ptr<CRoseClient>> client_list_;
+  std::forward_list<std::shared_ptr<CRoseClient>> isc_list_;
+  std::mutex client_list_mutex_;
+  std::mutex isc_list_mutex_;
 };
 
 }
