@@ -127,10 +127,6 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 //  }
 }
 
-void CRoseServer::SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer) {
-    CRoseServer::SendPacket(&sender, type, _buffer);
-}
-
 void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer) {
   std::lock_guard<std::mutex> lock(client_list_mutex_);
   switch(type)
