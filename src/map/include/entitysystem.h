@@ -99,7 +99,6 @@ class EntitySystem {
   EntityManager entityManager_;
   SystemManager systemManager_;
   mutable std::mutex access_;
-  std::vector<Entity> toDestroy_;
   std::unordered_map<std::string, Entity> nameToEntity_;
   std::unordered_map<uint32_t, Entity> idToEntity_;
   std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
@@ -125,6 +124,7 @@ class EntitySystem {
   };
 
   std::vector<std::unique_ptr<CommandBase>> create_commands_;
+ std::vector<std::unique_ptr<CommandBase>> delete_commands_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */
