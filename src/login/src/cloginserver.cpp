@@ -19,7 +19,7 @@
 #include "config.h"
 #include "platform_defines.h"
 
-CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
+CLoginServer::CLoginServer(bool _isc, CLoginServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
 }
 
 CLoginServer::~CLoginServer() { socket_[static_cast<int>(RoseCommon::SocketType::Client)]->shutdown(true); }

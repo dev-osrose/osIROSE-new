@@ -20,12 +20,13 @@
 
 using namespace RoseCommon;
 
-CMapServer::CMapServer(bool _isc, int16_t mapidx)
+CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server)
     : CRoseServer(_isc),
       map_idx_(mapidx),
       client_count_(0),
       server_count_(0),
-      entity_system_(std::make_shared<EntitySystem>(this)) {
+      entity_system_(std::make_shared<EntitySystem>(this)),
+      iscServer_(server) {
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle

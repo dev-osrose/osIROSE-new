@@ -208,8 +208,8 @@ int main(int argc, char* argv[]) {
                 config.database().host,
                 config.database().port));
 
-    CLoginServer clientServer;
     CLoginServer iscServer(true);
+    CLoginServer clientServer(false, &iscServer);
 
     clientServer.init(config.serverData().ip, config.loginServer().clientPort);
     clientServer.listen();

@@ -23,7 +23,7 @@
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
-  CMapServer(bool _isc = false, int16_t mapidx = -1);
+  CMapServer(bool _isc = false, int16_t mapidx = -1, CMapServer* iscServer = nullptr);
   virtual ~CMapServer();
 
   int16_t GetMapIDX() const { return map_idx_; }
@@ -37,6 +37,17 @@ class CMapServer : public RoseCommon::CRoseServer {
  
   inline LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_.value(); }
 
+  std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {
+      if (iscServer_)
+          return iscServer_->GetISCList();
+      return RoseCommon::CRoseServer::GetISCList();
+  }
+  std::mutex& GetISCListMutex() {
+      if (iscServer_)
+          return iscServer_->GetISCListMutex();
+      return RoseCommon::CRoseServer::GetISCListMutex();
+  }
+
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
 
@@ -46,6 +57,9 @@ class CMapServer : public RoseCommon::CRoseServer {
   uint32_t server_count_;
   std::shared_ptr<EntitySystem> entity_system_;
   std::optional<LuaScript::ScriptLoader> script_loader_;
+
+ private:
+  CMapServer *iscServer_;
 };
 
 #endif

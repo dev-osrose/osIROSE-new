@@ -20,7 +20,7 @@
 
 using namespace RoseCommon;
 
-CCharServer::CCharServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
+CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
 }
 
 CCharServer::~CCharServer() { socket_[SocketType::Client]->shutdown(); }
