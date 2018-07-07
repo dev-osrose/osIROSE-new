@@ -109,6 +109,7 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
     } else {
         if (auto client = getClient(entity)) {
             auto &config = Core::Config::getInstance();
+            client->switch_server();
             client->send(*makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
                 config.mapServer().clientPort + map_id,
                 client->get_session_id(),

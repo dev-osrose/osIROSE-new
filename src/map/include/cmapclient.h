@@ -40,6 +40,8 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
 
   uint32_t get_session_id() const { return sessionId_; }
 
+  void switch_server() { login_state_ = eSTATE::SWITCHING; }
+
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual void OnDisconnected() override;
@@ -52,6 +54,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,
+    SWITCHING,
   };
 
   uint16_t access_rights_;

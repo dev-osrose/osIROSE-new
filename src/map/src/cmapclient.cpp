@@ -108,9 +108,11 @@ void CMapClient::OnDisconnected() {
     entity_.component<BasicInfo>()->isOnMap_.store(false);
     entitySystem_->destroy(entity_);
 
-    Core::AccountTable table{};
-    auto conn = Core::connectionPool.getConnection(Core::osirose);
-    conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
+    if (login_state_ != eSTATE::SWITCHING) {
+        Core::AccountTable table{};
+        auto conn = Core::connectionPool.getConnection(Core::osirose);
+        conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
+    }
   }
   logger_->trace("CMapClient::OnDisconnected() end");
 }
@@ -152,7 +154,6 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
         conn(sqlpp::update(sessions)
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
-        conn(sqlpp::update(accounts).set(accounts.online = 1).where(accounts.id == get_id()));
         entity_.assign<SocketConnector>(shared_from_this());
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));
