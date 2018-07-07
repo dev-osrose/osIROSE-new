@@ -1,16 +1,14 @@
-#include <sstream>
-
 #include "systems/chatsystem.h"
-#include "cli_normalchat.h"
-#include "cli_partychat.h"
-#include "cli_whisperchat.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
 #include "itemdb.h"
 #include "srv_normalchat.h"
+#include "cli_normalchat.h"
 #include "srv_partychat.h"
 #include "srv_whisperchat.h"
-#include "systems/inventorysystem.h"
+#include "cli_whisperchat.h"
+#include "cli_partychat.h"
+#include "gm_commands.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -32,40 +30,7 @@ void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
 void ChatSystem::normalChat(CMapClient &client, Entity entity, const CliNormalChat &packet) {
   logger_->trace("ChatSystem::normalChat");
   if (!entity.component<BasicInfo>()) return;
-  if (packet.message()[0] == '/') {
-    logger_->info("GM command from {} : {}", getId(entity), packet.message());
-    std::stringstream ss(packet.message());
-    std::string command;
-    ss >> command;
-    if (command == "/item") {
-      uint16_t type = 0, id = 0;
-      ss >> type >> id;
-      if (!type || !id) {
-        logger_->info("Wrong number of arguments for GM command {} from {}", packet.message(), getId(entity));
-        client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Usage: /item <type> <id>"));
-        return;
-      } else if (!ItemDatabase::getInstance().itemExists(type, id)) {
-        logger_->info("Wrong type, id: {}, {}", type, id);
-        client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} doesn't exists", type, id)));
-        return;
-      }
-      auto invSys = manager_.get<InventorySystem>();
-      auto item = invSys->buildItem(type, id);
-      if (!item) {
-        client.send(
-            *makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Error while building the object, check the logs"));
-      } else if (!InventorySystem::addItem(entity, std::move(item.value()))) {
-        logger_->info("Inventory full for {}", getId(entity));
-        client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
-      } else {
-        logger_->info("Item {}:{} added to {}", type, id, getId(entity));
-        client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {}:{} added", type, id)));
-      }
-    } else if (command == "/load_npc") {
-      client.get_entity_system()->get_script_loader().load_npcs(); //FIXME : temporary to show how we could do it
-    }
-    return;
-  }
+  if (executeGM(packet.message(), manager_, entity)) return;
   manager_.SendPacket(client, CMapServer::eSendType::NEARBY,
                          *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }

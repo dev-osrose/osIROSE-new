@@ -17,6 +17,7 @@ SET( SOURCES_HEADER
   include/id_manager.h
   include/script_loader.h
   include/map_manager.h
+  include/gm_commands.h
   include/systems/system.h
   include/systems/movementsystem.h
   include/systems/timesystem.h
@@ -37,6 +38,7 @@ SET( SOURCES_MAIN
   src/id_manager.cpp
   src/script_loader.cpp
   src/map_manager.cpp
+  src/gm_commands.cpp
   src/systems/movementsystem.cpp
   src/systems/timesystem.cpp
   src/systems/updatesystem.cpp

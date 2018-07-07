@@ -13,6 +13,8 @@
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
 
+#include "srv_npcchar.h"
+
 using namespace RoseCommon;
 EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(server) {
   systemManager_.add<Systems::MovementSystem>();
