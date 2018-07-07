@@ -7,17 +7,18 @@
 #include "logconsole.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
-#include "systems/inventorysystem.h"
-#include "systems/chatsystem.h"
 #include "itemdb.h"
 #include "srv_whisperchat.h"
+#include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
+#include "systems/movementsystem.h"
 #include "gm_commands.h"
 
 using namespace Systems;
 using namespace RoseCommon;
 
 namespace {
+void help(Entity entity, const std::string& command = "");
 
 void item(std::stringstream &&ss, SystemManager &manager, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
@@ -26,7 +27,7 @@ void item(std::stringstream &&ss, SystemManager &manager, Entity e) {
     ss >> type >> id;
     if (!type || !id) {
         logger->info("Wrong number of arguments for GM command {} from {}", fmt::format("/item {}", ss.str()), getId(e));
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Usage: /item <type> <id>"));
+        help(e, "/item");
         return;
     } else if (!ItemDatabase::getInstance().itemExists(type, id)) {
         logger->info("Wrong type, id: {}, {}", type, id);
@@ -51,16 +52,35 @@ void load_npc(std::stringstream&&, SystemManager&, Entity e) {
     client->get_entity_system()->get_script_loader().load_npcs();
 }
 
+void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    auto client = getClient(e);
+    uint16_t map_id = 0;
+    float x = 0.f, y = 0.f;
+    ss >> map_id >> x >> y;
+    if (!map_id || !x || !y) {
+        logger->info("Wrong number of arguments for GM command {} from {}", fmt::format("/tp {}", ss.str()), getId(e));
+        help(e, "/tp");
+        return;
+    }
+    manager.get<MovementSystem>()->teleport(e, map_id, x, y);
+}
+
 std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
     {"/item", {item, "Creates an item. Usage: /item <type> <id>"}},
-    {"/load_npc", {load_npc, "Loads npc(s). TODO"}}
+    {"/load_npc", {load_npc, "Loads npc(s). TODO"}},
+    {"/tp", {teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
 };
 
-void help(Entity entity) {
+void help(Entity entity, const std::string& command) {
     auto client = getClient(entity);
     std::string text;
-    for (const auto &[key, value] : commands) {
-        text += key + "\t" + value.second + "\n";
+    if (command.size()) {
+        text = command + "\t" + commands[command].second;
+    } else {
+        for (const auto &[key, value] : commands) {
+            text += key + "\t" + value.second + "\n";
+        }
     }
     client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
 }

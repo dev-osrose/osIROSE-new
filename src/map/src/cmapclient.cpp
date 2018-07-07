@@ -55,7 +55,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
-      logger_->warn("Change character hasn't been implmented yet.");
+      logger_->warn("Change character hasn't been implemented yet.");
       // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
       // change their character
       return true;
@@ -65,7 +65,6 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
-      entity_.component<BasicInfo>()->isOnMap_.store(false);
       break;
     default:
       break;
@@ -153,6 +152,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
         conn(sqlpp::update(sessions)
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
+        conn(sqlpp::update(accounts).set(accounts.online = 1).where(accounts.id == get_id()));
         entity_.assign<SocketConnector>(shared_from_this());
 
         auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));

@@ -38,6 +38,8 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
  
   inline std::shared_ptr<EntitySystem> get_entity_system() noexcept { return entitySystem_; }
 
+  uint32_t get_session_id() const { return sessionId_; }
+
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
   virtual void OnDisconnected() override;

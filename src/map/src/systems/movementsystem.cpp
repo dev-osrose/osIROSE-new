@@ -6,6 +6,10 @@
 #include "packetfactory.h"
 #include "srv_mousecmd.h"
 #include "srv_stopmoving.h"
+#include "srv_adjustposition.h"
+#include "srv_switchserver.h"
+#include "config.h"
+#include "cmapclient.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -16,7 +20,7 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
   manager.getEntityManager().on_component_removed<Destination>([this](Entity entity, Destination *dest) {
     if (!entity) return;
     if (auto client = getClient(entity))
-      manager_.SendPacket(client, CMapServer::eSendType::EVERYONE,
+      manager_.SendPacket(client, CMapServer::eSendType::NEARBY,
                                              *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
     // TODO: check what type entity.component<BasicInfo>()->targetId_ is and execute corresponding action (npc talk, attack, item pickup...)
   });
@@ -42,6 +46,7 @@ void MovementSystem::update(EntityManager &es, double dt) {
       position->x_ += dx * dt / ntime;
       position->y_ += dy * dt / ntime;
     }
+    // TODO: check if position is near warpgate and force teleport
   }
 }
 
@@ -90,4 +95,25 @@ void MovementSystem::processMove(CMapClient &, Entity entity, const CliMouseCmd 
 void MovementSystem::stopMoving(CMapClient &, Entity entity, const CliStopMoving &packet) {
   logger_->trace("MovementSystem::stopMoving");
   stop(entity, packet.x(), packet.y());
+}
+
+void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) {
+    entity.component<BasicInfo>()->targetId_ = 0; // to avoid doing anything in the destination callback
+    entity.remove<Destination>();
+    auto pos = entity.component<Position>();
+    pos->x_ = x;
+    pos->y_ = y;
+    if (pos->map_ == map_id) {
+        manager_.SendPacket(getClient(entity), CMapServer::eSendType::EVERYONE, 
+                            *makePacket<ePacketType::PAKWC_ADJUST_POSITION>(entity));
+    } else {
+        if (auto client = getClient(entity)) {
+            auto &config = Core::Config::getInstance();
+            client->send(*makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
+                config.mapServer().clientPort + map_id,
+                client->get_session_id(),
+                0,
+                config.serverData().ip));
+        }
+    }
 }

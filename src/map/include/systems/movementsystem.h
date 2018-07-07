@@ -5,6 +5,7 @@
 namespace RoseCommon {
 class CliMouseCmd;
 class CliStopMoving;
+class CliChangeMapReq;
 }  // namespace RoseCommon
 
 namespace Systems {
@@ -17,6 +18,8 @@ class MovementSystem : public System {
   virtual void update(EntityManager &es, double dt);
 
   void move(Entity entity, float x, float y, uint16_t target = 0);
+
+  void teleport(Entity entity, uint16_t map_id, float x, float y);
 
   void stop(Entity entity, float x, float y);
 
