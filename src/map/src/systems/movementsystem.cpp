@@ -24,7 +24,9 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
                                              *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
     // TODO: check what type entity.component<BasicInfo>()->targetId_ is and execute corresponding action (npc talk, attack, item pickup...)
   });
-  // FIXME : use es.on_component_added for Destination? -> what happens if the destination is only updated
+  manager.getEntityManager().on_component_added<Position>([this](Entity entity, Position*) {
+      updatePosition(entity);
+  });
 }
 
 void MovementSystem::update(EntityManager &es, double dt) {
@@ -46,7 +48,11 @@ void MovementSystem::update(EntityManager &es, double dt) {
       position->x_ += dx * dt / ntime;
       position->y_ += dy * dt / ntime;
     }
-    // TODO: check if position is near warpgate and force teleport
+    updatePosition(entity);
+    if (Entity e = is_on_warpgate(entity); e) {
+        auto dest = e.component<Destination>();
+        teleport(entity, dest->dist_, dest->x_, dest->y_);
+    }
   }
 }
 
@@ -117,4 +123,18 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
                 config.serverData().ip));
         }
     }
+}
+
+bool MovementSystem::nearby(Entity a, Entity b) const {
+    (void)a;
+    (void)b;
+    // TODO: implement the function
+    return false;
+}
+
+void MovementSystem::updatePosition(Entity e) {
+}
+
+Entity MovementSystem::is_on_warpgate(Entity e) {
+    return {};
 }

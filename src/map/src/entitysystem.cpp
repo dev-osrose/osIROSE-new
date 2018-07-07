@@ -99,15 +99,7 @@ void EntitySystem::destroy(Entity entity) {
 Entity EntitySystem::create() { return entityManager_.create(); }
 
 bool EntitySystem::isNearby(Entity a, Entity b) {
-  return true;  // FIXME : actually implement the sight calculation instead of the distance
-  if (!a || !b) return false;
-  auto posa = a.component<Position>();
-  auto posb = b.component<Position>();
-  if (!posa || !posb) return false;  // FIXME : is it a bug if there is no position?
-  if (posa->map_ != posb->map_) return false;
-  double dist = (posa->x_ - posb->x_) * (posa->x_ - posb->x_) + (posa->y_ - posb->y_) * (posa->y_ - posb->y_);
-  if (dist > NEARBY_DIST) return false;
-  return true;
+    return systemManager_.get<Systems::MovementSystem>()->nearby(a, b);
 }
 
 bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {

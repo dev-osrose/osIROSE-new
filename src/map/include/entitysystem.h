@@ -33,10 +33,6 @@
 #include "systems/system.h"
 #include "id_manager.h"
 
-// FIXME : set those values in the config file/database ?
-#define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
-#define POSITION_CHEATING 1000 * 1000
-
 class CMapServer;
 
 namespace LuaScript {

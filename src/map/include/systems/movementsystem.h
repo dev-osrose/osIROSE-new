@@ -23,8 +23,16 @@ class MovementSystem : public System {
 
   void stop(Entity entity, float x, float y);
 
+  bool nearby(Entity a, Entity b) const;
+
   void processMove(CMapClient &client, Entity entity, const RoseCommon::CliMouseCmd &packet);
   void stopMoving(CMapClient &client, Entity entity, const RoseCommon::CliStopMoving &packet);
+
+ protected:
+  void updatePosition(Entity e);
+  Entity is_on_warpgate(Entity e);
+
+  static constexpr double POSITION_CHEATING = 100.;
 };
 
 }  // namespace Systems
