@@ -1,4 +1,6 @@
 #include <cmath>
+#include <algorithm>
+
 #include "systems/movementsystem.h"
 #include "cli_mousecmd.h"
 #include "cli_stopmoving.h"
@@ -40,6 +42,8 @@ void MovementSystem::update(EntityManager &es, double dt) {
     destination->dist_ = distance;
     float speed = advanced->runSpeed_;
     float ntime = distance / speed;
+    float old_x = position->x_;
+    float old_y = position->y_;
     if (ntime <= dt || distance == 0) {
       position->x_ = destination->x_;
       position->y_ = destination->y_;
@@ -48,7 +52,7 @@ void MovementSystem::update(EntityManager &es, double dt) {
       position->x_ += dx * dt / ntime;
       position->y_ += dy * dt / ntime;
     }
-    updatePosition(entity);
+    updatePosition(entity, old_x, old_y);
     if (Entity e = is_on_warpgate(entity); e) {
         auto dest = e.component<Destination>();
         teleport(entity, dest->dist_, dest->x_, dest->y_);
@@ -125,14 +129,32 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
     }
 }
 
-bool MovementSystem::nearby(Entity a, Entity b) const {
-    (void)a;
-    (void)b;
-    // TODO: implement the function
+namespace {
+std::tuple<uint16_t, uint16_t> get_grid_position(Entity e) {
+    auto pos = e.component<Position>();
+    uint16_t x = pos->x_ / 100.f;
+    uint16_t y = pos->y_ / 100.f;
+    return {x, y};
+}
+}
+
+bool MovementSystem::is_nearby(Entity a, Entity b) const {
+    auto pos_a = get_grid_position(a);
+    auto pos_b = get_grid_position(b);
+    if (std::abs(std::get<0>(pos_a) - std::get<0>(pos_b)) <= 1
+        && std::abs(std::get<1>(pos_a) - std::get<1>(pos_b)) <= 1)
+        return true;
     return false;
 }
 
-void MovementSystem::updatePosition(Entity e) {
+void MovementSystem::updatePosition(Entity e, float old_x, float old_y) {
+    if (old_x && old_y) {
+        uint16_t x = old_x / 100.f;
+        uint16_t y = old_y / 100.f;
+        auto &list = grid[{x, y}];
+        std::remove(list.begin(), list.end(), e);
+    }
+    grid[get_grid_position(e)].push_back(e);
 }
 
 Entity MovementSystem::is_on_warpgate(Entity e) {

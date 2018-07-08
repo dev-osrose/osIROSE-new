@@ -28,13 +28,13 @@ class MovementSystem : public System {
 
   void stop(Entity entity, float x, float y);
 
-  bool nearby(Entity a, Entity b) const;
+  bool is_nearby(Entity a, Entity b) const;
 
   void processMove(CMapClient &client, Entity entity, const RoseCommon::CliMouseCmd &packet);
   void stopMoving(CMapClient &client, Entity entity, const RoseCommon::CliStopMoving &packet);
 
  protected:
-  void updatePosition(Entity e);
+  void updatePosition(Entity e, float old_x = 0.f, float old_y = 0.f);
   Entity is_on_warpgate(Entity e);
 
   static constexpr double POSITION_CHEATING = 100.;

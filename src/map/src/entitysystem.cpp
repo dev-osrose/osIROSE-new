@@ -99,7 +99,7 @@ void EntitySystem::destroy(Entity entity) {
 Entity EntitySystem::create() { return entityManager_.create(); }
 
 bool EntitySystem::isNearby(Entity a, Entity b) {
-    return systemManager_.get<Systems::MovementSystem>()->nearby(a, b);
+    return systemManager_.get<Systems::MovementSystem>()->is_nearby(a, b);
 }
 
 bool EntitySystem::dispatch(Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {
