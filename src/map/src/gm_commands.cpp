@@ -74,15 +74,18 @@ std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &
 
 void help(Entity entity, const std::string& command) {
     auto client = getClient(entity);
-    std::string text;
+    client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help:"));
     if (command.size()) {
-        text = command + "\t" + commands[command].second;
+        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + commands[command].second));
     } else {
+        auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
         for (const auto &[key, value] : commands) {
-            text += key + "\t" + value.second + "\n";
+            std::string text;
+            text = key + " " + value.second;
+            logger->info("help: {}", text);
+            client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
         }
     }
-    client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
 }
 
 }

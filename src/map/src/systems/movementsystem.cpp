@@ -108,6 +108,8 @@ void MovementSystem::stopMoving(CMapClient &, Entity entity, const CliStopMoving
 }
 
 void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) {
+    logger_->trace("MovementSystem::teleport");
+    logger_->debug("Teleporting {} to {} {} {}", getId(entity), map_id, x, y);
     entity.component<BasicInfo>()->targetId_ = 0; // to avoid doing anything in the destination callback
     entity.remove<Destination>();
     auto pos = entity.component<Position>();
@@ -130,11 +132,15 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
 }
 
 namespace {
+constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
+    uint16_t gx = x / 1000.f;
+    uint16_t gy = y / 1000.f;
+    return {gx, gy};
+}
+
 std::tuple<uint16_t, uint16_t> get_grid_position(Entity e) {
     auto pos = e.component<Position>();
-    uint16_t x = pos->x_ / 100.f;
-    uint16_t y = pos->y_ / 100.f;
-    return {x, y};
+    return get_grid_position(pos->x_, pos->y_);
 }
 }
 
@@ -149,9 +155,7 @@ bool MovementSystem::is_nearby(Entity a, Entity b) const {
 
 void MovementSystem::updatePosition(Entity e, float old_x, float old_y) {
     if (old_x && old_y) {
-        uint16_t x = old_x / 100.f;
-        uint16_t y = old_y / 100.f;
-        auto &list = grid[{x, y}];
+        auto &list = grid[get_grid_position(old_x, old_y)];
         std::remove(list.begin(), list.end(), e);
     }
     grid[get_grid_position(e)].push_back(e);
