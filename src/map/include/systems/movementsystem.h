@@ -38,6 +38,7 @@ class MovementSystem : public System {
   Entity is_on_warpgate(Entity e);
 
   static constexpr double POSITION_CHEATING = 100.;
+  static constexpr float WARPGATE_DISTANCE = 50.f * 50.f; // distance is squared to avoid sqrt
 
   using key_t = std::tuple<uint16_t, uint16_t>;
 
