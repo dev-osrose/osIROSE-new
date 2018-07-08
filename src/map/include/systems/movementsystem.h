@@ -1,6 +1,11 @@
 #pragma once
 
 #include "system.h"
+#include "hash.h"
+
+#include <unordered_map>
+#include <vector>
+#include <tuple>
 
 namespace RoseCommon {
 class CliMouseCmd;
@@ -33,6 +38,10 @@ class MovementSystem : public System {
   Entity is_on_warpgate(Entity e);
 
   static constexpr double POSITION_CHEATING = 100.;
+
+  using key_t = std::tuple<uint16_t, uint16_t>;
+
+  std::unordered_map<key_t, std::vector<Entity>, Core::tuple_hash> grid;
 };
 
 }  // namespace Systems
