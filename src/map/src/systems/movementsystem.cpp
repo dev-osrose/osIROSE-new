@@ -93,6 +93,7 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     } else
       logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
                     getId(entity), position->x_, position->y_, x, y);
+      client->shutdown();
   }
 }
 
@@ -127,7 +128,7 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
                 client->get_session_id(),
                 0,
                 config.serverData().ip));
-            client->disconnect();
+            client->shutdown();
         }
     }
 }
