@@ -93,7 +93,6 @@ void MovementSystem::stop(Entity entity, float x, float y) {
     } else
       logger_->warn("Player {} attempted to cheat his position : calculated position : ({}, {}), got ({}, {})",
                     getId(entity), position->x_, position->y_, x, y);
-      client->shutdown(true);
   }
 }
 
