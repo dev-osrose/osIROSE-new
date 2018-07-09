@@ -16,7 +16,8 @@ SrvTeleportReply::SrvTeleportReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacke
 	*this >> position->x_;
 	*this >> position->y_;
 	*this >> advancedInfo->moveMode_;
-	*this >> advancedInfo->moveMode_;
+	uint8_t rideMode;
+	*this >> rideMode;
 
 }
 
@@ -37,7 +38,7 @@ void SrvTeleportReply::pack() {
 	*this << position->x_;
 	*this << position->y_;
 	*this << advancedInfo->moveMode_;
-	*this << advancedInfo->moveMode_;
+	*this << (uint8_t)0; // rideMode
 
 }
 
