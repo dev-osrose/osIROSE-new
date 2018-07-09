@@ -16,6 +16,20 @@
 using namespace Systems;
 using namespace RoseCommon;
 
+namespace {
+constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
+    uint16_t gx = x / 1000.f;
+    uint16_t gy = y / 1000.f;
+    return {gx, gy};
+}
+
+std::tuple<uint16_t, uint16_t> get_grid_position(Entity e) {
+    auto pos = e.component<Position>();
+    if (!pos) return {0, 0};
+    return get_grid_position(pos->x_, pos->y_);
+}
+}
+
 MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
   manager.registerDispatcher(ePacketType::PAKCS_MOUSE_CMD, &MovementSystem::processMove);
   manager.registerDispatcher(ePacketType::PAKCS_STOP_MOVING, &MovementSystem::stopMoving);
@@ -28,6 +42,11 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
   });
   manager.getEntityManager().on_component_added<Position>([this](Entity entity, Position*) {
       updatePosition(entity);
+  });
+  manager.getEntityManager().on_component_removed<Position>([this](Entity entity, Position* pos) {
+      // remove entity from grid
+      auto &patch = grid[get_grid_position(pos->x_, pos->y_)];
+      std::remove(patch.begin(), patch.end(), entity);
   });
 }
 
@@ -127,23 +146,9 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
                 client->get_session_id(),
                 0,
                 config.serverData().ip));
-            client->shutdown(true);
+            client->shutdown();
         }
     }
-}
-
-namespace {
-constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
-    uint16_t gx = x / 1000.f;
-    uint16_t gy = y / 1000.f;
-    return {gx, gy};
-}
-
-std::tuple<uint16_t, uint16_t> get_grid_position(Entity e) {
-    auto pos = e.component<Position>();
-    if (!pos) return {0, 0};
-    return get_grid_position(pos->x_, pos->y_);
-}
 }
 
 bool MovementSystem::is_nearby(Entity a, Entity b) const {
