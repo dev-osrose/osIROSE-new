@@ -167,7 +167,7 @@ void MovementSystem::updatePosition(Entity e, float old_x, float old_y) {
 Entity MovementSystem::is_on_warpgate(Entity e) {
     auto pos = e.component<Position>();
     for (auto &it : grid[get_grid_position(e)]) {
-        if (it.component<Warpgate>()) continue; // skip non warpgates
+        if (!it || !it.component<Warpgate>()) continue; // skip non warpgates
         auto warp_pos = it.component<Position>();
         float dx = pos->x_ - warp_pos->x_;
         float dy = pos->x_ - warp_pos->y_;
