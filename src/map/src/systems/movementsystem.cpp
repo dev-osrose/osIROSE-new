@@ -140,11 +140,13 @@ constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
 
 std::tuple<uint16_t, uint16_t> get_grid_position(Entity e) {
     auto pos = e.component<Position>();
+    if (!pos) return {0, 0};
     return get_grid_position(pos->x_, pos->y_);
 }
 }
 
 bool MovementSystem::is_nearby(Entity a, Entity b) const {
+    if (!a || !b) return false;
     auto pos_a = get_grid_position(a);
     auto pos_b = get_grid_position(b);
     if (std::abs(std::get<0>(pos_a) - std::get<0>(pos_b)) <= 1
