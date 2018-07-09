@@ -8,7 +8,7 @@
 #include "packetfactory.h"
 #include "srv_mousecmd.h"
 #include "srv_stopmoving.h"
-#include "srv_adjustposition.h"
+#include "srv_teleportreply.h"
 #include "srv_switchserver.h"
 #include "config.h"
 #include "cmapclient.h"
@@ -117,7 +117,7 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
     pos->y_ = y;
     if (pos->map_ == map_id) {
         manager_.SendPacket(getClient(entity), CMapServer::eSendType::EVERYONE, 
-                            *makePacket<ePacketType::PAKWC_ADJUST_POSITION>(entity));
+                            *makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity));
     } else {
         if (auto client = getClient(entity)) {
             auto &config = Core::Config::getInstance();
