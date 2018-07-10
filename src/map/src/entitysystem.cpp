@@ -77,7 +77,7 @@ void EntitySystem::destroy(Entity entity, bool save) {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
           if (auto client = getClient(entity); client)
-            es.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
+            es.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
                                *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
           else
             es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
