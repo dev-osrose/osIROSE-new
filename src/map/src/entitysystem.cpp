@@ -73,21 +73,21 @@ void EntitySystem::update(double dt) {
 
 void EntitySystem::destroy(Entity entity) {
   if (!entity) return;
-  std::unique_ptr<CommandBase> ptr{new Command([this, entity] (EntitySystem &) mutable {
+  std::unique_ptr<CommandBase> ptr{new Command([entity] (EntitySystem &es) mutable {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
           if (auto client = getClient(entity); client)
-            SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
+            es.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME,
                                *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
           else
-            SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
+            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
       if (!entity.component<Npc>()) {
-          saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
+          es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
           auto basic = entity.component<BasicInfo>();
-          nameToEntity_.erase(basic->name_);
-          idToEntity_.erase(basic->id_);
-          id_manager_.release_id(basic->id_);
+          es.nameToEntity_.erase(basic->name_);
+          es.idToEntity_.erase(basic->id_);
+          es.id_manager_.release_id(basic->id_);
       }
       }
       entity.destroy();
@@ -293,12 +293,12 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
 }
 
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
-  std::unique_ptr<CommandBase> ptr{new Command([this, s] (EntitySystem &) mutable {
+  std::unique_ptr<CommandBase> ptr{new Command([s] (EntitySystem &es) mutable {
     for (auto entity : s) {
         if (!entity) continue;
         if (!entity.component<Warpgate>())
-            SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-                       *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
+                         *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
         entity.destroy();
     }
   })};
