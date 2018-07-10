@@ -52,7 +52,7 @@ class EntitySystem {
 
   void update(double dt);
 
-  void destroy(Entity entity);
+  void destroy(Entity entity, bool save);
 
   Entity create();
 
