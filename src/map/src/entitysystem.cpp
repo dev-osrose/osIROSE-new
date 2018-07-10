@@ -71,7 +71,7 @@ void EntitySystem::update(double dt) {
   delete_commands_.clear();
 }
 
-void EntitySystem::destroy(Entity entity) {
+void EntitySystem::destroy(Entity entity, bool save) {
   if (!entity) return;
   std::unique_ptr<CommandBase> ptr{new Command([entity] (EntitySystem &es) mutable {
       if (!entity) return;
@@ -83,7 +83,7 @@ void EntitySystem::destroy(Entity entity) {
             es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
       if (!entity.component<Npc>()) {
-          es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
+          if (saev) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
           auto basic = entity.component<BasicInfo>();
           es.nameToEntity_.erase(basic->name_);
           es.idToEntity_.erase(basic->id_);
