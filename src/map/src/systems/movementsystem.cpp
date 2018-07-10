@@ -146,6 +146,7 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
                 client->get_session_id(),
                 0,
                 config.serverData().ip));
+            client->switch_server(); // this allow us to not remove the online bit for this client as it's only moving around servers
             client->shutdown();
         }
     }
