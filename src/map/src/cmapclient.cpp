@@ -106,7 +106,7 @@ void CMapClient::OnDisconnected() {
   logger_->trace("CMapClient::OnDisconnected() start");
   if (isOnMap(entity_)) {
     entity_.component<BasicInfo>()->isOnMap_.store(false);
-    entitySystem_->destroy(entity_);
+    entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
 
     if (login_state_ != eSTATE::SWITCHING) {
         Core::AccountTable table{};
