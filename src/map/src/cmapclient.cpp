@@ -155,7 +155,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
                  .where(sessions.id == sessionID));
         entity_.assign<SocketConnector>(shared_from_this());
 
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));
+        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_);
         send(*packet);
 
         // SEND PLAYER DATA HERE!!!!!!
