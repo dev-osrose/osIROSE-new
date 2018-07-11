@@ -104,16 +104,15 @@ void CMapClient::updateSession() {
 
 void CMapClient::OnDisconnected() {
   logger_->trace("CMapClient::OnDisconnected() start");
-  if (isOnMap(entity_)) {
-    entity_.component<BasicInfo>()->isOnMap_.store(false);
-    entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
+  if (login_state_ == eSTATE::DEFAULT) return;
+  entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
 
-    if (login_state_ != eSTATE::SWITCHING) {
-        Core::AccountTable table{};
-        auto conn = Core::connectionPool.getConnection(Core::osirose);
-        conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
-    }
+  if (login_state_ != eSTATE::SWITCHING) {
+      Core::AccountTable table{};
+      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
+  login_state_ = eSTATE::DEFAULT;
   logger_->trace("CMapClient::OnDisconnected() end");
 }
 

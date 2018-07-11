@@ -73,6 +73,9 @@ void EntitySystem::update(double dt) {
 
 void EntitySystem::destroy(Entity entity, bool save) {
   if (!entity) return;
+  std::lock_guard<std::mutex> lock(access_);
+  if (!isOnMap(entity)) return;
+  entity.component<BasicInfo>()->isOnMap_.store(false);
   std::unique_ptr<CommandBase> ptr{new Command([save, entity] (EntitySystem &es) mutable {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
@@ -92,7 +95,6 @@ void EntitySystem::destroy(Entity entity, bool save) {
       }
       entity.destroy();
     })};
-  std::lock_guard<std::mutex> lock(access_);
   delete_commands_.emplace_back(std::move(ptr));
 }
 
