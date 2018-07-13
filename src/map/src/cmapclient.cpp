@@ -26,6 +26,7 @@
 #include "srv_questdata.h"
 #include "srv_removeobject.h"
 #include "srv_selectcharreply.h"
+#include "srv_teleportreply.h"
 
 using namespace RoseCommon;
 
@@ -171,6 +172,8 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
 
           auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
           send(*packet5);
+        } else {
+          send(*makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity_));
         }
 
       } else {

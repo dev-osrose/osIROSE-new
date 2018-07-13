@@ -135,8 +135,7 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
     pos->x_ = x;
     pos->y_ = y;
     if (pos->map_ == map_id) {
-        manager_.SendPacket(getClient(entity), CMapServer::eSendType::EVERYONE, 
-                            *makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity));
+        getClient(entity)->send(*makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity));
     } else {
         if (auto client = getClient(entity)) {
             pos->map_ = map_id;
