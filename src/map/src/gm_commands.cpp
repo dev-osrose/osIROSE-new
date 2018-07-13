@@ -63,7 +63,7 @@ void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
         help(e, "/tp");
         return;
     }
-    manager.get<MovementSystem>()->teleport(e, map_id, x * 1000, y * 1000); // transforms from map coordinates to real coordinates
+    manager.get<MovementSystem>()->teleport(e, map_id, x * 100, y * 100); // transforms from map coordinates to real coordinates
 }
 
 std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
