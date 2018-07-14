@@ -37,7 +37,7 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
   e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
   auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
   basic->ownerId_ = creator.component<BasicInfo>()->id_;
-  itemToEntity_[basic->id_] = e;
+  registerEntity(e);
   return e;
 }
 
@@ -52,22 +52,33 @@ Entity EntitySystem::buildMobEntity(Entity spawner) {
     pos->z_ = spos->z_;
     auto spawn = spawner.component<Spawner>();
     e.assign<Npc>(spawn->mob_id_, 0);
+    registerEntity(e);
     return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
   if (!entity) return;
-  auto basic = entity.component<BasicInfo>();
-  if (!basic || basic->name_ == "" || !basic->id_) return;
-  nameToEntity_[basic->name_] = entity;
-  idToEntity_[basic->id_] = entity;
+  if (auto basic = entity.component<BasicInfo>(); basic) {
+      if (basic->id_)
+          idToEntity_[basic->id_] = entity;
+      if (basic->name_.size())
+          nameToEntity_[basic->name_] = entity;
+  }
 }
 
-Entity EntitySystem::getItemEntity(uint32_t id) { return itemToEntity_[id]; }
+void EntitySystem::unregisterEntity(Entity entity) {
+    if (!entity) return;
+    if (auto basic = entity.component<BasicInfo>(); basic) {
+        if (basic->id_)
+            idToEntity.erase(basic->id_);
+        if (basic->name_.size())
+            nameToEntity_.erase(basic->name_);
+    }
+}
 
 Entity EntitySystem::getEntity(const std::string& name) { return nameToEntity_[name]; }
 
-Entity EntitySystem::getEntity(uint32_t charId) { return idToEntity_[charId]; }
+Entity EntitySystem::getEntity(uint32_t id) { return idToEntity_[id]; }
 
 void EntitySystem::update(double dt) {
   std::lock_guard<std::mutex> lock(access_);
@@ -101,14 +112,19 @@ void EntitySystem::destroy(Entity entity, bool save) {
           else
             es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
                            *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
-      if (!entity.component<Npc>()) {
-          if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
-          auto basic = entity.component<BasicInfo>();
-          es.nameToEntity_.erase(basic->name_);
-          es.idToEntity_.erase(basic->id_);
-          es.id_manager_.release_id(basic->id_);
+          if (!entity.component<Npc>()) {
+              if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
+              auto basic = entity.component<BasicInfo>();
+              es.id_manager_.release_id(basic->id_);
+          } else if (auto basic = entity.component<BasicInfo>(); basic && basic->ownerId_) {
+            // this is a mob, we need to update the spawner
+            Entity spawner = idToEntity_[basic->ownerId_];
+            if (spawner) {
+                --spawner.component<Spawner>()->current_total_;
+            }
+          }
       }
-      }
+      unregisterEntity(entity);
       entity.destroy();
     })};
   delete_commands_.emplace_back(std::move(ptr));
