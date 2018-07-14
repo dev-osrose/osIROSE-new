@@ -29,10 +29,4 @@ CRoseClient::CRoseClient(std::unique_ptr<Core::INetwork> _sock) : CRoseSocket(st
 CRoseClient::~CRoseClient() {
 }
 
-bool CRoseClient::is_nearby(const CRoseClient* _otherClient) const {
-  (void)_otherClient;
-  logger_->trace("CRoseClient::IsNearby()");
-  return false;
-}
-
 }

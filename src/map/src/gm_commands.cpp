@@ -31,25 +31,24 @@ void item(std::stringstream &&ss, SystemManager &manager, Entity e) {
         return;
     } else if (!ItemDatabase::getInstance().itemExists(type, id)) {
         logger->info("Wrong type, id: {}, {}", type, id);
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} doesn't exists", type, id)));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} doesn't exists", type, id)));
         return;
     }
     auto inv = manager.get<InventorySystem>();
     auto item = inv->buildItem(type, id);
     if (!item) {
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Error while building the object, check the logs"));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Error while building the object, check the logs"));
     } else if (!InventorySystem::addItem(e, std::move(item.value()))) {
         logger->info("Inventory full for {}", getId(e));
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
     } else {
         logger->info("Item {}:{} added to {}", type, id, getId(e));
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {}:{} added", type, id)));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {}:{} added", type, id)));
     }
 }
 
-void load_npc(std::stringstream&&, SystemManager&, Entity e) {
-    auto client = getClient(e);
-    client->get_entity_system()->get_script_loader().load_npcs();
+void load_npc(std::stringstream&&, SystemManager&, Entity) {
+    //TODO: todo
 }
 
 void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
@@ -74,16 +73,16 @@ std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &
 
 void help(Entity entity, const std::string& command) {
     auto client = getClient(entity);
-    client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help:"));
+    client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help:"));
     if (command.size()) {
-        client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + commands[command].second));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + commands[command].second));
     } else {
         auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
         for (const auto &[key, value] : commands) {
             std::string text;
             text = key + " " + value.second;
             logger->info("help: {}", text);
-            client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
+            client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
         }
     }
 }

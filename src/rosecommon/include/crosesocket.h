@@ -60,6 +60,7 @@ class CRoseSocket {
     }
   };
 
+  virtual bool send(std::unique_ptr<CRosePacket>&& _buffer, int socket_id = static_cast<int>(SocketType::Client));
   virtual bool send(CRosePacket& _buffer, int socket_id = static_cast<int>(SocketType::Client));
   virtual bool send(std::unique_ptr<uint8_t[]> _buffer, int socket_id = static_cast<int>(SocketType::Client));
 

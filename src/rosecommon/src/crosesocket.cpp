@@ -64,6 +64,10 @@ CRoseSocket::~CRoseSocket() {
   logger_.reset();
 }
 
+bool CRoseSocket::send(std::unique_ptr<CRosePacket>&& _buffer, int socket_id) {
+  return CRoseSocket::send(_buffer->getPacked(), socket_id);
+}
+
 bool CRoseSocket::send(CRosePacket& _buffer, int socket_id) {
   return CRoseSocket::send(_buffer.getPacked(), socket_id);
 }

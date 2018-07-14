@@ -31,8 +31,6 @@ class CCharClient : public RoseCommon::CRoseClient {
   CCharClient();
   CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock);
 
-  bool is_nearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
-
   uint32_t sessionId() const { return sessionId_; }
 
  protected:

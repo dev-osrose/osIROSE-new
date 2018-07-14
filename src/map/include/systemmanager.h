@@ -120,11 +120,9 @@ class SystemManager {
 
   EntityManager &getEntityManager();
 
+  void saveCharacter(Entity entity);
 
-  void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
-                 RoseCommon::CRosePacket& _buffer);
-  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
-                 RoseCommon::CRosePacket& _buffer);
+  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, std::unique_ptr<RoseCommon::CRosePacket>&& _buffer);
 
  private:
   EntitySystem &entitySystem_;

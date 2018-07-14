@@ -31,11 +31,6 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   void update(std::chrono::milliseconds dt);
 
-  void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
-                         RoseCommon::CRosePacket& _buffer);
-  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
-                         RoseCommon::CRosePacket& _buffer);
- 
   inline LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_.value(); }
 
   std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {

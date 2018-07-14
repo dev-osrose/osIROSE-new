@@ -156,45 +156,32 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
                  .where(sessions.id == sessionID));
         entity_.assign<SocketConnector>(shared_from_this());
 
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_);
-        send(*packet);
+        send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_));
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
-          send(*packet2);
+          send(makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_));
 
-          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
-          send(*packet3);
+          send(makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_));
 
-          auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_);
-          send(*packet4);
+          send(makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_));
 
-          auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-          send(*packet5);
+          send(makePacket<ePacketType::PAKWC_BILLING_MESSAGE>());
         } else {
-          send(*makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity_));
+          send(makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity_));
         }
 
       } else {
         logger_->debug("Something wrong happened when creating the entity");
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
-        send(*packet);
+        send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0));
       }
     } else {
       logger_->debug("Client {} auth INVALID_PASS.", get_id());
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::INVALID_PASSWORD, 0);
-      send(*packet);
+      send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::INVALID_PASSWORD, 0));
     }
   } catch (const sqlpp::exception& e) {
     logger_->error("Error while accessing the database: {}", e.what());
-    auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
-    send(*packet);
+    send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0));
   }
   return true;
 };
-
-bool CMapClient::is_nearby(const CRoseClient* _otherClient) const {
-  logger_->trace("CMapClient::is_nearby()");
-  return entitySystem_->isNearby(entity_, _otherClient->getEntity());
-}

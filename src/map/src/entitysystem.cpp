@@ -110,11 +110,11 @@ void EntitySystem::destroy(Entity entity, bool save) {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
           if (auto client = getClient(entity); client)
-            es.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
-                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY_BUT_ME,
+                               makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
           else
-            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-                           *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY,
+                           makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
           if (!entity.component<Npc>()) {
               if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
               auto basic = entity.component<BasicInfo>();
@@ -317,8 +317,7 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
       pos->angle_ = angle;
       //e.assign<EntityApi>();
       // we send the new NPC to the existing clients
-      es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-              *makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
+      es.send(e, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
@@ -346,8 +345,7 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
     for (auto entity : s) {
         if (!entity) continue;
         if (!entity.component<Warpgate>())
-            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-                         *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
         entity.destroy();
     }
   })};
@@ -359,11 +357,6 @@ LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
   return server_->get_script_loader();
 }
 
-void EntitySystem::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServer::eSendType type,
-                            CRosePacket& _buffer) {
-  server_->SendPacket(sender, type, _buffer);
-}
-
-void EntitySystem::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket& _buffer) {
-  server_->SendPacket(sender, type, _buffer);
+void EntitySystem::send(Entity sender, CMapServer::eSendType type, std::unique_ptr<CRosePacket>&& _buffer) {
+  server_->SendPacket(sender, type, std::move(_buffer), std::bind(&EntitySystem::isNearby, this, std::placeholders::_1, std::placeholders::_2));
 }

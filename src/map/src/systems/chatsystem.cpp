@@ -27,12 +27,12 @@ void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
   if (auto client = getClient(entity)) client->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("server", msg));
 }
 
-void ChatSystem::normalChat(CMapClient &client, Entity entity, const CliNormalChat &packet) {
+void ChatSystem::normalChat(CMapClient&, Entity entity, const CliNormalChat &packet) {
   logger_->trace("ChatSystem::normalChat");
   if (!entity.component<BasicInfo>()) return;
   if (executeGM(packet.message(), manager_, entity)) return;
-  manager_.SendPacket(client, CMapServer::eSendType::NEARBY,
-                         *makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
+  manager_.send(entity, CMapServer::eSendType::NEARBY,
+                         makePacket<ePacketType::PAKWC_NORMAL_CHAT>(getId(entity), packet.message()));
 }
 
 void ChatSystem::whisperChat(CMapClient &client, Entity entity, const CliWhisperChat &packet) {
@@ -40,11 +40,11 @@ void ChatSystem::whisperChat(CMapClient &client, Entity entity, const CliWhisper
   if (!entity.component<BasicInfo>()) return;
   auto target = manager_.getEntity(packet.targetId());
   if (!target || !getClient(target)) {
-    client.send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
+    client.send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "User cannot be found or is offline"));
     return;
   }
   if (auto socket = getClient(target))
-    socket->send(*makePacket<ePacketType::PAKWC_WHISPER_CHAT>(getName(entity), packet.message()));
+    socket->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>(getName(entity), packet.message()));
 }
 
 void ChatSystem::partyChat(CMapClient &, Entity entity, const CliPartyChat &packet) {
@@ -57,6 +57,6 @@ void ChatSystem::partyChat(CMapClient &, Entity entity, const CliPartyChat &pack
   auto party = entity.component<Party>()->party_;
   for (auto it : party->members_) {
     if (auto socket = getClient(it))
-      socket->send(*makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
+      socket->send(makePacket<ePacketType::PAKWC_PARTY_CHAT>(getId(entity), packet.message()));
   }
 }

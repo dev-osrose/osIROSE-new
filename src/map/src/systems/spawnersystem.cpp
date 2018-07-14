@@ -14,7 +14,7 @@ void SpawnerSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
             spawn->until_update_ = 0ms;
             if (spawn->current_total_ < spawn->total_on_map_) {
                 Entity mob = manager_.buildMob(spawner);
-                manager_.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
+                manager_.send(spawner, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
                 ++spawn->current_total_;
             }
         }

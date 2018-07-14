@@ -32,8 +32,6 @@ class CRoseClient : public CRoseSocket {
   CRoseClient(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseClient();
 
-  virtual bool is_nearby(const CRoseClient* _otherClient) const;
-
   Entity getEntity() const { return entity_; }
 
  protected:

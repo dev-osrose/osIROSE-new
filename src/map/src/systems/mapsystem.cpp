@@ -24,25 +24,25 @@ void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const Ros
   auto basic = entity.component<BasicInfo>();
   auto info = entity.component<CharacterInfo>();
 
-  client.send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(getId(entity), advanced->hp_, advanced->mp_, basic->xp_,
+  client.send(makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(getId(entity), advanced->hp_, advanced->mp_, basic->xp_,
                                                                info->penaltyXp_, std::time(nullptr), 0));
   manager_.get<Systems::ChatSystem>()->sendMsg(entity, "You are client " + std::to_string(getId(entity)));
-  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
-                                         *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
+  manager_.send(entity, CMapServer::eSendType::NEARBY_BUT_ME,
+                                         makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
   auto &manager = manager_.getEntityManager();
   for (Entity e : manager.entities_with_components<BasicInfo, AdvancedInfo>()) {
     basic = e.component<BasicInfo>();
     if (basic->ownerId_ == 0 && e.component<Npc>()) {
-        client.send(*makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
+        client.send(makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
     } else if (e.component<Npc>()) {
-        client.send(*makePacket<ePacketType::PAKWC_MOB_CHAR>(e));
+        client.send(makePacket<ePacketType::PAKWC_MOB_CHAR>(e));
     } else {
         if (e != entity && basic->isOnMap_.load())
-            client.send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
+            client.send(makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));
     }
   }
   for (Entity e : manager.entities_with_components<Item>()) {
-    client.send(*makePacket<ePacketType::PAKWC_DROP_ITEM>(e));
+    client.send(makePacket<ePacketType::PAKWC_DROP_ITEM>(e));
   }
   entity.component<BasicInfo>()->isOnMap_.store(true);
 }

@@ -36,8 +36,8 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
   manager.getEntityManager().on_component_removed<Destination>([this](Entity entity, Destination *dest) {
     if (!entity) return;
     if (auto client = getClient(entity))
-      manager_.SendPacket(client, CMapServer::eSendType::NEARBY,
-                                             *makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
+      manager_.send(entity, CMapServer::eSendType::NEARBY,
+                                             makePacket<ePacketType::PAKWC_STOP_MOVING>(entity));
     // TODO: check what type entity.component<BasicInfo>()->targetId_ is and execute corresponding action (npc talk, attack, item pickup...)
   });
   manager.getEntityManager().on_component_added<Position>([this](Entity entity, Position*) {
@@ -97,7 +97,7 @@ void MovementSystem::move(Entity entity, float x, float y, uint16_t target) {
   entity.component<BasicInfo>()->targetId_ = target;
   // FIXME: what happens if the entity is an NPC or a monster?
   if (auto client = getClient(entity))
-    manager_.SendPacket(client, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
+    manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_MOUSE_CMD>(entity));
 }
 
 void MovementSystem::stop(Entity entity, float x, float y) {
@@ -136,19 +136,19 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
     pos->x_ = x;
     pos->y_ = y;
     if (pos->map_ == map_id) {
-        getClient(entity)->send(*makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity));
+        getClient(entity)->send(makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity));
     } else {
         if (auto client = getClient(entity)) {
             pos->map_ = map_id;
             auto &config = Core::Config::getInstance();
             client->switch_server();
-            client->send(*makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
+            client->send(makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
                 config.mapServer().clientPort + map_id,
                 client->get_session_id(),
                 0,
                 config.serverData().ip));
             client->switch_server(); // this allow us to not remove the online bit for this client as it's only moving around servers
-            client->get_entity_system()->saveCharacter(entity.component<CharacterInfo>()->charId_, entity); // force save
+            manager_.saveCharacter(entity); // force save
         }
     }
 }
