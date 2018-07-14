@@ -23,6 +23,7 @@ set( SOURCES_HEADER
   include/crash_report.h
   include/hash.h
   include/fuzzy_matching.h
+  include/random.h
 )
 
 set( SOURCES_BASE

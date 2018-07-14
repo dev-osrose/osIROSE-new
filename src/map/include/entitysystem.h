@@ -128,6 +128,9 @@ class EntitySystem {
 
   std::vector<std::unique_ptr<CommandBase>> create_commands_;
   std::vector<std::unique_ptr<CommandBase>> delete_commands_;
+
+ private:
+  static constexpr double drop_radius = 50.f;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

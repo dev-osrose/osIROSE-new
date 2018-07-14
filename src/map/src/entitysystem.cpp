@@ -1,6 +1,7 @@
 #include <set>
 #include <vector>
 
+#include "random.h"
 #include "entitysystem.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
@@ -34,7 +35,8 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
   Entity e = create();
   e.assign<Item>(std::move(item));
   auto pos = creator.component<Position>();
-  e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
+  auto newpos = Core::Random::getInstance().random_in_circle(pos->x_, pos->y_, drop_radius);
+  e.assign<Position>(std::get<0>(newpos), std::get<1>(newpos), pos->map_, 0);
   auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
   basic->ownerId_ = creator.component<BasicInfo>()->id_;
   registerEntity(e);
