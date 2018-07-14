@@ -47,14 +47,14 @@ class Random : public Singleton<Random> {
         }
 
         // doesn't actually returns a perfect unit circle as 1.0 can never be reached, but it's sufficient for our purposes
-        std::tuple<double, double> random_in_unit_circle(double x, double y) {
-            return {x + get_uniform(-1.f, 1.f), y + get_uniform(-1.f, 1.f)};
+        std::tuple<double, double> random_in_unit_circle() {
+            return {get_uniform(-1.f, 1.f), get_uniform(-1.f, 1.f)};
         }
 
         template <typename T>
         std::tuple<T, T> random_in_circle(T x, T y, T radius) {
-            auto unit = random_in_unit_circle(x, y);
-            return {std::get<0>(unit) * radius, std::get<1>(unit) * radius};
+            auto unit = random_in_unit_circle();
+            return {x + std::get<0>(unit) * radius, y + std::get<1>(unit) * radius};
         }
 
         virtual ~Random() = default;

@@ -1,4 +1,5 @@
 #include "systems/spawnersystem.h"
+#include "cmapserver.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -12,7 +13,8 @@ void SpawnerSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
         if (spawn->until_update_ > spawn->interval_) {
             spawn->until_update_ = 0ms;
             if (spawn->current_total_ < spawn->total_on_map_) {
-                manager_.buildMob(spawner);
+                Entity mob = manager_.buildMob(spawner);
+                manager_.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
                 ++spawn->current_total_;
             }
         }
