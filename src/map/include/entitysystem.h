@@ -58,6 +58,8 @@ class EntitySystem {
 
   Entity buildItemEntity(Entity creator, RoseCommon::Item&& item);
 
+  Entity buildMobEntity(Entity spawner);
+
   template <typename T>
   T& get() {
     return *systemManager_.get<T>();

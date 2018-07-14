@@ -48,6 +48,7 @@ set( SOURCES_HEADER
   include/components/quests.h
   include/components/npc.h
   include/components/warpgate.h
+  include/components/spawner.h
 )
 
 SET(SOURCES_BASE

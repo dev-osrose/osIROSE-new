@@ -37,4 +37,5 @@ void UpdateSystem::calculateCommand(Entity entity) {
   auto basic = entity.component<BasicInfo>();
   auto destination = entity.component<Destination>();
   if (destination) basic->command_ = BasicInfo::MOVE;
+  else basic->command_ = BasicInfo::STOP;
 }

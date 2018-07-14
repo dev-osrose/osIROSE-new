@@ -30,10 +30,12 @@ void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const Ros
   manager_.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
                                          *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
   auto &manager = manager_.getEntityManager();
-  for (Entity e : manager.entities_with_components<BasicInfo>()) {
+  for (Entity e : manager.entities_with_components<BasicInfo, AdvancedInfo>()) {
     basic = e.component<BasicInfo>();
-    if (e.component<Npc>()) {
+    if (basic->ownerId_ == 0 && e.component<Npc>()) {
         client.send(*makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
+    } else if (e.component<Npc>()) {
+        client.send(*makePacket<ePacketType::PAKWC_MOB_CHAR>(e));
     } else {
         if (e != entity && basic->isOnMap_.load())
             client.send(*makePacket<ePacketType::PAKWC_PLAYER_CHAR>(e));

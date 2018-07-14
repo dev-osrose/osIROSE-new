@@ -12,6 +12,7 @@
 #include "systems/movementsystem.h"
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
+#include "systems/spawnersystem.h"
 
 #include "srv_npcchar.h"
 
@@ -24,7 +25,9 @@ EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(
   systemManager_.add<Systems::PartySystem>();
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
+  systemManager_.add<Systems::SpawnerSystem>();
 }
+
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }
 
 Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
@@ -32,11 +35,24 @@ Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
   e.assign<Item>(std::move(item));
   auto pos = creator.component<Position>();
   e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
-  auto basic = e.assign<BasicInfo>();
+  auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
   basic->ownerId_ = creator.component<BasicInfo>()->id_;
-  basic->id_ = id_manager_.get_free_id();
   itemToEntity_[basic->id_] = e;
   return e;
+}
+
+Entity EntitySystem::buildMobEntity(Entity spawner) {
+    Entity e = create();
+    auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
+    basic->ownerId_ = spawner.component<BasicInfo>()->id_;
+    e.assign<AdvancedInfo>();
+    e.assign<CharacterInfo>();
+    auto spos = spawner.component<Position>();
+    auto pos = e.assign<Position>(spos->x_, spos->y_, spos->map_, 0);
+    pos->z_ = spos->z_;
+    auto spawn = spawner.component<Spawner>();
+    e.assign<Npc>(spawn->mob_id_, 0);
+    return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
@@ -258,6 +274,7 @@ Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float d
       auto dest = e.assign<Destination>(dest_x * 100, dest_y * 100, dest_map_id);
       dest->z_ = static_cast<uint16_t>(dest_z);
     })};
+    std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
     return e;
 }
@@ -284,6 +301,7 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
       es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
               *makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
     })};
+    std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
     return e;
 }
@@ -291,7 +309,17 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
 Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count,
                    int spawner_limit, int spawner_interval, int spawner_range,
                    int map_id, float x, float y, float z) {
-  return {};
+    Entity e = create();
+    std::unique_ptr<CommandBase> ptr{new Command([mob_id, mob_count, spawner_limit, spawner_interval, spawner_range, map_id, x, y, z, e] (EntitySystem &es) mutable {
+        if (!e) return;
+        e.assign<BasicInfo>(id_manager_.get_free_id());
+        auto pos = e.assign<Position>(x, y, map_id, 0);
+        pos->z_ = static_cast<uint16_t>(z);
+        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range, id_manager_.get_free_id());
+    })};
+    std::lock_guard<std::mutex> lock(access_);
+    create_commands_.emplace_back(std::move(ptr));
+    return e;
 }
 
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
