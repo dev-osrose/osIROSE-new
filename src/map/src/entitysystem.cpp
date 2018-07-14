@@ -50,9 +50,10 @@ Entity EntitySystem::buildMobEntity(Entity spawner) {
     e.assign<AdvancedInfo>();
     e.assign<CharacterInfo>();
     auto spos = spawner.component<Position>();
-    auto pos = e.assign<Position>(spos->x_, spos->y_, spos->map_, 0);
-    pos->z_ = spos->z_;
     auto spawn = spawner.component<Spawner>();
+    auto newpos = Core::Random::getInstance().random_in_circle(spos->x_, spos->y_, static_cast<float>(spawn->range_));
+    auto pos = e.assign<Position>(std::get<0>(newpos), std::get<1>(newpos), spos->map_, 0);
+    pos->z_ = spos->z_;
     e.assign<Npc>(spawn->mob_id_, 0);
     registerEntity(e);
     return e;

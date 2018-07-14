@@ -47,20 +47,15 @@ class Random : public Singleton<Random> {
         }
 
         std::tuple<double, double> random_in_unit_circle(double x, double y) {
-            return {get_uniform(0.f, 1.f), get_uniform(0.f, 1.f)};
+            return {x + get_uniform(-1.f, 1.f), y + get_uniform(-1.f, 1.f)};
         }
 
-        std::tuple<double, double> random_in_circle(double x, double y, double radius) {
-            return random_in_unit_circle(x, y) * radius;
-        }
-
-        std::tuple<int, int> random_in_circle(int x, int y, int radius) {
+        template <typename T>
+        std::tuple<T, T> random_in_circle(T x, T y, T radius) {
             auto unit = random_in_unit_circle(x, y);
-            return {std::floor(std::get<0>(unit) * radius),
-                    std::floor(std::get<1>(unit) * radius)};
+            return {std::get<0>(unit) * radius, std::get<1>(unit) * radius};
         }
 
-    protected:
         virtual ~Random() = default;
         Random() : engine_(std::random_device()()) {}
 
