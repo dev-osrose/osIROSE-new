@@ -331,7 +331,7 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
         e.assign<BasicInfo>(es.id_manager_.get_free_id());
         auto pos = e.assign<Position>(x, y, map_id, 0);
         pos->z_ = static_cast<uint16_t>(z);
-        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range, es.id_manager_.get_free_id());
+        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range);
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
