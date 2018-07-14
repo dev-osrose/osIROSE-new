@@ -31,7 +31,7 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
   // TODO : use on_component_assign for new members?
 }
 
-void PartySystem::update(EntityManager &es, double) {
+void PartySystem::update(EntityManager &es, std::chrono::milliseconds) {
   for (Entity entity : es.entities_with_components<BasicInfo, Party>()) {
     Party *party = entity.component<Party>();
     if (!party->party_) {

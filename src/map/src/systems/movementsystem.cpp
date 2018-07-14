@@ -50,7 +50,7 @@ MovementSystem::MovementSystem(SystemManager &manager) : System(manager) {
   });
 }
 
-void MovementSystem::update(EntityManager &es, double dt) {
+void MovementSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
   for (Entity entity : es.entities_with_components<Position, Destination, AdvancedInfo>()) {
     Position *position = entity.component<Position>();
     Destination *destination = entity.component<Destination>();
@@ -60,7 +60,7 @@ void MovementSystem::update(EntityManager &es, double dt) {
     float distance = std::sqrt(dx * dx + dy * dy);
     destination->dist_ = distance;
     float speed = advanced->runSpeed_;
-    float ntime = distance / speed;
+    std::chrono::milliseconds ntime{static_cast<int>(1000.f * distance / speed)};
     float old_x = position->x_;
     float old_y = position->y_;
     if (ntime <= dt || distance == 0) {
@@ -68,8 +68,9 @@ void MovementSystem::update(EntityManager &es, double dt) {
       position->y_ = destination->y_;
       entity.remove<Destination>();
     } else {
-      position->x_ += dx * dt / ntime;
-      position->y_ += dy * dt / ntime;
+      auto delta = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(dt);
+      position->x_ += dx * delta / ntime;
+      position->y_ += dy * delta / ntime;
     }
     updatePosition(entity, old_x, old_y);
     if (Entity e = is_on_warpgate(entity); e) {

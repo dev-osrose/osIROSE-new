@@ -19,7 +19,7 @@ ChatSystem::ChatSystem(SystemManager &manager) : System(manager) {
   manager.registerDispatcher(ePacketType::PAKCS_PARTY_CHAT, &ChatSystem::partyChat);
 }
 
-void ChatSystem::update(EntityManager &, double) {}
+void ChatSystem::update(EntityManager &, std::chrono::milliseconds) {}
 
 void ChatSystem::sendMsg(Entity entity, const std::string &msg) {
   logger_->trace("ChatSystem::sendMsg");

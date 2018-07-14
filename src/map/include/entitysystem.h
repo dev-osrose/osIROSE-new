@@ -28,6 +28,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 #include "crosepacket.h"
 #include "item.h"
 #include "systems/system.h"
@@ -50,7 +51,7 @@ class EntitySystem {
  public:
   EntitySystem(CMapServer *server);
 
-  void update(double dt);
+  void update(std::chrono::milliseconds dt);
 
   void destroy(Entity entity, bool save);
 

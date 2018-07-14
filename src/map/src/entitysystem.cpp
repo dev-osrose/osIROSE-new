@@ -80,7 +80,7 @@ Entity EntitySystem::getEntity(const std::string& name) { return nameToEntity_[n
 
 Entity EntitySystem::getEntity(uint32_t id) { return idToEntity_[id]; }
 
-void EntitySystem::update(double dt) {
+void EntitySystem::update(std::chrono::milliseconds dt) {
   std::lock_guard<std::mutex> lock(access_);
   for (auto& it : create_commands_) {
     it->execute(*this);

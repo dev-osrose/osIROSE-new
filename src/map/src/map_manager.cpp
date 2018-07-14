@@ -3,6 +3,8 @@
 #include "platform_defines.h"
 #include "config.h"
 
+using namespace std::chrono_literals;
+
 MapManager::MapManager(std::vector<uint16_t> maps):
     isc_server_{true}, 
     isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()},
@@ -24,10 +26,10 @@ MapManager::MapManager(std::vector<uint16_t> maps):
         maps_.emplace_back([this, map = std::move(map)] () {
             auto start = Core::Time::GetTickCount();
             while (!stop_.load() && map->is_active()) {
-                std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
-                map->update(diff.count());
+                std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - start);
+                map->update(diff);
                 start = Core::Time::GetTickCount();
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(100ms);
             }
         });
     }

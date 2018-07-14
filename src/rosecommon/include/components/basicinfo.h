@@ -17,9 +17,9 @@ struct BasicInfo {
         SIT = 10
     };
 
-    explicit BasicInfo(uint16_t id) : level_(0), xp_(0), id_(id), tag_(0), teamId_(0), targetId_(0), command_(STOP), isOnMap_(false), ownerId_(0) {}
+    BasicInfo(uint16_t id) : level_(0), xp_(0), id_(id), tag_(0), teamId_(0), targetId_(0), command_(STOP), isOnMap_(false), ownerId_(0) {}
     template <typename T>
-    BasicInfo(const T& row) : BasicInfo(0) {
+    BasicInfo(const T& row) : BasicInfo(static_cast<uint16_t>(0)) {
         loadFromRow(row);
     }
 

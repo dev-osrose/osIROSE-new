@@ -20,6 +20,6 @@ struct Spawner {
     int total_once_;
     int current_total_ = 0;
     std::chrono::seconds interval_;
-    std::chrono::seconds until_update_ = 0s;
+    std::chrono::milliseconds until_update_ = 0ms;
     int range_;
 };

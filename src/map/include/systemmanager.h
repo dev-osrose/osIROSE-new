@@ -27,6 +27,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 #include "crosepacket.h"
 #include "entitycomponents.h"
 #include "epackettype.h"
@@ -73,7 +74,7 @@ class SystemManager {
     return nullptr;
   }
 
-  void update(double dt);
+  void update(std::chrono::milliseconds dt);
 
   bool wouldDispatch(const RoseCommon::CRosePacket &packet) {
     auto res = dispatch_.equal_range(to_underlying(packet.type()));
@@ -115,6 +116,7 @@ class SystemManager {
   Entity getEntity(uint32_t charId) const;
 
   Entity buildItem(Entity creator, RoseCommon::Item &&);
+  Entity buildMob(Entity spawner);
 
   EntityManager &getEntityManager();
 

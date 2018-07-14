@@ -20,6 +20,7 @@
 #include "croseserver.h"
 #include "entitysystem.h"
 #include "script_loader.h"
+#include <chrono>
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
@@ -28,7 +29,7 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   int16_t GetMapIDX() const { return map_idx_; }
 
-  void update(double dt);
+  void update(std::chrono::milliseconds dt);
 
   void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
                          RoseCommon::CRosePacket& _buffer);

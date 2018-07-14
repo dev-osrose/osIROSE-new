@@ -43,7 +43,7 @@ class LuaSystem : public System {
           return std::make_optional(std::move(lua));
         }
 
-    virtual void update(EntityManager&, double) {}
+    virtual void update(EntityManager&, std::chrono::milliseconds) override {}
 
         /*void unregisterEntity(Entity e) {
           auto it = std::find(callbacks_.begin(), callbacks_.end(), Callback{e});

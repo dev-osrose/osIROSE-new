@@ -20,7 +20,7 @@ class MovementSystem : public System {
   MovementSystem(SystemManager &manager);
   virtual ~MovementSystem() = default;
 
-  virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, std::chrono::milliseconds dt) override;
 
   void move(Entity entity, float x, float y, uint16_t target = 0);
 

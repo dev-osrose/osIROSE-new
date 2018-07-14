@@ -2,7 +2,7 @@
 
 using namespace Systems;
 
-void UpdateSystem::update(EntityManager &es, double) {
+void UpdateSystem::update(EntityManager &es, std::chrono::milliseconds) {
   for (Entity entity : es.entities_with_components<AdvancedInfo, Inventory, Stats>()) calculateSpeed(entity);
   for (Entity entity : es.entities_with_components<BasicInfo>()) calculateCommand(entity);
 }

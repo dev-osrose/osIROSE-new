@@ -9,7 +9,7 @@ class TimeSystem : public System {
   TimeSystem(SystemManager &manager) : System(manager) {}
   virtual ~TimeSystem() = default;
 
-  virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, std::chrono::milliseconds dt);
 };
 
 }  // namespace Systems

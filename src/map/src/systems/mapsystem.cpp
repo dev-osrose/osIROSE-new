@@ -15,7 +15,7 @@ MapSystem::MapSystem(SystemManager &m) : System(m) {
   m.registerDispatcher(ePacketType::PAKCS_CHANGE_MAP_REQ, &MapSystem::processChangeMapReq);
 }
 
-void MapSystem::update(EntityManager &, double) {}
+void MapSystem::update(EntityManager &, std::chrono::milliseconds) {}
 
 void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const RoseCommon::CliChangeMapReq &) {
   logger_->trace("MapSystem::processChangeMapReq");

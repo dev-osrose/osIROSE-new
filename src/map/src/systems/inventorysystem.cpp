@@ -19,7 +19,7 @@ InventorySystem::InventorySystem(SystemManager &manager) : System(manager) {
   manager.registerDispatcher(ePacketType::PAKCS_DROP_ITEM, &InventorySystem::dropItem);
 }
 
-void InventorySystem::update(EntityManager &, double) {}
+void InventorySystem::update(EntityManager &, std::chrono::milliseconds) {}
 
 uint8_t InventorySystem::findNextEmptySlot(Entity entity) {
   if (!entity || !entity.component<Inventory>()) return 0;

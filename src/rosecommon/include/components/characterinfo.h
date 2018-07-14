@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <chrono>
 #include "item.h"
 
 struct CharacterInfo {
@@ -103,7 +104,7 @@ struct CharacterInfo {
     uint32_t subFlag_;
     uint16_t stamina_;
     uint16_t patHp_;
-    uint32_t patCooldownTime_; // in seconds
-    double dt_; // to keep track of seconds for patCoolDownTime_
+    std::chrono::seconds patCooldownTime_;
+    std::chrono::milliseconds dt_; // to keep track of seconds for patCoolDownTime_
     uint32_t charId_;
 };

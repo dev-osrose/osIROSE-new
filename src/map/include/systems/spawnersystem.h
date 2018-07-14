@@ -9,7 +9,7 @@ class SpawnerSystem : public System {
   SpawnerSystem(SystemManager &manager);
   virtual ~SpawnerSystem() = default;
 
-  virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, std::chrono::milliseconds dt) override;
 };
 
 }  // namespace Systems

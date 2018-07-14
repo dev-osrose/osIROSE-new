@@ -15,7 +15,7 @@ class ChatSystem : public System {
   ChatSystem(SystemManager &manager);
   virtual ~ChatSystem() = default;
 
-  virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, std::chrono::milliseconds dt) override;
 
   void sendMsg(Entity entity, const std::string &msg);
 

@@ -2,7 +2,7 @@
 
 using namespace Systems;
 
-void TimeSystem::update(EntityManager &es, double dt) {
+void TimeSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
   for (Entity entity : es.entities_with_components<CharacterInfo>()) {
     entity.component<CharacterInfo>()->dt_ += dt;
   }

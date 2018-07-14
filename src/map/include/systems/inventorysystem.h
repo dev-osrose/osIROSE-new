@@ -17,7 +17,7 @@ class InventorySystem : public System {
   InventorySystem(SystemManager &manager);
   virtual ~InventorySystem() = default;
 
-  virtual void update(EntityManager &es, double dt);
+  virtual void update(EntityManager &es, std::chrono::milliseconds dt) override;
 
   static uint8_t findNextEmptySlot(Entity entity);
   static bool swapItems(Entity entity, uint8_t &a, uint8_t &b);

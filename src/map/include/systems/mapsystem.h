@@ -13,7 +13,7 @@ class MapSystem : public System {
   MapSystem(SystemManager&);
   virtual ~MapSystem() = default;
 
-  virtual void update(EntityManager&, double);
+  virtual void update(EntityManager&, std::chrono::milliseconds) override;
 
   void processChangeMapReq(CMapClient& client, Entity entity, const RoseCommon::CliChangeMapReq& packet);
 };

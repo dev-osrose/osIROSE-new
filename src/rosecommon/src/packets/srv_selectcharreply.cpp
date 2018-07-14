@@ -62,7 +62,7 @@ void SrvSelectCharReply::pack() {
 	*this << characterInfo->pkFlag_;
 	*this << characterInfo->stamina_;
 	for (auto &it : statusEffects->effects_) {
-        *this << it.expiredSeconds_ << it.value_ << it.unkown_;
+        *this << it.expired_.count() << it.value_ << it.unkown_;
 	}
 	*this << characterInfo->patHp_;
 	*this << characterInfo->patCooldownTime_;
