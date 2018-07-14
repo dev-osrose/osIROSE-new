@@ -70,7 +70,7 @@ void EntitySystem::unregisterEntity(Entity entity) {
     if (!entity) return;
     if (auto basic = entity.component<BasicInfo>(); basic) {
         if (basic->id_)
-            idToEntity.erase(basic->id_);
+            idToEntity_.erase(basic->id_);
         if (basic->name_.size())
             nameToEntity_.erase(basic->name_);
     }
@@ -118,13 +118,13 @@ void EntitySystem::destroy(Entity entity, bool save) {
               es.id_manager_.release_id(basic->id_);
           } else if (auto basic = entity.component<BasicInfo>(); basic && basic->ownerId_) {
             // this is a mob, we need to update the spawner
-            Entity spawner = idToEntity_[basic->ownerId_];
+            Entity spawner = es.idToEntity_[basic->ownerId_];
             if (spawner) {
                 --spawner.component<Spawner>()->current_total_;
             }
           }
       }
-      unregisterEntity(entity);
+      es.unregisterEntity(entity);
       entity.destroy();
     })};
   delete_commands_.emplace_back(std::move(ptr));
@@ -328,10 +328,10 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
     Entity e = create();
     std::unique_ptr<CommandBase> ptr{new Command([mob_id, mob_count, spawner_limit, spawner_interval, spawner_range, map_id, x, y, z, e] (EntitySystem &es) mutable {
         if (!e) return;
-        e.assign<BasicInfo>(id_manager_.get_free_id());
+        e.assign<BasicInfo>(es.id_manager_.get_free_id());
         auto pos = e.assign<Position>(x, y, map_id, 0);
         pos->z_ = static_cast<uint16_t>(z);
-        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range, id_manager_.get_free_id());
+        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range, es.id_manager_.get_free_id());
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
