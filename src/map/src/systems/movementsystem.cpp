@@ -140,13 +140,12 @@ void MovementSystem::teleport(Entity entity, uint16_t map_id, float x, float y) 
         if (auto client = getClient(entity)) {
             pos->map_ = map_id;
             auto &config = Core::Config::getInstance();
-            client->switch_server();
+            client->switch_server(); // this allow us to not remove the online bit for this client as it's only moving around servers
             client->send(*makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
                 config.mapServer().clientPort + map_id,
                 client->get_session_id(),
                 0,
                 config.serverData().ip));
-            client->switch_server(); // this allow us to not remove the online bit for this client as it's only moving around servers
             client->get_entity_system()->saveCharacter(entity.component<CharacterInfo>()->charId_, entity); // force save
         }
     }
