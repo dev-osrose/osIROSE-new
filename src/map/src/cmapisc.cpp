@@ -22,17 +22,17 @@
 
 using namespace RoseCommon;
 
-CMapISC::CMapISC() : CRoseISC() {
+CMapISC::CMapISC() : CRoseISC(), server_(nullptr) {
   //  socket_->set_type(iscPacket::ServerType::MAP_MASTER);
 }
 
-CMapISC::CMapISC(std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)) {
-  socket_->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
-  socket_->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
-  socket_->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
+CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
+  socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
+  socket_[SocketType::Client]->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
+  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
 }
 
-bool CMapISC::IsChar() const { return socket_->get_type() == Isc::ServerType::CHAR; }
+bool CMapISC::IsChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -102,8 +102,8 @@ void CMapISC::OnConnected() {
                  static_cast<uint16_t>(packet->type()));
   send(*packet);
 
-  if (socket_->process_thread_.joinable() == false) {
-    socket_->process_thread_ = std::thread([this]() {
+  if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
+    socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
       while (is_active() == true && IsChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
@@ -126,14 +126,14 @@ bool CMapISC::OnShutdown() {
 
   if (is_active() == true) {
     if (get_type() == RoseCommon::Isc::ServerType::CHAR) {
-      if (socket_->reconnect() == true) {
+      if (socket_[SocketType::Client]->reconnect() == true) {
         logger_->info("Reconnected to character server.");
         result = false;
       }
     } else {
       auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
-      std::lock_guard<std::mutex> lock(CMapServer::GetISCListMutex());
-      for (auto& server : CMapServer::GetISCList()) {
+      std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+      for (auto& server : server_->GetISCList()) {
         CMapISC* svr = static_cast<CMapISC*>(server.get());
         if (!svr) {
           continue;

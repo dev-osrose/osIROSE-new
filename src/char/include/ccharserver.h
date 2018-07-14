@@ -19,13 +19,27 @@
 
 class CCharServer : public RoseCommon::CRoseServer {
  public:
-  CCharServer(bool _isc = false);
+  CCharServer(bool _isc = false, CCharServer *iscServer = nullptr);
   virtual ~CCharServer();
+
+  std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {
+      if (iscServer_)
+          return iscServer_->GetISCList();
+      return RoseCommon::CRoseServer::GetISCList();
+  }
+  std::mutex& GetISCListMutex() {
+      if (iscServer_)
+          return iscServer_->GetISCListMutex();
+      return RoseCommon::CRoseServer::GetISCListMutex();
+  }
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
   uint32_t client_count_;
   uint32_t server_count_;
+
+ private:
+  CCharServer *iscServer_;
 };
 
 #endif

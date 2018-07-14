@@ -27,8 +27,8 @@ void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const Ros
   client.send(*makePacket<ePacketType::PAKWC_CHANGE_MAP_REPLY>(getId(entity), advanced->hp_, advanced->mp_, basic->xp_,
                                                                info->penaltyXp_, std::time(nullptr), 0));
   manager_.get<Systems::ChatSystem>()->sendMsg(entity, "You are client " + std::to_string(getId(entity)));
-  CMapServer::SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
-                         *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
+  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
+                                         *makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
   auto &manager = manager_.getEntityManager();
   for (Entity e : manager.entities_with_components<BasicInfo>()) {
     basic = e.component<BasicInfo>();

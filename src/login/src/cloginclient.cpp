@@ -38,14 +38,16 @@ CLoginClient::CLoginClient()
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       userid_(0),
-      session_id_(0) {}
+      session_id_(0),
+      server_(nullptr) {}
 
-CLoginClient::CLoginClient(std::unique_ptr<Core::INetwork> _sock)
+CLoginClient::CLoginClient(CLoginServer* server, std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       userid_(0),
-      session_id_(0) {}
+      session_id_(0),
+      server_(server) {}
 
 void CLoginClient::SendLoginReply(uint8_t Result) {
   logger_->debug("SendLoginReply({})", Result);
@@ -56,8 +58,8 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
     packet->right() = access_rights_;
 
     // loop the server list here
-    std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-    for (auto& server : CLoginServer::GetISCList())
+    std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+    for (auto& server : server_->GetISCList())
       if (server->get_type() == Isc::ServerType::CHAR) {
         CLoginISC* svr = static_cast<CLoginISC*>(server.get());
         if (!svr) {
@@ -81,11 +83,11 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
   }
   uint32_t serverCount = 0;
 
-  CLoginServer::GetISCListMutex().lock();
-  for (auto& server : CLoginServer::GetISCList()) {
+  server_->GetISCListMutex().lock();
+  for (auto& server : server_->GetISCList()) {
     if (server && server->get_type() == Isc::ServerType::CHAR) serverCount++;
   }
-  CLoginServer::GetISCListMutex().unlock();
+  server_->GetISCListMutex().unlock();
 
   logger_->debug("Found {} type 1 (CHAR) servers", serverCount);
 
@@ -129,6 +131,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                                               table.lastip = get_address(),
                                               table.lasttime = std::chrono::system_clock::now())
                      .where(table.id == userid_));
+                this->set_name(username_);
                 SendLoginReply(SrvLoginReply::OK);
             } else {
                 // Online already
@@ -177,8 +180,8 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
   uint32_t ServerID = P->serverId()-1;
 
   auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
-  std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-  for (auto& obj : CLoginServer::GetISCList()) {
+  std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+  for (auto& obj : server_->GetISCList()) {
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (!server) {
         continue;
@@ -213,8 +216,8 @@ bool CLoginClient::ServerSelect(
   // 2 = Full
   // 3 = Invalid channel
   // 4 = Channel not active
-  std::lock_guard<std::mutex> lock(CLoginServer::GetISCListMutex());
-  for (auto& obj : CLoginServer::GetISCList()) {
+  std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+  for (auto& obj : server_->GetISCList()) {
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {

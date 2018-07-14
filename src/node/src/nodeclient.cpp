@@ -61,7 +61,7 @@ bool NodeClient::HandlePacket(uint8_t* _buffer) {
       // Send the packet to the server
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
       std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
-      send( std::move(res), true );
+      send(std::move(res), SocketType::CurrentMap);
       return true;
     }
   }
@@ -77,7 +77,7 @@ bool NodeClient::HandleServerPacket(uint8_t* _buffer) {
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
       std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
-      send( std::move(res), false );
+      send( std::move(res), SocketType::Client );
       return true;
     }
   }

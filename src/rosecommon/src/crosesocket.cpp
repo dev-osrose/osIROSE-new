@@ -20,37 +20,43 @@
 
 namespace RoseCommon {
 
-CRoseSocket::CRoseSocket() : crypt_(), socket_(nullptr) {
+CRoseSocket::CRoseSocket() : crypt_() {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
+
+  socket_[static_cast<int>(SocketType::Client)] = nullptr;
 }
 
-CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock) : crypt_(), socket_(std::move(_sock)) {
+CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock) : crypt_() {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
-  
-  socket_->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-  socket_->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-  socket_->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
 
-  socket_->reset_internal_buffer();
+  socket_[static_cast<int>(SocketType::Client)] = std::move(_sock);
+  socket_[static_cast<int>(SocketType::Client)]->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_[static_cast<int>(SocketType::Client)]->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
+  socket_[static_cast<int>(SocketType::Client)]->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+
+  socket_[static_cast<int>(SocketType::Client)]->reset_internal_buffer();
 }
 
-CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server) : crypt_(), socket_(std::move(_sock)) {
+CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server, int socket_id)
+    : crypt_() {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
+
+  socket_[socket_id] = std::move(_sock);
   
   if(true == is_server)
   {
-    socket_->registerOnReceived(std::bind(&CRoseSocket::OnServerReceived, this, std::placeholders::_1, std::placeholders::_2));
-    socket_->registerOnSend(std::bind(&CRoseSocket::OnServerSend, this, std::placeholders::_1));
-    socket_->registerOnDisconnected(std::bind(&CRoseSocket::OnServerDisconnected, this));
+    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnServerReceived, this, std::placeholders::_1, std::placeholders::_2));
+    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnServerSend, this, std::placeholders::_1));
+    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnServerDisconnected, this));
   }
   else
   {
-    socket_->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-    socket_->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-    socket_->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
+    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
   }
 
-  socket_->reset_internal_buffer();
+  socket_[socket_id]->reset_internal_buffer();
 }
 
 CRoseSocket::~CRoseSocket() {
@@ -58,21 +64,19 @@ CRoseSocket::~CRoseSocket() {
   logger_.reset();
 }
 
-bool CRoseSocket::send(CRosePacket &_buffer, bool to_server) {
-  return CRoseSocket::send(_buffer.getPacked(), to_server);
+bool CRoseSocket::send(CRosePacket& _buffer, int socket_id) {
+  return CRoseSocket::send(_buffer.getPacked(), socket_id);
 }
 
-bool CRoseSocket::send(std::unique_ptr<uint8_t[]> _buffer, bool to_server) {
+bool CRoseSocket::send(std::unique_ptr<uint8_t[]> _buffer, int socket_id) {
   logger_->trace("Sending a packet on CRoseSocket: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), static_cast<uint16_t>(CRosePacket::type(_buffer.get())));
-  if(true == to_server)
-    return server_socket_->send_data(std::move(_buffer));
-  else
-    return socket_->send_data(std::move(_buffer));
+  return socket_[socket_id]->send_data(std::move(_buffer));
 }
 
 // Callback functions
 void CRoseSocket::OnDisconnected() {}
 
+// TODO The socket ids in this fuction need to be fixed.
 bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
   ///*
@@ -85,7 +89,7 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      socket_->reset_internal_buffer();
+      socket_[0]->reset_internal_buffer();
       return false;
     }
 
@@ -97,7 +101,7 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   if (!crypt_.decodeClientBody(reinterpret_cast<unsigned char*>(buffer_))) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
-    socket_->reset_internal_buffer();
+    socket_[0]->reset_internal_buffer();
     return false;
   }
 #endif
@@ -117,8 +121,8 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
 
-  socket_->dispatch([this]() {
-        if (true == socket_->is_active()) {
+  socket_[0]->dispatch([this]() {
+    if (true == socket_[0]->is_active()) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
 
@@ -134,14 +138,14 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");
-              socket_->shutdown();
+              socket_[0]->shutdown();
             }
           }
           recv_mutex_.unlock();
         }
       });
 
-  socket_->reset_internal_buffer();
+  socket_[0]->reset_internal_buffer();
   //*/
   return rtnVal;
 }
@@ -196,6 +200,7 @@ bool CRoseSocket::HandlePacket(uint8_t* _buffer) {
 // Server Callback functions
 void CRoseSocket::OnServerDisconnected() {}
 
+//TODO The socket ids in this fuction need to be fixed.
 bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
     bool rtnVal = true;
   ///*
@@ -208,7 +213,7 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      socket_->reset_internal_buffer();
+      socket_[0]->reset_internal_buffer();
       return false;
     }
 
@@ -220,7 +225,7 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   if (!crypt_.decodeServerBody(reinterpret_cast<unsigned char*>(buffer_))) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
-    socket_->reset_internal_buffer();
+    socket_[0]->reset_internal_buffer();
     return false;
   }
 #endif
@@ -240,8 +245,8 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
 
-  socket_->dispatch([this]() {
-        if (true == socket_->is_active()) {
+  socket_[0]->dispatch([this]() {
+    if (true == socket_[0]->is_active()) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
 
@@ -257,14 +262,14 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");
-              socket_->shutdown();
+              socket_[0]->shutdown();
             }
           }
           recv_mutex_.unlock();
         }
       });
 
-  socket_->reset_internal_buffer();
+  socket_[0]->reset_internal_buffer();
   //*/
   return rtnVal;
 }

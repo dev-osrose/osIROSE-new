@@ -26,6 +26,7 @@
 #include "srv_questdata.h"
 #include "srv_removeobject.h"
 #include "srv_selectcharreply.h"
+#include "srv_teleportreply.h"
 
 using namespace RoseCommon;
 
@@ -41,7 +42,7 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       charid_(0),
       entitySystem_(entitySystem) {}
 
-CMapClient::~CMapClient() { entitySystem_->destroy(entity_); }
+CMapClient::~CMapClient() {}
 
 bool CMapClient::HandlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -55,7 +56,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
-      logger_->warn("Change character hasn't been implmented yet.");
+      logger_->warn("Change character hasn't been implemented yet.");
       // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
       // change their character
       return true;
@@ -65,7 +66,6 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
-      entity_.component<BasicInfo>()->isOnMap_.store(false);
       break;
     default:
       break;
@@ -105,16 +105,15 @@ void CMapClient::updateSession() {
 
 void CMapClient::OnDisconnected() {
   logger_->trace("CMapClient::OnDisconnected() start");
-  if (isOnMap(entity_)) {
-    entity_.component<BasicInfo>()->isOnMap_.store(false);
-    entitySystem_->saveCharacter(charid_, entity_);
-    CMapServer::SendPacket(*this, CMapServer::eSendType::EVERYONE_BUT_ME,
-                           *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity_));
+  if (login_state_ == eSTATE::DEFAULT) return;
+  entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
 
-    Core::AccountTable table{};
-    auto conn = Core::connectionPool.getConnection(Core::osirose);
-    conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
+  if (login_state_ != eSTATE::SWITCHING) {
+      Core::AccountTable table{};
+      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
+  login_state_ = eSTATE::DEFAULT;
   logger_->trace("CMapClient::OnDisconnected() end");
 }
 
@@ -134,7 +133,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
   Core::SessionTable sessions{};
   try {
     const auto res = conn(
-        sqlpp::select(sessions.userid, sessions.charid, accounts.platinium)
+        sqlpp::select(sessions.userid, sessions.charid, sessions.worldip, accounts.platinium)
             .from(sessions.join(accounts).on(sessions.userid == accounts.id))
             .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format(
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
@@ -157,21 +156,25 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
                  .where(sessions.id == sessionID));
         entity_.assign<SocketConnector>(shared_from_this());
 
-        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));
+        auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_);
         send(*packet);
 
-        // SEND PLAYER DATA HERE!!!!!!
-        auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
-        send(*packet2);
+        if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
+          // SEND PLAYER DATA HERE!!!!!!
+          auto packet2 = makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_);
+          send(*packet2);
 
-        auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
-        send(*packet3);
+          auto packet3 = makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_);
+          send(*packet3);
 
-        auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_);
-        send(*packet4);
+          auto packet4 = makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_);
+          send(*packet4);
 
-        auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
-        send(*packet5);
+          auto packet5 = makePacket<ePacketType::PAKWC_BILLING_MESSAGE>();
+          send(*packet5);
+        } else {
+          send(*makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity_));
+        }
 
       } else {
         logger_->debug("Something wrong happened when creating the entity");

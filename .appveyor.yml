@@ -75,12 +75,6 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
 - 7z a %APPVEYOR_BUILD_FOLDER%/win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-- cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-- SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-- curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
-- curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
-- curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
-- curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
 
 artifacts:
 - path: win32-$(appveyor_build_version)-$(configuration).zip
@@ -91,6 +85,12 @@ artifacts:
 on_success:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 success $env:WEBHOOK_URL
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
+  - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 failure $env:WEBHOOK_URL

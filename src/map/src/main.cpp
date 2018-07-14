@@ -22,8 +22,7 @@
 #include "platform_defines.h"
 #include "version.h"
 
-#include "cmapisc.h"
-#include "cmapserver.h"
+#include "map_manager.h"
 
 namespace {
 void DisplayTitle() {
@@ -174,28 +173,10 @@ int main(int argc, char* argv[]) {
         Core::osirose, std::bind(Core::mysqlFactory, config.database().user, config.database().password,
                                  config.database().database, config.database().host, config.database().port));
 
-    CMapServer clientServer(false, config.mapServer().mapId[0]);
-    CMapServer iscServer(true);
-    CMapISC* iscClient = new CMapISC(std::make_unique<Core::CNetwork_Asio>());
-    iscClient->init(config.mapServer().charIp, config.charServer().iscPort);
-    iscClient->set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
+    MapManager app(config.mapServer().mapId);
 
-    clientServer.init(config.serverData().ip, config.mapServer().clientPort);
-    clientServer.listen();
-    clientServer.GetISCList().push_front(std::unique_ptr<CMapISC>(iscClient));
-
-    iscServer.init(config.serverData().iscListenIp, config.mapServer().iscPort);
-    iscServer.listen();
-    iscClient->connect();
-    iscClient->start_recv();
-
-    auto start = Core::Time::GetTickCount();
-    while (clientServer.is_active()) {
-      std::chrono::duration<double> diff = Core::Time::GetTickCount() - start;
-      clientServer.update(diff.count());
-      start = Core::Time::GetTickCount();
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+    while (1)
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     if (auto log = console.lock()) log->info("Server shutting down...");
     Core::NetworkThreadPool::DeleteInstance();

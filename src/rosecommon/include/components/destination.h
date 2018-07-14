@@ -5,6 +5,7 @@ struct Destination {
 
     float x_;
     float y_;
+    uint16_t z_;
     uint16_t dist_;
 };
 

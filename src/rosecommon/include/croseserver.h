@@ -29,12 +29,12 @@ class CRoseServer : public CRoseSocket {
 
   bool IsISCServer() const { return isc_server_; }
 
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetClientList() {
+  std::forward_list<std::shared_ptr<CRoseClient>>& GetClientList() {
     return client_list_;
   }
-  static std::forward_list<std::shared_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
-  static std::mutex& GetClientListMutex() { return client_list_mutex_; }
-  static std::mutex& GetISCListMutex() { return isc_list_mutex_; }
+  std::forward_list<std::shared_ptr<CRoseClient>>& GetISCList() { return isc_list_; }
+  std::mutex& GetClientListMutex() { return client_list_mutex_; }
+  std::mutex& GetISCListMutex() { return isc_list_mutex_; }
 
   enum class eSendType : uint8_t {
     EVERYONE,
@@ -44,12 +44,12 @@ class CRoseServer : public CRoseSocket {
     NEARBY_BUT_ME,
   };
 
-  static void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
-  static void SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer);
+  void SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer);
 
-  void set_socket(std::unique_ptr<Core::INetwork> _val, [[maybe_unused]] bool is_server = false) override {
-   socket_ = std::move(_val);
-   socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
+  void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
+                  [[maybe_unused]] bool is_server = false) override {
+    socket_[socket_id] = std::move(_val);
+    socket_[socket_id]->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
   };
 
  protected:
@@ -57,10 +57,10 @@ class CRoseServer : public CRoseSocket {
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) ;
 
   bool isc_server_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> client_list_;
-  static std::forward_list<std::shared_ptr<CRoseClient>> isc_list_;
-  static std::mutex client_list_mutex_;
-  static std::mutex isc_list_mutex_;
+  std::forward_list<std::shared_ptr<CRoseClient>> client_list_;
+  std::forward_list<std::shared_ptr<CRoseClient>> isc_list_;
+  std::mutex client_list_mutex_;
+  std::mutex isc_list_mutex_;
 };
 
 }

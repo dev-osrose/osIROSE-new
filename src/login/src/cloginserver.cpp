@@ -19,10 +19,10 @@
 #include "config.h"
 #include "platform_defines.h"
 
-CLoginServer::CLoginServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
+CLoginServer::CLoginServer(bool _isc, CLoginServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
 }
 
-CLoginServer::~CLoginServer() { socket_->shutdown(true); }
+CLoginServer::~CLoginServer() { socket_[static_cast<int>(RoseCommon::SocketType::Client)]->shutdown(true); }
 
 void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (is_active()) {
@@ -30,7 +30,7 @@ void CLoginServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      std::shared_ptr<CLoginClient> nClient = std::make_shared<CLoginClient>(std::move(_sock));
+      std::shared_ptr<CLoginClient> nClient = std::make_shared<CLoginClient>(this, std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);

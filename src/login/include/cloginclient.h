@@ -25,10 +25,12 @@ class CliSrvSelectReq;
 
 }
 
+class CLoginServer;
+
 class CLoginClient : public RoseCommon::CRoseClient {
  public:
   CLoginClient();
-  CLoginClient(std::unique_ptr<Core::INetwork> _sock);
+  CLoginClient(CLoginServer* server, std::unique_ptr<Core::INetwork> _sock);
 
  protected:
   virtual bool HandlePacket(uint8_t* _buffer) override;
@@ -53,6 +55,7 @@ class CLoginClient : public RoseCommon::CRoseClient {
   eSTATE login_state_;
   uint32_t userid_;
   uint32_t session_id_;
+  CLoginServer *server_;
 };
 
 #endif

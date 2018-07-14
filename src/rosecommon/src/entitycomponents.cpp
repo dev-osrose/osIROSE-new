@@ -14,7 +14,7 @@ std::string &getName(Entity entity) {
 
 std::shared_ptr<CMapClient> getClient(Entity entity) {
     if (!entity.component<SocketConnector>())
-        return nullptr;
+        return {};
     return entity.component<SocketConnector>()->client_.lock();
 }
 

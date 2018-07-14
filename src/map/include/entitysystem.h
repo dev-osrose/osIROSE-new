@@ -33,10 +33,6 @@
 #include "systems/system.h"
 #include "id_manager.h"
 
-// FIXME : set those values in the config file/database ?
-#define NEARBY_DIST 10000  // in game units, how far is considered 'near' // FIXME : make it entity dependent?
-#define POSITION_CHEATING 1000 * 1000
-
 class CMapServer;
 
 namespace LuaScript {
@@ -56,7 +52,7 @@ class EntitySystem {
 
   void update(double dt);
 
-  void destroy(Entity entity);
+  void destroy(Entity entity, bool save);
 
   Entity create();
 
@@ -94,18 +90,42 @@ class EntitySystem {
   void bulk_destroy(const std::vector<Entity>& s);
  
   LuaScript::ScriptLoader& get_script_loader() noexcept;
+ 
+ void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
+                  RoseCommon::CRosePacket& _buffer);
+  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
+                  RoseCommon::CRosePacket& _buffer);
 
  private:
   EntityManager entityManager_;
   SystemManager systemManager_;
   mutable std::mutex access_;
-  std::vector<Entity> toDestroy_;
   std::unordered_map<std::string, Entity> nameToEntity_;
   std::unordered_map<uint32_t, Entity> idToEntity_;
   std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
   std::unordered_map<uint32_t, Entity> itemToEntity_;
   IdManager id_manager_;
   CMapServer *server_;
+
+ private:
+  struct CommandBase {
+      virtual ~CommandBase() = default;
+      virtual void execute(EntitySystem&) = 0;
+  };
+
+  template <typename Func>
+  struct Command : public CommandBase {
+      Command(Func&& f) : func_(std::move(f)) {}
+      virtual ~Command() = default;
+      virtual void execute(EntitySystem& e) override {
+          func_(e);
+      }
+      private:
+        Func func_;
+  };
+
+  std::vector<std::unique_ptr<CommandBase>> create_commands_;
+ std::vector<std::unique_ptr<CommandBase>> delete_commands_;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

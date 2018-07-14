@@ -254,17 +254,5 @@ with open("rosecommon/src/packets/{}.cpp".format(obj.filename), "w") as f:
     f.write(obj.getCpp())
     print("Cpp file written at location rosecommon/src/packets/{}.cpp".format(obj.filename))
 
-from os import walk
-files = []
-for (dirpath, dirnames, filenames) in walk("rosecommon/include/packets/"):
-    files.extend(filenames)
-    break
-files = filter(lambda f: ".h" in f, files)
-
-with open("rosecommon/include/packets.h", "w") as f:
-    f.write("#pragma once\n\n")
-    for tmp in files:
-        f.write('#include "{}"\n'.format(tmp))
-    print("Added include to rosecommon/include/packets.h")
 if toImplement:
     print("You have some implementation left in {}.cpp (it'll cause compilation errors if you don't)".format(obj.filename))

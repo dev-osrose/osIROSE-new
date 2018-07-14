@@ -16,3 +16,13 @@ EntityManager &SystemManager::getEntityManager() { return entitySystem_.getEntit
 Entity SystemManager::buildItem(Entity creator, RoseCommon::Item &&item) {
   return entitySystem_.buildItemEntity(creator, std::move(item));
 }
+
+void SystemManager::SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
+               RoseCommon::CRosePacket& _buffer) {
+    entitySystem_.SendPacket(sender, type, _buffer);
+}
+
+void SystemManager::SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
+               RoseCommon::CRosePacket& _buffer) {
+    entitySystem_.SendPacket(sender, type, _buffer);
+}

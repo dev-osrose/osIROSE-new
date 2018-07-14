@@ -194,9 +194,9 @@ int main(int argc, char* argv[]) {
             config.database().host,
             config.database().port));
 
-  CCharServer clientServer;
   CCharServer iscServer(true);
-  CCharISC* iscClient = new CCharISC(std::make_unique<Core::CNetwork_Asio>());
+  CCharServer clientServer(false, &iscServer);
+  CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
   iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
   iscClient->SetLogin(true);
   iscClient->connect();

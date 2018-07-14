@@ -59,10 +59,10 @@ bool NodeISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
   // todo: replace these numbers with the actual enum name
   if (_type == Isc::ServerType::CHAR) {
     server_name_ = P->name();
-    socket_->set_address(P->addr());
-    socket_->set_port(P->port());
+    socket_[SocketType::Client]->set_address(P->addr());
+    socket_[SocketType::Client]->set_port(P->port());
     min_right_ = P->right();
-    socket_->set_type(_type);
+    socket_[SocketType::Client]->set_type(_type);
   } else if (_type == Isc::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
@@ -73,8 +73,7 @@ bool NodeISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
     channel_count_++;
   }
 
-  logger_->debug( "ISC Server Type: [{}]\n",
-    socket_->get_type() );
+  logger_->debug( "ISC Server Type: [{}]\n", socket_[SocketType::Client]->get_type());
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
                 RoseCommon::Isc::serverTypeName(P->serverType()),

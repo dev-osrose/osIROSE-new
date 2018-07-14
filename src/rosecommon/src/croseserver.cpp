@@ -25,19 +25,14 @@
 
 namespace RoseCommon {
 
-std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::client_list_;
-std::forward_list<std::shared_ptr<CRoseClient>> CRoseServer::isc_list_;
-std::mutex CRoseServer::client_list_mutex_;
-std::mutex CRoseServer::isc_list_mutex_;
-
 CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::CNetwork_Asio>()),
   isc_server_(_iscServer) {
 
   std::function<void(std::unique_ptr<Core::INetwork>)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
 
-  socket_->registerOnAccepted(fnOnAccepted);
+  socket_[0]->registerOnAccepted(fnOnAccepted);
 
-  socket_->process_thread_ = std::thread([this]() {
+  socket_[0]->process_thread_ = std::thread([this]() {
 
     std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
@@ -132,10 +127,6 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 //  }
 }
 
-void CRoseServer::SendPacket(const CRoseClient& sender, eSendType type, CRosePacket &_buffer) {
-    CRoseServer::SendPacket(&sender, type, _buffer);
-}
-
 void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePacket &_buffer) {
   std::lock_guard<std::mutex> lock(client_list_mutex_);
   switch(type)
@@ -163,7 +154,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::NEARBY:
     {
       for (auto& client : client_list_) {
-        if( client->is_nearby(sender) == true && isOnMap(client->getEntity()))
+        if(isOnMap(client->getEntity()) && client->is_nearby(sender) == true)
           client->send(_buffer);
       }
       break;
@@ -171,7 +162,7 @@ void CRoseServer::SendPacket(const CRoseClient* sender, eSendType type, CRosePac
     case eSendType::NEARBY_BUT_ME:
     {
       for (auto& client : client_list_) {
-        if( client.get() != sender && client->is_nearby(sender) == true  && isOnMap(client->getEntity()))
+        if(isOnMap(client->getEntity()) && client.get() != sender && client->is_nearby(sender) == true)
           client->send(_buffer);
       }
       break;

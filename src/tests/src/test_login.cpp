@@ -56,7 +56,7 @@ CLoginClient_Mock netConnect;
 
   iscServ->set_id(0);
   iscServ->set_type(1);
-  CLoginServer::GetISCList().push_front(std::move(iscServ));
+  network.GetISCList().push_front(std::move(iscServ));
 
 
   //-----------------------------------------
@@ -95,7 +95,7 @@ CLoginClient_Mock netConnect;
 
   EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
 
-  CLoginServer::GetISCList().clear();
+  network.GetISCList().clear();
 
   EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
   EXPECT_NO_FATAL_FAILURE(network.shutdown());

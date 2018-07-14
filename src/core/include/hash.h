@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+#include <tuple>
+#include <utility>
 
 namespace Core {
 
@@ -21,5 +23,17 @@ constexpr std::size_t hash_val(const Types&... args) {
     hash_combine(seed, args...);
     return seed;
 }
+
+template <typename Tuple, std::size_t... I>
+constexpr size_t apply_impl(const Tuple& tuple, std::index_sequence<I...>) {
+    return hash_val(std::get<I>(tuple)...);
+}
+
+struct tuple_hash {
+    template <typename... Types>
+    std::size_t operator()(const std::tuple<Types...>& k) const {
+        return apply_impl(k, std::make_index_sequence<sizeof...(Types)>());
+    }
+};
 
 }

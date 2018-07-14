@@ -118,6 +118,12 @@ class SystemManager {
 
   EntityManager &getEntityManager();
 
+
+  void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
+                 RoseCommon::CRosePacket& _buffer);
+  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
+                 RoseCommon::CRosePacket& _buffer);
+
  private:
   EntitySystem &entitySystem_;
   std::unordered_map<std::type_index, std::unique_ptr<System>> systems_;

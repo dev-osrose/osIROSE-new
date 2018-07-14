@@ -21,11 +21,12 @@ namespace RoseCommon {
 class IscServerRegister;
 }
 
+class CCharServer;
 
 class CCharISC : public RoseCommon::CRoseISC {
  public:
   CCharISC();
-  CCharISC(std::unique_ptr<Core::INetwork> _sock);
+  CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock);
 
   bool IsLogin() const;
   void SetLogin(bool val);
@@ -36,6 +37,9 @@ class CCharISC : public RoseCommon::CRoseISC {
 
   virtual void OnConnected() override;
   virtual bool OnShutdown() override;
+
+ private:
+  CCharServer *server_;
 };
 
 #endif

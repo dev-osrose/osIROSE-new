@@ -31,15 +31,16 @@
 using namespace RoseCommon;
 
 CCharClient::CCharClient()
-    : CRoseClient(), accessRights_(0), loginState_(eSTATE::DEFAULT), sessionId_(0), userId_(0), channelId_(0) {}
+    : CRoseClient(), accessRights_(0), loginState_(eSTATE::DEFAULT), sessionId_(0), userId_(0), channelId_(0), server_(nullptr) {}
 
-CCharClient::CCharClient(std::unique_ptr<Core::INetwork> _sock)
+CCharClient::CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       accessRights_(0),
       loginState_(eSTATE::DEFAULT),
       sessionId_(0),
       userId_(0),
-      channelId_(0) {}
+      channelId_(0),
+      server_(server) {}
 
 bool CCharClient::HandlePacket(uint8_t *_buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -232,11 +233,15 @@ bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharR
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn->execute(query);
 
-  std::lock_guard<std::mutex> lock(CCharServer::GetISCListMutex());
-  for (auto &server : CCharServer::GetISCList()) {
+  Core::CharacterTable table{};
+  auto charRes = conn(sqlpp::select(table.map).from(table).where(table.id == characterRealId_[selected_id]));
+  uint16_t map_id = charRes.front().map;
+
+  std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
+  for (auto &server : server_->GetISCList()) {
     if (server->get_type() == Isc::ServerType::MAP_MASTER && server->get_id() == channelId_) {
       auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
-          server->get_port(), sessionId_, 0,
+          server->get_port() + map_id, sessionId_, 0,
           server->get_address());  // this should be set to the map server's encryption seed
       send(*packet);
     }

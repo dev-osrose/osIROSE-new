@@ -19,7 +19,7 @@
 
 class CLoginServer : public RoseCommon::CRoseServer {
  public:
-  CLoginServer(bool _isc = false);
+  CLoginServer(bool _isc = false, CLoginServer* iscServer = nullptr);
   virtual ~CLoginServer();
 
   // This will give you the count of the clients in the list
@@ -28,10 +28,24 @@ class CLoginServer : public RoseCommon::CRoseServer {
                                                      std::end(client_list_)));
   }
 
+  std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {
+      if (iscServer_)
+          return iscServer_->GetISCList();
+      return RoseCommon::CRoseServer::GetISCList();
+  }
+  std::mutex& GetISCListMutex() {
+      if (iscServer_)
+          return iscServer_->GetISCListMutex();
+      return RoseCommon::CRoseServer::GetISCListMutex();
+  }
+
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
   uint32_t client_count_;
   uint32_t server_count_;
+
+ private:
+  CLoginServer *iscServer_;
 };
 
 #endif

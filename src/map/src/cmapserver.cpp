@@ -20,12 +20,13 @@
 
 using namespace RoseCommon;
 
-CMapServer::CMapServer(bool _isc, int16_t mapidx)
+CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server)
     : CRoseServer(_isc),
       map_idx_(mapidx),
       client_count_(0),
       server_count_(0),
-      entity_system_(std::make_shared<EntitySystem>(this)) {
+      entity_system_(std::make_shared<EntitySystem>(this)),
+      iscServer_(server) {
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
@@ -44,7 +45,7 @@ void CMapServer::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServe
 }
 
 void CMapServer::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket& _buffer) {
-  CRoseServer::SendPacket(static_cast<const CRoseClient&>(sender), type, _buffer);
+  CRoseServer::SendPacket(&sender, type, _buffer);
 }
 
 CMapServer::~CMapServer() {}
@@ -64,7 +65,7 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     client_list_.push_front(std::move(nClient));
   } else {
     std::lock_guard<std::mutex> lock(isc_list_mutex_);
-    std::shared_ptr<CMapISC> nClient = std::make_shared<CMapISC>(std::move(_sock));
+    std::shared_ptr<CMapISC> nClient = std::make_shared<CMapISC>(this, std::move(_sock));
     nClient->set_id(server_count_++);
     nClient->set_update_time(Core::Time::GetTickCount());
     nClient->set_active(true);

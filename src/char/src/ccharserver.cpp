@@ -20,10 +20,10 @@
 
 using namespace RoseCommon;
 
-CCharServer::CCharServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
+CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
 }
 
-CCharServer::~CCharServer() { socket_->shutdown(); }
+CCharServer::~CCharServer() { socket_[SocketType::Client]->shutdown(); }
 
 void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (_sock->is_active()) {
@@ -31,7 +31,7 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     std::string _address = _sock->get_address();
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      std::shared_ptr<CCharClient> nClient = std::make_shared<CCharClient>(std::move(_sock));
+      std::shared_ptr<CCharClient> nClient = std::make_shared<CCharClient>(this, std::move(_sock));
       nClient->set_id(client_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);
@@ -41,7 +41,7 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      std::shared_ptr<CCharISC> nClient = std::make_shared<CCharISC>(std::move(_sock));
+      std::shared_ptr<CCharISC> nClient = std::make_shared<CCharISC>(this, std::move(_sock));
       nClient->set_id(server_count_++);
       nClient->set_update_time( Core::Time::GetTickCount() );
       nClient->set_active(true);

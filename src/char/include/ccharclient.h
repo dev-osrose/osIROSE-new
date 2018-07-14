@@ -24,10 +24,12 @@ class CliDeleteCharReq;
 class CliSelectCharReq;
 }
 
+class CCharServer;
+
 class CCharClient : public RoseCommon::CRoseClient {
  public:
   CCharClient();
-  CCharClient(std::unique_ptr<Core::INetwork> _sock);
+  CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock);
 
   bool is_nearby(const CRoseClient* _otherClient) const override { (void)_otherClient; return true; }
 
@@ -60,6 +62,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   uint32_t channelId_;
 
   std::vector<uint32_t> characterRealId_;
+  CCharServer *server_;
 };
 
 #endif

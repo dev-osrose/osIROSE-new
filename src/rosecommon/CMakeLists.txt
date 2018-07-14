@@ -47,6 +47,7 @@ set( SOURCES_HEADER
   include/components/wishlist.h
   include/components/quests.h
   include/components/npc.h
+  include/components/warpgate.h
 )
 
 SET(SOURCES_BASE
@@ -181,6 +182,10 @@ SET(SOURCES_PACKETS
   include/packets/srv_mobchar.h
   src/packets/srv_npcchar.cpp
   include/packets/srv_npcchar.h
+  src/packets/srv_adjustposition.cpp
+  include/packets/srv_adjustposition.h
+  src/packets/srv_teleportreply.cpp
+  include/packets/srv_teleportreply.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
