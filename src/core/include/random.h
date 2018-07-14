@@ -46,6 +46,7 @@ class Random : public Singleton<Random> {
             return normal(engine_);
         }
 
+        // doesn't actually returns a perfect unit circle as 1.0 can never be reached, but it's sufficient for our purposes
         std::tuple<double, double> random_in_unit_circle(double x, double y) {
             return {x + get_uniform(-1.f, 1.f), y + get_uniform(-1.f, 1.f)};
         }
