@@ -19,12 +19,12 @@
 [submodule "tools/sqlpp11"]
 	path = 3rdparty/sqlpp11
 	url = https://github.com/rbock/sqlpp11
-[submodule "tools/sqlpp11-connector-mysql"]
-	path = 3rdparty/sqlpp11-connector-mysql
-	url = https://github.com/RavenX8/sqlpp11-connector-mysql
 [submodule "3rdparty/Configuru"]
 	path = 3rdparty/Configuru
 	url = https://github.com/emilk/Configuru
 [submodule "3rdparty/visit_struct"]
 	path = 3rdparty/visit_struct
 	url = https://github.com/cbeck88/visit_struct
+[submodule "3rdparty/sqlpp11-connector-mysql"]
+	path = 3rdparty/sqlpp11-connector-mysql
+	url = https://github.com/rbock/sqlpp11-connector-mysql
