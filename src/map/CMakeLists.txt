@@ -20,7 +20,6 @@ SET( SOURCES_HEADER
   include/gm_commands.h
   include/systems/system.h
   include/systems/movementsystem.h
-  include/systems/timesystem.h
   include/systems/updatesystem.h
   include/systems/chatsystem.h
   include/systems/inventorysystem.h
@@ -41,7 +40,6 @@ SET( SOURCES_MAIN
   src/map_manager.cpp
   src/gm_commands.cpp
   src/systems/movementsystem.cpp
-  src/systems/timesystem.cpp
   src/systems/updatesystem.cpp
   src/systems/chatsystem.cpp
   src/systems/inventorysystem.cpp
