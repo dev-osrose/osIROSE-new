@@ -18,7 +18,7 @@
 	url = https://github.com/HowardHinnant/date.git
 [submodule "tools/sqlpp11"]
 	path = 3rdparty/sqlpp11
-	url = https://github.com/rbock/sqlpp11
+	url = https://github.com/L3nn0x/sqlpp11
 [submodule "3rdparty/Configuru"]
 	path = 3rdparty/Configuru
 	url = https://github.com/emilk/Configuru
