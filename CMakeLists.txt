@@ -75,7 +75,7 @@ set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
+set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date/include)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)

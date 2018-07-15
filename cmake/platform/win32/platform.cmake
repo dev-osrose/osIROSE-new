@@ -61,6 +61,11 @@ else()
   message("-- detected 32bit")
 endif()
 
+if(64BIT)
+else()
+  add_linker_flags(/LARGEADDRESSAWARE)
+endif()
+
 macro(SetSharedRuntime target)
   if(DEBUG)
     set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/MDd")

@@ -15,7 +15,7 @@
 	url = https://github.com/alecthomas/entityx.git
 [submodule "tools/date"]
 	path = 3rdparty/date
-	url = https://github.com/L3nn0x/date
+	url = https://github.com/HowardHinnant/date.git
 [submodule "tools/sqlpp11"]
 	path = 3rdparty/sqlpp11
 	url = https://github.com/rbock/sqlpp11
