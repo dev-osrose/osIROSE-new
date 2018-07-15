@@ -13,7 +13,7 @@
 #include "systems/movementsystem.h"
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
-#include "systems/spawnersystem.h"
+#include "systems/callbacksystem.h"
 
 #include "srv_npcchar.h"
 
@@ -26,7 +26,7 @@ EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(
   systemManager_.add<Systems::PartySystem>();
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
-  systemManager_.add<Systems::SpawnerSystem>();
+  systemManager_.add<Systems::CallbackSystem>();
 }
 
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }
@@ -333,7 +333,17 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
         e.assign<BasicInfo>(es.id_manager_.get_free_id());
         auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
         pos->z_ = static_cast<uint16_t>(z);
-        e.assign<Spawner>(mob_id, mob_count, spawner_limit, std::chrono::seconds(spawner_interval), spawner_range * 100);
+        e.assign<Spawner>(mob_id, mob_count, spawner_limit, spawner_range * 100);
+        Systems::CallbackSystem::add_callback(e, std::chrono::seconds(spawner_interval), [e](SystemManager& manager) mutable {
+            auto spawner = e.component<Spawner>();
+            if (spawner->current_total_ < spawner->total_on_map_) {
+                Entity mob = manager.buildMob(e);
+                manager.send(e, CMapServer::eSendType::NEARBY,
+                              makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
+                ++spawner->current_total_;
+            }
+            return true;
+        });
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));

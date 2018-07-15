@@ -26,7 +26,7 @@ SET( SOURCES_HEADER
   include/systems/inventorysystem.h
   include/systems/partysystem.h
   include/systems/mapsystem.h
-  include/systems/spawnersystem.h
+  include/systems/callbacksystem.h
   )
 
 SET( SOURCES_MAIN
@@ -47,7 +47,7 @@ SET( SOURCES_MAIN
   src/systems/inventorysystem.cpp
   src/systems/partysystem.cpp
   src/systems/mapsystem.cpp
-  src/systems/spawnersystem.cpp
+  src/systems/callbacksystem.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

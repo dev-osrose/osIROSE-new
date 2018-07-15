@@ -45,33 +45,8 @@ class LuaSystem : public System {
 
     virtual void update(EntityManager&, std::chrono::milliseconds) override {}
 
-        /*void unregisterEntity(Entity e) {
-          auto it = std::find(callbacks_.begin(), callbacks_.end(), Callback{e});
-            if (it != callbacks_.end())
-              callbacks_.erase(it);
-        }
-
-        virtual void update(EntityManager&, double dt) {
-            for (auto &it : callbacks_) {
-                it.dt += dt;
-                if (it.dt >= it.timeout) {
-                    it.dt = 0.f;
-                }
-            }
-        }*/
-
     private:
         sol::state state_;
-
-        /*struct Callback {
-            Entity e;
-            std::string name{};
-            double timeout = 0;
-            double dt = 0;
-
-            bool operator==(const Callback& c) const { return e == c.e; }
-        };
-        std::vector<Callback> callbacks_;*/
 };
 
 }
