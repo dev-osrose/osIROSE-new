@@ -62,7 +62,9 @@ else()
 endif()
 
 if(64BIT)
+  set(BUILD_PLATFORM "x64")
 else()
+  set(BUILD_PLATFORM "x86")
   add_linker_flags(/LARGEADDRESSAWARE)
 endif()
 
