@@ -36,7 +36,6 @@ else()
   find_library(LUA_DL_LIBRARY dl)
   find_library(LUA_MATH_LIBRARY m)
   set(_byproducts
-    ${LUA_MATH_LIBRARY}
     ${LUA_INSTALL_DIR}/lib/liblua.a
   )
   ExternalProject_Add(
@@ -64,7 +63,7 @@ if(WIN32)
   set(LUA_INSTALL_LIBS "${install_dir}/lib/lua51.dll")
 else()
   set(LUA_LIBRARY "${install_dir}/lib/liblua.a")
-  set(LUA_LIBRARIES "${LUA_LIBRARY}" "${LUA_DL_LIBRARY}")
+  set(LUA_LIBRARIES "${LUA_LIBRARY}" "${LUA_DL_LIBRARY}" "${LUA_MATH_LIBRARY}")
   set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.a")
 endif()
 
