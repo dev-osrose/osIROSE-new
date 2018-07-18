@@ -68,7 +68,7 @@ set(args
   OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
-GENERATE_SQL_HEADER(OSIROSE_HEADER ${args})
+generate_sql_header(OSIROSE_HEADER ${args})
 
 set(args
   SQLFILE ${CMAKE_SOURCE_DIR}/Database/logs.sql
@@ -77,10 +77,13 @@ set(args
   OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
-GENERATE_SQL_HEADER(LOGS_HEADER ${args})
+generate_sql_header(LOGS_HEADER ${args})
 
 add_library(${PROJECT} STATIC ${OSIROSE_HEADER} ${LOGS_HEADER} ${SOURCES_BASE} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+# Make sure the SQL headers are created before core is created
+add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
 
 if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua)
@@ -108,4 +111,4 @@ if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
 
-SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")
+set_property(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")
