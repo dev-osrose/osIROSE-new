@@ -11,7 +11,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/lib/libmysqlclient.so" ]; then
     echo 'Setting up mysql...';
     
-    wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.6-src.tar.gz
+    wget http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-src.tar.gz
     tar -xf mysql-connector-c-6.1.6-src.tar.gz
     rm mysql-connector-c-6.1.6-src.tar.gz
     cd mysql-connector-c-6.1.6-src
