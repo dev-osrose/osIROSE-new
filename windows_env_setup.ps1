@@ -9,10 +9,10 @@ function Install-MySQL-Connector-C
 {
 	$current_path = Get-AbsolutePath;
 
-	Write-Host "Downloading Mysql Connector-C v$global:mysql_connector_version x86 to the $current_path"
-	Invoke-WebRequest -Uri "https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-$global:mysql_connector_version-win32.msi" -OutFile "$current_path/mysql-connector-c-$global:mysql_connector_version-winx32.msi"
+	Write-Host "Downloading Mysql Connector-C v$global:mysql_connector_version x64 to the $current_path"
+	Invoke-WebRequest -Uri "https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-$global:mysql_connector_version-winx64.msi" -OutFile "$current_path/mysql-connector-c.msi"
 
-    $installer = 'msiexec /i mysql-connector-c-' + $global:mysql_connector_version + '-winx32.msi /quiet /qn /norestart /log mysql-connector-c-' + $global:mysql_connector_version + '.log 2>&1';
+    $installer = 'msiexec /i mysql-connector-c.msi /quiet /qn /norestart /log mysql-connector-c-' + $global:mysql_connector_version + '.log 2>&1';
 	
 	cmd /c $installer
 }
