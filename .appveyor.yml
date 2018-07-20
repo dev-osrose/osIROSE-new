@@ -28,7 +28,7 @@ environment:
   MYSQL_USER: root
   MYSQL_PWD: "Password12!"
   MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
-  MYSQL_CONNECTOR_PATH: C:\Program Files (x86)\MySQL\MySQL Connector C 6.1
+  MYSQL_CONNECTOR_PATH: C:\Program Files\MySQL\MySQL Connector C 6.1
   PROJECT_PATH: C:\projects\osIROSE
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
