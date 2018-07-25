@@ -13,6 +13,14 @@ if(WIN32)
     INSTALL_DIR ${LUA_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
   )
+  
+  ExternalProject_Add_Step(
+    lua
+    copy-lua
+    DEPENDEES download
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.hpp"
+  )
 else()
   find_library(LUA_DL_LIBRARY dl)
   find_library(LUA_MATH_LIBRARY m)
@@ -39,7 +47,7 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(LUA_LIBRARY "${install_dir}/lib/liblua.lib")
+  set(LUA_LIBRARY "${install_dir}/lib/lua51.lib")
   set(LUA_LIBRARIES "${LUA_LIBRARY}")
   set(LUA_INSTALL_LIBS "${install_dir}/lib/lua51.dll")
 else()
