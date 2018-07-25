@@ -8,7 +8,7 @@ if(WIN32)
   ExternalProject_Add(
     lua
     GIT_REPOSITORY https://github.com/RavenX8/lua.git
-    GIT_TAG 2fcfa77c2c1d3787d706923771f8846a635a7920
+    GIT_TAG e3f46c3bee3d6b62f9ea9a36c86249978504e404
     CMAKE_ARGS -G ${CMAKE_GENERATOR} -Dlua_MSVC_STATIC_RUNTIME=ON
     INSTALL_DIR ${LUA_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
