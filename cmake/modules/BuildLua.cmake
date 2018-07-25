@@ -20,6 +20,7 @@ if(WIN32)
     DEPENDEES download
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.hpp"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<BUILD_DIR>" "<INSTALL_DIR>/lib/" "*.lib"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)
