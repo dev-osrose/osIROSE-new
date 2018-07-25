@@ -27,4 +27,4 @@
 	url = https://github.com/cbeck88/visit_struct
 [submodule "3rdparty/sqlpp11-connector-mysql"]
 	path = 3rdparty/sqlpp11-connector-mysql
-	url = https://github.com/rbock/sqlpp11-connector-mysql
+	url = https://github.com/RavenX8/sqlpp11-connector-mysql
