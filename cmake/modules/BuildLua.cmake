@@ -2,35 +2,16 @@ set(LUA_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
   set(_byproducts
-    ${LUA_INSTALL_DIR}/bin/lua51.dll
-    ${LUA_INSTALL_DIR}/lib/lua51.lib
-    ${LUA_INSTALL_DIR}/bin/lua5.1.dll
-    ${LUA_INSTALL_DIR}/lib/lua5.1.lib
+    ${LUA_INSTALL_DIR}/lib/liblua.lib
   )
   
   ExternalProject_Add(
     lua
-    GIT_REPOSITORY https://github.com/rjpcomputing/luaforwindows.git
-    GIT_TAG v5.1.5-52
-    GIT_SHALLOW true
+    GIT_REPOSITORY https://github.com/RavenX8/lua.git
+    GIT_TAG 2fcfa77c2c1d3787d706923771f8846a635a7920
+    CMAKE_ARGS -G ${CMAKE_GENERATOR} -Dlua_MSVC_STATIC_RUNTIME=ON
     INSTALL_DIR ${LUA_INSTALL_DIR}
-    BUILD_IN_SOURCE TRUE
-
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
     BUILD_BYPRODUCTS ${_byproducts}
-  )
-  
-  ExternalProject_Add_Step(
-    lua
-    copy-lua
-    DEPENDEES download
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.h"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.hpp"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/lib/" "*.lib"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/bin/" "*.dll"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/" "*.dll"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)
