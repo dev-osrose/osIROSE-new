@@ -47,9 +47,9 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(LUA_LIBRARY "${install_dir}/lib/lua51.lib")
+  set(LUA_LIBRARY "${install_dir}/lib/liblua.lib")
   set(LUA_LIBRARIES "${LUA_LIBRARY}")
-  set(LUA_INSTALL_LIBS "${install_dir}/lib/lua51.dll")
+  set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.dll")
 else()
   set(LUA_LIBRARY "${install_dir}/lib/liblua.a")
   set(LUA_LIBRARIES "${LUA_LIBRARY}" "${LUA_DL_LIBRARY}" "${LUA_MATH_LIBRARY}")
