@@ -2,14 +2,14 @@ set(LUA_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
   set(_byproducts
-    ${LUA_INSTALL_DIR}/lib/liblua.lib
+    ${LUA_INSTALL_DIR}/lib/lua.lib
   )
   
   ExternalProject_Add(
     lua
     GIT_REPOSITORY https://github.com/RavenX8/lua.git
     GIT_TAG e3f46c3bee3d6b62f9ea9a36c86249978504e404
-    CMAKE_ARGS -G ${CMAKE_GENERATOR} -Dlua_MSVC_STATIC_RUNTIME=ON
+    CMAKE_ARGS -G ${CMAKE_GENERATOR} -Dlua_MSVC_STATIC_RUNTIME=ON -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     INSTALL_DIR ${LUA_INSTALL_DIR}
     BUILD_BYPRODUCTS ${_byproducts}
   )
@@ -20,7 +20,6 @@ if(WIN32)
     DEPENDEES download
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.hpp"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<BUILD_DIR>" "<INSTALL_DIR>/lib/" "*.lib"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)
@@ -48,7 +47,7 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(LUA_LIBRARY "${install_dir}/lib/liblua.lib")
+  set(LUA_LIBRARY "${install_dir}/lib/lua.lib")
   set(LUA_LIBRARIES "${LUA_LIBRARY}")
   set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.dll")
 else()
