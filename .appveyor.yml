@@ -85,12 +85,6 @@ artifacts:
 on_success:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 success $env:WEBHOOK_URL
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-  - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 failure $env:WEBHOOK_URL
@@ -131,5 +125,11 @@ notifications:
 #    branch: master                 # release from master branch only
 #    appveyor_repo_tag: true        # deploy on tag push only
 
-#on_finish:
+on_finish:
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
+  - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
