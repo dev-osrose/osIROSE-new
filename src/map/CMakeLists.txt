@@ -26,6 +26,7 @@ SET( SOURCES_HEADER
   include/systems/partysystem.h
   include/systems/mapsystem.h
   include/systems/callbacksystem.h
+  include/systems/combat_system.h
   )
 
 SET( SOURCES_MAIN
@@ -46,6 +47,7 @@ SET( SOURCES_MAIN
   src/systems/partysystem.cpp
   src/systems/mapsystem.cpp
   src/systems/callbacksystem.cpp
+  src/systems/combat_system.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

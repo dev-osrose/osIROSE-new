@@ -1,5 +1,6 @@
 #include "gm_commands.h"
 
+#include <limits.h>
 #include <sstream>
 #include <unordered_map>
 #include <functional>
@@ -12,6 +13,7 @@
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
 #include "systems/movementsystem.h"
+#include "systems/combat_system.h"
 #include "gm_commands.h"
 
 using namespace Systems;
@@ -65,10 +67,18 @@ void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
     manager.get<MovementSystem>()->teleport(e, map_id, x * 100, y * 100); // transforms from map coordinates to real coordinates
 }
 
+void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    auto client = getClient(e);
+    manager.get<CombatSystem>()->apply_damage(e, UINT_MAX);
+}
+
 std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
     {"/item", {item, "Creates an item. Usage: /item <type> <id>"}},
     {"/load_npc", {load_npc, "Loads npc(s). TODO"}},
     {"/tp", {teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
+    {"/die", {die, "Kills self"}},
+    {"/dead", {die, "Kills self"}},
 };
 
 void help(Entity entity, const std::string& command) {
