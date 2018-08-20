@@ -1,5 +1,6 @@
 #include "gm_commands.h"
 
+#include <limits.h>
 #include <sstream>
 #include <unordered_map>
 #include <functional>
@@ -13,6 +14,7 @@
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
 #include "systems/movementsystem.h"
+#include "systems/combat_system.h"
 #include "gm_commands.h"
 
 using namespace Systems;
@@ -80,11 +82,19 @@ void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
     client->send(makePacket<ePacketType::PAKWC_SET_MONEY>(e));
 }
 
+void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    auto client = getClient(e);
+    manager.get<CombatSystem>()->apply_damage(e, UINT_MAX);
+}
+
 static std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
     {"/item", {100, item, "Creates an item. Usage: /item <type> <id>"}},
     {"/load_npc", {100, load_npc, "Loads npc(s). TODO"}},
     {"/tp", {200, teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
     {"/zuly", {100, zuly, "Adds zulies to your inventory. Usage: /zuly <amount>"}},
+    {"/die", {100, die, "Kills self"}},
+    {"/dead", {100, die, "Kills self"}},
 };
 
 void help(Entity entity, const std::string& command) {
