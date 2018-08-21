@@ -49,6 +49,9 @@ set( SOURCES_HEADER
   include/components/npc.h
   include/components/warpgate.h
   include/components/spawner.h
+  include/components/callbacks.h
+  include/components/buffs.h
+  include/components/damage.h
 )
 
 SET(SOURCES_BASE
