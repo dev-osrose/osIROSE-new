@@ -80,28 +80,35 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
   //TODO: Calculate defensive buffs before doing damage
   //TODO: Calculate natural and magic health regen
   if(damage) {
-    int32_t newHp = advanced->hp_;
+    //TODO: Calculate each real damage done for each attack
+    
+    int32_t adjusted_hp = advanced->hp_;
+    uint32_t total_applied_damage = 0;
     for(auto attack : damage->damage_)
     {
-      if(newHp - attack.value_ < 0) {
-        newHp = 0;
+      if(adjusted_hp - attack.value_ <= 0) {
+        total_applied_damage = attack.value_ + (adjusted_hp - attack.value_);
+        adjusted_hp = 0;
         //TODO: Credit this attacker as the one who killed this entity.
         break;
       } else {
-        newHp -= attack.value_;
+        total_applied_damage = attack.value_;
+        adjusted_hp -= attack.value_;
       }
+      
+      //TODO: Store damage applied for this attacker for later (exp distributuion)
       //TODO: Send damage packet here
       // if (auto client = getClient(entity))
       //   manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(entity, attack.attacker_, attack.value_));
     }
     
-    // Make sure our HP is not less then 0
-    if(newHp < 0) {
-      newHp = 0;
+    // Last sanity check to make sure our HP is not less then 0
+    if(adjusted_hp < 0) {
+      adjusted_hp = 0;
     }
     
-    advanced->hp_ = newHp;
-    entity.component<AdvancedInfo>()->hp_ = newHp;
+    advanced->hp_ = adjusted_hp;
+    entity.component<AdvancedInfo>()->hp_ = adjusted_hp;
     
     //TODO: Send HP update here
     // if (auto client = getClient(entity))
