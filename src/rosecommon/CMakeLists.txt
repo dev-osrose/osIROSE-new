@@ -117,6 +117,10 @@ SET(SOURCES_PACKETS
   include/packets/cli_charlistreq.h
   src/packets/cli_dropitem.cpp
   include/packets/cli_dropitem.h
+  src/packets/cli_attack.cpp
+  include/packets/cli_attack.h
+  src/packets/cli_hpreq.cpp
+  include/packets/cli_hpreq.h
   #------------------------------------------------
   src/packets/srv_acceptreply.cpp
   include/packets/srv_acceptreply.h
