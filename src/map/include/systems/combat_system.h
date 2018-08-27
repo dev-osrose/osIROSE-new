@@ -8,8 +8,8 @@
 #include <tuple>
 
 namespace RoseCommon {
-class CliMouseCmd;
-class CliStopMoving;
+class CliAttack;
+class CliHpReq;
 }  // namespace RoseCommon
 
 namespace Systems {
@@ -23,6 +23,9 @@ class CombatSystem : public System {
 
   void apply_damage(Entity defender, Entity attacker, int32_t damage = 0);
   void apply_damage(Entity defender, int32_t damage = 0);
+  
+  void processAttack(CMapClient &client, Entity entity, const RoseCommon::CliAttack &packet);
+  void processHpRequest(CMapClient &client, Entity entity, const RoseCommon::CliHpReq &packet);
   
  protected:
   void updateHP(Entity e, std::chrono::milliseconds dt);
