@@ -20,7 +20,7 @@ void SrvDamage::pack() {
 
   *this << attackerInfo->id_;
   *this << defenderInfo->id_;
-  *this << damage_;
+  *this << (int16_t)damage_;
 }
 
 }
