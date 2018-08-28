@@ -202,6 +202,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_hpreply.h
   src/packets/srv_sethpandmp.cpp
   include/packets/srv_sethpandmp.h
+  src/packets/srv_damage.cpp
+  include/packets/srv_damage.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h

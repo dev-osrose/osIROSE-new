@@ -8,6 +8,7 @@
 #include "cli_attack.h"
 #include "cli_hpreq.h"
 #include "srv_attack.h"
+#include "srv_damage.h"
 #include "srv_hpreply.h"
 #include "srv_sethpandmp.h"
 
@@ -90,6 +91,11 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
     uint32_t total_applied_damage = 0;
     for(auto attack : damage->damage_)
     {
+      Entity other;
+      if (!(other = manager_.getEntity(attack.attacker_))) {
+        continue;
+      }
+      
       if(adjusted_hp - attack.value_ <= 0) {
         total_applied_damage = attack.value_ + (adjusted_hp - attack.value_);
         adjusted_hp = 0;
@@ -101,9 +107,17 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       }
       
       //TODO: Store damage applied for this attacker for later (exp distributuion)
+      
       //TODO: Send damage packet here
-//      if (auto client = getClient(entity))
-//        manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(entity, attack.attacker_, attack.value_));
+      //TODO: If the entity is dead send the packet to everyone (with drop info as needed)
+      // else send to the attacker, the defender and the defender's party
+      if(adjusted_hp <= 0) {
+        if (auto client = getClient(entity))
+          manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_)); //TODO: Send item info here...
+      } else {
+        if (auto client = getClient(entity))
+          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_));
+      }
     }
     
     // Last sanity check to make sure our HP is not less then 0
@@ -126,7 +140,7 @@ void CombatSystem::processAttack(CMapClient &client, Entity entity, const RoseCo
   if (!entity) return;
   
   Entity other;
-  if (!(other = manager_.getEntity(packet.targetId())) || !getClient(other)) {
+  if (!(other = manager_.getEntity(packet.targetId()))) {
     logger_->debug("Client {} requested to engage combat with an non-existing entity {}", getId(entity), packet.targetId());
     return;
   }
@@ -141,7 +155,7 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
   if (!entity) return;
   
   Entity other;
-  if (!(other = manager_.getEntity(packet.targetId())) || !getClient(other)) {
+  if (!(other = manager_.getEntity(packet.targetId()))) {
     logger_->debug("Client {} requested the hp of a non existing entity {}", getId(entity), packet.targetId());
     return;
   }

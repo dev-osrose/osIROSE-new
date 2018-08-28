@@ -14,6 +14,7 @@
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
 #include "systems/callbacksystem.h"
+#include "systems/combat_system.h"
 
 #include "srv_npcchar.h"
 
@@ -27,6 +28,7 @@ EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
   systemManager_.add<Systems::CallbackSystem>();
+  systemManager_.add<Systems::CombatSystem>();
 }
 
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }

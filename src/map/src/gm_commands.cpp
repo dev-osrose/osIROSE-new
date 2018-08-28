@@ -84,8 +84,9 @@ void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
 
 void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    logger->trace("gm_commands die called");
     auto client = getClient(e);
-    manager.get<CombatSystem>()->apply_damage(e, UINT_MAX);
+    manager.get<CombatSystem>()->apply_damage(e, INT_MAX);
 }
 
 static std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
