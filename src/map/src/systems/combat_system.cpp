@@ -7,6 +7,9 @@
 #include "packetfactory.h"
 #include "cli_attack.h"
 #include "cli_hpreq.h"
+#include "srv_attack.h"
+#include "srv_hpreply.h"
+#include "srv_sethpandmp.h"
 
 #include "systems/combat_system.h"
 
@@ -108,12 +111,12 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       adjusted_hp = 0;
     }
     
-    advanced->hp_ = adjusted_hp;
+    //advanced->hp_ = adjusted_hp;
     entity.component<AdvancedInfo>()->hp_ = adjusted_hp;
     
     //TODO: Send HP update here
-//    if (auto client = getClient(entity))
-//      manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity, 0, advanced->mp_));
+    if (auto client = getClient(entity))
+      manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity));
   }
 }
 
@@ -121,6 +124,15 @@ void CombatSystem::processAttack(CMapClient &client, Entity entity, const RoseCo
 {
   logger_->trace("CombatSystem::processAttack start");
   if (!entity) return;
+  
+  Entity other;
+  if (!(other = manager_.getEntity(packet.targetId())) || !getClient(other)) {
+    logger_->debug("Client {} requested to engage combat with an non-existing entity {}", getId(entity), packet.targetId());
+    return;
+  }
+  
+  //TODO: Set the other entity as the destination
+  manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_ATTACK>(entity, other));
 }
 
 void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const RoseCommon::CliHpReq &packet)
@@ -134,11 +146,5 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
     return;
   }
   
-  auto advanced = other.component<AdvancedInfo>();
-  
-  if(!advanced) {
-    return;
-  }
-  
-  //client->send(makePacket<ePacketType::PAKWC_HP_REPLY>(packet.targetId(), advanced->hp_));
+  client.send(makePacket<ePacketType::PAKWC_HP_REPLY>(other));
 }
