@@ -196,6 +196,12 @@ SET(SOURCES_PACKETS
   include/packets/srv_teleportreply.h
   src/packets/srv_setmoney.cpp
   include/packets/srv_setmoney.h
+  src/packets/srv_attack.cpp
+  include/packets/srv_attack.h
+  src/packets/srv_hpreply.cpp
+  include/packets/srv_hpreply.h
+  src/packets/srv_sethpandmp.cpp
+  include/packets/srv_sethpandmp.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
