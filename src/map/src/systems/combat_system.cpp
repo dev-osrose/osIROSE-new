@@ -23,15 +23,8 @@ CombatSystem::CombatSystem(SystemManager &manager) : System(manager) {
 }
 
 void CombatSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
-  for (Entity entity : es.entities_with_components<AdvancedInfo, Stats>()) {
-    AdvancedInfo *advanced = entity.component<AdvancedInfo>();
+  for (Entity entity : es.entities_with_components<AdvancedInfo, Damage>()) {
     updateHP(entity, dt);
-    
-    if(advanced->hp_ <= 0) {
-      advanced->hp_ = 0;
-      
-      //TODO: send dead stoof?
-    }
   }
 }
 
@@ -43,8 +36,9 @@ void CombatSystem::apply_damage(Entity defender, Entity attacker, int32_t damage
   //auto advanced = defender.component<AdvancedInfo>();
   
   if(!nDamage) {
-   defender.assign<Damage>();
-   nDamage = defender.component<Damage>();
+    logger_->debug("Adding damage component to entity");
+    defender.assign<Damage>();
+    nDamage = defender.component<Damage>();
   }
   
   // We aren't applying static damage, calculate it now
@@ -64,8 +58,9 @@ void CombatSystem::apply_damage(Entity defender, int32_t damage) {
   //auto advanced = defender.component<AdvancedInfo>();
   
   if(!nDamage) {
-   defender.assign<Damage>();
-   nDamage = defender.component<Damage>();
+    logger_->debug("Adding damage component to entity");
+    defender.assign<Damage>();
+    nDamage = defender.component<Damage>();
   }
   
   // We aren't applying static damage, calculate it now
@@ -95,6 +90,8 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       if (!(other = manager_.getEntity(attack.attacker_))) {
         continue;
       }
+      
+      logger_->debug("Applying damage to entity");
       
       if(adjusted_hp - attack.value_ <= 0) {
         total_applied_damage = attack.value_ + (adjusted_hp - attack.value_);
