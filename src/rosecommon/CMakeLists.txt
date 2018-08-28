@@ -194,6 +194,12 @@ SET(SOURCES_PACKETS
   include/packets/srv_adjustposition.h
   src/packets/srv_teleportreply.cpp
   include/packets/srv_teleportreply.h
+  src/packets/srv_attack.cpp
+  include/packets/srv_attack.h
+  src/packets/srv_hpreply.cpp
+  include/packets/srv_hpreply.h
+  src/packets/srv_sethpandmp.cpp
+  include/packets/srv_sethpandmp.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
