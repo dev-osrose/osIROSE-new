@@ -22,7 +22,6 @@ void SrvMouseCmd::pack() {
   *this << destination->x_;
   *this << destination->y_;
   *this << position->z_;
-
 }
 
 }
