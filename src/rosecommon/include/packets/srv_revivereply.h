@@ -2,8 +2,9 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-
-
+//-------------------------------------------------------
+//TODO: REMOVE THIS FILE AS THIS PACKET ISN'T USED!!!!!!
+//-------------------------------------------------------
 namespace RoseCommon {
 
 REGISTER_SEND_PACKET(ePacketType::PAKWC_REVIVE_REPLY, SrvReviveReply)
@@ -24,3 +25,6 @@ class SrvReviveReply : public CRosePacket {
 };
 
 }
+//-------------------------------------------------------
+//TODO: REMOVE THIS FILE AS THIS PACKET ISN'T USED!!!!!!
+//-------------------------------------------------------

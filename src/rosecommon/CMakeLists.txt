@@ -146,8 +146,6 @@ SET(SOURCES_PACKETS
   include/packets/srv_playerchar.h
   src/packets/srv_removeobject.cpp
   include/packets/srv_removeobject.h
-  src/packets/srv_revivereply.cpp
-  include/packets/srv_revivereply.h
   src/packets/srv_screenshottimereply.cpp
   include/packets/srv_screenshottimereply.h
   src/packets/srv_selectcharreply.cpp
