@@ -191,16 +191,16 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   
   switch(packet.reviveType())
   {
-    case ReviveReq::REVIVE_POS:
+    case REVIVE_POS:
       //TODO: Get the closest revive location to the user
       //x = (RAND(1001) - 500));
       //y = (RAND(1001) - 500));
       //break;
-    case ReviveReq::SAVE_POS:
+    case SAVE_POS:
       //TODO: get the save location of the player
-    case ReviveReq::START_POST:
+    case START_POST:
       //TODO: grab the start position of this map
-    case ReviveReq::CURRENT_POS:
+    case CURRENT_POS:
       map_id = position->map_;
       x = position->x_;
       y = position->y_;
