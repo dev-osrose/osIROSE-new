@@ -9,6 +9,7 @@
 #include "cmapclient.h"
 #include "cmapserver.h"
 #include "itemdb.h"
+#include "dataconsts.h"
 #include "srv_whisperchat.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
@@ -71,7 +72,7 @@ void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
     logger->trace("gm_commands die called");
     auto client = getClient(e);
-    manager.get<CombatSystem>()->apply_damage(e, INT_MAX);
+    manager.get<CombatSystem>()->apply_damage(e, MAX_DAMAGE);
 }
 
 std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {

@@ -5,25 +5,31 @@
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "packetfactory.h"
+#include "dataconsts.h"
+
 #include "cli_attack.h"
 #include "cli_hpreq.h"
+#include "cli_revivereq.h"
 #include "srv_attack.h"
 #include "srv_damage.h"
 #include "srv_hpreply.h"
 #include "srv_sethpandmp.h"
 
+#include "systems/movementsystem.h"
 #include "systems/combat_system.h"
 
 using namespace Systems;
 using namespace RoseCommon;
+using namespace ReviveReq;
 
 CombatSystem::CombatSystem(SystemManager &manager) : System(manager) {
   manager.registerDispatcher(ePacketType::PAKCS_ATTACK, &CombatSystem::processAttack);
   manager.registerDispatcher(ePacketType::PAKCS_HP_REQ, &CombatSystem::processHpRequest);
+  manager.registerDispatcher(ePacketType::PAKCS_REVIVE_REQ, &CombatSystem::processReviveRequest);
 }
 
 void CombatSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
-  for (Entity entity : es.entities_with_components<AdvancedInfo, Damage>()) {
+  for (Entity entity : es.entities_with_components<AdvancedInfo>()) {
     updateHP(entity, dt);
   }
 }
@@ -32,6 +38,7 @@ void CombatSystem::apply_damage(Entity defender, Entity attacker, int32_t damage
   if (!defender || !attacker) return;
   
   //auto stats = defender.component<Stats>();
+  auto attackerBasic = attacker.component<BasicInfo>();
   auto nDamage = defender.component<Damage>();
   //auto advanced = defender.component<AdvancedInfo>();
   
@@ -47,12 +54,13 @@ void CombatSystem::apply_damage(Entity defender, Entity attacker, int32_t damage
   }
   
   //TODO: Replace 0 with the method of attack
-  nDamage->addDamage(attacker, 0, damage);
+  nDamage->addDamage(attackerBasic->id_, DAMAGE_ACTION_ATTACK, damage);
 }
 
 void CombatSystem::apply_damage(Entity defender, int32_t damage) {
   if (!defender) return;
   
+  auto basic = defender.component<BasicInfo>();
   //auto stats = defender.component<Stats>();
   auto nDamage = defender.component<Damage>();
   //auto advanced = defender.component<AdvancedInfo>();
@@ -69,15 +77,18 @@ void CombatSystem::apply_damage(Entity defender, int32_t damage) {
   }
   
   //TODO: Replace 0 with the method of attack
-  nDamage->addDamage(defender, 0, damage);
+  nDamage->addDamage(basic->id_, DAMAGE_ACTION_ATTACK, damage);
 }
 
 void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
   if (!entity) return;
   
+  auto basic = entity.component<BasicInfo>();
   //auto stats = entity.component<Stats>(); // max hp and mp
   auto damage = entity.component<Damage>();
   auto advanced = entity.component<AdvancedInfo>();
+  
+  //logger_->debug("Updating HP for {}", basic->name_);
   
   //TODO: Calculate defensive buffs before doing damage
   //TODO: Calculate natural and magic health regen
@@ -88,18 +99,19 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
     {
       Entity other;
       if (!(other = manager_.getEntity(attack.attacker_))) {
+        logger_->debug("Attacking entity doesn't exist. Skipping...");
         continue;
       }
       
-      logger_->debug("Applying damage to entity");
+      logger_->debug("Applying damage to entity {} {}", basic->name_, basic->id_);
       
-      if(adjusted_hp - attack.value_ <= 0) {
-        total_applied_damage = attack.value_ + (adjusted_hp - attack.value_);
+      if((adjusted_hp - attack.value_) <= 0) {
+        logger_->debug("Entity {} {} will die from {} damage", basic->name_, basic->id_, attack.value_);
+        total_applied_damage = attack.value_ + adjusted_hp;
         adjusted_hp = 0;
         //TODO: Credit this attacker as the one who killed this entity.
-        break;
       } else {
-        total_applied_damage = attack.value_;
+        total_applied_damage += attack.value_;
         adjusted_hp -= attack.value_;
       }
       
@@ -109,25 +121,29 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       //TODO: If the entity is dead send the packet to everyone (with drop info as needed)
       // else send to the attacker, the defender and the defender's party
       if(adjusted_hp <= 0) {
-        if (auto client = getClient(entity))
-          manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_)); //TODO: Send item info here...
+        //logger_->debug("Entity {} {}, died.", basic->name_, basic->id_);
+        //TODO: Set the dead state flag in the damage data for the client
+        //TODO: Get dropped item data here and send it with the DAMAGE packet
+        attack.action_ &= ~DAMAGE_ACTION_HIT;
+        attack.action_ |= DAMAGE_ACTION_DEAD;
+        manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
+        entity.remove<Damage>();
       } else {
+        logger_->debug("applied {} damage to entity {} {}.", attack.value_, basic->name_, basic->id_);
         if (auto client = getClient(entity))
-          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_));
+          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
+        else if (auto client = getClient(other))
+          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
       }
     }
+    damage->damage_.clear();
     
     // Last sanity check to make sure our HP is not less then 0
     if(adjusted_hp < 0) {
       adjusted_hp = 0;
     }
-    
-    //advanced->hp_ = adjusted_hp;
     entity.component<AdvancedInfo>()->hp_ = adjusted_hp;
-    
-    //TODO: Send HP update here
-    if (auto client = getClient(entity))
-      manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity));
+    //manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity));
   }
 }
 
@@ -158,4 +174,43 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
   }
   
   client.send(makePacket<ePacketType::PAKWC_HP_REPLY>(other));
+}
+
+#define	RAND(value)				( rand() % value ) // This is only temp
+void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const RoseCommon::CliReviveReq &packet)
+{
+  logger_->trace("CombatSystem::processReviveRequest start");
+  if (!entity) return;
+  
+  auto basic = entity.component<BasicInfo>();
+  auto stats = entity.component<Stats>(); 
+  auto position = entity.component<Position>();
+  
+  uint16_t map_id = 0;
+  float x = 0.f, y = 0.f;
+  
+  switch(packet.reviveType())
+  {
+    case ReviveReq::REVIVE_POS:
+      //TODO: Get the closest revive location to the user
+      //x = (RAND(1001) - 500));
+      //y = (RAND(1001) - 500));
+      //break;
+    case ReviveReq::SAVE_POS:
+      //TODO: get the save location of the player
+    case ReviveReq::START_POST:
+      //TODO: grab the start position of this map
+    case ReviveReq::CURRENT_POS:
+      map_id = position->map_;
+      x = position->x_;
+      y = position->y_;
+      break;
+    default:
+      logger_->warn("CombatSystem::processReviveRequest player {} sent a revive type that doesn't exist...", basic->name_);
+      return;
+  }
+  
+  entity.component<AdvancedInfo>()->hp_ = (stats->maxHp_ * 0.25f);
+  entity.component<AdvancedInfo>()->mp_ = 0;
+  manager_.get<MovementSystem>()->teleport(entity, map_id, x, y);
 }

@@ -10,6 +10,7 @@
 namespace RoseCommon {
 class CliAttack;
 class CliHpReq;
+class CliReviveReq;
 }  // namespace RoseCommon
 
 namespace Systems {
@@ -26,6 +27,7 @@ class CombatSystem : public System {
   
   void processAttack(CMapClient &client, Entity entity, const RoseCommon::CliAttack &packet);
   void processHpRequest(CMapClient &client, Entity entity, const RoseCommon::CliHpReq &packet);
+  void processReviveRequest(CMapClient &client, Entity entity, const RoseCommon::CliReviveReq &packet);
   
  protected:
   void updateHP(Entity e, std::chrono::milliseconds dt);
