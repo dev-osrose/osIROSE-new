@@ -29,7 +29,7 @@ CombatSystem::CombatSystem(SystemManager &manager) : System(manager) {
 }
 
 void CombatSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
-  for (Entity entity : es.entities_with_components<AdvancedInfo>()) {
+  for (Entity entity : es.entities_with_components<AdvancedInfo, BasicInfo, Stats, AdvancedInfo>()) {
     updateHP(entity, dt);
   }
 }
@@ -84,7 +84,7 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
   if (!entity) return;
   
   auto basic = entity.component<BasicInfo>();
-  //auto stats = entity.component<Stats>(); // max hp and mp
+  auto stats = entity.component<Stats>();
   auto damage = entity.component<Damage>();
   auto advanced = entity.component<AdvancedInfo>();
   
@@ -92,6 +92,39 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
   
   //TODO: Calculate defensive buffs before doing damage
   //TODO: Calculate natural and magic health regen
+  // if(false)
+  // {
+  //   int stanceModifier = (basic->command_ == BasicInfo::SIT ? 4 : 1); // This should be if sitting
+  //   {
+  //     // Regen HP
+  //     int32_t amount = (int32_t)std::ceil(stats->maxHp_ * 0.02);
+  //     amount = amount * stanceModifier;
+  //     //TODO: update amount based on equipment values
+  //     //TODO: Take into account HP regen buffs
+    
+  //     advanced->hp_ += amount;
+  //   }
+  
+  //   {
+  //     // Regen MP
+  //     int32_t amount = (int32_t)std::ceil(stats->maxMp_ * 0.02);
+  //     amount = amount * stanceModifier;
+  //     //TODO: update amount based on equipment values
+  //     //TODO: Take into account HP regen buffs
+
+  //     advanced->mp_ += amount;
+  //   }
+    
+  //   if(advanced->hp_ > stats->maxHp_) {
+  //     advanced->hp_ = stats->maxHp_;
+  //   }
+
+  //   if(advanced->mp_ > stats->maxMp_) {
+  //     advanced->mp_ = stats->maxMp_;
+  //   }
+  //   manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity));
+  // }
+
   if(damage) {
     int32_t adjusted_hp = advanced->hp_;
     uint32_t total_applied_damage = 0;
@@ -143,7 +176,6 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       adjusted_hp = 0;
     }
     entity.component<AdvancedInfo>()->hp_ = adjusted_hp;
-    //manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_SET_HP_AND_MP>(entity));
   }
 }
 
@@ -183,7 +215,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   if (!entity) return;
   
   auto basic = entity.component<BasicInfo>();
-  auto stats = entity.component<Stats>(); 
+  auto stats = entity.component<Stats>();
   auto position = entity.component<Position>();
   
   uint16_t map_id = 0;
@@ -198,6 +230,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
       //break;
     case SAVE_POS:
       //TODO: get the save location of the player
+      //TOOD: Make sure our save location isn't on birth island if we already left it
     case START_POST:
       //TODO: grab the start position of this map
     case CURRENT_POS:
