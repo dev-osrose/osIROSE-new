@@ -7,6 +7,7 @@
 #include "cmapserver.h"
 #include "systems/chatsystem.h"
 #include "systems/mapsystem.h"
+#include "systems/movementsystem.h"
 
 using namespace Systems;
 using namespace RoseCommon;
@@ -29,10 +30,10 @@ void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const Ros
   manager_.get<Systems::ChatSystem>()->sendMsg(entity, "You are client " + std::to_string(getId(entity)));
   manager_.send(entity, CMapServer::eSendType::NEARBY_BUT_ME,
                                          makePacket<ePacketType::PAKWC_PLAYER_CHAR>(entity));
-  const auto &movement = manager_.get<Systems::MovementSystem>();
+  const auto movement = manager_.get<Systems::MovementSystem>();
   auto &manager = manager_.getEntityManager();
   for (Entity e : manager.entities_with_components<BasicInfo, AdvancedInfo>()) {
-    if (!movement.is_nearby(entity, e)) continue; // do not send non nearby stuff
+    if (!movement->is_nearby(entity, e)) continue; // do not send non nearby stuff
     basic = e.component<BasicInfo>();
     if (basic->ownerId_ == 0 && e.component<Npc>()) {
         client.send(makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
@@ -44,7 +45,7 @@ void MapSystem::processChangeMapReq(CMapClient &client, Entity entity, const Ros
     }
   }
   for (Entity e : manager.entities_with_components<Item>()) {
-    if (!movement.is_nearby(entity, e) continue; // do not send non nearby stuff
+    if (!movement->is_nearby(entity, e)) continue; // do not send non nearby stuff
     client.send(makePacket<ePacketType::PAKWC_DROP_ITEM>(e));
   }
   entity.component<BasicInfo>()->isOnMap_.store(true);
