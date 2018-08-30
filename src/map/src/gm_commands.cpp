@@ -9,6 +9,7 @@
 #include "cmapserver.h"
 #include "itemdb.h"
 #include "srv_whisperchat.h"
+#include "srv_setmoney.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
 #include "systems/movementsystem.h"
@@ -53,7 +54,6 @@ void load_npc(std::stringstream&&, SystemManager&, Entity) {
 
 void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
-    auto client = getClient(e);
     uint16_t map_id = 0;
     float x = 0.f, y = 0.f;
     ss >> map_id >> x >> y;
@@ -65,22 +65,38 @@ void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
     manager.get<MovementSystem>()->teleport(e, map_id, x * 100, y * 100); // transforms from map coordinates to real coordinates
 }
 
-std::unordered_map<std::string, std::pair<std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
-    {"/item", {item, "Creates an item. Usage: /item <type> <id>"}},
-    {"/load_npc", {load_npc, "Loads npc(s). TODO"}},
-    {"/tp", {teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
+void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    uint64_t zuly = 0;
+    ss >> zuly;
+    if (!zuly) {
+        logger->info("Wrong number of arguments for GM command {} from {}", fmt::format("/zuly {}", ss.str()), getId(e));
+        help(e, "/zuly");
+        return;
+    }
+    auto client = getClient(e);
+    auto advanced = e.component<AdvancedInfo>();
+    advanced->zuly_ += zuly;
+    client->send(makePacket<ePacketType::PAKWC_SET_MONEY>(e));
+}
+
+static std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(std::stringstream &&ss, SystemManager&, Entity)>, std::string>> commands = {
+    {"/item", {100, item, "Creates an item. Usage: /item <type> <id>"}},
+    {"/load_npc", {100, load_npc, "Loads npc(s). TODO"}},
+    {"/tp", {200, teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
+    {"/zuly", {100, zuly, "Adds zulies to your inventory. Usage: /zuly <amount>"}},
 };
 
 void help(Entity entity, const std::string& command) {
     auto client = getClient(entity);
-    client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help:"));
+    client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help (<required args> [optional args]):"));
     if (command.size()) {
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + commands[command].second));
+        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + std::get<2>(commands[command])));
     } else {
         auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
         for (const auto &[key, value] : commands) {
             std::string text;
-            text = key + " " + value.second;
+            text = key + " " + std::get<2>(value);
             logger->info("help: {}", text);
             client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
         }
@@ -95,11 +111,12 @@ bool executeGM(const std::string& message, SystemManager &manager, Entity entity
         help(entity);
         return true;
     }
+    uint16_t access_level = entity.component<SocketConnector>()->access_level_;
     std::stringstream ss(message);
     std::string command;
     ss >> command;
-    if (auto it = commands.find(command); it != commands.end()) {
-        it->second.first(std::move(ss), manager, entity);
+    if (auto it = commands.find(command); it != commands.end() && access_level >= std::get<0>(it->second)) {
+        std::get<1>(it->second)(std::move(ss), manager, entity);
         return true;
     }
     return false;

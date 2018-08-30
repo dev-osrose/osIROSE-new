@@ -187,6 +187,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_adjustposition.h
   src/packets/srv_teleportreply.cpp
   include/packets/srv_teleportreply.h
+  src/packets/srv_setmoney.cpp
+  include/packets/srv_setmoney.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
