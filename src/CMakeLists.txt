@@ -50,7 +50,9 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty")
-set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad")
+set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad" 
+  "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/components"
+  "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/packets")
 set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "asio.hpp")
 
 if(WIN32)
