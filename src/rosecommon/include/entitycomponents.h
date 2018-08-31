@@ -49,6 +49,7 @@
 #include "components/callbacks.h"
 #include "components/damage.h"
 #include "components/buffs.h"
+#include "components/playerspawn.h"
 
 #include "entityapi.h"
 #include "item.h"
@@ -58,7 +59,7 @@ using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::Feature
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
       RoseCommon::EntityAPI, RoseCommon::Item, Npc, Warpgate,
-      Spawner, Callback, Damage, Buffs>;
+      Spawner, Callback, Damage, Buffs, PlayerSpawn>;
 
 using Entity = EntityManager::Entity;
 

@@ -52,6 +52,7 @@ set( SOURCES_HEADER
   include/components/callbacks.h
   include/components/buffs.h
   include/components/damage.h
+  include/components/playerspawn.h
 )
 
 SET(SOURCES_BASE
