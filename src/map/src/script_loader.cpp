@@ -93,18 +93,37 @@ void ScriptLoader::load_script(std::string const& path) {
             spawners.push_back(entity_system_->create_spawner(alias, mob_id, mob_count, limit, interval, range, map_id, x, y, z));
         });
         
-        logger_->info("(Re)loading scripts from '{}'", path);
+        auto spawn_file = player_spawn_files_.find(path);
+        std::vector<Entity> player_spawns;
+        if (spawn_file != player_spawn_files_.end()) {
+            player_spawns = std::move(spawn_file->second);
+        }
+        env.set_function("login_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
+            if (map_id != map_id_) return;
+            player_spawns.push_back(entity_system_->create_player_spawn(0, map_id, dest_x, dest_y));
+        });
+        env.set_function("respawn_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
+            if (map_id != map_id_) return;
+            player_spawns.push_back(entity_system_->create_player_spawn(1, map_id, dest_x, dest_y));
+        });
+        
+        logger_->debug("(Re)loading scripts from '{}'", path);
         state_.script_file(path, env);
-        logger_->info("Loaded {} warpgates", warpgates.size());
-        logger_->info("Loaded {} npcs", npcs.size());
-        logger_->info("Loaded {} spawners", spawners.size());
-        logger_->info("Finished (re)loading scripts from '{}'", path);
+        
+        if (warpgates.size() || npcs.size() || spawners.size() || player_spawns.size()) {
+          logger_->trace("Loaded {} warpgates", warpgates.size());
+          logger_->trace("Loaded {} npcs", npcs.size());
+          logger_->trace("Loaded {} spawners", spawners.size());
+          logger_->trace("Loaded {} player_spawns", player_spawns.size());
+        }
+        logger_->debug("Finished (re)loading scripts from '{}'", path);
 
         if (warpgates.size()) warpgate_files_.insert_or_assign(path, std::move(warpgates));
         if (npcs.size()) npc_files_.insert_or_assign(path, std::move(npcs));
         if (spawners.size()) spawner_files_.insert_or_assign(path, std::move(spawners));
+        if (player_spawns.size()) player_spawn_files_.insert_or_assign(path, std::move(player_spawns));
 
-        if (warpgates.size() || npcs.size() || spawners.size()) {
+        if (warpgates.size() || npcs.size() || spawners.size() || player_spawns.size()) {
             for (auto& f : files_) if (f == path) return;
             files_.push_back(path);
         }

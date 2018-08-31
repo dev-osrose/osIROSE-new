@@ -89,6 +89,8 @@ class EntitySystem {
   Entity create_spawner(std::string alias, int mob_id, int mob_count,
                      int spawner_limit, int spawner_interval, int spawner_range,
                      int map_id, float x, float y, float z);
+                     
+  Entity create_player_spawn(char type, int map_id, float x, float y);
 
   void bulk_destroy(const std::vector<Entity>& s);
  

@@ -352,6 +352,19 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
     return e;
 }
 
+Entity EntitySystem::create_player_spawn(char type, int map_id, float x, float y) {
+    Entity e = create();
+    std::unique_ptr<CommandBase> ptr{new Command([type, map_id, x, y, e] (EntitySystem &es) mutable {
+      if (!e) return;
+      e.assign<BasicInfo>(es.id_manager_.get_free_id());
+      auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
+      //e.assign<PlayerSpawn>(type);
+    })};
+    std::lock_guard<std::mutex> lock(access_);
+    create_commands_.emplace_back(std::move(ptr));
+    return e;
+}
+
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
   std::unique_ptr<CommandBase> ptr{new Command([s] (EntitySystem &es) mutable {
     for (auto entity : s) {
