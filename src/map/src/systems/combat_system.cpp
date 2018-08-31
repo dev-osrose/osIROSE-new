@@ -208,6 +208,52 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
   client.send(makePacket<ePacketType::PAKWC_HP_REPLY>(other));
 }
 
+Entity CombatSystem::get_closest_spawn(Entity player) {
+  auto position = player.component<Position>();
+  
+  Entity closest = {};
+  
+  for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
+    auto closestPosition = entity.component<Position>();
+    auto spawnPosition = entity.component<Position>();
+    
+    if(!closestPosition) {
+      closest = entity;
+      continue;
+    }
+    //TODO: Do distance calc here
+    closest = entity;
+  }
+  
+  return closest;
+}
+
+Entity CombatSystem::get_saved_spawn(Entity player) {
+  auto position = player.component<Position>();
+
+  for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
+    auto spawnPosition = entity.component<Position>();
+    auto spawnInfo = entity.component<PlayerSpawn>();
+    
+    if(spawnPosition->map_ == position->spawn_ && spawnInfo->type_ == PlayerSpawn::LOGIN_POINT)
+      return entity;
+  }
+  
+  return {};
+}
+
+Entity CombatSystem::get_start_spawn() {
+  for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
+    auto spawnPosition = entity.component<Position>();
+    auto spawninfo = entity.component<PlayerSpawn>();
+    
+    if(spawninfo->type_ == PlayerSpawn::LOGIN_POINT)
+      return entity;
+  }
+  
+  return {};
+}
+
 #define	RAND(value)				( rand() % value ) // This is only temp
 void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const RoseCommon::CliReviveReq &packet)
 {
@@ -218,23 +264,51 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   auto stats = entity.component<Stats>();
   auto position = entity.component<Position>();
   
-  uint16_t map_id = 0;
+  uint16_t map_id = position->map_;
   float x = 0.f, y = 0.f;
   
   switch(packet.reviveType())
   {
     case REVIVE_POS:
-      //TODO: Get the closest revive location to the user
-      //x = (RAND(1001) - 500));
-      //y = (RAND(1001) - 500));
-      //break;
+    {
+      if (Entity e = get_closest_spawn(entity); e) {
+        auto dest = e.component<Position>();
+        x = dest->x_ + (RAND(1001) - 500);
+        y = dest->y_ + (RAND(1001) - 500);
+      }
+      break;
+    }
     case SAVE_POS:
+    {
       //TODO: get the save location of the player
       //TOOD: Make sure our save location isn't on birth island if we already left it
+      if (Entity e = get_saved_spawn(entity); e) {
+        auto dest = e.component<Position>();
+        if(position->map_ != dest->map_ && dest->map_ != 20) {
+          map_id = dest->map_;
+          x = dest->x_ + (RAND(1001) - 500);
+          y = dest->y_ + (RAND(1001) - 500);
+        } else {
+          if (Entity e = get_closest_spawn(entity); e) {
+            auto dest = e.component<Position>();
+            x = dest->x_ + (RAND(1001) - 500);
+            y = dest->y_ + (RAND(1001) - 500);
+          }
+        }
+      }
+      break;
+    }
     case START_POST:
+    {
       //TODO: grab the start position of this map
+      if (Entity e = get_start_spawn(); e) {
+        auto dest = e.component<Position>();
+        x = dest->x_ + (RAND(1001) - 500);
+        y = dest->y_ + (RAND(1001) - 500);
+      }
+      break;
+    }
     case CURRENT_POS:
-      map_id = position->map_;
       x = position->x_;
       y = position->y_;
       break;

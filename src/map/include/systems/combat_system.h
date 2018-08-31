@@ -16,7 +16,7 @@ class CliReviveReq;
 namespace Systems {
 
 class CombatSystem : public System {
- public:
+public:
   CombatSystem(SystemManager &manager);
   virtual ~CombatSystem() = default;
 
@@ -29,7 +29,10 @@ class CombatSystem : public System {
   void processHpRequest(CMapClient &client, Entity entity, const RoseCommon::CliHpReq &packet);
   void processReviveRequest(CMapClient &client, Entity entity, const RoseCommon::CliReviveReq &packet);
   
- protected:
+protected:
+  Entity get_closest_spawn(Entity player);
+  Entity get_saved_spawn(Entity player);
+  Entity get_start_spawn();
   void updateHP(Entity e, std::chrono::milliseconds dt);
 };
 
