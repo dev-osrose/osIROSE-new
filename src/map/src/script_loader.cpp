@@ -98,8 +98,9 @@ void ScriptLoader::load_script(std::string const& path) {
         if (spawn_file != player_spawn_files_.end()) {
             player_spawns = std::move(spawn_file->second);
         }
+        
         env.set_function("login_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
-            if (map_id != map_id_) return;
+            // Combat system needs all map's login spawn points to revive the player at a saved location
             player_spawns.push_back(entity_system_->create_player_spawn(0, map_id, dest_x, dest_y));
         });
         env.set_function("respawn_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
@@ -107,16 +108,13 @@ void ScriptLoader::load_script(std::string const& path) {
             player_spawns.push_back(entity_system_->create_player_spawn(1, map_id, dest_x, dest_y));
         });
         
-        logger_->debug("(Re)loading scripts from '{}'", path);
+        logger_->trace("(Re)loading scripts from '{}'", path);
         state_.script_file(path, env);
-        
-        if (warpgates.size() || npcs.size() || spawners.size() || player_spawns.size()) {
-          logger_->trace("Loaded {} warpgates", warpgates.size());
-          logger_->trace("Loaded {} npcs", npcs.size());
-          logger_->trace("Loaded {} spawners", spawners.size());
-          logger_->trace("Loaded {} player_spawns", player_spawns.size());
-        }
-        logger_->debug("Finished (re)loading scripts from '{}'", path);
+        if (warpgates.size()) logger_->trace("Map {} loaded {} warpgates", map_id_, warpgates.size());
+        if (npcs.size()) logger_->trace("Map {} loaded {} npcs", map_id_, npcs.size());
+        if (spawners.size()) logger_->trace("Map {} loaded {} mob spawners", map_id_, spawners.size());
+        if (player_spawns.size()) logger_->trace("Map {} loaded {} player_spawns", map_id_, player_spawns.size());
+        logger_->trace("Finished (re)loading scripts from '{}'", path);
 
         if (warpgates.size()) warpgate_files_.insert_or_assign(path, std::move(warpgates));
         if (npcs.size()) npc_files_.insert_or_assign(path, std::move(npcs));

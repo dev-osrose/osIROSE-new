@@ -357,8 +357,8 @@ Entity EntitySystem::create_player_spawn(char type, int map_id, float x, float y
     std::unique_ptr<CommandBase> ptr{new Command([type, map_id, x, y, e] (EntitySystem &es) mutable {
       if (!e) return;
       e.assign<BasicInfo>(es.id_manager_.get_free_id());
-      auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
-      //e.assign<PlayerSpawn>(type);
+      e.assign<Position>(x * 100, y * 100, map_id, 0);
+      e.assign<PlayerSpawn>((PlayerSpawn::Type)type);
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
