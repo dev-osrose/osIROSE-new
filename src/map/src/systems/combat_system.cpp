@@ -202,6 +202,7 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
 }
 
 Entity CombatSystem::get_closest_spawn(Entity player) {
+  logger_->trace("CombatSystem::get_closest_spawn start");
   auto position = player.component<Position>();
   
   Entity closest = {};
@@ -216,16 +217,17 @@ Entity CombatSystem::get_closest_spawn(Entity player) {
     float dy = spawnPosition->y_ - position->y_;
     float distance = std::sqrt(dx * dx + dy * dy);
     
-    if(closestDist > distance) {
+    if(distance < closestDist) {
       closest = entity;
       closestDist = distance;
     }
   }
-  
+  logger_->trace("CombatSystem::get_closest_spawn end");
   return closest;
 }
 
 Entity CombatSystem::get_saved_spawn(Entity player) {
+  logger_->trace("CombatSystem::get_saved_spawn start");
   auto position = player.component<Position>();
 
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
@@ -243,6 +245,7 @@ Entity CombatSystem::get_saved_spawn(Entity player) {
 }
 
 Entity CombatSystem::get_start_spawn() {
+  logger_->trace("CombatSystem::get_start_spawn start");
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
     auto spawnPosition = entity.component<Position>();
     auto spawninfo = entity.component<PlayerSpawn>();
@@ -272,6 +275,8 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   
   uint16_t map_id = position->map_;
   float x = 0.f, y = 0.f;
+  
+  logger_->trace("CombatSystem::processReviveRequest reviveType {}", packet.reviveType());
   
   switch(packet.reviveType())
   {

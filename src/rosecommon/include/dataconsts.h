@@ -33,7 +33,7 @@ namespace RoseCommon {
 
 namespace ReviveReq {
     enum ReviveReq : uint8_t {
-        REVIVE_POS,
+        REVIVE_POS = 1,
         SAVE_POS,
         START_POST,
         CURRENT_POS
