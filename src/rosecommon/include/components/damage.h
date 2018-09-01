@@ -15,7 +15,7 @@ struct tDamage {
 struct Damage {
     static const uint16_t maxConcurentDamage = 300;
     
-    bool addDamage(uint32_t attacker, uint16_t action, int32_t damage = 0) {
+    bool addDamage(uint32_t attacker, uint8_t action, int32_t damage = 0) {
         tDamage newDamage = tDamage(action, attacker, damage);
         damage_.push_back(newDamage);
         return true;

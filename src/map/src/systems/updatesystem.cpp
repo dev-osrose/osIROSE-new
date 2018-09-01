@@ -4,7 +4,7 @@ using namespace Systems;
 
 void UpdateSystem::update(EntityManager &es, std::chrono::milliseconds) {
   for (Entity entity : es.entities_with_components<AdvancedInfo, Inventory, Stats>()) calculateSpeed(entity);
-  for (Entity entity : es.entities_with_components<BasicInfo>()) calculateCommand(entity);
+  for (Entity entity : es.entities_with_components<BasicInfo, AdvancedInfo>()) calculateCommand(entity);
 }
 
 void UpdateSystem::calculateSpeed(Entity entity) {
@@ -36,6 +36,9 @@ void UpdateSystem::calculateAtkSpeed(Entity) {}
 void UpdateSystem::calculateCommand(Entity entity) {
   auto basic = entity.component<BasicInfo>();
   auto destination = entity.component<Destination>();
-  if (destination) basic->command_ = BasicInfo::MOVE;
+  auto advanced = entity.component<AdvancedInfo>();
+  
+  if(advanced->hp_ <= 0) basic->command_ = BasicInfo::DIE;
+  else if (destination) basic->command_ = BasicInfo::MOVE;
   else basic->command_ = BasicInfo::STOP;
 }
