@@ -205,7 +205,7 @@ Entity CombatSystem::get_closest_spawn(Entity player) {
   auto position = player.component<Position>();
   
   Entity closest = {};
-  double closestDist = 999999999999;
+  float closestDist = 999999999999;
   
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
     auto spawnPosition = entity.component<Position>();
