@@ -209,6 +209,11 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
 
   // luaSystem->loadScript(entity, "function onInit()\ndisplay('test')\nend");
   // lua->onInit();
+  if(entity.component<AdvancedInfo>()->hp_ <= 0) {
+    entity.component<AdvancedInfo>()->hp_ = (entity.component<Stats>()->maxHp_ * 0.3f); // Set to 30% HP
+  }
+  
+  Systems::UpdateSystem::calculateCommand(entity);
 
   registerEntity(entity);
   return entity;
@@ -352,7 +357,7 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
     return e;
 }
 
-Entity EntitySystem::create_player_spawn(char type, int map_id, float x, float y) {
+Entity EntitySystem::create_player_spawn(PlayerSpawn::Type type, int map_id, float x, float y) {
     Entity e = create();
     std::unique_ptr<CommandBase> ptr{new Command([type, map_id, x, y, e] (EntitySystem &es) mutable {
       if (!e) return;

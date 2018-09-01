@@ -154,12 +154,10 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       //TODO: If the entity is dead send the packet to everyone (with drop info as needed)
       // else send to the attacker, the defender and the defender's party
       if(adjusted_hp <= 0) {
-        //logger_->debug("Entity {} {}, died.", basic->name_, basic->id_);
-        //TODO: Set the dead state flag in the damage data for the client
         //TODO: Get dropped item data here and send it with the DAMAGE packet
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
-        manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
+        manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_ + 30000, attack.action_));
         entity.remove<Damage>();
       } else {
         logger_->debug("applied {} damage to entity {} {}.", attack.value_, basic->name_, basic->id_);
@@ -170,11 +168,6 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
       }
     }
     damage->damage_.clear();
-    
-    // Last sanity check to make sure our HP is not less then 0
-    if(adjusted_hp < 0) {
-      adjusted_hp = 0;
-    }
     entity.component<AdvancedInfo>()->hp_ = adjusted_hp;
   }
 }
@@ -212,17 +205,22 @@ Entity CombatSystem::get_closest_spawn(Entity player) {
   auto position = player.component<Position>();
   
   Entity closest = {};
+  double closestDist = 999999999999;
   
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
-    auto closestPosition = entity.component<Position>();
     auto spawnPosition = entity.component<Position>();
     
-    if(!closestPosition) {
+    if(spawnPosition->map_ != position->map_) continue;
+    
+    int distancex = (spawnPosition->x_ - position->x_) * (spawnPosition->x_ - position->x_);
+    int distancey = (spawnPosition->y_ - position->y_) * (spawnPosition->y_ - position->y_);
+
+    double realDist = distancex - distancey;
+    
+    if(closestDist > realDist) {
       closest = entity;
-      continue;
+      closestDist = realDist;
     }
-    //TODO: Do distance calc here
-    closest = entity;
   }
   
   return closest;
@@ -232,13 +230,16 @@ Entity CombatSystem::get_saved_spawn(Entity player) {
   auto position = player.component<Position>();
 
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
-    auto spawnPosition = entity.component<Position>();
     auto spawnInfo = entity.component<PlayerSpawn>();
-    
-    if(spawnPosition->map_ == position->spawn_ && spawnInfo->type_ == PlayerSpawn::LOGIN_POINT)
-      return entity;
+    if(spawnInfo->type_ == PlayerSpawn::LOGIN_POINT) {
+      auto spawnPosition = entity.component<Position>();
+
+      if(spawnPosition->map_ == position->spawn_)
+        return entity;
+    }
   }
   
+  logger_->trace("CombatSystem::get_saved_spawn unable to find the saved spawn point");
   return {};
 }
 
@@ -263,6 +264,12 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   auto basic = entity.component<BasicInfo>();
   auto stats = entity.component<Stats>();
   auto position = entity.component<Position>();
+  auto charinfo = entity.component<CharacterInfo>();
+  
+  if(!charinfo) {
+    logger_->warn("CombatSystem::processReviveRequest recved revive request for an entity that doesn't have 'CharacterInfo'");
+    return;
+  }
   
   uint16_t map_id = position->map_;
   float x = 0.f, y = 0.f;
@@ -284,17 +291,21 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
       //TOOD: Make sure our save location isn't on birth island if we already left it
       if (Entity e = get_saved_spawn(entity); e) {
         auto dest = e.component<Position>();
-        if(position->map_ != dest->map_ && dest->map_ != 20) {
-          map_id = dest->map_;
-          x = dest->x_ + (RAND(1001) - 500);
-          y = dest->y_ + (RAND(1001) - 500);
-        } else {
+        
+        if(dest->map_ == 20 && charinfo->job_) {
           if (Entity e = get_closest_spawn(entity); e) {
             auto dest = e.component<Position>();
             x = dest->x_ + (RAND(1001) - 500);
             y = dest->y_ + (RAND(1001) - 500);
           }
+          break;
         }
+        
+        if(position->map_ != dest->map_) {
+          map_id = dest->map_;
+        }
+        x = dest->x_ + (RAND(1001) - 500);
+        y = dest->y_ + (RAND(1001) - 500);
       }
       break;
     }
@@ -317,7 +328,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
       return;
   }
   
-  entity.component<AdvancedInfo>()->hp_ = (stats->maxHp_ * 0.25f);
+  entity.component<AdvancedInfo>()->hp_ = (stats->maxHp_ * 0.3f);
   entity.component<AdvancedInfo>()->mp_ = 0;
   manager_.get<MovementSystem>()->teleport(entity, map_id, x, y);
 }

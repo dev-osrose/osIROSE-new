@@ -101,11 +101,11 @@ void ScriptLoader::load_script(std::string const& path) {
         
         env.set_function("login_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
             // Combat system needs all map's login spawn points to revive the player at a saved location
-            player_spawns.push_back(entity_system_->create_player_spawn(0, map_id, dest_x, dest_y));
+            player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::LOGIN_POINT, map_id, dest_x, dest_y));
         });
         env.set_function("respawn_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
             if (map_id != map_id_) return;
-            player_spawns.push_back(entity_system_->create_player_spawn(1, map_id, dest_x, dest_y));
+            player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::RESPAWN_POINT, map_id, dest_x, dest_y));
         });
         
         logger_->trace("(Re)loading scripts from '{}'", path);
