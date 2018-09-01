@@ -212,14 +212,13 @@ Entity CombatSystem::get_closest_spawn(Entity player) {
     
     if(spawnPosition->map_ != position->map_) continue;
     
-    int distancex = (spawnPosition->x_ - position->x_) * (spawnPosition->x_ - position->x_);
-    int distancey = (spawnPosition->y_ - position->y_) * (spawnPosition->y_ - position->y_);
-
-    double realDist = distancex - distancey;
+    float dx = spawnPosition->x_ - position->x_;
+    float dy = spawnPosition->y_ - position->y_;
+    float distance = std::sqrt(dx * dx + dy * dy);
     
-    if(closestDist > realDist) {
+    if(closestDist > distance) {
       closest = entity;
-      closestDist = realDist;
+      closestDist = distance;
     }
   }
   
