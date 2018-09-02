@@ -99,9 +99,13 @@ void ScriptLoader::load_script(std::string const& path) {
             player_spawns = std::move(spawn_file->second);
         }
         
-        env.set_function("login_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
+        env.set_function("revive_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
             // Combat system needs all map's login spawn points to revive the player at a saved location
-            player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::LOGIN_POINT, map_id, dest_x, dest_y));
+            player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::REVIVE_POINT, map_id, dest_x, dest_y));
+        });
+        env.set_function("start_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
+            // Combat system needs all map's login spawn points to revive the player at a saved location
+            player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::START_POINT, map_id, dest_x, dest_y));
         });
         env.set_function("respawn_point", [&player_spawns, this](int map_id, float dest_x, float dest_y) {
             if (map_id != map_id_) return;

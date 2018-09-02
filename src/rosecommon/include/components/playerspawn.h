@@ -2,8 +2,9 @@
 
 struct PlayerSpawn {
     enum Type : uint8_t {
-        LOGIN_POINT = 0,
-        RESPAWN_POINT = 1
+        REVIVE_POINT = 0,
+        START_POINT,
+        RESPAWN_POINT
     };
 
     PlayerSpawn() : type_(RESPAWN_POINT) {}
