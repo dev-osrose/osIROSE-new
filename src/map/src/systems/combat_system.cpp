@@ -232,7 +232,7 @@ Entity CombatSystem::get_saved_spawn(Entity player) {
 
   for (Entity entity : manager_.getEntityManager().entities_with_components<BasicInfo, Position, PlayerSpawn>()) {
     auto spawnInfo = entity.component<PlayerSpawn>();
-    if(spawnInfo->type_ == PlayerSpawn::LOGIN_POINT) {
+    if(spawnInfo->type_ == PlayerSpawn::RESPAWN_POINT) {
       auto spawnPosition = entity.component<Position>();
 
       if(spawnPosition->map_ == position->spawn_)
@@ -250,7 +250,7 @@ Entity CombatSystem::get_start_spawn() {
     auto spawnPosition = entity.component<Position>();
     auto spawninfo = entity.component<PlayerSpawn>();
     
-    if(spawninfo->type_ == PlayerSpawn::LOGIN_POINT)
+    if(spawninfo->type_ == PlayerSpawn::START_POINT)
       return entity;
   }
   
