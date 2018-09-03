@@ -83,7 +83,7 @@ list(LENGTH ARG_FLATBUFFERSROOT FLATBUFFERSROOT_LENGTH)
         message("  EXT_CLEANED_FILE=${EXT_CLEANED_FILE}")
     endif()
 
-    set(H_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.h")
+    set(H_FILE "${OUTPATH}/${EXT_CLEANED_FILE}_generated.h")
 
     if(ARG_DEBUG)
       message("  H_FILE=${H_FILE}")
@@ -94,8 +94,7 @@ list(LENGTH ARG_FLATBUFFERSROOT FLATBUFFERSROOT_LENGTH)
     add_custom_command(
       OUTPUT "${H_FILE}"
       COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
-      COMMAND ${FLATBUFFER_EXEC}
-      ARGS "-c -b -o" ${OUTPATH} ${ABS_FILE}
+      COMMAND ${FLATBUFFERS_EXEC} -c -b -o ${OUTPATH} ${ABS_FILE}
       DEPENDS ${ABS_FILE}
       COMMENT "Running flatc compiler on ${MATCH_PATH} with root ${FLATBUFFERSROOT}, generating: ${H_FILE}"
       VERBATIM)
