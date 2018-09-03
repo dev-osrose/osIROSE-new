@@ -213,6 +213,19 @@ SET(SOURCES_PACKETS
 
 )
 
+set(packets
+    test.fbs
+)
+
+set(args
+    DEBUG
+    FLATBUFFERSFILE ${packets}
+    FLATBUFFERSROOT "${CMAKE_CURRENT_SOURCE_DIR}/packets"
+    OUTPATH ${CMAKE_GEN_SRC_DIR}
+)
+
+generate_flatbuffers_headers(FLATBUFFERS ${args})
+
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)

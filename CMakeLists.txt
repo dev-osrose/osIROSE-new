@@ -78,9 +78,12 @@ set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
 set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date/include)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
+set(FLATBUFFERS_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/flatbuffers/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
 set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
 set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
+
+include(FlatBuffersGenerator)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed
