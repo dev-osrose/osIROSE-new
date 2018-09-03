@@ -49,7 +49,8 @@ Entity EntitySystem::buildMobEntity(Entity spawner) {
     Entity e = create();
     auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
     basic->ownerId_ = spawner.component<BasicInfo>()->id_;
-    e.assign<AdvancedInfo>();
+    e.assign<AdvancedInfo>()->hp_ = 1;
+    e.assign<Stats>()->maxHp_ = 1;
     e.assign<CharacterInfo>();
     auto spos = spawner.component<Position>();
     auto spawn = spawner.component<Spawner>();
@@ -310,7 +311,8 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
     std::unique_ptr<CommandBase> ptr{new Command([npc_lua, npc_id, map_id, x, y, z, angle, e] (EntitySystem &es) mutable {
       if (!e) return;
       e.assign<BasicInfo>(es.id_manager_.get_free_id());
-      e.assign<AdvancedInfo>();
+      e.assign<AdvancedInfo>()->hp_ = 1;
+      e.assign<Stats>()->maxHp_ = 1;
       e.assign<CharacterInfo>();
 
       uint16_t dialog_id = 0;
@@ -374,7 +376,7 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
   std::unique_ptr<CommandBase> ptr{new Command([s] (EntitySystem &es) mutable {
     for (auto entity : s) {
         if (!entity) continue;
-        if (!entity.component<Warpgate>())
+        if (!entity.component<Warpgate>() || !entity.component<PlayerSpawn>())
             es.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
         entity.destroy();
     }
