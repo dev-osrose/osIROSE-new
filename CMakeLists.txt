@@ -144,6 +144,8 @@ if(NOT LUA_FOUND)
   include(BuildLua)
 endif()
 
+include(BuildFlatbuffers)
+
 if(NOT CURL_FOUND)
   include(BuildCURL)
 endif()

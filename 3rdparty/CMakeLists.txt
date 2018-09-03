@@ -13,5 +13,3 @@ IF(WITH_MYSQL)
   # SQLPP11 mysql connector
   ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/sqlpp11-connector-mysql)
 ENDIF()
-
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/flatbuffers)
