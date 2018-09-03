@@ -18,7 +18,6 @@ set(packets
 )
 
 set(args
-    DEBUG
     FLATBUFFERSFILE ${packets}
     FLATBUFFERSROOT "${CMAKE_CURRENT_SOURCE_DIR}/packets"
     OUTPATH ${CMAKE_GEN_SRC_DIR}

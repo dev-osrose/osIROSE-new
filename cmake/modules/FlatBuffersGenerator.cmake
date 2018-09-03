@@ -6,6 +6,11 @@ function(GENERATE_FLATBUFFERS_HEADERS HDRS)
     return()
 endif(NOT ARG_FLATBUFFERSFILE)
 
+if (NOT FLATBUFFERS_EXEC)
+    message(SEND_ERROR "Error: no FLATBUFFERS_EXEC defined")
+    return()
+endif()
+
 list(LENGTH ARG_FLATBUFFERSROOT FLATBUFFERSROOT_LENGTH)
   if(FLATBUFFERSROOT_LENGTH GREATER 1)
       message(SEND_ERROR "Error: GENERATE_FLATBUFFERS_HEADER() called with too many flatbuffersroots, only one is allowed")
@@ -89,7 +94,7 @@ list(LENGTH ARG_FLATBUFFERSROOT FLATBUFFERSROOT_LENGTH)
     add_custom_command(
       OUTPUT "${H_FILE}"
       COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
-      COMMAND ./bin/flatc
+      COMMAND ${FLATBUFFER_EXEC}
       ARGS "-c -b -o" ${OUTPATH} ${ABS_FILE}
       DEPENDS ${ABS_FILE}
       COMMENT "Running flatc compiler on ${MATCH_PATH} with root ${FLATBUFFERSROOT}, generating: ${H_FILE}"
