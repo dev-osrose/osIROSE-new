@@ -1,0 +1,7 @@
+namespace RoseCommon;
+
+table CliDeleteCharReq {
+    charId: uint8;
+    isDelete: uint8;
+    name: string;
+}

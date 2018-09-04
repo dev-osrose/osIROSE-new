@@ -1,0 +1,11 @@
+namespace RoseCommon;
+
+table CliCreateCharReq {
+    race: uint8;
+    stone: uint8;
+    hair: uint8;
+    face: uint8;
+    weapon: uint8;
+    zone: uint16;
+    name: string;
+}

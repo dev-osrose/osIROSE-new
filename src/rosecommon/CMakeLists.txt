@@ -14,7 +14,7 @@ include_directories(
 )
 
 set(packets
-    test.fbs
+    cli_acceptreq.fbs
 )
 
 set(args
