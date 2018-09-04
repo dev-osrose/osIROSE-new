@@ -102,6 +102,15 @@ if(WIN32)
   find_package(PythonLibs 2.7 REQUIRED)
 endif()
 
+find_package(Patch REQUIRED)
+if(MSVC)
+  configure_file(${CMAKE_SCRIPT_PATH}/patch.bat ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat @ONLY)
+  set(PATCH_SCRIPT_PATH ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat)
+else()
+  set(PATCH_SCRIPT_PATH ${CMAKE_SCRIPT_PATH}/patch.sh)
+endif()
+
+
 find_package(Threads REQUIRED)
 
 #set(ENV{LUA_DIR} ${CMAKE_THIRD_PARTY_DIR})
