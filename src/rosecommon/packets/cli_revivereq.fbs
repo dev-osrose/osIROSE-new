@@ -1,0 +1,12 @@
+namespace RoseCommon;
+
+enum ReviveReq : uint8 {
+    REVIVE_POS = 1,
+    SAVE_POS,
+    START_POS,
+    CURRENT_POS
+}
+
+table CliReviveReq {
+    reviveReq: ReviveReq;
+}

@@ -1,0 +1,8 @@
+namespace RoseCommon;
+
+table CliMouseCmd {
+    targetId: uint16;
+    x: float;
+    y: float;
+    z: uint16;
+}

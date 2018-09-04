@@ -1,0 +1,4 @@
+namespace RoseCommon;
+
+table CliLogoutReq {
+}

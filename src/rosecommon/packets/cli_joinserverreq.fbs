@@ -1,0 +1,6 @@
+namespace RoseCommon;
+
+table CliJoinServerReq {
+    sessionId: uint32;
+    password: [int8];
+}

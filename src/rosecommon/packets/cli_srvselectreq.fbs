@@ -1,0 +1,6 @@
+namespace RoseCommon;
+
+table CliSrvSelectReq {
+    serverId: uint32;
+    channelId: uint8;
+}

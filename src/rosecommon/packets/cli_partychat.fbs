@@ -1,0 +1,5 @@
+namespace RoseCommon;
+
+table CliPartyChat {
+    message: string;
+}

@@ -1,0 +1,8 @@
+namespace RoseCommon;
+
+table CliSelectCharReq {
+    charId: uint8;
+    runMode: uint8;
+    rideMode: uint8;
+    name: string;
+}

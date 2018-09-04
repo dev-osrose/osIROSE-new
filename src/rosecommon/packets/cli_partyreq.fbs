@@ -1,0 +1,14 @@
+namespace RoseCommon;
+
+enum PartyReq : uint8 {
+    MAKE = 0,
+    JOIN,
+    LEFT,
+    CHANGE_OWNER,
+    KICK = 0x81
+}
+
+table CliPartyReq {
+    request: PartyReq;
+    idXorTag: uint32;
+}

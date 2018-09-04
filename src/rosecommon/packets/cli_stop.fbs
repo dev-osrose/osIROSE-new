@@ -1,0 +1,6 @@
+namespace RoseCommon;
+
+table CliStop {
+    x: float;
+    y: float:
+}

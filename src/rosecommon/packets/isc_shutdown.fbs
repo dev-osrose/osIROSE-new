@@ -1,0 +1,8 @@
+namespace RoseCommon;
+
+include "isc_serverregister.fbs"
+
+table IscShutdown {
+    serverType: ServerType;
+    id: int32;
+}
