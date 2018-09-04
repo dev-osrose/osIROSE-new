@@ -10,7 +10,7 @@
 # IMPORTED Targets
 # ^^^^^^^^^^^^^^^^
 #
-# This module defines :prop_tgt:`IMPORTED` target ``CURL::CURL``, if
+# This module defines :prop_tgt:`IMPORTED` target ``CURL::libcurl``, if
 # curl has been found.
 #
 # Result Variables
@@ -67,9 +67,9 @@ if(CURL_FOUND)
   set(CURL_LIBRARIES ${CURL_LIBRARY})
   set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
 
-  if(NOT TARGET CURL::CURL)
-    add_library(CURL::CURL INTERFACE IMPORTED)
-    set_target_properties(CURL::CURL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
-    set_target_properties(CURL::CURL PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
+  if(NOT TARGET CURL::libcurl)
+    add_library(CURL::libcurl INTERFACE IMPORTED)
+    set_target_properties(CURL::libcurl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
+    set_target_properties(CURL::libcurl PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
   endif()
 endif()

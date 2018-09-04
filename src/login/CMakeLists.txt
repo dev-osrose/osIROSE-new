@@ -29,7 +29,7 @@ set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_I
 
 
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} CURL::CURL)
+target_link_libraries(${PROJECT} CURL::libcurl)
 
 if(WITH_MYSQL)
   target_link_libraries(${PROJECT} mysql::mysql)
