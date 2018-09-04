@@ -75,9 +75,7 @@ set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date/include)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
-set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
 set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
 set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
@@ -95,10 +93,7 @@ if(WITH_COTIRE)
 endif()
 
 IF(WITH_MYSQL)
-  set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11-connector-mysql/include)
   find_package(MySQL REQUIRED)
-  
-  include(SQLPPGenerator)
 ENDIF()
 
 find_package(PythonInterp 2.7 REQUIRED)
@@ -136,6 +131,14 @@ endif()
 #------------------------------------------------------------------------------
 # build some external projects
 #------------------------------------------------------------------------------
+
+if(WITH_MYSQL)
+  include(Build-HinnantDate)
+  include(Build-sqlpp11)
+  include(Build-sqlpp11-connector-mysql)
+  
+  include(SQLPPGenerator)
+endif()
 
 if(NOT LUA_FOUND)
   include(BuildLua)
