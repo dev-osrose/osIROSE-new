@@ -8,7 +8,6 @@ ExternalProject_Add(
   PATCH_COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/date_win.patch
   INSTALL_DIR ${DATE_INSTALL_DIR}
   DEPENDS CURL::libcurl
-  BUILD_COMMAND cmake --build . --target install
 )
 
 ExternalProject_Get_Property(
