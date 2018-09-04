@@ -132,20 +132,20 @@ endif()
 # build some external projects
 #------------------------------------------------------------------------------
 
-if(WITH_MYSQL)
-  include(Build-HinnantDate)
-  include(Build-sqlpp11)
-  include(Build-sqlpp11-connector-mysql)
-  
-  include(SQLPPGenerator)
-endif()
-
 if(NOT LUA_FOUND)
   include(BuildLua)
 endif()
 
 if(NOT CURL_FOUND)
   include(BuildCURL)
+endif()
+
+if(WITH_MYSQL)
+  include(Build-HinnantDate)
+  include(Build-sqlpp11)
+  include(Build-sqlpp11-connector-mysql)
+  
+  include(SQLPPGenerator)
 endif()
 
 if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
