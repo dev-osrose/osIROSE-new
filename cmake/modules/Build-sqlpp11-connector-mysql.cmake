@@ -2,8 +2,8 @@ set(SQLPP11_MYSQL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
   set(_byproducts
-    ${SQLPP11_MYSQL_INSTALL_DIR}/bin/sqlpp11-ddl2cpp.exe
-    ${SQLPP11_MYSQL_INSTALL_DIR}/lib/libsqlpp-mysql.lib
+    ${SQLPP11_MYSQL_INSTALL_DIR}/bin/sqlpp11-ddl2cpp
+    ${SQLPP11_MYSQL_INSTALL_DIR}/lib/sqlpp-mysql.lib
   )
   ExternalProject_Add(
     sqlpp11-connector-mysql
