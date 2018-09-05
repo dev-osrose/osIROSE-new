@@ -13,9 +13,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> cmake/scripts/msvc_build.bat
-  - 3rdparty\lib -> cmake/scripts/msvc_build.bat
-  - 3rdparty\include -> cmake/scripts/msvc_build.bat
+  - 3rdparty\bin -> cmake/modules/Build*.cmake
+  - 3rdparty\lib -> cmake/modules/Build*.cmake
+  - 3rdparty\include -> cmake/modules/Build*.cmake
 
 branches:
   except:
