@@ -1,0 +1,7 @@
+namespace RoseCommon;
+
+table SrvEquipItem {
+    id: uint16;
+    slot: int16;
+    visible_data: uint32;
+}

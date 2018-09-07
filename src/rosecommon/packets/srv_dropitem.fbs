@@ -1,0 +1,11 @@
+namespace RoseCommon;
+
+table SrvDropItem {
+    x: float;
+    y: float:
+    header: uint16;
+    data: uint32;
+    id: uint16;
+    ownerId: uint16;
+    remaining_time: uint16;
+}

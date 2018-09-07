@@ -1,0 +1,24 @@
+namespace RoseCommon;
+
+struct EquipItem {
+    id: uint16;
+    gem_opt: uint16;
+    socket: bool;
+    grade: uint8;
+}
+
+struct CharInfo {
+    remain_sec_until_delete: uint32;
+    level: uint16;
+    job: uint16;
+    race: uint8;
+    platinium: uint8;
+    items: [EquipItem];
+    name: string;
+    face: uint32;
+    hair: uint32;
+}
+
+table SrvCharacterListReply {
+    characters: [CharInfo];
+}

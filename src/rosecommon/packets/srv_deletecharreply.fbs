@@ -1,0 +1,6 @@
+namespace RoseCommon;
+
+table SrvDeleteCharReply {
+    remaining_time: uint32;
+    name: string;
+}

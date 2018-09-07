@@ -1,0 +1,8 @@
+namespace RoseCommon;
+
+table SrvDamage {
+    attackerId: uint16;
+    defenderId: uint16;
+    damage: uint32;
+    action: uint32;
+}
