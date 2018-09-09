@@ -96,3 +96,14 @@ After downloading and installing the above applications, to compile the servers 
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).
 
 After running for the first time, the servers will create a config file in the current directory that can be modified.
+
+Database installation
+-----------------------
+
+To install the database, create a new database and then run `mysql -u<user> -p<password> <database_name> < Database/osirose.sql`. This will create all of the required tables for the server. Then run `mysql -u<user> -p<password> <database_name> < Database/item_db.sql` to populate the item table with all of the required information. This table was generated using client v137. If you are using a different client, please generate your own table to match the information you need.
+_TODO: add more information on the generation tool._
+
+Contributing
+-----------------------
+
+If you want to contribute, please read the [code of conduct](CODE_OF_CONDUCT.md). You can find some documentation about the source code [here](Documentation.md). Don't hesitate to contribute!
