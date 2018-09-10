@@ -1,4 +1,4 @@
-#Documentation
+# Documentation
 
 As with most rose servers, the project has 3 different executables: login, char and map. This is done to allow for greater flexibility and better resource management.
 We are also working on a 4th executable: the node server. This executable will be responsible for rerouting all the packets from the client to the correct map server (assuming you have multiple). If you only have one map server, this executable will not be needed.
