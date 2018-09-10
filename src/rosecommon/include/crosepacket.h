@@ -66,7 +66,7 @@ class CRosePacket {
           std::memcpy(buffer_, buffer, CRosePacket::size(buffer));
           *this >> size_ >> type_ >> CRC_;
         }
-        virtual ~CRosePacket() {}
+        virtual ~CRosePacket() = default;
 
         ePacketType type() const {return type_;}
         uint16_t size() const {return size_;}
@@ -113,6 +113,29 @@ class CRosePacket {
          * \brief Reimplement this function to include last minute logic before the packet is written to an external buffer
          */
         virtual void pack() {}
+    
+        void write_uint8(uint8_t value) { writeNext<uint8_t>(value); }
+        void write_int8(int8_t value) { writeNext<int8_t>(value); }
+        void write_uint16(uint16_t value) { writeNext<uint16_t>(value); }
+        void write_int16(int16_t value) { writeNext<int16_t>(value); }
+        void write_uint32(uint32_t value) { writeNext<uint32_t>(value); }
+        void write_int32(int32_t value) { writeNext<int32_t>(value); }
+        void write_uint64(uint64_t value) { writeNext<uint64_t>(value); }
+        void write_int64(int64_t value) { writeNext<int64_t>(value); }
+        void write_char(char value) { writeNext<char>(value); }
+        void write_string(const char* value) { while (*value) writeNext<char>(*(value++)); }
+        void write_string(const std::string& value) { for (const char c : value) writeNext<char>(c); }
+    
+        uint8_t read_uint8() { return readNext<uint8_t>(); }
+        int8_t read_int8() { return readNext<int8_t>(); }
+        uint16_t read_uint16() { return readNext<uint16_t>(); }
+        int16_t read_int16() { return readNext<int16_t>(); }
+        uint32_t read_uint32() { return readNext<uint32_t>(); }
+        int32_t read_int32() { return readNext<int32_t>(); }
+        uint64_t read_uint64() { return readNext<uint64_t>(); }
+        inte64_t read_int64() { return readNext<int64_t>(); }
+        char read_char() { return readNext<char>(); }
+        std::string read_string() { std::string res; while (const char c = readNext<char>()) res.push_back(c); return ress; }
 
         template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
         friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
