@@ -1,6 +1,6 @@
 # Integration testing
 To be able to test complex interactions between all servers and the client, it was necessary to build an automated tool.
-This tool is a basic udp client that just connects to the local server and tries to identificates with the following credentials: test/test.
+This tool is a basic tcp client that just connects to the local server and tries to identificates with the following credentials: test/test.
 If there is an account with such username/password, it then tries to select the first character and connect to the map server if there is one.
 
 All of the code was poorly written in a single cpp file as a proof of concept mostly (also because I wanted to test that workflow without firing up the client all the time).
