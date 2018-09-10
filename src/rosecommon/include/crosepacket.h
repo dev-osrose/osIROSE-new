@@ -133,9 +133,10 @@ class CRosePacket {
         uint32_t read_uint32() { return readNext<uint32_t>(); }
         int32_t read_int32() { return readNext<int32_t>(); }
         uint64_t read_uint64() { return readNext<uint64_t>(); }
-        inte64_t read_int64() { return readNext<int64_t>(); }
+        int64_t read_int64() { return readNext<int64_t>(); }
         char read_char() { return readNext<char>(); }
-        std::string read_string() { std::string res; while (const char c = readNext<char>()) res.push_back(c); return ress; }
+        std::string read_string() { std::string res; while (const char c = readNext<char>()) res.push_back(c); return res; }
+        template <size_t N> void read_array(char value[N]) { for (size_t i = 0; i < N; ++i) value[i] = readNext<char>(); }
 
         template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
         friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
