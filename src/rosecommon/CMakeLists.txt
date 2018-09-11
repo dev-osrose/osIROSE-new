@@ -136,7 +136,7 @@ SET(SOURCES_PACKETS
   #------------------------------------------------
   src/packets/srv_acceptreply.cpp
   include/packets/srv_acceptreply.h
-#  src/packets/srv_changemap.cpp
+  src/packets/srv_changemapreply.cpp
   include/packets/srv_changemapreply.h
   src/packets/srv_createcharreply.cpp
   include/packets/srv_createcharreply.h
