@@ -30,45 +30,7 @@ class SrvChangeMapReply : public CRosePacket {
                     uint16_t penalize_exp, uint16_t world_time,
                     uint16_t team_number);
 
-  virtual ~SrvChangeMapReply();
-
-  uint16_t object_index() const;
-  uint16_t current_hp() const;
-  uint16_t current_mp() const;
-
-  void setItemRate(uint8_t type, uint8_t rate);
-
- protected:
-  void pack();
-
- private:
-  struct global_var {
-    uint16_t craft_rate_;
-    uint32_t update_time_;
-    uint16_t world_rate_;
-    uint8_t town_rate_;
-    uint8_t item_rate_[MAX_SELL_TYPE];
-    uint32_t flags_;
-
-    global_var() : craft_rate_(0),
-    update_time_(0),
-    world_rate_(0),
-    town_rate_(0),
-    flags_(0) {
-      for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-        item_rate_[i] = 0;
-      }
-    }
-  };
-
-  uint16_t object_index_;
-  uint16_t current_hp_;
-  uint16_t current_mp_;
-  uint64_t current_exp_;
-  uint64_t penalize_exp_;
-  uint32_t world_time_;
-  uint32_t team_number_;
-  global_var zone_vars_;
+  virtual ~SrvChangeMapReply() = default;
 };
 
 }
