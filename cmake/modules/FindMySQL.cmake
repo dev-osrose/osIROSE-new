@@ -30,6 +30,7 @@ if( WIN32 )
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
+				"${CMAKE_EXTERNAL_INCLUDE_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */include"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */include"
@@ -41,7 +42,8 @@ if( WIN32 )
 
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient_r.lib"
-		PATHS "${EXTERNAL_BINARY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
@@ -53,7 +55,8 @@ if( WIN32 )
 
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient_r"
-		PATHS "${EXTERNAL_BINARY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
@@ -73,7 +76,7 @@ else()
 
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES libmysqlclient.a libmysqlclient.so libmysqlclient_r.a libmysqlclient_r.so
-		PATHS "${CMAKE_THIRD_PARTY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
@@ -84,11 +87,11 @@ else()
 			  "/usr/local/lib64/mysql"
 			  "/usr/mysql/lib/mysql"
 			  "/usr/mysql/lib64/mysql"
-              "/usr/lib/x86_64-linux-gnu" )
+        "/usr/lib/x86_64-linux-gnu" )
 
 	find_library( MYSQL_LIBRARY
 		NAMES mysqlclient mysqlclient_r
-		PATHS "${CMAKE_THIRD_PARTY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
