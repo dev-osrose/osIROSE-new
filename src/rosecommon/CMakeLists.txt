@@ -33,7 +33,6 @@ set( SOURCES_HEADER
   include/croseisc.h
   include/crosepacket.h
   include/epackettype.h
-  include/mappackets.h
   include/isccommon.h
   include/item.h
   include/itemdb.h
@@ -215,6 +214,7 @@ SET(SOURCES_PACKETS
   include/packets/srv_sethpandmp.h
   src/packets/srv_damage.cpp
   include/packets/srv_damage.h
+  include/packets/srv-billingmsg.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
