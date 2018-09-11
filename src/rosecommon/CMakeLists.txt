@@ -72,7 +72,6 @@ SET(SOURCES_BASE
   src/croseserver.cpp
   src/croseclient.cpp
   src/croseisc.cpp
-  src/mappackets.cpp
   src/item.cpp
   src/itemdb.cpp
   src/entitycomponents.cpp
@@ -162,7 +161,7 @@ SET(SOURCES_PACKETS
   include/packets/srv_screenshottimereply.h
   src/packets/srv_selectcharreply.cpp
   include/packets/srv_selectcharreply.h
-#  src/packets/srv_serverdata.cpp
+  src/packets/srv_serverdata.cpp
   include/packets/srv_serverdata.h
   src/packets/srv_srvselectreply.cpp
   include/packets/srv_srvselectreply.h
