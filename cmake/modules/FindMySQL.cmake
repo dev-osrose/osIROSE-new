@@ -104,9 +104,9 @@ else()
 			  "/usr/mysql/lib64/mysql" )
 endif()
 
-MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
-MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
-MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+#MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+#MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+#MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
 
 if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
 	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"
@@ -119,9 +119,10 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
 # all listed variables are TRUE
 include( FindPackageHandleStandardArgs )
-find_package_handle_standard_args( MYSQL DEFAULT_MSG
-	MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
-	MYSQL_VERSION_STRING )
+find_package_handle_standard_args( MYSQL
+	REQUIRED_VARS MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
+	VERSION_VAR MYSQL_VERSION_STRING
+	)
 
 set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
 set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
