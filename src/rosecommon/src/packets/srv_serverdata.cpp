@@ -17,28 +17,22 @@
 namespace RoseCommon {
 
 RoseCommon::SrvServerData::SrvServerData(uint8_t type)
-    : CRosePacket(ePacketType::PAKWC_GLOBAL_VARS), type_(type) {}
-
-RoseCommon::SrvServerData::~SrvServerData() {}
-
-uint8_t RoseCommon::SrvServerData::type() const { return type_; }
-
-void RoseCommon::SrvServerData::pack() {
-  *this << type_;
-
-  switch (type_) {
-    case data_type::ECONOMY: {
-      *this << enconmy_data_.counter_ << enconmy_data_.pop_base_
-            << enconmy_data_.dev_base_;
-      for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
-        *this << enconmy_data_.consume_[idx];
+    : CRosePacket(ePacketType::PAKWC_GLOBAL_VARS) {
+  write_uint8(type);
+  switch (type) {
+    case data_type::ECONOMY:
+      write_uint32(0); // economy counter
+      write_uint16(0); // economy pop base
+      write_uint16(0); // economy dev base
+      for (int i = MIN_SELL_TYPE; i < MAX_SELL_TYPE; ++i) {
+        write_uint16(0); // economy consume
       }
-      *this << enconmy_data_.dev_ << enconmy_data_.pop_;
-      for (int idx = MIN_SELL_TYPE; idx < MAX_SELL_TYPE; ++idx) {
-        *this << enconmy_data_.item_[idx];
+      write_uint16(0); // economy dev
+      write_uint32(0); // economy pop
+      for (int i = MIN_SELL_TYPE; i < MAX_SELL_TYPE; ++i) {
+        write_uint32(0); // economy item
       }
       break;
-    }
     case data_type::NPC:
     default:
       break;
