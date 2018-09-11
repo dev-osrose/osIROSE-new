@@ -26,37 +26,9 @@ class SrvServerData : public CRosePacket {
  public:
   SrvServerData(uint8_t type);
 
-  virtual ~SrvServerData();
-
-  uint8_t type() const;
+  virtual ~SrvServerData() = default;
 
   enum data_type : uint8_t { ECONOMY = 0, NPC };
-
- protected:
-  void pack();
-
- private:
-  struct Enconmy_Data {
-    uint32_t counter_;
-    uint16_t pop_base_;
-    uint16_t dev_base_;
-    uint16_t consume_[MAX_SELL_TYPE];
-    uint16_t dev_;
-    uint32_t pop_;
-    uint32_t item_[MAX_SELL_TYPE];
-
-    Enconmy_Data() : counter_(0),
-    pop_base_(0),
-    dev_base_(0),
-    dev_(0),
-    pop_(0) {
-      for(int i =0; i < MAX_SELL_TYPE; ++i) {
-        item_[i] = consume_[i] = 0;
-      }
-    }
-  };
-  uint8_t type_;
-  Enconmy_Data enconmy_data_;
 };
 
 }
