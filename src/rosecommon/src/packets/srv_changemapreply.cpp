@@ -27,15 +27,16 @@ RoseCommon::SrvChangeMapReply::SrvChangeMapReply(
   write_uint16(current_exp);
   write_uint16(penalize_exp);
   { // global vars
-  write_uint16(0); // craft rate
-  write_uint32(0); // update time
-  write_uint16(0); // world rate
-  write_uint8(0); // town rate
-  for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-    write_uint8(0);
+    write_uint16(0); // craft rate
+    write_uint32(0); // update time
+    write_uint16(0); // world rate
+    write_uint8(0); // town rate
+    for (int i = 0; i < MAX_SELL_TYPE; ++i) {
+      write_uint8(0);
+    }
+    write_uint32(0); // flags
   } // global vars
-  write_uint32(0); // flags
-  }
   write_uint16(world_time);
   write_uint16(team_number);
+}
 }
