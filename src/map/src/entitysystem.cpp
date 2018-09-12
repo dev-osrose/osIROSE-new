@@ -17,6 +17,7 @@
 #include "systems/combat_system.h"
 
 #include "srv_npcchar.h"
+#include "srv_removeobject.h"
 
 using namespace RoseCommon;
 EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(server) {

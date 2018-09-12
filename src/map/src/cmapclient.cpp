@@ -27,6 +27,7 @@
 #include "srv_removeobject.h"
 #include "srv_selectcharreply.h"
 #include "srv_teleportreply.h"
+#include "srv_billingmsg.h"
 
 using namespace RoseCommon;
 

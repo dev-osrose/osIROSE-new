@@ -17,7 +17,6 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
-#include "mappackets.h"
 
 #include "entitysystem.h"
 
