@@ -213,7 +213,7 @@ SET(SOURCES_PACKETS
   include/packets/srv_sethpandmp.h
   src/packets/srv_damage.cpp
   include/packets/srv_damage.h
-  include/packets/srv-billingmsg.h
+  include/packets/srv_billingmsg.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
