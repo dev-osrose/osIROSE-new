@@ -18,7 +18,9 @@ class CliChangeMapReq : public CRosePacket {
 		virtual ~CliChangeMapReq() = default;
 
 		uint8_t weightRate() const;
+		void weightRate(uint8_t rate);
 		uint16_t z() const;
+		void z(uint16_t z);
 
 	protected:
 		virtual void pack() override;
