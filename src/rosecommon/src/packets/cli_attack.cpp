@@ -9,7 +9,7 @@ CliAttack::CliAttack() : CRosePacket(ePacketType::PAKCS_ATTACK) {}
 
 CliAttack::CliAttack(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
 	throw_assert(type() == ePacketType::PAKCS_ATTACK, "Not the right packet: " << to_underlying(type()));
-	*this >> targetId_;
+	targetId_ = read_uint16();
 }
 
 CliAttack::CliAttack(uint16_t targetId) : CRosePacket(ePacketType::PAKCS_ATTACK), targetId_(targetId) {}
@@ -17,10 +17,13 @@ CliAttack::CliAttack(uint16_t targetId) : CRosePacket(ePacketType::PAKCS_ATTACK)
 uint16_t CliAttack::targetId() const {
 	return targetId_;
 }
-
+	
+void CliAttack::targetId(uint16_t id) {
+	targetId_ = id;
+}
 
 void CliAttack::pack() {
-	*this << targetId_;
+	write_uint16(targetId_);
 }
 
 }
