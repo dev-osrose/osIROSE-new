@@ -18,6 +18,7 @@ class CliAttack : public CRosePacket {
 		virtual ~CliAttack() = default;
 
 		uint16_t targetId() const;
+		void targetId(uint16_t id);
 
 	protected:
 		virtual void pack() override;
