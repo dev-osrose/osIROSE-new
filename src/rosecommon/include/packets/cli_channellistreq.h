@@ -17,6 +17,7 @@ class CliChannelListReq : public CRosePacket {
 		virtual ~CliChannelListReq() = default;
 
 		uint32_t serverId() const;
+		void serverId(uint32_t id);
 
 	protected:
 		virtual void pack() override;
