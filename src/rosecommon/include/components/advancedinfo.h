@@ -29,7 +29,7 @@ struct AdvancedInfo {
     update.assignments.add(chars.currentMp = mp_);
   }
 
-    uint64_t zuly_;
+    int64_t zuly_;
     int32_t hp_;
     int32_t mp_;
     uint8_t moveMode_;

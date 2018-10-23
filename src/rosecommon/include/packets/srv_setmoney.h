@@ -10,6 +10,7 @@ REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_MONEY, SrvSetMoney)
 class SrvSetMoney : public CRosePacket {
 	public:
 		SrvSetMoney();
+		SrvSetMoney(uint8_t buffer[MAX_PACKET_SIZE]);
 		SrvSetMoney(Entity entity);
 
 		virtual ~SrvSetMoney() = default;

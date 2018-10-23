@@ -133,7 +133,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
   Core::SessionTable sessions{};
   try {
     const auto res = conn(
-        sqlpp::select(sessions.userid, sessions.charid, sessions.worldip, accounts.platinium)
+        sqlpp::select(sessions.userid, sessions.charid, sessions.worldip, accounts.platinium, accounts.access)
             .from(sessions.join(accounts).on(sessions.userid == accounts.id))
             .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format(
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
@@ -154,7 +154,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
         conn(sqlpp::update(sessions)
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
-        entity_.assign<SocketConnector>(shared_from_this());
+        entity_.assign<SocketConnector>(shared_from_this())->access_level_ = row.access;
 
         send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_));
 
