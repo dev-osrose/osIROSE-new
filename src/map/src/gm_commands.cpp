@@ -1,5 +1,6 @@
 #include "gm_commands.h"
 
+#include <limits.h>
 #include <sstream>
 #include <unordered_map>
 #include <functional>
@@ -8,11 +9,13 @@
 #include "cmapclient.h"
 #include "cmapserver.h"
 #include "itemdb.h"
+#include "dataconsts.h"
 #include "srv_whisperchat.h"
 #include "srv_setmoney.h"
 #include "systems/chatsystem.h"
 #include "systems/inventorysystem.h"
 #include "systems/movementsystem.h"
+#include "systems/combat_system.h"
 #include "gm_commands.h"
 
 using namespace Systems;
@@ -65,6 +68,13 @@ void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
     manager.get<MovementSystem>()->teleport(e, map_id, x * 100, y * 100); // transforms from map coordinates to real coordinates
 }
 
+void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
+    logger->trace("gm_commands die called");
+    auto client = getClient(e);
+    manager.get<CombatSystem>()->apply_damage(e, MAX_DAMAGE);
+}
+
 void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
     uint64_t zuly = 0;
@@ -85,6 +95,8 @@ static std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(s
     {"/load_npc", {100, load_npc, "Loads npc(s). TODO"}},
     {"/tp", {200, teleport, "Teleports a player or self. Usage: /tp <map_id> <x> <y> [client_id]"}},
     {"/zuly", {100, zuly, "Adds zulies to your inventory. Usage: /zuly <amount>"}},
+    {"/die", {100, die, "Kills self"}},
+    {"/dead", {100, die, "Kills self"}},
 };
 
 void help(Entity entity, const std::string& command) {

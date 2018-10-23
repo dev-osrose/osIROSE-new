@@ -9,12 +9,14 @@ option(OFFICIAL_BUILD "do you want to compile an official build?" OFF)
 option(BUILD_LUA "Build Lua" ON)
 option(BUILD_API_DOC "Build doxygen documentation" OFF)
 option(ENABLE_ASAN "Enable address sanitizer" OFF)
+option(BUILD_MYSQL "Download and build mysql libs if not found on the system" ON)
 
 set(DEV_SETTING ON)
 if(OFFICIAL_BUILD)
   message(STATUS "Official Build is set - Turning off dev options")
   set(DEV_SETTING OFF)
 endif()
+
 
 option(BUILD_TOOLS "Build server tools" OFF)
 option(BUILD_TESTS "Build various unit tests." ${DEV_SETTING})

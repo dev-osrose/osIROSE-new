@@ -73,7 +73,9 @@ bool CRoseSocket::send(CRosePacket& _buffer, int socket_id) {
 }
 
 bool CRoseSocket::send(std::unique_ptr<uint8_t[]> _buffer, int socket_id) {
+#ifdef SPDLOG_TRACE_ON
   logger_->trace("Sending a packet on CRoseSocket: Header[{0}, 0x{1:04x}]", CRosePacket::size(_buffer.get()), static_cast<uint16_t>(CRosePacket::type(_buffer.get())));
+#endif
   return socket_[socket_id]->send_data(std::move(_buffer));
 }
 

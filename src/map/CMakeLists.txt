@@ -26,6 +26,7 @@ SET( SOURCES_HEADER
   include/systems/partysystem.h
   include/systems/mapsystem.h
   include/systems/callbacksystem.h
+  include/systems/combat_system.h
   )
 
 SET( SOURCES_MAIN
@@ -46,6 +47,7 @@ SET( SOURCES_MAIN
   src/systems/partysystem.cpp
   src/systems/mapsystem.cpp
   src/systems/callbacksystem.cpp
+  src/systems/combat_system.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
@@ -54,7 +56,7 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} CURL::CURL)
+target_link_libraries(${PROJECT} CURL::libcurl)
 if(WITH_MYSQL)
   target_link_libraries(${PROJECT} mysql::mysql)
 endif()

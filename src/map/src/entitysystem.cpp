@@ -14,6 +14,7 @@
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
 #include "systems/callbacksystem.h"
+#include "systems/combat_system.h"
 
 #include "srv_npcchar.h"
 
@@ -27,6 +28,7 @@ EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
   systemManager_.add<Systems::CallbackSystem>();
+  systemManager_.add<Systems::CombatSystem>();
 }
 
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }
@@ -47,7 +49,8 @@ Entity EntitySystem::buildMobEntity(Entity spawner) {
     Entity e = create();
     auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
     basic->ownerId_ = spawner.component<BasicInfo>()->id_;
-    e.assign<AdvancedInfo>();
+    e.assign<AdvancedInfo>()->hp_ = 1;
+    e.assign<Stats>()->maxHp_ = 1;
     e.assign<CharacterInfo>();
     auto spos = spawner.component<Position>();
     auto spawn = spawner.component<Spawner>();
@@ -207,6 +210,11 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
 
   // luaSystem->loadScript(entity, "function onInit()\ndisplay('test')\nend");
   // lua->onInit();
+  if(entity.component<AdvancedInfo>()->hp_ <= 0) {
+    entity.component<AdvancedInfo>()->hp_ = (entity.component<Stats>()->maxHp_ * 0.3f); // Set to 30% HP
+  }
+  
+  Systems::UpdateSystem::calculateCommand(entity);
 
   registerEntity(entity);
   return entity;
@@ -303,7 +311,8 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
     std::unique_ptr<CommandBase> ptr{new Command([npc_lua, npc_id, map_id, x, y, z, angle, e] (EntitySystem &es) mutable {
       if (!e) return;
       e.assign<BasicInfo>(es.id_manager_.get_free_id());
-      e.assign<AdvancedInfo>();
+      e.assign<AdvancedInfo>()->hp_ = 1;
+      e.assign<Stats>()->maxHp_ = 1;
       e.assign<CharacterInfo>();
 
       uint16_t dialog_id = 0;
@@ -350,11 +359,24 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
     return e;
 }
 
+Entity EntitySystem::create_player_spawn(PlayerSpawn::Type type, int map_id, float x, float y) {
+    Entity e = create();
+    std::unique_ptr<CommandBase> ptr{new Command([type, map_id, x, y, e] (EntitySystem &es) mutable {
+      if (!e) return;
+      e.assign<BasicInfo>(es.id_manager_.get_free_id());
+      e.assign<Position>(x * 100, y * 100, map_id, 0);
+      e.assign<PlayerSpawn>((PlayerSpawn::Type)type);
+    })};
+    std::lock_guard<std::mutex> lock(access_);
+    create_commands_.emplace_back(std::move(ptr));
+    return e;
+}
+
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
   std::unique_ptr<CommandBase> ptr{new Command([s] (EntitySystem &es) mutable {
     for (auto entity : s) {
         if (!entity) continue;
-        if (!entity.component<Warpgate>())
+        if (!entity.component<Warpgate>() || !entity.component<PlayerSpawn>())
             es.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
         entity.destroy();
     }

@@ -16,18 +16,24 @@
 #define _DATACONSTS_H_
 
 namespace RoseCommon {
-#define MIN_SELL_TYPE 1
-#define MAX_SELL_TYPE 11
+#define MIN_SELL_TYPE     1
+#define MAX_SELL_TYPE     11
 
-#define MAX_UNION_COUNT 10
-#define MAX_BUFF_STATUS 40
-#define MAX_SKILL_COUNT 120
-#define MAX_HOTBAR_ITEMS 32
+#define MAX_UNION_COUNT   10
+#define MAX_BUFF_STATUS   40
+#define MAX_SKILL_COUNT   120
+#define MAX_HOTBAR_ITEMS  32
+#define MAX_DAMAGE        99999999
+
+#define	DAMAGE_ACTION_ATTACK    0x02
+#define	DAMAGE_ACTION_HIT       0x04
+#define	DAMAGE_ACTION_CRITICAL  0x08
+#define	DAMAGE_ACTION_DEAD      0x10
 }
 
 namespace ReviveReq {
     enum ReviveReq : uint8_t {
-        REVIVE_POS,
+        REVIVE_POS = 1,
         SAVE_POS,
         START_POST,
         CURRENT_POS

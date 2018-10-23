@@ -49,6 +49,10 @@ set( SOURCES_HEADER
   include/components/npc.h
   include/components/warpgate.h
   include/components/spawner.h
+  include/components/callbacks.h
+  include/components/buffs.h
+  include/components/damage.h
+  include/components/playerspawn.h
 )
 
 SET(SOURCES_BASE
@@ -114,6 +118,10 @@ SET(SOURCES_PACKETS
   include/packets/cli_charlistreq.h
   src/packets/cli_dropitem.cpp
   include/packets/cli_dropitem.h
+  src/packets/cli_attack.cpp
+  include/packets/cli_attack.h
+  src/packets/cli_hpreq.cpp
+  include/packets/cli_hpreq.h
   #------------------------------------------------
   src/packets/srv_acceptreply.cpp
   include/packets/srv_acceptreply.h
@@ -139,8 +147,6 @@ SET(SOURCES_PACKETS
   include/packets/srv_playerchar.h
   src/packets/srv_removeobject.cpp
   include/packets/srv_removeobject.h
-  src/packets/srv_revivereply.cpp
-  include/packets/srv_revivereply.h
   src/packets/srv_screenshottimereply.cpp
   include/packets/srv_screenshottimereply.h
   src/packets/srv_selectcharreply.cpp
@@ -187,8 +193,14 @@ SET(SOURCES_PACKETS
   include/packets/srv_adjustposition.h
   src/packets/srv_teleportreply.cpp
   include/packets/srv_teleportreply.h
-  src/packets/srv_setmoney.cpp
-  include/packets/srv_setmoney.h
+  src/packets/srv_attack.cpp
+  include/packets/srv_attack.h
+  src/packets/srv_hpreply.cpp
+  include/packets/srv_hpreply.h
+  src/packets/srv_sethpandmp.cpp
+  include/packets/srv_sethpandmp.h
+  src/packets/srv_damage.cpp
+  include/packets/srv_damage.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h

@@ -15,6 +15,8 @@ set(CMAKE_OUTPUT "${CMAKE_SOURCE_DIR}/build_out")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_PLATFORM_PATH "${CMAKE_SOURCE_DIR}/cmake/platform")
 set(CMAKE_THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/3rdparty")
+set(CMAKE_THIRD_PARTY_LIBRARY_DIR ${CMAKE_THIRD_PARTY_DIR}/lib)
+set(CMAKE_THIRD_PARTY_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/include)
 set(CMAKE_EXTERNAL_BINARY_DIR "${CMAKE_BINARY_DIR}/external")
 set(CMAKE_EXTERNAL_LIBRARY_DIR "${CMAKE_EXTERNAL_BINARY_DIR}/lib")
 set(CMAKE_EXTERNAL_INCLUDE_DIR "${CMAKE_EXTERNAL_BINARY_DIR}/include")
@@ -23,7 +25,6 @@ set(CMAKE_PATCH_DIR "${CMAKE_SOURCE_DIR}/cmake/patches")
 set(CMAKE_GEN_SRC_DIR "${CMAKE_BINARY_DIR}/gen")
 set(CMAKE_TEST_PROJECTS "${CMAKE_SOURCE_DIR}/src/tests")
 set(CMAKE_TEST_PROJECTS_BIN "${CMAKE_BINARY_DIR}/cmake_test")
-set(CMAKE_THIRD_PARTY_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/include)
 set(CMAKE_PREFIX_PATH "${CMAKE_THIRD_PARTY_DIR}")
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -75,9 +76,7 @@ set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date/include)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
-set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
 set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
 set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
@@ -95,10 +94,7 @@ if(WITH_COTIRE)
 endif()
 
 IF(WITH_MYSQL)
-  set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11-connector-mysql/include)
   find_package(MySQL REQUIRED)
-  
-  include(SQLPPGenerator)
 ENDIF()
 
 find_package(PythonInterp 2.7 REQUIRED)
@@ -106,6 +102,15 @@ find_package(PythonInterp 2.7 REQUIRED)
 if(WIN32)
   find_package(PythonLibs 2.7 REQUIRED)
 endif()
+
+find_package(Patch REQUIRED)
+if(MSVC)
+  configure_file(${CMAKE_SCRIPT_PATH}/patch.bat ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat @ONLY)
+  set(PATCH_SCRIPT_PATH ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat)
+else()
+  set(PATCH_SCRIPT_PATH ${CMAKE_SCRIPT_PATH}/patch.sh)
+endif()
+
 
 find_package(Threads REQUIRED)
 
@@ -143,6 +148,18 @@ endif()
 
 if(NOT CURL_FOUND)
   include(BuildCURL)
+endif()
+
+if(WITH_MYSQL)
+  if(BUILD_MYSQL AND NOT MYSQL_FOUND)
+    include(Build-mysql)
+  endif()
+
+  include(Build-HinnantDate)
+  include(Build-sqlpp11)
+  include(Build-sqlpp11-connector-mysql)
+  
+  include(SQLPPGenerator)
 endif()
 
 if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)

@@ -102,8 +102,8 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 if (WITH_MYSQL)
-  add_dependencies(${PROJECT} sqlpp-mysql)
-  target_link_libraries(${PROJECT} sqlpp-mysql)
+  add_dependencies(${PROJECT} SQLPP11::SQLPP11_MYSQL)
+  target_link_libraries(${PROJECT} SQLPP11::SQLPP11_MYSQL)
 endif()
 
 set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)

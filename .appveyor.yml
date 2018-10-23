@@ -3,6 +3,7 @@ init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
 
 image: 
+#- Previous Visual Studio 2017
 - Visual Studio 2017
 
 configuration:
@@ -13,9 +14,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> cmake/scripts/msvc_build.bat
-  - 3rdparty\lib -> cmake/scripts/msvc_build.bat
-  - 3rdparty\include -> cmake/scripts/msvc_build.bat
+  - 3rdparty\bin -> cmake/modules/Build*.cmake
+  - 3rdparty\lib -> cmake/modules/Build*.cmake
+  - 3rdparty\include -> cmake/modules/Build*.cmake
 
 branches:
   except:
@@ -73,18 +74,25 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
-- 7z a %APPVEYOR_BUILD_FOLDER%/win32-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
-- 7z a %APPVEYOR_BUILD_FOLDER%/win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
+- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
-- path: win32-$(appveyor_build_version)-$(configuration).zip
+- path: $(platform)-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-- path: win32-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
   name: osirose-debug-symbols
 
 on_success:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 success $env:WEBHOOK_URL
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
+  #- curl --connect-timeout 30 -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
+  #- curl --connect-timeout 30 -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
+  #- curl --connect-timeout 30 -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
+  #- curl --connect-timeout 30 -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
+
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 failure $env:WEBHOOK_URL
@@ -124,12 +132,5 @@ notifications:
 #  on:
 #    branch: master                 # release from master branch only
 #    appveyor_repo_tag: true        # deploy on tag push only
-
-on_finish:
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-  - curl -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
-  - curl -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
+#on_finish:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

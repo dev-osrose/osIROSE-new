@@ -159,9 +159,26 @@ enum class ePacketType : uint16_t {
   PAKCS_STOP, // client wants to stop
   PAKWC_STOP = PAKCS_STOP, // object stops at position x
   PAKWC_MOVE, // mouse cmd with move mode in it??
+  
+  PAKCS_ATTACK,
+  PAKWC_ATTACK = PAKCS_ATTACK,
+  
+  PAKCS_DAMAGE,
+  PAKWC_DAMAGE = PAKCS_DAMAGE,
 
   PAKCS_MOUSE_CMD = 0x79A, // client wants to move or click on an object
   PAKWC_MOUSE_CMD = PAKCS_MOUSE_CMD, // answer from the server
+  
+  PAKWC_SETEXP,
+  PAKWC_LEVELUP = 0x79E,
+  
+  PAKCS_HP_REQ = 0x79F,
+  PAKWC_HP_REPLY = PAKCS_HP_REQ,
+  
+  PAKWC_SET_HP_AND_MP,
+  
+  PAKCS_STORE_TRADE_REQ,
+  PAKWC_STORE_TRADE_REPLY = PAKCS_STORE_TRADE_REQ,
 
   PAKCS_USE_ITEM = 0x07a3,
   PAKWC_USE_ITEM_REPLY = PAKCS_USE_ITEM,

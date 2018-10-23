@@ -26,13 +26,14 @@
 
 if( WIN32 )
 
-	SET(BINDIR32_ENV_NAME "Program Files (x86)")
+	SET(BINDIR32_ENV_NAME "Program Files")
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/include"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/include"
+				"${CMAKE_EXTERNAL_INCLUDE_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */include"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */include"
 			  "$ENV{PROGRAMFILES}/MySQL/*/include"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/include"
@@ -41,10 +42,11 @@ if( WIN32 )
 
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient_r.lib"
-		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
@@ -53,10 +55,11 @@ if( WIN32 )
 
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient_r"
-		PATHS "${EXTERNAL_BINARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C 6.1/lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C 6.1/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C 6.1/lib"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
@@ -73,7 +76,7 @@ else()
 
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES libmysqlclient.a libmysqlclient.so libmysqlclient_r.a libmysqlclient_r.so
-		PATHS "${CMAKE_THIRD_PARTY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
@@ -84,11 +87,11 @@ else()
 			  "/usr/local/lib64/mysql"
 			  "/usr/mysql/lib/mysql"
 			  "/usr/mysql/lib64/mysql"
-              "/usr/lib/x86_64-linux-gnu" )
+        "/usr/lib/x86_64-linux-gnu" )
 
 	find_library( MYSQL_LIBRARY
 		NAMES mysqlclient mysqlclient_r
-		PATHS "${CMAKE_THIRD_PARTY_DIR}"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
 			  "$ENV{HOME}/mysql/lib"
 			  "/lib/mysql"
 			  "/lib64/mysql"
@@ -101,9 +104,9 @@ else()
 			  "/usr/mysql/lib64/mysql" )
 endif()
 
-MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
-MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
-MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+#MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+#MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+#MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
 
 if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
 	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"
@@ -116,9 +119,10 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
 # all listed variables are TRUE
 include( FindPackageHandleStandardArgs )
-find_package_handle_standard_args( MYSQL DEFAULT_MSG
-	MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
-	MYSQL_VERSION_STRING )
+find_package_handle_standard_args( MYSQL
+	REQUIRED_VARS MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
+	VERSION_VAR MYSQL_VERSION_STRING
+	)
 
 set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
 set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
