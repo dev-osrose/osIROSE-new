@@ -25,7 +25,7 @@ if(WIN32 AND NOT MINGW)
 
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
-    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${BUILD_TYPE}
+    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/lib/breakpad" "*.lib"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/bin" "*.dll"
     INSTALL_COMMAND ""
@@ -35,14 +35,14 @@ if(WIN32 AND NOT MINGW)
     breakpad
     build-crash-generation-client
     DEPENDERS build
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${BUILD_TYPE}
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
   )
 
   ExternalProject_Add_Step(
     breakpad
     build-common
     DEPENDERS build
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /property:Configuration=${BUILD_TYPE}
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
   )
 
   ExternalProject_Add_Step(

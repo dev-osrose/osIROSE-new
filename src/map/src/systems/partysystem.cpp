@@ -21,17 +21,17 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
     Entity starter = entity;
     if (Cparty->isKicked_) starter = party->leader_;
     if (auto socket = getClient(entity))
-      socket->send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::DESTROY, starter));
+      socket->send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::DESTROY, starter));
     if (party->members_.size() == 1) party->members_[0].remove<Party>();
     for (auto &it : party->members_) {
       if (auto socket = getClient(it))
-        socket->send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, Core::make_vector(entity)));
+        socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, Core::make_vector(entity)));
     }
   });
   // TODO : use on_component_assign for new members?
 }
 
-void PartySystem::update(EntityManager &es, double) {
+void PartySystem::update(EntityManager &es, std::chrono::milliseconds) {
   for (Entity entity : es.entities_with_components<BasicInfo, Party>()) {
     Party *party = entity.component<Party>();
     if (!party->party_) {
@@ -51,10 +51,10 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
   newMember.assign<Party>(party);
   for (auto &it : party->members_) {
     if (auto socket = getClient(it))
-      socket->send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, Core::make_vector(newMember)));
+      socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, Core::make_vector(newMember)));
   }
   if (auto socket = getClient(newMember))
-    socket->send(*makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
+    socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
   party->addMember(newMember);
 }
 
@@ -66,7 +66,7 @@ void PartySystem::changeLeader(Entity leader, Entity newLeader) {
   if (!party->changeLeader(newLeader)) return;
   for (auto it : party->members_) {
     if (auto socket = getClient(it))
-      socket->send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::CHANGE_OWNER, newLeader));
+      socket->send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::CHANGE_OWNER, newLeader));
   }
 }
 
@@ -75,7 +75,7 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
   Entity other;
   if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {
     logger_->debug("Client {} requested a party with the non existing char {}", getId(entity), packet.idXorTag());
-    client.send(*makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
+    client.send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
     return;
   }
   Party *party = nullptr;
@@ -90,7 +90,7 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
       {
         if (auto socket = getClient(other))
           socket->send(
-              *makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
+              makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
       }
       return;
     case CliPartyReq::JOIN:
@@ -103,7 +103,7 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
       {
         if (auto socket = getClient(other))
           socket->send(
-              *makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
+              makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
       }
       return;
     case CliPartyReq::LEFT:
@@ -159,7 +159,7 @@ void PartySystem::processPartyReply(CMapClient &, Entity entity, const RoseCommo
       {
         if (auto socket = getClient(other))
           socket->send(
-              *makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
+              makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
       }
       return;
     // if the guy asked accepts, we send it to the guy asking and we update the party
@@ -169,7 +169,7 @@ void PartySystem::processPartyReply(CMapClient &, Entity entity, const RoseCommo
       {
         if (auto socket = getClient(other))
           socket->send(
-              *makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
+              makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
       }
       addPartyMember(other, entity);
       return;

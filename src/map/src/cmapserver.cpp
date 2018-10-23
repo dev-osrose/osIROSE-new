@@ -39,15 +39,6 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server)
   }
 }
 
-void CMapServer::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServer::eSendType type,
-                            CRosePacket& _buffer) {
-  CRoseServer::SendPacket(sender.get(), type, _buffer);
-}
-
-void CMapServer::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket& _buffer) {
-  CRoseServer::SendPacket(&sender, type, _buffer);
-}
-
 CMapServer::~CMapServer() {}
 
 void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
@@ -76,4 +67,4 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //}
 }
 
-void CMapServer::update(double dt) { entity_system_->update(dt); }
+void CMapServer::update(std::chrono::milliseconds dt) { entity_system_->update(dt); }

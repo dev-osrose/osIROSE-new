@@ -19,7 +19,7 @@ InventorySystem::InventorySystem(SystemManager &manager) : System(manager) {
   manager.registerDispatcher(ePacketType::PAKCS_DROP_ITEM, &InventorySystem::dropItem);
 }
 
-void InventorySystem::update(EntityManager &, double) {}
+void InventorySystem::update(EntityManager &, std::chrono::milliseconds) {}
 
 uint8_t InventorySystem::findNextEmptySlot(Entity entity) {
   if (!entity || !entity.component<Inventory>()) return 0;
@@ -65,9 +65,9 @@ void InventorySystem::processEquip(CMapClient &client, Entity entity, const Rose
     logger_->warn("There was an error while swapping items for client {}", getId(entity));
     return;
   }
-  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE,
-                         *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
-  client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
+  manager_.send(entity, CMapServer::eSendType::NEARBY,
+                         makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, packet.slotTo()));
+  client.send(makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(to, from)));
 }
 
 void InventorySystem::dropItem(CMapClient &client, Entity entity, const RoseCommon::CliDropItem &packet) {
@@ -89,12 +89,12 @@ void InventorySystem::dropItem(CMapClient &client, Entity entity, const RoseComm
     item.count_ -= count;
     droppedItem = item;
     droppedItem.count_ = count;
-    client.send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(packet.item())));
+    client.send(makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(packet.item())));
   } else {
     droppedItem = removeItem(entity, packet.item());
   }
   Entity item = manager_.buildItem(entity, std::move(droppedItem));
-  manager_.SendPacket(client, CMapServer::eSendType::EVERYONE, *makePacket<ePacketType::PAKWC_DROP_ITEM>(item));
+  manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DROP_ITEM>(item));
 }
 
 bool InventorySystem::addItem(Entity e, Item &&item) {
@@ -106,7 +106,7 @@ bool InventorySystem::addItem(Entity e, Item &&item) {
 
   auto client = getClient(e);
 
-  client->send(*makePacket<ePacketType::PAKWC_SET_ITEM>(e, Core::make_vector(slot)));
+  client->send(makePacket<ePacketType::PAKWC_SET_ITEM>(e, Core::make_vector(slot)));
   return true;
 }
 
@@ -118,13 +118,13 @@ Item InventorySystem::removeItem(Entity entity, uint8_t slot) {
   item.lua_.onDrop(&entity);
 
   auto client = getClient(entity);
-  client->send(*makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(slot)));
+  client->send(makePacket<ePacketType::PAKWC_SET_ITEM>(entity, Core::make_vector(slot)));
 
   if (slot < Inventory::MAX_EQUIP_ITEMS) {
     // if the item removed was equipped, we send the update to everybody in range
     // this can happen if the equipment is destroyed while in combat or something
-    manager_.SendPacket(client, CMapServer::eSendType::EVERYONE,
-                                           *makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, slot));
+    manager_.send(entity, CMapServer::eSendType::NEARBY,
+                                           makePacket<ePacketType::PAKWC_EQUIP_ITEM>(entity, slot));
   }
   return item;
 }

@@ -26,7 +26,7 @@ class System {
 
   virtual ~System() = default;
 
-  virtual void update(EntityManager &, double dt) = 0;
+  virtual void update(EntityManager &, std::chrono::milliseconds dt) = 0;
 
  protected:
   SystemManager &manager_;

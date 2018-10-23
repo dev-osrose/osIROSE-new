@@ -100,7 +100,7 @@ void CMapISC::OnConnected() {
 
   logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet->size(),
                  static_cast<uint16_t>(packet->type()));
-  send(*packet);
+  send(std::move(packet));
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
@@ -110,8 +110,7 @@ void CMapISC::OnConnected() {
         if (dt > (1000 * 60) * 1)  // wait 1 minute before pinging
         {
           logger_->trace("Sending ISC_ALIVE");
-          auto packet = std::make_unique<CRosePacket>(ePacketType::ISC_ALIVE);
-          send(*packet);
+          send(std::make_unique<CRosePacket>(ePacketType::ISC_ALIVE));
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }

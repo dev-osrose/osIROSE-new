@@ -2,23 +2,15 @@ set(LUA_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 if(WIN32)
   set(_byproducts
-    ${LUA_INSTALL_DIR}/bin/lua51.dll
-    ${LUA_INSTALL_DIR}/lib/lua51.lib
-    ${LUA_INSTALL_DIR}/bin/lua5.1.dll
-    ${LUA_INSTALL_DIR}/lib/lua5.1.lib
+    ${LUA_INSTALL_DIR}/lib/lua.lib
   )
   
   ExternalProject_Add(
     lua
-    GIT_REPOSITORY https://github.com/rjpcomputing/luaforwindows.git
-    GIT_TAG v5.1.5-52
-    GIT_SHALLOW true
+    GIT_REPOSITORY https://github.com/RavenX8/lua.git
+    GIT_TAG e3f46c3bee3d6b62f9ea9a36c86249978504e404
+    CMAKE_ARGS -G ${CMAKE_GENERATOR} -Dlua_MSVC_STATIC_RUNTIME=ON -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     INSTALL_DIR ${LUA_INSTALL_DIR}
-    BUILD_IN_SOURCE TRUE
-
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
     BUILD_BYPRODUCTS ${_byproducts}
   )
   
@@ -26,17 +18,13 @@ if(WIN32)
     lua
     copy-lua
     DEPENDEES download
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.h"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/include" "<INSTALL_DIR>/include/" "*.hpp"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/lib/" "*.lib"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "<INSTALL_DIR>/bin/" "*.dll"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/files/lib" "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/" "*.dll"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.hpp"
   )
 else()
   find_library(LUA_DL_LIBRARY dl)
   find_library(LUA_MATH_LIBRARY m)
   set(_byproducts
-    ${LUA_MATH_LIBRARY}
     ${LUA_INSTALL_DIR}/lib/liblua.a
   )
   ExternalProject_Add(
@@ -59,12 +47,12 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(LUA_LIBRARY "${install_dir}/lib/lua51.lib")
+  set(LUA_LIBRARY "${install_dir}/lib/lua.lib")
   set(LUA_LIBRARIES "${LUA_LIBRARY}")
-  set(LUA_INSTALL_LIBS "${install_dir}/lib/lua51.dll")
+  set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.dll")
 else()
   set(LUA_LIBRARY "${install_dir}/lib/liblua.a")
-  set(LUA_LIBRARIES "${LUA_LIBRARY}" "${LUA_DL_LIBRARY}")
+  set(LUA_LIBRARIES "${LUA_LIBRARY}" "${LUA_DL_LIBRARY}" "${LUA_MATH_LIBRARY}")
   set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.a")
 endif()
 

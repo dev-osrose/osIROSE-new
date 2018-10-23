@@ -45,6 +45,8 @@
 #include "components/quests.h"
 #include "components/npc.h"
 #include "components/warpgate.h"
+#include "components/spawner.h"
+#include "components/callbacks.h"
 
 #include "entityapi.h"
 #include "item.h"
@@ -53,7 +55,8 @@ using EntityManager = entityx::EntityX<entityx::DefaultStorage, entityx::Feature
       SocketConnector, BasicInfo, Stats, AdvancedInfo, CharacterInfo, Graphics,
       CharacterGraphics, Position, StatusEffects, Skills, Hotbar, Destination,
       RidingItems, BulletItems, Inventory, Party, Wishlist, Quests,
-      RoseCommon::EntityAPI, RoseCommon::Item, Npc, Warpgate>;
+      RoseCommon::EntityAPI, RoseCommon::Item, Npc, Warpgate,
+      Spawner, Callback>;
 
 using Entity = EntityManager::Entity;
 

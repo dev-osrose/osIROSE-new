@@ -75,7 +75,7 @@ set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
 set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date)
+set(DATE_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/date/include)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(SQLPP_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/sqlpp11/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
@@ -109,8 +109,8 @@ endif()
 
 find_package(Threads REQUIRED)
 
-set(ENV{LUA_DIR} ${CMAKE_THIRD_PARTY_DIR})
-find_package(Lua ${REQUIRED_IF_OPTION})
+#set(ENV{LUA_DIR} ${CMAKE_THIRD_PARTY_DIR})
+#find_package(Lua ${REQUIRED_IF_OPTION})
 
 find_package(CURL ${REQUIRED_IF_OPTION})
 
@@ -180,6 +180,9 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 include_directories(${CMAKE_GEN_SRC_DIR})
+
+file(COPY "${CMAKE_SOURCE_DIR}/scripts"
+       DESTINATION "${CMAKE_BINARY_DIR}/bin")
 
 add_subdirectory(src)
 add_subdirectory(tools)

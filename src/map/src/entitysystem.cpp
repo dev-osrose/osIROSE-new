@@ -1,6 +1,7 @@
 #include <set>
 #include <vector>
 
+#include "random.h"
 #include "entitysystem.h"
 #include "cmapclient.h"
 #include "cmapserver.h"
@@ -12,6 +13,7 @@
 #include "systems/movementsystem.h"
 #include "systems/partysystem.h"
 #include "systems/updatesystem.h"
+#include "systems/callbacksystem.h"
 
 #include "srv_npcchar.h"
 
@@ -24,36 +26,64 @@ EntitySystem::EntitySystem(CMapServer *server) : systemManager_(*this), server_(
   systemManager_.add<Systems::PartySystem>();
   systemManager_.add<Systems::MapSystem>();
   systemManager_.add<Systems::LuaSystem>();
+  systemManager_.add<Systems::CallbackSystem>();
 }
+
 EntityManager& EntitySystem::getEntityManager() { return entityManager_; }
 
 Entity EntitySystem::buildItemEntity(Entity creator, RoseCommon::Item&& item) {
   Entity e = create();
   e.assign<Item>(std::move(item));
   auto pos = creator.component<Position>();
-  e.assign<Position>(pos->x_, pos->y_, pos->map_, 0);
-  auto basic = e.assign<BasicInfo>();
+  auto newpos = Core::Random::getInstance().random_in_circle(pos->x_, pos->y_, drop_radius);
+  e.assign<Position>(std::get<0>(newpos), std::get<1>(newpos), pos->map_, 0);
+  auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
   basic->ownerId_ = creator.component<BasicInfo>()->id_;
-  basic->id_ = id_manager_.get_free_id();
-  itemToEntity_[basic->id_] = e;
+  registerEntity(e);
   return e;
+}
+
+Entity EntitySystem::buildMobEntity(Entity spawner) {
+    Entity e = create();
+    auto basic = e.assign<BasicInfo>(id_manager_.get_free_id());
+    basic->ownerId_ = spawner.component<BasicInfo>()->id_;
+    e.assign<AdvancedInfo>();
+    e.assign<CharacterInfo>();
+    auto spos = spawner.component<Position>();
+    auto spawn = spawner.component<Spawner>();
+    auto newpos = Core::Random::getInstance().random_in_circle(spos->x_, spos->y_, static_cast<float>(spawn->range_));
+    auto pos = e.assign<Position>(std::get<0>(newpos), std::get<1>(newpos), spos->map_, 0);
+    pos->z_ = spos->z_;
+    e.assign<Npc>(spawn->mob_id_, 0);
+    registerEntity(e);
+    return e;
 }
 
 void EntitySystem::registerEntity(Entity entity) {
   if (!entity) return;
-  auto basic = entity.component<BasicInfo>();
-  if (!basic || basic->name_ == "" || !basic->id_) return;
-  nameToEntity_[basic->name_] = entity;
-  idToEntity_[basic->id_] = entity;
+  if (auto basic = entity.component<BasicInfo>(); basic) {
+      if (basic->id_)
+          idToEntity_[basic->id_] = entity;
+      if (basic->name_.size())
+          nameToEntity_[basic->name_] = entity;
+  }
 }
 
-Entity EntitySystem::getItemEntity(uint32_t id) { return itemToEntity_[id]; }
+void EntitySystem::unregisterEntity(Entity entity) {
+    if (!entity) return;
+    if (auto basic = entity.component<BasicInfo>(); basic) {
+        if (basic->id_)
+            idToEntity_.erase(basic->id_);
+        if (basic->name_.size())
+            nameToEntity_.erase(basic->name_);
+    }
+}
 
 Entity EntitySystem::getEntity(const std::string& name) { return nameToEntity_[name]; }
 
-Entity EntitySystem::getEntity(uint32_t charId) { return idToEntity_[charId]; }
+Entity EntitySystem::getEntity(uint32_t id) { return idToEntity_[id]; }
 
-void EntitySystem::update(double dt) {
+void EntitySystem::update(std::chrono::milliseconds dt) {
   std::lock_guard<std::mutex> lock(access_);
   for (auto& it : create_commands_) {
     it->execute(*this);
@@ -80,19 +110,24 @@ void EntitySystem::destroy(Entity entity, bool save) {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
           if (auto client = getClient(entity); client)
-            es.SendPacket(client, CMapServer::eSendType::EVERYONE_BUT_ME_ON_MAP,
-                               *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY_BUT_ME,
+                               makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
           else
-            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-                           *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
-      if (!entity.component<Npc>()) {
-          if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
-          auto basic = entity.component<BasicInfo>();
-          es.nameToEntity_.erase(basic->name_);
-          es.idToEntity_.erase(basic->id_);
-          es.id_manager_.release_id(basic->id_);
+            es.send(entity, CMapServer::eSendType::NEARBY,
+                           makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+          if (!entity.component<Npc>()) {
+              if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
+              auto basic = entity.component<BasicInfo>();
+              es.id_manager_.release_id(basic->id_);
+          } else if (auto basic = entity.component<BasicInfo>(); basic && basic->ownerId_) {
+            // this is a mob, we need to update the spawner
+            Entity spawner = es.idToEntity_[basic->ownerId_];
+            if (spawner) {
+                --spawner.component<Spawner>()->current_total_;
+            }
+          }
       }
-      }
+      es.unregisterEntity(entity);
       entity.destroy();
     })};
   delete_commands_.emplace_back(std::move(ptr));
@@ -258,6 +293,7 @@ Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float d
       auto dest = e.assign<Destination>(dest_x * 100, dest_y * 100, dest_map_id);
       dest->z_ = static_cast<uint16_t>(dest_z);
     })};
+    std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
     return e;
 }
@@ -281,9 +317,9 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
       pos->angle_ = angle;
       //e.assign<EntityApi>();
       // we send the new NPC to the existing clients
-      es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-              *makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
+      es.send(e, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
     })};
+    std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
     return e;
 }
@@ -291,7 +327,27 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
 Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count,
                    int spawner_limit, int spawner_interval, int spawner_range,
                    int map_id, float x, float y, float z) {
-  return {};
+    Entity e = create();
+    std::unique_ptr<CommandBase> ptr{new Command([mob_id, mob_count, spawner_limit, spawner_interval, spawner_range, map_id, x, y, z, e] (EntitySystem &es) mutable {
+        if (!e) return;
+        e.assign<BasicInfo>(es.id_manager_.get_free_id());
+        auto pos = e.assign<Position>(x * 100, y * 100, map_id, 0);
+        pos->z_ = static_cast<uint16_t>(z);
+        e.assign<Spawner>(mob_id, mob_count, spawner_limit, spawner_range * 100);
+        Systems::CallbackSystem::add_callback(e, std::chrono::seconds(spawner_interval), [e](SystemManager& manager) mutable {
+            auto spawner = e.component<Spawner>();
+            if (spawner->current_total_ < spawner->total_on_map_) {
+                Entity mob = manager.buildMob(e);
+                manager.send(e, CMapServer::eSendType::NEARBY,
+                              makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
+                ++spawner->current_total_;
+            }
+            return true;
+        });
+    })};
+    std::lock_guard<std::mutex> lock(access_);
+    create_commands_.emplace_back(std::move(ptr));
+    return e;
 }
 
 void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
@@ -299,8 +355,7 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
     for (auto entity : s) {
         if (!entity) continue;
         if (!entity.component<Warpgate>())
-            es.SendPacket(std::shared_ptr<CMapClient>{}, CMapServer::eSendType::EVERYONE,
-                         *makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
         entity.destroy();
     }
   })};
@@ -312,11 +367,6 @@ LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
   return server_->get_script_loader();
 }
 
-void EntitySystem::SendPacket(const std::shared_ptr<CMapClient>& sender, CMapServer::eSendType type,
-                            CRosePacket& _buffer) {
-  server_->SendPacket(sender, type, _buffer);
-}
-
-void EntitySystem::SendPacket(const CMapClient& sender, CMapServer::eSendType type, CRosePacket& _buffer) {
-  server_->SendPacket(sender, type, _buffer);
+void EntitySystem::send(Entity sender, CMapServer::eSendType type, std::unique_ptr<CRosePacket>&& _buffer) {
+  server_->SendPacket(sender, type, std::move(_buffer), std::bind(&EntitySystem::isNearby, this, std::placeholders::_1, std::placeholders::_2));
 }

@@ -16,7 +16,7 @@ class PartySystem : public System {
   PartySystem(SystemManager&);
   virtual ~PartySystem() = default;
 
-  virtual void update(EntityManager&, double);
+  virtual void update(EntityManager&, std::chrono::milliseconds) override;
 
   void addPartyMember(Entity leader, Entity newMember);
   void changeLeader(Entity leader, Entity newLeader);

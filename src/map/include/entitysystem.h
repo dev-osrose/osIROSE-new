@@ -28,6 +28,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 #include "crosepacket.h"
 #include "item.h"
 #include "systems/system.h"
@@ -50,13 +51,15 @@ class EntitySystem {
  public:
   EntitySystem(CMapServer *server);
 
-  void update(double dt);
+  void update(std::chrono::milliseconds dt);
 
   void destroy(Entity entity, bool save);
 
   Entity create();
 
   Entity buildItemEntity(Entity creator, RoseCommon::Item&& item);
+
+  Entity buildMobEntity(Entity spawner);
 
   template <typename T>
   T& get() {
@@ -72,10 +75,10 @@ class EntitySystem {
 
   void registerEntity(Entity entity);
 
-  Entity getEntity(const std::string& name);
-  Entity getEntity(uint32_t charId);
+  void unregisterEntity(Entity entity);
 
-  Entity getItemEntity(uint32_t id);
+  Entity getEntity(const std::string& name);
+  Entity getEntity(uint32_t id);
 
   EntityManager& getEntityManager();
  
@@ -91,10 +94,7 @@ class EntitySystem {
  
   LuaScript::ScriptLoader& get_script_loader() noexcept;
  
- void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
-                  RoseCommon::CRosePacket& _buffer);
-  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
-                  RoseCommon::CRosePacket& _buffer);
+ void send(Entity sender, RoseCommon::CRoseServer::eSendType type, std::unique_ptr<RoseCommon::CRosePacket>&& _buffer);
 
  private:
   EntityManager entityManager_;
@@ -103,7 +103,6 @@ class EntitySystem {
   std::unordered_map<std::string, Entity> nameToEntity_;
   std::unordered_map<uint32_t, Entity> idToEntity_;
   std::queue<std::pair<Entity, std::unique_ptr<RoseCommon::CRosePacket>>> toDispatch_;
-  std::unordered_map<uint32_t, Entity> itemToEntity_;
   IdManager id_manager_;
   CMapServer *server_;
 
@@ -125,7 +124,10 @@ class EntitySystem {
   };
 
   std::vector<std::unique_ptr<CommandBase>> create_commands_;
- std::vector<std::unique_ptr<CommandBase>> delete_commands_;
+  std::vector<std::unique_ptr<CommandBase>> delete_commands_;
+
+ private:
+  static constexpr float drop_radius = 50.f;
 };
 
 #endif /* !_ENTITYSYSTEM_H_ */

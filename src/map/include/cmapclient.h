@@ -34,10 +34,6 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
 
   virtual ~CMapClient();
 
-  virtual bool is_nearby(const CRoseClient* _otherClient) const override;
- 
-  inline std::shared_ptr<EntitySystem> get_entity_system() noexcept { return entitySystem_; }
-
   uint32_t get_session_id() const { return sessionId_; }
 
   void switch_server() { login_state_ = eSTATE::SWITCHING; }

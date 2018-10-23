@@ -74,24 +74,23 @@ C++ Installation - Windows
 [![vis-studio]][vis-studio-link]
 [![cmake]][cmake-link]
 [![mysql]][mysql-link]
-[![perl]][perl-link]
+[![python]][python-link]
 
 [vis-studio]: https://img.shields.io/badge/Visual%20Studio-Download-blue.svg "Download Visual Stuido"
-[vis-studio-link]: https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx "Download Visual Stuido"
+[vis-studio-link]: https://visualstudio.microsoft.com/downloads/ "Download Visual Stuido"
 [cmake]: https://img.shields.io/badge/CMake-Download-blue.svg "Download CMake"
 [cmake-link]: https://cmake.org/download/ "Download CMake"
-[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20v6.1.6%2032--bit-Download-blue.svg "Download MySQL Connector:C 32-bit"
-[mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 32-bit"
-[perl]: https://img.shields.io/badge/Perl-Download-blue.svg "Download Perl"
-[perl-link]: https://www.perl.org/get.html "Download Perl"
+[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%2064--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
+[mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 64-bit"
+[python]: https://img.shields.io/badge/Python-Download-blue.svg "Download Python 2.7"
+[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python"
 
 After downloading and installing the above applications, to compile the servers run the following commands:
 
     git submodule update --init --recursive
-    ./ci/msvc_mysqlpp_install.bat
     ./ci/msvc_install.bat
     cd build
-    cmake -DBUILD_TYPE=Release -DBUILD_PROTOBUF=ON -Dprotobuf_BUILD_TESTS=OFF ..
+    cmake ..
     cmake --build . --config Release
 
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).

@@ -2,18 +2,19 @@
 
 #include <vector>
 #include <initializer_list>
+#include <chrono>
 
 // This is not a component!
 struct StatusEffect {
-    StatusEffect() : expiredSeconds_(0), value_(0), unkown_(0), dt_(0) {}
-    StatusEffect(uint32_t expiredSeconds, uint16_t value, uint16_t unkown = 0) :
-        expiredSeconds_(expiredSeconds), value_(value), unkown_(unkown), dt_(0) {}
+    StatusEffect() : expired_(0), value_(0), unkown_(0), dt_(0) {}
+    StatusEffect(std::chrono::seconds expired, uint16_t value, uint16_t unkown = 0) :
+        expired_(expired), value_(value), unkown_(unkown), dt_(0) {}
     virtual ~StatusEffect() {}
 
-    uint32_t expiredSeconds_;
+    std::chrono::seconds expired_;
     uint16_t value_;
     uint16_t unkown_;
-    double dt_; // to keep track of time (in seconds)
+    std::chrono::milliseconds dt_; // to keep track of time
 };
 
 struct StatusEffects {

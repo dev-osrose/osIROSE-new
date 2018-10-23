@@ -20,6 +20,7 @@
 #include "croseserver.h"
 #include "entitysystem.h"
 #include "script_loader.h"
+#include <chrono>
 
 class CMapServer : public RoseCommon::CRoseServer {
  public:
@@ -28,13 +29,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   int16_t GetMapIDX() const { return map_idx_; }
 
-  void update(double dt);
+  void update(std::chrono::milliseconds dt);
 
-  void SendPacket(const std::shared_ptr<CMapClient>& sender, RoseCommon::CRoseServer::eSendType type,
-                         RoseCommon::CRosePacket& _buffer);
-  void SendPacket(const CMapClient& sender, RoseCommon::CRoseServer::eSendType type,
-                         RoseCommon::CRosePacket& _buffer);
- 
   inline LuaScript::ScriptLoader& get_script_loader() noexcept { return script_loader_.value(); }
 
   std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {

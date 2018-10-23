@@ -20,12 +20,12 @@ SET( SOURCES_HEADER
   include/gm_commands.h
   include/systems/system.h
   include/systems/movementsystem.h
-  include/systems/timesystem.h
   include/systems/updatesystem.h
   include/systems/chatsystem.h
   include/systems/inventorysystem.h
   include/systems/partysystem.h
   include/systems/mapsystem.h
+  include/systems/callbacksystem.h
   )
 
 SET( SOURCES_MAIN
@@ -40,12 +40,12 @@ SET( SOURCES_MAIN
   src/map_manager.cpp
   src/gm_commands.cpp
   src/systems/movementsystem.cpp
-  src/systems/timesystem.cpp
   src/systems/updatesystem.cpp
   src/systems/chatsystem.cpp
   src/systems/inventorysystem.cpp
   src/systems/partysystem.cpp
   src/systems/mapsystem.cpp
+  src/systems/callbacksystem.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
