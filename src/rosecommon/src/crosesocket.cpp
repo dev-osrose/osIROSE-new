@@ -137,6 +137,7 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             bool rtnVal = true;
             std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
             recv_queue_.pop();
+            recv_mutex_.unlock();
 
             rtnVal = HandlePacket(_buffer.get());
             _buffer.reset(nullptr);
@@ -145,9 +146,12 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
               // Abort connection
               logger_->debug("HandlePacket returned false, disconnecting client.");
               socket_[0]->shutdown();
+              // TODO: if this happens, we should disconnect ALL of the sockets.
             }
           }
-          recv_mutex_.unlock();
+          else {
+            recv_mutex_.unlock();
+          }
         }
       });
 
