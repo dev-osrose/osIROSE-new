@@ -1,0 +1,7 @@
+PAKCC_SWITCH_SERVER
+uint16_t port
+uint32_t sessionId
+uint32_t sessionSeed
+include string
+std::string ip &
+

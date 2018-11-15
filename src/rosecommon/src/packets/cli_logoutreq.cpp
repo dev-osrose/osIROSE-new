@@ -3,16 +3,31 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliLogoutReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_LOGOUT_REQ, &createPacket<CliLogoutReq>);
-
 CliLogoutReq::CliLogoutReq() : CRosePacket(ePacketType::PAKCS_LOGOUT_REQ) {}
 
-CliLogoutReq::CliLogoutReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_LOGOUT_REQ, "Not the right packet: " << to_underlying(type()));
+CliLogoutReq::CliLogoutReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_LOGOUT_REQ, "Not the right packet: " << to_underlying(get_type()));
 }
 
 
-void CliLogoutReq::pack() {
+void CliLogoutReq::pack(CRoseWriter&) const {
+}
+
+uint16_t CliLogoutReq::get_size() const {
+	uint16_t size = 0;
+	return size;
+}
+
+
+CliLogoutReq CliLogoutReq::create() {
+
+
+	return CliLogoutReq();
+}
+
+CliLogoutReq CliLogoutReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliLogoutReq(reader);
 }
 
 }

@@ -16,14 +16,10 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-
-namespace RoseCommon {
-
-class CliLoginReq;
-class CliChannelListReq;
-class CliSrvSelectReq;
-
-}
+#include "cli_loginreq.h"
+#include "cli_channellistreq.h"
+#include "cli_srvselectreq.h"
+#include "dataconsts.h"
 
 class CLoginServer;
 
@@ -33,16 +29,16 @@ class CLoginClient : public RoseCommon::CRoseClient {
   CLoginClient(CLoginServer* server, std::unique_ptr<Core::INetwork> _sock);
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
-  bool UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P);
-  bool ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P);
-  bool ServerSelect(std::unique_ptr<RoseCommon::CliSrvSelectReq> P);
+  bool userLogin(RoseCommon::CliLoginReq&& P);
+  bool channelList(RoseCommon::CliChannelListReq&& P);
+  bool serverSelect(RoseCommon::CliSrvSelectReq&& P);
 
-  void SendLoginReply(uint8_t Result);
+  void sendLoginReply(LoginReply::eResult Result);
 
-  virtual void OnDisconnected() override;
+  virtual void onDisconnected() override;
 
   enum class eSTATE {
     DEFAULT,

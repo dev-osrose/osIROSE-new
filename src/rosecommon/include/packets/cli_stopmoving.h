@@ -7,22 +7,30 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving)
 class CliStopMoving : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliStopMoving();
-		CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliStopMoving(CRoseReader reader);
+	private:
 		CliStopMoving(float x, float y, int16_t z);
+	public:
 
 		virtual ~CliStopMoving() = default;
 
 		float x() const;
+		CliStopMoving& set_x(float);
 		float y() const;
+		CliStopMoving& set_y(float);
 		int16_t z() const;
+		CliStopMoving& set_z(int16_t);
+
+		static CliStopMoving create(float x, float y, int16_t z);
+		static CliStopMoving create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		float x_;

@@ -45,7 +45,10 @@ class CRoseServer : public CRoseSocket {
   };
 
   template <typename Func>
-  void SendPacket(Entity sender, eSendType type, std::unique_ptr<CRosePacket>&& _buffer, Func&& nearby_function);
+  void sendPacket(Entity sender, eSendType type, CRosePacket&& _buffer, Func&& nearby_function);
+
+  template <typename Func>
+  void sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby_function);
 
   void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
                   [[maybe_unused]] bool is_server = false) override {
@@ -65,49 +68,55 @@ class CRoseServer : public CRoseSocket {
 };
 
 template <typename Func>
-void CRoseServer::SendPacket(Entity sender, eSendType type, std::unique_ptr<CRosePacket>&& _buffer, Func&& nearby) {
+void CRoseServer::sendPacket(Entity sender, eSendType type, CRosePacket&& _buffer, Func&& nearby) {
   std::lock_guard<std::mutex> lock(client_list_mutex_);
   switch(type)
   {
     case eSendType::EVERYONE:
     {
       for (auto& client : client_list_) {
-          client->send(*_buffer);
+          if (client->isLoggedIn())
+              client->send(_buffer);
       }
       break;
     }
     case eSendType::EVERYONE_BUT_ME:
     {
       for (auto& client : client_list_) {
-        if(client->getEntity() != sender)
-          client->send(*_buffer);
+        if(client->isLoggedIn() && client->getEntity() != sender)
+          client->send(_buffer);
       }
       break;
     }
     case eSendType::EVERYONE_BUT_ME_ON_MAP:
         for (auto &client : client_list_)
-            if (client->getEntity() != sender && isOnMap(client->getEntity()))
-                client->send(*_buffer);
+            if (client->isLoggedIn() && client->getEntity() != sender && isOnMap(client->getEntity()))
+                client->send(_buffer);
         break;
     case eSendType::NEARBY:
     {
       for (auto& client : client_list_) {
-        if(isOnMap(client->getEntity()) && nearby(client->getEntity(), sender))
-          client->send(*_buffer);
+        if(client->isLoggedIn() && isOnMap(client->getEntity()) && nearby(client->getEntity(), sender))
+          client->send(_buffer);
       }
       break;
     }
     case eSendType::NEARBY_BUT_ME:
     {
       for (auto& client : client_list_) {
-        if(isOnMap(client->getEntity()) && client->getEntity() != sender && nearby(client->getEntity(), sender))
-          client->send(*_buffer);
+        if(client->isLoggedIn() && isOnMap(client->getEntity()) && client->getEntity() != sender && nearby(client->getEntity(), sender))
+          client->send(_buffer);
       }
       break;
     }
     default:
       break;
   }
+}
+
+template <typename Func>
+void CRoseServer::sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby) {
+    sendPacket(sender, type, std::move(_buffer), std::forward<Func>(nearby));
 }
 
 }

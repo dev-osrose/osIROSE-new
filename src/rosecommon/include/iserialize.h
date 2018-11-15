@@ -23,9 +23,10 @@
 #ifndef __ISERIALIZE_H__
 #define __ISERIALIZE_H__
 
-#include "crosepacket.h"
-
 namespace RoseCommon {
+
+class CRoseWriter;
+class CRoseReader;
 
 /*!
  * \class ISerialize
@@ -38,10 +39,9 @@ class ISerialize {
 	public:
 		virtual ~ISerialize() = default;
 
-	protected:
-        virtual uint32_t getVisible() const = 0;
-        virtual uint16_t getHeader() const = 0;
-        virtual uint32_t getData() const = 0;
+        virtual bool read(CRoseReader& reader) = 0;
+        virtual bool write(CRoseWriter& writer) const = 0;
+        virtual uint16_t get_size() const = 0;
 };
 
 }

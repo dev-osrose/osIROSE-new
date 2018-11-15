@@ -15,14 +15,10 @@
 #include "ccharclient.h"
 #include "ccharisc.h"
 #include "ccharserver.h"
-#include "cli_createcharreq.h"
-#include "cli_deletecharreq.h"
-#include "cli_joinserverreq.h"
-#include "cli_selectcharreq.h"
 #include "connection.h"
 #include "connectionpool.h"
 #include "srv_channellistreply.h"
-#include "srv_characterlistreply.h"
+#include "srv_charlistreply.h"
 #include "srv_createcharreply.h"
 #include "srv_deletecharreply.h"
 #include "srv_joinserverreply.h"
@@ -42,28 +38,27 @@ CCharClient::CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _s
       channelId_(0),
       server_(server) {}
 
-bool CCharClient::HandlePacket(uint8_t *_buffer) {
+bool CCharClient::handlePacket(uint8_t *_buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
-      return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
+      return joinServerReply(CliJoinServerReq::create(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHAR_LIST_REQ:
-      return SendCharListReply();
+      return sendCharListReply();
     case ePacketType::PAKCS_CREATE_CHAR_REQ:
-      return SendCharCreateReply(getPacket<ePacketType::PAKCS_CREATE_CHAR_REQ>(_buffer));
+      return sendCharCreateReply(CliCreateCharReq::create(_buffer));
     case ePacketType::PAKCS_DELETE_CHAR_REQ:
-      return SendCharDeleteReply(getPacket<ePacketType::PAKCS_DELETE_CHAR_REQ>(_buffer));
+      return sendCharDeleteReply(CliDeleteCharReq::create(_buffer));
     case ePacketType::PAKCS_SELECT_CHAR_REQ:
-      return SendCharSelectReply(getPacket<ePacketType::PAKCS_SELECT_CHAR_REQ>(_buffer));
+      return sendCharSelectReply(CliSelectCharReq::create(_buffer));
     case ePacketType::PAKCS_ALIVE:
       if (loginState_ != eSTATE::LOGGEDIN) {
         logger_->warn("Client {} is attempting to execute an action before loggin in.", userId_);
         return true;
       }
       updateSession();
-      CRoseClient::HandlePacket(_buffer);
-      break;
+      [[fallthrough]];
     default:
-      CRoseClient::HandlePacket(_buffer);
+      CRoseClient::handlePacket(_buffer);
   }
   return true;
 }
@@ -79,16 +74,16 @@ void CCharClient::updateSession() {
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == userId_));
 }
 
-bool CCharClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
-  logger_->trace("CCharClient::JoinServerReply");
+bool CCharClient::joinServerReply(RoseCommon::CliJoinServerReq&& P) {
+  logger_->trace("CCharClient::joinServerReply");
 
   if (loginState_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.", get_id());
     return true;
   }
 
-  uint32_t sessionID = P->sessionId();
-  std::string password = Core::escapeData(P->password());
+  uint32_t sessionID = P.sessionId();
+  std::string password = Core::escapeData(P.password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable accounts{};
@@ -101,28 +96,29 @@ bool CCharClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> 
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
     if (!res.empty()) {
       loginState_ = eSTATE::LOGGEDIN;
+      isLoggedIn_ = true;
       const auto &row = res.front();
       userId_ = row.userid;
       channelId_ = row.channelid;
 
       sessionId_ = sessionID;
 
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, std::time(nullptr));
-      send(*packet);
+      auto packet = SrvJoinServerReply::create(JoinServerReply::OK, std::time(nullptr));
+      send(packet);
     } else {
-      auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::INVALID_PASSWORD, 0);
-      send(*packet);
+      auto packet = SrvJoinServerReply::create(JoinServerReply::INVALID_PASSWORD, 0);
+      send(packet);
     }
   } catch (const sqlpp::exception &e) {
     logger_->error("Error while accessing the database: {}", e.what());
-    auto packet = makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0);
-    send(*packet);
+    auto packet = SrvJoinServerReply::create(JoinServerReply::FAILED, 0);
+    send(packet);
   }
   return true;
 }
 
-bool CCharClient::SendCharListReply() {
-  logger_->trace("CharListReply\n");
+bool CCharClient::sendCharListReply() {
+  logger_->trace("CCharClient::sendCharListReply");
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to get the char list before logging in.", get_id());
@@ -132,76 +128,85 @@ bool CCharClient::SendCharListReply() {
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::CharacterTable table{};
 
-  auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
+  auto packet = SrvCharListReply::create();
   uint32_t id = 0;
 
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
-    packet->addCharacter(row.name, row.race, row.level, row.job, row.face, row.hair, row.deleteDate);
+    CharListReply::CharInfo charInfo(
+            row.name,
+            row.race,
+            row.level,
+            row.job,
+            row.face,
+            row.hair,
+            row.deleteDate
+    );
     characterRealId_.push_back(row.id);
     Core::InventoryTable inv{};
     for (const auto &iv :
          conn(sqlpp::select(inv.slot, inv.itemid).from(inv).where(inv.charId == row.id and inv.slot < 10)))
-      packet->addEquipItem(id, SrvCharacterListReply::getPosition(iv.slot), iv.itemid);
+      charInfo.addEquipItem(static_cast<CharListReply::equipped_position>(id), CharListReply::getPosition(iv.slot), iv.itemid);
     ++id;
+    packet.add_charinfo(charInfo);
   }
-  send(*packet);
+  send(packet);
 
   return true;
 }
 
-bool CCharClient::SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P) {
-  logger_->trace("CharCreateReply\n");
+bool CCharClient::sendCharCreateReply(RoseCommon::CliCreateCharReq&& P) {
+  logger_->trace("CCharClient::sendCharCreateReply");
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to get the create a char before logging in.", get_id());
     return true;
   }
-  std::string query = fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});", Core::escapeData(P->name().c_str()),
-                                  userId_, P->race(), P->face(), P->hair(), P->stone());
+  std::string query = fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});", Core::escapeData(P.name().c_str()),
+                                  userId_, P.race(), P.face(), P.hair(), P.stone());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
-  auto res = SrvCreateCharReply::OK;
+  auto res = CreateCharReply::OK;
   try {
     conn->execute(query);
   } catch (sqlpp::exception &) {
-    res = SrvCreateCharReply::NAME_TAKEN;
+    res = CreateCharReply::NAME_TAKEN;
   }
 
-  auto packet = makePacket<ePacketType::PAKCC_CREATE_CHAR_REPLY>(res);
-  send(*packet);
+  auto packet = SrvCreateCharReply::create(res);
+  send(packet);
 
   return true;
 }
 
-bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P) {
-  logger_->trace("CharDeleteReply\n");
+bool CCharClient::sendCharDeleteReply(RoseCommon::CliDeleteCharReq&& P) {
+  logger_->trace("CCharClient::sendCharDeleteReply");
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to delete a char before logging in.", get_id());
     return true;
   }
 
-  if (P->charId() > 6) return false;
+  if (P.charId() > 6) return false;
 
   uint32_t time = 0;
-  if (P->isDelete()) {
+  if (P.isDelete()) {
     // we need to delete the char
     time = std::time(nullptr);
 
-    std::string query = fmt::format("CALL delete_character({}, '{}');", userId_, Core::escapeData(P->name().c_str()));
+    std::string query = fmt::format("CALL delete_character({}, '{}');", userId_, Core::escapeData(P.name().c_str()));
 
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     conn->execute(query);
   }
 
-  auto packet = makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
-  send(*packet);
+  auto packet = SrvDeleteCharReply::create(time, P.name());
+  send(packet);
   return true;
 }
 
-void CCharClient::OnDisconnected() {
-  logger_->trace("CCharClient::OnDisconnected()");
+void CCharClient::onDisconnected() {
+  logger_->trace("CCharClient::onDisconnected()");
   Core::SessionTable session{};
   Core::AccountTable table{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
@@ -211,8 +216,8 @@ void CCharClient::OnDisconnected() {
   conn(sqlpp::update(table).set(table.online = 0).where(table.id == userId_));
 }
 
-bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P) {
-  logger_->trace("CharSelectReply\n");
+bool CCharClient::sendCharSelectReply(RoseCommon::CliSelectCharReq&& P) {
+  logger_->trace("CCharClient::sendCharSelectReply");
 
   if (loginState_ != eSTATE::LOGGEDIN) {
     logger_->warn("Client {} is attempting to select a char before logging in.", get_id());
@@ -221,7 +226,7 @@ bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharR
 
   loginState_ = eSTATE::TRANSFERING;
 
-  uint8_t selected_id = P->charId();
+  uint8_t selected_id = P.charId();
   if (selected_id > characterRealId_.size()) {
     logger_->warn("Client {} is attempting to select a invalid character.", get_id());
     return false;
@@ -240,10 +245,10 @@ bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharR
   std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
   for (auto &server : server_->GetISCList()) {
     if (server->get_type() == Isc::ServerType::MAP_MASTER && server->get_id() == channelId_) {
-      auto packet = makePacket<ePacketType::PAKCC_SWITCH_SERVER>(
+      auto packet = SrvSwitchServer::create(
           server->get_port() + map_id, sessionId_, 0,
           server->get_address());  // this should be set to the map server's encryption seed
-      send(*packet);
+      send(packet);
     }
   }
 

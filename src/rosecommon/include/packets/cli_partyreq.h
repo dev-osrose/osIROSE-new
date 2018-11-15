@@ -2,35 +2,36 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-
+#include <dataconsts.h>
 
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_REQ, CliPartyReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_PARTY_REQ, CliPartyReq)
 class CliPartyReq : public CRosePacket {
 	public:
-        enum Request : uint8_t {
-            MAKE = 0,
-            JOIN = 1,
-            LEFT,
-            CHANGE_OWNER,
-            KICK = 0x81
-        };
-
 		CliPartyReq();
-		CliPartyReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliPartyReq(Request request, uint32_t idXorTag);
+		CliPartyReq(CRoseReader reader);
+	private:
+		CliPartyReq(PartyReq::Request request, uint32_t idXorTag);
+	public:
 
 		virtual ~CliPartyReq() = default;
 
-		Request request() const;
+		PartyReq::Request request() const;
+		CliPartyReq& set_request(PartyReq::Request);
 		uint32_t idXorTag() const;
+		CliPartyReq& set_idXorTag(uint32_t);
+
+		static CliPartyReq create(PartyReq::Request request, uint32_t idXorTag);
+		static CliPartyReq create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
-		Request request_;
+		PartyReq::Request request_;
 		uint32_t idXorTag_;
 };
 

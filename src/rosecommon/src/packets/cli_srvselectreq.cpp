@@ -3,30 +3,48 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliSrvSelectReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_SRV_SELECT_REQ, &createPacket<CliSrvSelectReq>);
-
 CliSrvSelectReq::CliSrvSelectReq() : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ) {}
 
-CliSrvSelectReq::CliSrvSelectReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_SRV_SELECT_REQ, "Not the right packet: " << to_underlying(type()));
-	*this >> serverId_;
-	*this >> channelId_;
+CliSrvSelectReq::CliSrvSelectReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_SRV_SELECT_REQ, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint32_t(serverId_);
+	reader.get_uint8_t(channelId_);
 }
 
-CliSrvSelectReq::CliSrvSelectReq(uint32_t serverId, uint8_t channelId) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), serverId_(serverId), channelId_(channelId) {}
-
-uint32_t CliSrvSelectReq::serverId() const {
-	return serverId_;
+CliSrvSelectReq::CliSrvSelectReq(uint32_t serverId, uint8_t channelId) : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ), serverId_(serverId), channelId_(channelId) {
 }
 
-uint8_t CliSrvSelectReq::channelId() const {
-	return channelId_;
+uint32_t CliSrvSelectReq::serverId() const { return serverId_; }
+
+CliSrvSelectReq& CliSrvSelectReq::set_serverId(uint32_t data) { serverId_ = data; return *this; }
+
+uint8_t CliSrvSelectReq::channelId() const { return channelId_; }
+
+CliSrvSelectReq& CliSrvSelectReq::set_channelId(uint8_t data) { channelId_ = data; return *this; }
+
+
+void CliSrvSelectReq::pack(CRoseWriter& writer) const {
+	writer.set_uint32_t(serverId_);
+	writer.set_uint8_t(channelId_);
+}
+
+uint16_t CliSrvSelectReq::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(serverId_);
+	size += sizeof(channelId_);
+	return size;
 }
 
 
-void CliSrvSelectReq::pack() {
-	*this << serverId_;
-	*this << channelId_;
+CliSrvSelectReq CliSrvSelectReq::create(uint32_t serverId, uint8_t channelId) {
+
+
+	return CliSrvSelectReq(serverId, channelId);
+}
+
+CliSrvSelectReq CliSrvSelectReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliSrvSelectReq(reader);
 }
 
 }

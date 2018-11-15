@@ -1,0 +1,9 @@
+PAKCS_CREATE_CHAR_REQ
+uint8_t race
+uint8_t stone
+uint8_t hair
+uint8_t face
+uint8_t weapon
+uint16_t zone
+include string
+std::string name &

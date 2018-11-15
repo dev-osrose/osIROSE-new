@@ -7,20 +7,26 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_REVIVE_REQ, CliReviveReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_REVIVE_REQ, CliReviveReq)
 class CliReviveReq : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliReviveReq();
-		CliReviveReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliReviveReq(CRoseReader reader);
+	private:
 		CliReviveReq(ReviveReq::ReviveReq reviveType);
+	public:
 
 		virtual ~CliReviveReq() = default;
 
 		ReviveReq::ReviveReq reviveType() const;
+		CliReviveReq& set_reviveType(ReviveReq::ReviveReq);
+
+		static CliReviveReq create(ReviveReq::ReviveReq reviveType);
+		static CliReviveReq create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		ReviveReq::ReviveReq reviveType_;

@@ -5,26 +5,46 @@ namespace RoseCommon {
 
 SrvAcceptReply::SrvAcceptReply() : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY) {}
 
-SrvAcceptReply::SrvAcceptReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKSS_ACCEPT_REPLY, "Not the right packet: " << to_underlying(type()));
-	*this >> result_;
-	*this >> randValue_;
+SrvAcceptReply::SrvAcceptReply(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKSS_ACCEPT_REPLY, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint8_t(result_);
+	reader.get_uint32_t(randValue_);
 }
 
-SrvAcceptReply::SrvAcceptReply(uint32_t randValue, uint8_t result) : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY), result_(result), randValue_(randValue) {}
-
-uint8_t SrvAcceptReply::result() const {
-	return result_;
+SrvAcceptReply::SrvAcceptReply(uint8_t result, uint32_t randValue) : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY), result_(result), randValue_(randValue) {
 }
 
-uint32_t SrvAcceptReply::randValue() const {
-	return randValue_;
+uint8_t SrvAcceptReply::result() const { return result_; }
+
+SrvAcceptReply& SrvAcceptReply::set_result(uint8_t data) { result_ = data; return *this; }
+
+uint32_t SrvAcceptReply::randValue() const { return randValue_; }
+
+SrvAcceptReply& SrvAcceptReply::set_randValue(uint32_t data) { randValue_ = data; return *this; }
+
+
+void SrvAcceptReply::pack(CRoseWriter& writer) const {
+	writer.set_uint8_t(result_);
+	writer.set_uint32_t(randValue_);
+}
+
+uint16_t SrvAcceptReply::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(result_);
+	size += sizeof(randValue_);
+	return size;
 }
 
 
-void SrvAcceptReply::pack() {
-	*this << result_;
-	*this << randValue_;
+SrvAcceptReply SrvAcceptReply::create(uint8_t result, uint32_t randValue) {
+
+
+	return SrvAcceptReply(result, randValue);
+}
+
+SrvAcceptReply SrvAcceptReply::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvAcceptReply(reader);
 }
 
 }

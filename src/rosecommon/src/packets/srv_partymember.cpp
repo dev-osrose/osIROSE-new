@@ -1,50 +1,50 @@
 #include "srv_partymember.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 SrvPartyMember::SrvPartyMember() : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER) {}
 
-SrvPartyMember::SrvPartyMember(uint8_t rules, bool isDelete, const std::vector<Entity> &list) : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER), rules_(rules), isDelete_(isDelete), list_(list) {}
-
-uint8_t SrvPartyMember::rules() const {
-	return rules_;
+SrvPartyMember::SrvPartyMember(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKWC_PARTY_MEMBER, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint8_t(rules_);
+	reader.get_iserialize(party_);
 }
 
-bool SrvPartyMember::isDelete() const {
-	return isDelete_;
+SrvPartyMember::SrvPartyMember(uint8_t rules, PartyMember::Party party) : CRosePacket(ePacketType::PAKWC_PARTY_MEMBER), rules_(rules), party_(party) {
 }
 
-const std::vector<Entity> &SrvPartyMember::list() const {
-	return list_;
+uint8_t SrvPartyMember::rules() const { return rules_; }
+
+SrvPartyMember& SrvPartyMember::set_rules(uint8_t data) { rules_ = data; return *this; }
+
+PartyMember::Party SrvPartyMember::party() const { return party_; }
+
+SrvPartyMember& SrvPartyMember::set_party(PartyMember::Party data) { party_ = data; return *this; }
+
+
+void SrvPartyMember::pack(CRoseWriter& writer) const {
+	writer.set_uint8_t(rules_);
+	writer.set_iserialize(party_);
+}
+
+uint16_t SrvPartyMember::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(rules_);
+	size += party_.get_size();
+	return size;
 }
 
 
-void SrvPartyMember::pack() {
-	*this << rules_;
-    if (isDelete_) {
-        *this << (int8_t)-1;
-        *this << list_[0].component<BasicInfo>()->tag_; // leaving
-        *this << list_[1].component<BasicInfo>()->tag_; // leader
-        return;
-    }
+SrvPartyMember SrvPartyMember::create(uint8_t rules, PartyMember::Party party) {
 
-    *this << (uint8_t)list_.size();
-    for (auto it : list_) {
-        auto basic = it.component<BasicInfo>();
-        auto advanced = it.component<AdvancedInfo>();
-        auto stats = it.component<Stats>();
-        auto character = it.component<CharacterInfo>();
-        *this << basic->tag_;
-        *this << basic->id_;
-        *this << stats->maxHp_;
-        *this << advanced->hp_;
-        *this << character->statusFlag_;
-        *this << stats->con_;
-        *this << (uint16_t)0; // TODO : RECOVERY HP
-        *this << (uint16_t)0; // TODO : RECOVERY MP
-        *this << character->stamina_;
-        *this << basic->name_;
-    }
+
+	return SrvPartyMember(rules, party);
+}
+
+SrvPartyMember SrvPartyMember::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvPartyMember(reader);
 }
 
 }

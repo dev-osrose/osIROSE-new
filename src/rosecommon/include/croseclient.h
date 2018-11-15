@@ -34,8 +34,11 @@ class CRoseClient : public CRoseSocket {
 
   Entity getEntity() const { return entity_; }
 
+  bool isLoggedIn() const { return isLoggedIn_; }
+
  protected:
   Entity entity_;
+  bool isLoggedIn_;
 };
 
 }

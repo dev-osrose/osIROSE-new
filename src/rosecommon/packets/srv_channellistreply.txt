@@ -1,0 +1,5 @@
+PAKLC_CHANNEL_LIST_REPLY
+uint32_t id
+include vector
+include dataconsts.h
+std::vector<ChannelListReply::ChannelInfo> channels s(uint8_t) I & ==

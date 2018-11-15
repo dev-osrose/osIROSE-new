@@ -27,11 +27,11 @@ class CRoseISC : public CRoseClient {
 
  protected:
   // Override the callback functions we will use only
-  virtual void OnConnected();
-  virtual bool OnShutdown();
-  virtual bool OnReceived(uint16_t& packet_size_, uint8_t* buffer_) override;
-  virtual bool OnSend(uint8_t* _buffer) override;
-  virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual void onConnected();
+  virtual bool onShutdown();
+  virtual bool onReceived(uint16_t& packet_size_, uint8_t* buffer_) override;
+  virtual bool onSend(uint8_t* _buffer) override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
 };
 
 }

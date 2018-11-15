@@ -3,28 +3,41 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliNormalChat::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_NORMAL_CHAT, &createPacket<CliNormalChat>);
-
 CliNormalChat::CliNormalChat() : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT) {}
 
-CliNormalChat::CliNormalChat(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_NORMAL_CHAT, "Not the right packet: " << to_underlying(type()));
-	*this >> message_;
+CliNormalChat::CliNormalChat(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_NORMAL_CHAT, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_string(message_);
 }
 
-CliNormalChat::CliNormalChat(const std::string &message) : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT), message_(message) {}
-
-std::string &CliNormalChat::message() {
-	return message_;
+CliNormalChat::CliNormalChat(const std::string& message) : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT), message_(message) {
 }
 
-const std::string &CliNormalChat::message() const {
-	return message_;
+const std::string& CliNormalChat::message() const { return message_; }
+
+CliNormalChat& CliNormalChat::set_message(const std::string& data) { message_ = data; return *this; }
+
+
+void CliNormalChat::pack(CRoseWriter& writer) const {
+	writer.set_string(message_);
+}
+
+uint16_t CliNormalChat::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(char) * (message_.size() + 1);
+	return size;
 }
 
 
-void CliNormalChat::pack() {
-	*this << message_;
+CliNormalChat CliNormalChat::create(const std::string& message) {
+
+
+	return CliNormalChat(message);
+}
+
+CliNormalChat CliNormalChat::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliNormalChat(reader);
 }
 
 }

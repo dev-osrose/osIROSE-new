@@ -23,32 +23,22 @@
 #include "factory.h"
 #include "epackettype.h"
 #include "crosepacket.h"
+#include "crosewriter.h"
 
 namespace RoseCommon {
 
 using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
+using SendvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
 template <typename T>
-inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
+inline std::unique_ptr<CRosePacket> createPacket(CRoseReader reader)
 {
-  return std::make_unique<T>(buffer);
+  return std::make_unique<T>(reader);
 }
 
-template <ePacketType Type>
-struct find_send_class;
+#define REGISTER_SEND_PACKET(Type, Class) class Class; static const SendvPacketFactory::Initializer<CRoseReader> send__##Class = SendvPacketFactory::Initializer<CRoseReader>(Type, &createPacket<Class>);
 
-template <ePacketType Type>
-using find_send_class_t = typename find_send_class<Type>::type;
-
-template <ePacketType Type>
-struct find_recv_class;
-
-template <ePacketType Type>
-using find_recv_class_t = typename find_recv_class<Type>::type;
-
-#define REGISTER_SEND_PACKET(Type, Class) class Class; template <> struct find_send_class<Type> { typedef Class type; };
-
-#define REGISTER_RECV_PACKET(Type, Class) class Class; template <> struct find_recv_class<Type> { typedef Class type; }; static const RecvPacketFactory::Initializer<uint8_t*> __##Class = RecvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
+#define REGISTER_RECV_PACKET(Type, Class) class Class; static const RecvPacketFactory::Initializer<CRoseReader> recv__##Class = RecvPacketFactory::Initializer<CRoseReader>(Type, &createPacket<Class>);
 
 /*!
  * \function fetchPacket
@@ -60,35 +50,8 @@ using find_recv_class_t = typename find_recv_class<Type>::type;
  * \date october 2016
  */
 inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
-  return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
-}
-
-/*!
- * \function getPacket
- * \brief returns the correctly instantiated packet at compile time from a buffer.
- * \param[in] the data buffer
- * \param[out] the correct instance of the packet
- *
- * \author L3nn0x
- * \ate october 2016
- */
-template <ePacketType T>
-std::unique_ptr<find_recv_class_t<T>> getPacket(uint8_t buffer[MAX_PACKET_SIZE]) {
-    return std::make_unique<find_recv_class_t<T>>(buffer);
-}
-
-/*!
- * \function makePacket
- * \brief returns a correctly instantiated packet at compile time from the args.
- * \param[in] the arguments needed to create the packet
- * \param[out] the packet ready to be sent
- *
- * \author L3nn0x
- * \date october 2016
- */
-template <ePacketType T, typename... Args>
-std::unique_ptr<find_send_class_t<T>> makePacket(Args&&... args) {
-    return std::make_unique<find_send_class_t<T>>(std::forward<Args>(args)...);
+  CRoseReader reader(buffer, CRosePacket::size(buffer));
+  return RecvPacketFactory::create(CRosePacket::type(buffer), reader);
 }
 
 }

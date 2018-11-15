@@ -1,5 +1,6 @@
 #include "item.h"
 #include "itemdb.h"
+#include "crosewriter.h"
 
 using namespace RoseCommon;
 
@@ -48,4 +49,24 @@ uint32_t Item::getData() const {
     if (isStackable_)
         return count_;
     return (refine_ << 28) | (isAppraised_ << 27) | (hasSocket_ << 26) | (life_ << 16) | (durability_ << 9) | gemOpt_;
+}
+
+bool Item::read(CRoseReader& reader) {
+    uint16_t header;
+    uint32_t data;
+    if (!reader.get_uint16_t(header)) return false;
+    return reader.get_uint32_t(data);
+    // TODO: set the values somehow?
+}
+
+bool Item::write(CRoseWriter& writer) const {
+    if (!writer.set_uint16_t(getHeader())) return false;
+    return writer.set_uint32_t(getData());
+}
+
+uint16_t Item::get_size() const {
+    uint16_t size = 0;
+    size += sizeof(uint16_t);
+    size += sizeof(uint32_t);
+    return size;
 }

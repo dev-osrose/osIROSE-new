@@ -16,10 +16,7 @@
 #define __CMAPISC_H__
 
 #include "croseisc.h"
-
-namespace RoseCommon {
-class IscServerRegister;
-}
+#include "isc_serverregister.h"
 
 class CMapServer;
 
@@ -28,14 +25,14 @@ class CMapISC : public RoseCommon::CRoseISC {
   CMapISC();
   CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock);
 
-  bool IsChar() const;
+  bool isChar() const;
 
  protected:
-  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
-  bool HandlePacket(uint8_t* _buffer) override;
+  bool serverRegister(RoseCommon::IscServerRegister&& P);
+  bool handlePacket(uint8_t* _buffer) override;
 
-  virtual void OnConnected() override;
-  virtual bool OnShutdown() override;
+  virtual void onConnected() override;
+  virtual bool onShutdown() override;
 
  private:
   CMapServer *server_;

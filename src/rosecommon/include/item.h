@@ -56,6 +56,7 @@ struct Item : public ISerialize {
     Item(const ItemDef& def);
 
     Item(Item&& other) = default;
+    Item(const Item& other) = default;
 
     Item& operator=(Item&&) = default;
 
@@ -63,9 +64,13 @@ struct Item : public ISerialize {
 
     virtual ~Item() = default;
 
-    virtual uint32_t getVisible() const override;
-    virtual uint16_t getHeader() const override;
-    virtual uint32_t getData() const override;
+    virtual bool read(CRoseReader& reader) override;
+    virtual bool write(CRoseWriter& writer) const override;
+    virtual uint16_t get_size() const override;
+
+    uint32_t getVisible() const;
+    uint16_t getHeader() const;
+    uint32_t getData() const;
 
     template <typename T, typename U>
     void loadFromRow(const T& row, U& builder) {

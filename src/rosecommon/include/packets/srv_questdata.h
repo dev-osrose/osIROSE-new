@@ -6,22 +6,33 @@
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData)
 REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData)
 class SrvQuestData : public CRosePacket {
 	public:
 		SrvQuestData();
-		SrvQuestData(uint8_t buffer[MAX_PACKET_SIZE]);
-		SrvQuestData(Entity entity);
+		SrvQuestData(CRoseReader reader);
+	private:
+		SrvQuestData(Quests quests, Wishlist wishlist);
+	public:
 
 		virtual ~SrvQuestData() = default;
 
-		Entity entity() const;
+		Quests quests() const;
+		SrvQuestData& set_quests(Quests);
+		Wishlist wishlist() const;
+		SrvQuestData& set_wishlist(Wishlist);
+
+		static SrvQuestData create(Entity entity);
+		static SrvQuestData create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
-		Entity entity_;
+		Quests quests_;
+		Wishlist wishlist_;
 };
 
 }

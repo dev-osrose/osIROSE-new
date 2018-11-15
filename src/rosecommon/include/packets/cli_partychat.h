@@ -7,21 +7,26 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_CHAT, CliPartyChat)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_PARTY_CHAT, CliPartyChat)
 class CliPartyChat : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliPartyChat();
-		CliPartyChat(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliPartyChat(const std::string &message);
+		CliPartyChat(CRoseReader reader);
+	private:
+		CliPartyChat(const std::string& message);
+	public:
 
 		virtual ~CliPartyChat() = default;
 
-		std::string &message();
-		const std::string &message() const;
+		const std::string& message() const;
+		CliPartyChat& set_message(const std::string&);
+
+		static CliPartyChat create(const std::string& message);
+		static CliPartyChat create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		std::string message_;

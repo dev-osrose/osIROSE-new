@@ -17,14 +17,11 @@
 
 #include <forward_list>
 #include "croseisc.h"
+#include "isc_serverregister.h"
+#include "isc_shutdown.h"
 
 namespace Core {
 class INetwork;
-}
-
-namespace RoseCommon {
-class IscServerRegister;
-class IscShutdown;
 }
 
 class CLoginISC : public RoseCommon::CRoseISC {
@@ -32,16 +29,16 @@ class CLoginISC : public RoseCommon::CRoseISC {
   CLoginISC();
   CLoginISC(std::unique_ptr<Core::INetwork> _sock);
 
-  std::string GetName() { return server_name_; }
-  bool IsTestServer() { return test_server_; }
-  std::forward_list<RoseCommon::tChannelInfo> GetChannelList() const {
+  std::string getName() { return server_name_; }
+  bool isTestServer() { return test_server_; }
+  std::forward_list<RoseCommon::tChannelInfo> getChannelList() const {
     return channel_list_;
   }
 
  protected:
-  bool HandlePacket(uint8_t* _buffer) override;
-  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
-  bool ServerShutdown(std::unique_ptr<RoseCommon::IscShutdown> P);
+  bool handlePacket(uint8_t* _buffer) override;
+  bool serverRegister(RoseCommon::IscServerRegister&& P);
+  bool serverShutdown(RoseCommon::IscShutdown&& P);
 
   std::string server_name_;
   uint32_t channel_count_;

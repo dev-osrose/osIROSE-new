@@ -3,27 +3,41 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliChannelListReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_CHANNEL_LIST_REQ, &createPacket<CliChannelListReq>);
-
 CliChannelListReq::CliChannelListReq() : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ) {}
 
-CliChannelListReq::CliChannelListReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_CHANNEL_LIST_REQ, "Not the right packet: " << to_underlying(type()));
-	serverId_ = read_uint32();
+CliChannelListReq::CliChannelListReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_CHANNEL_LIST_REQ, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint32_t(serverId_);
 }
 
-CliChannelListReq::CliChannelListReq(uint32_t serverId) : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ), serverId_(serverId) {}
-
-uint32_t CliChannelListReq::serverId() const {
-	return serverId_;
+CliChannelListReq::CliChannelListReq(uint32_t serverId) : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ), serverId_(serverId) {
 }
 
-void CliChangeChannelListReq::serverId(uint32_t id) {
-	serverId_ = id;
+uint32_t CliChannelListReq::serverId() const { return serverId_; }
+
+CliChannelListReq& CliChannelListReq::set_serverId(uint32_t data) { serverId_ = data; return *this; }
+
+
+void CliChannelListReq::pack(CRoseWriter& writer) const {
+	writer.set_uint32_t(serverId_);
 }
 
-void CliChannelListReq::pack() {
-	write_uint32(serverId_);
+uint16_t CliChannelListReq::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(serverId_);
+	return size;
+}
+
+
+CliChannelListReq CliChannelListReq::create(uint32_t serverId) {
+
+
+	return CliChannelListReq(serverId);
+}
+
+CliChannelListReq CliChannelListReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliChannelListReq(reader);
 }
 
 }

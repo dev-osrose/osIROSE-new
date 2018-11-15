@@ -7,18 +7,22 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_CHAR_LIST_REQ, CliCharListReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_CHAR_LIST_REQ, CliCharListReq)
 class CliCharListReq : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliCharListReq();
-		CliCharListReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliCharListReq(CRoseReader reader);
+	public:
 
 		virtual ~CliCharListReq() = default;
 
 
+		static CliCharListReq create();
+		static CliCharListReq create(uint8_t *buffer);
+
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 };
 
 }

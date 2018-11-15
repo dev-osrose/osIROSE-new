@@ -1,42 +1,131 @@
-// Copyright 2016 Chirstopher Torres (Raven), L3nn0x
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http ://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #include "srv_changemapreply.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
-RoseCommon::SrvChangeMapReply::SrvChangeMapReply(
-    uint16_t object_index, uint16_t current_hp, uint16_t current_mp,
-    uint16_t current_exp, uint16_t penalize_exp, uint16_t world_time,
-    uint16_t team_number)
-    : CRosePacket(ePacketType::PAKWC_CHANGE_MAP_REPLY) {
-  write_uint16(object_index);
-  write_uint16(current_hp);
-  write_uint16(current_mp);
-  write_uint16(current_exp);
-  write_uint16(penalize_exp);
-  { // global vars
-    write_uint16(0); // craft rate
-    write_uint32(0); // update time
-    write_uint16(0); // world rate
-    write_uint8(0); // town rate
-    for (int i = 0; i < MAX_SELL_TYPE; ++i) {
-      write_uint8(0);
-    }
-    write_uint32(0); // flags
-  } // global vars
-  write_uint16(world_time);
-  write_uint16(team_number);
+SrvChangeMapReply::SrvChangeMapReply() : CRosePacket(ePacketType::PAKWC_CHANGE_MAP_REPLY) {}
+
+SrvChangeMapReply::SrvChangeMapReply(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKWC_CHANGE_MAP_REPLY, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint16_t(objectIndex_);
+	reader.get_uint16_t(currentHp_);
+	reader.get_uint16_t(currentMp_);
+	reader.get_uint16_t(currentExp_);
+	reader.get_uint16_t(penalizeExp_);
+	reader.get_uint16_t(craftRate_);
+	reader.get_uint16_t(updateTime_);
+	reader.get_uint16_t(worldRate_);
+	reader.get_uint8_t(townRate_);
+	for (size_t index = 0; index < MAX_SELL_TYPE; ++index) reader.get_uint8_t(itemRate_[index]);
+	reader.get_uint32_t(flags_);
+	reader.get_uint16_t(worldTime_);
+	reader.get_uint16_t(teamNumber_);
 }
+
+SrvChangeMapReply::SrvChangeMapReply(uint16_t objectIndex, uint16_t currentHp, uint16_t currentMp, uint16_t currentExp, uint16_t penalizeExp, uint16_t worldTime, uint16_t teamNumber) : CRosePacket(ePacketType::PAKWC_CHANGE_MAP_REPLY), objectIndex_(objectIndex), currentHp_(currentHp), currentMp_(currentMp), currentExp_(currentExp), penalizeExp_(penalizeExp), worldTime_(worldTime), teamNumber_(teamNumber) {
+}
+
+uint16_t SrvChangeMapReply::objectIndex() const { return objectIndex_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_objectIndex(uint16_t data) { objectIndex_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::currentHp() const { return currentHp_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_currentHp(uint16_t data) { currentHp_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::currentMp() const { return currentMp_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_currentMp(uint16_t data) { currentMp_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::currentExp() const { return currentExp_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_currentExp(uint16_t data) { currentExp_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::penalizeExp() const { return penalizeExp_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_penalizeExp(uint16_t data) { penalizeExp_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::craftRate() const { return craftRate_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_craftRate(uint16_t data) { craftRate_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::updateTime() const { return updateTime_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_updateTime(uint16_t data) { updateTime_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::worldRate() const { return worldRate_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_worldRate(uint16_t data) { worldRate_ = data; return *this; }
+
+uint8_t SrvChangeMapReply::townRate() const { return townRate_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_townRate(uint8_t data) { townRate_ = data; return *this; }
+
+const uint8_t* SrvChangeMapReply::itemRate() const { return itemRate_; }
+
+uint8_t SrvChangeMapReply::itemRate(size_t index) const { return itemRate_[index]; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_itemRate(const uint8_t* data) { for (size_t index = 0; index < MAX_SELL_TYPE; ++index) itemRate_[index] = data[index]; return *this; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_itemRate(uint8_t data, size_t index) { itemRate_[index] = data; return *this; }
+
+uint32_t SrvChangeMapReply::flags() const { return flags_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_flags(uint32_t data) { flags_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::worldTime() const { return worldTime_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_worldTime(uint16_t data) { worldTime_ = data; return *this; }
+
+uint16_t SrvChangeMapReply::teamNumber() const { return teamNumber_; }
+
+SrvChangeMapReply& SrvChangeMapReply::set_teamNumber(uint16_t data) { teamNumber_ = data; return *this; }
+
+
+void SrvChangeMapReply::pack(CRoseWriter& writer) const {
+	writer.set_uint16_t(objectIndex_);
+	writer.set_uint16_t(currentHp_);
+	writer.set_uint16_t(currentMp_);
+	writer.set_uint16_t(currentExp_);
+	writer.set_uint16_t(penalizeExp_);
+	writer.set_uint16_t(craftRate_);
+	writer.set_uint16_t(updateTime_);
+	writer.set_uint16_t(worldRate_);
+	writer.set_uint8_t(townRate_);
+	for (size_t index = 0; index < MAX_SELL_TYPE; ++index) writer.set_uint8_t(itemRate_[index]);
+	writer.set_uint32_t(flags_);
+	writer.set_uint16_t(worldTime_);
+	writer.set_uint16_t(teamNumber_);
+}
+
+uint16_t SrvChangeMapReply::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(objectIndex_);
+	size += sizeof(currentHp_);
+	size += sizeof(currentMp_);
+	size += sizeof(currentExp_);
+	size += sizeof(penalizeExp_);
+	size += sizeof(craftRate_);
+	size += sizeof(updateTime_);
+	size += sizeof(worldRate_);
+	size += sizeof(townRate_);
+	size += sizeof(itemRate_);
+	size += sizeof(flags_);
+	size += sizeof(worldTime_);
+	size += sizeof(teamNumber_);
+	return size;
+}
+
+
+SrvChangeMapReply SrvChangeMapReply::create(uint16_t objectIndex, uint16_t currentHp, uint16_t currentMp, uint16_t currentExp, uint16_t penalizeExp, uint16_t worldTime, uint16_t teamNumber) {
+
+
+	return SrvChangeMapReply(objectIndex, currentHp, currentMp, currentExp, penalizeExp, worldTime, teamNumber);
+}
+
+SrvChangeMapReply SrvChangeMapReply::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvChangeMapReply(reader);
+}
+
 }

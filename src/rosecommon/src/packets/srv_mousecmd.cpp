@@ -1,27 +1,80 @@
 #include "srv_mousecmd.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 SrvMouseCmd::SrvMouseCmd() : CRosePacket(ePacketType::PAKWC_MOUSE_CMD) {}
 
-SrvMouseCmd::SrvMouseCmd(Entity entity) : CRosePacket(ePacketType::PAKWC_MOUSE_CMD), entity_(entity) {}
+SrvMouseCmd::SrvMouseCmd(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKWC_MOUSE_CMD, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint16_t(id_);
+	reader.get_uint16_t(targetId_);
+	reader.get_uint16_t(dist_);
+	reader.get_float(x_);
+	reader.get_float(y_);
+	reader.get_uint16_t(z_);
+}
 
-Entity SrvMouseCmd::entity() const {
-  return entity_;
+SrvMouseCmd::SrvMouseCmd(uint16_t id, uint16_t targetId, uint16_t dist, float x, float y, uint16_t z) : CRosePacket(ePacketType::PAKWC_MOUSE_CMD), id_(id), targetId_(targetId), dist_(dist), x_(x), y_(y), z_(z) {
+}
+
+uint16_t SrvMouseCmd::id() const { return id_; }
+
+SrvMouseCmd& SrvMouseCmd::set_id(uint16_t data) { id_ = data; return *this; }
+
+uint16_t SrvMouseCmd::targetId() const { return targetId_; }
+
+SrvMouseCmd& SrvMouseCmd::set_targetId(uint16_t data) { targetId_ = data; return *this; }
+
+uint16_t SrvMouseCmd::dist() const { return dist_; }
+
+SrvMouseCmd& SrvMouseCmd::set_dist(uint16_t data) { dist_ = data; return *this; }
+
+float SrvMouseCmd::x() const { return x_; }
+
+SrvMouseCmd& SrvMouseCmd::set_x(float data) { x_ = data; return *this; }
+
+float SrvMouseCmd::y() const { return y_; }
+
+SrvMouseCmd& SrvMouseCmd::set_y(float data) { y_ = data; return *this; }
+
+uint16_t SrvMouseCmd::z() const { return z_; }
+
+SrvMouseCmd& SrvMouseCmd::set_z(uint16_t data) { z_ = data; return *this; }
+
+
+void SrvMouseCmd::pack(CRoseWriter& writer) const {
+	writer.set_uint16_t(id_);
+	writer.set_uint16_t(targetId_);
+	writer.set_uint16_t(dist_);
+	writer.set_float(x_);
+	writer.set_float(y_);
+	writer.set_uint16_t(z_);
+}
+
+uint16_t SrvMouseCmd::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(id_);
+	size += sizeof(targetId_);
+	size += sizeof(dist_);
+	size += sizeof(x_);
+	size += sizeof(y_);
+	size += sizeof(z_);
+	return size;
 }
 
 
-void SrvMouseCmd::pack() {
-  auto basicInfo = entity_.component<BasicInfo>();
-  auto destination = entity_.component<Destination>();
-  auto position = entity_.component<Position>();
+SrvMouseCmd SrvMouseCmd::create(Entity entity) {
+	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_destination = entity.component<Destination>();
+	const auto entity_position = entity.component<Position>();
 
-  *this << basicInfo->id_;
-  *this << basicInfo->targetId_;
-  *this << destination->dist_;
-  *this << destination->x_;
-  *this << destination->y_;
-  *this << position->z_;
+	return SrvMouseCmd(entity_basicinfo->id_, entity_basicinfo->targetId_, entity_destination->dist_, entity_destination->x_, entity_destination->y_, entity_position->z_);
+}
+
+SrvMouseCmd SrvMouseCmd::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvMouseCmd(reader);
 }
 
 }

@@ -1,0 +1,3 @@
+PAKWC_INIT_DATA
+uint32_t randSeed
+uint16_t randIndex

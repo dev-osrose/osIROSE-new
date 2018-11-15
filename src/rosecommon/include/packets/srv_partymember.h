@@ -2,29 +2,37 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include <vector>
+#include <dataconsts.h>
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKWC_PARTY_MEMBER, SrvPartyMember)
 REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_MEMBER, SrvPartyMember)
 class SrvPartyMember : public CRosePacket {
 	public:
 		SrvPartyMember();
-		SrvPartyMember(uint8_t rules, bool isDelete, const std::vector<Entity> &list);
+		SrvPartyMember(CRoseReader reader);
+	private:
+		SrvPartyMember(uint8_t rules, PartyMember::Party party);
+	public:
 
 		virtual ~SrvPartyMember() = default;
 
 		uint8_t rules() const;
-		bool isDelete() const;
-        const std::vector<Entity> &list() const;
+		SrvPartyMember& set_rules(uint8_t);
+		PartyMember::Party party() const;
+		SrvPartyMember& set_party(PartyMember::Party);
+
+		static SrvPartyMember create(uint8_t rules, PartyMember::Party party);
+		static SrvPartyMember create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint8_t rules_;
-		bool isDelete_;
-        std::vector<Entity> list_;
+		PartyMember::Party party_;
 };
 
 }

@@ -41,8 +41,6 @@ class System;
 class CMapClient;
 class EntitySystem;
 
-using Systems::System;
-
 /*!
  * \class SystemManager
  * \brief handles all systems that should interact with entities
@@ -77,13 +75,13 @@ class SystemManager {
   void update(std::chrono::milliseconds dt);
 
   bool wouldDispatch(const RoseCommon::CRosePacket &packet) {
-    auto res = dispatch_.equal_range(to_underlying(packet.type()));
+    auto res = dispatch_.equal_range(to_underlying(packet.get_type()));
     if (std::distance(res.first, res.second) > 0) return true;
     return false;
   }
 
   bool dispatch(Entity entity, const RoseCommon::CRosePacket &packet) {
-    auto res = dispatch_.equal_range(to_underlying(packet.type()));
+    auto res = dispatch_.equal_range(to_underlying(packet.get_type()));
     if (res.first == dispatch_.end()) return false;
     for (auto it = res.first; it != res.second;) {
       auto &func = it->second;
@@ -122,11 +120,12 @@ class SystemManager {
 
   void saveCharacter(Entity entity);
 
-  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, std::unique_ptr<RoseCommon::CRosePacket>&& _buffer);
+  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket&& _buffer);
+  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, const RoseCommon::CRosePacket& _buffer);
 
  private:
   EntitySystem &entitySystem_;
-  std::unordered_map<std::type_index, std::unique_ptr<System>> systems_;
+  std::unordered_map<std::type_index, std::unique_ptr<Systems::System>> systems_;
   std::unordered_multimap<std::underlying_type_t<RoseCommon::ePacketType>,
                           std::function<bool(Entity, const RoseCommon::CRosePacket &)>>
       dispatch_;

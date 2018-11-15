@@ -1,0 +1,17 @@
+PAKWC_NPC_CHAR
+uint16_t id BasicInfo::id
+float x Position::x
+float y Position::y
+float destX Destination::x|Position::x
+float destY Destination::y|Position::y
+uint16_t command BasicInfo::command
+uint16_t targetId BasicInfo::targetId
+uint8_t moveMode AdvancedInfo::moveMode
+int32_t hp AdvancedInfo::hp
+int32_t teamId BasicInfo::teamId
+uint32_t statusFlag CharacterInfo::statusFlag
+uint16_t npcId Npc::npc_id
+uint16_t questId Npc::quest_id
+
+float angle Position::angle
+uint16_t eventStatus = 0

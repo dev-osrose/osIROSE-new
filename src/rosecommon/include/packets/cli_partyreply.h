@@ -2,29 +2,36 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include <partybase.h>
+#include <dataconsts.h>
 
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_REPLY, CliPartyReply)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_PARTY_REPLY, CliPartyReply)
 class CliPartyReply : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliPartyReply();
-		CliPartyReply(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliPartyReply(PartyReply::PartyReply reply, uint32_t idXorTag);
+		CliPartyReply(CRoseReader reader);
+	private:
+		CliPartyReply(PartyReply::Reply reply, uint32_t idXorTag);
+	public:
 
 		virtual ~CliPartyReply() = default;
 
-		PartyReply::PartyReply reply() const;
+		PartyReply::Reply reply() const;
+		CliPartyReply& set_reply(PartyReply::Reply);
 		uint32_t idXorTag() const;
+		CliPartyReply& set_idXorTag(uint32_t);
+
+		static CliPartyReply create(PartyReply::Reply reply, uint32_t idXorTag);
+		static CliPartyReply create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
-		PartyReply::PartyReply reply_;
+		PartyReply::Reply reply_;
 		uint32_t idXorTag_;
 };
 

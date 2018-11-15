@@ -3,30 +3,48 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliEquipItem::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_EQUIP_ITEM, &createPacket<CliEquipItem>);
-
 CliEquipItem::CliEquipItem() : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM) {}
 
-CliEquipItem::CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_EQUIP_ITEM, "Not the right packet: " << to_underlying(type()));
-	*this >> slotTo_;
-	*this >> slotFrom_;
+CliEquipItem::CliEquipItem(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_EQUIP_ITEM, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_int16_t(slotTo_);
+	reader.get_int16_t(slotFrom_);
 }
 
-CliEquipItem::CliEquipItem(int16_t slotTo, int16_t slotFrom) : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM), slotTo_(slotTo), slotFrom_(slotFrom) {}
-
-int16_t CliEquipItem::slotTo() const {
-	return slotTo_;
+CliEquipItem::CliEquipItem(int16_t slotTo, int16_t slotFrom) : CRosePacket(ePacketType::PAKCS_EQUIP_ITEM), slotTo_(slotTo), slotFrom_(slotFrom) {
 }
 
-int16_t CliEquipItem::slotFrom() const {
-	return slotFrom_;
+int16_t CliEquipItem::slotTo() const { return slotTo_; }
+
+CliEquipItem& CliEquipItem::set_slotTo(int16_t data) { slotTo_ = data; return *this; }
+
+int16_t CliEquipItem::slotFrom() const { return slotFrom_; }
+
+CliEquipItem& CliEquipItem::set_slotFrom(int16_t data) { slotFrom_ = data; return *this; }
+
+
+void CliEquipItem::pack(CRoseWriter& writer) const {
+	writer.set_int16_t(slotTo_);
+	writer.set_int16_t(slotFrom_);
+}
+
+uint16_t CliEquipItem::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(slotTo_);
+	size += sizeof(slotFrom_);
+	return size;
 }
 
 
-void CliEquipItem::pack() {
-	*this << slotTo_;
-	*this << slotFrom_;
+CliEquipItem CliEquipItem::create(int16_t slotTo, int16_t slotFrom) {
+
+
+	return CliEquipItem(slotTo, slotFrom);
+}
+
+CliEquipItem CliEquipItem::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliEquipItem(reader);
 }
 
 }

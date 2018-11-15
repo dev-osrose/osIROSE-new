@@ -1,0 +1,5 @@
+PAKWC_STOP_MOVING
+uint16_t id BasicInfo::id
+float x Position::x
+float y Position::y
+uint16_t z Position::z

@@ -21,8 +21,12 @@ Entity SystemManager::buildMob(Entity spawner) {
   return entitySystem_.buildMobEntity(spawner);
 }
 
-void SystemManager::send(Entity sender, RoseCommon::CRoseServer::eSendType type, std::unique_ptr<RoseCommon::CRosePacket>&& _buffer) {
+void SystemManager::send(Entity sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket&& _buffer) {
     entitySystem_.send(sender, type, std::move(_buffer));
+}
+
+void SystemManager::send(Entity sender, RoseCommon::CRoseServer::eSendType type, const RoseCommon::CRosePacket& _buffer) {
+    entitySystem_.send(sender, type, _buffer);
 }
 
 void SystemManager::saveCharacter(Entity e) {

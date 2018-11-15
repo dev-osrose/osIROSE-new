@@ -3,40 +3,38 @@
 #include "packetfactory.h"
 #include "entitycomponents.h"
 #include <vector>
-#include <string>
+#include <dataconsts.h>
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKLC_CHANNEL_LIST_REPLY, SrvChannelListReply)
 REGISTER_SEND_PACKET(ePacketType::PAKLC_CHANNEL_LIST_REPLY, SrvChannelListReply)
 class SrvChannelListReply : public CRosePacket {
 	public:
-        struct ChannelInfo {
-            std::string name_;
-            uint8_t id_;
-            uint8_t lowAge_;
-            uint8_t highAge_;
-            uint16_t capacity_;
-        };
-
 		SrvChannelListReply();
-        SrvChannelListReply(uint8_t buffer[MAX_PACKET_SIZE]);
-        SrvChannelListReply(uint32_t id);
-		SrvChannelListReply(uint32_t id, const std::vector<ChannelInfo> &channels);
+		SrvChannelListReply(CRoseReader reader);
+	private:
+		SrvChannelListReply(uint32_t id);
+	public:
 
 		virtual ~SrvChannelListReply() = default;
 
 		uint32_t id() const;
-		std::vector<ChannelInfo> &channels();
-		const std::vector<ChannelInfo> &channels() const;
+		SrvChannelListReply& set_id(uint32_t);
+		const std::vector<ChannelListReply::ChannelInfo>& channels() const;
+		SrvChannelListReply& set_channels(const std::vector<ChannelListReply::ChannelInfo>&);
+		SrvChannelListReply& add_channelinfo(const ChannelListReply::ChannelInfo&);
 
-        void addChannel(const std::string &name, uint8_t id, uint16_t capacity, uint8_t lowAge = 0, uint8_t highAge = 0);
+		static SrvChannelListReply create(uint32_t id);
+		static SrvChannelListReply create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint32_t id_;
-		std::vector<ChannelInfo> channels_;
+		std::vector<ChannelListReply::ChannelInfo> channels_;
 };
 
 }

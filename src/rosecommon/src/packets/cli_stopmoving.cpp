@@ -3,36 +3,55 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliStopMoving::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_STOP_MOVING, &createPacket<CliStopMoving>);
-
 CliStopMoving::CliStopMoving() : CRosePacket(ePacketType::PAKCS_STOP_MOVING) {}
 
-CliStopMoving::CliStopMoving(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_STOP_MOVING, "Not the right packet: " << to_underlying(type()));
-	*this >> x_;
-	*this >> y_;
-	*this >> z_;
+CliStopMoving::CliStopMoving(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_STOP_MOVING, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_float(x_);
+	reader.get_float(y_);
+	reader.get_int16_t(z_);
 }
 
-CliStopMoving::CliStopMoving(float x, float y, int16_t z) : CRosePacket(ePacketType::PAKCS_STOP_MOVING), x_(x), y_(y), z_(z) {}
-
-float CliStopMoving::x() const {
-	return x_;
+CliStopMoving::CliStopMoving(float x, float y, int16_t z) : CRosePacket(ePacketType::PAKCS_STOP_MOVING), x_(x), y_(y), z_(z) {
 }
 
-float CliStopMoving::y() const {
-	return y_;
+float CliStopMoving::x() const { return x_; }
+
+CliStopMoving& CliStopMoving::set_x(float data) { x_ = data; return *this; }
+
+float CliStopMoving::y() const { return y_; }
+
+CliStopMoving& CliStopMoving::set_y(float data) { y_ = data; return *this; }
+
+int16_t CliStopMoving::z() const { return z_; }
+
+CliStopMoving& CliStopMoving::set_z(int16_t data) { z_ = data; return *this; }
+
+
+void CliStopMoving::pack(CRoseWriter& writer) const {
+	writer.set_float(x_);
+	writer.set_float(y_);
+	writer.set_int16_t(z_);
 }
 
-int16_t CliStopMoving::z() const {
-	return z_;
+uint16_t CliStopMoving::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(x_);
+	size += sizeof(y_);
+	size += sizeof(z_);
+	return size;
 }
 
 
-void CliStopMoving::pack() {
-	*this << x_;
-	*this << y_;
-	*this << z_;
+CliStopMoving CliStopMoving::create(float x, float y, int16_t z) {
+
+
+	return CliStopMoving(x, y, z);
+}
+
+CliStopMoving CliStopMoving::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliStopMoving(reader);
 }
 
 }

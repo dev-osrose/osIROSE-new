@@ -20,11 +20,9 @@
 
 #include "entitysystem.h"
 
-#include <memory>
+#include "cli_joinserverreq.h"
 
-namespace RoseCommon {
-class CliJoinServerReq;
-}
+#include <memory>
 
 class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CMapClient> {
  public:
@@ -38,13 +36,13 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   void switch_server() { login_state_ = eSTATE::SWITCHING; }
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer) override;
-  virtual void OnDisconnected() override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
+  virtual void onDisconnected() override;
 
   void updateSession();
 
-  bool LogoutReply();
-  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
+  bool logoutReply();
+  bool joinServerReply(RoseCommon::CliJoinServerReq&& P);
 
   enum class eSTATE {
     DEFAULT,

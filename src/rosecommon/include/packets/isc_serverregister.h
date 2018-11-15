@@ -2,34 +2,42 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include <string>
 #include <isccommon.h>
+#include <string>
 
 namespace RoseCommon {
 
-REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
+REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister)
 class IscServerRegister : public CRosePacket {
-    private:
-        static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		IscServerRegister();
-		IscServerRegister(uint8_t buffer[MAX_PACKET_SIZE]);
-		IscServerRegister(Isc::ServerType serverType, const std::string &name, const std::string &addr, int32_t port, int32_t right, int32_t id);
+		IscServerRegister(CRoseReader reader);
+	private:
+		IscServerRegister(Isc::ServerType serverType, const std::string& name, const std::string& addr, int32_t port, int32_t right, int32_t id);
+	public:
 
 		virtual ~IscServerRegister() = default;
 
 		Isc::ServerType serverType() const;
-		std::string &name();
-		const std::string &name() const;
-		std::string &addr();
-		const std::string &addr() const;
+		IscServerRegister& set_serverType(Isc::ServerType);
+		const std::string& name() const;
+		IscServerRegister& set_name(const std::string&);
+		const std::string& addr() const;
+		IscServerRegister& set_addr(const std::string&);
 		int32_t port() const;
+		IscServerRegister& set_port(int32_t);
 		int32_t right() const;
+		IscServerRegister& set_right(int32_t);
 		int32_t id() const;
+		IscServerRegister& set_id(int32_t);
+
+		static IscServerRegister create(Isc::ServerType serverType, const std::string& name, const std::string& addr, int32_t port, int32_t right, int32_t id);
+		static IscServerRegister create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		Isc::ServerType serverType_;

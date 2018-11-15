@@ -19,6 +19,8 @@ std::shared_ptr<CMapClient> getClient(Entity entity) {
 }
 
 bool isOnMap(Entity entity) {
+    if (!entity)
+        return false;
     if (!entity.component<BasicInfo>())
         return false;
     return entity.component<BasicInfo>()->isOnMap_.load();

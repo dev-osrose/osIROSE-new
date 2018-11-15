@@ -1,0 +1,3 @@
+PAKWC_PARTY_REPLY
+PartyReply::Reply reply e(uint8_t)
+uint32_t id

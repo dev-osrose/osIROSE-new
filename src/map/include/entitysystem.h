@@ -96,7 +96,8 @@ class EntitySystem {
  
   LuaScript::ScriptLoader& get_script_loader() noexcept;
  
- void send(Entity sender, RoseCommon::CRoseServer::eSendType type, std::unique_ptr<RoseCommon::CRosePacket>&& _buffer);
+  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, RoseCommon::CRosePacket&& _buffer);
+  void send(Entity sender, RoseCommon::CRoseServer::eSendType type, const RoseCommon::CRosePacket& _buffer);
 
  private:
   EntityManager entityManager_;

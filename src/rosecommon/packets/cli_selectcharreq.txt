@@ -1,0 +1,6 @@
+PAKCS_SELECT_CHAR_REQ
+uint8_t charId
+uint8_t runMode
+uint8_t rideMode
+include string
+std::string name &

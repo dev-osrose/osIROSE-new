@@ -4,7 +4,7 @@
 #include "item.h"
 
 template <typename T>
-struct array_wrapper { T& iterable; const size_t start; const size_t length; };
+struct array_wrapper { const T& iterable; const size_t start; const size_t length; const typename T::value_type& operator[](size_t index) const { return *(std::begin(iterable) + start + index); } };
 
 template <typename T>
 auto begin(array_wrapper<T> w) {
@@ -32,7 +32,8 @@ struct Inventory {
         MAX_EQUIP_ITEMS
     };
 
-    static const uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
+    static constexpr uint16_t maxItems = 140; // 120 items + equipped + bullets + ride
+    static constexpr uint8_t maxVisibleEquippedItems = 8;
 
     template <typename T, typename U>
     void loadFromResult(T& res, U& builder) {
@@ -48,7 +49,6 @@ struct Inventory {
     std::array<RoseCommon::Item, maxItems> items_{};
 
     equipped_wrapper getEquipped() const {
-        static const uint8_t maxVisibleEquippedItems = 8;
         return { items_, 1, maxVisibleEquippedItems };
     }
 };

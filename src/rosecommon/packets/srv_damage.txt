@@ -1,0 +1,5 @@
+PAKWC_DAMAGE
+uint16_t idA entityA::BasicInfo::id_
+uint16_t idD entityD::BasicInfo::id_
+uint32_t damage
+uint32_t action

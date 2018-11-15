@@ -20,14 +20,13 @@
 #include "connection.h"
 #include "entitycomponents.h"
 #include "epackettype.h"
-#include "cli_joinserverreq.h"
 #include "srv_inventorydata.h"
 #include "srv_joinserverreply.h"
 #include "srv_questdata.h"
 #include "srv_removeobject.h"
 #include "srv_selectcharreply.h"
 #include "srv_teleportreply.h"
-#include "srv_billingmsg.h"
+#include "srv_billingmessage.h"
 
 using namespace RoseCommon;
 
@@ -45,7 +44,7 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
 
 CMapClient::~CMapClient() {}
 
-bool CMapClient::HandlePacket(uint8_t* _buffer) {
+bool CMapClient::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE:
       if (login_state_ != eSTATE::LOGGEDIN) {
@@ -55,7 +54,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
       updateSession();
       break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
-      return JoinServerReply(getPacket<ePacketType::PAKCS_JOIN_SERVER_REQ>(_buffer));  // Allow client to connect
+      return joinServerReply(CliJoinServerReq::create(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
       logger_->warn("Change character hasn't been implemented yet.");
       // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
@@ -68,20 +67,22 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
         return true;
       }
       break;
+    case ePacketType::PAKCS_ACCEPT_REQ:
+      return CRoseClient::handlePacket(_buffer);
     default:
       break;
   }
   if (login_state_ != eSTATE::LOGGEDIN) {
-    logger_->warn("Client {} is attempting to execute an action befire logging in.", get_id());
-    return CRoseClient::HandlePacket(_buffer);
+    logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
+    return CRoseClient::handlePacket(_buffer);
   }
   auto packet = fetchPacket(_buffer);
   if (!packet) {
-    CRoseClient::HandlePacket(_buffer);
+    CRoseClient::handlePacket(_buffer);
     return true;
   }
   if (!entitySystem_->dispatch(entity_, std::move(packet))) {
-    if(false == CRoseClient::HandlePacket(_buffer)) {  // FIXME : removed the return because I want to be able to
+    if(false == CRoseClient::handlePacket(_buffer)) {  // FIXME : removed the return because I want to be able to
                                          // mess around with unkown packets for the time being
       logger_->warn("There is no system willing to deal with this packet");
     }
@@ -90,7 +91,7 @@ bool CMapClient::HandlePacket(uint8_t* _buffer) {
 }
 
 void CMapClient::updateSession() {
-  logger_->trace("CMapClient::updateSession() start");
+  logger_->trace("CMapClient::updateSession()");
   using namespace std::chrono_literals;
   static std::chrono::steady_clock::time_point time{};
 
@@ -101,11 +102,10 @@ void CMapClient::updateSession() {
   Core::SessionTable session{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == get_id()));
-  logger_->trace("CMapClient::updateSession() end");
 }
 
-void CMapClient::OnDisconnected() {
-  logger_->trace("CMapClient::OnDisconnected() start");
+void CMapClient::onDisconnected() {
+  logger_->trace("CMapClient::OnDisconnected()");
   if (login_state_ == eSTATE::DEFAULT) return;
   entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
 
@@ -115,19 +115,18 @@ void CMapClient::OnDisconnected() {
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
   login_state_ = eSTATE::DEFAULT;
-  logger_->trace("CMapClient::OnDisconnected() end");
 }
 
-bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P) {
-  logger_->trace("CMapClient::JoinServerReply()");
+bool CMapClient::joinServerReply(RoseCommon::CliJoinServerReq&& P) {
+  logger_->trace("CMapClient::joinServerReply()");
 
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.", get_id());
     return true;
   }
 
-  uint32_t sessionID = P->sessionId();
-  std::string password = Core::escapeData(P->password());
+  uint32_t sessionID = P.sessionId();
+  std::string password = Core::escapeData(P.password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable accounts{};
@@ -142,6 +141,7 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
     if (!res.empty()) {
       logger_->debug("Client {} auth OK.", get_id());
       login_state_ = eSTATE::LOGGEDIN;
+      isLoggedIn_ = true;
       const auto& row = res.front();
       userid_ = row.userid;
       charid_ = row.charid;
@@ -157,32 +157,32 @@ bool CMapClient::JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P
                  .where(sessions.id == sessionID));
         entity_.assign<SocketConnector>(shared_from_this())->access_level_ = row.access;
 
-        send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::OK, entity_.component<BasicInfo>()->id_));
+        send(SrvJoinServerReply::create(JoinServerReply::OK, entity_.component<BasicInfo>()->id_));
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          send(makePacket<ePacketType::PAKWC_SELECT_CHAR_REPLY>(entity_));
+          send(SrvSelectCharReply::create(entity_));
 
-          send(makePacket<ePacketType::PAKWC_INVENTORY_DATA>(entity_));
+          send(SrvInventoryData::create(entity_));
 
-          send(makePacket<ePacketType::PAKWC_QUEST_DATA>(entity_));
+          send(SrvQuestData::create(entity_));
 
-          send(makePacket<ePacketType::PAKWC_BILLING_MESSAGE>());
+          send(SrvBillingMessage::create());
         } else {
-          send(makePacket<ePacketType::PAKWC_TELEPORT_REPLY>(entity_));
+          send(SrvTeleportReply::create(entity_));
         }
 
       } else {
         logger_->debug("Something wrong happened when creating the entity");
-        send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0));
+        send(SrvJoinServerReply::create(JoinServerReply::FAILED, 0));
       }
     } else {
       logger_->debug("Client {} auth INVALID_PASS.", get_id());
-      send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::INVALID_PASSWORD, 0));
+      send(SrvJoinServerReply::create(JoinServerReply::INVALID_PASSWORD, 0));
     }
   } catch (const sqlpp::exception& e) {
     logger_->error("Error while accessing the database: {}", e.what());
-    send(makePacket<ePacketType::PAKSC_JOIN_SERVER_REPLY>(SrvJoinServerReply::FAILED, 0));
+    send(SrvJoinServerReply::create(JoinServerReply::FAILED, 0));
   }
   return true;
-};
+}

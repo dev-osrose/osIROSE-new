@@ -5,64 +5,68 @@ namespace RoseCommon {
 
 SrvLoginReply::SrvLoginReply() : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY) {}
 
-SrvLoginReply::SrvLoginReply(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-    throw_assert(CRosePacket::type() == ePacketType::PAKLC_LOGIN_REPLY, "Not the right packet: " << to_underlying(CRosePacket::type()));
-    *this >> result_;
-    *this >> right_;
-    *this >> type_;
-    if (result_ != 0)
-        return;
-    char pad;
-    *this >> pad;
-    while (pad) {
-        SrvLoginReply::ServerInfo info;
-        *this >> info.name_;
-        *this >> info.id_;
-        info.test_ = pad == '@' ? true : false;
-        servers_.push_back(info);
-        *this >> pad;
-    }
+SrvLoginReply::SrvLoginReply(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKLC_LOGIN_REPLY, "Not the right packet: " << to_underlying(get_type()));
+	{ uint8_t _tmp = uint8_t(); reader.get_uint8_t(_tmp); result_ = static_cast<LoginReply::eResult>(_tmp); }
+	reader.get_uint16_t(right_);
+	reader.get_uint16_t(type_);
+	{
+		LoginReply::ServerInfo tmp;
+		while (reader.get_iserialize(tmp)) {
+			reader.get_iserialize(tmp);
+			serversInfo_.push_back(tmp);
+		}
+	}
 }
 
-SrvLoginReply::SrvLoginReply(uint8_t result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY), result_(result), right_(right), type_(type) {}
-
-SrvLoginReply::SrvLoginReply(uint8_t result, uint16_t right, uint16_t type, const std::vector<SrvLoginReply::ServerInfo> &servers) : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY), result_(result), right_(right), type_(type), servers_(servers) {}
-
-uint8_t SrvLoginReply::result() const {
-	return result_;
+SrvLoginReply::SrvLoginReply(LoginReply::eResult result, uint16_t right, uint16_t type) : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY), result_(result), right_(right), type_(type) {
 }
 
-uint16_t SrvLoginReply::right() const {
-	return right_;
+LoginReply::eResult SrvLoginReply::result() const { return result_; }
+
+SrvLoginReply& SrvLoginReply::set_result(LoginReply::eResult data) { result_ = data; return *this; }
+
+uint16_t SrvLoginReply::right() const { return right_; }
+
+SrvLoginReply& SrvLoginReply::set_right(uint16_t data) { right_ = data; return *this; }
+
+uint16_t SrvLoginReply::type() const { return type_; }
+
+SrvLoginReply& SrvLoginReply::set_type(uint16_t data) { type_ = data; return *this; }
+
+const std::vector<LoginReply::ServerInfo>& SrvLoginReply::serversInfo() const { return serversInfo_; }
+
+SrvLoginReply& SrvLoginReply::set_serversInfo(const std::vector<LoginReply::ServerInfo>& data) { serversInfo_ = data; return *this; }
+
+SrvLoginReply& SrvLoginReply::add_serverinfo(const LoginReply::ServerInfo& data) { serversInfo_.push_back(data); return *this; }
+
+
+void SrvLoginReply::pack(CRoseWriter& writer) const {
+	writer.set_uint8_t(result_);
+	writer.set_uint16_t(right_);
+	writer.set_uint16_t(type_);
+	for (const auto& elem : serversInfo_) writer.set_iserialize(elem);
 }
 
-uint16_t SrvLoginReply::type() const {
-	return type_;
-}
-
-std::vector<SrvLoginReply::ServerInfo> &SrvLoginReply::servers() {
-	return servers_;
-}
-
-const std::vector<SrvLoginReply::ServerInfo> &SrvLoginReply::servers() const {
-	return servers_;
-}
-
-void SrvLoginReply::addServer(const std::string &name, uint32_t id, bool isTest) {
-    servers_.push_back(SrvLoginReply::ServerInfo{name, id, isTest});
+uint16_t SrvLoginReply::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(result_);
+	size += sizeof(right_);
+	size += sizeof(type_);
+	{ for (const auto& it : serversInfo_) size += it.get_size();};
+	return size;
 }
 
 
-void SrvLoginReply::pack() {
-	*this << result_;
-	*this << right_;
-	*this << type_;
-    for (auto &server : servers_) {
-        char pad = ' ';
-        if (server.test_)
-            pad = '@';
-        *this << pad << server.name_ << server.id_;
-    }
+SrvLoginReply SrvLoginReply::create(LoginReply::eResult result, uint16_t right, uint16_t type) {
+
+
+	return SrvLoginReply(result, right, type);
+}
+
+SrvLoginReply SrvLoginReply::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvLoginReply(reader);
 }
 
 }

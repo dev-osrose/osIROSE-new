@@ -2,36 +2,37 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-
+#include <dataconsts.h>
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKCC_CREATE_CHAR_REPLY, SrvCreateCharReply)
 REGISTER_SEND_PACKET(ePacketType::PAKCC_CREATE_CHAR_REPLY, SrvCreateCharReply)
 class SrvCreateCharReply : public CRosePacket {
 	public:
-        enum eResult : uint8_t {
-            OK = 0,
-            FAILED,
-            NAME_TAKEN,
-            INVALID_VALUE,
-            TOO_MANY_CHARS,
-            BLOCKED
-        };
-
 		SrvCreateCharReply();
-		SrvCreateCharReply(SrvCreateCharReply::eResult result, uint8_t platinium = 0);
+		SrvCreateCharReply(CRoseReader reader);
+	private:
+		SrvCreateCharReply(CreateCharReply::Result result);
+	public:
 
 		virtual ~SrvCreateCharReply() = default;
 
-		SrvCreateCharReply::eResult result() const;
+		CreateCharReply::Result result() const;
+		SrvCreateCharReply& set_result(CreateCharReply::Result);
 		uint8_t platinium() const;
+		SrvCreateCharReply& set_platinium(uint8_t);
+
+		static SrvCreateCharReply create(CreateCharReply::Result result);
+		static SrvCreateCharReply create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
-		SrvCreateCharReply::eResult result_;
-		uint8_t platinium_;
+		CreateCharReply::Result result_;
+		uint8_t platinium_= 0;
 };
 
 }

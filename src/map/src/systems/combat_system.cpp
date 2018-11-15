@@ -157,14 +157,14 @@ void CombatSystem::updateHP(Entity entity, std::chrono::milliseconds dt) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
-        manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_ + 30000, attack.action_));
+        manager_.send(entity, CMapServer::eSendType::NEARBY, SrvDamage::create(other, entity, attack.value_ + 30000, attack.action_));
         entity.remove<Damage>();
       } else {
         logger_->debug("applied {} damage to entity {} {}.", attack.value_, basic->name_, basic->id_);
         if (auto client = getClient(entity))
-          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
+          client->send(SrvDamage::create(other, entity, attack.value_, attack.action_));
         else if (auto client = getClient(other))
-          client->send(makePacket<ePacketType::PAKWC_DAMAGE>(other, entity, attack.value_, attack.action_));
+          client->send(SrvDamage::create(other, entity, attack.value_, attack.action_));
       }
     }
     damage->damage_.clear();
@@ -184,7 +184,7 @@ void CombatSystem::processAttack(CMapClient &client, Entity entity, const RoseCo
   }
   
   //TODO: Set the other entity as the destination
-  manager_.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_ATTACK>(entity, other));
+  manager_.send(entity, CMapServer::eSendType::NEARBY, SrvAttack::create(entity, other));
 }
 
 void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const RoseCommon::CliHpReq &packet)
@@ -198,7 +198,7 @@ void CombatSystem::processHpRequest(CMapClient &client, Entity entity, const Ros
     return;
   }
   
-  client.send(makePacket<ePacketType::PAKWC_HP_REPLY>(other));
+  client.send(SrvHpReply::create(other));
 }
 
 Entity CombatSystem::get_closest_spawn(Entity player) {

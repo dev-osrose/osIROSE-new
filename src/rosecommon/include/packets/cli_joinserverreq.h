@@ -7,22 +7,28 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_JOIN_SERVER_REQ, CliJoinServerReq)
 class CliJoinServerReq : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliJoinServerReq();
-		CliJoinServerReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliJoinServerReq(uint32_t sessionId, const std::string &password);
+		CliJoinServerReq(CRoseReader reader);
+	private:
+		CliJoinServerReq(uint32_t sessionId, const std::string& password);
+	public:
 
 		virtual ~CliJoinServerReq() = default;
 
 		uint32_t sessionId() const;
-		std::string &password();
-		const std::string &password() const;
+		CliJoinServerReq& set_sessionId(uint32_t);
+		const std::string& password() const;
+		CliJoinServerReq& set_password(const std::string&);
+
+		static CliJoinServerReq create(uint32_t sessionId, const std::string& password);
+		static CliJoinServerReq create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint32_t sessionId_;

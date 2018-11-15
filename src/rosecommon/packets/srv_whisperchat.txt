@@ -1,0 +1,4 @@
+PAKWC_WHISPER_CHAT
+include string
+std::string senderId &
+std::string message &

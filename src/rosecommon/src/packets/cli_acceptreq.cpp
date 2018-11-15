@@ -3,16 +3,31 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliAcceptReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_ACCEPT_REQ, &createPacket<CliAcceptReq>);
-
 CliAcceptReq::CliAcceptReq() : CRosePacket(ePacketType::PAKCS_ACCEPT_REQ) {}
 
-CliAcceptReq::CliAcceptReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_ACCEPT_REQ, "Not the right packet: " << to_underlying(type()));
+CliAcceptReq::CliAcceptReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_ACCEPT_REQ, "Not the right packet: " << to_underlying(get_type()));
 }
 
 
-void CliAcceptReq::pack() {
+void CliAcceptReq::pack(CRoseWriter&) const {
+}
+
+uint16_t CliAcceptReq::get_size() const {
+	uint16_t size = 0;
+	return size;
+}
+
+
+CliAcceptReq CliAcceptReq::create() {
+
+
+	return CliAcceptReq();
+}
+
+CliAcceptReq CliAcceptReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliAcceptReq(reader);
 }
 
 }

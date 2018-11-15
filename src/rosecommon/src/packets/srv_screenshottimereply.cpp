@@ -1,38 +1,71 @@
 #include "srv_screenshottimereply.h"
+#include "throwassert.h"
 
 namespace RoseCommon {
 
 SrvScreenShotTimeReply::SrvScreenShotTimeReply() : CRosePacket(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY) {}
 
-SrvScreenShotTimeReply::SrvScreenShotTimeReply(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min) : CRosePacket(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY), year_(year), month_(month), day_(day), hour_(hour), min_(min) {}
-
-uint16_t SrvScreenShotTimeReply::year() const {
-	return year_;
+SrvScreenShotTimeReply::SrvScreenShotTimeReply(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint16_t(year_);
+	reader.get_uint8_t(month_);
+	reader.get_uint8_t(day_);
+	reader.get_uint8_t(hour_);
+	reader.get_uint8_t(min_);
 }
 
-uint8_t SrvScreenShotTimeReply::month() const {
-	return month_;
+SrvScreenShotTimeReply::SrvScreenShotTimeReply(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min) : CRosePacket(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY), year_(year), month_(month), day_(day), hour_(hour), min_(min) {
 }
 
-uint8_t SrvScreenShotTimeReply::day() const {
-	return day_;
+uint16_t SrvScreenShotTimeReply::year() const { return year_; }
+
+SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_year(uint16_t data) { year_ = data; return *this; }
+
+uint8_t SrvScreenShotTimeReply::month() const { return month_; }
+
+SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_month(uint8_t data) { month_ = data; return *this; }
+
+uint8_t SrvScreenShotTimeReply::day() const { return day_; }
+
+SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_day(uint8_t data) { day_ = data; return *this; }
+
+uint8_t SrvScreenShotTimeReply::hour() const { return hour_; }
+
+SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_hour(uint8_t data) { hour_ = data; return *this; }
+
+uint8_t SrvScreenShotTimeReply::min() const { return min_; }
+
+SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_min(uint8_t data) { min_ = data; return *this; }
+
+
+void SrvScreenShotTimeReply::pack(CRoseWriter& writer) const {
+	writer.set_uint16_t(year_);
+	writer.set_uint8_t(month_);
+	writer.set_uint8_t(day_);
+	writer.set_uint8_t(hour_);
+	writer.set_uint8_t(min_);
 }
 
-uint8_t SrvScreenShotTimeReply::hour() const {
-	return hour_;
+uint16_t SrvScreenShotTimeReply::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(year_);
+	size += sizeof(month_);
+	size += sizeof(day_);
+	size += sizeof(hour_);
+	size += sizeof(min_);
+	return size;
 }
 
-uint8_t SrvScreenShotTimeReply::min() const {
-	return min_;
+
+SrvScreenShotTimeReply SrvScreenShotTimeReply::create(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min) {
+
+
+	return SrvScreenShotTimeReply(year, month, day, hour, min);
 }
 
-
-void SrvScreenShotTimeReply::pack() {
-	*this << year_;
-	*this << month_;
-	*this << day_;
-	*this << hour_;
-	*this << min_;
+SrvScreenShotTimeReply SrvScreenShotTimeReply::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvScreenShotTimeReply(reader);
 }
 
 }

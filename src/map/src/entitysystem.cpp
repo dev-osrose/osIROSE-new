@@ -17,6 +17,7 @@
 #include "systems/combat_system.h"
 
 #include "srv_npcchar.h"
+#include "srv_mobchar.h"
 #include "srv_removeobject.h"
 
 using namespace RoseCommon;
@@ -113,11 +114,9 @@ void EntitySystem::destroy(Entity entity, bool save) {
       if (!entity) return;
       if (!entity.component<Warpgate>()) {
           if (auto client = getClient(entity); client)
-            es.send(entity, CMapServer::eSendType::NEARBY_BUT_ME,
-                               makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY_BUT_ME, SrvRemoveObject::create(entity));
           else
-            es.send(entity, CMapServer::eSendType::NEARBY,
-                           makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY, SrvRemoveObject::create(entity));
           if (!entity.component<Npc>()) {
               if (save) es.saveCharacter(entity.component<CharacterInfo>()->charId_, entity);
               auto basic = entity.component<BasicInfo>();
@@ -325,7 +324,7 @@ Entity EntitySystem::create_npc(std::string npc_lua, int npc_id, int map_id, flo
       pos->angle_ = angle;
       //e.assign<EntityApi>();
       // we send the new NPC to the existing clients
-      es.send(e, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_NPC_CHAR>(e));
+      es.send(e, CMapServer::eSendType::NEARBY, SrvNpcChar::create(e));
     })};
     std::lock_guard<std::mutex> lock(access_);
     create_commands_.emplace_back(std::move(ptr));
@@ -346,8 +345,7 @@ Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count
             auto spawner = e.component<Spawner>();
             if (spawner->current_total_ < spawner->total_on_map_) {
                 Entity mob = manager.buildMob(e);
-                manager.send(e, CMapServer::eSendType::NEARBY,
-                              makePacket<ePacketType::PAKWC_MOB_CHAR>(mob));
+                manager.send(e, CMapServer::eSendType::NEARBY, SrvMobChar::create(mob));
                 ++spawner->current_total_;
             }
             return true;
@@ -376,7 +374,7 @@ void EntitySystem::bulk_destroy(const std::vector<Entity>& s) {
     for (auto entity : s) {
         if (!entity) continue;
         if (!entity.component<Warpgate>())
-            es.send(entity, CMapServer::eSendType::NEARBY, makePacket<ePacketType::PAKWC_REMOVE_OBJECT>(entity));
+            es.send(entity, CMapServer::eSendType::NEARBY, SrvRemoveObject::create(entity));
         entity.destroy();
     }
   })};
@@ -388,6 +386,10 @@ LuaScript::ScriptLoader& EntitySystem::get_script_loader() noexcept {
   return server_->get_script_loader();
 }
 
-void EntitySystem::send(Entity sender, CMapServer::eSendType type, std::unique_ptr<CRosePacket>&& _buffer) {
-  server_->SendPacket(sender, type, std::move(_buffer), std::bind(&EntitySystem::isNearby, this, std::placeholders::_1, std::placeholders::_2));
+void EntitySystem::send(Entity sender, CMapServer::eSendType type, CRosePacket&& _buffer) {
+  server_->sendPacket(sender, type, std::move(_buffer), std::bind(&EntitySystem::isNearby, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+void EntitySystem::send(Entity sender, CMapServer::eSendType type, const CRosePacket& _buffer) {
+  server_->sendPacket(sender, type, _buffer, std::bind(&EntitySystem::isNearby, this, std::placeholders::_1, std::placeholders::_2));
 }

@@ -7,21 +7,28 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem)
 class CliEquipItem : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliEquipItem();
-		CliEquipItem(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliEquipItem(CRoseReader reader);
+	private:
 		CliEquipItem(int16_t slotTo, int16_t slotFrom);
+	public:
 
 		virtual ~CliEquipItem() = default;
 
 		int16_t slotTo() const;
+		CliEquipItem& set_slotTo(int16_t);
 		int16_t slotFrom() const;
+		CliEquipItem& set_slotFrom(int16_t);
+
+		static CliEquipItem create(int16_t slotTo, int16_t slotFrom);
+		static CliEquipItem create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		int16_t slotTo_;

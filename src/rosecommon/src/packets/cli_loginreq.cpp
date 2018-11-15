@@ -3,40 +3,48 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliLoginReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_LOGIN_REQ, &createPacket<CliLoginReq>);
-
 CliLoginReq::CliLoginReq() : CRosePacket(ePacketType::PAKCS_LOGIN_REQ) {}
 
-CliLoginReq::CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_LOGIN_REQ, "Not the right packet: " << to_underlying(type()));
-    char pass[32];
-    *this >> pass;
-    password_ = std::string(pass, 32);
-	*this >> username_;
+CliLoginReq::CliLoginReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_LOGIN_REQ, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_string(password_, 32);
+	reader.get_string(username_);
 }
 
-CliLoginReq::CliLoginReq(const std::string &password, const std::string &username) : CRosePacket(ePacketType::PAKCS_LOGIN_REQ), password_(password), username_(username) {}
-
-std::string &CliLoginReq::password() {
-	return password_;
+CliLoginReq::CliLoginReq(const std::string& password, const std::string& username) : CRosePacket(ePacketType::PAKCS_LOGIN_REQ), password_(password), username_(username) {
 }
 
-const std::string &CliLoginReq::password() const {
-	return password_;
+const std::string& CliLoginReq::password() const { return password_; }
+
+CliLoginReq& CliLoginReq::set_password(const std::string& data) { password_ = data; return *this; }
+
+const std::string& CliLoginReq::username() const { return username_; }
+
+CliLoginReq& CliLoginReq::set_username(const std::string& data) { username_ = data; return *this; }
+
+
+void CliLoginReq::pack(CRoseWriter& writer) const {
+	writer.set_string(password_, 32);
+	writer.set_string(username_);
 }
 
-std::string &CliLoginReq::username() {
-	return username_;
+uint16_t CliLoginReq::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(char) * 32;
+	size += sizeof(char) * (username_.size() + 1);
+	return size;
 }
 
-const std::string &CliLoginReq::username() const {
-	return username_;
+
+CliLoginReq CliLoginReq::create(const std::string& password, const std::string& username) {
+
+
+	return CliLoginReq(password, username);
 }
 
-
-void CliLoginReq::pack() {
-    *this << password_.c_str();
-	*this << username_;
+CliLoginReq CliLoginReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliLoginReq(reader);
 }
 
 }

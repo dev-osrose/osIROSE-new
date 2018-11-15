@@ -2,25 +2,31 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include <string>
+
 
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_HP_REQ, CliHpReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_HP_REQ, CliHpReq)
 class CliHpReq : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliHpReq();
-		CliHpReq(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliHpReq(CRoseReader reader);
+	private:
 		CliHpReq(uint16_t targetId);
+	public:
 
 		virtual ~CliHpReq() = default;
 
 		uint16_t targetId() const;
+		CliHpReq& set_targetId(uint16_t);
+
+		static CliHpReq create(uint16_t targetId);
+		static CliHpReq create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint16_t targetId_;

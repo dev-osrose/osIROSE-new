@@ -6,27 +6,33 @@
 
 namespace RoseCommon {
 
-REGISTER_SEND_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown)
 REGISTER_RECV_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown)
+REGISTER_SEND_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown)
 class IscShutdown : public CRosePacket {
- private:
-  static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		IscShutdown();
-		IscShutdown(uint8_t buffer[MAX_PACKET_SIZE]);
-    IscShutdown(Isc::ServerType serverType, int32_t id);
+		IscShutdown(CRoseReader reader);
+	private:
+		IscShutdown(Isc::ServerType serverType, int32_t id);
+	public:
 
 		virtual ~IscShutdown() = default;
 
-    Isc::ServerType serverType() const;
-    int32_t id() const;
+		Isc::ServerType serverType() const;
+		IscShutdown& set_serverType(Isc::ServerType);
+		int32_t id() const;
+		IscShutdown& set_id(int32_t);
+
+		static IscShutdown create(Isc::ServerType serverType, int32_t id);
+		static IscShutdown create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
- private:
-    Isc::ServerType serverType_;
-    int32_t id_;
+	private:
+		Isc::ServerType serverType_;
+		int32_t id_;
 };
 
 }

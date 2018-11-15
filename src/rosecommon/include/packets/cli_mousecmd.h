@@ -7,23 +7,32 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd)
 class CliMouseCmd : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliMouseCmd();
-		CliMouseCmd(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliMouseCmd(CRoseReader reader);
+	private:
 		CliMouseCmd(uint16_t targetId, float x, float y, uint16_t z);
+	public:
 
 		virtual ~CliMouseCmd() = default;
 
 		uint16_t targetId() const;
+		CliMouseCmd& set_targetId(uint16_t);
 		float x() const;
+		CliMouseCmd& set_x(float);
 		float y() const;
+		CliMouseCmd& set_y(float);
 		uint16_t z() const;
+		CliMouseCmd& set_z(uint16_t);
+
+		static CliMouseCmd create(uint16_t targetId, float x, float y, uint16_t z);
+		static CliMouseCmd create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint16_t targetId_;

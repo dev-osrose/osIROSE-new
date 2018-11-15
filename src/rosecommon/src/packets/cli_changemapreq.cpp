@@ -3,37 +3,48 @@
 
 namespace RoseCommon {
 
-const RecvPacketFactory::Initializer<uint8_t*> CliChangeMapReq::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_CHANGE_MAP_REQ, &createPacket<CliChangeMapReq>);
-
 CliChangeMapReq::CliChangeMapReq() : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ) {}
 
-CliChangeMapReq::CliChangeMapReq(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_CHANGE_MAP_REQ, "Not the right packet: " << to_underlying(type()));
-	weightRate_ = read_uint8();
-	z_ = read_uint16();
+CliChangeMapReq::CliChangeMapReq(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKCS_CHANGE_MAP_REQ, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_uint8_t(weightRate_);
+	reader.get_uint16_t(z_);
 }
 
-CliChangeMapReq::CliChangeMapReq(uint8_t weightRate, uint16_t z) : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), weightRate_(weightRate), z_(z) {}
-
-uint8_t CliChangeMapReq::weightRate() const {
-	return weightRate_;
+CliChangeMapReq::CliChangeMapReq(uint8_t weightRate, uint16_t z) : CRosePacket(ePacketType::PAKCS_CHANGE_MAP_REQ), weightRate_(weightRate), z_(z) {
 }
 
-uint16_t CliChangeMapReq::z() const {
-	return z_;
+uint8_t CliChangeMapReq::weightRate() const { return weightRate_; }
+
+CliChangeMapReq& CliChangeMapReq::set_weightRate(uint8_t data) { weightRate_ = data; return *this; }
+
+uint16_t CliChangeMapReq::z() const { return z_; }
+
+CliChangeMapReq& CliChangeMapReq::set_z(uint16_t data) { z_ = data; return *this; }
+
+
+void CliChangeMapReq::pack(CRoseWriter& writer) const {
+	writer.set_uint8_t(weightRate_);
+	writer.set_uint16_t(z_);
 }
 
-void CliChangeMapReq::weightRate(uint8_t rate) {
-	weightRate_ = rate;
+uint16_t CliChangeMapReq::get_size() const {
+	uint16_t size = 0;
+	size += sizeof(weightRate_);
+	size += sizeof(z_);
+	return size;
 }
 
-void CliChangeMapReq::z(uint16_t z) {
-	z_ = z;
+
+CliChangeMapReq CliChangeMapReq::create(uint8_t weightRate, uint16_t z) {
+
+
+	return CliChangeMapReq(weightRate, z);
 }
 
-void CliChangeMapReq::pack() {
-	write_uint8(weightRate_);
-	write_uint16(z_);
+CliChangeMapReq CliChangeMapReq::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return CliChangeMapReq(reader);
 }
 
 }

@@ -9,7 +9,6 @@ using namespace RoseCommon;
 
 TEST( TestCRosePacket, TestConstructor )
 {
-	EXPECT_NO_FATAL_FAILURE(CRosePacket packet(0xAAAA));
 }
 
 TEST(TestCRosePacket, TestSrvCharListReply) {

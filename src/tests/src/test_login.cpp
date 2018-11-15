@@ -43,14 +43,12 @@ CLoginClient_Mock netConnect;
 
 
   std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-  auto pak = std::unique_ptr<CliAcceptReq>(new CliAcceptReq());
-  netConnect.send(*pak);
+  netConnect.send(CliAcceptReq::create());
 
   //TODO(raven): Move this into a static function so we can just call the function
   //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
   // cc03e747a6afbbcbf8be7668acfebee5 == test123
-  auto pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
-  netConnect.send(*pak2);
+  netConnect.send(CliLoginReq::create("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -63,31 +61,24 @@ CLoginClient_Mock netConnect;
   // We aren't logged in yet
   // We should get a warning
   //-----------------------------------------
-  auto pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
-  netConnect.send(*pak3);
+  netConnect.send(CliChannelListReq::create(1));
 
-  auto pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0, 0));
-  netConnect.send(*pak4);
+  netConnect.send(CliSrvSelectReq::create(0, 0));
   //-----------------------------------------
 
   //Incorrect Password
-  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee6"));
-  netConnect.send(*pak2);
+  netConnect.send(CliLoginReq::create("test", "cc03e747a6afbbcbf8be7668acfebee6"));
 
   //Correct password
-  pak2 = std::unique_ptr<CliLoginReq>(new CliLoginReq("test", "cc03e747a6afbbcbf8be7668acfebee5"));
-  netConnect.send(*pak2);
+  netConnect.send(CliLoginReq::create("test", "cc03e747a6afbbcbf8be7668acfebee5"));
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  pak3 = std::unique_ptr<CRosePacket>(new CliChannelListReq(1));
-  netConnect.send(*pak3);
+  netConnect.send(CliChannelListReq::create(1));
 
-  pak4 = std::unique_ptr<CRosePacket>(new CliSrvSelectReq(0,0));
-  netConnect.send(*pak4);
+  netConnect.send(CliSrvSelectReq::create(0, 0));
 
-  auto pak5 = std::unique_ptr<CRosePacket>(new CliAlive());
-  netConnect.send(*pak5);
+  netConnect.send(CliAlive::create());
 
 
   std::this_thread::sleep_for(

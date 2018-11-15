@@ -16,10 +16,8 @@
 #define __CCHARISC_H__
 
 #include "croseisc.h"
+#include "isc_serverregister.h"
 
-namespace RoseCommon {
-class IscServerRegister;
-}
 
 class CCharServer;
 
@@ -28,15 +26,15 @@ class CCharISC : public RoseCommon::CRoseISC {
   CCharISC();
   CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock);
 
-  bool IsLogin() const;
-  void SetLogin(bool val);
+  bool isLogin() const;
+  void setLogin(bool val);
 
  protected:
-  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
-  bool HandlePacket(uint8_t* _buffer) override;
+  bool serverRegister(RoseCommon::IscServerRegister&& P);
+  bool handlePacket(uint8_t* _buffer) override;
 
-  virtual void OnConnected() override;
-  virtual bool OnShutdown() override;
+  virtual void onConnected() override;
+  virtual bool onShutdown() override;
 
  private:
   CCharServer *server_;

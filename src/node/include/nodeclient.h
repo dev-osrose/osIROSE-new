@@ -18,25 +18,17 @@
 #include "croseclient.h"
 #include "srv_srvselectreply.h"
 
-namespace RoseCommon {
-
-class CliLoginReq;
-class CliChannelListReq;
-class CliSrvSelectReq;
-
-}
-
 class NodeClient : public RoseCommon::CRoseClient {
  public:
   NodeClient();
   NodeClient(std::unique_ptr<Core::INetwork> _sock);
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer) override;
-  virtual bool HandleServerPacket(uint8_t* _buffer) override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
+  virtual bool handleServerPacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
-  bool ServerSelectReply(std::unique_ptr<RoseCommon::SrvSrvSelectReply> P);
+  bool serverSelectReply(RoseCommon::SrvSrvSelectReply&& P);
 
   enum class eSTATE {
     DEFAULT,

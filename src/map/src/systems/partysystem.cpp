@@ -21,11 +21,16 @@ PartySystem::PartySystem(SystemManager &m) : System(m) {
     Entity starter = entity;
     if (Cparty->isKicked_) starter = party->leader_;
     if (auto socket = getClient(entity))
-      socket->send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::DESTROY, starter));
-    if (party->members_.size() == 1) party->members_[0].remove<Party>();
+      socket->send(SrvPartyReply::create(PartyReply::DESTROY, starter));
+    if (party->members_.size() == 1) {
+      party->members_[0].remove<Party>();
+      return;
+    }
+    uint32_t leaver = entity.component<BasicInfo>()->tag_;
+    uint32_t leader = party->leader_.component<BasicInfo>()->tag_;
     for (auto &it : party->members_) {
       if (auto socket = getClient(it))
-        socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, true, Core::make_vector(entity)));
+        socket->send(SrvPartyMember::create(party->options_, PartyMember::Party(leaver, leader)));
     }
   });
   // TODO : use on_component_assign for new members?
@@ -51,10 +56,10 @@ void PartySystem::addPartyMember(Entity leader, Entity newMember) {
   newMember.assign<Party>(party);
   for (auto &it : party->members_) {
     if (auto socket = getClient(it))
-      socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, Core::make_vector(newMember)));
+      socket->send(SrvPartyMember::create(party->options_, PartyMember::Party(newMember)));
   }
   if (auto socket = getClient(newMember))
-    socket->send(makePacket<ePacketType::PAKWC_PARTY_MEMBER>(party->options_, false, party->members_));
+    socket->send(SrvPartyMember::create(party->options_, PartyMember::Party(party->members_)));
   party->addMember(newMember);
 }
 
@@ -66,7 +71,7 @@ void PartySystem::changeLeader(Entity leader, Entity newLeader) {
   if (!party->changeLeader(newLeader)) return;
   for (auto it : party->members_) {
     if (auto socket = getClient(it))
-      socket->send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::CHANGE_OWNER, newLeader));
+      socket->send(SrvPartyReply::create(PartyReply::CHANGE_OWNER, newLeader));
   }
 }
 
@@ -75,12 +80,14 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
   Entity other;
   if (!(other = manager_.getEntity(packet.idXorTag())) || !getClient(other)) {
     logger_->debug("Client {} requested a party with the non existing char {}", getId(entity), packet.idXorTag());
-    client.send(makePacket<ePacketType::PAKWC_PARTY_REPLY>(SrvPartyReply::NOT_FOUND, packet.idXorTag()));
+    SrvPartyReply sendPacket;
+    sendPacket.set_reply(PartyReply::NOT_FOUND).set_id(packet.idXorTag());
+    client.send(std::move(sendPacket));
     return;
   }
   Party *party = nullptr;
   switch (packet.request()) {
-    case CliPartyReq::MAKE:
+    case PartyReq::MAKE:
       if (entity.component<Party>() && entity.component<Party>()->party_) {
         logger_->warn("Client {} tried to create a party when already in a party", getId(entity));
         return;
@@ -89,11 +96,10 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
       party->isRequested_ = true;
       {
         if (auto socket = getClient(other))
-          socket->send(
-              makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
+          socket->send(SrvPartyReq::create(static_cast<PartyReq::Request>(packet.request()), entity));
       }
       return;
-    case CliPartyReq::JOIN:
+    case PartyReq::JOIN:
       if (!entity.component<Party>() || !entity.component<Party>()->party_) {
         logger_->warn("Client {} tried to execute an action on its party but doesn't have a party yet", getId(entity));
         return;
@@ -102,18 +108,17 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
       party->isRequested_ = true;
       {
         if (auto socket = getClient(other))
-          socket->send(
-              makePacket<ePacketType::PAKWC_PARTY_REQ>(static_cast<SrvPartyReq::Request>(packet.request()), entity));
+          socket->send(SrvPartyReq::create(static_cast<PartyReq::Request>(packet.request()), entity));
       }
       return;
-    case CliPartyReq::LEFT:
+    case PartyReq::LEFT:
       if (!entity.component<Party>()) {
         logger_->warn("Client {} tried to leave the party but isn't in one", getId(entity));
         return;
       }
       entity.remove<Party>();
       return;
-    case CliPartyReq::CHANGE_OWNER:
+    case PartyReq::CHANGE_OWNER:
       if (!entity.component<Party>() || !entity.component<Party>()->party_) {
         logger_->warn("Client {} tried to give up ownership but isn't in a party", getId(entity));
         return;
@@ -123,7 +128,7 @@ void PartySystem::processPartyReq(CMapClient &client, Entity entity, const CliPa
       }
       changeLeader(entity, other);
       return;
-    case CliPartyReq::KICK:
+    case PartyReq::KICK:
       if (!entity.component<Party>() || !entity.component<Party>()->party_) {
         logger_->warn("Client {} tried to kick a member party but isn't in one", getId(entity));
         return;
@@ -158,8 +163,7 @@ void PartySystem::processPartyReply(CMapClient &, Entity entity, const RoseCommo
       if (!other.component<Party>()->party_) other.remove<Party>();
       {
         if (auto socket = getClient(other))
-          socket->send(
-              makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
+          socket->send(SrvPartyReply::create(static_cast<PartyReply::Reply>(packet.reply()), entity));
       }
       return;
     // if the guy asked accepts, we send it to the guy asking and we update the party
@@ -168,8 +172,7 @@ void PartySystem::processPartyReply(CMapClient &, Entity entity, const RoseCommo
       other.component<Party>()->isRequested_ = false;
       {
         if (auto socket = getClient(other))
-          socket->send(
-              makePacket<ePacketType::PAKWC_PARTY_REPLY>(static_cast<SrvPartyReply::Reply>(packet.reply()), entity));
+          socket->send(SrvPartyReply::create(static_cast<PartyReply::Reply>(packet.reply()), entity));
       }
       addPartyMember(other, entity);
       return;

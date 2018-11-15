@@ -35,19 +35,19 @@ void item(std::stringstream &&ss, SystemManager &manager, Entity e) {
         return;
     } else if (!ItemDatabase::getInstance().itemExists(type, id)) {
         logger->info("Wrong type, id: {}, {}", type, id);
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("{} {} doesn't exists", type, id)));
+        client->send(SrvWhisperChat::create("", fmt::format("{} {} doesn't exists", type, id)));
         return;
     }
     auto inv = manager.get<InventorySystem>();
     auto item = inv->buildItem(type, id);
     if (!item) {
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Error while building the object, check the logs"));
+        client->send(SrvWhisperChat::create("", "Error while building the object, check the logs"));
     } else if (!InventorySystem::addItem(e, std::move(item.value()))) {
         logger->info("Inventory full for {}", getId(e));
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "Inventory full"));
+        client->send(SrvWhisperChat::create("", "Inventory full"));
     } else {
         logger->info("Item {}:{} added to {}", type, id, getId(e));
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", fmt::format("Item {}:{} added", type, id)));
+        client->send(SrvWhisperChat::create("", fmt::format("Item {}:{} added", type, id)));
     }
 }
 
@@ -80,10 +80,10 @@ void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
     auto client = getClient(e);
     auto advanced = e.component<AdvancedInfo>();
     advanced->zuly_ += zuly;
-    client->send(makePacket<ePacketType::PAKWC_SET_MONEY>(e));
+    client->send(SrvSetMoney::create(e));
 }
 
-void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
+void die([[maybe_unused]] std::stringstream&& ss, SystemManager &manager, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
     logger->trace("gm_commands die called");
     auto client = getClient(e);
@@ -101,16 +101,16 @@ static std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(s
 
 void help(Entity entity, const std::string& command) {
     auto client = getClient(entity);
-    client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", "help (<required args> [optional args]):"));
+    client->send(SrvWhisperChat::create("", "help (<required args> [optional args]):"));
     if (command.size()) {
-        client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", command + " " + std::get<2>(commands[command])));
+        client->send(SrvWhisperChat::create("", command + " " + std::get<2>(commands[command])));
     } else {
         auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
         for (const auto &[key, value] : commands) {
             std::string text;
             text = key + " " + std::get<2>(value);
             logger->info("help: {}", text);
-            client->send(makePacket<ePacketType::PAKWC_WHISPER_CHAT>("", text));
+            client->send(SrvWhisperChat::create("", text));
         }
     }
 }

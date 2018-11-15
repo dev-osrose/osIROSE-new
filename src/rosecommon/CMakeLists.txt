@@ -40,6 +40,7 @@ set( SOURCES_HEADER
   include/luaapi.h
   include/itemapi.h
   include/entityapi.h
+  include/crosewriter.h
   include/components/advancedinfo.h
   include/components/basicinfo.h
   include/components/bulletitems.h
@@ -161,8 +162,8 @@ SET(SOURCES_PACKETS
   include/packets/srv_screenshottimereply.h
   src/packets/srv_selectcharreply.cpp
   include/packets/srv_selectcharreply.h
-  src/packets/srv_serverdata.cpp
-  include/packets/srv_serverdata.h
+  src/packets/srv_globalvars.cpp
+  include/packets/srv_globalvars.h
   src/packets/srv_srvselectreply.cpp
   include/packets/srv_srvselectreply.h
   src/packets/srv_stop.cpp
@@ -213,14 +214,17 @@ SET(SOURCES_PACKETS
   include/packets/srv_sethpandmp.h
   src/packets/srv_damage.cpp
   include/packets/srv_damage.h
-  include/packets/srv_billingmsg.h
+  src/packets/srv_billingmessage.cpp
+  include/packets/srv_billingmessage.h
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
   src/packets/isc_shutdown.cpp
   include/packets/isc_shutdown.h
-  src/packets/srv_characterlistreply.cpp
-  include/packets/srv_characterlistreply.h
+  src/packets/srv_charlistreply.cpp
+  include/packets/srv_charlistreply.h
+  src/packets/isc_alive.cpp
+  include/packets/isc_alive.h
 
 )
 

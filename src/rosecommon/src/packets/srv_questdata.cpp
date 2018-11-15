@@ -5,23 +5,47 @@ namespace RoseCommon {
 
 SrvQuestData::SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA) {}
 
-SrvQuestData::SrvQuestData(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKWC_QUEST_DATA, "Not the right packet: " << to_underlying(type()));
+SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
+	throw_assert(get_type() == ePacketType::PAKWC_QUEST_DATA, "Not the right packet: " << to_underlying(get_type()));
+	reader.get_iserialize(quests_);
+	reader.get_iserialize(wishlist_);
 }
 
-SrvQuestData::SrvQuestData(Entity entity) : CRosePacket(ePacketType::PAKWC_QUEST_DATA), entity_(entity) {}
+SrvQuestData::SrvQuestData(Quests quests, Wishlist wishlist) : CRosePacket(ePacketType::PAKWC_QUEST_DATA), quests_(quests), wishlist_(wishlist) {
+}
 
-Entity SrvQuestData::entity() const {
-	return entity_;
+Quests SrvQuestData::quests() const { return quests_; }
+
+SrvQuestData& SrvQuestData::set_quests(Quests data) { quests_ = data; return *this; }
+
+Wishlist SrvQuestData::wishlist() const { return wishlist_; }
+
+SrvQuestData& SrvQuestData::set_wishlist(Wishlist data) { wishlist_ = data; return *this; }
+
+
+void SrvQuestData::pack(CRoseWriter& writer) const {
+	writer.set_iserialize(quests_);
+	writer.set_iserialize(wishlist_);
+}
+
+uint16_t SrvQuestData::get_size() const {
+	uint16_t size = 0;
+	size += quests_.get_size();
+	size += wishlist_.get_size();
+	return size;
 }
 
 
-void SrvQuestData::pack() {
-  const auto *quests = entity_.component<Quests>();
-  const auto *wishlist = entity_.component<Wishlist>();
+SrvQuestData SrvQuestData::create(Entity entity) {
+	const auto entity_wishlist = entity.component<Wishlist>();
+	const auto entity_quests = entity.component<Quests>();
 
-  *this << *quests;
-  *this << *wishlist;
+	return SrvQuestData(*entity_quests, *entity_wishlist);
+}
+
+SrvQuestData SrvQuestData::create(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return SrvQuestData(reader);
 }
 
 }

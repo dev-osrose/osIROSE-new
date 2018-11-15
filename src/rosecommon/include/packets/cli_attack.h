@@ -2,26 +2,31 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
-#include <string>
+
 
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_ATTACK, CliAttack)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_ATTACK, CliAttack)
 class CliAttack : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliAttack();
-		CliAttack(uint8_t buffer[MAX_PACKET_SIZE]);
+		CliAttack(CRoseReader reader);
+	private:
 		CliAttack(uint16_t targetId);
+	public:
 
 		virtual ~CliAttack() = default;
 
 		uint16_t targetId() const;
-		void targetId(uint16_t id);
+		CliAttack& set_targetId(uint16_t);
+
+		static CliAttack create(uint16_t targetId);
+		static CliAttack create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		uint16_t targetId_;

@@ -2,40 +2,43 @@
 
 #include "packetfactory.h"
 #include "entitycomponents.h"
+#include <dataconsts.h>
 #include <string>
 
 namespace RoseCommon {
 
+REGISTER_RECV_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply)
 REGISTER_SEND_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply)
 class SrvSrvSelectReply : public CRosePacket {
 	public:
-        enum eResult : uint8_t {
-            OK = 0,
-            FAILED,
-            FULL,
-            INVALID_CHANNEL,
-            CHANNEL_NOT_ACTIVE,
-            INVALID_AGE
-        };
-
 		SrvSrvSelectReply();
-        SrvSrvSelectReply(uint8_t buffer[MAX_PACKET_SIZE]);
-		SrvSrvSelectReply(SrvSrvSelectReply::eResult result, uint32_t sessionId, uint32_t cryptVal, const std::string &ip, uint16_t port);
+		SrvSrvSelectReply(CRoseReader reader);
+	private:
+		SrvSrvSelectReply(SrvSelectReply::Result result, uint32_t sessionId, uint32_t cryptVal, const std::string& ip, uint16_t port);
+	public:
 
 		virtual ~SrvSrvSelectReply() = default;
 
-		SrvSrvSelectReply::eResult result() const;
+		SrvSelectReply::Result result() const;
+		SrvSrvSelectReply& set_result(SrvSelectReply::Result);
 		uint32_t sessionId() const;
+		SrvSrvSelectReply& set_sessionId(uint32_t);
 		uint32_t cryptVal() const;
-		std::string &ip();
-		const std::string &ip() const;
+		SrvSrvSelectReply& set_cryptVal(uint32_t);
+		const std::string& ip() const;
+		SrvSrvSelectReply& set_ip(const std::string&);
 		uint16_t port() const;
+		SrvSrvSelectReply& set_port(uint16_t);
+
+		static SrvSrvSelectReply create(SrvSelectReply::Result result, uint32_t sessionId, uint32_t cryptVal, const std::string& ip, uint16_t port);
+		static SrvSrvSelectReply create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
-		SrvSrvSelectReply::eResult result_;
+		SrvSelectReply::Result result_;
 		uint32_t sessionId_;
 		uint32_t cryptVal_;
 		std::string ip_;

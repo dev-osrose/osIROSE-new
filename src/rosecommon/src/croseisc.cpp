@@ -21,22 +21,22 @@ CRoseISC::CRoseISC() : CRoseClient() {
 }
 
 CRoseISC::CRoseISC(std::unique_ptr<Core::INetwork> _sock) : CRoseClient(std::move(_sock)) {
-  socket_[SocketType::Client]->registerOnReceived(std::bind(&CRoseISC::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-  socket_[SocketType::Client]->registerOnSend(std::bind(&CRoseISC::OnSend, this, std::placeholders::_1));
-  socket_[SocketType::Client]->registerOnConnected(std::bind(&CRoseISC::OnConnected, this));
-  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CRoseISC::OnShutdown, this));
+  socket_[SocketType::Client]->registerOnReceived(std::bind(&CRoseISC::onReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_[SocketType::Client]->registerOnSend(std::bind(&CRoseISC::onSend, this, std::placeholders::_1));
+  socket_[SocketType::Client]->registerOnConnected(std::bind(&CRoseISC::onConnected, this));
+  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CRoseISC::onShutdown, this));
 
   socket_[SocketType::Client]->reset_internal_buffer();
 }
 
 CRoseISC::~CRoseISC() {}
 
-void CRoseISC::OnConnected() {
+void CRoseISC::onConnected() {
 }
 
-bool CRoseISC::OnShutdown() { return true; }
+bool CRoseISC::onShutdown() { return true; }
 
-bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
+bool CRoseISC::onReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
   if (packet_size_ == 6) {
     packet_size_ = (uint16_t)buffer_[0];
@@ -73,12 +73,12 @@ bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
         std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
         recv_queue_.pop();
 
-        rtnVal = HandlePacket(_buffer.get());
+        rtnVal = handlePacket(_buffer.get());
         _buffer.reset(nullptr);
 
         if (rtnVal == false) {
           // Abort connection
-          logger_->debug("HandlePacket returned false, disconnecting client.");
+          logger_->debug("handlePacket returned false, disconnecting client.");
           socket_[SocketType::Client]->shutdown();
         }
       }
@@ -90,13 +90,13 @@ bool CRoseISC::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   return rtnVal;
 }
 
-bool CRoseISC::OnSend(uint8_t* _buffer) {
+bool CRoseISC::onSend(uint8_t* _buffer) {
   // TODO: Encrypt the isc buffer.
   (void)_buffer;
   return true;
 }
 
-bool CRoseISC::HandlePacket(uint8_t* _buffer) {
+bool CRoseISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;

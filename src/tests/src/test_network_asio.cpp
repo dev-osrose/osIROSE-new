@@ -97,13 +97,13 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
 	  Test(ePacketType type) : CRosePacket(type) {}
 	  virtual ~Test() {}
 	  protected:
-		  void pack() {
-			  *this << 0x77;
+		  void pack(CRoseWriter& writer) const {
+              writer.set_uint8_t(0x77);
 		  }
   };
 
-  CRosePacket* pak = new Test(ePacketType::PAKCS_CHAR_LIST_REQ);
-  netConnect.send_data(pak->getPacked());
+  Test pak(ePacketType::PAKCS_CHAR_LIST_REQ);
+  netConnect.send_data(pak.getPacked());
   EXPECT_NO_FATAL_FAILURE(netConnect.disconnect());
   EXPECT_NO_FATAL_FAILURE(netConnect.shutdown());
   EXPECT_NO_FATAL_FAILURE(network.shutdown());

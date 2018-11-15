@@ -7,23 +7,28 @@
 namespace RoseCommon {
 
 REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq)
+REGISTER_SEND_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq)
 class CliLoginReq : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
 	public:
 		CliLoginReq();
-		CliLoginReq(uint8_t buffer[MAX_PACKET_SIZE]);
-		CliLoginReq(const std::string &password, const std::string &username);
+		CliLoginReq(CRoseReader reader);
+	private:
+		CliLoginReq(const std::string& password, const std::string& username);
+	public:
 
 		virtual ~CliLoginReq() = default;
 
-		std::string &password();
-		const std::string &password() const;
-		std::string &username();
-		const std::string &username() const;
+		const std::string& password() const;
+		CliLoginReq& set_password(const std::string&);
+		const std::string& username() const;
+		CliLoginReq& set_username(const std::string&);
+
+		static CliLoginReq create(const std::string& password, const std::string& username);
+		static CliLoginReq create(uint8_t *buffer);
 
 	protected:
-		virtual void pack() override;
+		virtual void pack(CRoseWriter&) const override;
+		virtual uint16_t get_size() const override;
 
 	private:
 		std::string password_;
