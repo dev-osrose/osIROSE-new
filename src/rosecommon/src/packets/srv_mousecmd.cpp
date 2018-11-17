@@ -65,9 +65,9 @@ uint16_t SrvMouseCmd::get_size() const {
 
 
 SrvMouseCmd SrvMouseCmd::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_destination = entity.component<Destination>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvMouseCmd(entity_basicinfo->id_, entity_basicinfo->targetId_, entity_destination->dist_, entity_destination->x_, entity_destination->y_, entity_position->z_);
 }

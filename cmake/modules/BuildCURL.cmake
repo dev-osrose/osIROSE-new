@@ -33,7 +33,7 @@ ExternalProject_Get_Property(
   install_dir
 )
 
-set(CURL_INCLUDE_DIRS "${install_dir}/include")
+set(CURL_INCLUDE_DIR "${install_dir}/include")
 if(WIN32)
   if("${BUILD_TYPE}" STREQUAL "Debug")
     set(CURL_LIBRARY "${install_dir}/lib/libcurl-d_imp.lib")
@@ -50,9 +50,9 @@ else()
   set(CURL_INSTALL_LIBS "${install_dir}/lib/libcurl.so")
 endif()
 
-if(NOT TARGET CURL::CURL)
-    add_library(CURL::CURL INTERFACE IMPORTED)
-    add_dependencies(CURL::CURL curl)
-    set_target_properties(CURL::CURL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
-    set_target_properties(CURL::CURL PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
+if(NOT TARGET CURL::libcurl)
+    add_library(CURL::libcurl INTERFACE IMPORTED)
+    add_dependencies(CURL::libcurl curl)
+    set_target_properties(CURL::libcurl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIR}")
+    set_target_properties(CURL::libcurl PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
 endif()

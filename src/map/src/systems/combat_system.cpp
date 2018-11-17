@@ -37,7 +37,7 @@ void CombatSystem::update(EntityManager &es, std::chrono::milliseconds dt) {
 void CombatSystem::apply_damage(Entity defender, Entity attacker, int32_t damage) {
   if (!defender || !attacker) return;
   
-  //auto stats = defender.component<Stats>();
+  auto stats = defender.component<Stats>();
   auto attackerBasic = attacker.component<BasicInfo>();
   auto nDamage = defender.component<Damage>();
   //auto advanced = defender.component<AdvancedInfo>();
@@ -51,6 +51,10 @@ void CombatSystem::apply_damage(Entity defender, Entity attacker, int32_t damage
   // We aren't applying static damage, calculate it now
   if(damage <= 0) {
     //TODO: Calculate each real damage done by setting value_
+    //Basic Damage:
+    int32_t crit_hit_success = 0;
+    //auto attcker_chance = attackerBasic->
+    crit_hit_success = 20;
   }
   
   //TODO: Replace 0 with the method of attack

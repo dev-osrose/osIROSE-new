@@ -65,9 +65,9 @@ uint16_t SrvAttack::get_size() const {
 
 
 SrvAttack SrvAttack::create(Entity entityA, Entity entityD) {
-	const auto entityd_basicinfo = entityD.component<BasicInfo>();
 	const auto entitya_basicinfo = entityA.component<BasicInfo>();
 	const auto entitya_destination = entityA.component<Destination>();
+	const auto entityd_basicinfo = entityD.component<BasicInfo>();
 
 	return SrvAttack(entitya_basicinfo->id_, entityd_basicinfo->id_, entitya_destination->dist_, entitya_destination->x_, entitya_destination->y_, entitya_destination->z_);
 }

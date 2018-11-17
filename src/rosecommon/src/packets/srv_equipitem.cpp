@@ -44,8 +44,8 @@ uint16_t SrvEquipItem::get_size() const {
 
 
 SrvEquipItem SrvEquipItem::create(Entity entity, int16_t slot) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_inventory = entity.component<Inventory>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvEquipItem(entity_basicinfo->id_, slot, entity_inventory->items_[slot].getVisible());
 }

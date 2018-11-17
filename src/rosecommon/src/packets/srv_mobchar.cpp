@@ -115,11 +115,11 @@ uint16_t SrvMobChar::get_size() const {
 
 SrvMobChar SrvMobChar::create(Entity entity) {
 	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_position = entity.component<Position>();
-	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_destination = entity.component<Destination>();
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_npc = entity.component<Npc>();
+	const auto entity_position = entity.component<Position>();
+	const auto entity_destination = entity.component<Destination>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 
 	return SrvMobChar(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_destination ? entity_destination->x_ : entity_position->x_, entity_destination ? entity_destination->y_ : entity_position->y_, entity_basicinfo->command_, entity_basicinfo->targetId_, entity_advancedinfo->moveMode_, entity_advancedinfo->hp_, entity_basicinfo->teamId_, entity_characterinfo->statusFlag_, entity_npc->npc_id_, entity_npc->quest_id_);
 }

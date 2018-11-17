@@ -28,7 +28,7 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} CURL::CURL)
+target_link_libraries(${PROJECT} CURL::libcurl)
 
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")

@@ -51,8 +51,8 @@ uint16_t SrvStopMoving::get_size() const {
 
 
 SrvStopMoving SrvStopMoving::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvStopMoving(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_position->z_);
 }

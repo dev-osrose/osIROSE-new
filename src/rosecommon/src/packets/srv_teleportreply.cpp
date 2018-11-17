@@ -65,9 +65,9 @@ uint16_t SrvTeleportReply::get_size() const {
 
 
 SrvTeleportReply SrvTeleportReply::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvTeleportReply(entity_basicinfo->id_, entity_position->map_, entity_position->x_, entity_position->y_, entity_advancedinfo->moveMode_);
 }

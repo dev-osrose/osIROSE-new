@@ -219,12 +219,12 @@ uint16_t SrvPlayerChar::get_size() const {
 
 
 SrvPlayerChar SrvPlayerChar::create(Entity entity) {
-	const auto entity_inventory = entity.component<Inventory>();
 	const auto entity_characterinfo = entity.component<CharacterInfo>();
+	const auto entity_ridingitems = entity.component<RidingItems>();
 	const auto entity_position = entity.component<Position>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_charactergraphics = entity.component<CharacterGraphics>();
-	const auto entity_ridingitems = entity.component<RidingItems>();
+	const auto entity_inventory = entity.component<Inventory>();
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_bulletitems = entity.component<BulletItems>();
 	uint32_t inventory_[Inventory::maxVisibleEquippedItems];

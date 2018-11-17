@@ -37,8 +37,8 @@ uint16_t SrvQuestData::get_size() const {
 
 
 SrvQuestData SrvQuestData::create(Entity entity) {
-	const auto entity_wishlist = entity.component<Wishlist>();
 	const auto entity_quests = entity.component<Quests>();
+	const auto entity_wishlist = entity.component<Wishlist>();
 
 	return SrvQuestData(*entity_quests, *entity_wishlist);
 }
