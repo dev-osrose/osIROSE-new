@@ -51,8 +51,8 @@ uint16_t SrvDamage::get_size() const {
 
 
 SrvDamage SrvDamage::create(Entity entityA, Entity entityD, uint32_t damage, uint32_t action) {
-	const auto entitya_basicinfo = entityA.component<BasicInfo>();
 	const auto entityd_basicinfo = entityD.component<BasicInfo>();
+	const auto entitya_basicinfo = entityA.component<BasicInfo>();
 
 	return SrvDamage(entitya_basicinfo->id_, entityd_basicinfo->id_, damage, action);
 }

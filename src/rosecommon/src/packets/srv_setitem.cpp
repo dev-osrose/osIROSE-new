@@ -10,7 +10,7 @@ SrvSetItem::SrvSetItem(CRoseReader reader) : CRosePacket(reader) {
 	{
 		uint8_t index = 0;
 		reader.get_uint8_t(index);
-		while (index-- > 0) {
+		for (uint8_t i = 0; i < index; ++i) {
 			SetItem::Item tmp;
 			reader.get_iserialize(tmp);
 			items_.push_back(tmp);

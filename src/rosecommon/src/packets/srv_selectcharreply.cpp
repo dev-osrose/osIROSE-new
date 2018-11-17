@@ -360,15 +360,15 @@ uint16_t SrvSelectCharReply::get_size() const {
 
 
 SrvSelectCharReply SrvSelectCharReply::create(Entity entity) {
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
-	const auto entity_statuseffects = entity.component<StatusEffects>();
-	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_skills = entity.component<Skills>();
-	const auto entity_position = entity.component<Position>();
-	const auto entity_charactergraphics = entity.component<CharacterGraphics>();
-	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_inventory = entity.component<Inventory>();
 	const auto entity_hotbar = entity.component<Hotbar>();
+	const auto entity_statuseffects = entity.component<StatusEffects>();
+	const auto entity_skills = entity.component<Skills>();
+	const auto entity_charactergraphics = entity.component<CharacterGraphics>();
+	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_characterinfo = entity.component<CharacterInfo>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
+	const auto entity_inventory = entity.component<Inventory>();
 	const auto entity_stats = entity.component<Stats>();
 	uint32_t inventory_[Inventory::maxVisibleEquippedItems];
 	for (size_t index = 0; index < Inventory::maxVisibleEquippedItems; ++index) inventory_[index] = entity_inventory->getEquipped()[index].getVisible();

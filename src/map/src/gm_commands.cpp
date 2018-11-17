@@ -68,13 +68,6 @@ void teleport(std::stringstream&& ss, SystemManager &manager, Entity e) {
     manager.get<MovementSystem>()->teleport(e, map_id, x * 100, y * 100); // transforms from map coordinates to real coordinates
 }
 
-void die(std::stringstream&& ss, SystemManager &manager, Entity e) {
-    auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
-    logger->trace("gm_commands die called");
-    auto client = getClient(e);
-    manager.get<CombatSystem>()->apply_damage(e, MAX_DAMAGE);
-}
-
 void zuly(std::stringstream&& ss, SystemManager&, Entity e) {
     auto logger = Core::CLog::GetLogger(Core::log_type::SYSTEM).lock();
     uint64_t zuly = 0;

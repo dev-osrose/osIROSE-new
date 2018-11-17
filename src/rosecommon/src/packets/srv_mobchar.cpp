@@ -114,10 +114,10 @@ uint16_t SrvMobChar::get_size() const {
 
 
 SrvMobChar SrvMobChar::create(Entity entity) {
+	const auto entity_destination = entity.component<Destination>();
 	const auto entity_characterinfo = entity.component<CharacterInfo>();
 	const auto entity_npc = entity.component<Npc>();
 	const auto entity_position = entity.component<Position>();
-	const auto entity_destination = entity.component<Destination>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 

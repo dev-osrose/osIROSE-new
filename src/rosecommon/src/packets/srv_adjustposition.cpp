@@ -51,8 +51,8 @@ uint16_t SrvAdjustPosition::get_size() const {
 
 
 SrvAdjustPosition SrvAdjustPosition::create(Entity entity) {
-	const auto entity_position = entity.component<Position>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_position = entity.component<Position>();
 
 	return SrvAdjustPosition(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_position->z_);
 }

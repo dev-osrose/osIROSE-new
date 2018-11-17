@@ -1,3 +1,3 @@
 PAKWC_QUEST_DATA
-Quests quests Quests:: I
-Wishlist wishlist Wishlist:: I
+Quests quests Quests:: I &
+Wishlist wishlist Wishlist:: I &

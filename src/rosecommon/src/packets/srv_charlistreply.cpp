@@ -10,7 +10,7 @@ SrvCharListReply::SrvCharListReply(CRoseReader reader) : CRosePacket(reader) {
 	{
 		uint8_t index = 0;
 		reader.get_uint8_t(index);
-		while (index-- > 0) {
+		for (uint8_t i = 0; i < index; ++i) {
 			CharListReply::CharInfo tmp;
 			reader.get_iserialize(tmp);
 			characters_.push_back(tmp);

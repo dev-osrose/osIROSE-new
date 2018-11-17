@@ -72,9 +72,9 @@ uint16_t SrvDropItem::get_size() const {
 
 
 SrvDropItem SrvDropItem::create(Entity entity) {
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_rosecommon_item = entity.component<RoseCommon::Item>();
 	const auto entity_position = entity.component<Position>();
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvDropItem(entity_position->x_, entity_position->y_, entity_rosecommon_item->getHeader(), entity_rosecommon_item->getData(), entity_basicinfo->id_, entity_basicinfo->ownerId_);
 }

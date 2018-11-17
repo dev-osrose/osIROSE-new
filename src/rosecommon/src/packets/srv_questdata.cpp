@@ -11,16 +11,16 @@ SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
 	reader.get_iserialize(wishlist_);
 }
 
-SrvQuestData::SrvQuestData(Quests quests, Wishlist wishlist) : CRosePacket(ePacketType::PAKWC_QUEST_DATA), quests_(quests), wishlist_(wishlist) {
+SrvQuestData::SrvQuestData(const Quests& quests, const Wishlist& wishlist) : CRosePacket(ePacketType::PAKWC_QUEST_DATA), quests_(quests), wishlist_(wishlist) {
 }
 
-Quests SrvQuestData::quests() const { return quests_; }
+const Quests& SrvQuestData::quests() const { return quests_; }
 
-SrvQuestData& SrvQuestData::set_quests(Quests data) { quests_ = data; return *this; }
+SrvQuestData& SrvQuestData::set_quests(const Quests& data) { quests_ = data; return *this; }
 
-Wishlist SrvQuestData::wishlist() const { return wishlist_; }
+const Wishlist& SrvQuestData::wishlist() const { return wishlist_; }
 
-SrvQuestData& SrvQuestData::set_wishlist(Wishlist data) { wishlist_ = data; return *this; }
+SrvQuestData& SrvQuestData::set_wishlist(const Wishlist& data) { wishlist_ = data; return *this; }
 
 
 void SrvQuestData::pack(CRoseWriter& writer) const {
@@ -37,8 +37,8 @@ uint16_t SrvQuestData::get_size() const {
 
 
 SrvQuestData SrvQuestData::create(Entity entity) {
-	const auto entity_quests = entity.component<Quests>();
 	const auto entity_wishlist = entity.component<Wishlist>();
+	const auto entity_quests = entity.component<Quests>();
 
 	return SrvQuestData(*entity_quests, *entity_wishlist);
 }

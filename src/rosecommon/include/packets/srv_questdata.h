@@ -13,15 +13,15 @@ class SrvQuestData : public CRosePacket {
 		SrvQuestData();
 		SrvQuestData(CRoseReader reader);
 	private:
-		SrvQuestData(Quests quests, Wishlist wishlist);
+		SrvQuestData(const Quests& quests, const Wishlist& wishlist);
 	public:
 
 		virtual ~SrvQuestData() = default;
 
-		Quests quests() const;
-		SrvQuestData& set_quests(Quests);
-		Wishlist wishlist() const;
-		SrvQuestData& set_wishlist(Wishlist);
+		const Quests& quests() const;
+		SrvQuestData& set_quests(const Quests&);
+		const Wishlist& wishlist() const;
+		SrvQuestData& set_wishlist(const Wishlist&);
 
 		static SrvQuestData create(Entity entity);
 		static SrvQuestData create(uint8_t *buffer);

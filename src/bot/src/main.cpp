@@ -269,6 +269,10 @@ class CharClient : public Client {
                     logger_->info("grade: {}", item.grade_);
                   }
                 }
+		if (reply.characters().size() == 0) {
+			logger_->info("No character!");
+			return false;
+		}
                 auto packet = CliSelectCharReq::create(0, 0, 0, reply.characters()[0].name_);
                 send(packet);
               }

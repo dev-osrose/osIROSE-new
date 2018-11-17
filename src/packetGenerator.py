@@ -206,7 +206,7 @@ class Variable:
             return "for (size_t index = 0; index < " + self.array + "; ++index) " + self._getter(data + "[index]")
         if not self.size_type is None:
             if len(self.size_type) > 0:
-                return "{{\n\t\t{0} index = 0;\n\t\treader.get_{0}(index);\n\t\twhile (index-- > 0) {{\n\t\t\t{1} tmp;\n\t\t\t{2}\n\t\t\t{3}.push_back(tmp);\n\t\t}}\n\t}}".format(self.size_type, self._getInsideType(), self._getter("tmp" + (", " + str(self.size) if self.size else "")), self.getName())
+                return "{{\n\t\t{0} index = 0;\n\t\treader.get_{0}(index);\n\t\tfor ({0} i = 0; i < index; ++i) {{\n\t\t\t{1} tmp;\n\t\t\t{2}\n\t\t\t{3}.push_back(tmp);\n\t\t}}\n\t}}".format(self.size_type, self._getInsideType(), self._getter("tmp" + (", " + str(self.size) if self.size else "")), self.getName())
             else:
                 return "{{\n\t\t{0} tmp;\n\t\twhile ({1}) {{\n\t\t\t{1};\n\t\t\t{2}.push_back(tmp);\n\t\t}}\n\t}}".format(self._getInsideType(), self._getter("tmp" + (", " + str(self.size) if self.size else ""))[:-1], self.getName())
         return self._getter(data)

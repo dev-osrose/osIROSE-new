@@ -23,7 +23,7 @@ set(args
     OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
 
-generate_flatbuffers_headers(FLATBUFFERS ${args})
+#generate_flatbuffers_headers(FLATBUFFERS ${args})
 
 set( SOURCES_HEADER
   include/crosesocket.h
@@ -237,7 +237,7 @@ if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
 endif()
 
-add_dependencies(${PROJECT} flatbuffers)
+#add_dependencies(${PROJECT} flatbuffers)
 
 add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)

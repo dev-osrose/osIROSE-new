@@ -37,8 +37,8 @@ uint16_t SrvHpReply::get_size() const {
 
 
 SrvHpReply SrvHpReply::create(Entity entity) {
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 
 	return SrvHpReply(entity_basicinfo->id_, entity_advancedinfo->hp_);
 }
