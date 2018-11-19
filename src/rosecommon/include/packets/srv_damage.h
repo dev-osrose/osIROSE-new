@@ -29,10 +29,10 @@ class SrvDamage : public CRosePacket {
 
 		static SrvDamage create(Entity entityA, Entity entityD, uint32_t damage, uint32_t action);
 		static SrvDamage create(uint8_t *buffer);
+		static std::unique_ptr<SrvDamage> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t idA_;

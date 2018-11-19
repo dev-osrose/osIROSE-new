@@ -27,10 +27,10 @@ class SrvSetHpAndMp : public CRosePacket {
 
 		static SrvSetHpAndMp create(Entity entity, uint16_t hp, uint16_t mp);
 		static SrvSetHpAndMp create(uint8_t *buffer);
+		static std::unique_ptr<SrvSetHpAndMp> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t id_;

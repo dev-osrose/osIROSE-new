@@ -28,20 +28,11 @@ uint32_t SrvJoinServerReply::payFlag() const { return payFlag_; }
 SrvJoinServerReply& SrvJoinServerReply::set_payFlag(uint32_t data) { payFlag_ = data; return *this; }
 
 
-void SrvJoinServerReply::pack(CRoseWriter& writer) const {
+void SrvJoinServerReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(result_);
 	writer.set_uint32_t(id_);
 	writer.set_uint32_t(payFlag_);
 }
-
-uint16_t SrvJoinServerReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(result_);
-	size += sizeof(id_);
-	size += sizeof(payFlag_);
-	return size;
-}
-
 
 SrvJoinServerReply SrvJoinServerReply::create(JoinServerReply::Result result, uint32_t id) {
 
@@ -52,6 +43,10 @@ SrvJoinServerReply SrvJoinServerReply::create(JoinServerReply::Result result, ui
 SrvJoinServerReply SrvJoinServerReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvJoinServerReply(reader);
+}
+std::unique_ptr<SrvJoinServerReply> SrvJoinServerReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvJoinServerReply>(reader);
 }
 
 }

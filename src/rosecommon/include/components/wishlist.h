@@ -16,16 +16,10 @@ struct Wishlist : public RoseCommon::ISerialize {
     return true;
   }
 
-  virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+  virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
       for (const auto& wish : wishlist_)
           if (!writer.set_iserialize(wish)) return false;
       return true;
-  }
-
-  uint16_t get_size() const override {
-      uint16_t size = 0;
-      for (const auto& it : wishlist_) size += it.get_size();
-      return size;
   }
 
   template <typename T, typename U>

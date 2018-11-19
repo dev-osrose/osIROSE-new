@@ -33,22 +33,12 @@ uint16_t CliMouseCmd::z() const { return z_; }
 CliMouseCmd& CliMouseCmd::set_z(uint16_t data) { z_ = data; return *this; }
 
 
-void CliMouseCmd::pack(CRoseWriter& writer) const {
+void CliMouseCmd::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(targetId_);
 	writer.set_float(x_);
 	writer.set_float(y_);
 	writer.set_uint16_t(z_);
 }
-
-uint16_t CliMouseCmd::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(targetId_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
 
 CliMouseCmd CliMouseCmd::create(uint16_t targetId, float x, float y, uint16_t z) {
 
@@ -59,6 +49,10 @@ CliMouseCmd CliMouseCmd::create(uint16_t targetId, float x, float y, uint16_t z)
 CliMouseCmd CliMouseCmd::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliMouseCmd(reader);
+}
+std::unique_ptr<CliMouseCmd> CliMouseCmd::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliMouseCmd>(reader);
 }
 
 }

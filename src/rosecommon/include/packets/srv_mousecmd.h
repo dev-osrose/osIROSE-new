@@ -33,10 +33,10 @@ class SrvMouseCmd : public CRosePacket {
 
 		static SrvMouseCmd create(Entity entity);
 		static SrvMouseCmd create(uint8_t *buffer);
+		static std::unique_ptr<SrvMouseCmd> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t id_;

@@ -23,18 +23,10 @@ const std::string& CliJoinServerReq::password() const { return password_; }
 CliJoinServerReq& CliJoinServerReq::set_password(const std::string& data) { password_ = data; return *this; }
 
 
-void CliJoinServerReq::pack(CRoseWriter& writer) const {
+void CliJoinServerReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint32_t(sessionId_);
 	writer.set_string(password_, 32);
 }
-
-uint16_t CliJoinServerReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(sessionId_);
-	size += sizeof(char) * 32;
-	return size;
-}
-
 
 CliJoinServerReq CliJoinServerReq::create(uint32_t sessionId, const std::string& password) {
 
@@ -45,6 +37,10 @@ CliJoinServerReq CliJoinServerReq::create(uint32_t sessionId, const std::string&
 CliJoinServerReq CliJoinServerReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliJoinServerReq(reader);
+}
+std::unique_ptr<CliJoinServerReq> CliJoinServerReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliJoinServerReq>(reader);
 }
 
 }

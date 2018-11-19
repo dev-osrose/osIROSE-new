@@ -23,18 +23,10 @@ uint32_t SrvPartyReply::id() const { return id_; }
 SrvPartyReply& SrvPartyReply::set_id(uint32_t data) { id_ = data; return *this; }
 
 
-void SrvPartyReply::pack(CRoseWriter& writer) const {
+void SrvPartyReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(reply_);
 	writer.set_uint32_t(id_);
 }
-
-uint16_t SrvPartyReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(reply_);
-	size += sizeof(id_);
-	return size;
-}
-
 
 SrvPartyReply SrvPartyReply::create(PartyReply::Reply reply, uint32_t id) {
 
@@ -45,6 +37,10 @@ SrvPartyReply SrvPartyReply::create(PartyReply::Reply reply, uint32_t id) {
 SrvPartyReply SrvPartyReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvPartyReply(reader);
+}
+std::unique_ptr<SrvPartyReply> SrvPartyReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvPartyReply>(reader);
 }
 
 }

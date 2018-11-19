@@ -43,7 +43,7 @@ uint8_t SrvTeleportReply::rideMode() const { return rideMode_; }
 SrvTeleportReply& SrvTeleportReply::set_rideMode(uint8_t data) { rideMode_ = data; return *this; }
 
 
-void SrvTeleportReply::pack(CRoseWriter& writer) const {
+void SrvTeleportReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_uint16_t(map_);
 	writer.set_float(x_);
@@ -52,22 +52,10 @@ void SrvTeleportReply::pack(CRoseWriter& writer) const {
 	writer.set_uint8_t(rideMode_);
 }
 
-uint16_t SrvTeleportReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(map_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(moveMode_);
-	size += sizeof(rideMode_);
-	return size;
-}
-
-
 SrvTeleportReply SrvTeleportReply::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvTeleportReply(entity_basicinfo->id_, entity_position->map_, entity_position->x_, entity_position->y_, entity_advancedinfo->moveMode_);
 }
@@ -75,6 +63,10 @@ SrvTeleportReply SrvTeleportReply::create(Entity entity) {
 SrvTeleportReply SrvTeleportReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvTeleportReply(reader);
+}
+std::unique_ptr<SrvTeleportReply> SrvTeleportReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvTeleportReply>(reader);
 }
 
 }

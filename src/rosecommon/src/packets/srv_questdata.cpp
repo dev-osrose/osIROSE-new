@@ -23,22 +23,14 @@ const Wishlist& SrvQuestData::wishlist() const { return wishlist_; }
 SrvQuestData& SrvQuestData::set_wishlist(const Wishlist& data) { wishlist_ = data; return *this; }
 
 
-void SrvQuestData::pack(CRoseWriter& writer) const {
+void SrvQuestData::pack(CRoseBasePolicy& writer) const {
 	writer.set_iserialize(quests_);
 	writer.set_iserialize(wishlist_);
 }
 
-uint16_t SrvQuestData::get_size() const {
-	uint16_t size = 0;
-	size += quests_.get_size();
-	size += wishlist_.get_size();
-	return size;
-}
-
-
 SrvQuestData SrvQuestData::create(Entity entity) {
-	const auto entity_wishlist = entity.component<Wishlist>();
 	const auto entity_quests = entity.component<Quests>();
+	const auto entity_wishlist = entity.component<Wishlist>();
 
 	return SrvQuestData(*entity_quests, *entity_wishlist);
 }
@@ -46,6 +38,10 @@ SrvQuestData SrvQuestData::create(Entity entity) {
 SrvQuestData SrvQuestData::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvQuestData(reader);
+}
+std::unique_ptr<SrvQuestData> SrvQuestData::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvQuestData>(reader);
 }
 
 }

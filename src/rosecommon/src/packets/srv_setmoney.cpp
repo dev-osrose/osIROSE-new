@@ -18,16 +18,9 @@ int64_t SrvSetMoney::zuly() const { return zuly_; }
 SrvSetMoney& SrvSetMoney::set_zuly(int64_t data) { zuly_ = data; return *this; }
 
 
-void SrvSetMoney::pack(CRoseWriter& writer) const {
+void SrvSetMoney::pack(CRoseBasePolicy& writer) const {
 	writer.set_int64_t(zuly_);
 }
-
-uint16_t SrvSetMoney::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(zuly_);
-	return size;
-}
-
 
 SrvSetMoney SrvSetMoney::create(Entity entity) {
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
@@ -38,6 +31,10 @@ SrvSetMoney SrvSetMoney::create(Entity entity) {
 SrvSetMoney SrvSetMoney::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSetMoney(reader);
+}
+std::unique_ptr<SrvSetMoney> SrvSetMoney::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSetMoney>(reader);
 }
 
 }

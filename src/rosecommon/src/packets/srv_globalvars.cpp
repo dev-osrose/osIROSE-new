@@ -58,7 +58,7 @@ SrvGlobalVars& SrvGlobalVars::set_item(const uint32_t* data) { for (size_t index
 SrvGlobalVars& SrvGlobalVars::set_item(const uint32_t& data, size_t index) { item_[index] = data; return *this; }
 
 
-void SrvGlobalVars::pack(CRoseWriter& writer) const {
+void SrvGlobalVars::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(type_);
 	writer.set_uint32_t(counter_);
 	writer.set_uint16_t(popBase_);
@@ -69,20 +69,6 @@ void SrvGlobalVars::pack(CRoseWriter& writer) const {
 	for (size_t index = 0; index < MAX_SELL_TYPE; ++index) writer.set_uint32_t(item_[index]);
 }
 
-uint16_t SrvGlobalVars::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(type_);
-	size += sizeof(counter_);
-	size += sizeof(popBase_);
-	size += sizeof(devBase_);
-	size += sizeof(consume_);
-	size += sizeof(dev_);
-	size += sizeof(pop_);
-	size += sizeof(item_);
-	return size;
-}
-
-
 SrvGlobalVars SrvGlobalVars::create() {
 
 
@@ -92,6 +78,10 @@ SrvGlobalVars SrvGlobalVars::create() {
 SrvGlobalVars SrvGlobalVars::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvGlobalVars(reader);
+}
+std::unique_ptr<SrvGlobalVars> SrvGlobalVars::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvGlobalVars>(reader);
 }
 
 }

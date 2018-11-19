@@ -48,7 +48,7 @@ uint16_t SrvDropItem::timeToLive() const { return timeToLive_; }
 SrvDropItem& SrvDropItem::set_timeToLive(uint16_t data) { timeToLive_ = data; return *this; }
 
 
-void SrvDropItem::pack(CRoseWriter& writer) const {
+void SrvDropItem::pack(CRoseBasePolicy& writer) const {
 	writer.set_float(x_);
 	writer.set_float(y_);
 	writer.set_uint16_t(header_);
@@ -58,23 +58,10 @@ void SrvDropItem::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(timeToLive_);
 }
 
-uint16_t SrvDropItem::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(header_);
-	size += sizeof(data_);
-	size += sizeof(id_);
-	size += sizeof(ownerId_);
-	size += sizeof(timeToLive_);
-	return size;
-}
-
-
 SrvDropItem SrvDropItem::create(Entity entity) {
+	const auto entity_position = entity.component<Position>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_rosecommon_item = entity.component<RoseCommon::Item>();
-	const auto entity_position = entity.component<Position>();
 
 	return SrvDropItem(entity_position->x_, entity_position->y_, entity_rosecommon_item->getHeader(), entity_rosecommon_item->getData(), entity_basicinfo->id_, entity_basicinfo->ownerId_);
 }
@@ -82,6 +69,10 @@ SrvDropItem SrvDropItem::create(Entity entity) {
 SrvDropItem SrvDropItem::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvDropItem(reader);
+}
+std::unique_ptr<SrvDropItem> SrvDropItem::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvDropItem>(reader);
 }
 
 }

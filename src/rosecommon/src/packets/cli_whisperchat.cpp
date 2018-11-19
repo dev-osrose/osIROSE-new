@@ -23,18 +23,10 @@ const std::string& CliWhisperChat::message() const { return message_; }
 CliWhisperChat& CliWhisperChat::set_message(const std::string& data) { message_ = data; return *this; }
 
 
-void CliWhisperChat::pack(CRoseWriter& writer) const {
+void CliWhisperChat::pack(CRoseBasePolicy& writer) const {
 	writer.set_string(targetId_);
 	writer.set_string(message_);
 }
-
-uint16_t CliWhisperChat::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(char) * (targetId_.size() + 1);
-	size += sizeof(char) * (message_.size() + 1);
-	return size;
-}
-
 
 CliWhisperChat CliWhisperChat::create(const std::string& targetId, const std::string& message) {
 
@@ -45,6 +37,10 @@ CliWhisperChat CliWhisperChat::create(const std::string& targetId, const std::st
 CliWhisperChat CliWhisperChat::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliWhisperChat(reader);
+}
+std::unique_ptr<CliWhisperChat> CliWhisperChat::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliWhisperChat>(reader);
 }
 
 }

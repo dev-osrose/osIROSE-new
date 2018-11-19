@@ -29,10 +29,10 @@ class CliMouseCmd : public CRosePacket {
 
 		static CliMouseCmd create(uint16_t targetId, float x, float y, uint16_t z);
 		static CliMouseCmd create(uint8_t *buffer);
+		static std::unique_ptr<CliMouseCmd> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t targetId_;

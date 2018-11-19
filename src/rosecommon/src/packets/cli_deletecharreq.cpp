@@ -28,20 +28,11 @@ const std::string& CliDeleteCharReq::name() const { return name_; }
 CliDeleteCharReq& CliDeleteCharReq::set_name(const std::string& data) { name_ = data; return *this; }
 
 
-void CliDeleteCharReq::pack(CRoseWriter& writer) const {
+void CliDeleteCharReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(charId_);
 	writer.set_uint8_t(isDelete_);
 	writer.set_string(name_);
 }
-
-uint16_t CliDeleteCharReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(charId_);
-	size += sizeof(isDelete_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
 
 CliDeleteCharReq CliDeleteCharReq::create(uint8_t charId, uint8_t isDelete, const std::string& name) {
 
@@ -52,6 +43,10 @@ CliDeleteCharReq CliDeleteCharReq::create(uint8_t charId, uint8_t isDelete, cons
 CliDeleteCharReq CliDeleteCharReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliDeleteCharReq(reader);
+}
+std::unique_ptr<CliDeleteCharReq> CliDeleteCharReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliDeleteCharReq>(reader);
 }
 
 }

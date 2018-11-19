@@ -31,10 +31,10 @@ class SrvScreenShotTimeReply : public CRosePacket {
 
 		static SrvScreenShotTimeReply create(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min);
 		static SrvScreenShotTimeReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvScreenShotTimeReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t year_;

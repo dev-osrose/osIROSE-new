@@ -34,10 +34,10 @@ class IscServerRegister : public CRosePacket {
 
 		static IscServerRegister create(Isc::ServerType serverType, const std::string& name, const std::string& addr, int32_t port, int32_t right, int32_t id);
 		static IscServerRegister create(uint8_t *buffer);
+		static std::unique_ptr<IscServerRegister> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		Isc::ServerType serverType_;

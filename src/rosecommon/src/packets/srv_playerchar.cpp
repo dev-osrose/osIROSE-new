@@ -157,7 +157,7 @@ const std::string& SrvPlayerChar::fakeName() const { return fakeName_; }
 SrvPlayerChar& SrvPlayerChar::set_fakeName(const std::string& data) { fakeName_ = data; return *this; }
 
 
-void SrvPlayerChar::pack(CRoseWriter& writer) const {
+void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_float(x_);
 	writer.set_float(y_);
@@ -186,47 +186,15 @@ void SrvPlayerChar::pack(CRoseWriter& writer) const {
 	writer.set_string(fakeName_);
 }
 
-uint16_t SrvPlayerChar::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(destX_);
-	size += sizeof(destY_);
-	size += sizeof(command_);
-	size += sizeof(targetId_);
-	size += sizeof(moveMode_);
-	size += sizeof(hp_);
-	size += sizeof(teamId_);
-	size += sizeof(statusFlag_);
-	size += sizeof(race_);
-	size += sizeof(runSpeed_);
-	size += sizeof(atkSpeed_);
-	size += sizeof(weightRate_);
-	size += sizeof(face_);
-	size += sizeof(hair_);
-	size += sizeof(inventory_);
-	size += sizeof(bullets_);
-	size += sizeof(job_);
-	size += sizeof(level_);
-	size += sizeof(ridingItems_);
-	size += sizeof(z_);
-	size += sizeof(subFlag_);
-	size += sizeof(char) * (name_.size() + 1);
-	size += sizeof(char) * (fakeName_.size() + 1);
-	return size;
-}
-
-
 SrvPlayerChar SrvPlayerChar::create(Entity entity) {
-	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_bulletitems = entity.component<BulletItems>();
 	const auto entity_ridingitems = entity.component<RidingItems>();
+	const auto entity_characterinfo = entity.component<CharacterInfo>();
 	const auto entity_charactergraphics = entity.component<CharacterGraphics>();
 	const auto entity_position = entity.component<Position>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	const auto entity_inventory = entity.component<Inventory>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
+	const auto entity_bulletitems = entity.component<BulletItems>();
 	uint32_t inventory_[Inventory::maxVisibleEquippedItems];
 	for (size_t index = 0; index < Inventory::maxVisibleEquippedItems; ++index) inventory_[index] = entity_inventory->getEquipped()[index].getVisible();
 	uint16_t bullets_[BulletItems::BulletType::MAX_BULLET_TYPES];
@@ -240,6 +208,10 @@ SrvPlayerChar SrvPlayerChar::create(Entity entity) {
 SrvPlayerChar SrvPlayerChar::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvPlayerChar(reader);
+}
+std::unique_ptr<SrvPlayerChar> SrvPlayerChar::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvPlayerChar>(reader);
 }
 
 }

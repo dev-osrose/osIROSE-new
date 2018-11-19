@@ -19,10 +19,10 @@ class IscAlive : public CRosePacket {
 
 		static IscAlive create();
 		static IscAlive create(uint8_t *buffer);
+		static std::unique_ptr<IscAlive> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 };
 
 }

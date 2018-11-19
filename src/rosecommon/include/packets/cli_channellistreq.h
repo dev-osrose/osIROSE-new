@@ -23,10 +23,10 @@ class CliChannelListReq : public CRosePacket {
 
 		static CliChannelListReq create(uint32_t serverId);
 		static CliChannelListReq create(uint8_t *buffer);
+		static std::unique_ptr<CliChannelListReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint32_t serverId_;

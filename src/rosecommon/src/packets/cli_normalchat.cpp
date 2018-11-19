@@ -18,16 +18,9 @@ const std::string& CliNormalChat::message() const { return message_; }
 CliNormalChat& CliNormalChat::set_message(const std::string& data) { message_ = data; return *this; }
 
 
-void CliNormalChat::pack(CRoseWriter& writer) const {
+void CliNormalChat::pack(CRoseBasePolicy& writer) const {
 	writer.set_string(message_);
 }
-
-uint16_t CliNormalChat::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(char) * (message_.size() + 1);
-	return size;
-}
-
 
 CliNormalChat CliNormalChat::create(const std::string& message) {
 
@@ -38,6 +31,10 @@ CliNormalChat CliNormalChat::create(const std::string& message) {
 CliNormalChat CliNormalChat::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliNormalChat(reader);
+}
+std::unique_ptr<CliNormalChat> CliNormalChat::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliNormalChat>(reader);
 }
 
 }

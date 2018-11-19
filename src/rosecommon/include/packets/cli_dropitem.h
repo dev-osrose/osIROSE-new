@@ -25,10 +25,10 @@ class CliDropItem : public CRosePacket {
 
 		static CliDropItem create(uint8_t item, uint32_t quantity);
 		static CliDropItem create(uint8_t *buffer);
+		static std::unique_ptr<CliDropItem> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t item_;

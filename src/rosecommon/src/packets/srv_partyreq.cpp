@@ -28,20 +28,11 @@ const std::string& SrvPartyReq::name() const { return name_; }
 SrvPartyReq& SrvPartyReq::set_name(const std::string& data) { name_ = data; return *this; }
 
 
-void SrvPartyReq::pack(CRoseWriter& writer) const {
+void SrvPartyReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(request_);
 	writer.set_uint32_t(tag_);
 	writer.set_string(name_);
 }
-
-uint16_t SrvPartyReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(request_);
-	size += sizeof(tag_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
 
 SrvPartyReq SrvPartyReq::create(PartyReq::Request request, Entity entity) {
 	const auto entity_basicinfo = entity.component<BasicInfo>();
@@ -52,6 +43,10 @@ SrvPartyReq SrvPartyReq::create(PartyReq::Request request, Entity entity) {
 SrvPartyReq SrvPartyReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvPartyReq(reader);
+}
+std::unique_ptr<SrvPartyReq> SrvPartyReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvPartyReq>(reader);
 }
 
 }

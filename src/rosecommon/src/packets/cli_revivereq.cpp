@@ -18,16 +18,9 @@ ReviveReq::ReviveReq CliReviveReq::reviveType() const { return reviveType_; }
 CliReviveReq& CliReviveReq::set_reviveType(ReviveReq::ReviveReq data) { reviveType_ = data; return *this; }
 
 
-void CliReviveReq::pack(CRoseWriter& writer) const {
+void CliReviveReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(reviveType_);
 }
-
-uint16_t CliReviveReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(reviveType_);
-	return size;
-}
-
 
 CliReviveReq CliReviveReq::create(ReviveReq::ReviveReq reviveType) {
 
@@ -38,6 +31,10 @@ CliReviveReq CliReviveReq::create(ReviveReq::ReviveReq reviveType) {
 CliReviveReq CliReviveReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliReviveReq(reader);
+}
+std::unique_ptr<CliReviveReq> CliReviveReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliReviveReq>(reader);
 }
 
 }

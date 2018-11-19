@@ -25,10 +25,10 @@ class CliPartyReq : public CRosePacket {
 
 		static CliPartyReq create(PartyReq::Request request, uint32_t idXorTag);
 		static CliPartyReq create(uint8_t *buffer);
+		static std::unique_ptr<CliPartyReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		PartyReq::Request request_;

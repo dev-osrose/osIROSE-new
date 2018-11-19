@@ -27,10 +27,10 @@ class CliDeleteCharReq : public CRosePacket {
 
 		static CliDeleteCharReq create(uint8_t charId, uint8_t isDelete, const std::string& name);
 		static CliDeleteCharReq create(uint8_t *buffer);
+		static std::unique_ptr<CliDeleteCharReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t charId_;

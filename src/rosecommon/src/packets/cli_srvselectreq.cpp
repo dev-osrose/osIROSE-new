@@ -23,18 +23,10 @@ uint8_t CliSrvSelectReq::channelId() const { return channelId_; }
 CliSrvSelectReq& CliSrvSelectReq::set_channelId(uint8_t data) { channelId_ = data; return *this; }
 
 
-void CliSrvSelectReq::pack(CRoseWriter& writer) const {
+void CliSrvSelectReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint32_t(serverId_);
 	writer.set_uint8_t(channelId_);
 }
-
-uint16_t CliSrvSelectReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(serverId_);
-	size += sizeof(channelId_);
-	return size;
-}
-
 
 CliSrvSelectReq CliSrvSelectReq::create(uint32_t serverId, uint8_t channelId) {
 
@@ -45,6 +37,10 @@ CliSrvSelectReq CliSrvSelectReq::create(uint32_t serverId, uint8_t channelId) {
 CliSrvSelectReq CliSrvSelectReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliSrvSelectReq(reader);
+}
+std::unique_ptr<CliSrvSelectReq> CliSrvSelectReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliSrvSelectReq>(reader);
 }
 
 }

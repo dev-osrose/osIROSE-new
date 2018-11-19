@@ -19,10 +19,10 @@ class CliLogoutReq : public CRosePacket {
 
 		static CliLogoutReq create();
 		static CliLogoutReq create(uint8_t *buffer);
+		static std::unique_ptr<CliLogoutReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 };
 
 }

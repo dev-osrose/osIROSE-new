@@ -23,18 +23,10 @@ uint16_t CliChangeMapReq::z() const { return z_; }
 CliChangeMapReq& CliChangeMapReq::set_z(uint16_t data) { z_ = data; return *this; }
 
 
-void CliChangeMapReq::pack(CRoseWriter& writer) const {
+void CliChangeMapReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(weightRate_);
 	writer.set_uint16_t(z_);
 }
-
-uint16_t CliChangeMapReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(weightRate_);
-	size += sizeof(z_);
-	return size;
-}
-
 
 CliChangeMapReq CliChangeMapReq::create(uint8_t weightRate, uint16_t z) {
 
@@ -45,6 +37,10 @@ CliChangeMapReq CliChangeMapReq::create(uint8_t weightRate, uint16_t z) {
 CliChangeMapReq CliChangeMapReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliChangeMapReq(reader);
+}
+std::unique_ptr<CliChangeMapReq> CliChangeMapReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliChangeMapReq>(reader);
 }
 
 }

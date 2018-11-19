@@ -25,7 +25,7 @@
 #include "cnetwork_asio.h"
 #include "platform_defines.h"
 
-//#define SPDLOG_TRACE_ON
+#define SPDLOG_TRACE_ON
 
 namespace Core {
 

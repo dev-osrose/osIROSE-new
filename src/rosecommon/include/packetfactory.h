@@ -31,14 +31,14 @@ using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket
 using SendvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
 template <typename T>
-inline std::unique_ptr<CRosePacket> createPacket(CRoseReader reader)
+inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
 {
-  return std::make_unique<T>(reader);
+    return T::allocate(buffer);
 }
 
-#define REGISTER_SEND_PACKET(Type, Class) class Class; static const SendvPacketFactory::Initializer<CRoseReader> send__##Class = SendvPacketFactory::Initializer<CRoseReader>(Type, &createPacket<Class>);
+#define REGISTER_SEND_PACKET(Type, Class) //class Class; static const SendvPacketFactory::Initializer<uint8_t*> send__##Class = SendvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
 
-#define REGISTER_RECV_PACKET(Type, Class) class Class; static const RecvPacketFactory::Initializer<CRoseReader> recv__##Class = RecvPacketFactory::Initializer<CRoseReader>(Type, &createPacket<Class>);
+#define REGISTER_RECV_PACKET(Type, Class) class Class; static const RecvPacketFactory::Initializer<uint8_t*> recv__##Class = RecvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
 
 /*!
  * \function fetchPacket
@@ -50,8 +50,7 @@ inline std::unique_ptr<CRosePacket> createPacket(CRoseReader reader)
  * \date october 2016
  */
 inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
-  CRoseReader reader(buffer, CRosePacket::size(buffer));
-  return RecvPacketFactory::create(CRosePacket::type(buffer), reader);
+  return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
 }
 
 }

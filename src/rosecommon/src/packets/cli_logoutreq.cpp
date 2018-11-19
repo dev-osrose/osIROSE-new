@@ -10,14 +10,8 @@ CliLogoutReq::CliLogoutReq(CRoseReader reader) : CRosePacket(reader) {
 }
 
 
-void CliLogoutReq::pack(CRoseWriter&) const {
+void CliLogoutReq::pack(CRoseBasePolicy&) const {
 }
-
-uint16_t CliLogoutReq::get_size() const {
-	uint16_t size = 0;
-	return size;
-}
-
 
 CliLogoutReq CliLogoutReq::create() {
 
@@ -28,6 +22,10 @@ CliLogoutReq CliLogoutReq::create() {
 CliLogoutReq CliLogoutReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliLogoutReq(reader);
+}
+std::unique_ptr<CliLogoutReq> CliLogoutReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliLogoutReq>(reader);
 }
 
 }

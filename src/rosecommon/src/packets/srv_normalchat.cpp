@@ -23,18 +23,10 @@ const std::string& SrvNormalChat::message() const { return message_; }
 SrvNormalChat& SrvNormalChat::set_message(const std::string& data) { message_ = data; return *this; }
 
 
-void SrvNormalChat::pack(CRoseWriter& writer) const {
+void SrvNormalChat::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(charId_);
 	writer.set_string(message_);
 }
-
-uint16_t SrvNormalChat::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(charId_);
-	size += sizeof(char) * (message_.size() + 1);
-	return size;
-}
-
 
 SrvNormalChat SrvNormalChat::create(uint16_t charId, const std::string& message) {
 
@@ -45,6 +37,10 @@ SrvNormalChat SrvNormalChat::create(uint16_t charId, const std::string& message)
 SrvNormalChat SrvNormalChat::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvNormalChat(reader);
+}
+std::unique_ptr<SrvNormalChat> SrvNormalChat::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvNormalChat>(reader);
 }
 
 }

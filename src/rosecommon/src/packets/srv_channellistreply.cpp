@@ -33,19 +33,11 @@ SrvChannelListReply& SrvChannelListReply::set_channels(const std::vector<Channel
 SrvChannelListReply& SrvChannelListReply::add_channelinfo(const ChannelListReply::ChannelInfo& data) { channels_.push_back(data); return *this; }
 
 
-void SrvChannelListReply::pack(CRoseWriter& writer) const {
+void SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint32_t(id_);
 	writer.set_uint8_t(channels_.size());
 	for (const auto& elem : channels_) writer.set_iserialize(elem);
 }
-
-uint16_t SrvChannelListReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	{ for (const auto& it : channels_) size += it.get_size();} size += sizeof(uint8_t);
-	return size;
-}
-
 
 SrvChannelListReply SrvChannelListReply::create(uint32_t id) {
 
@@ -56,6 +48,10 @@ SrvChannelListReply SrvChannelListReply::create(uint32_t id) {
 SrvChannelListReply SrvChannelListReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvChannelListReply(reader);
+}
+std::unique_ptr<SrvChannelListReply> SrvChannelListReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvChannelListReply>(reader);
 }
 
 }

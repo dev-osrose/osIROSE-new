@@ -28,20 +28,11 @@ uint16_t SrvSetHpAndMp::mp() const { return mp_; }
 SrvSetHpAndMp& SrvSetHpAndMp::set_mp(uint16_t data) { mp_ = data; return *this; }
 
 
-void SrvSetHpAndMp::pack(CRoseWriter& writer) const {
+void SrvSetHpAndMp::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_uint16_t(hp_);
 	writer.set_uint16_t(mp_);
 }
-
-uint16_t SrvSetHpAndMp::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(hp_);
-	size += sizeof(mp_);
-	return size;
-}
-
 
 SrvSetHpAndMp SrvSetHpAndMp::create(Entity entity, uint16_t hp, uint16_t mp) {
 	const auto entity_basicinfo = entity.component<BasicInfo>();
@@ -52,6 +43,10 @@ SrvSetHpAndMp SrvSetHpAndMp::create(Entity entity, uint16_t hp, uint16_t mp) {
 SrvSetHpAndMp SrvSetHpAndMp::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSetHpAndMp(reader);
+}
+std::unique_ptr<SrvSetHpAndMp> SrvSetHpAndMp::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSetHpAndMp>(reader);
 }
 
 }

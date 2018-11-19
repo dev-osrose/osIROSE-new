@@ -25,10 +25,10 @@ class CliEquipItem : public CRosePacket {
 
 		static CliEquipItem create(int16_t slotTo, int16_t slotFrom);
 		static CliEquipItem create(uint8_t *buffer);
+		static std::unique_ptr<CliEquipItem> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		int16_t slotTo_;

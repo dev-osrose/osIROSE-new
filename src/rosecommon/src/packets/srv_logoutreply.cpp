@@ -18,16 +18,9 @@ uint16_t SrvLogoutReply::waitTime() const { return waitTime_; }
 SrvLogoutReply& SrvLogoutReply::set_waitTime(uint16_t data) { waitTime_ = data; return *this; }
 
 
-void SrvLogoutReply::pack(CRoseWriter& writer) const {
+void SrvLogoutReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(waitTime_);
 }
-
-uint16_t SrvLogoutReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(waitTime_);
-	return size;
-}
-
 
 SrvLogoutReply SrvLogoutReply::create(uint16_t waitTime) {
 
@@ -38,6 +31,10 @@ SrvLogoutReply SrvLogoutReply::create(uint16_t waitTime) {
 SrvLogoutReply SrvLogoutReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvLogoutReply(reader);
+}
+std::unique_ptr<SrvLogoutReply> SrvLogoutReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvLogoutReply>(reader);
 }
 
 }

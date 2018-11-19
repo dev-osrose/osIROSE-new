@@ -25,17 +25,10 @@ SrvSetItem& SrvSetItem::set_items(const std::vector<SetItem::Item>& data) { item
 SrvSetItem& SrvSetItem::add_item(const SetItem::Item& data) { items_.push_back(data); return *this; }
 
 
-void SrvSetItem::pack(CRoseWriter& writer) const {
+void SrvSetItem::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(items_.size());
 	for (const auto& elem : items_) writer.set_iserialize(elem);
 }
-
-uint16_t SrvSetItem::get_size() const {
-	uint16_t size = 0;
-	{ for (const auto& it : items_) size += it.get_size();} size += sizeof(uint8_t);
-	return size;
-}
-
 
 SrvSetItem SrvSetItem::create() {
 
@@ -46,6 +39,10 @@ SrvSetItem SrvSetItem::create() {
 SrvSetItem SrvSetItem::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSetItem(reader);
+}
+std::unique_ptr<SrvSetItem> SrvSetItem::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSetItem>(reader);
 }
 
 }

@@ -25,10 +25,10 @@ class SrvCreateCharReply : public CRosePacket {
 
 		static SrvCreateCharReply create(CreateCharReply::Result result);
 		static SrvCreateCharReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvCreateCharReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		CreateCharReply::Result result_;

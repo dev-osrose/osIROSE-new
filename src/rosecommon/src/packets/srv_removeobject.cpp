@@ -18,16 +18,9 @@ uint16_t SrvRemoveObject::id() const { return id_; }
 SrvRemoveObject& SrvRemoveObject::set_id(uint16_t data) { id_ = data; return *this; }
 
 
-void SrvRemoveObject::pack(CRoseWriter& writer) const {
+void SrvRemoveObject::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 }
-
-uint16_t SrvRemoveObject::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	return size;
-}
-
 
 SrvRemoveObject SrvRemoveObject::create(Entity entity) {
 	const auto entity_basicinfo = entity.component<BasicInfo>();
@@ -38,6 +31,10 @@ SrvRemoveObject SrvRemoveObject::create(Entity entity) {
 SrvRemoveObject SrvRemoveObject::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvRemoveObject(reader);
+}
+std::unique_ptr<SrvRemoveObject> SrvRemoveObject::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvRemoveObject>(reader);
 }
 
 }

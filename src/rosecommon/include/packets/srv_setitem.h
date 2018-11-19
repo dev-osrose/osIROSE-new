@@ -23,10 +23,10 @@ class SrvSetItem : public CRosePacket {
 
 		static SrvSetItem create();
 		static SrvSetItem create(uint8_t *buffer);
+		static std::unique_ptr<SrvSetItem> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		std::vector<SetItem::Item> items_;

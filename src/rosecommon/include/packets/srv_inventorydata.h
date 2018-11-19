@@ -28,10 +28,10 @@ class SrvInventoryData : public CRosePacket {
 
 		static SrvInventoryData create(Entity entity);
 		static SrvInventoryData create(uint8_t *buffer);
+		static std::unique_ptr<SrvInventoryData> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		int64_t zuly_;

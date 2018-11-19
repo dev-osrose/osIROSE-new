@@ -38,24 +38,13 @@ uint8_t SrvScreenShotTimeReply::min() const { return min_; }
 SrvScreenShotTimeReply& SrvScreenShotTimeReply::set_min(uint8_t data) { min_ = data; return *this; }
 
 
-void SrvScreenShotTimeReply::pack(CRoseWriter& writer) const {
+void SrvScreenShotTimeReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(year_);
 	writer.set_uint8_t(month_);
 	writer.set_uint8_t(day_);
 	writer.set_uint8_t(hour_);
 	writer.set_uint8_t(min_);
 }
-
-uint16_t SrvScreenShotTimeReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(year_);
-	size += sizeof(month_);
-	size += sizeof(day_);
-	size += sizeof(hour_);
-	size += sizeof(min_);
-	return size;
-}
-
 
 SrvScreenShotTimeReply SrvScreenShotTimeReply::create(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min) {
 
@@ -66,6 +55,10 @@ SrvScreenShotTimeReply SrvScreenShotTimeReply::create(uint16_t year, uint8_t mon
 SrvScreenShotTimeReply SrvScreenShotTimeReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvScreenShotTimeReply(reader);
+}
+std::unique_ptr<SrvScreenShotTimeReply> SrvScreenShotTimeReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvScreenShotTimeReply>(reader);
 }
 
 }

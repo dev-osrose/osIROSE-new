@@ -38,24 +38,13 @@ uint16_t SrvSrvSelectReply::port() const { return port_; }
 SrvSrvSelectReply& SrvSrvSelectReply::set_port(uint16_t data) { port_ = data; return *this; }
 
 
-void SrvSrvSelectReply::pack(CRoseWriter& writer) const {
+void SrvSrvSelectReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(result_);
 	writer.set_uint32_t(sessionId_);
 	writer.set_uint32_t(cryptVal_);
 	writer.set_string(ip_);
 	writer.set_uint16_t(port_);
 }
-
-uint16_t SrvSrvSelectReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(result_);
-	size += sizeof(sessionId_);
-	size += sizeof(cryptVal_);
-	size += sizeof(char) * (ip_.size() + 1);
-	size += sizeof(port_);
-	return size;
-}
-
 
 SrvSrvSelectReply SrvSrvSelectReply::create(SrvSelectReply::Result result, uint32_t sessionId, uint32_t cryptVal, const std::string& ip, uint16_t port) {
 
@@ -66,6 +55,10 @@ SrvSrvSelectReply SrvSrvSelectReply::create(SrvSelectReply::Result result, uint3
 SrvSrvSelectReply SrvSrvSelectReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSrvSelectReply(reader);
+}
+std::unique_ptr<SrvSrvSelectReply> SrvSrvSelectReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSrvSelectReply>(reader);
 }
 
 }

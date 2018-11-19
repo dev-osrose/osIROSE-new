@@ -79,31 +79,6 @@ class Variable:
     def getName(self):
         return self.name + '_'
 
-    def get_size(self):
-        size = "sizeof({})".format(self.getName())
-        if not self.size is None:
-            size = str(self.size) + " * sizeof({})".format(self.getName())
-        elif self._getCleanedType() == "string":
-            size = "sizeof(char) * ({}.size() + 1)".format(self.getName())
-        if not self.size is None and self._getCleanedType() == "string":
-            size = "sizeof(char) * {}".format(str(self.size))
-        if self.array:
-            return "size += sizeof({})".format(self.getName())
-        if not self.size_type is None:
-            if self.iserialize:
-                size = "{{ for (const auto& it : {}) size += it.get_size();}}".format(self.getName())
-                if len(self.size_type) > 0:
-                    size += " size += sizeof({})".format(self.size_type)
-            else:
-                size = "size += {} * {}.size()".format(size, self.getName())
-                if len(self.size_type) > 0:
-                    size += " + sizeof({})".format(self.size_type)
-        elif self.iserialize:
-            size = "size += {}.get_size()".format(self.getName())
-        if size[0] != "{" and size[:5] != "size ":
-            size = "size += " + size
-        return size
-
     def getDeclaration(self):
         return self.type + " " + self.getName() + ("[" + self.array + "]" if self.array else "") + ("" if not self.default or self.default == "=" else "= " + self.default) + ";"
 
@@ -310,8 +285,8 @@ class Class:
             data += "\t\t" + var.setterHeader(self.name) + "\n"
         data += "\n\t\tstatic {} create({});".format(self.name, ", ".join(self.getArgs()))
         data += "\n\t\tstatic {0} create(uint8_t *buffer);".format(self.name)
-        data += "\n\n\tprotected:\n\t\tvirtual void pack(CRoseWriter&) const override;\n"
-        data += "\t\tvirtual uint16_t get_size() const override;\n"
+        data += "\n\t\tstatic std::unique_ptr<{0}> allocate(uint8_t *buffer);".format(self.name)
+        data += "\n\n\tprotected:\n\t\tvirtual void pack(CRoseBasePolicy&) const override;\n"
         if len(self.variables):
             data += "\n\tprivate:\n"
             for var in self.variables:
@@ -394,14 +369,10 @@ class Class:
         for var in self.variables:
             data += "\n" + var.getterCpp(self.name) + "\n"
             data += "\n" + var.setterCpp(self.name) + "\n"
-        data += "\n\nvoid {}::pack(CRoseWriter&{}) const {{\n".format(self.name, " writer" if len(self.variables) else "")
+        data += "\n\nvoid {}::pack(CRoseBasePolicy&{}) const {{\n".format(self.name, " writer" if len(self.variables) else "")
         for var in self.variables:
             data += "\t{}\n".format(var.writer())
         data += "}"
-        data += "\n\nuint16_t {}::get_size() const {{\n\tuint16_t size = 0;\n".format(self.name)
-        for var in self.variables:
-            data += "\t{};\n".format(var.get_size())
-        data += "\treturn size;\n}\n"
         data += "\n\n{} {}::create({}) {{\n".format(self.name, self.name, ", ".join(self.getArgs()))
         data += self.getComps()
         tmp = self.getTemps()
@@ -413,6 +384,10 @@ class Class:
         data += "\n{0} {0}::create(uint8_t *buffer) {{".format(self.name)
         data += "\n\tCRoseReader reader(buffer, CRosePacket::size(buffer));\n"
         data += "\treturn {}(reader);\n}}".format(self.name)
+
+        data += "\nstd::unique_ptr<{0}> {0}::allocate(uint8_t *buffer) {{".format(self.name)
+        data += "\n\tCRoseReader reader(buffer, CRosePacket::size(buffer));\n"
+        data += "\treturn std::make_unique<{}>(reader);\n}}".format(self.name)
         return data + '\n\n}'
 
 def getInt(msg = ''):

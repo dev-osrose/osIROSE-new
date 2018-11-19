@@ -88,7 +88,7 @@ uint16_t SrvNpcChar::eventStatus() const { return eventStatus_; }
 SrvNpcChar& SrvNpcChar::set_eventStatus(uint16_t data) { eventStatus_ = data; return *this; }
 
 
-void SrvNpcChar::pack(CRoseWriter& writer) const {
+void SrvNpcChar::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_float(x_);
 	writer.set_float(y_);
@@ -106,33 +106,12 @@ void SrvNpcChar::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(eventStatus_);
 }
 
-uint16_t SrvNpcChar::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(destX_);
-	size += sizeof(destY_);
-	size += sizeof(command_);
-	size += sizeof(targetId_);
-	size += sizeof(moveMode_);
-	size += sizeof(hp_);
-	size += sizeof(teamId_);
-	size += sizeof(statusFlag_);
-	size += sizeof(npcId_);
-	size += sizeof(questId_);
-	size += sizeof(angle_);
-	size += sizeof(eventStatus_);
-	return size;
-}
-
-
 SrvNpcChar SrvNpcChar::create(Entity entity) {
-	const auto entity_destination = entity.component<Destination>();
 	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_npc = entity.component<Npc>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_destination = entity.component<Destination>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_npc = entity.component<Npc>();
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 
 	return SrvNpcChar(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_destination ? entity_destination->x_ : entity_position->x_, entity_destination ? entity_destination->y_ : entity_position->y_, entity_basicinfo->command_, entity_basicinfo->targetId_, entity_advancedinfo->moveMode_, entity_advancedinfo->hp_, entity_basicinfo->teamId_, entity_characterinfo->statusFlag_, entity_npc->npc_id_, entity_npc->quest_id_, entity_position->angle_);
@@ -141,6 +120,10 @@ SrvNpcChar SrvNpcChar::create(Entity entity) {
 SrvNpcChar SrvNpcChar::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvNpcChar(reader);
+}
+std::unique_ptr<SrvNpcChar> SrvNpcChar::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvNpcChar>(reader);
 }
 
 }

@@ -33,22 +33,12 @@ const std::string& SrvSwitchServer::ip() const { return ip_; }
 SrvSwitchServer& SrvSwitchServer::set_ip(const std::string& data) { ip_ = data; return *this; }
 
 
-void SrvSwitchServer::pack(CRoseWriter& writer) const {
+void SrvSwitchServer::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(port_);
 	writer.set_uint32_t(sessionId_);
 	writer.set_uint32_t(sessionSeed_);
 	writer.set_string(ip_);
 }
-
-uint16_t SrvSwitchServer::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(port_);
-	size += sizeof(sessionId_);
-	size += sizeof(sessionSeed_);
-	size += sizeof(char) * (ip_.size() + 1);
-	return size;
-}
-
 
 SrvSwitchServer SrvSwitchServer::create(uint16_t port, uint32_t sessionId, uint32_t sessionSeed, const std::string& ip) {
 
@@ -59,6 +49,10 @@ SrvSwitchServer SrvSwitchServer::create(uint16_t port, uint32_t sessionId, uint3
 SrvSwitchServer SrvSwitchServer::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSwitchServer(reader);
+}
+std::unique_ptr<SrvSwitchServer> SrvSwitchServer::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSwitchServer>(reader);
 }
 
 }

@@ -27,7 +27,7 @@ struct Quest : public RoseCommon::ISerialize {
       return true;
   }
 
-  virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+  virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
       if (!writer.set_uint16_t(id_)) return false;
       if (!writer.set_uint32_t(timer_)) return false;
       for (const uint16_t var : vars_)
@@ -35,16 +35,7 @@ struct Quest : public RoseCommon::ISerialize {
       if (!writer.set_uint32_t(switches_)) return false;
       for (const RoseCommon::Item& item : items_)
           if (!writer.set_iserialize(item)) return false;
-  }
-
-  virtual uint16_t get_size() const override {
-      uint16_t size = 0;
-      size += sizeof(id_);
-      size += sizeof(timer_);
-      size += vars_.size() * sizeof(uint16_t);
-      size += sizeof(switches_);
-      for (const auto& it : items_) size += it.get_size();
-      return size;
+      return true;
   }
 };
 
@@ -79,7 +70,7 @@ struct Quests : public RoseCommon::ISerialize {
       return true;
   }
 
-  virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+  virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
       for (const uint16_t episode : episode_)
           if (!writer.set_uint16_t(episode)) return false;
       for (const uint16_t job : job_)
@@ -93,16 +84,5 @@ struct Quests : public RoseCommon::ISerialize {
       for (const uint32_t switche : switches_)
           if (!writer.set_uint32_t(switche)) return false;
       return true;
-  }
-
-  uint16_t get_size() const override {
-      uint16_t size = 0;
-      size += sizeof(uint16_t) * episode_.size();
-      size += sizeof(uint16_t) * job_.size();
-      size += sizeof(uint16_t) * planet_.size();
-      size += sizeof(uint16_t) * union_.size();
-      for (const Quest& it : quests_) size += it.get_size();
-      size += sizeof(uint32_t) * switches_.size();
-      return size;
   }
 };

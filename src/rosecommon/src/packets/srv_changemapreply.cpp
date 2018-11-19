@@ -82,7 +82,7 @@ uint16_t SrvChangeMapReply::teamNumber() const { return teamNumber_; }
 SrvChangeMapReply& SrvChangeMapReply::set_teamNumber(uint16_t data) { teamNumber_ = data; return *this; }
 
 
-void SrvChangeMapReply::pack(CRoseWriter& writer) const {
+void SrvChangeMapReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(objectIndex_);
 	writer.set_uint16_t(currentHp_);
 	writer.set_uint16_t(currentMp_);
@@ -98,25 +98,6 @@ void SrvChangeMapReply::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(teamNumber_);
 }
 
-uint16_t SrvChangeMapReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(objectIndex_);
-	size += sizeof(currentHp_);
-	size += sizeof(currentMp_);
-	size += sizeof(currentExp_);
-	size += sizeof(penalizeExp_);
-	size += sizeof(craftRate_);
-	size += sizeof(updateTime_);
-	size += sizeof(worldRate_);
-	size += sizeof(townRate_);
-	size += sizeof(itemRate_);
-	size += sizeof(flags_);
-	size += sizeof(worldTime_);
-	size += sizeof(teamNumber_);
-	return size;
-}
-
-
 SrvChangeMapReply SrvChangeMapReply::create(uint16_t objectIndex, uint16_t currentHp, uint16_t currentMp, uint16_t currentExp, uint16_t penalizeExp, uint16_t worldTime, uint16_t teamNumber) {
 
 
@@ -126,6 +107,10 @@ SrvChangeMapReply SrvChangeMapReply::create(uint16_t objectIndex, uint16_t curre
 SrvChangeMapReply SrvChangeMapReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvChangeMapReply(reader);
+}
+std::unique_ptr<SrvChangeMapReply> SrvChangeMapReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvChangeMapReply>(reader);
 }
 
 }

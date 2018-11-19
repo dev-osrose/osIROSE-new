@@ -25,10 +25,10 @@ class SrvInitData : public CRosePacket {
 
 		static SrvInitData create(uint32_t randSeed, uint16_t randIndex);
 		static SrvInitData create(uint8_t *buffer);
+		static std::unique_ptr<SrvInitData> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint32_t randSeed_;

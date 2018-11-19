@@ -25,10 +25,10 @@ class SrvQuestData : public CRosePacket {
 
 		static SrvQuestData create(Entity entity);
 		static SrvQuestData create(uint8_t *buffer);
+		static std::unique_ptr<SrvQuestData> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		Quests quests_;

@@ -23,10 +23,10 @@ class CliReviveReq : public CRosePacket {
 
 		static CliReviveReq create(ReviveReq::ReviveReq reviveType);
 		static CliReviveReq create(uint8_t *buffer);
+		static std::unique_ptr<CliReviveReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		ReviveReq::ReviveReq reviveType_;

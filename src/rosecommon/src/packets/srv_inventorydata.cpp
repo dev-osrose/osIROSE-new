@@ -27,18 +27,10 @@ SrvInventoryData& SrvInventoryData::set_items(const RoseCommon::Item* data) { fo
 SrvInventoryData& SrvInventoryData::set_items(const RoseCommon::Item& data, size_t index) { items_[index] = data; return *this; }
 
 
-void SrvInventoryData::pack(CRoseWriter& writer) const {
+void SrvInventoryData::pack(CRoseBasePolicy& writer) const {
 	writer.set_int64_t(zuly_);
 	for (size_t index = 0; index < Inventory::maxItems; ++index) writer.set_iserialize(items_[index]);
 }
-
-uint16_t SrvInventoryData::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(zuly_);
-	size += sizeof(items_);
-	return size;
-}
-
 
 SrvInventoryData SrvInventoryData::create(Entity entity) {
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
@@ -49,6 +41,10 @@ SrvInventoryData SrvInventoryData::create(Entity entity) {
 SrvInventoryData SrvInventoryData::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvInventoryData(reader);
+}
+std::unique_ptr<SrvInventoryData> SrvInventoryData::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvInventoryData>(reader);
 }
 
 }

@@ -262,7 +262,7 @@ const std::string& SrvSelectCharReply::name() const { return name_; }
 SrvSelectCharReply& SrvSelectCharReply::set_name(const std::string& data) { name_ = data; return *this; }
 
 
-void SrvSelectCharReply::pack(CRoseWriter& writer) const {
+void SrvSelectCharReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(race_);
 	writer.set_uint16_t(map_);
 	writer.set_float(x_);
@@ -309,67 +309,17 @@ void SrvSelectCharReply::pack(CRoseWriter& writer) const {
 	writer.set_string(name_);
 }
 
-uint16_t SrvSelectCharReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(race_);
-	size += sizeof(map_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(spawn_);
-	size += sizeof(mask_);
-	size += sizeof(headGear_);
-	size += sizeof(inventory_);
-	size += sizeof(stone_);
-	size += sizeof(face_);
-	size += sizeof(hair_);
-	size += sizeof(job_);
-	size += sizeof(factionId_);
-	size += sizeof(factionRank_);
-	size += sizeof(fame_);
-	size += sizeof(str_);
-	size += sizeof(dex_);
-	size += sizeof(intel_);
-	size += sizeof(con_);
-	size += sizeof(charm_);
-	size += sizeof(sense_);
-	size += sizeof(hp_);
-	size += sizeof(mp_);
-	size += sizeof(xp_);
-	size += sizeof(level_);
-	size += sizeof(statPoints_);
-	size += sizeof(skillPoints_);
-	size += sizeof(bodySize_);
-	size += sizeof(headSize_);
-	size += sizeof(penaltyXp_);
-	size += sizeof(factionFame_);
-	size += sizeof(factionPoints_);
-	size += sizeof(guildId_);
-	size += sizeof(guildContribution_);
-	size += sizeof(guildRank_);
-	size += sizeof(pkFlag_);
-	size += sizeof(stamina_);
-	size += sizeof(effects_);
-	size += sizeof(patHp_);
-	size += sizeof(patCooldownTime_);
-	size += sizeof(skills_);
-	size += sizeof(hotbar_);
-	size += sizeof(tag_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
-
 SrvSelectCharReply SrvSelectCharReply::create(Entity entity) {
 	const auto entity_hotbar = entity.component<Hotbar>();
-	const auto entity_statuseffects = entity.component<StatusEffects>();
-	const auto entity_skills = entity.component<Skills>();
+	const auto entity_characterinfo = entity.component<CharacterInfo>();
 	const auto entity_charactergraphics = entity.component<CharacterGraphics>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_skills = entity.component<Skills>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
-	const auto entity_inventory = entity.component<Inventory>();
 	const auto entity_stats = entity.component<Stats>();
+	const auto entity_statuseffects = entity.component<StatusEffects>();
+	const auto entity_inventory = entity.component<Inventory>();
+	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 	uint32_t inventory_[Inventory::maxVisibleEquippedItems];
 	for (size_t index = 0; index < Inventory::maxVisibleEquippedItems; ++index) inventory_[index] = entity_inventory->getEquipped()[index].getVisible();
 	uint16_t factionFame_[2];
@@ -389,6 +339,10 @@ SrvSelectCharReply SrvSelectCharReply::create(Entity entity) {
 SrvSelectCharReply SrvSelectCharReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvSelectCharReply(reader);
+}
+std::unique_ptr<SrvSelectCharReply> SrvSelectCharReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvSelectCharReply>(reader);
 }
 
 }

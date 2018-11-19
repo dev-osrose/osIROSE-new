@@ -32,10 +32,10 @@ class SrvSrvSelectReply : public CRosePacket {
 
 		static SrvSrvSelectReply create(SrvSelectReply::Result result, uint32_t sessionId, uint32_t cryptVal, const std::string& ip, uint16_t port);
 		static SrvSrvSelectReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvSrvSelectReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		SrvSelectReply::Result result_;

@@ -18,16 +18,9 @@ uint32_t CliChannelListReq::serverId() const { return serverId_; }
 CliChannelListReq& CliChannelListReq::set_serverId(uint32_t data) { serverId_ = data; return *this; }
 
 
-void CliChannelListReq::pack(CRoseWriter& writer) const {
+void CliChannelListReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint32_t(serverId_);
 }
-
-uint16_t CliChannelListReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(serverId_);
-	return size;
-}
-
 
 CliChannelListReq CliChannelListReq::create(uint32_t serverId) {
 
@@ -38,6 +31,10 @@ CliChannelListReq CliChannelListReq::create(uint32_t serverId) {
 CliChannelListReq CliChannelListReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliChannelListReq(reader);
+}
+std::unique_ptr<CliChannelListReq> CliChannelListReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliChannelListReq>(reader);
 }
 
 }

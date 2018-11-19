@@ -33,26 +33,16 @@ uint16_t SrvStop::z() const { return z_; }
 SrvStop& SrvStop::set_z(uint16_t data) { z_ = data; return *this; }
 
 
-void SrvStop::pack(CRoseWriter& writer) const {
+void SrvStop::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_float(x_);
 	writer.set_float(y_);
 	writer.set_uint16_t(z_);
 }
 
-uint16_t SrvStop::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
-
 SrvStop SrvStop::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvStop(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_position->z_);
 }
@@ -60,6 +50,10 @@ SrvStop SrvStop::create(Entity entity) {
 SrvStop SrvStop::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvStop(reader);
+}
+std::unique_ptr<SrvStop> SrvStop::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvStop>(reader);
 }
 
 }

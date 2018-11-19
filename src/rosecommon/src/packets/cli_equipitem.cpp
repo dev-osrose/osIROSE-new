@@ -23,18 +23,10 @@ int16_t CliEquipItem::slotFrom() const { return slotFrom_; }
 CliEquipItem& CliEquipItem::set_slotFrom(int16_t data) { slotFrom_ = data; return *this; }
 
 
-void CliEquipItem::pack(CRoseWriter& writer) const {
+void CliEquipItem::pack(CRoseBasePolicy& writer) const {
 	writer.set_int16_t(slotTo_);
 	writer.set_int16_t(slotFrom_);
 }
-
-uint16_t CliEquipItem::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(slotTo_);
-	size += sizeof(slotFrom_);
-	return size;
-}
-
 
 CliEquipItem CliEquipItem::create(int16_t slotTo, int16_t slotFrom) {
 
@@ -45,6 +37,10 @@ CliEquipItem CliEquipItem::create(int16_t slotTo, int16_t slotFrom) {
 CliEquipItem CliEquipItem::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliEquipItem(reader);
+}
+std::unique_ptr<CliEquipItem> CliEquipItem::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliEquipItem>(reader);
 }
 
 }

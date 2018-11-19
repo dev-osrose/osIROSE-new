@@ -25,10 +25,10 @@ class CliPartyReply : public CRosePacket {
 
 		static CliPartyReply create(PartyReply::Reply reply, uint32_t idXorTag);
 		static CliPartyReply create(uint8_t *buffer);
+		static std::unique_ptr<CliPartyReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		PartyReply::Reply reply_;

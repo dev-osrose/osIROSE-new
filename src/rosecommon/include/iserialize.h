@@ -25,7 +25,7 @@
 
 namespace RoseCommon {
 
-class CRoseWriter;
+class CRoseBasePolicy;
 class CRoseReader;
 
 /*!
@@ -40,8 +40,7 @@ class ISerialize {
 		virtual ~ISerialize() = default;
 
         virtual bool read(CRoseReader& reader) = 0;
-        virtual bool write(CRoseWriter& writer) const = 0;
-        virtual uint16_t get_size() const = 0;
+        virtual bool write(CRoseBasePolicy& writer) const = 0;
 };
 
 }

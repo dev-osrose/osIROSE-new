@@ -25,10 +25,10 @@ class SrvPartyReply : public CRosePacket {
 
 		static SrvPartyReply create(PartyReply::Reply reply, uint32_t id);
 		static SrvPartyReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvPartyReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		PartyReply::Reply reply_;

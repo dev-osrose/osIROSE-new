@@ -23,18 +23,10 @@ uint32_t SrvAcceptReply::randValue() const { return randValue_; }
 SrvAcceptReply& SrvAcceptReply::set_randValue(uint32_t data) { randValue_ = data; return *this; }
 
 
-void SrvAcceptReply::pack(CRoseWriter& writer) const {
+void SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(result_);
 	writer.set_uint32_t(randValue_);
 }
-
-uint16_t SrvAcceptReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(result_);
-	size += sizeof(randValue_);
-	return size;
-}
-
 
 SrvAcceptReply SrvAcceptReply::create(uint8_t result, uint32_t randValue) {
 
@@ -45,6 +37,10 @@ SrvAcceptReply SrvAcceptReply::create(uint8_t result, uint32_t randValue) {
 SrvAcceptReply SrvAcceptReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvAcceptReply(reader);
+}
+std::unique_ptr<SrvAcceptReply> SrvAcceptReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvAcceptReply>(reader);
 }
 
 }

@@ -48,7 +48,7 @@ const std::string& CliCreateCharReq::name() const { return name_; }
 CliCreateCharReq& CliCreateCharReq::set_name(const std::string& data) { name_ = data; return *this; }
 
 
-void CliCreateCharReq::pack(CRoseWriter& writer) const {
+void CliCreateCharReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(race_);
 	writer.set_uint8_t(stone_);
 	writer.set_uint8_t(hair_);
@@ -57,19 +57,6 @@ void CliCreateCharReq::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(zone_);
 	writer.set_string(name_);
 }
-
-uint16_t CliCreateCharReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(race_);
-	size += sizeof(stone_);
-	size += sizeof(hair_);
-	size += sizeof(face_);
-	size += sizeof(weapon_);
-	size += sizeof(zone_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
 
 CliCreateCharReq CliCreateCharReq::create(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint16_t zone, const std::string& name) {
 
@@ -80,6 +67,10 @@ CliCreateCharReq CliCreateCharReq::create(uint8_t race, uint8_t stone, uint8_t h
 CliCreateCharReq CliCreateCharReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliCreateCharReq(reader);
+}
+std::unique_ptr<CliCreateCharReq> CliCreateCharReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliCreateCharReq>(reader);
 }
 
 }

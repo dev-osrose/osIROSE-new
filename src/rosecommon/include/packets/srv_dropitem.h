@@ -35,10 +35,10 @@ class SrvDropItem : public CRosePacket {
 
 		static SrvDropItem create(Entity entity);
 		static SrvDropItem create(uint8_t *buffer);
+		static std::unique_ptr<SrvDropItem> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		float x_;

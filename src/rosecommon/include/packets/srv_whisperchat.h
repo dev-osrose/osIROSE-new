@@ -25,10 +25,10 @@ class SrvWhisperChat : public CRosePacket {
 
 		static SrvWhisperChat create(const std::string& senderId, const std::string& message);
 		static SrvWhisperChat create(uint8_t *buffer);
+		static std::unique_ptr<SrvWhisperChat> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		std::string senderId_;

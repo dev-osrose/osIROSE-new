@@ -59,14 +59,7 @@ bool Item::read(CRoseReader& reader) {
     // TODO: set the values somehow?
 }
 
-bool Item::write(CRoseWriter& writer) const {
+bool Item::write(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(getHeader())) return false;
     return writer.set_uint32_t(getData());
-}
-
-uint16_t Item::get_size() const {
-    uint16_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
-    return size;
 }

@@ -23,18 +23,10 @@ uint8_t SrvCreateCharReply::platinium() const { return platinium_; }
 SrvCreateCharReply& SrvCreateCharReply::set_platinium(uint8_t data) { platinium_ = data; return *this; }
 
 
-void SrvCreateCharReply::pack(CRoseWriter& writer) const {
+void SrvCreateCharReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(result_);
 	writer.set_uint8_t(platinium_);
 }
-
-uint16_t SrvCreateCharReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(result_);
-	size += sizeof(platinium_);
-	return size;
-}
-
 
 SrvCreateCharReply SrvCreateCharReply::create(CreateCharReply::Result result) {
 
@@ -45,6 +37,10 @@ SrvCreateCharReply SrvCreateCharReply::create(CreateCharReply::Result result) {
 SrvCreateCharReply SrvCreateCharReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvCreateCharReply(reader);
+}
+std::unique_ptr<SrvCreateCharReply> SrvCreateCharReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvCreateCharReply>(reader);
 }
 
 }

@@ -31,10 +31,10 @@ class SrvLoginReply : public CRosePacket {
 
 		static SrvLoginReply create(LoginReply::eResult result, uint16_t right, uint16_t type);
 		static SrvLoginReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvLoginReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		LoginReply::eResult result_;

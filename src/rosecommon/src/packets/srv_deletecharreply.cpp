@@ -23,18 +23,10 @@ std::string SrvDeleteCharReply::name() const { return name_; }
 SrvDeleteCharReply& SrvDeleteCharReply::set_name(std::string data) { name_ = data; return *this; }
 
 
-void SrvDeleteCharReply::pack(CRoseWriter& writer) const {
+void SrvDeleteCharReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint32_t(remainingTime_);
 	writer.set_string(name_);
 }
-
-uint16_t SrvDeleteCharReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(remainingTime_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
 
 SrvDeleteCharReply SrvDeleteCharReply::create(uint32_t remainingTime, std::string name) {
 
@@ -45,6 +37,10 @@ SrvDeleteCharReply SrvDeleteCharReply::create(uint32_t remainingTime, std::strin
 SrvDeleteCharReply SrvDeleteCharReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvDeleteCharReply(reader);
+}
+std::unique_ptr<SrvDeleteCharReply> SrvDeleteCharReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvDeleteCharReply>(reader);
 }
 
 }

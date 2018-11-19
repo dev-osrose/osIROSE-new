@@ -43,7 +43,7 @@ int32_t IscServerRegister::id() const { return id_; }
 IscServerRegister& IscServerRegister::set_id(int32_t data) { id_ = data; return *this; }
 
 
-void IscServerRegister::pack(CRoseWriter& writer) const {
+void IscServerRegister::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(serverType_);
 	writer.set_string(name_);
 	writer.set_string(addr_);
@@ -51,18 +51,6 @@ void IscServerRegister::pack(CRoseWriter& writer) const {
 	writer.set_int32_t(right_);
 	writer.set_int32_t(id_);
 }
-
-uint16_t IscServerRegister::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(serverType_);
-	size += sizeof(char) * (name_.size() + 1);
-	size += sizeof(char) * (addr_.size() + 1);
-	size += sizeof(port_);
-	size += sizeof(right_);
-	size += sizeof(id_);
-	return size;
-}
-
 
 IscServerRegister IscServerRegister::create(Isc::ServerType serverType, const std::string& name, const std::string& addr, int32_t port, int32_t right, int32_t id) {
 
@@ -73,6 +61,10 @@ IscServerRegister IscServerRegister::create(Isc::ServerType serverType, const st
 IscServerRegister IscServerRegister::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return IscServerRegister(reader);
+}
+std::unique_ptr<IscServerRegister> IscServerRegister::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<IscServerRegister>(reader);
 }
 
 }

@@ -23,10 +23,10 @@ class CliAttack : public CRosePacket {
 
 		static CliAttack create(uint16_t targetId);
 		static CliAttack create(uint8_t *buffer);
+		static std::unique_ptr<CliAttack> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t targetId_;

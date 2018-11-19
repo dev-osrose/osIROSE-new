@@ -23,18 +23,10 @@ PartyMember::Party SrvPartyMember::party() const { return party_; }
 SrvPartyMember& SrvPartyMember::set_party(PartyMember::Party data) { party_ = data; return *this; }
 
 
-void SrvPartyMember::pack(CRoseWriter& writer) const {
+void SrvPartyMember::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(rules_);
 	writer.set_iserialize(party_);
 }
-
-uint16_t SrvPartyMember::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(rules_);
-	size += party_.get_size();
-	return size;
-}
-
 
 SrvPartyMember SrvPartyMember::create(uint8_t rules, PartyMember::Party party) {
 
@@ -45,6 +37,10 @@ SrvPartyMember SrvPartyMember::create(uint8_t rules, PartyMember::Party party) {
 SrvPartyMember SrvPartyMember::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvPartyMember(reader);
+}
+std::unique_ptr<SrvPartyMember> SrvPartyMember::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvPartyMember>(reader);
 }
 
 }

@@ -28,24 +28,15 @@ uint32_t SrvEquipItem::item() const { return item_; }
 SrvEquipItem& SrvEquipItem::set_item(uint32_t data) { item_ = data; return *this; }
 
 
-void SrvEquipItem::pack(CRoseWriter& writer) const {
+void SrvEquipItem::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_int16_t(slot_);
 	writer.set_uint32_t(item_);
 }
 
-uint16_t SrvEquipItem::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(slot_);
-	size += sizeof(item_);
-	return size;
-}
-
-
 SrvEquipItem SrvEquipItem::create(Entity entity, int16_t slot) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_inventory = entity.component<Inventory>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvEquipItem(entity_basicinfo->id_, slot, entity_inventory->items_[slot].getVisible());
 }
@@ -53,6 +44,10 @@ SrvEquipItem SrvEquipItem::create(Entity entity, int16_t slot) {
 SrvEquipItem SrvEquipItem::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvEquipItem(reader);
+}
+std::unique_ptr<SrvEquipItem> SrvEquipItem::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvEquipItem>(reader);
 }
 
 }

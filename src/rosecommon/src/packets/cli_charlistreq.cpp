@@ -10,14 +10,8 @@ CliCharListReq::CliCharListReq(CRoseReader reader) : CRosePacket(reader) {
 }
 
 
-void CliCharListReq::pack(CRoseWriter&) const {
+void CliCharListReq::pack(CRoseBasePolicy&) const {
 }
-
-uint16_t CliCharListReq::get_size() const {
-	uint16_t size = 0;
-	return size;
-}
-
 
 CliCharListReq CliCharListReq::create() {
 
@@ -28,6 +22,10 @@ CliCharListReq CliCharListReq::create() {
 CliCharListReq CliCharListReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliCharListReq(reader);
+}
+std::unique_ptr<CliCharListReq> CliCharListReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliCharListReq>(reader);
 }
 
 }

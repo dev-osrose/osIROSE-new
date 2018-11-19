@@ -18,16 +18,9 @@ uint16_t CliScreenShotTimeReq::count() const { return count_; }
 CliScreenShotTimeReq& CliScreenShotTimeReq::set_count(uint16_t data) { count_ = data; return *this; }
 
 
-void CliScreenShotTimeReq::pack(CRoseWriter& writer) const {
+void CliScreenShotTimeReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(count_);
 }
-
-uint16_t CliScreenShotTimeReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(count_);
-	return size;
-}
-
 
 CliScreenShotTimeReq CliScreenShotTimeReq::create(uint16_t count) {
 
@@ -38,6 +31,10 @@ CliScreenShotTimeReq CliScreenShotTimeReq::create(uint16_t count) {
 CliScreenShotTimeReq CliScreenShotTimeReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliScreenShotTimeReq(reader);
+}
+std::unique_ptr<CliScreenShotTimeReq> CliScreenShotTimeReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliScreenShotTimeReq>(reader);
 }
 
 }

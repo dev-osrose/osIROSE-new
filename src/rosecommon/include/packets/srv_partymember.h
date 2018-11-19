@@ -25,10 +25,10 @@ class SrvPartyMember : public CRosePacket {
 
 		static SrvPartyMember create(uint8_t rules, PartyMember::Party party);
 		static SrvPartyMember create(uint8_t *buffer);
+		static std::unique_ptr<SrvPartyMember> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t rules_;

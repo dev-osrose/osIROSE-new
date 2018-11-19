@@ -23,18 +23,10 @@ uint32_t CliPartyReply::idXorTag() const { return idXorTag_; }
 CliPartyReply& CliPartyReply::set_idXorTag(uint32_t data) { idXorTag_ = data; return *this; }
 
 
-void CliPartyReply::pack(CRoseWriter& writer) const {
+void CliPartyReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(reply_);
 	writer.set_uint32_t(idXorTag_);
 }
-
-uint16_t CliPartyReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(reply_);
-	size += sizeof(idXorTag_);
-	return size;
-}
-
 
 CliPartyReply CliPartyReply::create(PartyReply::Reply reply, uint32_t idXorTag) {
 
@@ -45,6 +37,10 @@ CliPartyReply CliPartyReply::create(PartyReply::Reply reply, uint32_t idXorTag) 
 CliPartyReply CliPartyReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliPartyReply(reader);
+}
+std::unique_ptr<CliPartyReply> CliPartyReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliPartyReply>(reader);
 }
 
 }

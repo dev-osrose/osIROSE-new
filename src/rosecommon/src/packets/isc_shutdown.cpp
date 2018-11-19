@@ -23,18 +23,10 @@ int32_t IscShutdown::id() const { return id_; }
 IscShutdown& IscShutdown::set_id(int32_t data) { id_ = data; return *this; }
 
 
-void IscShutdown::pack(CRoseWriter& writer) const {
+void IscShutdown::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(serverType_);
 	writer.set_int32_t(id_);
 }
-
-uint16_t IscShutdown::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(serverType_);
-	size += sizeof(id_);
-	return size;
-}
-
 
 IscShutdown IscShutdown::create(Isc::ServerType serverType, int32_t id) {
 
@@ -45,6 +37,10 @@ IscShutdown IscShutdown::create(Isc::ServerType serverType, int32_t id) {
 IscShutdown IscShutdown::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return IscShutdown(reader);
+}
+std::unique_ptr<IscShutdown> IscShutdown::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<IscShutdown>(reader);
 }
 
 }

@@ -33,26 +33,16 @@ uint32_t SrvDamage::action() const { return action_; }
 SrvDamage& SrvDamage::set_action(uint32_t data) { action_ = data; return *this; }
 
 
-void SrvDamage::pack(CRoseWriter& writer) const {
+void SrvDamage::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(idA_);
 	writer.set_uint16_t(idD_);
 	writer.set_uint32_t(damage_);
 	writer.set_uint32_t(action_);
 }
 
-uint16_t SrvDamage::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(idA_);
-	size += sizeof(idD_);
-	size += sizeof(damage_);
-	size += sizeof(action_);
-	return size;
-}
-
-
 SrvDamage SrvDamage::create(Entity entityA, Entity entityD, uint32_t damage, uint32_t action) {
-	const auto entityd_basicinfo = entityD.component<BasicInfo>();
 	const auto entitya_basicinfo = entityA.component<BasicInfo>();
+	const auto entityd_basicinfo = entityD.component<BasicInfo>();
 
 	return SrvDamage(entitya_basicinfo->id_, entityd_basicinfo->id_, damage, action);
 }
@@ -60,6 +50,10 @@ SrvDamage SrvDamage::create(Entity entityA, Entity entityD, uint32_t damage, uin
 SrvDamage SrvDamage::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvDamage(reader);
+}
+std::unique_ptr<SrvDamage> SrvDamage::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvDamage>(reader);
 }
 
 }

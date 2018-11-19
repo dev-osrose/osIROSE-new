@@ -33,26 +33,16 @@ float SrvAdjustPosition::z() const { return z_; }
 SrvAdjustPosition& SrvAdjustPosition::set_z(float data) { z_ = data; return *this; }
 
 
-void SrvAdjustPosition::pack(CRoseWriter& writer) const {
+void SrvAdjustPosition::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_float(x_);
 	writer.set_float(y_);
 	writer.set_float(z_);
 }
 
-uint16_t SrvAdjustPosition::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
-
 SrvAdjustPosition SrvAdjustPosition::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvAdjustPosition(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_position->z_);
 }
@@ -60,6 +50,10 @@ SrvAdjustPosition SrvAdjustPosition::create(Entity entity) {
 SrvAdjustPosition SrvAdjustPosition::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvAdjustPosition(reader);
+}
+std::unique_ptr<SrvAdjustPosition> SrvAdjustPosition::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvAdjustPosition>(reader);
 }
 
 }

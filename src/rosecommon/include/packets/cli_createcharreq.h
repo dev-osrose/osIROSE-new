@@ -35,10 +35,10 @@ class CliCreateCharReq : public CRosePacket {
 
 		static CliCreateCharReq create(uint8_t race, uint8_t stone, uint8_t hair, uint8_t face, uint8_t weapon, uint16_t zone, const std::string& name);
 		static CliCreateCharReq create(uint8_t *buffer);
+		static std::unique_ptr<CliCreateCharReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t race_;

@@ -28,20 +28,11 @@ int16_t CliStopMoving::z() const { return z_; }
 CliStopMoving& CliStopMoving::set_z(int16_t data) { z_ = data; return *this; }
 
 
-void CliStopMoving::pack(CRoseWriter& writer) const {
+void CliStopMoving::pack(CRoseBasePolicy& writer) const {
 	writer.set_float(x_);
 	writer.set_float(y_);
 	writer.set_int16_t(z_);
 }
-
-uint16_t CliStopMoving::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
 
 CliStopMoving CliStopMoving::create(float x, float y, int16_t z) {
 
@@ -52,6 +43,10 @@ CliStopMoving CliStopMoving::create(float x, float y, int16_t z) {
 CliStopMoving CliStopMoving::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliStopMoving(reader);
+}
+std::unique_ptr<CliStopMoving> CliStopMoving::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliStopMoving>(reader);
 }
 
 }

@@ -25,10 +25,10 @@ class SrvAcceptReply : public CRosePacket {
 
 		static SrvAcceptReply create(uint8_t result, uint32_t randValue);
 		static SrvAcceptReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvAcceptReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t result_;

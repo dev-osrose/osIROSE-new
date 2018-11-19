@@ -70,11 +70,19 @@ class CRosePacket {
         virtual ~CRosePacket() = default;
 
         ePacketType get_type() const {return type_;}
-        virtual uint16_t get_size() const {return size_;}
+        uint16_t get_size() const {
+            if (size_ != 0)
+                return size_;
+            CRoseSizer sizer(0, 0);
+            pack(sizer);
+            uint16_t size = sizer.get_size();
+            size += sizeof(size_);
+            size += sizeof(type_);
+            size += sizeof(CRC_);
+            const_cast<CRosePacket*>(this)->size_ = size;
+            return size_;
+        }
         uint16_t get_CRC() const {return CRC_;}
-        CRosePacket& set_type(ePacketType t) { type_ = t; return *this; }
-        CRosePacket& set_size(uint16_t s) { size_ = s; return *this; }
-        CRosePacket& set_CRC(uint16_t c) { CRC_ = c; return *this; }
 
         /*!
          * \brief Function to get the structured buffer
@@ -83,12 +91,11 @@ class CRosePacket {
          */
         virtual std::unique_ptr<uint8_t[]> getPacked() const {
             uint16_t size = get_size();
-            size += sizeof(size) + sizeof(type_) + sizeof(CRC_);
             auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
             CRoseWriter writer(res.get(), size);
             writer.set_uint16_t(size);
-            writer.set_uint16_t(to_underlying(type_));
-            writer.set_uint16_t(CRC_);
+            writer.set_uint16_t(to_underlying(get_type()));
+            writer.set_uint16_t(get_CRC());
             pack(writer);
             return res;
         }
@@ -116,7 +123,7 @@ class CRosePacket {
         }
 
     protected:
-        virtual void pack(CRoseWriter& writer) const = 0;
+        virtual void pack(CRoseBasePolicy& writer) const = 0;
     
     private:
         uint16_t size_;

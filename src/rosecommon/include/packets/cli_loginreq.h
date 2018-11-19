@@ -25,10 +25,10 @@ class CliLoginReq : public CRosePacket {
 
 		static CliLoginReq create(const std::string& password, const std::string& username);
 		static CliLoginReq create(uint8_t *buffer);
+		static std::unique_ptr<CliLoginReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		std::string password_;

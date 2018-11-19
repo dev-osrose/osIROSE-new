@@ -23,18 +23,10 @@ uint32_t CliPartyReq::idXorTag() const { return idXorTag_; }
 CliPartyReq& CliPartyReq::set_idXorTag(uint32_t data) { idXorTag_ = data; return *this; }
 
 
-void CliPartyReq::pack(CRoseWriter& writer) const {
+void CliPartyReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(request_);
 	writer.set_uint32_t(idXorTag_);
 }
-
-uint16_t CliPartyReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(request_);
-	size += sizeof(idXorTag_);
-	return size;
-}
-
 
 CliPartyReq CliPartyReq::create(PartyReq::Request request, uint32_t idXorTag) {
 
@@ -45,6 +37,10 @@ CliPartyReq CliPartyReq::create(PartyReq::Request request, uint32_t idXorTag) {
 CliPartyReq CliPartyReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliPartyReq(reader);
+}
+std::unique_ptr<CliPartyReq> CliPartyReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliPartyReq>(reader);
 }
 
 }

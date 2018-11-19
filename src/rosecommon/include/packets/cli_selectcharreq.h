@@ -29,10 +29,10 @@ class CliSelectCharReq : public CRosePacket {
 
 		static CliSelectCharReq create(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string& name);
 		static CliSelectCharReq create(uint8_t *buffer);
+		static std::unique_ptr<CliSelectCharReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t charId_;

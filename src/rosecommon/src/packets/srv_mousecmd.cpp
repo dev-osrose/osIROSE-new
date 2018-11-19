@@ -43,7 +43,7 @@ uint16_t SrvMouseCmd::z() const { return z_; }
 SrvMouseCmd& SrvMouseCmd::set_z(uint16_t data) { z_ = data; return *this; }
 
 
-void SrvMouseCmd::pack(CRoseWriter& writer) const {
+void SrvMouseCmd::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_uint16_t(targetId_);
 	writer.set_uint16_t(dist_);
@@ -52,22 +52,10 @@ void SrvMouseCmd::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(z_);
 }
 
-uint16_t SrvMouseCmd::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(targetId_);
-	size += sizeof(dist_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
-
 SrvMouseCmd SrvMouseCmd::create(Entity entity) {
-	const auto entity_basicinfo = entity.component<BasicInfo>();
-	const auto entity_destination = entity.component<Destination>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_destination = entity.component<Destination>();
+	const auto entity_basicinfo = entity.component<BasicInfo>();
 
 	return SrvMouseCmd(entity_basicinfo->id_, entity_basicinfo->targetId_, entity_destination->dist_, entity_destination->x_, entity_destination->y_, entity_position->z_);
 }
@@ -75,6 +63,10 @@ SrvMouseCmd SrvMouseCmd::create(Entity entity) {
 SrvMouseCmd SrvMouseCmd::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvMouseCmd(reader);
+}
+std::unique_ptr<SrvMouseCmd> SrvMouseCmd::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvMouseCmd>(reader);
 }
 
 }

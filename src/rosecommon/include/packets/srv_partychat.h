@@ -25,10 +25,10 @@ class SrvPartyChat : public CRosePacket {
 
 		static SrvPartyChat create(uint16_t charId, const std::string& message);
 		static SrvPartyChat create(uint8_t *buffer);
+		static std::unique_ptr<SrvPartyChat> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t charId_;

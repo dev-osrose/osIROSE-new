@@ -97,7 +97,7 @@ TEST(TestAsioNetworking, TestListenAndConnect) {
 	  Test(ePacketType type) : CRosePacket(type) {}
 	  virtual ~Test() {}
 	  protected:
-		  void pack(CRoseWriter& writer) const {
+		  void pack(CRoseBasePolicy& writer) const {
               writer.set_uint8_t(0x77);
 		  }
   };

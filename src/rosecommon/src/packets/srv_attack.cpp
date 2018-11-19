@@ -43,7 +43,7 @@ uint16_t SrvAttack::z() const { return z_; }
 SrvAttack& SrvAttack::set_z(uint16_t data) { z_ = data; return *this; }
 
 
-void SrvAttack::pack(CRoseWriter& writer) const {
+void SrvAttack::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(attackerId_);
 	writer.set_uint16_t(defenderId_);
 	writer.set_uint16_t(dist_);
@@ -52,22 +52,10 @@ void SrvAttack::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(z_);
 }
 
-uint16_t SrvAttack::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(attackerId_);
-	size += sizeof(defenderId_);
-	size += sizeof(dist_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(z_);
-	return size;
-}
-
-
 SrvAttack SrvAttack::create(Entity entityA, Entity entityD) {
-	const auto entityd_basicinfo = entityD.component<BasicInfo>();
-	const auto entitya_basicinfo = entityA.component<BasicInfo>();
 	const auto entitya_destination = entityA.component<Destination>();
+	const auto entitya_basicinfo = entityA.component<BasicInfo>();
+	const auto entityd_basicinfo = entityD.component<BasicInfo>();
 
 	return SrvAttack(entitya_basicinfo->id_, entityd_basicinfo->id_, entitya_destination->dist_, entitya_destination->x_, entitya_destination->y_, entitya_destination->z_);
 }
@@ -75,6 +63,10 @@ SrvAttack SrvAttack::create(Entity entityA, Entity entityD) {
 SrvAttack SrvAttack::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvAttack(reader);
+}
+std::unique_ptr<SrvAttack> SrvAttack::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvAttack>(reader);
 }
 
 }

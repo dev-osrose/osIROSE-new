@@ -19,7 +19,7 @@ struct StatusEffect : public RoseCommon::ISerialize {
     uint16_t unkown_;
     std::chrono::milliseconds dt_; // to keep track of time
 
-    virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_uint32_t(expired_.count())) return false;
         if (!writer.set_uint16_t(value_)) return false;
         return writer.set_uint16_t(unkown_);
@@ -30,14 +30,6 @@ struct StatusEffect : public RoseCommon::ISerialize {
         if (!reader.get_uint32_t(time)) return false;
         if (!reader.get_uint16_t(value_)) return false;
         return reader.get_uint16_t(unkown_);
-    }
-
-    virtual uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(uint32_t);
-        size += sizeof(value_);
-        size += sizeof(unkown_);
-        return size;
     }
 };
 

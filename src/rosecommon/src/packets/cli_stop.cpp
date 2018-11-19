@@ -23,18 +23,10 @@ float CliStop::y() const { return y_; }
 CliStop& CliStop::set_y(float data) { y_ = data; return *this; }
 
 
-void CliStop::pack(CRoseWriter& writer) const {
+void CliStop::pack(CRoseBasePolicy& writer) const {
 	writer.set_float(x_);
 	writer.set_float(y_);
 }
-
-uint16_t CliStop::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(x_);
-	size += sizeof(y_);
-	return size;
-}
-
 
 CliStop CliStop::create(float x, float y) {
 
@@ -45,6 +37,10 @@ CliStop CliStop::create(float x, float y) {
 CliStop CliStop::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliStop(reader);
+}
+std::unique_ptr<CliStop> CliStop::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliStop>(reader);
 }
 
 }

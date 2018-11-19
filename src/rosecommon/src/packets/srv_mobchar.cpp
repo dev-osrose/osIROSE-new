@@ -78,7 +78,7 @@ uint16_t SrvMobChar::questId() const { return questId_; }
 SrvMobChar& SrvMobChar::set_questId(uint16_t data) { questId_ = data; return *this; }
 
 
-void SrvMobChar::pack(CRoseWriter& writer) const {
+void SrvMobChar::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(id_);
 	writer.set_float(x_);
 	writer.set_float(y_);
@@ -94,31 +94,12 @@ void SrvMobChar::pack(CRoseWriter& writer) const {
 	writer.set_uint16_t(questId_);
 }
 
-uint16_t SrvMobChar::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(id_);
-	size += sizeof(x_);
-	size += sizeof(y_);
-	size += sizeof(destX_);
-	size += sizeof(destY_);
-	size += sizeof(command_);
-	size += sizeof(targetId_);
-	size += sizeof(moveMode_);
-	size += sizeof(hp_);
-	size += sizeof(teamId_);
-	size += sizeof(statusFlag_);
-	size += sizeof(npcId_);
-	size += sizeof(questId_);
-	return size;
-}
-
-
 SrvMobChar SrvMobChar::create(Entity entity) {
-	const auto entity_destination = entity.component<Destination>();
 	const auto entity_characterinfo = entity.component<CharacterInfo>();
-	const auto entity_npc = entity.component<Npc>();
 	const auto entity_position = entity.component<Position>();
+	const auto entity_destination = entity.component<Destination>();
 	const auto entity_basicinfo = entity.component<BasicInfo>();
+	const auto entity_npc = entity.component<Npc>();
 	const auto entity_advancedinfo = entity.component<AdvancedInfo>();
 
 	return SrvMobChar(entity_basicinfo->id_, entity_position->x_, entity_position->y_, entity_destination ? entity_destination->x_ : entity_position->x_, entity_destination ? entity_destination->y_ : entity_position->y_, entity_basicinfo->command_, entity_basicinfo->targetId_, entity_advancedinfo->moveMode_, entity_advancedinfo->hp_, entity_basicinfo->teamId_, entity_characterinfo->statusFlag_, entity_npc->npc_id_, entity_npc->quest_id_);
@@ -127,6 +108,10 @@ SrvMobChar SrvMobChar::create(Entity entity) {
 SrvMobChar SrvMobChar::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvMobChar(reader);
+}
+std::unique_ptr<SrvMobChar> SrvMobChar::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvMobChar>(reader);
 }
 
 }

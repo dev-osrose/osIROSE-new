@@ -25,10 +25,10 @@ class CliWhisperChat : public CRosePacket {
 
 		static CliWhisperChat create(const std::string& targetId, const std::string& message);
 		static CliWhisperChat create(uint8_t *buffer);
+		static std::unique_ptr<CliWhisperChat> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		std::string targetId_;

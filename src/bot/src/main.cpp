@@ -20,6 +20,7 @@
 #include "cli_selectcharreq.h"
 #include "srv_switchserver.h"
 #include "cli_joinserverreq.h"
+#include "cli_normalchat.h"
 
 #define SPDLOG_TRACE_ON
 
@@ -332,6 +333,11 @@ private:
       break;
     case ePacketType::PAKWC_BILLING_MESSAGE:
       logger_->info("Got billing message reply");
+      logger_->info("Sending a chat message");
+      {
+          auto packet = CliNormalChat::create("This is a test message from a bot");
+          send(packet);
+      }
       break;
     default:
       logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));

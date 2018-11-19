@@ -49,10 +49,10 @@ class SrvChangeMapReply : public CRosePacket {
 
 		static SrvChangeMapReply create(uint16_t objectIndex, uint16_t currentHp, uint16_t currentMp, uint16_t currentExp, uint16_t penalizeExp, uint16_t worldTime, uint16_t teamNumber);
 		static SrvChangeMapReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvChangeMapReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t objectIndex_;

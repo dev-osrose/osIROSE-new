@@ -20,18 +20,10 @@ uint32_t SrvBillingMessage::payFlag() const { return payFlag_; }
 SrvBillingMessage& SrvBillingMessage::set_payFlag(uint32_t data) { payFlag_ = data; return *this; }
 
 
-void SrvBillingMessage::pack(CRoseWriter& writer) const {
+void SrvBillingMessage::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(functionType_);
 	writer.set_uint32_t(payFlag_);
 }
-
-uint16_t SrvBillingMessage::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(functionType_);
-	size += sizeof(payFlag_);
-	return size;
-}
-
 
 SrvBillingMessage SrvBillingMessage::create() {
 
@@ -42,6 +34,10 @@ SrvBillingMessage SrvBillingMessage::create() {
 SrvBillingMessage SrvBillingMessage::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvBillingMessage(reader);
+}
+std::unique_ptr<SrvBillingMessage> SrvBillingMessage::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvBillingMessage>(reader);
 }
 
 }

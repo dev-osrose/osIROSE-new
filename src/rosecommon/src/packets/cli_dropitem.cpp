@@ -23,18 +23,10 @@ uint32_t CliDropItem::quantity() const { return quantity_; }
 CliDropItem& CliDropItem::set_quantity(uint32_t data) { quantity_ = data; return *this; }
 
 
-void CliDropItem::pack(CRoseWriter& writer) const {
+void CliDropItem::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(item_);
 	writer.set_uint32_t(quantity_);
 }
-
-uint16_t CliDropItem::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(item_);
-	size += sizeof(quantity_);
-	return size;
-}
-
 
 CliDropItem CliDropItem::create(uint8_t item, uint32_t quantity) {
 
@@ -45,6 +37,10 @@ CliDropItem CliDropItem::create(uint8_t item, uint32_t quantity) {
 CliDropItem CliDropItem::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliDropItem(reader);
+}
+std::unique_ptr<CliDropItem> CliDropItem::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliDropItem>(reader);
 }
 
 }

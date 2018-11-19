@@ -33,10 +33,10 @@ class SrvTeleportReply : public CRosePacket {
 
 		static SrvTeleportReply create(Entity entity);
 		static SrvTeleportReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvTeleportReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t id_;

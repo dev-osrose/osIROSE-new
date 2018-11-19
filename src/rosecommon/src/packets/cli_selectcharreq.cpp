@@ -33,22 +33,12 @@ const std::string& CliSelectCharReq::name() const { return name_; }
 CliSelectCharReq& CliSelectCharReq::set_name(const std::string& data) { name_ = data; return *this; }
 
 
-void CliSelectCharReq::pack(CRoseWriter& writer) const {
+void CliSelectCharReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(charId_);
 	writer.set_uint8_t(runMode_);
 	writer.set_uint8_t(rideMode_);
 	writer.set_string(name_);
 }
-
-uint16_t CliSelectCharReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(charId_);
-	size += sizeof(runMode_);
-	size += sizeof(rideMode_);
-	size += sizeof(char) * (name_.size() + 1);
-	return size;
-}
-
 
 CliSelectCharReq CliSelectCharReq::create(uint8_t charId, uint8_t runMode, uint8_t rideMode, const std::string& name) {
 
@@ -59,6 +49,10 @@ CliSelectCharReq CliSelectCharReq::create(uint8_t charId, uint8_t runMode, uint8
 CliSelectCharReq CliSelectCharReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliSelectCharReq(reader);
+}
+std::unique_ptr<CliSelectCharReq> CliSelectCharReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliSelectCharReq>(reader);
 }
 
 }

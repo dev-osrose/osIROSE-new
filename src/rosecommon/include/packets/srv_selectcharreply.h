@@ -121,10 +121,10 @@ class SrvSelectCharReply : public CRosePacket {
 
 		static SrvSelectCharReply create(Entity entity);
 		static SrvSelectCharReply create(uint8_t *buffer);
+		static std::unique_ptr<SrvSelectCharReply> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint8_t race_;

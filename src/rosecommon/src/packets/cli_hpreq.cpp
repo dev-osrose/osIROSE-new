@@ -18,16 +18,9 @@ uint16_t CliHpReq::targetId() const { return targetId_; }
 CliHpReq& CliHpReq::set_targetId(uint16_t data) { targetId_ = data; return *this; }
 
 
-void CliHpReq::pack(CRoseWriter& writer) const {
+void CliHpReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint16_t(targetId_);
 }
-
-uint16_t CliHpReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(targetId_);
-	return size;
-}
-
 
 CliHpReq CliHpReq::create(uint16_t targetId) {
 
@@ -38,6 +31,10 @@ CliHpReq CliHpReq::create(uint16_t targetId) {
 CliHpReq CliHpReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliHpReq(reader);
+}
+std::unique_ptr<CliHpReq> CliHpReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliHpReq>(reader);
 }
 
 }

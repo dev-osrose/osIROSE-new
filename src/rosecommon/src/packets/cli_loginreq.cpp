@@ -23,18 +23,10 @@ const std::string& CliLoginReq::username() const { return username_; }
 CliLoginReq& CliLoginReq::set_username(const std::string& data) { username_ = data; return *this; }
 
 
-void CliLoginReq::pack(CRoseWriter& writer) const {
+void CliLoginReq::pack(CRoseBasePolicy& writer) const {
 	writer.set_string(password_, 32);
 	writer.set_string(username_);
 }
-
-uint16_t CliLoginReq::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(char) * 32;
-	size += sizeof(char) * (username_.size() + 1);
-	return size;
-}
-
 
 CliLoginReq CliLoginReq::create(const std::string& password, const std::string& username) {
 
@@ -45,6 +37,10 @@ CliLoginReq CliLoginReq::create(const std::string& password, const std::string& 
 CliLoginReq CliLoginReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliLoginReq(reader);
+}
+std::unique_ptr<CliLoginReq> CliLoginReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliLoginReq>(reader);
 }
 
 }

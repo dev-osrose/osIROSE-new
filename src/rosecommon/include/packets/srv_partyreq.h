@@ -28,10 +28,10 @@ class SrvPartyReq : public CRosePacket {
 
 		static SrvPartyReq create(PartyReq::Request request, Entity entity);
 		static SrvPartyReq create(uint8_t *buffer);
+		static std::unique_ptr<SrvPartyReq> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		PartyReq::Request request_;

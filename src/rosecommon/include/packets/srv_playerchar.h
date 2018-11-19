@@ -79,10 +79,10 @@ class SrvPlayerChar : public CRosePacket {
 
 		static SrvPlayerChar create(Entity entity);
 		static SrvPlayerChar create(uint8_t *buffer);
+		static std::unique_ptr<SrvPlayerChar> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t id_;

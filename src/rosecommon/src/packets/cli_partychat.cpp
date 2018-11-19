@@ -18,16 +18,9 @@ const std::string& CliPartyChat::message() const { return message_; }
 CliPartyChat& CliPartyChat::set_message(const std::string& data) { message_ = data; return *this; }
 
 
-void CliPartyChat::pack(CRoseWriter& writer) const {
+void CliPartyChat::pack(CRoseBasePolicy& writer) const {
 	writer.set_string(message_);
 }
-
-uint16_t CliPartyChat::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(char) * (message_.size() + 1);
-	return size;
-}
-
 
 CliPartyChat CliPartyChat::create(const std::string& message) {
 
@@ -38,6 +31,10 @@ CliPartyChat CliPartyChat::create(const std::string& message) {
 CliPartyChat CliPartyChat::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliPartyChat(reader);
+}
+std::unique_ptr<CliPartyChat> CliPartyChat::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliPartyChat>(reader);
 }
 
 }

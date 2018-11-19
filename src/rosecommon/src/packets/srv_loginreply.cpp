@@ -41,22 +41,12 @@ SrvLoginReply& SrvLoginReply::set_serversInfo(const std::vector<LoginReply::Serv
 SrvLoginReply& SrvLoginReply::add_serverinfo(const LoginReply::ServerInfo& data) { serversInfo_.push_back(data); return *this; }
 
 
-void SrvLoginReply::pack(CRoseWriter& writer) const {
+void SrvLoginReply::pack(CRoseBasePolicy& writer) const {
 	writer.set_uint8_t(result_);
 	writer.set_uint16_t(right_);
 	writer.set_uint16_t(type_);
 	for (const auto& elem : serversInfo_) writer.set_iserialize(elem);
 }
-
-uint16_t SrvLoginReply::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(result_);
-	size += sizeof(right_);
-	size += sizeof(type_);
-	{ for (const auto& it : serversInfo_) size += it.get_size();};
-	return size;
-}
-
 
 SrvLoginReply SrvLoginReply::create(LoginReply::eResult result, uint16_t right, uint16_t type) {
 
@@ -67,6 +57,10 @@ SrvLoginReply SrvLoginReply::create(LoginReply::eResult result, uint16_t right, 
 SrvLoginReply SrvLoginReply::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvLoginReply(reader);
+}
+std::unique_ptr<SrvLoginReply> SrvLoginReply::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvLoginReply>(reader);
 }
 
 }

@@ -10,14 +10,8 @@ CliAcceptReq::CliAcceptReq(CRoseReader reader) : CRosePacket(reader) {
 }
 
 
-void CliAcceptReq::pack(CRoseWriter&) const {
+void CliAcceptReq::pack(CRoseBasePolicy&) const {
 }
-
-uint16_t CliAcceptReq::get_size() const {
-	uint16_t size = 0;
-	return size;
-}
-
 
 CliAcceptReq CliAcceptReq::create() {
 
@@ -28,6 +22,10 @@ CliAcceptReq CliAcceptReq::create() {
 CliAcceptReq CliAcceptReq::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliAcceptReq(reader);
+}
+std::unique_ptr<CliAcceptReq> CliAcceptReq::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliAcceptReq>(reader);
 }
 
 }

@@ -10,14 +10,8 @@ IscAlive::IscAlive(CRoseReader reader) : CRosePacket(reader) {
 }
 
 
-void IscAlive::pack(CRoseWriter&) const {
+void IscAlive::pack(CRoseBasePolicy&) const {
 }
-
-uint16_t IscAlive::get_size() const {
-	uint16_t size = 0;
-	return size;
-}
-
 
 IscAlive IscAlive::create() {
 
@@ -28,6 +22,10 @@ IscAlive IscAlive::create() {
 IscAlive IscAlive::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return IscAlive(reader);
+}
+std::unique_ptr<IscAlive> IscAlive::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<IscAlive>(reader);
 }
 
 }

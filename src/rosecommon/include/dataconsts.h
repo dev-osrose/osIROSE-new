@@ -64,22 +64,12 @@ struct ChannelInfo : public RoseCommon::ISerialize {
         return reader.get_string(name_);
     }
 
-    bool write(RoseCommon::CRoseWriter& writer) const override {
+    bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_uint8_t(id_)) return false;
         if (!writer.set_uint8_t(lowAge_)) return false;
         if (!writer.set_uint8_t(highAge_)) return false;
         if (!writer.set_uint16_t(capacity_)) return false;
         return writer.set_string(name_);
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(id_);
-        size += sizeof(lowAge_);
-        size += sizeof(highAge_);
-        size += sizeof(capacity_);
-        size += sizeof(char) * (name_.size() + 1);
-        return size;
     }
 };
 }
@@ -153,7 +143,7 @@ struct CharInfo : public RoseCommon::ISerialize {
         return true;
     }
 
-    bool write(RoseCommon::CRoseWriter& writer) const override {
+    bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_string(name_)) return false;
         if (!writer.set_uint8_t(race_)) return false;
         if (!writer.set_uint16_t(level_)) return false;
@@ -167,20 +157,6 @@ struct CharInfo : public RoseCommon::ISerialize {
             if (!writer.set_uint32_t(item.data)) return false;
         }
         return true;
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(char) * (name_.size() + 1);
-        size += sizeof(race_);
-        size += sizeof(level_);
-        size += sizeof(job_);
-        size += sizeof(remain_sec_until_delete_);
-        size += sizeof(platinium_);
-        size += sizeof(face_);
-        size += sizeof(hair_);
-        size += sizeof(equip_item) * MAX_EQUIPPED_ITEMS;
-        return size;
     }
 };
 }
@@ -267,7 +243,7 @@ struct Item : public RoseCommon::ISerialize {
     Item(uint8_t id, uint16_t header, uint32_t data) : id_(id), header_(header), data_(data) {}
     virtual ~Item() = default;
 
-    virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_uint8_t(id_)) return false;
         if (!writer.set_uint16_t(header_)) return false;
         return writer.set_uint32_t(data_);
@@ -277,14 +253,6 @@ struct Item : public RoseCommon::ISerialize {
         if (!reader.get_uint8_t(id_)) return false;
         if (!reader.get_uint16_t(header_)) return false;
         return reader.get_uint32_t(data_);
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(id_);
-        size += sizeof(header_);
-        size += sizeof(data_);
-        return size;
     }
 
     uint8_t id_;
@@ -300,7 +268,7 @@ struct ServerInfo : public RoseCommon::ISerialize {
     ServerInfo(const std::string& name, uint32_t id, bool test) :
         name_(name), id_(id), test_(test) {}
 
-    virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_char(test_ ? '@' : ' ')) return false;
         if (!writer.set_string(name_)) return false;
         return writer.set_uint32_t(id_);
@@ -312,13 +280,6 @@ struct ServerInfo : public RoseCommon::ISerialize {
         test_ = test == '@';
         if (!reader.get_string(name_)) return false;
         return reader.get_uint32_t(id_);
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(char) * (name_.size() + 2);
-        size += sizeof(id_);
-        return size;
     }
 
     std::string name_;
@@ -376,7 +337,7 @@ struct Party : public RoseCommon::ISerialize {
         }
         virtual ~Data() = default;
 
-        virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+        virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
             if (!writer.set_uint32_t(tag_)) return false;
             if (!writer.set_uint16_t(id_)) return false;
             if (!writer.set_int32_t(maxHp_)) return false;
@@ -402,21 +363,6 @@ struct Party : public RoseCommon::ISerialize {
             return reader.get_string(name_);
         }
 
-        uint16_t get_size() const override {
-            uint16_t size = 0;
-            size += sizeof(tag_);
-            size += sizeof(id_);
-            size += sizeof(maxHp_);
-            size += sizeof(hp_);
-            size += sizeof(statusFlag_);
-            size += sizeof(con_);
-            size += sizeof(recoveryHp_);
-            size += sizeof(recoveryMp_);
-            size += sizeof(stamina_);
-            size += sizeof(char) * (name_.size() + 1);
-            return size;
-        }
-
         uint32_t tag_;
         uint16_t id_;
         int32_t maxHp_;
@@ -429,7 +375,7 @@ struct Party : public RoseCommon::ISerialize {
         std::string name_;
     };
 
-    virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (isDelete_) {
             if (!writer.set_int8_t(-1)) return false;
             if (!writer.set_uint32_t(tagLeaver_)) return false;
@@ -455,19 +401,6 @@ struct Party : public RoseCommon::ISerialize {
             data_.push_back(member);
         }
         return true;
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        if (isDelete_) {
-            size += sizeof(uint8_t);
-            size += sizeof(tagLeaver_);
-            size += sizeof(tagLeader_);
-        } else {
-            size += sizeof(uint8_t);
-            for (const auto& it : data_) size += it.get_size();
-        }
-        return size;
     }
 
     bool isDelete_;
@@ -504,7 +437,7 @@ struct Character : public RoseCommon::ISerialize {
         items_[slot] = itemId << 14 | gem << 5 | socket << 4 | grade;
     }
 
-    virtual bool write(RoseCommon::CRoseWriter& writer) const override {
+    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
         if (!writer.set_string(name_)) return false;
         if (!writer.set_uint8_t(race_)) return false;
         if (!writer.set_uint16_t(level_)) return false;
@@ -530,20 +463,6 @@ struct Character : public RoseCommon::ISerialize {
         for (size_t i = 0; i < Inventory::Position::MAX_EQUIP_ITEMS - 2; ++i)
             if (!reader.get_uint32_t(items_[i])) return false;
         return true;
-    }
-
-    uint16_t get_size() const override {
-        uint16_t size = 0;
-        size += sizeof(char) * (name_.size() + 1);
-        size += sizeof(race_);
-        size += sizeof(level_);
-        size += sizeof(job_);
-        size += sizeof(deleteSeconds_);
-        size += sizeof(platinium_);
-        size += sizeof(face_);
-        size += sizeof(hair_);
-        size += sizeof(items_);
-        return size;
     }
 };
 }

@@ -25,10 +25,10 @@ class CliStop : public CRosePacket {
 
 		static CliStop create(float x, float y);
 		static CliStop create(uint8_t *buffer);
+		static std::unique_ptr<CliStop> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		float x_;

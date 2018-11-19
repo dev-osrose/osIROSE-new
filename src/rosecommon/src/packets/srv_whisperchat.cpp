@@ -23,18 +23,10 @@ const std::string& SrvWhisperChat::message() const { return message_; }
 SrvWhisperChat& SrvWhisperChat::set_message(const std::string& data) { message_ = data; return *this; }
 
 
-void SrvWhisperChat::pack(CRoseWriter& writer) const {
+void SrvWhisperChat::pack(CRoseBasePolicy& writer) const {
 	writer.set_string(senderId_);
 	writer.set_string(message_);
 }
-
-uint16_t SrvWhisperChat::get_size() const {
-	uint16_t size = 0;
-	size += sizeof(char) * (senderId_.size() + 1);
-	size += sizeof(char) * (message_.size() + 1);
-	return size;
-}
-
 
 SrvWhisperChat SrvWhisperChat::create(const std::string& senderId, const std::string& message) {
 
@@ -45,6 +37,10 @@ SrvWhisperChat SrvWhisperChat::create(const std::string& senderId, const std::st
 SrvWhisperChat SrvWhisperChat::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return SrvWhisperChat(reader);
+}
+std::unique_ptr<SrvWhisperChat> SrvWhisperChat::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<SrvWhisperChat>(reader);
 }
 
 }

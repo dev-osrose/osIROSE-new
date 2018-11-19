@@ -10,14 +10,8 @@ CliAlive::CliAlive(CRoseReader reader) : CRosePacket(reader) {
 }
 
 
-void CliAlive::pack(CRoseWriter&) const {
+void CliAlive::pack(CRoseBasePolicy&) const {
 }
-
-uint16_t CliAlive::get_size() const {
-	uint16_t size = 0;
-	return size;
-}
-
 
 CliAlive CliAlive::create() {
 
@@ -28,6 +22,10 @@ CliAlive CliAlive::create() {
 CliAlive CliAlive::create(uint8_t *buffer) {
 	CRoseReader reader(buffer, CRosePacket::size(buffer));
 	return CliAlive(reader);
+}
+std::unique_ptr<CliAlive> CliAlive::allocate(uint8_t *buffer) {
+	CRoseReader reader(buffer, CRosePacket::size(buffer));
+	return std::make_unique<CliAlive>(reader);
 }
 
 }

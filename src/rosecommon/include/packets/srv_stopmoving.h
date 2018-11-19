@@ -29,10 +29,10 @@ class SrvStopMoving : public CRosePacket {
 
 		static SrvStopMoving create(Entity entity);
 		static SrvStopMoving create(uint8_t *buffer);
+		static std::unique_ptr<SrvStopMoving> allocate(uint8_t *buffer);
 
 	protected:
-		virtual void pack(CRoseWriter&) const override;
-		virtual uint16_t get_size() const override;
+		virtual void pack(CRoseBasePolicy&) const override;
 
 	private:
 		uint16_t id_;
