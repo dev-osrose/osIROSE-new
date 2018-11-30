@@ -1,46 +1,47 @@
-npc[1181].walk_speed = 0
-npc[1181].run_speed = 0
-npc[1181].scale = 0
-npc[1181].r_weapon = 140
-npc[1181].l_weapon = 0
-npc[1181].level = 0
-npc[1181].hp = 10
-npc[1181].attack = 100
-npc[1181].hit = 100
-npc[1181].def = 100
-npc[1181].res = 100
-npc[1181].avoid = 100
-npc[1181].attack_spd = 100
-npc[1181].is_magic_damage = 100
-npc[1181].ai_type = 0
-npc[1181].give_exp = 0
-npc[1181].drop_type = 0
-npc[1181].drop_money = 65
-npc[1181].drop_item = 0
-npc[1181].union_number = 0
-npc[1181].need_summon_count = 0
-npc[1181].sell_tab0 = 0
-npc[1181].sell_tab1 = 520
-npc[1181].sell_tab2 = 521
-npc[1181].sell_tab3 = 0
-npc[1181].can_target = 0
-npc[1181].attack_range = 0
-npc[1181].npc_type = 200
-npc[1181].hit_material_type = 999
-npc[1181].face_icon = 0
-npc[1181].summon_mob_type = 0
-npc[1181].quest_type = 10
-npc[1181].height = 0
-
-function OnInit()
+registerNpc(1181, {
+  walk_speed        = 0,
+  run_speed         = 0,
+  scale             = 0,
+  r_weapon          = 140,
+  l_weapon          = 0,
+  level             = 0,
+  hp                = 10,
+  attack            = 100,
+  hit               = 100,
+  def               = 100,
+  res               = 100,
+  avoid             = 100,
+  attack_spd        = 100,
+  is_magic_damage   = 100,
+  ai_type           = 0,
+  give_exp          = 0,
+  drop_type         = 0,
+  drop_money        = 65,
+  drop_item         = 0,
+  union_number      = 0,
+  need_summon_count = 0,
+  sell_tab0         = 0,
+  sell_tab1         = 520,
+  sell_tab2         = 521,
+  sell_tab3         = 0,
+  can_target        = 0,
+  attack_range      = 0,
+  npc_type          = 200,
+  hit_material_type = 999,
+  face_icon         = 0,
+  summon_mob_type   = 0,
+  quest_type        = 10,
+  height            = 0
+});
+function OnInit(entity)
   return true
 end
 
-function OnCreate()
+function OnCreate(entity)
   return true
 end
 
-function OnDelete()
+function OnDelete(entity)
   return true
 end
 
