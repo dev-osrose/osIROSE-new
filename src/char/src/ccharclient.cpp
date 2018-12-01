@@ -29,6 +29,7 @@
 #include "srv_switchserver.h"
 
 using namespace RoseCommon;
+const auto now = ::sqlpp::chrono::floor<::std::chrono::seconds>(std::chrono::system_clock::now());
 
 CCharClient::CCharClient()
     : CRoseClient(), accessRights_(0), loginState_(eSTATE::DEFAULT), sessionId_(0), userId_(0), channelId_(0), server_(nullptr) {}
@@ -137,7 +138,9 @@ bool CCharClient::SendCharListReply() {
 
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
-    packet->addCharacter(row.name, row.race, row.level, row.job, row.face, row.hair, row.deleteDate);
+    auto _remaining_time = (row.deleteDate.value() - now).count();  // Get time in seconds until delete
+    
+    packet->addCharacter(row.name, row.race, row.level, row.job, row.face, row.hair, _remaining_time);
     characterRealId_.push_back(row.id);
     Core::InventoryTable inv{};
     for (const auto &iv :
@@ -182,19 +185,27 @@ bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharR
     return true;
   }
 
+  //TODO: change this to be varible
   if (P->charId() > 6) return false;
 
   uint32_t time = 0;
   if (P->isDelete()) {
+    //TODO: if the character is a guild leader, time = -1 and don't delete character
+    //TODO: check to see if it's an instant delete
     // we need to delete the char
-    time = std::time(nullptr);
-
-    std::string query = fmt::format("CALL delete_character({}, '{}');", userId_, Core::escapeData(P->name().c_str()));
-
-    auto conn = Core::connectionPool.getConnection(Core::osirose);
-    conn->execute(query);
+    if(true) {
+      time = 60*60*24; // The default is one day from now
+    } else {
+      time = 1;
+    }
   }
+  
+  std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P->name().c_str()), (uint8_t)P->isDelete());
 
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn->execute(query);
+
+  // if time == -1, delete failed
   auto packet = makePacket<ePacketType::PAKCC_DELETE_CHAR_REPLY>(time, P->name());
   send(*packet);
   return true;
@@ -219,13 +230,17 @@ bool CCharClient::SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharR
     return true;
   }
 
-  loginState_ = eSTATE::TRANSFERING;
-
   uint8_t selected_id = P->charId();
   if (selected_id > characterRealId_.size()) {
     logger_->warn("Client {} is attempting to select a invalid character.", get_id());
     return false;
   }
+  // if (characterRealId_[selected_id]) {
+  //   logger_->warn("Client {} is attempting to select a character that is being deleted.", get_id());
+  //   return false;
+  // }
+  
+  loginState_ = eSTATE::TRANSFERING;
 
   std::string query =
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);
