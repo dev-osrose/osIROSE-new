@@ -100,6 +100,7 @@ class Config {
     std::string loginIp = "127.0.0.1";
     uint16_t clientPort = 29100;
     uint16_t iscPort = 29110;
+    bool instantCharDelete = true;
     uint8_t accessLevel = 1;
     uint8_t logLevel = 2;
   };

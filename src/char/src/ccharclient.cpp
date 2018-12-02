@@ -192,19 +192,22 @@ bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharR
   //TODO: change this to be varible
   if (P->charId() > 6) return false;
 
+  uint8_t delete_type = (uint8_t)P->isDelete();
   uint32_t time = 0;
   if (P->isDelete()) {
     //TODO: if the character is a guild leader, time = -1 and don't delete character
-    //TODO: check to see if it's an instant delete
     // we need to delete the char
-    if(true) {
+    Core::Config& config = Core::Config::getInstance();
+    if(config.charServer().instantCharDelete == false) {
+      //TODO: allow the server owner to set the time. This will also require the ability to change the time in sql
       time = 60*60*24; // The default is one day from now
     } else {
       time = 0;
+      delete_type = 2;
     }
   }
   
-  std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P->name().c_str()), (uint8_t)P->isDelete());
+  std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P->name().c_str()), delete_type);
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   conn->execute(query);

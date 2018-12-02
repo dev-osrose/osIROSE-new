@@ -307,6 +307,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
         y = dest->y_ + (RAND(1001) - 500);
         break;
       }
+      [[fallthrough]];
     }
     case REVIVE_POS:
     {
@@ -316,6 +317,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
         y = dest->y_ + (RAND(1001) - 500);
         break;
       }
+      [[fallthrough]];
     }
     case START_POST:
     {
@@ -326,6 +328,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
         y = dest->y_ + (RAND(1001) - 500);
         break;
       }
+      [[fallthrough]];
     }
     case CURRENT_POS:
       x = position->x_;

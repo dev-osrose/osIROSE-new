@@ -516,6 +516,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character_list`(IN `_userid` INT)
     READS SQL DATA
 BEGIN
+  set time_zone = '+00:00';
   delete from characters where characters.delete_date != 0 AND characters.delete_date <= NOW() AND userid = _userid;
   SELECT * FROM characters WHERE userid = _userid ;
 END ;;
