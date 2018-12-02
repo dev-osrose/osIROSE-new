@@ -214,7 +214,8 @@ Entity EntitySystem::loadCharacter(uint32_t charId, bool platinium) {
     entity.component<AdvancedInfo>()->hp_ = (entity.component<Stats>()->maxHp_ * 0.3f); // Set to 30% HP
   }
   
-  Systems::UpdateSystem::calculateCommand(entity);
+  //Systems::UpdateSystem::calculateCommand(entity);
+  entity.component<BasicInfo>()->command_ = BasicInfo::STOP;
 
   registerEntity(entity);
   return entity;

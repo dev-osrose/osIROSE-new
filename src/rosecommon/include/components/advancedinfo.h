@@ -8,7 +8,7 @@ struct AdvancedInfo {
         RIDEON = 4
     };
 
-    AdvancedInfo() : zuly_(0), hp_(0), mp_(0), moveMode_(AdvancedInfo::RUN), runSpeed_(0), atkSpeed_(0), weightRate_(0) {}
+    AdvancedInfo() : zuly_(0), hp_(1), mp_(0), moveMode_(AdvancedInfo::RUN), runSpeed_(0), atkSpeed_(0), weightRate_(0) {}
     template <typename T>
     AdvancedInfo(const T& row) : AdvancedInfo() {
         loadFromRow(row);

@@ -34,6 +34,7 @@ class ScriptLoader {
 
         std::vector<std::string> files_;
 
+        std::unordered_map<std::string, std::vector<Entity>> ai_files_;
         std::unordered_map<std::string, std::vector<Entity>> npc_files_;
         std::unordered_map<std::string, std::vector<Entity>> warpgate_files_;
         std::unordered_map<std::string, std::vector<Entity>> spawner_files_;

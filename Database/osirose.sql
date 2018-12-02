@@ -84,10 +84,10 @@ CREATE TABLE `characters` (
   `skill_points` int(10) unsigned NOT NULL DEFAULT '0',
   `penalty_exp` bigint(20) unsigned DEFAULT '0',
   `revive_map` int(11) NOT NULL DEFAULT '1',
-  `map` int(11) NOT NULL DEFAULT '1',
+  `map` int(11) NOT NULL DEFAULT '20',
   `x` bigint(32) NOT NULL DEFAULT '520000',
   `y` bigint(32) NOT NULL DEFAULT '520000',
-  `delete_date` int(11) NOT NULL DEFAULT '0' COMMENT 'Time until the character gets deleted',
+  `delete_date` datetime DEFAULT NULL COMMENT 'Time until the character gets deleted',
   `pk_flag` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -463,10 +463,20 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT, IN `_name` VARCHAR(20) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT, IN `_name` VARCHAR(20) CHARSET utf8, IN `_delete` INT)
     MODIFIES SQL DATA
 BEGIN
-	DELETE FROM characters WHERE characters.id = _charid AND characters.name = _name;
+  DECLARE _delete_date datetime;
+  set _delete_date=NULL;
+  set time_zone = '+00:00';
+  
+  if _delete > 1 then SET _delete_date = NOW();
+  elseif _delete = 1 then SET _delete_date = NOW() + INTERVAL 1 DAY;
+  end if;
+	
+  UPDATE `characters` 
+  SET delete_date = _delete_date
+  WHERE characters.id = _charid AND characters.name = _name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -506,6 +516,8 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_character_list`(IN `_userid` INT)
     READS SQL DATA
 BEGIN
+  set time_zone = '+00:00';
+  delete from characters where characters.delete_date != 0 AND characters.delete_date <= NOW() AND userid = _userid;
   SELECT * FROM characters WHERE userid = _userid ;
 END ;;
 DELIMITER ;

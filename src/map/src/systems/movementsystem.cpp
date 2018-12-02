@@ -157,8 +157,8 @@ bool MovementSystem::is_nearby(Entity a, Entity b) const {
     if (!a || !b) return false;
     auto pos_a = get_grid_position(a);
     auto pos_b = get_grid_position(b);
-    if (std::abs(std::get<0>(pos_a) - std::get<0>(pos_b)) <= 1
-        && std::abs(std::get<1>(pos_a) - std::get<1>(pos_b)) <= 1)
+    if (std::abs(std::get<0>(pos_a) - std::get<0>(pos_b)) <= 10
+        && std::abs(std::get<1>(pos_a) - std::get<1>(pos_b)) <= 10)
         return true;
     return false;
 }

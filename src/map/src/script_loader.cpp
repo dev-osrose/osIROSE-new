@@ -112,20 +112,32 @@ void ScriptLoader::load_script(std::string const& path) {
             player_spawns.push_back(entity_system_->create_player_spawn(PlayerSpawn::RESPAWN_POINT, map_id, dest_x, dest_y));
         });
         
+        auto ai_file = ai_files_.find(path);
+        std::vector<Entity> ai_logic;
+        if (ai_file != ai_files_.end()) {
+            ai_logic = std::move(ai_file->second);
+        }
+        env.set_function("registerNpc", [&ai_logic, this](int npc_id, sol::table npc_data) {
+            //if (map_id != map_id_) return;
+            //ai.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
+        });
+        
         logger_->trace("(Re)loading scripts from '{}'", path);
         state_.script_file(path, env);
         if (warpgates.size()) logger_->trace("Map {} loaded {} warpgates", map_id_, warpgates.size());
         if (npcs.size()) logger_->trace("Map {} loaded {} npcs", map_id_, npcs.size());
         if (spawners.size()) logger_->trace("Map {} loaded {} mob spawners", map_id_, spawners.size());
         if (player_spawns.size()) logger_->trace("Map {} loaded {} player_spawns", map_id_, player_spawns.size());
+        if (ai_logic.size()) logger_->trace("Map {} loaded {} ai logic files", map_id_, ai_logic.size());
         logger_->trace("Finished (re)loading scripts from '{}'", path);
 
         if (warpgates.size()) warpgate_files_.insert_or_assign(path, std::move(warpgates));
         if (npcs.size()) npc_files_.insert_or_assign(path, std::move(npcs));
         if (spawners.size()) spawner_files_.insert_or_assign(path, std::move(spawners));
         if (player_spawns.size()) player_spawn_files_.insert_or_assign(path, std::move(player_spawns));
+        if (ai_logic.size()) ai_files_.insert_or_assign(path, std::move(ai_logic));
 
-        if (warpgates.size() || npcs.size() || spawners.size() || player_spawns.size()) {
+        if (warpgates.size() || npcs.size() || spawners.size() || player_spawns.size() || ai_logic.size()) {
             for (auto& f : files_) if (f == path) return;
             files_.push_back(path);
         }
