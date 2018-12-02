@@ -16,10 +16,10 @@
 #define _CLOGINCLIENT_H_
 
 #include "croseclient.h"
-#include "cli_loginreq.h"
-#include "cli_channellistreq.h"
-#include "cli_srvselectreq.h"
-#include "dataconsts.h"
+#include "cli_login_req.h"
+#include "cli_channel_list_req.h"
+#include "cli_srv_select_req.h"
+#include "srv_login_reply.h"
 
 class CLoginServer;
 
@@ -32,11 +32,11 @@ class CLoginClient : public RoseCommon::CRoseClient {
   virtual bool handlePacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
-  bool userLogin(RoseCommon::CliLoginReq&& P);
-  bool channelList(RoseCommon::CliChannelListReq&& P);
-  bool serverSelect(RoseCommon::CliSrvSelectReq&& P);
+  bool userLogin(RoseCommon::Packet::CliLoginReq&& P);
+  bool channelList(RoseCommon::Packet::CliChannelListReq&& P);
+  bool serverSelect(RoseCommon::Packet::CliSrvSelectReq&& P);
 
-  void sendLoginReply(LoginReply::eResult Result);
+  void sendLoginReply(RoseCommon::Packet::SrvLoginReply::Result Result);
 
   virtual void onDisconnected() override;
 

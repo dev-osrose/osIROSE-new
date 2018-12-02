@@ -1,5 +1,0 @@
-namespace RoseCommon;
-
-table CliScreenShotTimeReq {
-    count: uint16;
-}

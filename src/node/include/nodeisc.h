@@ -18,7 +18,7 @@
 #include <forward_list>
 #include "croseisc.h"
 
-#include "isc_serverregister.h"
+#include "isc_server_register.h"
 #include "isc_shutdown.h"
 
 namespace Core {
@@ -36,8 +36,8 @@ class NodeISC : public RoseCommon::CRoseISC {
 
  protected:
   bool handlePacket(uint8_t* _buffer) override;
-  bool serverRegister(RoseCommon::IscServerRegister&& P);
-  bool serverShutdown(RoseCommon::IscShutdown&& P);
+  bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
+  bool serverShutdown(RoseCommon::Packet::IscShutdown&& P);
 
   std::string server_name_;
   uint32_t channel_count_;

@@ -33,20 +33,20 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return serverRegister(IscServerRegister::create(_buffer));
+      return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
-      return serverShutdown(IscShutdown::create(_buffer));
+      return serverShutdown(Packet::IscShutdown::create(_buffer));
     default: { return CRoseISC::handlePacket(_buffer); }
   }
   return true;
 }
 
-bool CLoginISC::serverRegister(IscServerRegister&& P) {
+bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
   logger_->trace("CLoginISC::serverRegister(CRosePacket&& P)");
 
-  Isc::ServerType _type = P.serverType();
+  Isc::ServerType _type = P.get_serverType();
 
   // 1 == char server
   // 2 == node server
@@ -56,17 +56,17 @@ bool CLoginISC::serverRegister(IscServerRegister&& P) {
 
   // todo: replace these numbers with the actual enum name
   if (_type == Isc::ServerType::CHAR) {
-    server_name_ = P.name();
-    socket_[SocketType::Client]->set_address(P.addr());
-    socket_[SocketType::Client]->set_port(P.port());
-    min_right_ = P.right();
+    server_name_ = P.get_name();
+    socket_[SocketType::Client]->set_address(P.get_addr());
+    socket_[SocketType::Client]->set_port(P.get_port());
+    min_right_ = P.get_right();
     socket_[SocketType::Client]->set_type(_type);
   } else if (_type == Isc::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
-    channel.channelName = P.name();
-    channel.ChannelID = P.id();
-    channel.MinRight = P.right();
+    channel.channelName = P.get_name();
+    channel.ChannelID = P.get_id();
+    channel.MinRight = P.get_right();
     channel_list_.push_front(channel);
     channel_count_++;
   }
@@ -76,15 +76,15 @@ bool CLoginISC::serverRegister(IscServerRegister&& P) {
   logger_->debug( "ISC Server Type: [{}]\n", socket_[SocketType::Client]->get_type());
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                RoseCommon::Isc::serverTypeName(P.serverType()),
-                  P.name(), P.addr(),
-                  P.port());
+                RoseCommon::Isc::serverTypeName(P.get_serverType()),
+                  P.get_name(), P.get_addr(),
+                  P.get_port());
   return true;
 }
 
-bool CLoginISC::serverShutdown(IscShutdown&& P) {
+bool CLoginISC::serverShutdown(Packet::IscShutdown&& P) {
   channel_list_.remove_if([&](RoseCommon::tChannelInfo channel) {
-    return channel.ChannelID == P.id();
+    return channel.ChannelID == P.get_id();
   });
   return true;
 }

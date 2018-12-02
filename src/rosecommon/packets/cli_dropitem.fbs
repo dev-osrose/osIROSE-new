@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table CliDropItem {
-    item: uint8;
-    quantity: uint32;
-}

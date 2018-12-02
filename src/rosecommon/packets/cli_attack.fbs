@@ -1,5 +1,0 @@
-namespace RoseCommon;
-
-table CliAttack {
-    targetId: uint16;
-}

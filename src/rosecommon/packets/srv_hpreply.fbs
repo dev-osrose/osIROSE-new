@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table SrvHpReply {
-    id: uint16;
-    hp: int32;
-}

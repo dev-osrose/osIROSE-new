@@ -26,7 +26,6 @@
 #include <functional>
 
 #include "singleton.h"
-#include "item.h"
 #include "hash.h"
 
 namespace RoseCommon

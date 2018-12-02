@@ -1,8 +1,0 @@
-namespace RoseCommon;
-
-table SrvAdjustPosition {
-    id: uint16;
-    x: float;
-    y: float;
-    z: uint16;
-}

@@ -44,11 +44,11 @@ class CRoseServer : public CRoseSocket {
     NEARBY_BUT_ME,
   };
 
-  template <typename Func>
-  void sendPacket(Entity sender, eSendType type, CRosePacket&& _buffer, Func&& nearby_function);
+  //template <typename Func>
+  //void sendPacket(Entity sender, eSendType type, CRosePacket&& _buffer, Func&& nearby_function);
 
-  template <typename Func>
-  void sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby_function);
+  //template <typename Func>
+  //void sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby_function);
 
   void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
                   [[maybe_unused]] bool is_server = false) override {
@@ -67,7 +67,7 @@ class CRoseServer : public CRoseSocket {
   std::mutex isc_list_mutex_;
 };
 
-template <typename Func>
+/*template <typename Func>
 void CRoseServer::sendPacket(Entity sender, eSendType type, CRosePacket&& _buffer, Func&& nearby) {
   std::lock_guard<std::mutex> lock(client_list_mutex_);
   switch(type)
@@ -112,12 +112,12 @@ void CRoseServer::sendPacket(Entity sender, eSendType type, CRosePacket&& _buffe
     default:
       break;
   }
-}
+}*/
 
-template <typename Func>
-void CRoseServer::sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby) {
-    sendPacket(sender, type, std::move(_buffer), std::forward<Func>(nearby));
-}
+//template <typename Func>
+//void CRoseServer::sendPacket(Entity sender, eSendType type, const CRosePacket& _buffer, Func&& nearby) {
+//    sendPacket(sender, type, std::move(_buffer), std::forward<Func>(nearby));
+//}
 
 }
 

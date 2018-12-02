@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table SrvAcceptReply {
-    result: uint8;
-    randValue: uint32;
-}

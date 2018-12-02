@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table CliChangeMapReq {
-    weightRate: uint8;
-    z: uint16;
-}

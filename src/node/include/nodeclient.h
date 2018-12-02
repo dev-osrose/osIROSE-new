@@ -16,7 +16,7 @@
 #define _NODECLIENT_H_
 
 #include "croseclient.h"
-#include "srv_srvselectreply.h"
+#include "srv_srv_select_reply.h"
 
 class NodeClient : public RoseCommon::CRoseClient {
  public:
@@ -28,7 +28,7 @@ class NodeClient : public RoseCommon::CRoseClient {
   virtual bool handleServerPacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
-  bool serverSelectReply(RoseCommon::SrvSrvSelectReply&& P);
+  bool serverSelectReply(RoseCommon::Packet::SrvSrvSelectReply&& P);
 
   enum class eSTATE {
     DEFAULT,

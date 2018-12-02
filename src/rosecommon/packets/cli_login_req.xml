@@ -1,0 +1,11 @@
+<packet ePacketType = "PAKCS_LOGIN_REQ">
+    <include path = "string" system = "true" />
+    <element name = "password" type = "Password" ref = "true" />
+    <element name = "username" type = "std::string" ref = "true" />
+
+    <simpleType name = "Password">
+        <restriction base = "std::string">
+            <length value = "32" />
+        </restriction>
+    </simpleType>
+</packet>

@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table SrvInitData {
-    rand_seed: uint32;
-    rand_index: uint16;
-}

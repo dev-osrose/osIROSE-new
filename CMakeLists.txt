@@ -78,10 +78,8 @@ set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
 set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
-set(ENTITYX_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entityx/entityx)
+set(ENTT_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entt/src/entt)
 set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
-
-include(FlatBuffersGenerator)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed
@@ -147,8 +145,6 @@ endif()
 if(NOT LUA_FOUND)
   include(BuildLua)
 endif()
-
-include(BuildFlatbuffers)
 
 if(NOT CURL_FOUND)
   include(BuildCURL)

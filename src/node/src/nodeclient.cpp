@@ -37,12 +37,10 @@ NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
     session_id_( 0 ),
     server_connection_(std::make_unique<Core::CNetwork_Asio>()) {}
 
-bool NodeClient::serverSelectReply(
-  SrvSrvSelectReply&& P) {
-
+bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   auto& config = Core::Config::getInstance();
-  auto packet = SrvSrvSelectReply::create(
-    P.result(), P.sessionId(), P.cryptVal(),
+  auto packet = Packet::SrvSrvSelectReply::create(
+    P.get_result(), P.get_sessionId(), P.get_cryptVal(),
     config.serverData().ip, config.loginServer().clientPort); // Replace this with MY current ip address
   send(packet);
   return true;
@@ -67,7 +65,7 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
   switch ( CRosePacket::type( _buffer ) ) {
     case ePacketType::PAKLC_SRV_SELECT_REPLY:
       return serverSelectReply(
-        SrvSrvSelectReply::create(_buffer));
+        Packet::SrvSrvSelectReply::create(_buffer));
     default:
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );

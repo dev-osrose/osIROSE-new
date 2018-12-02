@@ -88,7 +88,7 @@ using CRoseSizer = CRosePolicy<SizePolicy>;
 
 class CRoseReader {
     public:
-        CRoseReader(uint8_t *buffer, uint16_t size) : m_current(buffer), m_buffer(buffer), m_size(size) {}
+        CRoseReader(const uint8_t *buffer, uint16_t size) : m_current(buffer), m_buffer(buffer), m_size(size) {}
 
         bool get_uint8_t(uint8_t& data) { return read(data); }
         bool get_int8_t(int8_t& data) { return read(data); }
@@ -120,17 +120,17 @@ class CRoseReader {
         bool get_char(char& data) { return read(data); }
         bool get_iserialize(ISerialize& data) { return data.read(*this); }
 
-        template <typename T> static T read_at(const uint8_t *buffer) { return *reinterpret_cast<const T*>(buffer); }
+        template <typename T> static T read_at(const uint8_t *const buffer) { return *reinterpret_cast<const T* const>(buffer); }
 
     private:
-        uint8_t *m_current, *m_buffer;
+        const uint8_t *m_current, *m_buffer;
         uint16_t m_size;
 
         template <typename T>
         bool read(T& data) {
             static_assert(std::is_copy_assignable_v<T>, "CRoseReader doesn't know how to copy assign this type!");
             if (!m_current || m_current + sizeof(T) > m_buffer + m_size) return false;
-            data = *reinterpret_cast<T*>(m_current);
+            data = *reinterpret_cast<const T* const>(m_current);
             m_current += sizeof(T);
             return true;
         }

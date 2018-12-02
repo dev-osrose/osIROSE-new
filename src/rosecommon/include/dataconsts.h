@@ -44,36 +44,6 @@ namespace ReviveReq {
     };
 }
 
-namespace ChannelListReply {
-struct ChannelInfo : public RoseCommon::ISerialize {
-    std::string name_;
-    uint8_t id_;
-    uint8_t lowAge_;
-    uint8_t highAge_;
-    uint16_t capacity_;
-    virtual ~ChannelInfo() = default;
-    ChannelInfo() = default;
-    ChannelInfo(const std::string& name, uint8_t id, uint8_t lowAge, uint8_t highAge, uint16_t capacity):
-        name_(name), id_(id), lowAge_(lowAge), highAge_(highAge), capacity_(capacity) {}
-
-    bool read(RoseCommon::CRoseReader& reader) override {
-        if (!reader.get_uint8_t(id_)) return false;
-        if (!reader.get_uint8_t(lowAge_)) return false;
-        if (!reader.get_uint8_t(highAge_)) return false;
-        if (!reader.get_uint16_t(capacity_)) return false;
-        return reader.get_string(name_);
-    }
-
-    bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-        if (!writer.set_uint8_t(id_)) return false;
-        if (!writer.set_uint8_t(lowAge_)) return false;
-        if (!writer.set_uint8_t(highAge_)) return false;
-        if (!writer.set_uint16_t(capacity_)) return false;
-        return writer.set_string(name_);
-    }
-};
-}
-
 namespace CharListReply {
 enum equipped_position {
     EQUIP_HELMET = 0,
@@ -222,17 +192,6 @@ enum Result : uint8_t {
 };
 }
 
-namespace SrvSelectReply {
-enum Result : uint8_t {
-    OK = 0,
-    FAILED,
-    FULL,
-    INVALID_CHANNEL,
-    CHANNEL_NOT_ACTIVE,
-    INVALID_AGE
-};
-}
-
 namespace SetItem {
 struct Item : public RoseCommon::ISerialize {
     Item() = default;
@@ -261,155 +220,6 @@ struct Item : public RoseCommon::ISerialize {
 };
 }
 
-namespace LoginReply {
-struct ServerInfo : public RoseCommon::ISerialize {
-    virtual ~ServerInfo() = default;
-    ServerInfo() = default;
-    ServerInfo(const std::string& name, uint32_t id, bool test) :
-        name_(name), id_(id), test_(test) {}
-
-    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-        if (!writer.set_char(test_ ? '@' : ' ')) return false;
-        if (!writer.set_string(name_)) return false;
-        return writer.set_uint32_t(id_);
-    }
-
-    virtual bool read(RoseCommon::CRoseReader& reader) override {
-        char test;
-        if (!reader.get_char(test)) return false;
-        test_ = test == '@';
-        if (!reader.get_string(name_)) return false;
-        return reader.get_uint32_t(id_);
-    }
-
-    std::string name_;
-    uint32_t id_;
-    bool test_;
-};
-
-enum eResult : uint8_t {
-    OK = 0,
-    FAILED,
-    UNKNOWN_ACCOUNT,
-    INVALID_PASSWORD,
-    ALREADY_LOGGEDIN,
-    REFUSED_ACCOUNT,
-    NEED_CHARGE,
-    NO_RIGHT_TO_CONNECT,
-    TOO_MANY_USERS,
-    NO_NAME,
-    INVALID_VERSION,
-    OUTSIDE_REGION
-};
-
-}
-
-namespace PartyMember {
-#include "entitycomponents.h"
-struct Party : public RoseCommon::ISerialize {
-    Party() = default;
-    Party(uint32_t tagLeaver, uint32_t tagLeader) : isDelete_(true), tagLeaver_(tagLeaver), tagLeader_(tagLeader) {}
-    Party(Entity member) :isDelete_(false) {
-        data_.emplace_back(member);
-    }
-    Party(const std::vector<Entity>& members) :isDelete_(false) {
-        for (const auto& it : members) data_.emplace_back(it);
-    }
-    virtual ~Party() = default;
-
-    struct Data : public RoseCommon::ISerialize {
-        Data() = default;
-        Data(Entity e) {
-            auto basic = e.component<BasicInfo>();
-            auto advanced = e.component<AdvancedInfo>();
-            auto stats = e.component<Stats>();
-            auto character = e.component<CharacterInfo>();
-            tag_ = basic->tag_;
-            id_ = basic->id_;
-            maxHp_ = stats->maxHp_;
-            hp_ = advanced->hp_;
-            statusFlag_ = character->statusFlag_;
-            con_ = stats->con_;
-            recoveryHp_ = 0;
-            recoveryMp_ = 0;
-            stamina_ = character->stamina_;
-            name_ = basic->name_;
-        }
-        virtual ~Data() = default;
-
-        virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-            if (!writer.set_uint32_t(tag_)) return false;
-            if (!writer.set_uint16_t(id_)) return false;
-            if (!writer.set_int32_t(maxHp_)) return false;
-            if (!writer.set_int32_t(hp_)) return false;
-            if (!writer.set_uint32_t(statusFlag_)) return false;
-            if (!writer.set_uint16_t(con_)) return false;
-            if (!writer.set_uint16_t(recoveryHp_)) return false;
-            if (!writer.set_uint16_t(recoveryMp_)) return false;
-            if (!writer.set_uint16_t(stamina_)) return false;
-            return writer.set_string(name_);
-        }
-
-        virtual bool read(RoseCommon::CRoseReader& reader) override {
-            if (!reader.get_uint32_t(tag_)) return false;
-            if (!reader.get_uint16_t(id_)) return false;
-            if (!reader.get_int32_t(maxHp_)) return false;
-            if (!reader.get_int32_t(hp_)) return false;
-            if (!reader.get_uint32_t(statusFlag_)) return false;
-            if (!reader.get_uint16_t(con_)) return false;
-            if (!reader.get_uint16_t(recoveryHp_)) return false;
-            if (!reader.get_uint16_t(recoveryMp_)) return false;
-            if (!reader.get_uint16_t(stamina_)) return false;
-            return reader.get_string(name_);
-        }
-
-        uint32_t tag_;
-        uint16_t id_;
-        int32_t maxHp_;
-        int32_t hp_;
-        uint32_t statusFlag_;
-        uint16_t con_;
-        uint16_t recoveryHp_;
-        uint16_t recoveryMp_;
-        uint16_t stamina_;
-        std::string name_;
-    };
-
-    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-        if (isDelete_) {
-            if (!writer.set_int8_t(-1)) return false;
-            if (!writer.set_uint32_t(tagLeaver_)) return false;
-            return writer.set_uint32_t(tagLeader_);
-        }
-
-        if (!writer.set_uint8_t(data_.size())) return false;
-        for (const auto& it: data_)
-            if (!writer.set_iserialize(it)) return false;
-        return true;
-    }
-
-    virtual bool read(RoseCommon::CRoseReader& reader) override {
-        int8_t size;
-        if (!reader.get_int8_t(size)) return false;
-        if (size == -1) {
-            if (!reader.get_uint32_t(tagLeaver_)) return false;
-            return reader.get_uint32_t(tagLeader_);
-        }
-        for (int8_t i = 0; i < size; ++i) {
-            Data member;
-            if (!reader.get_iserialize(member)) return false;
-            data_.push_back(member);
-        }
-        return true;
-    }
-
-    bool isDelete_;
-    uint32_t tagLeaver_;
-    uint32_t tagLeader_;
-    std::vector<Data> data_;
-};
-}
-
 namespace ServerData {
 enum Type : uint8_t {
     ECONOMY = 0,
@@ -417,7 +227,7 @@ enum Type : uint8_t {
 };
 }
 
-namespace CharacterListReply {
+/*namespace CharacterListReply {
 struct Character : public RoseCommon::ISerialize {
     Character(std::string name, uint8_t race, uint16_t level, uint8_t job, uint32_t deleteSeconds, uint8_t platinium, uint32_t face, uint32_t hair) :
         name_(name), deleteSeconds_(deleteSeconds), level_(level), race_(race), job_(job), platinium_(platinium), face_(face), hair_(hair) {}
@@ -465,6 +275,6 @@ struct Character : public RoseCommon::ISerialize {
         return true;
     }
 };
-}
+}*/
 
 #endif

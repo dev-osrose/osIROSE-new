@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table CliLoginReq {
-    password: [int8];
-    username: string;
-}

@@ -1,7 +1,0 @@
-namespace RoseCommon;
-
-table CliStopMoving {
-    x: float;
-    y: float;
-    z: int16;
-}

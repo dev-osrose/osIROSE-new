@@ -15,8 +15,8 @@
 #include <ctime>
 #include "crosesocket.h"
 #include "epackettype.h"
-#include "srv_acceptreply.h"
-#include "srv_screenshottimereply.h"
+#include "srv_accept_reply.h"
+#include "srv_screen_shot_time_reply.h"
 
 namespace RoseCommon {
 
@@ -185,12 +185,12 @@ bool CRoseSocket::handlePacket(uint8_t* _buffer) {
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-      auto packet = SrvAcceptReply::create(0, std::time(nullptr));
+      auto packet = Packet::SrvAcceptReply::create(0, std::time(nullptr));
       send(packet);
       break;
     }
     case ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ: {
-      auto packet = SrvScreenShotTimeReply::create(0, 0, 0, 0, 0);
+      auto packet = Packet::SrvScreenShotTimeReply::create(0, 0, 0, 0, 0);
       send(packet);
       break;
     }

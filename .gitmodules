@@ -19,3 +19,6 @@
 [submodule "3rdparty/visit_struct"]
 	path = 3rdparty/visit_struct
 	url = https://github.com/cbeck88/visit_struct
+[submodule "3rdparty/entt"]
+	path = 3rdparty/entt
+	url = https://github.com/skypjack/entt

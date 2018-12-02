@@ -1,0 +1,4 @@
+<packet ePacketType = "PAKSS_ACCEPT_REPLY">
+    <element name = "result" type = "uint8_t" />
+    <element name = "randValue" type = "uint32_t" />
+</packet>

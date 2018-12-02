@@ -283,7 +283,7 @@ class Class:
         for var in self.variables:
             data += "\t\t" + var.getterHeader() + "\n"
             data += "\t\t" + var.setterHeader(self.name) + "\n"
-        data += "\n\t\tstatic {} create({});".format(self.name, ", ".join(self.getArgs()))
+        data += "\n\t\t//static {} create({});".format(self.name, ", ".join(self.getArgs()))
         data += "\n\t\tstatic {0} create(uint8_t *buffer);".format(self.name)
         data += "\n\t\tstatic std::unique_ptr<{0}> allocate(uint8_t *buffer);".format(self.name)
         data += "\n\n\tprotected:\n\t\tvirtual void pack(CRoseBasePolicy&) const override;\n"
@@ -373,14 +373,14 @@ class Class:
         for var in self.variables:
             data += "\t{}\n".format(var.writer())
         data += "}"
-        data += "\n\n{} {}::create({}) {{\n".format(self.name, self.name, ", ".join(self.getArgs()))
+        data += "\n\n/*{} {}::create({}) {{\n".format(self.name, self.name, ", ".join(self.getArgs()))
         data += self.getComps()
         tmp = self.getTemps()
         if len(tmp):
             data += "\n\t" + tmp + "\n\n"
         else:
             data += "\n\n"
-        data += "\treturn {}({});\n}}\n".format(self.name, self.expandArgs())
+        data += "\treturn {}({});\n}}*/\n".format(self.name, self.expandArgs())
         data += "\n{0} {0}::create(uint8_t *buffer) {{".format(self.name)
         data += "\n\tCRoseReader reader(buffer, CRosePacket::size(buffer));\n"
         data += "\treturn {}(reader);\n}}".format(self.name)

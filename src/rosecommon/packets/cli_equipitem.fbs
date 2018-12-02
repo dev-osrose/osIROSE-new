@@ -1,6 +1,0 @@
-namespace RoseCommon;
-
-table CliEquipItem {
-    slotTo: int16;
-    slotFrom: int16;
-}

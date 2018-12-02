@@ -1,46 +1,61 @@
 #include "isc_shutdown.h"
-#include "throwassert.h"
 
-namespace RoseCommon {
+using namespace RoseCommon;
+using namespace RoseCommon::Packet;
+
+
 
 IscShutdown::IscShutdown() : CRosePacket(ePacketType::ISC_SHUTDOWN) {}
 
 IscShutdown::IscShutdown(CRoseReader reader) : CRosePacket(reader) {
-	throw_assert(get_type() == ePacketType::ISC_SHUTDOWN, "Not the right packet: " << to_underlying(get_type()));
-	{ uint8_t _tmp = uint8_t(); reader.get_uint8_t(_tmp); serverType_ = static_cast<Isc::ServerType>(_tmp); }
-	reader.get_int32_t(id_);
+    if (!reader.get_uint8_t((uint8_t&)serverType)) {
+        return;
+    }
+    if (!reader.get_int32_t(id)) {
+        return;
+    }
 }
 
-IscShutdown::IscShutdown(Isc::ServerType serverType, int32_t id) : CRosePacket(ePacketType::ISC_SHUTDOWN), serverType_(serverType), id_(id) {
+void IscShutdown::set_serverType(const Isc::ServerType serverType) {
+    this->serverType = serverType;
 }
 
-Isc::ServerType IscShutdown::serverType() const { return serverType_; }
+Isc::ServerType IscShutdown::get_serverType() const {
+    return serverType;
+}
 
-IscShutdown& IscShutdown::set_serverType(Isc::ServerType data) { serverType_ = data; return *this; }
+void IscShutdown::set_id(const int32_t id) {
+    this->id = id;
+}
 
-int32_t IscShutdown::id() const { return id_; }
+int32_t IscShutdown::get_id() const {
+    return id;
+}
 
-IscShutdown& IscShutdown::set_id(int32_t data) { id_ = data; return *this; }
+IscShutdown IscShutdown::create(const Isc::ServerType& serverType, const int32_t& id) {
+    IscShutdown packet;
+    packet.set_serverType(serverType);
+    packet.set_id(id);
+    return packet;
+}
 
+IscShutdown IscShutdown::create(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return IscShutdown(reader);
+}
 
 void IscShutdown::pack(CRoseBasePolicy& writer) const {
-	writer.set_uint8_t(serverType_);
-	writer.set_int32_t(id_);
+    if (!writer.set_uint8_t(serverType)) {
+        return;
+    }
+    if (!writer.set_int32_t(id)) {
+        return;
+    }
 }
 
-IscShutdown IscShutdown::create(Isc::ServerType serverType, int32_t id) {
-
-
-	return IscShutdown(serverType, id);
-}
-
-IscShutdown IscShutdown::create(uint8_t *buffer) {
-	CRoseReader reader(buffer, CRosePacket::size(buffer));
-	return IscShutdown(reader);
-}
-std::unique_ptr<IscShutdown> IscShutdown::allocate(uint8_t *buffer) {
-	CRoseReader reader(buffer, CRosePacket::size(buffer));
-	return std::make_unique<IscShutdown>(reader);
-}
-
+constexpr size_t IscShutdown::size() {
+    size_t size = 0;
+    size += sizeof(Isc::ServerType);
+    size += sizeof(int32_t);
+    return size;
 }

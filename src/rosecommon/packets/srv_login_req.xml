@@ -1,0 +1,15 @@
+<packet ePacketType = "PAKLC_LOGIN_REQ">
+    <element name = "id" type = "uint32_t" />
+    <include path = "string" system = "true" />
+    <element name = "channels" type = "ChannelInfo" occurs = "unbounded" occursSize = "uint8_t" ref = "true" default = "none" />
+
+    <complexType name = "ChannelInfo">
+        <sequence>
+            <element name = "id" type = "uint8_t" />
+            <element name = "lowAge" type = "uint8_t" />
+            <element name = "highAge" type = "uint8_t" />
+            <element name = "capacity" type = "uint16_t" />
+            <element name = "name" type = "std::string" ref = "true" />
+        </sequence>
+    </complexType>
+</packet>
