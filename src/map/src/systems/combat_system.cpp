@@ -284,15 +284,6 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
   
   switch(packet.reviveType())
   {
-    case REVIVE_POS:
-    {
-      if (Entity e = get_closest_spawn(entity); e) {
-        auto dest = e.component<Position>();
-        x = dest->x_ + (RAND(1001) - 500);
-        y = dest->y_ + (RAND(1001) - 500);
-      }
-      break;
-    }
     case SAVE_POS:
     {
       //TODO: get the save location of the player
@@ -300,7 +291,7 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
       if (Entity e = get_saved_spawn(entity); e) {
         auto dest = e.component<Position>();
         
-        if(dest->map_ == 20 && charinfo->job_) {
+        if((map_id != 20 && dest->map_ == 20)) {
           if (Entity e = get_closest_spawn(entity); e) {
             auto dest = e.component<Position>();
             x = dest->x_ + (RAND(1001) - 500);
@@ -314,8 +305,17 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
         }
         x = dest->x_ + (RAND(1001) - 500);
         y = dest->y_ + (RAND(1001) - 500);
+        break;
       }
-      break;
+    }
+    case REVIVE_POS:
+    {
+      if (Entity e = get_closest_spawn(entity); e) {
+        auto dest = e.component<Position>();
+        x = dest->x_ + (RAND(1001) - 500);
+        y = dest->y_ + (RAND(1001) - 500);
+        break;
+      }
     }
     case START_POST:
     {
@@ -324,8 +324,8 @@ void CombatSystem::processReviveRequest(CMapClient &client, Entity entity, const
         auto dest = e.component<Position>();
         x = dest->x_ + (RAND(1001) - 500);
         y = dest->y_ + (RAND(1001) - 500);
+        break;
       }
-      break;
     }
     case CURRENT_POS:
       x = position->x_;

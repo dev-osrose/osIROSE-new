@@ -15,7 +15,7 @@ class UpdateSystem : public System {
 
   static void calculateAtkSpeed(Entity entity);
 
-  static void calculateCommand(Entity entity);
+  void calculateCommand(Entity entity);
 };
 
 }  // namespace Systems

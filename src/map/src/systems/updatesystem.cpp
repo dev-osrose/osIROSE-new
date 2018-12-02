@@ -40,11 +40,11 @@ void UpdateSystem::calculateCommand(Entity entity) {
   
   if(advanced->hp_ <= 0) basic->command_ = BasicInfo::DIE;
   else if (destination) basic->command_ = BasicInfo::MOVE;
-  // else if (basic->targetId_) {
-  //   Entity target = manager_.getEntity(basic->targetId_);
+  else if (basic->targetId_) {
+    Entity target = manager_.getEntity(basic->targetId_);
     
-  //   if(target && target.component<Npc>() && target.component<Spawner>()) basic->command_ = BasicInfo::ATTACK;
-  //   else basic->command_ = BasicInfo::STOP;
-  // }
+    if(target && target.component<Npc>() && target.component<Spawner>()) basic->command_ = BasicInfo::ATTACK;
+    else basic->command_ = BasicInfo::STOP;
+  }
   else basic->command_ = BasicInfo::STOP;
 }
