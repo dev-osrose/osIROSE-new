@@ -468,10 +468,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_character`(IN `_charid` INT,
 BEGIN
   DECLARE _delete_date datetime;
   set _delete_date=NULL;
+  set time_zone = '+00:00';
   
   if _delete > 1 then SET _delete_date = NOW();
   elseif _delete = 1 then SET _delete_date = NOW() + INTERVAL 1 DAY;
-	end if;
+  end if;
 	
   UPDATE `characters` 
   SET delete_date = _delete_date

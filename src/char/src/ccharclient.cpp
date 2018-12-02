@@ -136,9 +136,13 @@ bool CCharClient::SendCharListReply() {
   auto packet = makePacket<ePacketType::PAKCC_CHAR_LIST_REPLY>();
   uint32_t id = 0;
 
+  std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
-    auto _remaining_time = (row.deleteDate.value() - now).count();  // Get time in seconds until delete
+    auto _remaining_time = 0;  // Get time in seconds until delete
+    
+    if(row.deleteDate.is_null() == false)
+      _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(row.deleteDate.value()), now_c);
     
     packet->addCharacter(row.name, row.race, row.level, row.job, row.face, row.hair, _remaining_time);
     characterRealId_.push_back(row.id);
@@ -196,7 +200,7 @@ bool CCharClient::SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharR
     if(true) {
       time = 60*60*24; // The default is one day from now
     } else {
-      time = 1;
+      time = 0;
     }
   }
   
