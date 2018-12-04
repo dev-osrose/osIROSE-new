@@ -18,6 +18,7 @@
 #include "croseisc.h"
 
 namespace RoseCommon {
+class IscLoginReq;
 class IscServerRegister;
 }
 
@@ -32,11 +33,20 @@ class CCharISC : public RoseCommon::CRoseISC {
   void SetLogin(bool val);
 
  protected:
+  bool ServerAuth(std::unique_ptr<RoseCommon::IscLoginReq> P);
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool HandlePacket(uint8_t* _buffer) override;
 
   virtual void OnConnected() override;
   virtual bool OnShutdown() override;
+  
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+    REGISTERED,
+  };
+
+  eSTATE state_;
 
  private:
   CCharServer *server_;

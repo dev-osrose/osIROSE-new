@@ -16,6 +16,7 @@
 #include "cmapserver.h"
 #include "config.h"
 #include "crosepacket.h"
+#include "isc_loginreq.h"
 #include "isc_serverregister.h"
 #include "isc_shutdown.h"
 #include "platform_defines.h"
@@ -87,20 +88,31 @@ bool CMapISC::ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P) {
   //    this->set_type(_type);
   //  }
 
-  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n", RoseCommon::Isc::serverTypeName(P->serverType()), P->name(),
+  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n", get_id(), RoseCommon::Isc::serverTypeName(P->serverType()), P->name(),
                 P->addr(), P->port());
   return false;
 }
 
 void CMapISC::OnConnected() {
   Core::Config& config = Core::Config::getInstance();
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
-      config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
-
-  logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet->size(),
-                 static_cast<uint16_t>(packet->type()));
-  send(std::move(packet));
+  {
+    auto packet = makePacket<ePacketType::ISC_SERVER_AUTH>(
+        config.mapServer().charPassword,
+        config.mapServer().charUser);
+        
+    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
+                   packet->size(), (uint16_t)packet->type());
+    send(*packet);
+  }
+  {
+    auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+        RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
+        config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
+  
+    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet->size(),
+                   static_cast<uint16_t>(packet->type()));
+    send(std::move(packet));
+  }
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
