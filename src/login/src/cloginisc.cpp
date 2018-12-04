@@ -59,8 +59,8 @@ bool CLoginISC::ServerAuth(std::unique_ptr<RoseCommon::IscLoginReq> P) {
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable table{};
   try {
-    const auto res = conn(sqlpp::select(table.id, table.password)
-              .from(table).where(table.username == username_
+    const auto res = conn(sqlpp::select(table.id)
+              .from(table).where(table.accountType == "system" and table.username == username_
                   and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
         if (!res.empty()) {
