@@ -17,6 +17,7 @@
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
+#include "isc_loginreq.h"
 #include "isc_serverregister.h"
 #include "isc_shutdown.h"
 
@@ -24,9 +25,9 @@
 
 using namespace RoseCommon;
 
-CCharISC::CCharISC() : CRoseISC(), server_(nullptr) {}
+CCharISC::CCharISC() : CRoseISC(), state_(eSTATE::DEFAULT), server_(nullptr) {}
 
-CCharISC::CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
+CCharISC::CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), state_(eSTATE::DEFAULT), server_(server) {
   socket_[SocketType::Client]->registerOnConnected(std::bind(&CCharISC::OnConnected, this));
   socket_[SocketType::Client]->registerOnShutdown(std::bind(&CCharISC::OnShutdown, this));
 }
@@ -36,7 +37,7 @@ bool CCharISC::HandlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::ISC_SERVER_AUTH:
-      return true;
+      return ServerAuth(getPacket<ePacketType::ISC_SERVER_AUTH>(_buffer));
     case ePacketType::ISC_SERVER_REGISTER:
       return ServerRegister(
           getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
@@ -52,9 +53,42 @@ bool CCharISC::HandlePacket(uint8_t* _buffer) {
   return true;
 }
 
+bool CCharISC::ServerAuth(std::unique_ptr<RoseCommon::IscLoginReq> P) {
+  logger_->trace("CCharISC::ServerAuth(const CRosePacket& P)");
+  if(state_ != eSTATE::DEFAULT) {
+    logger_->warn("ISC {} is attempting to auth multiple times.", get_id());
+    return false;
+  }
+  std::string username_ = Core::escapeData(P->username());
+  std::string clientpass = Core::escapeData(P->password());
+  
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountTable table{};
+  try {
+    const auto res = conn(sqlpp::select(table.id, table.password)
+              .from(table).where(table.accountType == "system" and table.username == username_
+                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
+
+        if (!res.empty()) {
+          state_ = eSTATE::LOGGEDIN;
+          return true;
+        } else {
+          logger_->error("Map server auth from '{}' failed to auth with User: '{}' Pass: '{}'", get_address(), username_, clientpass);
+        }
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
+  }
+  
+  return false;
+}
+
 bool CCharISC::ServerRegister(
     std::unique_ptr<RoseCommon::IscServerRegister> P) {
   logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
+  if(state_ == eSTATE::DEFAULT) {
+    logger_->warn("ISC {} is attempting to register before auth.", get_id());
+    return false;
+  }
 
   // 1 == char server
   // 2 == node server
@@ -77,8 +111,11 @@ bool CCharISC::ServerRegister(
 
     socket_[SocketType::Client]->set_type(to_underlying(type));
   }
+  
+  state_ = eSTATE::REGISTERED;
 
-  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
+  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n",
+                get_id(),
                 RoseCommon::Isc::serverTypeName(P->serverType()),
                   P->name(), P->addr(),
                   P->port());
@@ -106,16 +143,27 @@ void CCharISC::OnConnected() {
   logger_->trace("CCharISC::OnConnected()");
 
   Core::Config& config = Core::Config::getInstance();
-  auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
-      RoseCommon::Isc::ServerType::CHAR,
-      config.charServer().worldName, config.serverData().ip,
-      config.charServer().clientPort,
-      config.charServer().accessLevel,
-      get_id());
-
-  logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
-                 packet->size(), (uint16_t)packet->type());
-  send(*packet);
+  {
+    auto packet = makePacket<ePacketType::ISC_SERVER_AUTH>(
+        config.charServer().loginPassword,
+        config.charServer().loginUser);
+        
+    logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
+                   packet->size(), (uint16_t)packet->type());
+    send(*packet);
+  }
+  
+  {
+    auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+        RoseCommon::Isc::ServerType::CHAR,
+        config.charServer().worldName, config.serverData().ip,
+        config.charServer().clientPort,
+        config.charServer().accessLevel,
+        get_id());
+    logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
+                   packet->size(), (uint16_t)packet->type());
+    send(*packet);
+  }
 
   socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::LOGIN));
 
@@ -144,6 +192,10 @@ void CCharISC::OnConnected() {
 bool CCharISC::OnShutdown() {
   logger_->trace("CCharISC::OnShutdown()");
   bool result = true;
+  if(state_ != eSTATE::REGISTERED) {
+    logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
+    return false;
+  }
 
   if (is_active() == true) {
     if (get_type() == Isc::ServerType::LOGIN) {

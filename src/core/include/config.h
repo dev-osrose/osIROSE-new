@@ -98,6 +98,8 @@ class Config {
   struct CharServer {
     std::string worldName = "osIROSE";
     std::string loginIp = "127.0.0.1";
+    std::string loginUser = "login";
+    std::string loginPassword = "098f6bcd4621d373cade4e832627b4f6";
     uint16_t clientPort = 29100;
     uint16_t iscPort = 29110;
     bool instantCharDelete = true;
@@ -107,6 +109,8 @@ class Config {
   struct MapServer {
     std::string channelName = "Athena";
     std::string charIp = "127.0.0.1";
+    std::string charUser = "char";
+    std::string charPassword = "098f6bcd4621d373cade4e832627b4f6";
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;
@@ -139,8 +143,8 @@ class Config {
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
 VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);
+VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, instantCharDelete, accessLevel, logLevel);
+VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);
 VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer);
 
 #endif /* !_CONFIG_H_ */

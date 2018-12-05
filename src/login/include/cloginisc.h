@@ -23,6 +23,7 @@ class INetwork;
 }
 
 namespace RoseCommon {
+class IscLoginReq;
 class IscServerRegister;
 class IscShutdown;
 }
@@ -40,9 +41,17 @@ class CLoginISC : public RoseCommon::CRoseISC {
 
  protected:
   bool HandlePacket(uint8_t* _buffer) override;
+  bool ServerAuth(std::unique_ptr<RoseCommon::IscLoginReq> P);
   bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
   bool ServerShutdown(std::unique_ptr<RoseCommon::IscShutdown> P);
+  
+  enum class eSTATE {
+    DEFAULT,
+    LOGGEDIN,
+    REGISTERED,
+  };
 
+  eSTATE login_state_;
   std::string server_name_;
   uint32_t channel_count_;
   uint32_t min_right_;

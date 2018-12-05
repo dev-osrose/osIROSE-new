@@ -204,6 +204,8 @@ SET(SOURCES_PACKETS
   #---------------------------------------------------------
   src/packets/isc_serverregister.cpp
   include/packets/isc_serverregister.h
+  src/packets/isc_loginreq.cpp
+  include/packets/isc_loginreq.h
   src/packets/isc_shutdown.cpp
   include/packets/isc_shutdown.h
   src/packets/srv_characterlistreply.cpp

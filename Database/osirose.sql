@@ -24,10 +24,11 @@ DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `account_type` enum('system','user') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',
   `username` varchar(64) DEFAULT NULL,
   `password` varchar(256) DEFAULT NULL,
   `salt` varchar(256) DEFAULT NULL,
-  `access` int(11) DEFAULT '100',
+  `access` int(11) DEFAULT '1',
   `active` int(11) DEFAULT '1',
   `platinium` tinyint(1) DEFAULT '0',
   `online` tinyint(1) DEFAULT '0',
