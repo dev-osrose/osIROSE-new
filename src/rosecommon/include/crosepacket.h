@@ -29,7 +29,6 @@
 #include <cassert>
 #include <type_traits>
 #include "epackettype.h"
-#include "iscontainer.h"
 #include "crosewriter.h"
 
 namespace RoseCommon {

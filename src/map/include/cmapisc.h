@@ -16,7 +16,7 @@
 #define __CMAPISC_H__
 
 #include "croseisc.h"
-#include "isc_serverregister.h"
+#include "isc_server_register.h"
 
 class CMapServer;
 
@@ -28,7 +28,7 @@ class CMapISC : public RoseCommon::CRoseISC {
   bool isChar() const;
 
  protected:
-  bool serverRegister(RoseCommon::IscServerRegister&& P);
+  bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
   bool handlePacket(uint8_t* _buffer) override;
 
   virtual void onConnected() override;

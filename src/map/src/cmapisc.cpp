@@ -41,7 +41,7 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_AUTH:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return serverRegister(IscServerRegister::create(_buffer));
+      return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
@@ -54,7 +54,7 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CMapISC::serverRegister(RoseCommon::IscServerRegister&& P) {
+bool CMapISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   logger_->trace("CMapISC::serverRegister");
 
   //  int16_t _type = 0;
@@ -87,14 +87,14 @@ bool CMapISC::serverRegister(RoseCommon::IscServerRegister&& P) {
   //    this->set_type(_type);
   //  }
 
-  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n", RoseCommon::Isc::serverTypeName(P.serverType()), P.name(),
-                P.addr(), P.port());
+  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n", RoseCommon::Isc::serverTypeName(P.get_serverType()), P.get_name(),
+                P.get_addr(), P.get_port());
   return false;
 }
 
 void CMapISC::onConnected() {
   Core::Config& config = Core::Config::getInstance();
-  auto packet = IscServerRegister::create(
+  auto packet = Packet::IscServerRegister::create(
       RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
       config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
 
@@ -108,7 +108,7 @@ void CMapISC::onConnected() {
         if (dt > (1000 * 60) * 1)  // wait 1 minute before pinging
         {
           logger_->trace("Sending ISC_ALIVE");
-          send(IscAlive::create());
+          send(Packet::IscAlive());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
@@ -128,7 +128,7 @@ bool CMapISC::onShutdown() {
         result = false;
       }
     } else {
-      auto packet = IscShutdown::create(get_type(), get_id());
+      auto packet = Packet::IscShutdown::create(get_type(), get_id());
       std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
       for (auto& server : server_->GetISCList()) {
         CMapISC* svr = static_cast<CMapISC*>(server.get());

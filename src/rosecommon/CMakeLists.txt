@@ -100,8 +100,8 @@ SET(SOURCES_PACKETS
     include/packets/srv_delete_char_reply.h
     #  src/packets/srv_initdata.cpp
     #  include/packets/srv_initdata.h
-    #  src/packets/srv_inventorydata.cpp
-    #  include/packets/srv_inventorydata.h
+    src/packets/srv_inventory_data.cpp
+    include/packets/srv_inventory_data.h
     src/packets/srv_join_server_reply.cpp
     include/packets/srv_join_server_reply.h
     #  src/packets/srv_logoutreply.cpp

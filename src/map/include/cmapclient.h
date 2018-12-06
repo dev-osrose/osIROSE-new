@@ -18,16 +18,12 @@
 #include "croseclient.h"
 #include "crosepacket.h"
 
-#include "entitysystem.h"
+#include "cli_join_server_req.h"
 
-#include "cli_joinserverreq.h"
-
-#include <memory>
-
-class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CMapClient> {
+class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
-  CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem);
+  CMapClient(std::unique_ptr<Core::INetwork> _sock);
 
   virtual ~CMapClient();
 
@@ -42,7 +38,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   void updateSession();
 
   bool logoutReply();
-  bool joinServerReply(RoseCommon::CliJoinServerReq&& P);
+  bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);
 
   enum class eSTATE {
     DEFAULT,
@@ -55,7 +51,6 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   uint32_t sessionId_;
   uint32_t userid_;
   uint32_t charid_;
-  std::shared_ptr<EntitySystem> entitySystem_;
 };
 
 #endif

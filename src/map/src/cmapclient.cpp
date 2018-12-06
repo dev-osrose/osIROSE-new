@@ -18,9 +18,8 @@
 #include "cmapserver.h"
 #include "config.h"
 #include "connection.h"
-#include "entitycomponents.h"
 #include "epackettype.h"
-#include "srv_inventorydata.h"
+#include "srv_inventory_data.h"
 #include "srv_joinserverreply.h"
 #include "srv_questdata.h"
 #include "srv_removeobject.h"
@@ -33,14 +32,13 @@ using namespace RoseCommon;
 CMapClient::CMapClient()
     : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT), sessionId_(0), userid_(0), charid_(0) {}
 
-CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
+CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0),
-      entitySystem_(entitySystem) {}
+      charid_(0) {}
 
 CMapClient::~CMapClient() {}
 
@@ -54,7 +52,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
       updateSession();
       break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
-      return joinServerReply(CliJoinServerReq::create(_buffer));  // Allow client to connect
+      return joinServerReply(Packet::CliJoinServerReq::create(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
       logger_->warn("Change character hasn't been implemented yet.");
       // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
@@ -76,17 +74,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
     return CRoseClient::handlePacket(_buffer);
   }
-  auto packet = fetchPacket(_buffer);
-  if (!packet) {
-    CRoseClient::handlePacket(_buffer);
-    return true;
-  }
-  if (!entitySystem_->dispatch(entity_, std::move(packet))) {
-    if(false == CRoseClient::handlePacket(_buffer)) {  // FIXME : removed the return because I want to be able to
-                                         // mess around with unkown packets for the time being
-      logger_->warn("There is no system willing to deal with this packet");
-    }
-  }
+  logger_->warn("Packet {} not handled", CRosePacket::type(_buffer));
   return true;
 }
 
@@ -107,7 +95,6 @@ void CMapClient::updateSession() {
 void CMapClient::onDisconnected() {
   logger_->trace("CMapClient::OnDisconnected()");
   if (login_state_ == eSTATE::DEFAULT) return;
-  entitySystem_->destroy(entity_, login_state_ != eSTATE::SWITCHING);
 
   if (login_state_ != eSTATE::SWITCHING) {
       Core::AccountTable table{};
@@ -117,7 +104,7 @@ void CMapClient::onDisconnected() {
   login_state_ = eSTATE::DEFAULT;
 }
 
-bool CMapClient::joinServerReply(RoseCommon::CliJoinServerReq&& P) {
+bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
   logger_->trace("CMapClient::joinServerReply()");
 
   if (login_state_ != eSTATE::DEFAULT) {
@@ -125,8 +112,8 @@ bool CMapClient::joinServerReply(RoseCommon::CliJoinServerReq&& P) {
     return true;
   }
 
-  uint32_t sessionID = P.sessionId();
-  std::string password = Core::escapeData(P.password());
+  uint32_t sessionID = P.get_sessionId();
+  std::string password = Core::escapeData(P.get_password());
 
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   Core::AccountTable accounts{};
@@ -148,41 +135,39 @@ bool CMapClient::joinServerReply(RoseCommon::CliJoinServerReq&& P) {
       sessionId_ = sessionID;
       bool platinium = false;
       platinium = row.platinium;
-      entity_ = entitySystem_->loadCharacter(charid_, platinium);
 
-      if (entity_) {
+      if (true) {
         Core::Config& config = Core::Config::getInstance();
         conn(sqlpp::update(sessions)
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
-        entity_.assign<SocketConnector>(shared_from_this())->access_level_ = row.access;
 
-        send(SrvJoinServerReply::create(JoinServerReply::OK, entity_.component<BasicInfo>()->id_));
+        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK));
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          send(SrvSelectCharReply::create(entity_));
+          send(Packet::SrvSelectCharReply::create(entity_));
 
-          send(SrvInventoryData::create(entity_));
+          send(Packet::SrvInventoryData::create(entity_));
 
-          send(SrvQuestData::create(entity_));
+          send(Packet::SrvQuestData::create(entity_));
 
-          send(SrvBillingMessage::create());
+          send(Packet::SrvBillingMessage::create());
         } else {
-          send(SrvTeleportReply::create(entity_));
+          send(Packet::SrvTeleportReply::create(entity_));
         }
 
       } else {
         logger_->debug("Something wrong happened when creating the entity");
-        send(SrvJoinServerReply::create(JoinServerReply::FAILED, 0));
+        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
       }
     } else {
       logger_->debug("Client {} auth INVALID_PASS.", get_id());
-      send(SrvJoinServerReply::create(JoinServerReply::INVALID_PASSWORD, 0));
+      send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::INVALID_PASSWORD, 0));
     }
   } catch (const sqlpp::exception& e) {
     logger_->error("Error while accessing the database: {}", e.what());
-    send(SrvJoinServerReply::create(JoinServerReply::FAILED, 0));
+    send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
   }
   return true;
 }
