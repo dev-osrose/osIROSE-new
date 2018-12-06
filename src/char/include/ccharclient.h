@@ -17,10 +17,10 @@
 
 #include "croseclient.h"
 
-#include "cli_createcharreq.h"
-#include "cli_deletecharreq.h"
-#include "cli_joinserverreq.h"
-#include "cli_selectcharreq.h"
+#include "cli_create_char_req.h"
+#include "cli_delete_char_req.h"
+#include "cli_join_server_req.h"
+#include "cli_select_char_req.h"
 
 class CCharServer;
 
@@ -34,11 +34,11 @@ class CCharClient : public RoseCommon::CRoseClient {
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
 
-  bool joinServerReply(RoseCommon::CliJoinServerReq&& P);
+  bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);
   bool sendCharListReply();
-  bool sendCharCreateReply(RoseCommon::CliCreateCharReq&& P);
-  bool sendCharDeleteReply(RoseCommon::CliDeleteCharReq&& P);
-  bool sendCharSelectReply(RoseCommon::CliSelectCharReq&& P);
+  bool sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P);
+  bool sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P);
+  bool sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P);
 
   virtual void onDisconnected() override;
 

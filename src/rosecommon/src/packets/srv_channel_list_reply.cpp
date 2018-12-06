@@ -91,6 +91,7 @@ constexpr size_t SrvChannelListReply::ChannelInfo::size() {
     return size;
 }
 
+
 SrvChannelListReply::SrvChannelListReply() : CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY) {}
 
 SrvChannelListReply::SrvChannelListReply(CRoseReader reader) : CRosePacket(reader) {
@@ -164,6 +165,8 @@ void SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
 constexpr size_t SrvChannelListReply::size() {
     size_t size = 0;
     size += sizeof(uint32_t);
+    size += sizeof(uint8_t);
     size += ChannelInfo::size();
     return size;
 }
+

@@ -59,3 +59,4 @@ constexpr size_t IscShutdown::size() {
     size += sizeof(int32_t);
     return size;
 }
+

@@ -45,12 +45,12 @@ SET(SOURCES_PACKETS
     #  include/packets/cli_changemapreq.h
     src/packets/cli_channel_list_req.cpp
     include/packets/cli_channel_list_req.h
-    #  src/packets/cli_createcharreq.cpp
-    #  include/packets/cli_createcharreq.h
-    #  src/packets/cli_deletecharreq.cpp
-    #  include/packets/cli_deletecharreq.h
-    #  src/packets/cli_joinserverreq.cpp
-    #  include/packets/cli_joinserverreq.h
+    src/packets/cli_create_char_req.cpp
+    include/packets/cli_create_char_req.h
+    src/packets/cli_delete_char_req.cpp
+    include/packets/cli_delete_char_req.h
+    src/packets/cli_join_server_req.cpp
+    include/packets/cli_join_server_req.h
     src/packets/cli_login_req.cpp
     include/packets/cli_login_req.h
     #  src/packets/cli_logoutreq.cpp
@@ -63,8 +63,8 @@ SET(SOURCES_PACKETS
     #  include/packets/cli_revivereq.h
     #  src/packets/cli_screenshottimereq.cpp
     #  include/packets/cli_screenshottimereq.h
-    #  src/packets/cli_selectcharreq.cpp
-    #  include/packets/cli_selectcharreq.h
+    src/packets/cli_select_char_req.cpp
+    include/packets/cli_select_char_req.h
     src/packets/cli_srv_select_req.cpp
     include/packets/cli_srv_select_req.h
     #  src/packets/cli_stop.cpp
@@ -94,16 +94,16 @@ SET(SOURCES_PACKETS
     include/packets/srv_accept_reply.h
     #  src/packets/srv_changemapreply.cpp
     #  include/packets/srv_changemapreply.h
-    #  src/packets/srv_createcharreply.cpp
-    #  include/packets/srv_createcharreply.h
-    #  src/packets/srv_deletecharreply.cpp
-    #  include/packets/srv_deletecharreply.h
+    src/packets/srv_create_char_reply.cpp
+    include/packets/srv_create_char_reply.h
+    src/packets/srv_delete_char_reply.cpp
+    include/packets/srv_delete_char_reply.h
     #  src/packets/srv_initdata.cpp
     #  include/packets/srv_initdata.h
     #  src/packets/srv_inventorydata.cpp
     #  include/packets/srv_inventorydata.h
-    #  src/packets/srv_joinserverreply.cpp
-    #  include/packets/srv_joinserverreply.h
+    src/packets/srv_join_server_reply.cpp
+    include/packets/srv_join_server_reply.h
     #  src/packets/srv_logoutreply.cpp
     #  include/packets/srv_logoutreply.h
     #  src/packets/srv_mousecmd.cpp
@@ -126,8 +126,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_stop.h
     #  src/packets/srv_stopmoving.cpp
     #  include/packets/srv_stopmoving.h
-    #  src/packets/srv_switchserver.cpp
-    #  include/packets/srv_switchserver.h
+    src/packets/srv_switch_server.cpp
+    include/packets/srv_switch_server.h
     #  src/packets/srv_whisperchat.cpp
     #  include/packets/srv_whisperchat.h
     #  src/packets/srv_equipitem.cpp
@@ -177,10 +177,10 @@ SET(SOURCES_PACKETS
     include/packets/isc_server_register.h
     src/packets/isc_shutdown.cpp
     include/packets/isc_shutdown.h
-    #  src/packets/srv_charlistreply.cpp
-    #  include/packets/srv_charlistreply.h
-    #  src/packets/isc_alive.cpp
-    #  include/packets/isc_alive.h
+    src/packets/srv_char_list_reply.cpp
+    include/packets/srv_char_list_reply.h
+    src/packets/isc_alive.cpp
+    include/packets/isc_alive.h
 
 )
 

@@ -1,0 +1,45 @@
+<packet ePacketType = "PAKCC_CHAR_LIST_REPLY">
+    <element name = "characters" type = "CharInfo" occurs = "unbounded" occursSize = "uint8_t" ref = "true" default = "none" />
+
+    <include path = "string" system = "true" />
+
+    <simpleType name = "EquippedPosition">
+        <restriction base = "uint8_t">
+            <enumeration value = "HELMET" />
+            <enumeration value = "ARMOR" />
+            <enumeration value = "GAUNTLET" />
+            <enumeration value = "BOOTS" />
+            <enumeration value = "GOOGLES" />
+            <enumeration value = "BACKPACK" />
+            <enumeration value = "WEAPON_R" />
+            <enumeration value = "WEAPON_L" />
+            <enumeration value = "MAX_ITEMS" />
+        </restriction>
+    </simpleType>
+
+    <complexType name = "EquippedItem">
+        <choice>
+            <sequence inline = "true">
+                <element name = "id" type = "unsigned int" bits = "10" />
+                <element name = "gem_opt" type = "unsigned int" bits = "9" />
+                <element name = "socket" type = "unsigned int" bits = "1" />
+                <element name = "grade" type = "unsigned int" bits = "4" />
+            </sequence>
+            <element name = "data" type = "uint32_t" />
+        </choice>
+    </complexType>
+
+    <complexType name = "CharInfo">
+        <sequence>
+            <element name = "name" type = "std::string" ref = "true" />
+            <element name = "race" type = "uint8_t" />
+            <element name = "level" type = "uint16_t" />
+            <element name = "job" type = "uint16_t" />
+            <element name = "remainSecsUntilDelete" type = "uint32_t" />
+            <element name = "platinium" type = "uint8_t" default = "0" />
+            <element name = "face" type = "uint32_t" />
+            <element name = "hair" type = "uint32_t" />
+            <element name = "items" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" />
+        </sequence>
+    </complexType>
+</packet>

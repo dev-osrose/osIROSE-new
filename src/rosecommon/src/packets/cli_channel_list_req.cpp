@@ -43,3 +43,4 @@ constexpr size_t CliChannelListReq::size() {
     size += sizeof(uint32_t);
     return size;
 }
+

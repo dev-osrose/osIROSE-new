@@ -59,3 +59,4 @@ constexpr size_t CliSrvSelectReq::size() {
     size += sizeof(uint8_t);
     return size;
 }
+

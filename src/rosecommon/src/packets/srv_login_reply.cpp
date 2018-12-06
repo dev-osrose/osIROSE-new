@@ -61,6 +61,7 @@ constexpr size_t SrvLoginReply::ServerInfo::size() {
     return size;
 }
 
+
 SrvLoginReply::SrvLoginReply() : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY) {}
 
 SrvLoginReply::SrvLoginReply(CRoseReader reader) : CRosePacket(reader) {
@@ -159,3 +160,4 @@ constexpr size_t SrvLoginReply::size() {
     size += ServerInfo::size();
     return size;
 }
+

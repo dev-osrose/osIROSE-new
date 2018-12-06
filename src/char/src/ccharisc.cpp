@@ -39,7 +39,7 @@ bool CCharISC::handlePacket(uint8_t* _buffer) {
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(
-          IscServerRegister::create(_buffer));
+          Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
@@ -52,7 +52,7 @@ bool CCharISC::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CCharISC::serverRegister(RoseCommon::IscServerRegister&& P) {
+bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   logger_->trace("CCharISC::serverRegister(CRosePacket P)");
 
   // 1 == char server
@@ -65,24 +65,24 @@ bool CCharISC::serverRegister(RoseCommon::IscServerRegister&& P) {
   int32_t right = 0;
   RoseCommon::Isc::ServerType type = RoseCommon::Isc::ServerType::NODE;
 
-  if (P.serverType() == RoseCommon::Isc::ServerType::NODE) {
+  if (P.get_serverType() == RoseCommon::Isc::ServerType::NODE) {
     // This is a node and we need to figure out something to do with this
-  } else if (P.serverType() == RoseCommon::Isc::ServerType::MAP_MASTER) {
-    name = P.name();
-    socket_[SocketType::Client]->set_address(P.addr());
-    socket_[SocketType::Client]->set_port(P.port());
-    type = P.serverType();
-    right = P.right();
+  } else if (P.get_serverType() == RoseCommon::Isc::ServerType::MAP_MASTER) {
+    name = P.get_name();
+    socket_[SocketType::Client]->set_address(P.get_addr());
+    socket_[SocketType::Client]->set_port(P.get_port());
+    type = P.get_serverType();
+    right = P.get_right();
 
     socket_[SocketType::Client]->set_type(to_underlying(type));
   }
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                RoseCommon::Isc::serverTypeName(P.serverType()),
-                  P.name(), P.addr(),
-                  P.port());
+                RoseCommon::Isc::serverTypeName(P.get_serverType()),
+                  P.get_name(), P.get_addr(),
+                  P.get_port());
 
-  auto packet = IscServerRegister::create(type, name, socket_[SocketType::Client]->get_address(),
+  auto packet = Packet::IscServerRegister::create(type, name, socket_[SocketType::Client]->get_address(),
                                                              socket_[SocketType::Client]->get_port(), right, get_id());
 
   // todo: get the ISC connection to the login server and send the packet to
@@ -105,7 +105,7 @@ void CCharISC::onConnected() {
   logger_->trace("CCharISC::onConnected()");
 
   Core::Config& config = Core::Config::getInstance();
-  auto packet = IscServerRegister::create(
+  auto packet = Packet::IscServerRegister::create(
       RoseCommon::Isc::ServerType::CHAR,
       config.charServer().worldName, config.serverData().ip,
       config.charServer().clientPort,
@@ -126,7 +126,7 @@ void CCharISC::onConnected() {
         if (dt > (1000 * 60) * 1)  // wait 1 minutes before pinging
         {
           logger_->trace("Sending ISC_ALIVE");
-          auto packet = IscAlive::create();
+          auto packet = Packet::IscAlive::create();
           send(packet);
         }
         std::this_thread::sleep_for(
@@ -148,7 +148,7 @@ bool CCharISC::onShutdown() {
         result = false;
       }
     } else {
-      auto packet = RoseCommon::IscShutdown::create(get_type(), get_id());
+      auto packet = RoseCommon::Packet::IscShutdown::create(get_type(), get_id());
       std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
       for (auto& server : server_->GetISCList()) {
         CCharISC* svr = static_cast<CCharISC*>(server.get());

@@ -121,3 +121,4 @@ constexpr size_t IscServerRegister::size() {
     size += sizeof(int32_t);
     return size;
 }
+

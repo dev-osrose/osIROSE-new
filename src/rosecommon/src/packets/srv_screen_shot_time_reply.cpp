@@ -107,3 +107,4 @@ constexpr size_t SrvScreenShotTimeReply::size() {
     size += sizeof(uint8_t);
     return size;
 }
+

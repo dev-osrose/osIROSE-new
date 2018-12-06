@@ -41,6 +41,7 @@ constexpr size_t CliLoginReq::Password::size() {
 }
 
 
+
 CliLoginReq::CliLoginReq() : CRosePacket(ePacketType::PAKCS_LOGIN_REQ) {}
 
 CliLoginReq::CliLoginReq(CRoseReader reader) : CRosePacket(reader) {
@@ -94,3 +95,4 @@ constexpr size_t CliLoginReq::size() {
     size += Password::size();
     return size;
 }
+

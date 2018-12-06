@@ -20,7 +20,7 @@ class CRoseBasePolicy {
        virtual bool set_double(double data) = 0;
        virtual bool set_char(char data) = 0;
        virtual bool set_iserialize(const ISerialize& data) = 0;
-       
+
        virtual uint16_t get_size() const = 0;
 };
 

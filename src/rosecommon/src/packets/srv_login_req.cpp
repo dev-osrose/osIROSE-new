@@ -91,6 +91,7 @@ constexpr size_t SrvLoginReq::ChannelInfo::size() {
     return size;
 }
 
+
 SrvLoginReq::SrvLoginReq() : CRosePacket(ePacketType::PAKLC_LOGIN_REQ) {}
 
 SrvLoginReq::SrvLoginReq(CRoseReader reader) : CRosePacket(reader) {
@@ -164,6 +165,8 @@ void SrvLoginReq::pack(CRoseBasePolicy& writer) const {
 constexpr size_t SrvLoginReq::size() {
     size_t size = 0;
     size += sizeof(uint32_t);
+    size += sizeof(uint8_t);
     size += ChannelInfo::size();
     return size;
 }
+
