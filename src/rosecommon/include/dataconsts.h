@@ -15,24 +15,34 @@
 #ifndef _DATACONSTS_H_
 #define _DATACONSTS_H_
 
-#include <string>
-#include "iserialize.h"
-#include "crosewriter.h"
-
 namespace RoseCommon {
-#define MIN_SELL_TYPE     1
-#define MAX_SELL_TYPE     11
+constexpr unsigned int MIN_SELL_TYPE = 1;
+constexpr unsigned int MAX_SELL_TYPE = 11;
 
-#define MAX_UNION_COUNT   10
-#define MAX_BUFF_STATUS   40
-#define MAX_SKILL_COUNT   120
-#define MAX_HOTBAR_ITEMS  32
-#define MAX_DAMAGE        99999999
+constexpr unsigned int MAX_ITEMS = 140;
 
-#define DAMAGE_ACTION_ATTACK    0x02
-#define DAMAGE_ACTION_HIT       0x04
-#define DAMAGE_ACTION_CRITICAL  0x08
-#define DAMAGE_ACTION_DEAD      0x10
+constexpr unsigned int MAX_UNION_COUNT = 10;
+constexpr unsigned int MAX_BUFF_STATUS = 40;
+constexpr unsigned int MAX_SKILL_COUNT = 120;
+constexpr unsigned int MAX_HOTBAR_ITEMS = 32;
+
+constexpr unsigned int MAX_DAMAGE = 99999999;
+
+constexpr unsigned int DAMAGE_ACTION_ATTACK = 0x02;
+constexpr unsigned int DAMAGE_ACTION_HIT = 0x4;
+constexpr unsigned int DAMAGE_ACTION_CRITICAL = 0x8;
+constexpr unsigned int DAMAGE_ACTION_DEAD = 0x10;
+
+constexpr unsigned int MAX_CONDITIONS_EPISODE = 5;
+constexpr unsigned int MAX_CONDITIONS_JOB = 3;
+constexpr unsigned int MAX_CONDITIONS_PLANET = 7;
+constexpr unsigned int MAX_CONDITIONS_UNION = 10;
+constexpr unsigned int MAX_QUESTS = 10;
+constexpr unsigned int MAX_SWITCHES = 16;
+
+constexpr unsigned int MAX_QUEST_SWITCHES = 32;
+constexpr unsigned int MAX_QUEST_VARS = 10;
+constexpr unsigned int MAX_QUEST_ITEMS = 6;
 }
 
 namespace ReviveReq {
@@ -42,17 +52,6 @@ namespace ReviveReq {
         START_POST,
         CURRENT_POS
     };
-}
-
-namespace SelectCharReply {
-enum Result : uint8_t {
-    OK = 0,
-    FAILED,
-    FULL,
-    INVALID_CHANNEL,
-    CHANNEL_NOT_ACTIVE,
-    INVALID_AGE
-};
 }
 
 namespace PartyReq {
@@ -84,7 +83,7 @@ enum Reply : uint8_t {
 };
 }
 
-namespace SetItem {
+/*namespace SetItem {
 struct Item : public RoseCommon::ISerialize {
     Item() = default;
     Item(const Item&) = default;
@@ -110,7 +109,7 @@ struct Item : public RoseCommon::ISerialize {
     uint16_t header_;
     uint32_t data_;
 };
-}
+}*/
 
 namespace ServerData {
 enum Type : uint8_t {
@@ -118,55 +117,5 @@ enum Type : uint8_t {
     NPC
 };
 }
-
-/*namespace CharacterListReply {
-struct Character : public RoseCommon::ISerialize {
-    Character(std::string name, uint8_t race, uint16_t level, uint8_t job, uint32_t deleteSeconds, uint8_t platinium, uint32_t face, uint32_t hair) :
-        name_(name), deleteSeconds_(deleteSeconds), level_(level), race_(race), job_(job), platinium_(platinium), face_(face), hair_(hair) {}
-
-    std::string name_;
-    uint32_t deleteSeconds_;
-    uint16_t level_;
-    uint8_t race_;
-    uint16_t job_;
-    uint8_t platinium_;
-    uint32_t face_;
-    uint32_t hair_;
-    uint32_t items_[Inventory::Position::MAX_EQUIP_ITEMS - 2] = {0}; // minus face and hair
-
-    void addEquipItem(uint8_t slot, uint16_t itemId, uint16_t gem, uint8_t socket, uint8_t grade) {
-        if (slot >= Inventory::Position::MAX_EQUIP_ITEMS - 2) return;
-        items_[slot] = itemId << 14 | gem << 5 | socket << 4 | grade;
-    }
-
-    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-        if (!writer.set_string(name_)) return false;
-        if (!writer.set_uint8_t(race_)) return false;
-        if (!writer.set_uint16_t(level_)) return false;
-        if (!writer.set_uint16_t(job_)) return false;
-        if (!writer.set_uint32_t(deleteSeconds_)) return false;
-        if (!writer.set_uint8_t(platinium_)) return false;
-        if (!writer.set_uint32_t(face_)) return false;
-        if (!writer.set_uint32_t(hair_)) return false;
-        for (size_t i = 0; i < Inventory::Position::MAX_EQUIP_ITEMS - 2; ++i)
-            if (!writer.set_uint32_t(items_[i])) return false;
-        return true;
-    }
-
-    virtual bool read(RoseCommon::CRoseReader& reader) override {
-        if (!reader.get_string(name_)) return false;
-        if (!reader.get_uint8_t(race_)) return false;
-        if (!reader.get_uint16_t(level_)) return false;
-        if (!reader.get_uint16_t(job_)) return false;
-        if (!reader.get_uint32_t(deleteSeconds_)) return false;
-        if (!reader.get_uint8_t(platinium_)) return false;
-        if (!reader.get_uint32_t(face_)) return false;
-        if (!reader.get_uint32_t(hair_)) return false;
-        for (size_t i = 0; i < Inventory::Position::MAX_EQUIP_ITEMS - 2; ++i)
-            if (!reader.get_uint32_t(items_[i])) return false;
-        return true;
-    }
-};
-}*/
 
 #endif

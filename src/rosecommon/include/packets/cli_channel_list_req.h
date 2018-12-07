@@ -24,6 +24,7 @@ class CliChannelListReq : public CRosePacket {
         
         static CliChannelListReq create(const uint32_t&);
         static CliChannelListReq create(const uint8_t*);
+        static std::unique_ptr<CliChannelListReq> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

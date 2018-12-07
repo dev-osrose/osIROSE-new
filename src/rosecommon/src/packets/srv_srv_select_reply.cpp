@@ -80,6 +80,11 @@ SrvSrvSelectReply SrvSrvSelectReply::create(const uint8_t* buffer) {
     return SrvSrvSelectReply(reader);
 }
 
+std::unique_ptr<SrvSrvSelectReply> SrvSrvSelectReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvSrvSelectReply>(reader);
+}
+
 void SrvSrvSelectReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
         return;

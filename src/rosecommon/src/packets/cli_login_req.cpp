@@ -81,6 +81,11 @@ CliLoginReq CliLoginReq::create(const uint8_t* buffer) {
     return CliLoginReq(reader);
 }
 
+std::unique_ptr<CliLoginReq> CliLoginReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliLoginReq>(reader);
+}
+
 void CliLoginReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_iserialize(password)) {
         return;

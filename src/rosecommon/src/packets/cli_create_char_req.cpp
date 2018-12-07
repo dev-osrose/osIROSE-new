@@ -104,6 +104,11 @@ CliCreateCharReq CliCreateCharReq::create(const uint8_t* buffer) {
     return CliCreateCharReq(reader);
 }
 
+std::unique_ptr<CliCreateCharReq> CliCreateCharReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliCreateCharReq>(reader);
+}
+
 void CliCreateCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(race)) {
         return;

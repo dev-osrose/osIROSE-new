@@ -68,6 +68,11 @@ CliSelectCharReq CliSelectCharReq::create(const uint8_t* buffer) {
     return CliSelectCharReq(reader);
 }
 
+std::unique_ptr<CliSelectCharReq> CliSelectCharReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliSelectCharReq>(reader);
+}
+
 void CliSelectCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(charId)) {
         return;

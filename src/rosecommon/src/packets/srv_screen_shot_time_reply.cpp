@@ -80,6 +80,11 @@ SrvScreenShotTimeReply SrvScreenShotTimeReply::create(const uint8_t* buffer) {
     return SrvScreenShotTimeReply(reader);
 }
 
+std::unique_ptr<SrvScreenShotTimeReply> SrvScreenShotTimeReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvScreenShotTimeReply>(reader);
+}
+
 void SrvScreenShotTimeReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(year)) {
         return;

@@ -29,6 +29,7 @@ class CliDeleteCharReq : public CRosePacket {
         
         static CliDeleteCharReq create(const uint8_t&, const uint8_t&, const std::string&);
         static CliDeleteCharReq create(const uint8_t*);
+        static std::unique_ptr<CliDeleteCharReq> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

@@ -36,6 +36,7 @@ class SrvJoinServerReply : public CRosePacket {
         
         static SrvJoinServerReply create(const Result&, const uint32_t&);
         static SrvJoinServerReply create(const uint8_t*);
+        static std::unique_ptr<SrvJoinServerReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

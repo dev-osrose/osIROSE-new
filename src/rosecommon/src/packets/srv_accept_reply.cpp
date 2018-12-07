@@ -44,6 +44,11 @@ SrvAcceptReply SrvAcceptReply::create(const uint8_t* buffer) {
     return SrvAcceptReply(reader);
 }
 
+std::unique_ptr<SrvAcceptReply> SrvAcceptReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvAcceptReply>(reader);
+}
+
 void SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
         return;

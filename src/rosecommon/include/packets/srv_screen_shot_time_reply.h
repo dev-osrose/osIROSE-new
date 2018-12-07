@@ -32,6 +32,7 @@ class SrvScreenShotTimeReply : public CRosePacket {
         
         static SrvScreenShotTimeReply create(const uint16_t&, const uint8_t&, const uint8_t&, const uint8_t&, const uint8_t&);
         static SrvScreenShotTimeReply create(const uint8_t*);
+        static std::unique_ptr<SrvScreenShotTimeReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

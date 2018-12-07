@@ -31,6 +31,7 @@ class SrvSwitchServer : public CRosePacket {
         
         static SrvSwitchServer create(const uint16_t&, const uint32_t&, const uint32_t&, const std::string&);
         static SrvSwitchServer create(const uint8_t*);
+        static std::unique_ptr<SrvSwitchServer> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

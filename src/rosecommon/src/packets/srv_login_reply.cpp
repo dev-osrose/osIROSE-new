@@ -135,6 +135,11 @@ SrvLoginReply SrvLoginReply::create(const uint8_t* buffer) {
     return SrvLoginReply(reader);
 }
 
+std::unique_ptr<SrvLoginReply> SrvLoginReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvLoginReply>(reader);
+}
+
 void SrvLoginReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
         return;

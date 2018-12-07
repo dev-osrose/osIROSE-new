@@ -37,6 +37,7 @@ class CliCreateCharReq : public CRosePacket {
         
         static CliCreateCharReq create(const uint8_t&, const uint8_t&, const uint8_t&, const uint8_t&, const uint8_t&, const uint16_t&, const std::string&);
         static CliCreateCharReq create(const uint8_t*);
+        static std::unique_ptr<CliCreateCharReq> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

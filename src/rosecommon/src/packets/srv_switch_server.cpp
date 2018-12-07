@@ -68,6 +68,11 @@ SrvSwitchServer SrvSwitchServer::create(const uint8_t* buffer) {
     return SrvSwitchServer(reader);
 }
 
+std::unique_ptr<SrvSwitchServer> SrvSwitchServer::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvSwitchServer>(reader);
+}
+
 void SrvSwitchServer::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(port)) {
         return;

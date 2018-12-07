@@ -268,6 +268,11 @@ SrvCharListReply SrvCharListReply::create(const uint8_t* buffer) {
     return SrvCharListReply(reader);
 }
 
+std::unique_ptr<SrvCharListReply> SrvCharListReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvCharListReply>(reader);
+}
+
 void SrvCharListReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(characters.size())) {
         return;

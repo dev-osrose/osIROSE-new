@@ -34,6 +34,7 @@ SET(SOURCES_BASE
   src/croseisc.cpp
   src/itemdb.cpp
   src/isccommon.cpp
+  src/packetfactory.cpp
 )
 
 SET(SOURCES_PACKETS

@@ -148,6 +148,11 @@ SrvChannelListReply SrvChannelListReply::create(const uint8_t* buffer) {
     return SrvChannelListReply(reader);
 }
 
+std::unique_ptr<SrvChannelListReply> SrvChannelListReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvChannelListReply>(reader);
+}
+
 void SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(id)) {
         return;

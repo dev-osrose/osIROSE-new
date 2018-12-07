@@ -36,6 +36,7 @@ class IscServerRegister : public CRosePacket {
         
         static IscServerRegister create(const Isc::ServerType&, const std::string&, const std::string&, const int32_t&, const int32_t&, const int32_t&);
         static IscServerRegister create(const uint8_t*);
+        static std::unique_ptr<IscServerRegister> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

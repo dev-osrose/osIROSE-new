@@ -81,6 +81,11 @@ CliJoinServerReq CliJoinServerReq::create(const uint8_t* buffer) {
     return CliJoinServerReq(reader);
 }
 
+std::unique_ptr<CliJoinServerReq> CliJoinServerReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliJoinServerReq>(reader);
+}
+
 void CliJoinServerReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(sessionId)) {
         return;

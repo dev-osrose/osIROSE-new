@@ -253,6 +253,7 @@ struct EPacketTypeHash {
 };
 
 
+//TODO: put it in its correct place
 struct tChannelInfo {
   uint16_t ChannelID;
   uint16_t Port;

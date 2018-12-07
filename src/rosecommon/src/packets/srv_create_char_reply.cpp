@@ -43,6 +43,11 @@ SrvCreateCharReply SrvCreateCharReply::create(const uint8_t* buffer) {
     return SrvCreateCharReply(reader);
 }
 
+std::unique_ptr<SrvCreateCharReply> SrvCreateCharReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvCreateCharReply>(reader);
+}
+
 void SrvCreateCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
         return;

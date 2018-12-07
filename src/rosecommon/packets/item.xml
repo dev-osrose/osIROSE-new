@@ -1,0 +1,31 @@
+<complexType name = "Header">
+    <choice>
+        <sequence inline = "true">
+            <element name = "isCreated" type = "unsigned int" bits = "1" />
+            <element name = "id" type = "unsigned int" bits = "10" />
+            <element name = "type" type = "unsigned int" bits = "5" />
+        </sequence>
+        <element name = "header" type = "uint16_t" />
+    </choice>
+</complexType>
+
+<complexType name = "Data">
+    <choice>
+        <sequence inline = "true">
+            <element name = "refine" type = "unsigned int" bits = "4" />
+            <element name = "isAppraised" type = "unsigned int" bits = "1" />
+            <element name = "hasSocket" type = "unsigned int" bits = "1" />
+            <element name = "life" type = "unsigned int" bits = "10" />
+            <element name = "durability" type = "unsigned int" bits = "7" />
+            <element name = "gem_opt" type = "unsigned int" bits = "9" />
+        </sequence>
+        <element name = "count" type = "uint32_t" />
+    </choice>
+</complexType>
+
+<complexType name = "Item">
+    <sequence>
+        <element name = "header" type = "Header" />
+        <element name = "data" type = "Data" />
+    </sequence>
+</complexType>

@@ -49,6 +49,7 @@ class CliJoinServerReq : public CRosePacket {
         
         static CliJoinServerReq create(const uint32_t&, const Password&);
         static CliJoinServerReq create(const uint8_t*);
+        static std::unique_ptr<CliJoinServerReq> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

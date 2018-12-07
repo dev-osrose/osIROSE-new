@@ -56,6 +56,11 @@ CliDeleteCharReq CliDeleteCharReq::create(const uint8_t* buffer) {
     return CliDeleteCharReq(reader);
 }
 
+std::unique_ptr<CliDeleteCharReq> CliDeleteCharReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliDeleteCharReq>(reader);
+}
+
 void CliDeleteCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(charId)) {
         return;

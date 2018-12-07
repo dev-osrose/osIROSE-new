@@ -26,6 +26,7 @@ class CliSrvSelectReq : public CRosePacket {
         
         static CliSrvSelectReq create(const uint32_t&, const uint8_t&);
         static CliSrvSelectReq create(const uint8_t*);
+        static std::unique_ptr<CliSrvSelectReq> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

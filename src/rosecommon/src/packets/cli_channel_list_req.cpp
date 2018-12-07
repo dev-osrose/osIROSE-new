@@ -32,6 +32,11 @@ CliChannelListReq CliChannelListReq::create(const uint8_t* buffer) {
     return CliChannelListReq(reader);
 }
 
+std::unique_ptr<CliChannelListReq> CliChannelListReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliChannelListReq>(reader);
+}
+
 void CliChannelListReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(serverId)) {
         return;

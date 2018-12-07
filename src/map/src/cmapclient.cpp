@@ -20,12 +20,11 @@
 #include "connection.h"
 #include "epackettype.h"
 #include "srv_inventory_data.h"
-#include "srv_joinserverreply.h"
-#include "srv_questdata.h"
-#include "srv_removeobject.h"
-#include "srv_selectcharreply.h"
-#include "srv_teleportreply.h"
-#include "srv_billingmessage.h"
+#include "srv_join_server_reply.h"
+#include "srv_quest_data.h"
+#include "srv_select_char_reply.h"
+#include "srv_teleport_reply.h"
+#include "srv_billing_message.h"
 
 using namespace RoseCommon;
 

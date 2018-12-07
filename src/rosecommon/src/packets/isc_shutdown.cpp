@@ -44,6 +44,11 @@ IscShutdown IscShutdown::create(const uint8_t* buffer) {
     return IscShutdown(reader);
 }
 
+std::unique_ptr<IscShutdown> IscShutdown::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<IscShutdown>(reader);
+}
+
 void IscShutdown::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(serverType)) {
         return;

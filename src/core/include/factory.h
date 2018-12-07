@@ -28,11 +28,9 @@ class Factory {
         }
 
         template <typename... Args>
-        struct Initializer {
-            Initializer(const KeyType& key, std::function<ReturnType(Args...)> f) {
-                getAssociations<Args...>()[key] = f;
-            }
-        };
+        static void registerPacket(const KeyType& key, std::function<ReturnType(Args...)> f) {
+            getAssociations<Args...>()[key] = f;
+        }
 
         template <typename... Args>
         static std::unordered_map<KeyType, std::function<ReturnType(Args...)>, Hash>& getAssociations() {

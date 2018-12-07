@@ -44,6 +44,11 @@ SrvDeleteCharReply SrvDeleteCharReply::create(const uint8_t* buffer) {
     return SrvDeleteCharReply(reader);
 }
 
+std::unique_ptr<SrvDeleteCharReply> SrvDeleteCharReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvDeleteCharReply>(reader);
+}
+
 void SrvDeleteCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(remainingTime)) {
         return;

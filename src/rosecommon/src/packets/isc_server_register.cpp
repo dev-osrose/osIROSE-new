@@ -92,6 +92,11 @@ IscServerRegister IscServerRegister::create(const uint8_t* buffer) {
     return IscServerRegister(reader);
 }
 
+std::unique_ptr<IscServerRegister> IscServerRegister::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<IscServerRegister>(reader);
+}
+
 void IscServerRegister::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(serverType)) {
         return;

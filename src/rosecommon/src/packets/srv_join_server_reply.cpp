@@ -55,6 +55,11 @@ SrvJoinServerReply SrvJoinServerReply::create(const uint8_t* buffer) {
     return SrvJoinServerReply(reader);
 }
 
+std::unique_ptr<SrvJoinServerReply> SrvJoinServerReply::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<SrvJoinServerReply>(reader);
+}
+
 void SrvJoinServerReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
         return;

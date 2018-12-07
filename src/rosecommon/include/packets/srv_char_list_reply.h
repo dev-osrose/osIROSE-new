@@ -108,6 +108,7 @@ class SrvCharListReply : public CRosePacket {
         
         static SrvCharListReply create();
         static SrvCharListReply create(const uint8_t*);
+        static std::unique_ptr<SrvCharListReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

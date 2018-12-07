@@ -36,10 +36,6 @@ inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
     return T::allocate(buffer);
 }
 
-#define REGISTER_SEND_PACKET(Type, Class) //class Class; static const SendvPacketFactory::Initializer<uint8_t*> send__##Class = SendvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
-
-#define REGISTER_RECV_PACKET(Type, Class) class Class; static const RecvPacketFactory::Initializer<uint8_t*> recv__##Class = RecvPacketFactory::Initializer<uint8_t*>(Type, &createPacket<Class>);
-
 /*!
  * \function fetchPacket
  * \brief returns the correctly instantiated packet from a buffer (not compile time).
@@ -52,5 +48,8 @@ inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
 inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
   return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
 }
+
+void register_recv_packets();
+void register_send_packets();
 
 }

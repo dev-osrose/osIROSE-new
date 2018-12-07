@@ -68,6 +68,7 @@ class SrvLoginReply : public CRosePacket {
         
         static SrvLoginReply create(const Result&, const uint16_t&, const uint16_t&);
         static SrvLoginReply create(const uint8_t*);
+        static std::unique_ptr<SrvLoginReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

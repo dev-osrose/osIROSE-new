@@ -27,6 +27,7 @@ class SrvDeleteCharReply : public CRosePacket {
         
         static SrvDeleteCharReply create(const uint32_t&, const std::string&);
         static SrvDeleteCharReply create(const uint8_t*);
+        static std::unique_ptr<SrvDeleteCharReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

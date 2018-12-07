@@ -44,6 +44,11 @@ CliSrvSelectReq CliSrvSelectReq::create(const uint8_t* buffer) {
     return CliSrvSelectReq(reader);
 }
 
+std::unique_ptr<CliSrvSelectReq> CliSrvSelectReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliSrvSelectReq>(reader);
+}
+
 void CliSrvSelectReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(serverId)) {
         return;

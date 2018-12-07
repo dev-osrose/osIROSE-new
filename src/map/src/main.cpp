@@ -23,6 +23,7 @@
 #include "version.h"
 
 #include "map_manager.h"
+#include "packetfactory.h"
 
 namespace {
 void DisplayTitle() {
@@ -150,6 +151,7 @@ void ParseCommandLine(int argc, char** argv) {
 
 int main(int argc, char* argv[]) {
   try {
+    RoseCommon::register_recv_packets();
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();

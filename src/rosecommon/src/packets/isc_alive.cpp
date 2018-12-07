@@ -20,6 +20,11 @@ IscAlive IscAlive::create(const uint8_t* buffer) {
     return IscAlive(reader);
 }
 
+std::unique_ptr<IscAlive> IscAlive::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<IscAlive>(reader);
+}
+
 void IscAlive::pack(CRoseBasePolicy&) const {
 }
 

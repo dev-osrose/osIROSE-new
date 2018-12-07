@@ -26,6 +26,7 @@ class SrvAcceptReply : public CRosePacket {
         
         static SrvAcceptReply create(const uint8_t&, const uint32_t&);
         static SrvAcceptReply create(const uint8_t*);
+        static std::unique_ptr<SrvAcceptReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

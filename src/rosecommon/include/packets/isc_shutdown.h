@@ -27,6 +27,7 @@ class IscShutdown : public CRosePacket {
         
         static IscShutdown create(const Isc::ServerType&, const int32_t&);
         static IscShutdown create(const uint8_t*);
+        static std::unique_ptr<IscShutdown> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;

@@ -55,6 +55,7 @@ class SrvChannelListReply : public CRosePacket {
         
         static SrvChannelListReply create(const uint32_t&);
         static SrvChannelListReply create(const uint8_t*);
+        static std::unique_ptr<SrvChannelListReply> allocate(const uint8_t*);
     
     protected:
         virtual void pack(CRoseBasePolicy&) const override;
