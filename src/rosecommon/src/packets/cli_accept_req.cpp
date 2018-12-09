@@ -1,0 +1,35 @@
+#include "cli_accept_req.h"
+
+using namespace RoseCommon;
+using namespace RoseCommon::Packet;
+
+
+
+CliAcceptReq::CliAcceptReq() : CRosePacket(ePacketType::PAKCS_ACCEPT_REQ) {}
+
+CliAcceptReq::CliAcceptReq(CRoseReader reader) : CRosePacket(reader) {
+}
+
+CliAcceptReq CliAcceptReq::create() {
+    CliAcceptReq packet;
+    return packet;
+}
+
+CliAcceptReq CliAcceptReq::create(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return CliAcceptReq(reader);
+}
+
+std::unique_ptr<CliAcceptReq> CliAcceptReq::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliAcceptReq>(reader);
+}
+
+void CliAcceptReq::pack(CRoseBasePolicy&) const {
+}
+
+constexpr size_t CliAcceptReq::size() {
+    size_t size = 0;
+    return size;
+}
+

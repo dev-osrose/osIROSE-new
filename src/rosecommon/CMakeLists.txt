@@ -57,10 +57,10 @@ SET(SOURCES_BASE
 )
 
 SET(SOURCES_PACKETS
-    #  src/packets/cli_acceptreq.cpp
-    #  include/packets/cli_acceptreq.h
-    #  src/packets/cli_alive.cpp
-    #  include/packets/cli_alive.h
+    src/packets/cli_accept_req.cpp
+    include/packets/cli_accept_req.h
+    src/packets/cli_alive.cpp
+    include/packets/cli_alive.h
     #  src/packets/cli_changemapreq.cpp
     #  include/packets/cli_changemapreq.h
     src/packets/cli_channel_list_req.cpp
@@ -77,8 +77,8 @@ SET(SOURCES_PACKETS
     #  include/packets/cli_logoutreq.h
     #  src/packets/cli_mousecmd.cpp
     #  include/packets/cli_mousecmd.h
-    #  src/packets/cli_normalchat.cpp
-    #  include/packets/cli_normalchat.h
+    src/packets/cli_normal_chat.cpp
+    include/packets/cli_normal_chat.h
     #  src/packets/cli_revivereq.cpp
     #  include/packets/cli_revivereq.h
     #  src/packets/cli_screenshottimereq.cpp
@@ -101,8 +101,8 @@ SET(SOURCES_PACKETS
     #  include/packets/cli_partyreply.h
     #  src/packets/cli_partychat.cpp
     #  include/packets/cli_partychat.h
-    #  src/packets/cli_charlistreq.cpp
-    #  include/packets/cli_charlistreq.h
+    src/packets/cli_char_list_req.cpp
+    include/packets/cli_char_list_req.h
     #  src/packets/cli_dropitem.cpp
     #  include/packets/cli_dropitem.h
     #  src/packets/cli_attack.cpp
@@ -168,8 +168,8 @@ SET(SOURCES_PACKETS
     include/packets/srv_login_reply.h
     src/packets/srv_channel_list_reply.cpp
     include/packets/srv_channel_list_reply.h
-    #  src/packets/srv_questdata.cpp
-    #  include/packets/srv_questdata.h
+    src/packets/srv_quest_data.cpp
+    include/packets/srv_quest_data.h
     #  src/packets/srv_dropitem.cpp
     #  include/packets/srv_dropitem.h
     #  src/packets/srv_mobchar.cpp

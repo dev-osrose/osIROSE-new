@@ -8,15 +8,16 @@
 #include "mock/login/mock_cloginclient.h"
 #include "mock/login/mock_cloginisc.h"
 #include "cnetwork_asio.h"
-#include "cli_acceptreq.h"
-#include "cli_loginreq.h"
-#include "cli_channellistreq.h"
-#include "cli_srvselectreq.h"
+#include "cli_accept_req.h"
+#include "cli_login_req.h"
+#include "cli_channel_list_req.h"
+#include "cli_srv_select_req.h"
 #include "cli_alive.h"
 #include "connection.h"
 #include "config.h"
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
 TEST(TestLoginServer, TestClientPacketPath) {
   Core::Config& config = Core::Config::getInstance();
@@ -48,7 +49,7 @@ CLoginClient_Mock netConnect;
   //TODO(raven): Move this into a static function so we can just call the function
   //TODO(raven): SendLogin(&netConnect, "test2", "cc03e747a6afbbcbf8be7668acfebee5");
   // cc03e747a6afbbcbf8be7668acfebee5 == test123
-  netConnect.send(CliLoginReq::create("test2", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.send(CliLoginReq::create(std::string("cc03e747a6afbbcbf8be7668acfebee5"), "test"));
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -67,10 +68,10 @@ CLoginClient_Mock netConnect;
   //-----------------------------------------
 
   //Incorrect Password
-  netConnect.send(CliLoginReq::create("test", "cc03e747a6afbbcbf8be7668acfebee6"));
+  netConnect.send(CliLoginReq::create(std::string("cc03e747a6afbbcbf8be7668acfebee6"), "test"));
 
   //Correct password
-  netConnect.send(CliLoginReq::create("test", "cc03e747a6afbbcbf8be7668acfebee5"));
+  netConnect.send(CliLoginReq::create(std::string("cc03e747a6afbbcbf8be7668acfebee5"), "test"));
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 

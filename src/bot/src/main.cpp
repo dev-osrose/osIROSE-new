@@ -6,21 +6,21 @@
 #include "crosesocket.h"
 #include "cnetwork_asio.h"
 #include "network_thread_pool.h"
-#include "srv_charlistreply.h"
-#include "cli_acceptreq.h"
-#include "cli_loginreq.h"
-#include "srv_loginreply.h"
-#include "cli_channellistreq.h"
-#include "srv_channellistreply.h"
-#include "cli_srvselectreq.h"
-#include "srv_srvselectreply.h"
-#include "cli_joinserverreq.h"
-#include "srv_joinserverreply.h"
-#include "cli_charlistreq.h"
-#include "cli_selectcharreq.h"
-#include "srv_switchserver.h"
-#include "cli_joinserverreq.h"
-#include "cli_normalchat.h"
+#include "srv_char_list_reply.h"
+#include "cli_accept_req.h"
+#include "cli_login_req.h"
+#include "srv_login_reply.h"
+#include "cli_channel_list_req.h"
+#include "srv_channel_list_reply.h"
+#include "cli_srv_select_req.h"
+#include "srv_srv_select_reply.h"
+#include "cli_join_server_req.h"
+#include "srv_join_server_reply.h"
+#include "cli_char_list_req.h"
+#include "cli_select_char_req.h"
+#include "srv_switch_server.h"
+#include "cli_join_server_req.h"
+#include "cli_normal_chat.h"
 
 #define SPDLOG_TRACE_ON
 
@@ -30,6 +30,7 @@ uint16_t charPort = 29100;
 uint16_t mapPort = 29110;
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
 class Client : public CRoseSocket {
     public:
@@ -140,7 +141,7 @@ class LoginClient : public Client {
                     logger_->info("Got accept reply");
                     logger_->info("Trying to login");
                     {
-                        auto packet = CliLoginReq::create("098f6bcd4621d373cade4e832627b4f6", "test2");
+                        auto packet = CliLoginReq::create(std::string("098f6bcd4621d373cade4e832627b4f6"), "test2");
                         send(packet);
                     }
                     break;
@@ -148,13 +149,13 @@ class LoginClient : public Client {
                     logger_->info("Got a login reply");
                     {
                         auto reply = SrvLoginReply::create(buffer);
-                        logger_->info("Got reply result: {}, right: {}, type: {}", reply.result(), reply.right(), reply.type());
-                        if (reply.result() != 0)
+                        logger_->info("Got reply result: {}, right: {}, type: {}", reply.get_result(), reply.get_right(), reply.get_type());
+                        if (reply.get_result() != 0)
                             return false;
                         logger_->info("Server list:");
-                        for (const auto &server : reply.serversInfo())
-                            logger_->info("{}({}) : test = {}", server.name_, server.id_, server.test_);
-                        auto packet = CliChannelListReq::create(reply.serversInfo()[0].id_);
+                        for (const auto &server : reply.get_serversInfo())
+                            logger_->info("{}({}) : test = {}", server.get_name(), server.get_id(), server.get_test());
+                        auto packet = CliChannelListReq::create(reply.get_serversInfo()[0].get_id());
                         send(packet);
                     }
                     break;
@@ -162,13 +163,14 @@ class LoginClient : public Client {
                     logger_->info("Got channel list reply");
                     {
                         auto reply = SrvChannelListReply::create(buffer);
-                        logger_->info("Got channels for server: {}", reply.id());
-                        if (!reply.channels().size())
+                        logger_->info("Got channels for server: {}", reply.get_id());
+                        if (!reply.get_channels().size())
                             return false;
                         logger_->info("Channel list:");
-                        for (const auto &channel : reply.channels())
-                            logger_->info("{}({}): {}-{}, {}%", channel.name_, channel.id_, channel.lowAge_, channel.highAge_, channel.capacity_);
-                        auto packet = CliSrvSelectReq::create(reply.id(), reply.channels()[0].id_);
+                        for (const auto &channel : reply.get_channels())
+                            logger_->info("{}({}): {}-{}, {}%", channel.get_name(),
+                                    channel.get_id(), channel.get_lowAge(), channel.get_highAge(), channel.get_capacity());
+                        auto packet = CliSrvSelectReq::create(reply.get_id(), reply.get_channels()[0].get_id());
                         send(packet);
                     }
                     break;
@@ -176,12 +178,12 @@ class LoginClient : public Client {
                     logger_->info("Got server select reply");
                     {
                         auto reply = SrvSrvSelectReply::create(buffer);
-                        logger_->info("Got reply result: {}", reply.result());
-                        if (reply.result() != SrvSelectReply::OK)
+                        logger_->info("Got reply result: {}", reply.get_result());
+                        if (reply.get_result() != SrvSrvSelectReply::OK)
                             return false;
-                        sessionId_ = reply.sessionId();
-                        ip_ = reply.ip();
-                        port_ = reply.port();
+                        sessionId_ = reply.get_sessionId();
+                        ip_ = reply.get_ip();
+                        port_ = reply.get_port();
                         return false;
                     }
                 default:
@@ -228,7 +230,7 @@ class CharClient : public Client {
             case ePacketType::PAKSS_ACCEPT_REPLY:
               logger_->info("asking for joinning server");
               {
-                auto packet = CliJoinServerReq::create(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+                auto packet = CliJoinServerReq::create(sessionId_, std::string("098f6bcd4621d373cade4e832627b4f6"));
                 send(packet);
               }
               break;
@@ -236,8 +238,8 @@ class CharClient : public Client {
               logger_->info("Got join server reply:");
               {
                 auto reply = SrvJoinServerReply::create(buffer);
-                logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.result(), reply.id(), reply.payFlag());
-                if (reply.result() != JoinServerReply::OK)
+                logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.get_result(), reply.get_id(), reply.get_payFlag());
+                if (reply.get_result() != SrvJoinServerReply::OK)
                   return false;
                 auto packet = CliCharListReq();
                 send(packet);
@@ -247,34 +249,35 @@ class CharClient : public Client {
               logger_->info("Got character list");
               {
                 auto reply = SrvCharListReply::create(buffer);
-                logger_->info("This account has {} characters", reply.characters().size());
+                logger_->info("This account has {} characters", reply.get_characters().size());
                 logger_->info("Character list:");
-                for (const auto &it : reply.characters()) {
-                  logger_->info("name: {}", it.name_);
-                  logger_->info("level: {}", it.level_);
-                  logger_->info("job: {}", it.job_);
-                  logger_->info("race: {}", it.race_);
-                  logger_->info("face: {}", it.face_);
-                  logger_->info("hair: {}", it.hair_);
-                  logger_->info("platinium: {}", it.platinium_);
-                  logger_->info("seconds until delete: {}", it.remain_sec_until_delete_);
+                for (const auto &it : reply.get_characters()) {
+                  logger_->info("name: {}", it.get_name());
+                  logger_->info("level: {}", it.get_level());
+                  logger_->info("job: {}", it.get_job());
+                  logger_->info("race: {}", it.get_race());
+                  logger_->info("face: {}", it.get_face());
+                  logger_->info("hair: {}", it.get_hair());
+                  logger_->info("platinium: {}", it.get_platinium());
+                  logger_->info("seconds until delete: {}", it.get_remainSecsUntilDelete());
                   logger_->info("items:");
-                  for (size_t i = 0; i < Inventory::Position::MAX_EQUIP_ITEMS - 2; ++i) {
+                  size_t i = 0;
+                  for (const auto& item : it.get_items()) {
                     logger_->info("Item in position {}", i);
-                    const auto &item = it.items_[i];
-                    logger_->info("id: {}", item.id_);
-                    if (item.id_ == 0)
+                    logger_->info("id: {}", item.get_id());
+                    if (item.get_id() == 0)
                       continue;
-                    logger_->info("gemOpt: {}", item.gem_op_);
-                    logger_->info("socket: {}", item.socket_);
-                    logger_->info("grade: {}", item.grade_);
+                    logger_->info("gemOpt: {}", item.get_gem_opt());
+                    logger_->info("socket: {}", item.get_socket());
+                    logger_->info("grade: {}", item.get_grade());
+                    ++i;
                   }
                 }
-		if (reply.characters().size() == 0) {
-			logger_->info("No character!");
-			return false;
-		}
-                auto packet = CliSelectCharReq::create(0, 0, 0, reply.characters()[0].name_);
+                if (reply.get_characters().size() == 0) {
+                    logger_->info("No character!");
+                    return false;
+                }
+                auto packet = CliSelectCharReq::create(0, 0, 0, reply.get_characters()[0].get_name());
                 send(packet);
               }
               break;
@@ -282,10 +285,10 @@ class CharClient : public Client {
               logger_->info("Got character select reply");
               {
                 auto reply = SrvSwitchServer::create(buffer);
-                ip_ = reply.ip();
-                port_ = reply.port();
-                sessionId_ = reply.sessionId();
-                sessionSeed_ = reply.sessionSeed();
+                ip_ = reply.get_ip();
+                port_ = reply.get_port();
+                sessionId_ = reply.get_sessionId();
+                sessionSeed_ = reply.get_sessionSeed();
                 isOk_ = true;
               }
               return true;
@@ -315,7 +318,7 @@ private:
     case ePacketType::PAKSS_ACCEPT_REPLY:
       logger_->info("asking for joinning server");
       {
-        auto packet = CliJoinServerReq::create(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+        auto packet = CliJoinServerReq::create(sessionId_, std::string("098f6bcd4621d373cade4e832627b4f6"));
         send(packet);
       }
       break;
