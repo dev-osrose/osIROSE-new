@@ -20,6 +20,8 @@
 #include "croseserver.h"
 #include <chrono>
 
+#include "entity_system.h"
+
 class CMapServer : public RoseCommon::CRoseServer {
  public:
   CMapServer(bool _isc = false, int16_t mapidx = -1, CMapServer* iscServer = nullptr);
@@ -50,6 +52,7 @@ class CMapServer : public RoseCommon::CRoseServer {
 
  private:
   CMapServer *iscServer_;
+  std::shared_ptr<EntitySystem> entitySystem;
 };
 
 #endif

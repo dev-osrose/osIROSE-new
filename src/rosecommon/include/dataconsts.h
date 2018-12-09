@@ -20,6 +20,9 @@
 #include <entt.hpp>
 
 namespace RoseCommon {
+namespace {
+using namespace std::chrono_literals;
+}
 constexpr unsigned int MIN_SELL_TYPE = 1;
 constexpr unsigned int MAX_SELL_TYPE = 11;
 
@@ -133,7 +136,7 @@ struct HotbarItem : public ISerialize {
                 uint8_t type : 5;
                 uint16_t slotId : 11;
             });
-            uint16_t item;
+            uint16_t item = 0;
         } data;
 };
 
@@ -168,8 +171,8 @@ struct Skill : public ISerialize {
     uint8_t get_level() const { return level; }
     
     private:
-        uint16_t id;
-        uint8_t level;
+        uint16_t id = 0;
+        uint8_t level = 0;
 };
 
 constexpr unsigned int MAX_STATUS_EFFECTS = 40;
@@ -215,10 +218,10 @@ struct StatusEffect : public ISerialize {
     std::chrono::milliseconds get_dt() const { return dt; }
     
     private:
-        std::chrono::seconds expired;
-        uint16_t value;
-        uint16_t unkown;
-        std::chrono::milliseconds dt;
+        std::chrono::seconds expired = 0s;
+        uint16_t value = 0;
+        uint16_t unkown = 0;
+        std::chrono::milliseconds dt = 0ms;
 };
 
 constexpr unsigned int MAX_WISHLIST = 30;

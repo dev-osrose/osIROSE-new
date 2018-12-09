@@ -2,7 +2,7 @@
 
 namespace Component {
 struct Stats {
-    uitn16_t str;
+    uint16_t str;
     uint16_t dex;
     uint16_t int_;
     uint16_t con;

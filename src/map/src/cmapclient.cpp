@@ -31,13 +31,14 @@ using namespace RoseCommon;
 CMapClient::CMapClient()
     : CRoseClient(), access_rights_(0), login_state_(eSTATE::DEFAULT), sessionId_(0), userid_(0), charid_(0) {}
 
-CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock)
+CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem)
     : CRoseClient(std::move(_sock)),
       access_rights_(0),
       login_state_(eSTATE::DEFAULT),
       sessionId_(0),
       userid_(0),
-      charid_(0) {}
+      charid_(0),
+      entitySystem(entitySystem) {}
 
 CMapClient::~CMapClient() {}
 
@@ -134,6 +135,8 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       sessionId_ = sessionID;
       bool platinium = false;
       platinium = row.platinium;
+
+      auto entity = entitySystem->load_character(charid_, platinium);
 
       if (true) {
         Core::Config& config = Core::Config::getInstance();

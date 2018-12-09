@@ -17,13 +17,14 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
+#include "entity_system.h"
 
 #include "cli_join_server_req.h"
 
 class CMapClient : public RoseCommon::CRoseClient {
  public:
   CMapClient();
-  CMapClient(std::unique_ptr<Core::INetwork> _sock);
+  CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem>);
 
   virtual ~CMapClient();
 
@@ -51,6 +52,8 @@ class CMapClient : public RoseCommon::CRoseClient {
   uint32_t sessionId_;
   uint32_t userid_;
   uint32_t charid_;
+
+  std::shared_ptr<EntitySystem> entitySystem;
 };
 
 #endif
