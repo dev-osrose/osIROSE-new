@@ -73,7 +73,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
     return CRoseClient::handlePacket(_buffer);
   }
-  logger_->warn("Packet {} not handled", CRosePacket::type(_buffer));
+  logger_->warn("Packet {} not handled", to_underlying(CRosePacket::type(_buffer)));
   return true;
 }
 
@@ -141,7 +141,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
 
-        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK));
+        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, 0)); // TODO: replace with a normal ID from the ECS
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!

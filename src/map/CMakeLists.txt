@@ -13,7 +13,7 @@ SET( SOURCES_HEADER
   include/cmapclient.h
   include/cmapisc.h
   include/id_manager.h
-  include/script_loader.h
+  include/map_manager.h
   )
 
 SET( SOURCES_MAIN
@@ -22,7 +22,7 @@ SET( SOURCES_MAIN
   src/cmapclient.cpp
   src/cmapisc.cpp
   src/id_manager.cpp
-  src/script_loader.cpp
+  src/map_manager.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

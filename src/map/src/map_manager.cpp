@@ -2,6 +2,7 @@
 #include "map_manager.h"
 #include "platform_defines.h"
 #include "config.h"
+#include "epackettype.h"
 
 using namespace std::chrono_literals;
 
@@ -15,7 +16,7 @@ MapManager::MapManager(std::vector<uint16_t> maps):
     isc_server_.listen();
 
     isc_client_.init(config.mapServer().charIp, config.charServer().iscPort);
-    isc_client_.set_type(to_underlying(RoseCommon::Isc::ServerType::CHAR));
+    isc_client_.set_type(RoseCommon::to_underlying(RoseCommon::Isc::ServerType::CHAR));
     isc_client_.connect();
     isc_client_.start_recv();
 
