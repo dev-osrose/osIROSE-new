@@ -10,9 +10,6 @@
 [submodule "tools/cxxopts"]
 	path = 3rdparty/cxxopts
 	url = https://github.com/jarro2783/cxxopts.git
-[submodule "tools/entityx"]
-	path = 3rdparty/entityx
-	url = https://github.com/alecthomas/entityx.git
 [submodule "3rdparty/Configuru"]
 	path = 3rdparty/Configuru
 	url = https://github.com/emilk/Configuru

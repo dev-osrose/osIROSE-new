@@ -14,6 +14,7 @@ SET( SOURCES_HEADER
   include/cmapisc.h
   include/id_manager.h
   include/map_manager.h
+  include/entity_system.h
   )
 
 SET( SOURCES_MAIN
@@ -23,6 +24,7 @@ SET( SOURCES_MAIN
   src/cmapisc.cpp
   src/id_manager.cpp
   src/map_manager.cpp
+  src/entity_system.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

@@ -17,6 +17,7 @@
 
 #include "iserialize.h"
 #include <chrono>
+#include <entt.hpp>
 
 namespace RoseCommon {
 constexpr unsigned int MIN_SELL_TYPE = 1;
@@ -46,6 +47,7 @@ constexpr unsigned int MAX_QUEST_VARS = 10;
 constexpr unsigned int MAX_QUEST_ITEMS = 6;
 
 using Entity = uint32_t;
+using Registry = entt::registry<Entity>;
 
 enum BulletType : uint8_t {
     ARROW = 0,
