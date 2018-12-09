@@ -54,6 +54,123 @@ constexpr size_t SrvQuestData::Header::size() {
     return sizeof(data);
 }
 
+void SrvQuestData::Data::set_refine(const unsigned int refine) {
+    this->data.refine = refine;
+}
+
+unsigned int SrvQuestData::Data::get_refine() const {
+    return data.refine;
+}
+
+void SrvQuestData::Data::set_isAppraised(const unsigned int isAppraised) {
+    this->data.isAppraised = isAppraised;
+}
+
+unsigned int SrvQuestData::Data::get_isAppraised() const {
+    return data.isAppraised;
+}
+
+void SrvQuestData::Data::set_hasSocket(const unsigned int hasSocket) {
+    this->data.hasSocket = hasSocket;
+}
+
+unsigned int SrvQuestData::Data::get_hasSocket() const {
+    return data.hasSocket;
+}
+
+void SrvQuestData::Data::set_life(const unsigned int life) {
+    this->data.life = life;
+}
+
+unsigned int SrvQuestData::Data::get_life() const {
+    return data.life;
+}
+
+void SrvQuestData::Data::set_durability(const unsigned int durability) {
+    this->data.durability = durability;
+}
+
+unsigned int SrvQuestData::Data::get_durability() const {
+    return data.durability;
+}
+
+void SrvQuestData::Data::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
+}
+
+unsigned int SrvQuestData::Data::get_gem_opt() const {
+    return data.gem_opt;
+}
+
+void SrvQuestData::Data::set_count(const uint32_t count) {
+    this->data.count = count;
+}
+
+uint32_t SrvQuestData::Data::get_count() const {
+    return data.count;
+}
+
+bool SrvQuestData::Data::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvQuestData::Data::read(CRoseReader& reader) {
+    if (!reader.get_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvQuestData::Data::size() {
+    return sizeof(data);
+}
+
+void SrvQuestData::Item::set_header(const SrvQuestData::Header header) {
+    this->header = header;
+}
+
+SrvQuestData::Header SrvQuestData::Item::get_header() const {
+    return header;
+}
+
+void SrvQuestData::Item::set_data(const SrvQuestData::Data data) {
+    this->data = data;
+}
+
+SrvQuestData::Data SrvQuestData::Item::get_data() const {
+    return data;
+}
+
+bool SrvQuestData::Item::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_iserialize(header)) {
+        return false;
+    }
+    if (!writer.set_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvQuestData::Item::read(CRoseReader& reader) {
+    if (!reader.get_iserialize(header)) {
+        return false;
+    }
+    if (!reader.get_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvQuestData::Item::size() {
+    size_t size = 0;
+    size += Header::size();
+    size += Data::size();
+    return size;
+}
+
 void SrvQuestData::Quest::set_id(const uint16_t id) {
     this->id = id;
 }
@@ -70,17 +187,15 @@ uint32_t SrvQuestData::Quest::get_timer() const {
     return timer;
 }
 
-void SrvQuestData::Quest::set_vars(const uint32_t* vars) {
-    for (size_t index = 0; index < MAX_QUEST_VARS; ++index) {
-        this->vars[index] = vars[index];
-    }
+void SrvQuestData::Quest::set_vars(const std::array<uint32_t, MAX_QUEST_VARS> vars) {
+    this->vars = vars;
 }
 
 void SrvQuestData::Quest::set_vars(const uint32_t vars, size_t index) {
     this->vars[index] = vars;
 }
 
-const uint32_t* SrvQuestData::Quest::get_vars() const {
+std::array<uint32_t, MAX_QUEST_VARS> SrvQuestData::Quest::get_vars() const {
     return vars;
 }
 
@@ -96,21 +211,19 @@ uint32_t SrvQuestData::Quest::get_switches() const {
     return switches;
 }
 
-void SrvQuestData::Quest::set_items(const Item* items) {
-    for (size_t index = 0; index < MAX_QUEST_ITEMS; ++index) {
-        this->items[index] = items[index];
-    }
+void SrvQuestData::Quest::set_items(const std::array<SrvQuestData::Item, MAX_QUEST_ITEMS> items) {
+    this->items = items;
 }
 
 void SrvQuestData::Quest::set_items(const Item items, size_t index) {
     this->items[index] = items;
 }
 
-const Item* SrvQuestData::Quest::get_items() const {
+std::array<SrvQuestData::Item, MAX_QUEST_ITEMS> SrvQuestData::Quest::get_items() const {
     return items;
 }
 
-Item SrvQuestData::Quest::get_items(size_t index) const {
+SrvQuestData::Item SrvQuestData::Quest::get_items(size_t index) const {
     return items[index];
 }
 
@@ -130,7 +243,7 @@ bool SrvQuestData::Quest::write(CRoseBasePolicy& writer) const {
         return false;
     }
     for (size_t index = 0; index < MAX_QUEST_ITEMS; ++index) {
-        if (!writer.set_Item(items[index])) {
+        if (!writer.set_iserialize(items[index])) {
             return false;
         }
     }
@@ -153,7 +266,7 @@ bool SrvQuestData::Quest::read(CRoseReader& reader) {
         return false;
     }
     for (size_t index = 0; index < MAX_QUEST_ITEMS; ++index) {
-        if (!reader.get_Item(items[index])) {
+        if (!reader.get_iserialize(items[index])) {
             return false;
         }
     }
@@ -166,7 +279,7 @@ constexpr size_t SrvQuestData::Quest::size() {
     size += sizeof(uint32_t);
     size += sizeof(uint32_t) * MAX_QUEST_VARS;
     size += sizeof(uint32_t);
-    size += sizeof(Item) * MAX_QUEST_ITEMS;
+    size += Item::size() * MAX_QUEST_ITEMS;
     return size;
 }
 
@@ -175,22 +288,22 @@ SrvQuestData::SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA) {}
 
 SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
     for (size_t index = 0; index < MAX_CONDITIONS_EPISODE; ++index) {
-        if (!reader.get_uint16_t(episode[index])) {
+        if (!reader.get_uint16_t(episodes[index])) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_CONDTIONS_JOB; ++index) {
-        if (!reader.get_uint16_t(job[index])) {
+    for (size_t index = 0; index < MAX_CONDITIONS_JOB; ++index) {
+        if (!reader.get_uint16_t(jobs[index])) {
             return;
         }
     }
     for (size_t index = 0; index < MAX_CONDITIONS_PLANET; ++index) {
-        if (!reader.get_uint16_t(planet[index])) {
+        if (!reader.get_uint16_t(planets[index])) {
             return;
         }
     }
     for (size_t index = 0; index < MAX_CONDITIONS_UNION; ++index) {
-        if (!reader.get_uint16_t(union[index])) {
+        if (!reader.get_uint16_t(unions[index])) {
             return;
         }
     }
@@ -206,89 +319,79 @@ SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
     }
 }
 
-void SrvQuestData::set_episode(const uint16_t* episode) {
-    for (size_t index = 0; index < MAX_CONDITIONS_EPISODE; ++index) {
-        this->episode[index] = episode[index];
-    }
+void SrvQuestData::set_episodes(const std::array<uint16_t, MAX_CONDITIONS_EPISODE> episodes) {
+    this->episodes = episodes;
 }
 
-void SrvQuestData::set_episode(const uint16_t episode, size_t index) {
-    this->episode[index] = episode;
+void SrvQuestData::set_episodes(const uint16_t episodes, size_t index) {
+    this->episodes[index] = episodes;
 }
 
-const uint16_t* SrvQuestData::get_episode() const {
-    return episode;
+std::array<uint16_t, MAX_CONDITIONS_EPISODE> SrvQuestData::get_episodes() const {
+    return episodes;
 }
 
-uint16_t SrvQuestData::get_episode(size_t index) const {
-    return episode[index];
+uint16_t SrvQuestData::get_episodes(size_t index) const {
+    return episodes[index];
 }
 
-void SrvQuestData::set_job(const uint16_t* job) {
-    for (size_t index = 0; index < MAX_CONDTIONS_JOB; ++index) {
-        this->job[index] = job[index];
-    }
+void SrvQuestData::set_jobs(const std::array<uint16_t, MAX_CONDITIONS_JOB> jobs) {
+    this->jobs = jobs;
 }
 
-void SrvQuestData::set_job(const uint16_t job, size_t index) {
-    this->job[index] = job;
+void SrvQuestData::set_jobs(const uint16_t jobs, size_t index) {
+    this->jobs[index] = jobs;
 }
 
-const uint16_t* SrvQuestData::get_job() const {
-    return job;
+std::array<uint16_t, MAX_CONDITIONS_JOB> SrvQuestData::get_jobs() const {
+    return jobs;
 }
 
-uint16_t SrvQuestData::get_job(size_t index) const {
-    return job[index];
+uint16_t SrvQuestData::get_jobs(size_t index) const {
+    return jobs[index];
 }
 
-void SrvQuestData::set_planet(const uint16_t* planet) {
-    for (size_t index = 0; index < MAX_CONDITIONS_PLANET; ++index) {
-        this->planet[index] = planet[index];
-    }
+void SrvQuestData::set_planets(const std::array<uint16_t, MAX_CONDITIONS_PLANET> planets) {
+    this->planets = planets;
 }
 
-void SrvQuestData::set_planet(const uint16_t planet, size_t index) {
-    this->planet[index] = planet;
+void SrvQuestData::set_planets(const uint16_t planets, size_t index) {
+    this->planets[index] = planets;
 }
 
-const uint16_t* SrvQuestData::get_planet() const {
-    return planet;
+std::array<uint16_t, MAX_CONDITIONS_PLANET> SrvQuestData::get_planets() const {
+    return planets;
 }
 
-uint16_t SrvQuestData::get_planet(size_t index) const {
-    return planet[index];
+uint16_t SrvQuestData::get_planets(size_t index) const {
+    return planets[index];
 }
 
-void SrvQuestData::set_union(const uint16_t* union) {
-    for (size_t index = 0; index < MAX_CONDITIONS_UNION; ++index) {
-        this->union[index] = union[index];
-    }
+void SrvQuestData::set_unions(const std::array<uint16_t, MAX_CONDITIONS_UNION> unions) {
+    this->unions = unions;
 }
 
-void SrvQuestData::set_union(const uint16_t union, size_t index) {
-    this->union[index] = union;
+void SrvQuestData::set_unions(const uint16_t unions, size_t index) {
+    this->unions[index] = unions;
 }
 
-const uint16_t* SrvQuestData::get_union() const {
-    return union;
+std::array<uint16_t, MAX_CONDITIONS_UNION> SrvQuestData::get_unions() const {
+    return unions;
 }
 
-uint16_t SrvQuestData::get_union(size_t index) const {
-    return union[index];
+uint16_t SrvQuestData::get_unions(size_t index) const {
+    return unions[index];
 }
 
-void SrvQuestData::set_quests(const SrvQuestData::Quest* quests) {
-    for (size_t index = 0; index < MAX_QUESTS; ++index) {
-        this->quests[index] = quests[index];
-    }
+void SrvQuestData::set_quests(const std::array<SrvQuestData::Quest, MAX_QUESTS> quests) {
+    this->quests = quests;
 }
 
 void SrvQuestData::set_quests(const Quest quests, size_t index) {
     this->quests[index] = quests;
 }
 
-const SrvQuestData::Quest* SrvQuestData::get_quests() const {
+std::array<SrvQuestData::Quest, MAX_QUESTS> SrvQuestData::get_quests() const {
     return quests;
 }
 
@@ -296,17 +399,15 @@ SrvQuestData::Quest SrvQuestData::get_quests(size_t index) const {
     return quests[index];
 }
 
-void SrvQuestData::set_switches(const uint32_t* switches) {
-    for (size_t index = 0; index < MAX_SWITCHES; ++index) {
-        this->switches[index] = switches[index];
-    }
+void SrvQuestData::set_switches(const std::array<uint32_t, MAX_SWITCHES> switches) {
+    this->switches = switches;
 }
 
 void SrvQuestData::set_switches(const uint32_t switches, size_t index) {
     this->switches[index] = switches;
 }
 
-const uint32_t* SrvQuestData::get_switches() const {
+std::array<uint32_t, MAX_SWITCHES> SrvQuestData::get_switches() const {
     return switches;
 }
 
@@ -330,33 +431,33 @@ std::unique_ptr<SrvQuestData> SrvQuestData::allocate(const uint8_t* buffer) {
 }
 
 void SrvQuestData::pack(CRoseBasePolicy& writer) const {
-    for (size_t index = 0; index < MAX_CONDITIONS_EPISODE; ++index) {
-        if (!writer.set_uint16_t(episode[index])) {
+    for (const auto& elem : episodes) {
+        if (!writer.set_uint16_t(elem)) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_CONDTIONS_JOB; ++index) {
-        if (!writer.set_uint16_t(job[index])) {
+    for (const auto& elem : jobs) {
+        if (!writer.set_uint16_t(elem)) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_CONDITIONS_PLANET; ++index) {
-        if (!writer.set_uint16_t(planet[index])) {
+    for (const auto& elem : planets) {
+        if (!writer.set_uint16_t(elem)) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_CONDITIONS_UNION; ++index) {
-        if (!writer.set_uint16_t(union[index])) {
+    for (const auto& elem : unions) {
+        if (!writer.set_uint16_t(elem)) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_QUESTS; ++index) {
-        if (!writer.set_iserialize(quests[index])) {
+    for (const auto& elem : quests) {
+        if (!writer.set_iserialize(elem)) {
             return;
         }
     }
-    for (size_t index = 0; index < MAX_SWITCHES; ++index) {
-        if (!writer.set_uint32_t(switches[index])) {
+    for (const auto& elem : switches) {
+        if (!writer.set_uint32_t(elem)) {
             return;
         }
     }
@@ -365,7 +466,7 @@ void SrvQuestData::pack(CRoseBasePolicy& writer) const {
 constexpr size_t SrvQuestData::size() {
     size_t size = 0;
     size += sizeof(uint16_t) * MAX_CONDITIONS_EPISODE;
-    size += sizeof(uint16_t) * MAX_CONDTIONS_JOB;
+    size += sizeof(uint16_t) * MAX_CONDITIONS_JOB;
     size += sizeof(uint16_t) * MAX_CONDITIONS_PLANET;
     size += sizeof(uint16_t) * MAX_CONDITIONS_UNION;
     size += Quest::size() * MAX_QUESTS;

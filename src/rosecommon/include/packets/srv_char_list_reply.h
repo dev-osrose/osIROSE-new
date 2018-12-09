@@ -82,10 +82,10 @@ class SrvCharListReply : public CRosePacket {
             uint32_t get_face() const;
             void set_hair(const uint32_t);
             uint32_t get_hair() const;
-            void set_items(const EquippedItem*);
-            void set_items(const EquippedItem, size_t index);
-            const EquippedItem* get_items() const;
-            EquippedItem get_items(size_t index) const;
+            void set_items(const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>&);
+            void set_items(const EquippedItem&, size_t index);
+            const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>& get_items() const;
+            const EquippedItem& get_items(size_t index) const;
             
             private:
                 std::string name;
@@ -96,7 +96,7 @@ class SrvCharListReply : public CRosePacket {
                 uint8_t platinium = 0;
                 uint32_t face;
                 uint32_t hair;
-                EquippedItem items[EquippedPosition::MAX_ITEMS];
+                std::array<EquippedItem, EquippedPosition::MAX_ITEMS> items;
         };
         
         

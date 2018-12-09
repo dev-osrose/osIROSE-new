@@ -54,6 +54,123 @@ constexpr size_t SrvInventoryData::Header::size() {
     return sizeof(data);
 }
 
+void SrvInventoryData::Data::set_refine(const unsigned int refine) {
+    this->data.refine = refine;
+}
+
+unsigned int SrvInventoryData::Data::get_refine() const {
+    return data.refine;
+}
+
+void SrvInventoryData::Data::set_isAppraised(const unsigned int isAppraised) {
+    this->data.isAppraised = isAppraised;
+}
+
+unsigned int SrvInventoryData::Data::get_isAppraised() const {
+    return data.isAppraised;
+}
+
+void SrvInventoryData::Data::set_hasSocket(const unsigned int hasSocket) {
+    this->data.hasSocket = hasSocket;
+}
+
+unsigned int SrvInventoryData::Data::get_hasSocket() const {
+    return data.hasSocket;
+}
+
+void SrvInventoryData::Data::set_life(const unsigned int life) {
+    this->data.life = life;
+}
+
+unsigned int SrvInventoryData::Data::get_life() const {
+    return data.life;
+}
+
+void SrvInventoryData::Data::set_durability(const unsigned int durability) {
+    this->data.durability = durability;
+}
+
+unsigned int SrvInventoryData::Data::get_durability() const {
+    return data.durability;
+}
+
+void SrvInventoryData::Data::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
+}
+
+unsigned int SrvInventoryData::Data::get_gem_opt() const {
+    return data.gem_opt;
+}
+
+void SrvInventoryData::Data::set_count(const uint32_t count) {
+    this->data.count = count;
+}
+
+uint32_t SrvInventoryData::Data::get_count() const {
+    return data.count;
+}
+
+bool SrvInventoryData::Data::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvInventoryData::Data::read(CRoseReader& reader) {
+    if (!reader.get_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvInventoryData::Data::size() {
+    return sizeof(data);
+}
+
+void SrvInventoryData::Item::set_header(const SrvInventoryData::Header header) {
+    this->header = header;
+}
+
+SrvInventoryData::Header SrvInventoryData::Item::get_header() const {
+    return header;
+}
+
+void SrvInventoryData::Item::set_data(const SrvInventoryData::Data data) {
+    this->data = data;
+}
+
+SrvInventoryData::Data SrvInventoryData::Item::get_data() const {
+    return data;
+}
+
+bool SrvInventoryData::Item::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_iserialize(header)) {
+        return false;
+    }
+    if (!writer.set_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvInventoryData::Item::read(CRoseReader& reader) {
+    if (!reader.get_iserialize(header)) {
+        return false;
+    }
+    if (!reader.get_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvInventoryData::Item::size() {
+    size_t size = 0;
+    size += Header::size();
+    size += Data::size();
+    return size;
+}
+
 
 SrvInventoryData::SrvInventoryData() : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA) {}
 
@@ -62,7 +179,7 @@ SrvInventoryData::SrvInventoryData(CRoseReader reader) : CRosePacket(reader) {
         return;
     }
     for (size_t index = 0; index < MAX_ITEMS; ++index) {
-        if (!reader.get_Item(items[index])) {
+        if (!reader.get_iserialize(items[index])) {
             return;
         }
     }
@@ -76,21 +193,19 @@ int64_t SrvInventoryData::get_zuly() const {
     return zuly;
 }
 
-void SrvInventoryData::set_items(const Item* items) {
-    for (size_t index = 0; index < MAX_ITEMS; ++index) {
-        this->items[index] = items[index];
-    }
+void SrvInventoryData::set_items(const std::array<SrvInventoryData::Item, MAX_ITEMS> items) {
+    this->items = items;
 }
 
 void SrvInventoryData::set_items(const Item items, size_t index) {
     this->items[index] = items;
 }
 
-const Item* SrvInventoryData::get_items() const {
+std::array<SrvInventoryData::Item, MAX_ITEMS> SrvInventoryData::get_items() const {
     return items;
 }
 
-Item SrvInventoryData::get_items(size_t index) const {
+SrvInventoryData::Item SrvInventoryData::get_items(size_t index) const {
     return items[index];
 }
 
@@ -114,8 +229,8 @@ void SrvInventoryData::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_int64_t(zuly)) {
         return;
     }
-    for (size_t index = 0; index < MAX_ITEMS; ++index) {
-        if (!writer.set_Item(items[index])) {
+    for (const auto& elem : items) {
+        if (!writer.set_iserialize(elem)) {
             return;
         }
     }
@@ -124,7 +239,7 @@ void SrvInventoryData::pack(CRoseBasePolicy& writer) const {
 constexpr size_t SrvInventoryData::size() {
     size_t size = 0;
     size += sizeof(int64_t);
-    size += sizeof(Item) * MAX_ITEMS;
+    size += Item::size() * MAX_ITEMS;
     return size;
 }
 

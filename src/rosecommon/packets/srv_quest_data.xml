@@ -1,10 +1,10 @@
 <packet ePacketType = "PAKWC_QUEST_DATA">
     <include path = "dataconsts.h" />
     <includeXml path = "item.xml" />
-    <element name = "episode" type = "uint16_t" occurs = "MAX_CONDITIONS_EPISODE" default = "{0}" />
-    <element name = "job" type = "uint16_t" occurs = "MAX_CONDTIONS_JOB" default = "{0}" />
-    <element name = "planet" type = "uint16_t" occurs = "MAX_CONDITIONS_PLANET" default = "{0}" />
-    <element name = "union" type = "uint16_t" occurs = "MAX_CONDITIONS_UNION" default = "{0}" />
+    <element name = "episodes" type = "uint16_t" occurs = "MAX_CONDITIONS_EPISODE" default = "{0}" />
+    <element name = "jobs" type = "uint16_t" occurs = "MAX_CONDITIONS_JOB" default = "{0}" />
+    <element name = "planets" type = "uint16_t" occurs = "MAX_CONDITIONS_PLANET" default = "{0}" />
+    <element name = "unions" type = "uint16_t" occurs = "MAX_CONDITIONS_UNION" default = "{0}" />
     <element name = "quests" type = "Quest" occurs = "MAX_QUESTS" default = "{}" />
     <element name = "switches" type = "uint32_t" occurs = "MAX_SWITCHES" default = "{0}" />
 

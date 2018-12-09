@@ -126,21 +126,19 @@ uint32_t SrvCharListReply::CharInfo::get_hair() const {
     return hair;
 }
 
-void SrvCharListReply::CharInfo::set_items(const SrvCharListReply::EquippedItem* items) {
-    for (size_t index = 0; index < EquippedPosition::MAX_ITEMS; ++index) {
-        this->items[index] = items[index];
-    }
+void SrvCharListReply::CharInfo::set_items(const std::array<SrvCharListReply::EquippedItem, SrvCharListReply::EquippedPosition::MAX_ITEMS>& items) {
+    this->items = items;
 }
 
-void SrvCharListReply::CharInfo::set_items(const EquippedItem items, size_t index) {
+void SrvCharListReply::CharInfo::set_items(const EquippedItem& items, size_t index) {
     this->items[index] = items;
 }
 
-const SrvCharListReply::EquippedItem* SrvCharListReply::CharInfo::get_items() const {
+const std::array<SrvCharListReply::EquippedItem, SrvCharListReply::EquippedPosition::MAX_ITEMS>& SrvCharListReply::CharInfo::get_items() const {
     return items;
 }
 
-SrvCharListReply::EquippedItem SrvCharListReply::CharInfo::get_items(size_t index) const {
+const SrvCharListReply::EquippedItem& SrvCharListReply::CharInfo::get_items(size_t index) const {
     return items[index];
 }
 

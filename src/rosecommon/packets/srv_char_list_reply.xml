@@ -39,7 +39,7 @@
             <element name = "platinium" type = "uint8_t" default = "0" />
             <element name = "face" type = "uint32_t" />
             <element name = "hair" type = "uint32_t" />
-            <element name = "items" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" />
+            <element name = "items" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" />
         </sequence>
     </complexType>
 </packet>
