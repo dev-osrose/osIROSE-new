@@ -24,6 +24,25 @@ set( SOURCES_HEADER
   include/isccommon.h
   include/itemdb.h
   include/crosewriter.h
+  include/components/basic_info.h
+  include/components/computed_values.h
+  include/components/destination.h
+  include/components/graphics.h
+  include/components/hotbar.h
+  include/components/inventory.h
+  include/components/item.h
+  include/components/level.h
+  include/components/life.h
+  include/components/magic.h
+  include/components/npc.h
+  include/components/owner.h
+  include/components/party.h
+  include/components/position.h
+  include/components/skills.h
+  include/components/stats.h
+  include/components/status_effects.h
+  include/components/target.h
+  include/components/wishlist.h
 )
 
 SET(SOURCES_BASE
