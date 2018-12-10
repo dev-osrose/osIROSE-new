@@ -22,6 +22,7 @@ set( SOURCES_HEADER
   include/fuzzy_matching.h
   include/random.h
   include/mwsrqueue.h
+  include/enumerate.h
 )
 
 set( SOURCES_BASE
