@@ -23,8 +23,7 @@ class EntitySystem {
         RoseCommon::Entity load_character(uint32_t charId, bool platinium);
 	void save_character(RoseCommon::Entity) const;
 	
-	RoseCommon::Entity load_item(uint8_t type, uint16_t id);
-	void save_item(RoseCommon::Entity) const;
+	RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
     private:
         Core::MWSRQueue<std::deque<std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
