@@ -173,11 +173,11 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     using namespace Component;
     entt::prototype prototype(registry);
     
-    const auto &itemDb = ItemDatabase::getInstance();
+    const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     if (!itemDb.hasItemDef(type, id)) {
         return entt::null;
     }
-    const auto def = itemDb.getItemDef(type, id);
+    const auto& def = itemDb.getItemDef(type, id);
     
     auto& item = prototype.set<Item>();
     item.type = type;
@@ -189,6 +189,8 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.refine = 0;
     item.count = 0;
     item.gemOpt = 0;
+
+    prototype.set<RoseCommon::ItemDatabase::ItemDef>(def);
 	
     std::lock_guard<std::mutex> lock(access);
     return prototype();
