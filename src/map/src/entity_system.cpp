@@ -2,7 +2,9 @@
 #include <entt.hpp>
 #include "components/basic_info.h"
 #include "components/computed_values.h"
+#include "components/faction.h"
 #include "components/graphics.h"
+#include "components/guild.h"
 #include "components/hotbar.h"
 #include "components/inventory.h"
 #include "components/level.h"
@@ -12,6 +14,7 @@
 #include "components/owner.h"
 #include "components/position.h"
 #include "components/skills.h"
+#include "components/stamina.h"
 #include "components/stats.h"
 #include "components/status_effects.h"
 #include "components/wishlist.h"
@@ -66,6 +69,10 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     basicInfo.id = idManager.get_free_id();
     basicInfo.tag = basicInfo.id;
     basicInfo.teamId = basicInfo.id;
+    basicInfo.job = charRow.job;
+    basicInfo.statPoints = charRow.stat_points;
+    basicInfo.skillPoints = charRow.skill_points;
+    basicInfo.pkFlag = charRow.pk_flag;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
@@ -74,11 +81,26 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     computedValues.runSpeed = 0;
     computedValues.atkSpeed = 0;
     computedValues.weightRate = 0;
+    
+    auto& faction = prototype.set<Faction>();
+    faction.id = charRow.factionid;
+    faction.rank = charRow.faction_rank;
+    faction.fame = charRow.fame;
+    faction.factionFame[0] = charRow.faction_fame1;
+    faction.factionFame[1] = charRow.faction_fame2;
+    faction.points[0] = charRow.faction_points1;
+    faction.points[1] = charRow.faction_points2;
+    faction.points[2] = charRow.faction_points3;
 
     auto& graphics = prototype.set<Graphics>();
     graphics.face = charRow.face;
     graphics.hair = charRow.hair;
     graphics.race = charRow.race;
+    
+    auto& guild = prototype.set<Guild>();
+    guild.id = charRow.clanid;
+    guild.contribution = charRow.clan_contribution;
+    guild.rank = charRow.clan_rank;
 
     prototype.set<Hotbar>();
 
@@ -87,6 +109,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     auto& level = prototype.set<Level>();
     level.xp = charRow.exp;
     level.level = charRow.level;
+    level.penaltyXp = charRow.penalty_exp;
 
     auto& life = prototype.set<Life>();
     life.hp = charRow.maxHp / 3; // you only get 30% of your health when login in
@@ -103,6 +126,10 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     pos.spawn = charRow.reviveMap;
 
     prototype.set<Skills>();
+
+    auto& stamina = prototype.set<Stamina>();
+    stamina.stamina = charRow.stamina;
+
     auto& stats = prototype.set<Stats>();
     stats.str = charRow.str;
     stats.dex = charRow.dex;
