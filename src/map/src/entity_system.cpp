@@ -180,8 +180,6 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     const auto& def = itemDb.getItemDef(type, id);
     
     auto& item = prototype.set<Item>();
-    item.type = type;
-    item.id = id;
     item.isCreated = false;
     item.life = 1000;
     item.hasSocket = false;
