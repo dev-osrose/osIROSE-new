@@ -8,5 +8,6 @@ struct Item {
     bool isAppraised;
     uint8_t refine;
     uint32_t count;
+    uint16_t gemOpt;
 };
 }
