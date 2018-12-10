@@ -1,4 +1,5 @@
 #include "entity_system.h"
+#include "enumerate.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
 #include "components/computed_values.h"
@@ -7,6 +8,7 @@
 #include "components/guild.h"
 #include "components/hotbar.h"
 #include "components/inventory.h"
+#include "components/item.h"
 #include "components/level.h"
 #include "components/life.h"
 #include "components/magic.h"
@@ -53,6 +55,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     Core::CharacterTable characters{};
     Core::InventoryTable inventoryTable{};
     Core::SkillTable skillsTable{};
+    Core::WishTable wish{};
 
     auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
                           .from(characters).where(characters.id == charId));
@@ -104,7 +107,9 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
 
     prototype.set<Hotbar>();
 
-    prototype.set<Inventory>();
+    auto invRes =
+      conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable).where(inventoryTable.charId == charId));
+    auto& inventory = prototype.set<Inventory>();
 
     auto& level = prototype.set<Level>();
     level.xp = charRow.exp;
@@ -125,7 +130,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
 
-    prototype.set<Skills>();
+    auto skillRes =
+      conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
+    auto& skills = prototype.set<Skills>();
+    for (const auto& [i, row] : Core::enumerate(skillRes)) {
+        skills[i].set_id(row.id);
+        skills[i].set_level(row.level);
+    }
 
     auto& stamina = prototype.set<Stamina>();
     stamina.stamina = charRow.stamina;
@@ -142,7 +153,14 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
 
     prototype.set<StatusEffects>();
 
-    prototype.set<Wishlist>();
+    auto wishRes = conn(sqlpp::select(sqlpp::all_of(wish)).from(wish).where(wish.charId == charId));
+    auto& wishlist = prototype.set<Wishlist>();
+    for (const auto& row : wishRes) {
+        if (row.slot >= RoseCommon::MAX_WISHLIST) {
+            continue;
+        }
+        // TODO: add load_item from database (from row??)
+    }
 
     std::lock_guard<std::mutex> lock(access);
     return prototype();
@@ -155,6 +173,23 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     using namespace Component;
     entt::prototype prototype(registry);
     
+    const auto &itemDb = ItemDatabase::getInstance();
+    if (!itemDb.hasItemDef(type, id)) {
+        return entt::null;
+    }
+    const auto def = itemDb.getItemDef(type, id);
+    
+    auto& item = prototype.set<Item>();
+    item.type = type;
+    item.id = id;
+    item.isCreated = false;
+    item.life = 1000;
+    item.hasSocket = false;
+    item.isAppraised = false;
+    item.refine = 0;
+    item.count = 0;
+    item.gemOpt = 0;
+	
     std::lock_guard<std::mutex> lock(access);
     return prototype();
 }
