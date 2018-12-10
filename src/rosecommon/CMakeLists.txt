@@ -136,8 +136,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_removeobject.h
     src/packets/srv_screen_shot_time_reply.cpp
     include/packets/srv_screen_shot_time_reply.h
-    #  src/packets/srv_selectcharreply.cpp
-    #  include/packets/srv_selectcharreply.h
+    src/packets/srv_select_char_reply.cpp
+    include/packets/srv_select_char_reply.h
     #  src/packets/srv_globalvars.cpp
     #  include/packets/srv_globalvars.h
     src/packets/srv_srv_select_reply.cpp

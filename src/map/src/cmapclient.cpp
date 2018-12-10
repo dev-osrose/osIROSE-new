@@ -22,7 +22,7 @@
 #include "srv_inventory_data.h"
 #include "srv_join_server_reply.h"
 #include "srv_quest_data.h"
-//#include "srv_select_char_reply.h"
+#include "srv_select_char_reply.h"
 //#include "srv_teleport_reply.h"
 //#include "srv_billing_message.h"
 

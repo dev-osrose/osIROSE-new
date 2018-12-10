@@ -5,6 +5,6 @@
 
 namespace Component {
 struct Skills {
-    std::array<RoseCommon::Skill, RoseCommon::MAX_SKILLS> skills;
+    std::array<RoseCommon::Skill, RoseCommon::MAX_SKILL_COUNT> skills;
 };
 }

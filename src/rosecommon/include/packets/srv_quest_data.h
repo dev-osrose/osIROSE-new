@@ -121,7 +121,7 @@ class SrvQuestData : public CRosePacket {
                 uint16_t id = 0;
                 // timer: Unlimited if 0
                 uint32_t timer = 0;
-                std::array<uint32_t, MAX_QUEST_VARS> vars;
+                std::array<uint32_t, MAX_QUEST_VARS> vars = {0};
                 uint32_t switches = 0;
                 std::array<Item, MAX_QUEST_ITEMS> items;
         };
@@ -161,12 +161,12 @@ class SrvQuestData : public CRosePacket {
         virtual void pack(CRoseBasePolicy&) const override;
     
     private:
-        std::array<uint16_t, MAX_CONDITIONS_EPISODE> episodes;
-        std::array<uint16_t, MAX_CONDITIONS_JOB> jobs;
-        std::array<uint16_t, MAX_CONDITIONS_PLANET> planets;
-        std::array<uint16_t, MAX_CONDITIONS_UNION> unions;
-        std::array<Quest, MAX_QUESTS> quests;
-        std::array<uint32_t, MAX_SWITCHES> switches;
+        std::array<uint16_t, MAX_CONDITIONS_EPISODE> episodes = {0};
+        std::array<uint16_t, MAX_CONDITIONS_JOB> jobs = {0};
+        std::array<uint16_t, MAX_CONDITIONS_PLANET> planets = {0};
+        std::array<uint16_t, MAX_CONDITIONS_UNION> unions = {0};
+        std::array<Quest, MAX_QUESTS> quests = {};
+        std::array<uint32_t, MAX_SWITCHES> switches = {0};
 };
 
 }

@@ -140,8 +140,6 @@ struct HotbarItem : public ISerialize {
         } data;
 };
 
-constexpr unsigned int MAX_SKILLS = 120;
-
 struct Skill : public ISerialize {
     virtual bool read(CRoseReader& reader) override {
         if (!reader.get_uint16_t(id)) {
