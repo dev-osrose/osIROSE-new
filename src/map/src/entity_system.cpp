@@ -148,3 +148,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     return prototype();
 }
 
+void EntitySystem::save_character(RoseCommon::Entity character) const {
+}
+
+RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
+    using namespace Component;
+    entt::prototype prototype(registry);
+    
+    std::lock_guard<std::mutex> lock(access);
+    return prototype();
+}
