@@ -50,7 +50,7 @@ void EntitySystem::update(std::chrono::milliseconds dt) {
     }
 }
 
-RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium) {
+RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     Core::CharacterTable characters{};
@@ -71,7 +71,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     auto& basicInfo = prototype.set<BasicInfo>();
     basicInfo.name = charRow.name;
     basicInfo.id = idManager.get_free_id();
-    basicInfo.tag = basicInfo.id;
+    basicInfo.tag = sessionId;
     basicInfo.teamId = basicInfo.id;
     basicInfo.job = charRow.job;
     basicInfo.statPoints = charRow.statPoints;
