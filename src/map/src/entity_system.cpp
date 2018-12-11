@@ -145,6 +145,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     pos.y = charRow.y;
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
+	pos.map = charRow.map;
 
     auto skillRes =
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
