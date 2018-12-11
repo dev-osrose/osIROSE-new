@@ -1,5 +1,6 @@
 #include "entity_system.h"
 #include "enumerate.h"
+#include "itemdb.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
 #include "components/computed_values.h"
@@ -73,9 +74,9 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     basicInfo.tag = basicInfo.id;
     basicInfo.teamId = basicInfo.id;
     basicInfo.job = charRow.job;
-    basicInfo.statPoints = charRow.stat_points;
-    basicInfo.skillPoints = charRow.skill_points;
-    basicInfo.pkFlag = charRow.pk_flag;
+    basicInfo.statPoints = charRow.statPoints;
+    basicInfo.skillPoints = charRow.skillPoints;
+    basicInfo.pkFlag = charRow.pkFlag;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
@@ -87,13 +88,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     
     auto& faction = prototype.set<Faction>();
     faction.id = charRow.factionid;
-    faction.rank = charRow.faction_rank;
+    faction.rank = charRow.factionRank;
     faction.fame = charRow.fame;
-    faction.factionFame[0] = charRow.faction_fame1;
-    faction.factionFame[1] = charRow.faction_fame2;
-    faction.points[0] = charRow.faction_points1;
-    faction.points[1] = charRow.faction_points2;
-    faction.points[2] = charRow.faction_points3;
+    faction.factionFame[0] = charRow.factionFame1;
+    faction.factionFame[1] = charRow.factionFame2;
+    faction.points[0] = charRow.factionPoints1;
+    faction.points[1] = charRow.factionPoints2;
+    faction.points[2] = charRow.factionPoints3;
 
     auto& graphics = prototype.set<Graphics>();
     graphics.face = charRow.face;
@@ -102,19 +103,34 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     
     auto& guild = prototype.set<Guild>();
     guild.id = charRow.clanid;
-    guild.contribution = charRow.clan_contribution;
-    guild.rank = charRow.clan_rank;
+    guild.contribution = charRow.clanContribution;
+    guild.rank = charRow.clanRank;
 
     prototype.set<Hotbar>();
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable).where(inventoryTable.charId == charId));
     auto& inventory = prototype.set<Inventory>();
+    for (const auto& row : invRes) {
+        if (row.slot >= RoseCommon::MAX_ITEMS) {
+            continue;
+        }
+        Item item;
+        item.isCreated = false;
+        item.life = 1000;
+        item.hasSocket = row.socket;
+        item.isAppraised = true;
+        item.refine = row.refine;
+        item.count = row.amount;
+        item.gemOpt = row.gemOpt;
+        item.price = 0;
+        inventory.items[row.slot] = load_item(row.itemtype, row.itemid, item);
+    }
 
     auto& level = prototype.set<Level>();
     level.xp = charRow.exp;
     level.level = charRow.level;
-    level.penaltyXp = charRow.penalty_exp;
+    level.penaltyXp = charRow.penaltyExp;
 
     auto& life = prototype.set<Life>();
     life.hp = charRow.maxHp / 3; // you only get 30% of your health when login in
@@ -134,8 +150,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
     auto& skills = prototype.set<Skills>();
     for (const auto& [i, row] : Core::enumerate(skillRes)) {
-        skills[i].set_id(row.id);
-        skills[i].set_level(row.level);
+        skills.skills[i].set_id(row.id);
+        skills.skills[i].set_level(row.level);
     }
 
     auto& stamina = prototype.set<Stamina>();
@@ -159,7 +175,16 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
         if (row.slot >= RoseCommon::MAX_WISHLIST) {
             continue;
         }
-        // TODO: add load_item from database (from row??)
+        Item item;
+        item.isCreated = false;
+        item.life = 1000;
+        item.hasSocket = row.socket;
+        item.isAppraised = true;
+        item.refine = row.refine;
+        item.count = row.amount;
+        item.gemOpt = row.gemOpt;
+        item.price = row.price;
+        wishlist.items[row.slot] = load_item(row.itemtype, row.itemid, item);
     }
 
     std::lock_guard<std::mutex> lock(access);
@@ -174,7 +199,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     entt::prototype prototype(registry);
     
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
-    if (!itemDb.hasItemDef(type, id)) {
+    if (!itemDb.itemExists(type, id)) {
         return entt::null;
     }
     const auto& def = itemDb.getItemDef(type, id);
@@ -187,9 +212,22 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.refine = 0;
     item.count = 0;
     item.gemOpt = 0;
+    item.price = 0;
 
-    prototype.set<RoseCommon::ItemDatabase::ItemDef>(def);
+    prototype.set<RoseCommon::ItemDef>(def);
 	
     std::lock_guard<std::mutex> lock(access);
     return prototype();
+}
+
+RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component::Item item) {
+    auto entity = create_item(type, id);
+    if (entity == entt::null) {
+        return entt::null;
+    }
+    registry.replace<Component::Item>(entity, item);
+    return entity;
+}
+
+void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
 }

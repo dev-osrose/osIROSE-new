@@ -9,5 +9,6 @@ struct Item {
     uint8_t refine;
     uint32_t count;
     uint16_t gemOpt;
+    uint32_t price;
 };
 }

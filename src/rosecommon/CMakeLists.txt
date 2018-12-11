@@ -27,7 +27,9 @@ set( SOURCES_HEADER
   include/components/basic_info.h
   include/components/computed_values.h
   include/components/destination.h
+  include/components/faction.h
   include/components/graphics.h
+  include/components/guild.h
   include/components/hotbar.h
   include/components/inventory.h
   include/components/item.h
@@ -37,8 +39,10 @@ set( SOURCES_HEADER
   include/components/npc.h
   include/components/owner.h
   include/components/party.h
+  include/components/pat.h
   include/components/position.h
   include/components/skills.h
+  include/components/stamina.h
   include/components/stats.h
   include/components/status_effects.h
   include/components/target.h
@@ -190,8 +194,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_sethpandmp.h
     #  src/packets/srv_damage.cpp
     #  include/packets/srv_damage.h
-    #  src/packets/srv_billingmessage.cpp
-    #  include/packets/srv_billingmessage.h
+    src/packets/srv_billing_message.cpp
+    include/packets/srv_billing_message.h
     #  #---------------------------------------------------------
     src/packets/isc_server_register.cpp
     include/packets/isc_server_register.h
