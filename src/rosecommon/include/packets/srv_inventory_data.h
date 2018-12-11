@@ -114,7 +114,7 @@ class SrvInventoryData : public CRosePacket {
     
     private:
         int64_t zuly;
-        std::array<Item, MAX_ITEMS> items;
+        std::array<Item, MAX_ITEMS> items = {};
 };
 
 }

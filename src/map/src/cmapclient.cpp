@@ -24,7 +24,9 @@
 #include "srv_quest_data.h"
 #include "srv_select_char_reply.h"
 //#include "srv_teleport_reply.h"
-//#include "srv_billing_message.h"
+#include "srv_billing_message.h"
+
+#include "components/basic_info.h"
 
 using namespace RoseCommon;
 
@@ -148,13 +150,14 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          //send(Packet::SrvSelectCharReply::create(entity_));
+          const auto& basicInfo = entitySystem->get<Component::BasicInfo>(entity);
+          send(Packet::SrvSelectCharReply::create());
 
-          //send(Packet::SrvInventoryData::create(entity_));
+          send(Packet::SrvInventoryData::create((int64_t)0)); // it's zuly
 
-          //send(Packet::SrvQuestData::create(entity_));
+          send(Packet::SrvQuestData::create());
 
-          //send(Packet::SrvBillingMessage::create());
+          send(Packet::SrvBillingMessage::create());
         } else {
           //send(Packet::SrvTeleportReply::create(entity_));
         }

@@ -28,6 +28,16 @@ class EntitySystem {
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
+        template <typename T>
+        const T& get_component(RoseCommon::Entity entity) const {
+            return registry.get<T>(entity);
+        }
+
+        template <typename T>
+        const T* try_get_component(RoseCommon::Entity entity) const {
+            return registry.try_get<T>(entity);
+        }
+
     private:
         Core::MWSRQueue<std::deque<std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
         RoseCommon::Registry registry;

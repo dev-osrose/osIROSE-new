@@ -1,49 +1,49 @@
 <packet ePacketType = "PAKWC_SELECT_CHAR_REPLY">
-    <element name = "race" type ="uint8_t" default = "none" />
-    <element name = "map" type = "uint16_t" default = "none" />
-    <element name = "x" type = "float" default = "none" />
-    <element name = "y" type = "float" default = "none" />
-    <element name = "spawn" type = "uint16_t" default = "none" />
-    <element name = "mask" type = "uint32_t" default = "none" />
-    <element name = "headGear" type = "uint32_t" default = "none" />
-    <includeXml path = "equipped_item.xml" default = "none" />
-    <element name = "inventory" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" default = "none" />
-    <element name = "stone" type = "uint8_t" default = "none" />
-    <element name = "face" type = "uint8_t" default = "none" />
-    <element name = "hair" type = "uint8_t" default = "none" />
-    <element name = "job" type = "uint16_t" default = "none" />
+    <element name = "race" type ="uint8_t" default = "0" />
+    <element name = "map" type = "uint16_t" default = "0" />
+    <element name = "x" type = "float" default = "0" />
+    <element name = "y" type = "float" default = "0" />
+    <element name = "spawn" type = "uint16_t" default = "0" />
+    <element name = "mask" type = "uint32_t" default = "0" />
+    <element name = "headGear" type = "uint32_t" default = "0" />
+    <includeXml path = "equipped_item.xml" default = "0" />
+    <element name = "inventory" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" default = "{}" />
+    <element name = "stone" type = "uint8_t" default = "0" />
+    <element name = "face" type = "uint8_t" default = "0" />
+    <element name = "hair" type = "uint8_t" default = "0" />
+    <element name = "job" type = "uint16_t" default = "0" />
     <element name = "factionId" type = "uint8_t" default = "0" />
     <element name = "factionRank" type = "uint8_t" default = "0" />
     <element name = "fame" type = "uint8_t" default = "0" />
-    <element name = "str" type = "uint16_t" default = "none" />
-    <element name = "dex" type = "uint16_t" default = "none" />
-    <element name = "int_" type = "uint16_t" default = "none" />
-    <element name = "con" type = "uint16_t" default = "none" />
-    <element name = "charm" type = "uint16_t" default = "none" />
-    <element name = "sense" type = "uint16_t" default = "none" />
-    <element name = "hp" type = "int32_t" default = "none" />
-    <element name = "mp" type = "int32_t" default = "none" />
-    <element name = "xp" type = "uint32_t" default = "none" />
-    <element name = "level" type = "uint16_t" default = "none" />
-    <element name = "statPoints" type = "uint32_t" default = "none" />
-    <element name = "skillPoints" type = "uint32_t" default = "none" />
-    <element name = "bodySize" type = "uint8_t" default = "none" />
-    <element name = "headSize" type = "uint8_t" default = "none" />
-    <element name = "penaltyXp" type = "uint32_t" default = "none" />
+    <element name = "str" type = "uint16_t" default = "0" />
+    <element name = "dex" type = "uint16_t" default = "0" />
+    <element name = "int_" type = "uint16_t" default = "0" />
+    <element name = "con" type = "uint16_t" default = "0" />
+    <element name = "charm" type = "uint16_t" default = "0" />
+    <element name = "sense" type = "uint16_t" default = "0" />
+    <element name = "hp" type = "int32_t" default = "0" />
+    <element name = "mp" type = "int32_t" default = "0" />
+    <element name = "xp" type = "uint32_t" default = "0" />
+    <element name = "level" type = "uint16_t" default = "0" />
+    <element name = "statPoints" type = "uint32_t" default = "0" />
+    <element name = "skillPoints" type = "uint32_t" default = "0" />
+    <element name = "bodySize" type = "uint8_t" default = "0" />
+    <element name = "headSize" type = "uint8_t" default = "0" />
+    <element name = "penaltyXp" type = "uint32_t" default = "0" />
     <element name = "factionFame" type = "uint16_t" ref = "true" occurs = "2" default = "{0}" />
     <element name = "factionPoints" type = "uint16_t" ref = "true" occurs = "10" default = "{0}" />
     <element name = "guildId" type = "uint32_t" default = "0" />
     <element name = "guildContribution" type = "uint16_t" default = "0" />
     <element name = "guildRank" type = "uint8_t" default = "0" />
-    <element name = "pkFlag" type = "uint16_t" default = "none" />
-    <element name = "stamina" type = "uint16_t" default = "none" />
-    <include path = "dataconsts.h" default = "none" />
+    <element name = "pkFlag" type = "uint16_t" default = "0" />
+    <element name = "stamina" type = "uint16_t" default = "0" />
+    <include path = "dataconsts.h" default = "0" />
     <element name = "effects" type = "StatusEffect" ref = "true" occurs = "MAX_STATUS_EFFECTS" default = "{}" />
     <element name = "patHp" type = "uint16_t" default = "0" />
     <element name = "patCooldownTime" type = "uint32_t" default = "0" />
     <element name = "skills" type = "uint16_t" ref = "true" occurs = "MAX_SKILL_COUNT" default = "{0}" />
     <element name = "hotbar" type = "HotbarItem" ref = "true" occurs = "MAX_HOTBAR_ITEMS" default = "{}" />
-    <element name = "tag" type = "uint32_t" default = "none" />
-    <include path = "string" system = "true" default = "none" />
-    <element name = "name" type = "std::string" ref = "true" default = "none" />
+    <element name = "tag" type = "uint32_t" default = "0" />
+    <include path = "string" system = "true" default = "0" />
+    <element name = "name" type = "std::string" ref = "true" default = '"test"' />
 </packet>
