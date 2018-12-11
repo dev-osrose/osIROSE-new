@@ -32,10 +32,30 @@ class EntitySystem {
         const T& get_component(RoseCommon::Entity entity) const {
             return registry.get<T>(entity);
         }
+	
+	    template <typename T>
+	    T& get_component(RoseCommon::entity entity) {
+	        return registry.get<T>(entity);
+        }
 
         template <typename T>
         const T* try_get_component(RoseCommon::Entity entity) const {
             return registry.try_get<T>(entity);
+        }
+    
+        template <typename T>
+        T* try_get_component(RoseCommon::Entity entity) {
+            return registry.try_get<T>(entity);
+        }
+        
+        template <typename T>
+        void remove_component(RoseCommon::Entity entity) {
+            registry.remove<T>(entity);
+        }
+    
+        template <typename T>
+        T& add_component(RoseCommon::Entity entity) {
+            return registry.assign<T>(entity);
         }
 
     private:
