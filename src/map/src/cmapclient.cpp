@@ -150,7 +150,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          const auto& basicInfo = entitySystem->get<Component::BasicInfo>(entity);
+          const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
           send(Packet::SrvSelectCharReply::create());
 
           send(Packet::SrvInventoryData::create((int64_t)0)); // it's zuly
