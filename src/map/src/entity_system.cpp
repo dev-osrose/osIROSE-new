@@ -5,7 +5,7 @@
 #include "components/basic_info.h"
 #include "components/computed_values.h"
 #include "components/faction.h"
-#include "components/graphics.h"
+#include "components/character_graphics.h"
 #include "components/guild.h"
 #include "components/hotbar.h"
 #include "components/inventory.h"
@@ -97,10 +97,10 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     faction.points[1] = charRow.factionPoints2;
     faction.points[2] = charRow.factionPoints3;
 
-    auto& graphics = prototype.set<Graphics>();
-    graphics.face = charRow.face;
-    graphics.hair = charRow.hair;
-    graphics.race = charRow.race;
+    auto& characterGraphics = prototype.set<CharacterGraphics>();
+    characterGraphics.face = charRow.face;
+    characterGraphics.hair = charRow.hair;
+    characterGraphics.race = charRow.race;
     
     auto& guild = prototype.set<Guild>();
     guild.id = charRow.clanid;
