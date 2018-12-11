@@ -21,7 +21,7 @@ class EntitySystem {
 
         void add_task(std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& task);
 
-        RoseCommon::Entity load_character(uint32_t charId, bool platinium);
+        RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId);
         void save_character(RoseCommon::Entity) const;
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
