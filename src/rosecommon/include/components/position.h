@@ -6,6 +6,7 @@ struct Position {
     float y;
     uint16_t z;
     uint16_t spawn;
+    uint16_t map;
     float npcAngle = 0; // angle for npcs
 };
 }
