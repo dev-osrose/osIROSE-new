@@ -5,7 +5,7 @@
             <element name = "id" type = "unsigned int" bits = "10" />
             <element name = "type" type = "unsigned int" bits = "5" />
         </sequence>
-        <element name = "header" type = "uint16_t" />
+        <element name = "header" type = "uint16_t" default = "0" />
     </choice>
 </complexType>
 
@@ -19,13 +19,13 @@
             <element name = "durability" type = "unsigned int" bits = "7" />
             <element name = "gem_opt" type = "unsigned int" bits = "9" />
         </sequence>
-        <element name = "count" type = "uint32_t" />
+        <element name = "count" type = "uint32_t" default = "0" />
     </choice>
 </complexType>
 
 <complexType name = "Item">
     <sequence>
-        <element name = "header" type = "Header" />
-        <element name = "data" type = "Data" />
+        <element name = "header" type = "Header" default = "{}" />
+        <element name = "data" type = "Data" default = "{}" />
     </sequence>
 </complexType>

@@ -41,7 +41,7 @@ class SrvInventoryData : public CRosePacket {
                         unsigned int id : 10;
                         unsigned int type : 5;
                     });
-                    uint16_t header;
+                    uint16_t header = 0;
                 } data;
         };
         
@@ -76,7 +76,7 @@ class SrvInventoryData : public CRosePacket {
                         unsigned int durability : 7;
                         unsigned int gem_opt : 9;
                     });
-                    uint32_t count;
+                    uint32_t count = 0;
                 } data;
         };
         
@@ -92,8 +92,8 @@ class SrvInventoryData : public CRosePacket {
             Data get_data() const;
             
             private:
-                Header header;
-                Data data;
+                Header header = {};
+                Data data = {};
         };
         
         

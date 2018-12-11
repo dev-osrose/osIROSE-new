@@ -41,7 +41,7 @@ class SrvQuestData : public CRosePacket {
                         unsigned int id : 10;
                         unsigned int type : 5;
                     });
-                    uint16_t header;
+                    uint16_t header = 0;
                 } data;
         };
         
@@ -76,7 +76,7 @@ class SrvQuestData : public CRosePacket {
                         unsigned int durability : 7;
                         unsigned int gem_opt : 9;
                     });
-                    uint32_t count;
+                    uint32_t count = 0;
                 } data;
         };
         
@@ -92,8 +92,8 @@ class SrvQuestData : public CRosePacket {
             Data get_data() const;
             
             private:
-                Header header;
-                Data data;
+                Header header = {};
+                Data data = {};
         };
         
         struct Quest : public ISerialize {
@@ -123,7 +123,7 @@ class SrvQuestData : public CRosePacket {
                 uint32_t timer = 0;
                 std::array<uint32_t, MAX_QUEST_VARS> vars = {0};
                 uint32_t switches = 0;
-                std::array<Item, MAX_QUEST_ITEMS> items;
+                std::array<Item, MAX_QUEST_ITEMS> items = {};
         };
         
         

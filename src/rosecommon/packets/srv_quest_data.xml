@@ -16,7 +16,7 @@
             </element>
             <element name = "vars" type = "uint32_t" occurs = "MAX_QUEST_VARS" default = "{0}" />
             <element name = "switches" type = "uint32_t" default = "0" />
-            <element name = "items" type = "Item" occurs = "MAX_QUEST_ITEMS" />
+            <element name = "items" type = "Item" occurs = "MAX_QUEST_ITEMS" default = "{}" />
         </sequence>
     </complexType>
 </packet>
