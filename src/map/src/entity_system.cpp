@@ -77,6 +77,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium)
     basicInfo.statPoints = charRow.statPoints;
     basicInfo.skillPoints = charRow.skillPoints;
     basicInfo.pkFlag = charRow.pkFlag;
+	basicInfo.stone = charRow.stone;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
