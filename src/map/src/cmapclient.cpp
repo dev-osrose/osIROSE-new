@@ -27,6 +27,20 @@
 #include "srv_billing_message.h"
 
 #include "components/basic_info.h"
+#include "components/faction.h"
+#include "components/character_graphics.h"
+#include "components/guild.h"
+#include "components/hotbar.h"
+#include "components/inventory.h"
+#include "components/level.h"
+#include "components/life.h"
+#include "components/magic.h"
+#include "components/position.h"
+#include "components/skills.h"
+#include "components/stamina.h"
+#include "components/stats.h"
+#include "components/status_effects.h"
+#include "components/wishlist.h"
 
 using namespace RoseCommon;
 
@@ -152,7 +166,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           // SEND PLAYER DATA HERE!!!!!!
           auto packet = Packet::SrvSelectCharReply::create();
           const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
-          const auto& graphics = entitySystem->get_component<Component::Graphics>(entity);
+          const auto& characterGraphics = entitySystem->get_component<Component::CharacterGraphics>(entity);
           const auto& position = entitySystem->get_component<Component::Position>(entity);
           const auto& inventory = entitySystem->get_component<Component::Inventory>(entity);
           const auto& faction = entitySystem->get_component<Component::Faction>(entity);
@@ -164,17 +178,17 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           const auto& stamina = entitySystem->get_component<Component::Stamina>(entity);
           const auto& skills = entitySystem->get_component<Component::Skills>(entity);
           const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
-          packet.set_race(graphics.race);
+          packet.set_race(characterGraphics.race);
           packet.set_map(position.map);
           packet.set_x(position.x);
           packet.set_y(position.y);
           packet.set_spawn(position.spawn);
-          packet.set_mask(graphics.face);
-          packet.set_headGear(graphics.hair);
+          packet.set_mask(characterGraphics.face);
+          packet.set_headGear(characterGraphics.hair);
           //TODO: packet.set_equippedItems();
           packet.set_stone(basicInfo.stone);
-          packet.set_face(graphics.face);
-          packet.set_hair(graphics.hair);
+          packet.set_face(characterGraphics.face);
+          packet.set_hair(characterGraphics.hair);
           packet.set_job(basicInfo.job);
           packet.set_factionId(faction.id);
           packet.set_factionRank(faction.rank);
