@@ -13,8 +13,12 @@ struct ComputedValues {
 
     ComputedValues& operator=(ComputedValues&&) = default;
     ComputedValues& operator=(const ComputedValues& other) {
-        ComputedValues copy(other);
-        std::swap(*this, copy);
+        command = other.command;
+        isOnMap.store(other.isOnMap.load());
+        moveMode = other.moveMode;
+        runSpeed = other.runSpeed;
+        atkSpeed = other.atkSpeed;
+        weightRate = other.weightRate;
         return *this;
     }
 
