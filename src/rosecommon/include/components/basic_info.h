@@ -12,5 +12,6 @@ struct BasicInfo {
     uint32_t statPoints;
     uint32_t skillPoints;
     uint16_t pkFlag;
+    uint8_t stone;
 };
 }
