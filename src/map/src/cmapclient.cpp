@@ -150,8 +150,63 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
+          auto packet = Packet::SrvSelectCharReply::create();
           const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
-          send(Packet::SrvSelectCharReply::create());
+          const auto& graphics = entitySystem->get_component<Component::Graphics>(entity);
+          const auto& position = entitySystem->get_component<Component::Position>(entity);
+          const auto& inventory = entitySystem->get_component<Component::Inventory>(entity);
+          const auto& faction = entitySystem->get_component<Component::Faction>(entity);
+          const auto& guild = entitySystem->get_component<Component::Guild>(entity);
+          const auto& level = entitySystem->get_component<Component::Level>(entity);
+          const auto& stats = entitySystem->get_component<Component::Stats>(entity);
+          const auto& life = entitySystem->get_component<Component::Life>(entity);
+          const auto& magic = entitySystem->get_component<Component::Magic>(entity);
+          const auto& stamina = entitySystem->get_component<Component::Stamina>(entity);
+          const auto& skills = entitySystem->get_component<Component::Skills>(entity);
+          const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
+          packet.set_race(graphics.race);
+          packet.set_map(position.map);
+          packet.set_x(position.x);
+          packet.set_y(position.y);
+          packet.set_spawn(position.spawn);
+          packet.set_mask(graphics.face);
+          packet.set_headGear(graphics.hair);
+          //TODO: packet.set_equippedItems();
+          packet.set_stone(basicInfo.stone);
+          packet.set_face(graphics.face);
+          packet.set_hair(graphics.hair);
+          packet.set_job(basicInfo.job);
+          packet.set_factionId(faction.id);
+          packet.set_factionRank(faction.rank);
+          packet.set_fame(faction.fame);
+          packet.set_str(stats.str);
+          packet.set_dex(stats.dex);
+          packet.set_int_(stats.int_);
+          packet.set_con(stats.con);
+          packet.set_charm(stats.charm);
+          packet.set_sense(stats.sense);
+          packet.set_hp(life.hp);
+          packet.set_mp(magic.mp);
+          packet.set_xp(level.xp);
+          packet.set_level(level.level);
+          packet.set_statPoints(basicInfo.statPoints);
+          packet.set_skillPoints(basicInfo.skillPoints);
+          packet.set_bodySize(stats.bodySize);
+          packet.set_headSize(stats.headSize);
+          packet.set_penaltyXp(level.penaltyXp);
+          packet.set_factionFame(faction.fame);
+          packet.set_factionPoints(faction.points);
+          packet.set_guildId(guild.id);
+          packet.set_guildContribution(guild.contribution);
+          packet.set_guildRank(guild.rank);
+          packet.set_pkFlag(basicInfo.pkFlag);
+          packet.set_stamina(stamina.stamina);
+          packet.set_skills(skills.skills);
+          packet.set_hotbar(hotbar.items);
+          packet.set_tag(basicInfo.tag);
+          packet.set_name(basicInfo.name);
+
+          send(packet);
 
           send(Packet::SrvInventoryData::create((int64_t)0)); // it's zuly
 
