@@ -7,7 +7,7 @@
     <element name = "mask" type = "uint32_t" default = "0" />
     <element name = "headGear" type = "uint32_t" default = "0" />
     <includeXml path = "equipped_item.xml" default = "0" />
-    <element name = "inventory" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" default = "{}" />
+    <element name = "equippedItems" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" default = "{}" />
     <element name = "stone" type = "uint8_t" default = "0" />
     <element name = "face" type = "uint8_t" default = "0" />
     <element name = "hair" type = "uint8_t" default = "0" />
