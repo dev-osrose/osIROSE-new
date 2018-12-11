@@ -28,7 +28,7 @@ set( SOURCES_HEADER
   include/components/computed_values.h
   include/components/destination.h
   include/components/faction.h
-  include/components/graphics.h
+  include/components/character_graphics.h
   include/components/guild.h
   include/components/hotbar.h
   include/components/inventory.h
