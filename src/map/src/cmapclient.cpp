@@ -187,9 +187,6 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_mask(characterGraphics.face);
           packet.set_headGear(characterGraphics.hair);
           for (const auto& [i, entity] : inventory.getVisible()) {
-            if (i >= MAX_VISIBLE_ITEMS) {
-                break;
-            }
             const auto& item = entitySystem->get_component<Component::Item>(entity);
             const auto& data = entitySystem->get_component<ItemDef>(entity);
 
