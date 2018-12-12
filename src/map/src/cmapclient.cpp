@@ -229,7 +229,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
           packet.set_inventory(Core::transform(inventory.items, [entitySystem](const auto& entity) {
-              return entitySystem->item_to_item<decltype(packet)>(entity);
+              return entitySystem->item_to_item<decltype(packetInv)>(entity);
           }));
           send(packetInv);
 
