@@ -186,7 +186,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_spawn(position.spawn);
           packet.set_mask(characterGraphics.face);
           packet.set_headGear(characterGraphics.hair);
-          for (const auto& [i, entity] : inventory.getVisible()) {
+          packet.set_equippedItems(Core::transform(inventory.getVisible(), [entitySystem](const auto& entity) {
             const auto& item = entitySystem->get_component<Component::Item>(entity);
             const auto& data = entitySystem->get_component<ItemDef>(entity);
 
@@ -195,8 +195,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
             item.set_gem_opt(item.gemOpt);
             item.set_socket(item.hasSocket);
             item.set_grade(item.refine);
-            packet.set_equippedItems(item, i);
-          }
+          }));
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);
           packet.set_hair(characterGraphics.hair);
@@ -262,7 +261,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
               item.set_header(header);
               item.set_data(data);
               return item;
-          });
+          }));
           send(packetInv);
 
           send(Packet::SrvQuestData::create());
