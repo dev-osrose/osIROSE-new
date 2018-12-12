@@ -224,6 +224,13 @@ struct StatusEffect : public ISerialize {
 
 constexpr unsigned int MAX_WISHLIST = 30;
 
+enum ItemType : uint8_t {
+    WEARABLE = 0,
+    CONSUMABLE = 1,
+    ETC = 2,
+    RIDING = 3
+};
+
 }
 
 namespace ReviveReq {

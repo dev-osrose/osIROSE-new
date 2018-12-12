@@ -23,6 +23,7 @@ set( SOURCES_HEADER
   include/random.h
   include/mwsrqueue.h
   include/enumerate.h
+  include/transform.h
 )
 
 set( SOURCES_BASE

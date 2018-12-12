@@ -4,6 +4,7 @@ namespace Component {
 struct Item {
     bool isCreated;
     uint16_t life;
+    uint8_t durability;
     bool hasSocket;
     bool isAppraised;
     uint8_t refine;

@@ -209,6 +209,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     auto& item = prototype.set<Item>();
     item.isCreated = false;
     item.life = 1000;
+    item.durability = 100;
     item.hasSocket = false;
     item.isAppraised = false;
     item.refine = 0;

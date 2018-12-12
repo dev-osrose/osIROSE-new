@@ -34,7 +34,7 @@ class EntitySystem {
         }
 	
 	    template <typename T>
-	    T& get_component(RoseCommon::entity entity) {
+	    T& get_component(RoseCommon::Entity entity) {
 	        return registry.get<T>(entity);
         }
 

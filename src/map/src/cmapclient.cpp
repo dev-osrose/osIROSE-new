@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <cmath>
+#include "transform.h"
 #include "cmapclient.h"
 #include "cmapisc.h"
 #include "cmapserver.h"
@@ -185,7 +186,10 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_spawn(position.spawn);
           packet.set_mask(characterGraphics.face);
           packet.set_headGear(characterGraphics.hair);
-          //TODO: packet.set_equippedItems();
+          /*packet.set_equippedItems(Core::transform(inventory.getEquipped(), [entitySystem](const auto& entity) {
+            const auto& item = entitySystem->get_component<Component::Item>(entity);
+            const auto& data = entitySystemè>get_component<ItemDef>(entity);
+          }));*/
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);
           packet.set_hair(characterGraphics.hair);
@@ -208,14 +212,16 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_bodySize(stats.bodySize);
           packet.set_headSize(stats.headSize);
           packet.set_penaltyXp(level.penaltyXp);
-          packet.set_factionFame(faction.fame);
+          packet.set_factionFame(faction.factionFame);
           packet.set_factionPoints(faction.points);
           packet.set_guildId(guild.id);
           packet.set_guildContribution(guild.contribution);
           packet.set_guildRank(guild.rank);
           packet.set_pkFlag(basicInfo.pkFlag);
           packet.set_stamina(stamina.stamina);
-          packet.set_skills(skills.skills);
+          packet.set_skills(Core::transform(skills.skills, [](const auto& skill) {
+            return skill.get_id();
+          }));
           packet.set_hotbar(hotbar.items);
           packet.set_tag(basicInfo.tag);
           packet.set_name(basicInfo.name);
