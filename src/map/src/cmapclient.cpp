@@ -186,10 +186,17 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_spawn(position.spawn);
           packet.set_mask(characterGraphics.face);
           packet.set_headGear(characterGraphics.hair);
-          /*packet.set_equippedItems(Core::transform(inventory.getEquipped(), [entitySystem](const auto& entity) {
+          for (const auto& [i, entity] : inventory.getVisible()) {
             const auto& item = entitySystem->get_component<Component::Item>(entity);
             const auto& data = entitySystemè>get_component<ItemDef>(entity);
-          }));*/
+
+            Packet::SrvSelectCharReply::EquippedItem item;
+            item.set_id(data.id);
+            item.set_gem_opt(item.gemOpt);
+            item.set_socket(item.hasSocket);
+            item.set_grade(item.refine);
+            packet.set_equippedItems(item, to3dDataPosition(i));
+          }
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);
           packet.set_hair(characterGraphics.hair);

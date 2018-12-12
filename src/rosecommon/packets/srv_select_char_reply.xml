@@ -4,8 +4,12 @@
     <element name = "x" type = "float" default = "0" />
     <element name = "y" type = "float" default = "0" />
     <element name = "spawn" type = "uint16_t" default = "0" />
-    <element name = "mask" type = "uint32_t" default = "0" />
-    <element name = "headGear" type = "uint32_t" default = "0" />
+    <element name = "mask" type = "uint32_t" default = "0">
+        <documentation>It's actually the body part face that is expected here</documentation>
+    </element>
+    <element name = "headGear" type = "uint32_t" default = "0">
+        <documentation>It's actually the body part hair that is expected here</documentation>
+    </element>
     <includeXml path = "equipped_item.xml" default = "0" />
     <element name = "equippedItems" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" default = "{}" />
     <element name = "stone" type = "uint8_t" default = "0" />

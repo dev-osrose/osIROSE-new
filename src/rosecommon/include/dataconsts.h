@@ -83,6 +83,30 @@ enum EquippedPosition : uint8_t {
     MAX_EQUIP_ITEMS
 };
 
+constexpr unsigned int MAX_VISIBLE_ITEMS = 8;
+
+constexpr uint8_t to3DDataPosition(uint8_t position) {
+    switch (position) {
+        case 1: // GOGGLES
+            return 4;
+        case 2: // HELMET
+            return 0;
+        case 3: // ARMOR
+            return 1;
+        case 4: // BACKPACK
+            return 5;
+        case 5: // GAUNTLET
+            return 2;
+        case 6: // BOOTS
+            return 3;
+        case 7: // WEAPON R
+            return 6;
+        case 8: // WEAPON L
+            return 7;
+    }
+    return 0;
+}
+
 constexpr unsigned int MAX_INVENTORY = 120;
 
 constexpr unsigned int MAX_ITEMS = MAX_INVENTORY + BulletType::MAX_BULLET_TYPES + RidingItem::MAX_RIDING_ITEMS + EquippedPosition::MAX_EQUIP_ITEMS;

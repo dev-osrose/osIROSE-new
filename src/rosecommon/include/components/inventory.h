@@ -30,6 +30,10 @@ struct Inventory {
         return { items, 1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS };
     }
 
+    constexpr wrapper getVisible() {
+        return { items, 1, RoseCommon::EquippedPosition::MAX_VISIBLE_ITEMS };
+    }
+
     constexpr wrapper getBullets() {
         return { items, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES };
     }
