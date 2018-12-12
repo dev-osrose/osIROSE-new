@@ -238,7 +238,35 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           send(packet);
 
-          send(Packet::SrvInventoryData::create((int64_t)0)); // it's zuly
+          auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
+          packet.set_inventory(Core::transform(inventory.items, [entitySystem](const auto& entity) {
+              const auto& item = entitySystem->get_component<Component::Item>(entity);
+              const auto& data = entitySystem->get_component<ItemDef>(entity);
+              
+              Packet::SrvInventoryData::Header header;
+              Packet::SrvInventoryData::Data data;
+              Packet::SrvInventoryData::Item item;
+              
+              header.set_isCreated(item.isCreated);
+              header.set_id(data.id);
+              header.set_type(data.type);
+              
+              if (item.count == 0) {
+                data.set_refine(item.refine);
+                data.set_isAppraised(item.isAppraised);
+                data.set_hasSocket(item.hasSocket);
+                data.set_life(item.life);
+                data.set_durability(item.durability);
+                data.set_gem_opt(item.gemOpt);
+              } else {
+                data.set_count(item.count);
+              }
+              
+              item.set_header(header);
+              item.set_data(data);
+              return item;
+          });
+          send(packetInv);
 
           send(Packet::SrvQuestData::create());
 
