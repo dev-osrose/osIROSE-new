@@ -3,6 +3,7 @@
 
     <include path = "string" system = "true" />
 
+    <includeXml path = "equipped_position.xml" />
     <includeXml path = "equipped_item.xml" />
 
     <complexType name = "CharInfo">
