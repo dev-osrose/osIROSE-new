@@ -57,6 +57,59 @@ class EntitySystem {
         T& add_component(RoseCommon::Entity entity) {
             return registry.assign<T>(entity);
         }
+	
+	template <typename T>
+	auto item_to_equipped(RoseCommon::Entity entity) const {
+	    const auto& item = entitySystem->get_component<Component::Item>(entity);
+        const auto& data = entitySystem->get_component<ItemDef>(entity);
+
+        typename T::EquippedItem item;
+        item.set_id(data.id);
+        item.set_gem_opt(item.gemOpt);
+        item.set_socket(item.hasSocket);
+        item.set_grade(item.refine);
+        return item;
+	}
+    
+    template <typename T>
+    auto item_to_header(RoseCommon::Entity entity) const {
+        const auto& item = entitySystem->get_component<Component::Item>(entity);
+        const auto& data = entitySystem->get_component<ItemDef>(entity);
+        
+        typename T::Header header;
+        header.set_isCreated(item.isCreated);
+        header.set_id(data.id);
+        header.set_type(data.type);
+        
+        return header;
+    }
+    
+    template <typename T>
+    auto item_to_data(RoseCommon::Entity entity) const {
+        const auto& item = entitySystem->get_component<Component::Item>(entity);
+        const auto& data = entitySystem->get_component<ItemDef>(entity);
+        
+        typename T::Data data;
+        if (item.count == 0) {
+            data.set_refine(item.refine);
+            data.set_isAppraised(item.isAppraised);
+            data.set_hasSocket(item.hasSocket);
+            data.set_life(item.life);
+            data.set_durability(item.durability);
+            data.set_gem_opt(item.gemOpt);
+        } else {
+            data.set_count(item.count);
+        }
+        return data;
+    }
+    
+    template <typename T>
+    auto item_to_item(RoseCommon::Entity entity) const {
+        typename T::Item item;
+        item.set_header(item_to_header(entity));
+        item.set_data(item_to_data(entity));
+        return item;
+    }
 
     private:
         Core::MWSRQueue<std::deque<std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
