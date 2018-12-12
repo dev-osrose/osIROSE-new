@@ -187,14 +187,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_mask(characterGraphics.face);
           packet.set_headGear(characterGraphics.hair);
           packet.set_equippedItems(Core::transform(inventory.getVisible(), [entitySystem](const auto& entity) {
-            const auto& item = entitySystem->get_component<Component::Item>(entity);
-            const auto& data = entitySystem->get_component<ItemDef>(entity);
-
-            Packet::SrvSelectCharReply::EquippedItem item;
-            item.set_id(data.id);
-            item.set_gem_opt(item.gemOpt);
-            item.set_socket(item.hasSocket);
-            item.set_grade(item.refine);
+            return entitySystem->item_to_equipped<decltype(packet)>(entity);
           }));
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);
@@ -236,31 +229,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
           packet.set_inventory(Core::transform(inventory.items, [entitySystem](const auto& entity) {
-              const auto& item = entitySystem->get_component<Component::Item>(entity);
-              const auto& data = entitySystem->get_component<ItemDef>(entity);
-              
-              Packet::SrvInventoryData::Header header;
-              Packet::SrvInventoryData::Data data;
-              Packet::SrvInventoryData::Item item;
-              
-              header.set_isCreated(item.isCreated);
-              header.set_id(data.id);
-              header.set_type(data.type);
-              
-              if (item.count == 0) {
-                data.set_refine(item.refine);
-                data.set_isAppraised(item.isAppraised);
-                data.set_hasSocket(item.hasSocket);
-                data.set_life(item.life);
-                data.set_durability(item.durability);
-                data.set_gem_opt(item.gemOpt);
-              } else {
-                data.set_count(item.count);
-              }
-              
-              item.set_header(header);
-              item.set_data(data);
-              return item;
+              return entitySystem->item_to_item<decltype(packet)>(entity);
           }));
           send(packetInv);
 
