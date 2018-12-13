@@ -3,6 +3,7 @@
 #include <functional>
 #include <thread>
 #include <mutex>
+#include <vector>
 #include <condition_variable>
 #include <chrono>
 #include <future>
@@ -13,7 +14,7 @@ class TimedCallback {
         ~TimedCallback() {
             cv.notify_all();
             std::lock_guard<std::mutex> lock(mutex);
-            for (const auto& it : callbacks) {
+            for (auto& it : callbacks) {
                 it.thread.join();
             }
         }
@@ -22,7 +23,7 @@ class TimedCallback {
         void add_callback(const std::chrono::duration<Rep, Period>& timeout, std::function<void(void)>&& callback) {
             std::lock_guard<std::mutex> lock(mutex);
             // first we remove dead tasks from the vector
-            std::remove_if(callbacks.begin(), callbacks.end(), [](const auto& callback) {
+            std::remove_if(callbacks.begin(), callbacks.end(), [](auto& callback) {
                 if (callback.future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
                     callback.thread.join();
                     return true;
@@ -32,12 +33,12 @@ class TimedCallback {
             // we then add the callback
             std::promise<void> promise;
             std::future<void> future = promise.get_future();
-            std::thread thread([this, timeout, std::move(callback), std::move(promise)]() {
+            std::thread thread([this, timeout, callback = std::move(callback), promise = std::move(promise)]() mutable {
                 std::unique_lock<std::mutex> lock(mutex);
                 if (cv.wait_for(lock, timeout) == std::cv_status::timeout) {
                     callback();
                 }
-                promise.set_value();
+                promise.set_value_at_thread_exit();
             });
             callbacks.emplace_back(std::move(thread), std::move(future));
         }
