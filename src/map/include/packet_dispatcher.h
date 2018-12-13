@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <functional>
 #include <type_traits>
+#include <chrono>
 
 class PacketDispatcher {
     public:
@@ -27,13 +28,13 @@ class PacketDispatcher {
     
         <template typename PacketType, typename Func>
         void add_dispatcher(ePacketType type, Func&& func) {
-            static_assert(std::is_invocable<Func, RoseCommon::Entity, const PacketType&>::value, "registering function must be of the form void(*)(RoseCommon::Entity, const PacketType&)");
-            dispatcher.emplace(type, [func = std::forward<Func>(func)](RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) mutable {
+            static_assert(std::is_invocable<Func, RoseCommon::Registry&, RoseCommon::Entity, std::chrono::milliseconds, const PacketType&>::value, "registering function must be of the form void(*)(RoseCommon::Entity, const PacketType&)");
+            dispatcher.emplace(type, [func = std::forward<Func>(func)](RoseCommon::Registry& registry, RoseCommon::Entity entity, std::chrono::milliseconds dt, const RoseCommon::CRosePacket& packet) mutable {
                 PacketType *p = dynamic_cast<PacketType*>(&packet);
                 if (p == nullptr) {
                     return;
                 }
-                func(entity, *p);
+                func(registry, entity, dt, *p);
             });
         }
     
