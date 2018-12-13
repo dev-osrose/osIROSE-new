@@ -11,6 +11,7 @@
 #include "components/item.h"
 #include "itemdb.h"
 #include "timed_callbacks.h"
+#include "packet_dispatcher.h"
 
 using namespace std::chrono_literals;
 
@@ -20,6 +21,17 @@ class EntitySystem {
         ~EntitySystem();
 
         void update(std::chrono::milliseconds);
+	
+	    template <typename T>
+	    bool dispatch_packet(RoseCommon::Entity entity, T&& packet) {
+		    if (!dispatcher.is_supported(packet)) {
+                return false;
+            }
+            add_task([this, entity, packet = std::forward<T>(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
+                dispatcher.dispatch(registry, entity, dt, std::forward<T>(packet));
+            });
+            return true;
+	    }
 
         void add_task(std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& task);
 
@@ -127,4 +139,5 @@ class EntitySystem {
         std::mutex access;
         IdManager idManager;
 	    TimedCallbacks timers;
+        PacketDispatcher dispatcher;
 };
