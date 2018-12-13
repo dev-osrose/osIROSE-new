@@ -22,13 +22,12 @@ class EntitySystem {
 
         void update(std::chrono::milliseconds);
 	
-	    template <typename T>
-	    bool dispatch_packet(RoseCommon::Entity entity, T&& packet) {
+	    bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
 		    if (!dispatcher.is_supported(packet)) {
-                return false;
+		        return false;
             }
-            add_task([this, entity, packet = std::forward<T>(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
-                dispatcher.dispatch(registry, entity, dt, std::forward<T>(packet));
+            add_task([this, entity, packet = std::move(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
+                dispatcher.dispatch(registry, entity, dt, std::move(packet));
             });
             return true;
 	    }
