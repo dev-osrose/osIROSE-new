@@ -9,9 +9,9 @@
 #include <future>
 #include <algorithm>
 
-class TimedCallback {
+class TimedCallbacks {
     public:
-        ~TimedCallback() {
+        ~TimedCallbacks() {
             cv.notify_all();
             std::lock_guard<std::mutex> lock(mutex);
             for (auto& it : callbacks) {
