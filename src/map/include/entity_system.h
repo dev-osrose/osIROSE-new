@@ -23,9 +23,12 @@ class EntitySystem {
         void update(std::chrono::milliseconds);
 	
 	    bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
-		    if (!dispatcher.is_supported(packet)) {
+		    if (!packet) {
+			return false;
+		    }
+		    if (!dispatcher.is_supported(*packet.get())) {
 		        return false;
-            }
+            	}
             add_task([this, entity, packet = std::move(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
                 dispatcher.dispatch(registry, entity, dt, std::move(packet));
             });
