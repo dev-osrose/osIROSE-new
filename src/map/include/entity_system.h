@@ -111,6 +111,13 @@ class EntitySystem {
         item.set_data(item_to_data<T>(entity));
         return item;
     }
+	
+    template <class Rep, class Period>
+    void add_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& callback) {
+        timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
+            add_task(std::move(callback));
+        });
+    }
 
     private:
         Core::MWSRQueue<std::deque<std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
@@ -119,5 +126,5 @@ class EntitySystem {
 		std::chrono::milliseconds maxTimePerUpdate;
         std::mutex access;
         IdManager idManager;
-	TimedCallbacks timers;
+	    TimedCallbacks timers;
 };
