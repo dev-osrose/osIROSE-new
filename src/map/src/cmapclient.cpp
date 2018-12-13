@@ -91,6 +91,9 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
     return CRoseClient::handlePacket(_buffer);
   }
+  if (entitySystem->dispatch_packet(entity, RoseCommon::fetchPacket(_buffer)) {
+      return true;
+  }
   logger_->warn("Packet {} not handled", to_underlying(CRosePacket::type(_buffer)));
   return true;
 }
