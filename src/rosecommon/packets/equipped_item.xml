@@ -6,6 +6,6 @@
             <element name = "socket" type = "unsigned int" bits = "1" />
             <element name = "grade" type = "unsigned int" bits = "4" />
         </sequence>
-        <element name = "data" type = "uint32_t" />
+        <element name = "data" type = "uint32_t" default = "0" />
     </choice>
 </complexType>

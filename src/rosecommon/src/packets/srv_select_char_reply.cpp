@@ -81,14 +81,14 @@ SrvSelectCharReply::SrvSelectCharReply(CRoseReader reader) : CRosePacket(reader)
     if (!reader.get_uint16_t(spawn)) {
         return;
     }
-    if (!reader.get_uint32_t(mask)) {
+    if (!reader.get_uint32_t(bodyFace)) {
         return;
     }
-    if (!reader.get_uint32_t(headGear)) {
+    if (!reader.get_uint32_t(bodyHair)) {
         return;
     }
-    for (size_t index = 0; index < EquippedPosition::MAX_ITEMS; ++index) {
-        if (!reader.get_iserialize(inventory[index])) {
+    for (size_t index = 0; index < MAX_VISIBLE_ITEMS; ++index) {
+        if (!reader.get_iserialize(equippedItems[index])) {
             return;
         }
     }
@@ -252,36 +252,36 @@ uint16_t SrvSelectCharReply::get_spawn() const {
     return spawn;
 }
 
-void SrvSelectCharReply::set_mask(const uint32_t mask) {
-    this->mask = mask;
+void SrvSelectCharReply::set_bodyFace(const uint32_t bodyFace) {
+    this->bodyFace = bodyFace;
 }
 
-uint32_t SrvSelectCharReply::get_mask() const {
-    return mask;
+uint32_t SrvSelectCharReply::get_bodyFace() const {
+    return bodyFace;
 }
 
-void SrvSelectCharReply::set_headGear(const uint32_t headGear) {
-    this->headGear = headGear;
+void SrvSelectCharReply::set_bodyHair(const uint32_t bodyHair) {
+    this->bodyHair = bodyHair;
 }
 
-uint32_t SrvSelectCharReply::get_headGear() const {
-    return headGear;
+uint32_t SrvSelectCharReply::get_bodyHair() const {
+    return bodyHair;
 }
 
-void SrvSelectCharReply::set_inventory(const std::array<SrvSelectCharReply::EquippedItem, SrvSelectCharReply::EquippedPosition::MAX_ITEMS>& inventory) {
-    this->inventory = inventory;
+void SrvSelectCharReply::set_equippedItems(const std::array<SrvSelectCharReply::EquippedItem, MAX_VISIBLE_ITEMS>& equippedItems) {
+    this->equippedItems = equippedItems;
 }
 
-void SrvSelectCharReply::set_inventory(const EquippedItem& inventory, size_t index) {
-    this->inventory[index] = inventory;
+void SrvSelectCharReply::set_equippedItems(const EquippedItem& equippedItems, size_t index) {
+    this->equippedItems[index] = equippedItems;
 }
 
-const std::array<SrvSelectCharReply::EquippedItem, SrvSelectCharReply::EquippedPosition::MAX_ITEMS>& SrvSelectCharReply::get_inventory() const {
-    return inventory;
+const std::array<SrvSelectCharReply::EquippedItem, MAX_VISIBLE_ITEMS>& SrvSelectCharReply::get_equippedItems() const {
+    return equippedItems;
 }
 
-const SrvSelectCharReply::EquippedItem& SrvSelectCharReply::get_inventory(size_t index) const {
-    return inventory[index];
+const SrvSelectCharReply::EquippedItem& SrvSelectCharReply::get_equippedItems(size_t index) const {
+    return equippedItems[index];
 }
 
 void SrvSelectCharReply::set_stone(const uint8_t stone) {
@@ -643,13 +643,13 @@ void SrvSelectCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(spawn)) {
         return;
     }
-    if (!writer.set_uint32_t(mask)) {
+    if (!writer.set_uint32_t(bodyFace)) {
         return;
     }
-    if (!writer.set_uint32_t(headGear)) {
+    if (!writer.set_uint32_t(bodyHair)) {
         return;
     }
-    for (const auto& elem : inventory) {
+    for (const auto& elem : equippedItems) {
         if (!writer.set_iserialize(elem)) {
             return;
         }
@@ -783,7 +783,7 @@ constexpr size_t SrvSelectCharReply::size() {
     size += sizeof(uint16_t);
     size += sizeof(uint32_t);
     size += sizeof(uint32_t);
-    size += EquippedItem::size() * EquippedPosition::MAX_ITEMS;
+    size += EquippedItem::size() * MAX_VISIBLE_ITEMS;
     size += sizeof(uint8_t);
     size += sizeof(uint8_t);
     size += sizeof(uint8_t);

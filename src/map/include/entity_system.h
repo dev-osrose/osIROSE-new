@@ -9,6 +9,7 @@
 #include "mwsrqueue.h"
 #include "id_manager.h"
 #include "components/item.h"
+#include "itemdb.h"
 
 using namespace std::chrono_literals;
 
@@ -60,21 +61,21 @@ class EntitySystem {
 	
 	template <typename T>
 	auto item_to_equipped(RoseCommon::Entity entity) const {
-	    const auto& item = entitySystem->get_component<Component::Item>(entity);
-        const auto& data = entitySystem->get_component<ItemDef>(entity);
+	    const auto& item = get_component<Component::Item>(entity);
+        const auto& data = get_component<RoseCommon::ItemDef>(entity);
 
-        typename T::EquippedItem item;
-        item.set_id(data.id);
-        item.set_gem_opt(item.gemOpt);
-        item.set_socket(item.hasSocket);
-        item.set_grade(item.refine);
-        return item;
+        typename T::EquippedItem itemPacket;
+        itemPacket.set_id(data.id);
+        itemPacket.set_gem_opt(item.gemOpt);
+        itemPacket.set_socket(item.hasSocket);
+        itemPacket.set_grade(item.refine);
+        return itemPacket;
 	}
     
     template <typename T>
     auto item_to_header(RoseCommon::Entity entity) const {
-        const auto& item = entitySystem->get_component<Component::Item>(entity);
-        const auto& data = entitySystem->get_component<ItemDef>(entity);
+        const auto& item = get_component<Component::Item>(entity);
+        const auto& data = get_component<RoseCommon::ItemDef>(entity);
         
         typename T::Header header;
         header.set_isCreated(item.isCreated);
@@ -86,8 +87,7 @@ class EntitySystem {
     
     template <typename T>
     auto item_to_data(RoseCommon::Entity entity) const {
-        const auto& item = entitySystem->get_component<Component::Item>(entity);
-        const auto& data = entitySystem->get_component<ItemDef>(entity);
+        const auto& item = get_component<Component::Item>(entity);
         
         typename T::Data data;
         if (item.count == 0) {
@@ -106,8 +106,8 @@ class EntitySystem {
     template <typename T>
     auto item_to_item(RoseCommon::Entity entity) const {
         typename T::Item item;
-        item.set_header(item_to_header(entity));
-        item.set_data(item_to_data(entity));
+        item.set_header(item_to_header<T>(entity));
+        item.set_data(item_to_data<T>(entity));
         return item;
     }
 

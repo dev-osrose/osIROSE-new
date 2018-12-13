@@ -1,45 +1,54 @@
 #pragma once
 
+#include "array_wrapper.h"
 #include "dataconsts.h"
 #include <array>
 #include <entt.hpp>
 
-namespace {
-template <typename T>
-struct array_wrapper { T& iterable; const size_t start; const size_t length; };
-
-template <typename T>
-auto begin(array_wrapper<T> w) {
-    return std::begin(w.iterable) + w.start;
-}
-
-template <typename T>
-auto end(array_wrapper<T> w) {
-    return std::begin(w.iterable) + w.start + w.length;
-}
-}
+#include <type_traits>
 
 namespace Component {
 struct Inventory {
     int64_t zuly;
     std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS> items = {entt::null };
 
-    using wrapper = array_wrapper<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>;
+    template <typename T, size_t N, size_t L>
+    using base_wrapper = Core::array_wrapper<T, N, L>;
+    template <size_t N, size_t L>
+    using wrapper = base_wrapper<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>, N, L>;
+    template <size_t N, size_t L>
+    using const_wrapper = base_wrapper<std::add_const_t<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>, N, L>;
 
-    constexpr wrapper getEquipped() {
-        return { items, 1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS };
+    constexpr wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() {
+        return { items };
     }
 
-    constexpr wrapper getVisible() {
-        return { items, 1, RoseCommon::EquippedPosition::MAX_VISIBLE_ITEMS };
+    constexpr wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() {
+        return { items };
     }
 
-    constexpr wrapper getBullets() {
-        return { items, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES };
+    constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() {
+        return { items };
     }
 
-    constexpr wrapper getRidingItems() {
-        return { items, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS };
+    constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() {
+        return { items };
+    }
+
+    constexpr const_wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
+        return { items };
+    }
+
+    constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
+        return { items };
+    }
+
+    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() const {
+        return { items };
+    }
+
+    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() const {
+        return { items };
     }
 };
 }

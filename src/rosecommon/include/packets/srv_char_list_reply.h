@@ -56,7 +56,7 @@ class SrvCharListReply : public CRosePacket {
                         unsigned int socket : 1;
                         unsigned int grade : 4;
                     });
-                    uint32_t data;
+                    uint32_t data = 0;
                 } data;
         };
         

@@ -20,18 +20,6 @@ class SrvSelectCharReply : public CRosePacket {
         static constexpr size_t size();
         
         
-        enum EquippedPosition : uint8_t {
-            HELMET = 0,
-            ARMOR = 1,
-            GAUNTLET = 2,
-            BOOTS = 3,
-            GOOGLES = 4,
-            BACKPACK = 5,
-            WEAPON_R = 6,
-            WEAPON_L = 7,
-            MAX_ITEMS = 8,
-        };
-        
         struct EquippedItem : public ISerialize {
             virtual bool read(CRoseReader&) override;
             virtual bool write(CRoseBasePolicy&) const override;
@@ -57,7 +45,7 @@ class SrvSelectCharReply : public CRosePacket {
                         unsigned int socket : 1;
                         unsigned int grade : 4;
                     });
-                    uint32_t data;
+                    uint32_t data = 0;
                 } data;
         };
         
@@ -72,14 +60,14 @@ class SrvSelectCharReply : public CRosePacket {
         float get_y() const;
         void set_spawn(const uint16_t);
         uint16_t get_spawn() const;
-        void set_mask(const uint32_t);
-        uint32_t get_mask() const;
-        void set_headGear(const uint32_t);
-        uint32_t get_headGear() const;
-        void set_inventory(const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>&);
-        void set_inventory(const EquippedItem&, size_t index);
-        const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>& get_inventory() const;
-        const EquippedItem& get_inventory(size_t index) const;
+        void set_bodyFace(const uint32_t);
+        uint32_t get_bodyFace() const;
+        void set_bodyHair(const uint32_t);
+        uint32_t get_bodyHair() const;
+        void set_equippedItems(const std::array<EquippedItem, MAX_VISIBLE_ITEMS>&);
+        void set_equippedItems(const EquippedItem&, size_t index);
+        const std::array<EquippedItem, MAX_VISIBLE_ITEMS>& get_equippedItems() const;
+        const EquippedItem& get_equippedItems(size_t index) const;
         void set_stone(const uint8_t);
         uint8_t get_stone() const;
         void set_face(const uint8_t);
@@ -177,9 +165,11 @@ class SrvSelectCharReply : public CRosePacket {
         float x = 0;
         float y = 0;
         uint16_t spawn = 0;
-        uint32_t mask = 0;
-        uint32_t headGear = 0;
-        std::array<EquippedItem, EquippedPosition::MAX_ITEMS> inventory = {};
+        // It's actually the face that is expected here
+        uint32_t bodyFace = 0;
+        // It's actually the hair that is expected here
+        uint32_t bodyHair = 0;
+        std::array<EquippedItem, MAX_VISIBLE_ITEMS> equippedItems = {};
         uint8_t stone = 0;
         uint8_t face = 0;
         uint8_t hair = 0;
