@@ -10,6 +10,7 @@
 #include "id_manager.h"
 #include "components/item.h"
 #include "itemdb.h"
+#include "timed_callbacks.h"
 
 using namespace std::chrono_literals;
 
@@ -118,4 +119,5 @@ class EntitySystem {
 		std::chrono::milliseconds maxTimePerUpdate;
         std::mutex access;
         IdManager idManager;
+	TimedCallbacks timers;
 };
