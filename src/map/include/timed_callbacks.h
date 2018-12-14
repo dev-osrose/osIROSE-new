@@ -9,6 +9,8 @@
 #include <future>
 #include <algorithm>
 
+#include "fire_once.h"
+
 class TimedCallbacks {
     public:
         ~TimedCallbacks() {
@@ -19,8 +21,9 @@ class TimedCallbacks {
             }
         }
         
-        template <class Rep, class Period>
-        void add_callback(const std::chrono::duration<Rep, Period>& timeout, std::function<void(void)>&& callback) {
+        template <class Rep, class Period, class Func>
+        void add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+            static_assert(std::is_invocable_v<Func>, "error should be void(*)()");
             std::lock_guard<std::mutex> lock(mutex);
             // first we remove dead tasks from the vector
             std::remove_if(callbacks.begin(), callbacks.end(), [](auto& callback) {
@@ -36,7 +39,7 @@ class TimedCallbacks {
             std::thread thread([this, timeout, callback = std::move(callback), promise = std::move(promise)]() mutable {
                 std::unique_lock<std::mutex> lock(mutex);
                 if (cv.wait_for(lock, timeout) == std::cv_status::timeout) {
-                    callback();
+                    std::invoke(callback);
                 }
                 promise.set_value_at_thread_exit();
             });
