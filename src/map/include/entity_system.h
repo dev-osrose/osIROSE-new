@@ -7,6 +7,7 @@
 #include "dataconsts.h"
 #include "logconsole.h"
 #include "mwsrqueue.h"
+#include "fire_once.h"
 #include "id_manager.h"
 #include "components/item.h"
 #include "itemdb.h"
@@ -35,7 +36,11 @@ class EntitySystem {
             return true;
 	    }
 
-        void add_task(std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& task);
+		template <typename Func>
+        void add_task(Func&& task) {
+			static_assert(std::is_invocable_v<Func, RoseCommon::Registry&, std::chrono::milliseconds>, "task should be of the form void(*)(RoseCommon::Registry&, std::chrono::milliseconds)");
+			work_queue.push_back(std::forward<Func>(task));
+		}
 
         RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId);
         void save_character(RoseCommon::Entity) const;
@@ -127,14 +132,14 @@ class EntitySystem {
     }
 	
     template <class Rep, class Period>
-    void add_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& callback) {
+    void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
             add_task(std::move(callback));
         });
     }
 
     private:
-        Core::MWSRQueue<std::deque<std::function<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
+        Core::MWSRQueue<std::deque<Core::fire_once<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
 		std::chrono::milliseconds maxTimePerUpdate;
