@@ -36,10 +36,10 @@ class TimedCallbacks {
             // we then add the callback
             std::promise<void> promise;
             std::future<void> future = promise.get_future();
-            std::thread thread([this, timeout, callback = std::move(callback), promise = std::move(promise)]() mutable {
+            std::thread thread([this, timeout, callback = std::forward<Func>(callback), promise = std::move(promise)]() mutable {
                 std::unique_lock<std::mutex> lock(mutex);
                 if (cv.wait_for(lock, timeout) == std::cv_status::timeout) {
-                    std::invoke(callback);
+                    std::invoke(std::forward<Func>(callback));
                 }
                 promise.set_value_at_thread_exit();
             });
