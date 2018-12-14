@@ -9,6 +9,7 @@ namespace Packet {
 
 class SrvSwitchServer : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCC_SWITCH_SERVER;
         SrvSwitchServer();
         SrvSwitchServer(CRoseReader reader);
         SrvSwitchServer(SrvSwitchServer&&) = default;

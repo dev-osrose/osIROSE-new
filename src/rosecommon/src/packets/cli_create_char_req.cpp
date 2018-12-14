@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliCreateCharReq::CliCreateCharReq() : CRosePacket(ePacketType::PAKCS_CREATE_CHAR_REQ) {}
+CliCreateCharReq::CliCreateCharReq() : CRosePacket(CliCreateCharReq::PACKET_ID) {}
 
 CliCreateCharReq::CliCreateCharReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(race)) {

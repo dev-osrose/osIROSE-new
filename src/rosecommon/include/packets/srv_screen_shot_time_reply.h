@@ -8,6 +8,7 @@ namespace Packet {
 
 class SrvScreenShotTimeReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY;
         SrvScreenShotTimeReply();
         SrvScreenShotTimeReply(CRoseReader reader);
         SrvScreenShotTimeReply(SrvScreenShotTimeReply&&) = default;

@@ -10,6 +10,7 @@ namespace Packet {
 
 class IscServerRegister : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::ISC_SERVER_REGISTER;
         IscServerRegister();
         IscServerRegister(CRoseReader reader);
         IscServerRegister(IscServerRegister&&) = default;

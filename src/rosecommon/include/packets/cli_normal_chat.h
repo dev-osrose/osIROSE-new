@@ -9,6 +9,7 @@ namespace Packet {
 
 class CliNormalChat : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_NORMAL_CHAT;
         CliNormalChat();
         CliNormalChat(CRoseReader reader);
         CliNormalChat(CliNormalChat&&) = default;

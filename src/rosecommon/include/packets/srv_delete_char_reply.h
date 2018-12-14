@@ -9,6 +9,7 @@ namespace Packet {
 
 class SrvDeleteCharReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCC_DELETE_CHAR_REPLY;
         SrvDeleteCharReply();
         SrvDeleteCharReply(CRoseReader reader);
         SrvDeleteCharReply(SrvDeleteCharReply&&) = default;

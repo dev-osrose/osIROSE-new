@@ -10,6 +10,7 @@ namespace Packet {
 
 class SrvQuestData : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_QUEST_DATA;
         SrvQuestData();
         SrvQuestData(CRoseReader reader);
         SrvQuestData(SrvQuestData&&) = default;

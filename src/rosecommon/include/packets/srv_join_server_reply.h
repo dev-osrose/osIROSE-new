@@ -8,6 +8,7 @@ namespace Packet {
 
 class SrvJoinServerReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKSC_JOIN_SERVER_REPLY;
         SrvJoinServerReply();
         SrvJoinServerReply(CRoseReader reader);
         SrvJoinServerReply(SrvJoinServerReply&&) = default;

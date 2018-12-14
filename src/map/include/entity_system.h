@@ -29,9 +29,9 @@ class EntitySystem {
 		    if (!dispatcher.is_supported(*packet.get())) {
 		        return false;
             	}
-            add_task([this, entity, packet = std::move(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
+            add_task(std::move([this, entity, packet = std::move(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
                 dispatcher.dispatch(registry, entity, dt, std::move(packet));
-            });
+            }));
             return true;
 	    }
 

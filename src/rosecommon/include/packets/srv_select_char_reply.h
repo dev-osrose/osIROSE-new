@@ -11,6 +11,7 @@ namespace Packet {
 
 class SrvSelectCharReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_SELECT_CHAR_REPLY;
         SrvSelectCharReply();
         SrvSelectCharReply(CRoseReader reader);
         SrvSelectCharReply(SrvSelectCharReply&&) = default;

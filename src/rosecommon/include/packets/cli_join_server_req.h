@@ -9,6 +9,7 @@ namespace Packet {
 
 class CliJoinServerReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_JOIN_SERVER_REQ;
         CliJoinServerReq();
         CliJoinServerReq(CRoseReader reader);
         CliJoinServerReq(CliJoinServerReq&&) = default;

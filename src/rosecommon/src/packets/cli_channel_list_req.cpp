@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliChannelListReq::CliChannelListReq() : CRosePacket(ePacketType::PAKCS_CHANNEL_LIST_REQ) {}
+CliChannelListReq::CliChannelListReq() : CRosePacket(CliChannelListReq::PACKET_ID) {}
 
 CliChannelListReq::CliChannelListReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint32_t(serverId)) {

@@ -92,7 +92,7 @@ constexpr size_t SrvChannelListReply::ChannelInfo::size() {
 }
 
 
-SrvChannelListReply::SrvChannelListReply() : CRosePacket(ePacketType::PAKLC_CHANNEL_LIST_REPLY) {}
+SrvChannelListReply::SrvChannelListReply() : CRosePacket(SrvChannelListReply::PACKET_ID) {}
 
 SrvChannelListReply::SrvChannelListReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint32_t(id)) {

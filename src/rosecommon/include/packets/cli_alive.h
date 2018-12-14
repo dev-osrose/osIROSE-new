@@ -8,6 +8,7 @@ namespace Packet {
 
 class CliAlive : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_ALIVE;
         CliAlive();
         CliAlive(CRoseReader reader);
         CliAlive(CliAlive&&) = default;

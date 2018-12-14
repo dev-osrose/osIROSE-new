@@ -63,7 +63,7 @@ constexpr size_t SrvSelectCharReply::EquippedItem::size() {
 }
 
 
-SrvSelectCharReply::SrvSelectCharReply() : CRosePacket(ePacketType::PAKWC_SELECT_CHAR_REPLY) {}
+SrvSelectCharReply::SrvSelectCharReply() : CRosePacket(SrvSelectCharReply::PACKET_ID) {}
 
 SrvSelectCharReply::SrvSelectCharReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(race)) {

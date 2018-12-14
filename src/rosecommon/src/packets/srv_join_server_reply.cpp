@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvJoinServerReply::SrvJoinServerReply() : CRosePacket(ePacketType::PAKSC_JOIN_SERVER_REPLY) {}
+SrvJoinServerReply::SrvJoinServerReply() : CRosePacket(SrvJoinServerReply::PACKET_ID) {}
 
 SrvJoinServerReply::SrvJoinServerReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)result)) {

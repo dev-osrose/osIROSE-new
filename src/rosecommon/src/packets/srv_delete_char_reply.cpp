@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvDeleteCharReply::SrvDeleteCharReply() : CRosePacket(ePacketType::PAKCC_DELETE_CHAR_REPLY) {}
+SrvDeleteCharReply::SrvDeleteCharReply() : CRosePacket(SrvDeleteCharReply::PACKET_ID) {}
 
 SrvDeleteCharReply::SrvDeleteCharReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint32_t(remainingTime)) {

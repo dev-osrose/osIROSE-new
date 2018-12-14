@@ -42,7 +42,7 @@ constexpr size_t CliJoinServerReq::Password::size() {
 
 
 
-CliJoinServerReq::CliJoinServerReq() : CRosePacket(ePacketType::PAKCS_JOIN_SERVER_REQ) {}
+CliJoinServerReq::CliJoinServerReq() : CRosePacket(CliJoinServerReq::PACKET_ID) {}
 
 CliJoinServerReq::CliJoinServerReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint32_t(sessionId)) {

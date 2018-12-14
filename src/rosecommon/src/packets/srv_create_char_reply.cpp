@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvCreateCharReply::SrvCreateCharReply() : CRosePacket(ePacketType::PAKCC_CREATE_CHAR_REPLY) {}
+SrvCreateCharReply::SrvCreateCharReply() : CRosePacket(SrvCreateCharReply::PACKET_ID) {}
 
 SrvCreateCharReply::SrvCreateCharReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)result)) {

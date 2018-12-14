@@ -222,7 +222,7 @@ constexpr size_t SrvCharListReply::CharInfo::size() {
 }
 
 
-SrvCharListReply::SrvCharListReply() : CRosePacket(ePacketType::PAKCC_CHAR_LIST_REPLY) {}
+SrvCharListReply::SrvCharListReply() : CRosePacket(SrvCharListReply::PACKET_ID) {}
 
 SrvCharListReply::SrvCharListReply(CRoseReader reader) : CRosePacket(reader) {
     {

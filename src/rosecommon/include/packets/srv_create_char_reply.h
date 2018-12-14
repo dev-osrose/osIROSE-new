@@ -8,6 +8,7 @@ namespace Packet {
 
 class SrvCreateCharReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCC_CREATE_CHAR_REPLY;
         SrvCreateCharReply();
         SrvCreateCharReply(CRoseReader reader);
         SrvCreateCharReply(SrvCreateCharReply&&) = default;

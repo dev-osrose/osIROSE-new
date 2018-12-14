@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-IscShutdown::IscShutdown() : CRosePacket(ePacketType::ISC_SHUTDOWN) {}
+IscShutdown::IscShutdown() : CRosePacket(IscShutdown::PACKET_ID) {}
 
 IscShutdown::IscShutdown(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)serverType)) {

@@ -42,7 +42,7 @@ constexpr size_t CliLoginReq::Password::size() {
 
 
 
-CliLoginReq::CliLoginReq() : CRosePacket(ePacketType::PAKCS_LOGIN_REQ) {}
+CliLoginReq::CliLoginReq() : CRosePacket(CliLoginReq::PACKET_ID) {}
 
 CliLoginReq::CliLoginReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_iserialize(password)) {

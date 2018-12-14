@@ -8,6 +8,7 @@ namespace Packet {
 
 class CliChannelListReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_CHANNEL_LIST_REQ;
         CliChannelListReq();
         CliChannelListReq(CRoseReader reader);
         CliChannelListReq(CliChannelListReq&&) = default;

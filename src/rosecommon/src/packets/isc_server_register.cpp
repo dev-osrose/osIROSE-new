@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-IscServerRegister::IscServerRegister() : CRosePacket(ePacketType::ISC_SERVER_REGISTER) {}
+IscServerRegister::IscServerRegister() : CRosePacket(IscServerRegister::PACKET_ID) {}
 
 IscServerRegister::IscServerRegister(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)serverType)) {

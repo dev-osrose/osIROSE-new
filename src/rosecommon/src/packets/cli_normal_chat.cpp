@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliNormalChat::CliNormalChat() : CRosePacket(ePacketType::PAKCS_NORMAL_CHAT) {}
+CliNormalChat::CliNormalChat() : CRosePacket(CliNormalChat::PACKET_ID) {}
 
 CliNormalChat::CliNormalChat(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_string(message)) {

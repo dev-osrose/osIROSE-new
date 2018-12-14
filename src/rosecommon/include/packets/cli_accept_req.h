@@ -8,6 +8,7 @@ namespace Packet {
 
 class CliAcceptReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_ACCEPT_REQ;
         CliAcceptReq();
         CliAcceptReq(CRoseReader reader);
         CliAcceptReq(CliAcceptReq&&) = default;

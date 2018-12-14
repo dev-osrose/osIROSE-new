@@ -8,6 +8,7 @@ namespace Packet {
 
 class CliSrvSelectReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_SRV_SELECT_REQ;
         CliSrvSelectReq();
         CliSrvSelectReq(CRoseReader reader);
         CliSrvSelectReq(CliSrvSelectReq&&) = default;

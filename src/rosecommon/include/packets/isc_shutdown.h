@@ -9,6 +9,7 @@ namespace Packet {
 
 class IscShutdown : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::ISC_SHUTDOWN;
         IscShutdown();
         IscShutdown(CRoseReader reader);
         IscShutdown(IscShutdown&&) = default;

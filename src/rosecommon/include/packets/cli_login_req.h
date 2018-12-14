@@ -9,6 +9,7 @@ namespace Packet {
 
 class CliLoginReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_LOGIN_REQ;
         CliLoginReq();
         CliLoginReq(CRoseReader reader);
         CliLoginReq(CliLoginReq&&) = default;

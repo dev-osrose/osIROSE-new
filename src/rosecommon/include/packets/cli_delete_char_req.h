@@ -9,6 +9,7 @@ namespace Packet {
 
 class CliDeleteCharReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_DELETE_CHAR_REQ;
         CliDeleteCharReq();
         CliDeleteCharReq(CRoseReader reader);
         CliDeleteCharReq(CliDeleteCharReq&&) = default;

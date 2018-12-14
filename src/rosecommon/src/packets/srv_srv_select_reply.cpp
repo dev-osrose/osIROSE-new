@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvSrvSelectReply::SrvSrvSelectReply() : CRosePacket(ePacketType::PAKLC_SRV_SELECT_REPLY) {}
+SrvSrvSelectReply::SrvSrvSelectReply() : CRosePacket(SrvSrvSelectReply::PACKET_ID) {}
 
 SrvSrvSelectReply::SrvSrvSelectReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)result)) {

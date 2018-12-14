@@ -8,6 +8,7 @@ namespace Packet {
 
 class IscAlive : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::ISC_ALIVE;
         IscAlive();
         IscAlive(CRoseReader reader);
         IscAlive(IscAlive&&) = default;

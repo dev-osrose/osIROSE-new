@@ -8,6 +8,7 @@ namespace Packet {
 
 class CliCharListReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_CHAR_LIST_REQ;
         CliCharListReq();
         CliCharListReq(CRoseReader reader);
         CliCharListReq(CliCharListReq&&) = default;

@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliDeleteCharReq::CliDeleteCharReq() : CRosePacket(ePacketType::PAKCS_DELETE_CHAR_REQ) {}
+CliDeleteCharReq::CliDeleteCharReq() : CRosePacket(CliDeleteCharReq::PACKET_ID) {}
 
 CliDeleteCharReq::CliDeleteCharReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(charId)) {

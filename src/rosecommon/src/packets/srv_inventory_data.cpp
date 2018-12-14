@@ -172,7 +172,7 @@ constexpr size_t SrvInventoryData::Item::size() {
 }
 
 
-SrvInventoryData::SrvInventoryData() : CRosePacket(ePacketType::PAKWC_INVENTORY_DATA) {}
+SrvInventoryData::SrvInventoryData() : CRosePacket(SrvInventoryData::PACKET_ID) {}
 
 SrvInventoryData::SrvInventoryData(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_int64_t(zuly)) {

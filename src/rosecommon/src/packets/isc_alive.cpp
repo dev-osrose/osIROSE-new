@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-IscAlive::IscAlive() : CRosePacket(ePacketType::ISC_ALIVE) {}
+IscAlive::IscAlive() : CRosePacket(IscAlive::PACKET_ID) {}
 
 IscAlive::IscAlive(CRoseReader reader) : CRosePacket(reader) {
 }

@@ -9,6 +9,7 @@ namespace Packet {
 
 class CliCreateCharReq : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_CREATE_CHAR_REQ;
         CliCreateCharReq();
         CliCreateCharReq(CRoseReader reader);
         CliCreateCharReq(CliCreateCharReq&&) = default;

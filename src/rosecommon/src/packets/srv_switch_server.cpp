@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvSwitchServer::SrvSwitchServer() : CRosePacket(ePacketType::PAKCC_SWITCH_SERVER) {}
+SrvSwitchServer::SrvSwitchServer() : CRosePacket(SrvSwitchServer::PACKET_ID) {}
 
 SrvSwitchServer::SrvSwitchServer(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint16_t(port)) {

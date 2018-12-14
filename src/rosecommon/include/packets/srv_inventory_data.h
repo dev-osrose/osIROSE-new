@@ -10,6 +10,7 @@ namespace Packet {
 
 class SrvInventoryData : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_INVENTORY_DATA;
         SrvInventoryData();
         SrvInventoryData(CRoseReader reader);
         SrvInventoryData(SrvInventoryData&&) = default;

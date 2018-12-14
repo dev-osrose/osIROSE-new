@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvBillingMessage::SrvBillingMessage() : CRosePacket(ePacketType::PAKWC_BILLING_MESSAGE) {}
+SrvBillingMessage::SrvBillingMessage() : CRosePacket(SrvBillingMessage::PACKET_ID) {}
 
 SrvBillingMessage::SrvBillingMessage(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint16_t(functionType)) {

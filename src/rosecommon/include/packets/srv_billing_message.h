@@ -8,6 +8,7 @@ namespace Packet {
 
 class SrvBillingMessage : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_BILLING_MESSAGE;
         SrvBillingMessage();
         SrvBillingMessage(CRoseReader reader);
         SrvBillingMessage(SrvBillingMessage&&) = default;

@@ -284,7 +284,7 @@ constexpr size_t SrvQuestData::Quest::size() {
 }
 
 
-SrvQuestData::SrvQuestData() : CRosePacket(ePacketType::PAKWC_QUEST_DATA) {}
+SrvQuestData::SrvQuestData() : CRosePacket(SrvQuestData::PACKET_ID) {}
 
 SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
     for (size_t index = 0; index < MAX_CONDITIONS_EPISODE; ++index) {

@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliAlive::CliAlive() : CRosePacket(ePacketType::PAKCS_ALIVE) {}
+CliAlive::CliAlive() : CRosePacket(CliAlive::PACKET_ID) {}
 
 CliAlive::CliAlive(CRoseReader reader) : CRosePacket(reader) {
 }

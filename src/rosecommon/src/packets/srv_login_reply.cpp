@@ -62,7 +62,7 @@ constexpr size_t SrvLoginReply::ServerInfo::size() {
 }
 
 
-SrvLoginReply::SrvLoginReply() : CRosePacket(ePacketType::PAKLC_LOGIN_REPLY) {}
+SrvLoginReply::SrvLoginReply() : CRosePacket(SrvLoginReply::PACKET_ID) {}
 
 SrvLoginReply::SrvLoginReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t((uint8_t&)result)) {

@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliSrvSelectReq::CliSrvSelectReq() : CRosePacket(ePacketType::PAKCS_SRV_SELECT_REQ) {}
+CliSrvSelectReq::CliSrvSelectReq() : CRosePacket(CliSrvSelectReq::PACKET_ID) {}
 
 CliSrvSelectReq::CliSrvSelectReq(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint32_t(serverId)) {

@@ -8,6 +8,7 @@ namespace Packet {
 
 class SrvAcceptReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKSS_ACCEPT_REPLY;
         SrvAcceptReply();
         SrvAcceptReply(CRoseReader reader);
         SrvAcceptReply(SrvAcceptReply&&) = default;

@@ -10,6 +10,7 @@ namespace Packet {
 
 class SrvCharListReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCC_CHAR_LIST_REPLY;
         SrvCharListReply();
         SrvCharListReply(CRoseReader reader);
         SrvCharListReply(SrvCharListReply&&) = default;

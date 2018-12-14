@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-CliAcceptReq::CliAcceptReq() : CRosePacket(ePacketType::PAKCS_ACCEPT_REQ) {}
+CliAcceptReq::CliAcceptReq() : CRosePacket(CliAcceptReq::PACKET_ID) {}
 
 CliAcceptReq::CliAcceptReq(CRoseReader reader) : CRosePacket(reader) {
 }

@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvAcceptReply::SrvAcceptReply() : CRosePacket(ePacketType::PAKSS_ACCEPT_REPLY) {}
+SrvAcceptReply::SrvAcceptReply() : CRosePacket(SrvAcceptReply::PACKET_ID) {}
 
 SrvAcceptReply::SrvAcceptReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(result)) {

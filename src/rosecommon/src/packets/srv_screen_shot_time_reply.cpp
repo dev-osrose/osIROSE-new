@@ -5,7 +5,7 @@ using namespace RoseCommon::Packet;
 
 
 
-SrvScreenShotTimeReply::SrvScreenShotTimeReply() : CRosePacket(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY) {}
+SrvScreenShotTimeReply::SrvScreenShotTimeReply() : CRosePacket(SrvScreenShotTimeReply::PACKET_ID) {}
 
 SrvScreenShotTimeReply::SrvScreenShotTimeReply(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint16_t(year)) {

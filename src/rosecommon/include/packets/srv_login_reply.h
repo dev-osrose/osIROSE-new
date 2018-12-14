@@ -10,6 +10,7 @@ namespace Packet {
 
 class SrvLoginReply : public CRosePacket {
     public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKLC_LOGIN_REPLY;
         SrvLoginReply();
         SrvLoginReply(CRoseReader reader);
         SrvLoginReply(SrvLoginReply&&) = default;
