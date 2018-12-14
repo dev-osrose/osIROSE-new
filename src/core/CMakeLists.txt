@@ -24,6 +24,7 @@ set( SOURCES_HEADER
   include/mwsrqueue.h
   include/enumerate.h
   include/transform.h
+  include/fire_once.h
 )
 
 set( SOURCES_BASE
