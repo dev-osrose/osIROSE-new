@@ -6,6 +6,9 @@
 
 namespace Component {
 struct Wishlist {
-    std::array<RoseCommon::Entity, RoseCommon::MAX_WISHLIST> items = { entt::null };
+    Wishlist() {
+        items.fill(entt::null);
+    }
+    std::array<RoseCommon::Entity, RoseCommon::MAX_WISHLIST> items;
 };
 }

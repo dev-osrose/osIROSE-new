@@ -91,7 +91,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
     return CRoseClient::handlePacket(_buffer);
   }
-  if (entitySystem->dispatch_packet(entity, RoseCommon::fetchPacket(_buffer)) {
+  if (entitySystem->dispatch_packet(entity, RoseCommon::fetchPacket(_buffer))) {
       return true;
   }
   logger_->warn("Packet {} not handled", to_underlying(CRosePacket::type(_buffer)));
@@ -156,7 +156,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       bool platinium = false;
       platinium = row.platinium;
 
-      auto entity = entitySystem->load_character(charid_, platinium, sessionID);
+      entity = entitySystem->load_character(charid_, platinium, sessionID);
 
       if (true) {
         Core::Config& config = Core::Config::getInstance();
@@ -164,12 +164,13 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
 
-        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, 0)); // TODO: replace with a normal ID from the ECS
+        const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
+
+        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, basicInfo.id));
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
           auto packet = Packet::SrvSelectCharReply::create();
-          const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
           const auto& characterGraphics = entitySystem->get_component<Component::CharacterGraphics>(entity);
           const auto& position = entitySystem->get_component<Component::Position>(entity);
           const auto& inventory = entitySystem->get_component<Component::Inventory>(entity);
@@ -189,8 +190,8 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_spawn(position.spawn);
           packet.set_bodyFace(characterGraphics.face);
           packet.set_bodyHair(characterGraphics.hair);
-          packet.set_equippedItems(Core::transform(inventory.getVisible(), [this](const auto& entity) {
-            return entitySystem->item_to_equipped<decltype(packet)>(entity);
+          packet.set_equippedItems(Core::transform(inventory.getVisible(), [this](const auto& en) {
+            return entitySystem->item_to_equipped<decltype(packet)>(en);
           }));
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);

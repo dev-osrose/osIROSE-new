@@ -81,6 +81,9 @@ class EntitySystem {
 	
 	template <typename T>
 	auto item_to_equipped(RoseCommon::Entity entity) const {
+        if (entity == entt::null) {
+            return typename T::EquippedItem{};
+        }
 	    const auto& item = get_component<Component::Item>(entity);
         const auto& data = get_component<RoseCommon::ItemDef>(entity);
 
@@ -94,6 +97,9 @@ class EntitySystem {
     
     template <typename T>
     auto item_to_header(RoseCommon::Entity entity) const {
+        if (entity == entt::null) {
+            return typename T::Header{};
+        }
         const auto& item = get_component<Component::Item>(entity);
         const auto& data = get_component<RoseCommon::ItemDef>(entity);
         
@@ -107,6 +113,9 @@ class EntitySystem {
     
     template <typename T>
     auto item_to_data(RoseCommon::Entity entity) const {
+        if (entity == entt::null) {
+            return typename T::Data{};
+        }
         const auto& item = get_component<Component::Item>(entity);
         
         typename T::Data data;
@@ -125,7 +134,10 @@ class EntitySystem {
     
     template <typename T>
     auto item_to_item(RoseCommon::Entity entity) const {
-        typename T::Item item;
+        typename T::Item item{};
+        if (entity == entt::null) {
+            return item;
+        }
         item.set_header(item_to_header<T>(entity));
         item.set_data(item_to_data<T>(entity));
         return item;

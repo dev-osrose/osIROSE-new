@@ -15,7 +15,9 @@
 #ifndef _DATACONSTS_H_
 #define _DATACONSTS_H_
 
+#include "epackettype.h"
 #include "iserialize.h"
+#include "crosewriter.h"
 #include <chrono>
 #include <entt.hpp>
 

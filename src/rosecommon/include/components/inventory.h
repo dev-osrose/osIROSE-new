@@ -9,8 +9,11 @@
 
 namespace Component {
 struct Inventory {
+    Inventory() {
+        items.fill(entt::null);
+    }
     int64_t zuly;
-    std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS> items = {entt::null };
+    std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS> items;
 
     template <typename T, size_t N, size_t L>
     using base_wrapper = Core::array_wrapper<T, N, L>;
