@@ -7,6 +7,8 @@
 #include <type_traits>
 #include <chrono>
 
+class EntitySystem;
+
 class PacketDispatcher {
     public:
     
@@ -16,30 +18,30 @@ class PacketDispatcher {
             return std::distance(res.first, res.second) > 0;
         }
     
-        void dispatch(RoseCommon::Registry& registry, RoseCommon::Entity entity, std::chrono::milliseconds dt, std::unique_ptr<RoseCommon::CRosePacket> packet) {
+        void dispatch(EntitySystem& entitySystem, RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {
             if (!packet) {
                 return;
             }
             const RoseCommon::ePacketType type = packet->get_type();
             auto res = dispatcher.equal_range(type);
             for (auto it = res.first; it != res.second; ++it) {
-                it->second(registry, entity, dt, packet.get());
+                it->second(entitySystem, entity, packet.get());
             }
         }
     
         template <typename PacketType, typename Func>
         void add_dispatcher(RoseCommon::ePacketType type, Func&& func) {
-            static_assert(std::is_invocable<Func, RoseCommon::Registry&, RoseCommon::Entity, std::chrono::milliseconds, const PacketType&>::value,
-                          "registering function must be of the form void(*)(RoseCommon::Registry&, RoseCommon::Entity, std::chrono::milliseconds, const PacketType&)");
-            dispatcher.emplace(type, [func = std::forward<Func>(func)](RoseCommon::Registry& registry, RoseCommon::Entity entity, std::chrono::milliseconds dt, const RoseCommon::CRosePacket* packet) mutable {
+            static_assert(std::is_invocable<Func, EntitySystem&, RoseCommon::Entity, const PacketType&>::value,
+                          "registering function must be of the form void(*)(EntitySystem&, RoseCommon::Entity, const PacketType&)");
+            dispatcher.emplace(type, [func = std::forward<Func>(func)](EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::CRosePacket* packet) mutable {
                 PacketType *p = dynamic_cast<PacketType*>(packet);
                 if (p == nullptr) {
                     return;
                 }
-                func(registry, entity, dt, *p);
+                func(entitySystem, entity, *p);
             });
         }
     
     private:
-        std::unordered_map<RoseCommon::ePacketType, std::function<void(RoseCommon::Registry&, RoseCommon::Entity, std::chrono::milliseconds, const RoseCommon::CRosePacket*)>> dispatcher;
+        std::unordered_map<RoseCommon::ePacketType, std::function<void(EntitySystem&, RoseCommon::Entity, const RoseCommon::CRosePacket*)>> dispatcher;
 };

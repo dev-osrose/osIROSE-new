@@ -30,15 +30,15 @@ class EntitySystem {
 		    if (!dispatcher.is_supported(*packet.get())) {
 		        return false;
             	}
-            add_task(std::move([this, entity, packet = std::move(packet)](RoseCommon::Registry& registry, std::chrono::milliseconds dt) mutable {
-                dispatcher.dispatch(registry, entity, dt, std::move(packet));
+            add_task(std::move([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
+                dispatcher.dispatch(entitySystem, entity, std::move(packet));
             }));
             return true;
 	    }
 
 		template <typename Func>
         void add_task(Func&& task) {
-			static_assert(std::is_invocable_v<Func, RoseCommon::Registry&, std::chrono::milliseconds>, "task should be of the form void(*)(RoseCommon::Registry&, std::chrono::milliseconds)");
+			static_assert(std::is_invocable_v<Func, EntitySystem&>, "task should be of the form void(*)(EntitySystem&)");
 			work_queue.push_back(std::forward<Func>(task));
 		}
 
@@ -144,14 +144,14 @@ class EntitySystem {
     }
 	
     template <class Rep, class Period>
-    void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(RoseCommon::Registry&, std::chrono::milliseconds)>&& callback) {
+    void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
             add_task(std::move(callback));
         });
     }
 
     private:
-        Core::MWSRQueue<std::deque<Core::fire_once<void(RoseCommon::Registry&, std::chrono::milliseconds)>>> work_queue;
+        Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
 		std::chrono::milliseconds maxTimePerUpdate;

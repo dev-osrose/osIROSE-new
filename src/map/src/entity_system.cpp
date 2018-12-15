@@ -30,11 +30,11 @@ EntitySystem::~EntitySystem() {
     work_queue.kill();
 }
 
-void EntitySystem::update(std::chrono::milliseconds dt) {
+void EntitySystem::update(std::chrono::milliseconds) {
     auto start = Core::Time::GetTickCount();
     for (auto [res, task] = work_queue.pop_front(); res;) {
         std::lock_guard<std::mutex> lock(access);
-        std::invoke(std::move(task), registry, dt);
+        std::invoke(std::move(task), *this);
         const std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - start);
         if (diff >= maxTimePerUpdate) {
             logger->warn("Stopping after {}ms, {} tasks remaining", maxTimePerUpdate.count(), work_queue.size());
