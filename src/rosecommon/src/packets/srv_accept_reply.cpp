@@ -8,7 +8,7 @@ using namespace RoseCommon::Packet;
 SrvAcceptReply::SrvAcceptReply() : CRosePacket(SrvAcceptReply::PACKET_ID) {}
 
 SrvAcceptReply::SrvAcceptReply(CRoseReader reader) : CRosePacket(reader) {
-    if (!reader.get_uint8_t(result)) {
+    if (!reader.get_uint8_t((uint8_t&)result)) {
         return;
     }
     if (!reader.get_uint32_t(randValue)) {
@@ -16,11 +16,11 @@ SrvAcceptReply::SrvAcceptReply(CRoseReader reader) : CRosePacket(reader) {
     }
 }
 
-void SrvAcceptReply::set_result(const uint8_t result) {
+void SrvAcceptReply::set_result(const SrvAcceptReply::Result result) {
     this->result = result;
 }
 
-uint8_t SrvAcceptReply::get_result() const {
+SrvAcceptReply::Result SrvAcceptReply::get_result() const {
     return result;
 }
 
@@ -32,7 +32,7 @@ uint32_t SrvAcceptReply::get_randValue() const {
     return randValue;
 }
 
-SrvAcceptReply SrvAcceptReply::create(const uint8_t& result, const uint32_t& randValue) {
+SrvAcceptReply SrvAcceptReply::create(const SrvAcceptReply::Result& result, const uint32_t& randValue) {
     SrvAcceptReply packet;
     packet.set_result(result);
     packet.set_randValue(randValue);
@@ -60,7 +60,7 @@ void SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvAcceptReply::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
+    size += sizeof(Result);
     size += sizeof(uint32_t);
     return size;
 }

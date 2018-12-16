@@ -185,7 +185,7 @@ bool CRoseSocket::handlePacket(uint8_t* _buffer) {
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-      auto packet = Packet::SrvAcceptReply::create(0, std::time(nullptr));
+      auto packet = Packet::SrvAcceptReply::create(Packet::SrvAcceptReply::ACCEPTED, std::time(nullptr));
       send(packet);
       break;
     }

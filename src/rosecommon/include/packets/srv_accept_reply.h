@@ -18,14 +18,21 @@ class SrvAcceptReply : public CRosePacket {
         static constexpr size_t size();
         
         
+        enum Result : uint8_t {
+            CONNECT = 1,
+            ACCEPTED = 2,
+            DISCONNECT = 3,
+            DERVERDEAD = 4,
+        };
         
-        void set_result(const uint8_t);
-        uint8_t get_result() const;
+        
+        void set_result(const Result);
+        Result get_result() const;
         void set_randValue(const uint32_t);
         uint32_t get_randValue() const;
         
         
-        static SrvAcceptReply create(const uint8_t&, const uint32_t&);
+        static SrvAcceptReply create(const Result&, const uint32_t&);
         static SrvAcceptReply create(const uint8_t*);
         static std::unique_ptr<SrvAcceptReply> allocate(const uint8_t*);
     
@@ -33,7 +40,7 @@ class SrvAcceptReply : public CRosePacket {
         virtual void pack(CRoseBasePolicy&) const override;
     
     private:
-        uint8_t result;
+        Result result;
         uint32_t randValue;
 };
 
