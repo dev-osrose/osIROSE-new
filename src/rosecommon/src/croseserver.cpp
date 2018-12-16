@@ -54,7 +54,12 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
     do {
       (*mutex_ptr).lock();
         (*list_ptr).remove_if([this, inactive_log] (auto &i) {
-            if (i->is_active() == false) {
+          std::chrono::steady_clock::time_point update =
+              Core::Time::GetTickCount();
+          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+                           update - i->get_update_time())
+                           .count();
+            if (i->is_active() == false && dt > (1000 * 60) * 3 ) {
               logger_->debug(inactive_log.c_str(), i->get_id());
               return true;
             }
@@ -67,7 +72,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
           int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
                            update - client->get_update_time())
                            .count();
-          if (dt > (1000 * 60) * 2)  // wait 2 minutes before time out
+          if (dt > (1000 * 60) * 2 && client->is_active() == true)  // wait 2 minutes before time out
           {
             logger_->info(timeout_log.c_str(), client->get_id());
             client->shutdown();

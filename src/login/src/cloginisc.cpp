@@ -123,10 +123,10 @@ bool CLoginISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
 }
 
 bool CLoginISC::ServerShutdown(std::unique_ptr<IscShutdown> P) {
-  if(login_state_ != eSTATE::REGISTERED) {
-    logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
-    return false;
-  }
+  // if(login_state_ != eSTATE::REGISTERED) {
+  //   logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
+  //   return false;
+  // }
   channel_list_.remove_if([&](RoseCommon::tChannelInfo channel) {
     return channel.ChannelID == P->id();
   });

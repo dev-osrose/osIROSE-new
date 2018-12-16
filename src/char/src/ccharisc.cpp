@@ -192,10 +192,6 @@ void CCharISC::OnConnected() {
 bool CCharISC::OnShutdown() {
   logger_->trace("CCharISC::OnShutdown()");
   bool result = true;
-  if(state_ != eSTATE::REGISTERED) {
-    logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
-    return false;
-  }
 
   if (is_active() == true) {
     if (get_type() == Isc::ServerType::LOGIN) {
