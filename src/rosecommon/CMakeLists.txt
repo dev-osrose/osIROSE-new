@@ -132,8 +132,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_logoutreply.h
     #  src/packets/srv_mousecmd.cpp
     #  include/packets/srv_mousecmd.h
-    #  src/packets/srv_normalchat.cpp
-    #  include/packets/srv_normalchat.h
+    src/packets/srv_normal_chat.cpp
+    include/packets/srv_normal_chat.h
     #  src/packets/srv_playerchar.cpp
     #  include/packets/srv_playerchar.h
     #  src/packets/srv_removeobject.cpp

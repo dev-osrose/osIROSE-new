@@ -22,9 +22,9 @@ namespace Core {
   #include <chrono>
 
   namespace Time {
-    inline std::chrono::steady_clock::time_point GetTickCount()
+    inline auto GetTickCount()
     {
-      return std::chrono::steady_clock::now();
+      return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());
     }
   } // end namespace Time
 //  #endif

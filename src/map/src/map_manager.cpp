@@ -9,8 +9,7 @@ using namespace std::chrono_literals;
 MapManager::MapManager(std::vector<uint16_t> maps):
     isc_server_{true}, 
     isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()},
-    maps_{maps.size()},
-    stop_(false) {
+    maps_{maps.size()} {
     Core::Config& config = Core::Config::getInstance();
     isc_server_.init(config.serverData().iscListenIp, config.mapServer().iscPort);
     isc_server_.listen();
@@ -24,21 +23,22 @@ MapManager::MapManager(std::vector<uint16_t> maps):
         auto map = std::make_unique<CMapServer>(false, id, &isc_server_);
         map->init(config.serverData().ip, config.mapServer().clientPort + id);
         map->listen();
-        maps_.emplace_back([this, map = std::move(map)] () {
-            auto start = Core::Time::GetTickCount();
-            while (!stop_.load() && map->is_active()) {
-                std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - start);
-                map->update(diff);
-                start = Core::Time::GetTickCount();
-                std::this_thread::sleep_for(100ms);
-            }
-        });
+        CMapServer* map_ptr = map.get();
+        maps_.emplace_back(std::pair([this, map = std::move(map)] () {
+            map->run();
+        }, [this, map_ptr]() {
+            std::unique_lock<std::mutex> lock(mutex);
+            cv.wait(lock);
+            map_ptr->stop();
+        }));
     }
 }
 
 MapManager::~MapManager() {
-    stop_.store(true);
+    cv.notify_all();
+    std::lock_guard<std::mutex> lock(mutex);
     for (auto& map : maps_) {
-        map.join();
+        map.second.join();
+        map.first.join();
     }
 }

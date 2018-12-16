@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <thread>
-#include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 #include "cmapserver.h"
 #include "cmapisc.h"
@@ -16,6 +17,7 @@ class MapManager {
     private:
         CMapServer isc_server_;
         CMapISC isc_client_;
-        std::vector<std::thread> maps_;
-        std::atomic<bool> stop_;
+        std::vector<std::pair<std::thread, std::thread>> maps_;
+        std::mutex mutex;
+        std::condition_variable cv;
 };

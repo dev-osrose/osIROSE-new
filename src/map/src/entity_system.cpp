@@ -22,23 +22,37 @@
 #include "components/status_effects.h"
 #include "components/wishlist.h"
 
+#include "chat/normal_chat.h"
+
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
-	logger = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
+	logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+
+    // dispatcher registration
+    register_dispatcher(std::function{Chat::normal_chat});
 }
 
-EntitySystem::~EntitySystem() {
+void EntitySystem::stop() {
     work_queue.kill();
 }
 
-void EntitySystem::update(std::chrono::milliseconds) {
-    auto start = Core::Time::GetTickCount();
+bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
+    if (!packet) {
+        return false;
+    }
+    if (!dispatcher.is_supported(*packet.get())) {
+        return false;
+    }
+    add_task(std::move([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
+        dispatcher.dispatch(entitySystem, entity, std::move(packet));
+    }));
+    return true;
+}
+
+void EntitySystem::run() {
     for (auto [res, task] = work_queue.pop_front(); res;) {
-        std::lock_guard<std::mutex> lock(access);
-        std::invoke(std::move(task), *this);
-        const std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - start);
-        if (diff >= maxTimePerUpdate) {
-            logger->warn("Stopping after {}ms, {} tasks remaining", maxTimePerUpdate.count(), work_queue.size());
-            break;
+        {
+            std::lock_guard<std::mutex> lock(access);
+            std::invoke(std::move(task), *this);
         }
         auto [tmp_res, tmp_task] = work_queue.pop_front();
         res = tmp_res;

@@ -29,12 +29,10 @@ class PacketDispatcher {
             }
         }
     
-        template <typename PacketType, typename Func>
-        void add_dispatcher(RoseCommon::ePacketType type, Func&& func) {
-            static_assert(std::is_invocable<Func, EntitySystem&, RoseCommon::Entity, const PacketType&>::value,
-                          "registering function must be of the form void(*)(EntitySystem&, RoseCommon::Entity, const PacketType&)");
-            dispatcher.emplace(type, [func = std::forward<Func>(func)](EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::CRosePacket* packet) mutable {
-                PacketType *p = dynamic_cast<PacketType*>(packet);
+        template <typename PacketType>
+        void add_dispatcher(RoseCommon::ePacketType type, std::function<void(EntitySystem&, RoseCommon::Entity, const PacketType&)>&& func) {
+            dispatcher.emplace(type, [func = std::move(func)](EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::CRosePacket* packet) mutable {
+                const PacketType *p = dynamic_cast<const PacketType*>(packet);
                 if (p == nullptr) {
                     return;
                 }

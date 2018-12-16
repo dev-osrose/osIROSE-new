@@ -19,28 +19,22 @@ using namespace std::chrono_literals;
 class EntitySystem {
     public:
         EntitySystem(std::chrono::milliseconds maxTimePerUpdate = 50ms);
-        ~EntitySystem();
 
-        void update(std::chrono::milliseconds);
-	
-	    bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
-		    if (!packet) {
-			return false;
-		    }
-		    if (!dispatcher.is_supported(*packet.get())) {
-		        return false;
-            	}
-            add_task(std::move([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
-                dispatcher.dispatch(entitySystem, entity, std::move(packet));
-            }));
-            return true;
-	    }
+        void run();
+        void stop();
+    
+        bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet);
 
-		template <typename Func>
+        template <typename T>
+        void register_dispatcher(std::function<void(EntitySystem&, RoseCommon::Entity, const T&)>&& func) {
+            dispatcher.add_dispatcher(T::PACKET_ID, std::move(func));
+        }
+
+        template <typename Func>
         void add_task(Func&& task) {
-			static_assert(std::is_invocable_v<Func, EntitySystem&>, "task should be of the form void(*)(EntitySystem&)");
-			work_queue.push_back(std::forward<Func>(task));
-		}
+            static_assert(std::is_invocable_v<Func, EntitySystem&>, "task should be of the form void(*)(EntitySystem&)");
+            work_queue.push_back(std::forward<Func>(task));
+        }
 
         RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId);
         void save_character(RoseCommon::Entity) const;
@@ -53,10 +47,10 @@ class EntitySystem {
         const T& get_component(RoseCommon::Entity entity) const {
             return registry.get<T>(entity);
         }
-	
-	    template <typename T>
-	    T& get_component(RoseCommon::Entity entity) {
-	        return registry.get<T>(entity);
+    
+        template <typename T>
+        T& get_component(RoseCommon::Entity entity) {
+            return registry.get<T>(entity);
         }
 
         template <typename T>
@@ -78,13 +72,13 @@ class EntitySystem {
         T& add_component(RoseCommon::Entity entity) {
             return registry.assign<T>(entity);
         }
-	
-	template <typename T>
-	auto item_to_equipped(RoseCommon::Entity entity) const {
+    
+    template <typename T>
+    auto item_to_equipped(RoseCommon::Entity entity) const {
         if (entity == entt::null) {
             return typename T::EquippedItem{};
         }
-	    const auto& item = get_component<Component::Item>(entity);
+        const auto& item = get_component<Component::Item>(entity);
         const auto& data = get_component<RoseCommon::ItemDef>(entity);
 
         typename T::EquippedItem itemPacket;
@@ -93,7 +87,7 @@ class EntitySystem {
         itemPacket.set_socket(item.hasSocket);
         itemPacket.set_grade(item.refine);
         return itemPacket;
-	}
+    }
     
     template <typename T>
     auto item_to_header(RoseCommon::Entity entity) const {
@@ -142,7 +136,7 @@ class EntitySystem {
         item.set_data(item_to_data<T>(entity));
         return item;
     }
-	
+    
     template <class Rep, class Period>
     void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
@@ -154,9 +148,9 @@ class EntitySystem {
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
-		std::chrono::milliseconds maxTimePerUpdate;
+        std::chrono::milliseconds maxTimePerUpdate;
         std::mutex access;
         IdManager idManager;
-	    TimedCallbacks timers;
+        TimedCallbacks timers;
         PacketDispatcher dispatcher;
 };

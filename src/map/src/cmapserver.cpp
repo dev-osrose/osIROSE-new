@@ -66,4 +66,5 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //}
 }
 
-void CMapServer::update(std::chrono::milliseconds) { }
+void CMapServer::stop() { entitySystem->stop(); }
+void CMapServer::run() { entitySystem->run(); }

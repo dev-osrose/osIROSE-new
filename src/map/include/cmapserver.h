@@ -29,7 +29,8 @@ class CMapServer : public RoseCommon::CRoseServer {
 
   int16_t GetMapIDX() const { return map_idx_; }
 
-  void update(std::chrono::milliseconds dt);
+  void stop();
+  void run();
 
   std::forward_list<std::shared_ptr<RoseCommon::CRoseClient>>& GetISCList() {
       if (iscServer_)
