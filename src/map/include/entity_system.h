@@ -148,6 +148,9 @@ class EntitySystem {
     
     void update_position(RoseCommon::Entity entity, float x, float y);
     
+    // returns a sorted vector
+    std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
+    
     template <class Rep, class Period>
     void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
