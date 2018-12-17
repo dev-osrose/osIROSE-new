@@ -5,7 +5,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include <unordered_set>
 #include <tuple>
 
 class EntitySystem;
@@ -26,7 +25,7 @@ class Nearby {
   private:
     using key_t = std::tuple<uint16_t, uint16_t>;
     
-    std::unordered_map<key_t, std::unordered_set<Entity>, Core::tuple_hash> grid;
+    std::unordered_map<key_t, std::vector<Entity>, Core::tuple_hash> grid;
   
     const EntitySystem& entitySystem;
 };
