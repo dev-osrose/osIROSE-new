@@ -74,8 +74,8 @@ class EntitySystem {
         // returns a sorted vector
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
 
-    template <class Rep, class Period>
-    void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
+        template <class Rep, class Period>
+        void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
 
     private:
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
