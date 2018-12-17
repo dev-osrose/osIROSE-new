@@ -30,8 +30,8 @@ class CMapClient : public RoseCommon::CRoseClient, std::enable_shared_from_this<
   virtual ~CMapClient();
 
   uint32_t get_session_id() const { return sessionId_; }
-
-  void switch_server() { login_state_ = eSTATE::SWITCHING; }
+ 
+  void send(const RoseCommon::CRosePacket& packet);
 
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
