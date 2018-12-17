@@ -84,6 +84,12 @@ void EntitySystem::sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
     }
 }
 
+void EntitySystem::delete_entity(RoseCommon::Entity entity) {
+    add_task([entity](EntitySystem& entitySystem) {
+        entitySystem.registry.destroy(entity);
+    });
+}
+
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
@@ -231,6 +237,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 }
 
 void EntitySystem::save_character(RoseCommon::Entity character) const {
+    //TODO: should be done as a task
 }
 
 RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
@@ -270,4 +277,5 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 }
 
 void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
+    // TODO: should be done as a task???
 }
