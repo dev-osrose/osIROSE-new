@@ -77,6 +77,8 @@ class EntitySystem {
 
         template <class Rep, class Period>
         void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
+        template <class Rep, class Period>
+        void add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, const std::function<void(EntitySystem&)>& callback);
 
     private:
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
@@ -201,5 +203,12 @@ template <class Rep, class Period>
 void EntitySystem::add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
     timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(std::move(callback));
+    });
+}
+
+template <class Rep, class Period>
+void EntitySystem::add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, const std::function<void(EntitySystem&)>& callback) {
+    timers.add_recurrent_callback(timeout, [this, callback = callback]() mutable {
+        add_task(callback);
     });
 }
