@@ -13,6 +13,7 @@
 #include "itemdb.h"
 #include "timed_callbacks.h"
 #include "packet_dispatcher.h"
+#include "nearby.h"
 
 using namespace std::chrono_literals;
 
@@ -161,4 +162,5 @@ class EntitySystem {
         IdManager idManager;
         TimedCallbacks timers;
         PacketDispatcher dispatcher;
+        Nearby nearby;
 };
