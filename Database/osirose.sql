@@ -617,49 +617,5 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_inventory` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_unicode_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_inventory`()
-    MODIFIES SQL DATA
-BEGIN
-  MERGE `inventory` AS TARGET USING `inventory_merge` AS SOURCE
-  ON (TARGET.char_id = SOURCE.char_id AND TARGET.slot = SOURCE.slot AND TARGET.storage_type = SOURCE.storage_type)		  
-  WHEN MATCHED
-  THEN UPDATE SET
-    TARGET.itemid = SOURCE.itemid,
-    TARGET.itemtype = SOURCE.itemtype,
-    TARGET.amount = SOURCE.amount,
-    TARGET.refine = SOURCE.refine,
-    TARGET.gem_opt = SOURCE.gem_opt,
-    TARGET.socket = SOURCE.socket,
-    TARGET.price = SOURCE.price
-  WHEN NOT MATCHED BY TARGET
-  THEN INSERT (char_id, itemid, itemtype, slot, amount, refine, gem_opt, socket, price, storage_type)
-    VALUES (SOURCE.char_id, SOURCE.itemtype, SOURCE.amount, SOURCE.refine, SOURCE.gem_opt, SOURCE.socket, SOURCE.price, SOURCE.storage_type)
-  WHEN NOT MATCHED BY SOURCE
-  THEN DELETE;
-END ;;
-DELIMITER ;
 								  
 -- Dump completed on 2016-10-08  0:41:39
