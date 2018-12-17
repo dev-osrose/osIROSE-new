@@ -26,6 +26,31 @@
 
 using namespace RoseCommon;
 
+namespace {
+constexpr size_t convertSlot(uint8_t slot) {
+    using namespace Packet;
+    switch (static_cast<RoseCommon::EquippedPosition>(slot)) {
+        case RoseCommon::EquippedPosition::GOGGLES:
+            return SrvCharListReply::GOOGLES;
+        case RoseCommon::EquippedPosition::HELMET:
+            return SrvCharListReply::HELMET;
+        case RoseCommon::EquippedPosition::ARMOR:
+            return SrvCharListReply::ARMOR;
+        case RoseCommon::EquippedPosition::BACKPACK:
+            return SrvCharListReply::BACKPACK;
+        case RoseCommon::EquippedPosition::GAUNTLET:
+            return SrvCharListReply::GAUNTLET;
+        case RoseCommon::EquippedPosition::BOOTS:
+            return SrvCharListReply::BOOTS;
+        case RoseCommon::EquippedPosition::WEAPON_R:
+            return SrvCharListReply::WEAPON_R;
+        case RoseCommon::EquippedPosition::WEAPON_L:
+            return SrvCharListReply::WEAPON_L;
+    }
+    return SrvCharListReply::WEAPON_R;
+}
+}
+
 CCharClient::CCharClient()
     : CRoseClient(), accessRights_(0), loginState_(eSTATE::DEFAULT), sessionId_(0), userId_(0), channelId_(0), server_(nullptr) {}
 
@@ -147,7 +172,7 @@ bool CCharClient::sendCharListReply() {
         item.set_gem_opt(0);
         item.set_socket(0);
         item.set_grade(0);
-        charInfo.set_items(item, iv.slot);
+        charInfo.set_items(item, convertSlot(iv.slot));
     }
     packet.add_characters(charInfo);
   }
