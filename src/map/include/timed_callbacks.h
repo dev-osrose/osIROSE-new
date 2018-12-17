@@ -23,16 +23,10 @@ class TimedCallbacks {
         
         template <class Rep, class Period, class Func>
         void add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
-            static_assert(std::is_invocable_v<Func>, "error should be void(*)()");
+            static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
             std::lock_guard<std::mutex> lock(mutex);
             // first we remove dead tasks from the vector
-            std::remove_if(callbacks.begin(), callbacks.end(), [](auto& callback) {
-                if (callback.future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-                    callback.thread.join();
-                    return true;
-                }
-                return false;
-            });
+            remove_dead_tasks();
             // we then add the callback
             std::promise<void> promise;
             std::future<void> future = promise.get_future();
@@ -46,7 +40,35 @@ class TimedCallbacks {
             callbacks.emplace_back(std::move(thread), std::move(future));
         }
     
+        // if the callback returns false, we unregister it
+        template <class Rep, class Period, class Func>
+        void add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, const Func& callback) {
+            static_assert(std::is_invocable_v<bool, Func>, "timer functions should be bool(*)()");
+            std::lock_guard<std::mutex> lock(mutex);
+            // first we remove dead tasks from the vector
+            remove_dead_tasks();
+            // we then add the callback
+            std::promise<void> promise;
+            std::future<void> future = promise.get_future();
+            std::thread thread([this, timeout, callback, promise = std::move(promise)]() mutable {
+                std::unique_lock<std::mutex> lock(mutex);
+                while (cv.wait_for(lock, timeout) == std::cv_status::timeout && std::invoke(callback));
+                promise.set_value_at_thread_exit();
+            });
+            callbacks.emplace_back(std::move(thread), std::move(future));
+        }
+    
     private:
+        void remove_dead_tasks() {
+            std::remove_if(callbacks.begin(), callbacks.end(), [](auto& callback) {
+                if (callback.future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+                    callback.thread.join();
+                    return true;
+                }
+                return false;
+            });
+        }
+    
         struct Callback {
             Callback(std::thread&& thread, std::future<void>&& future) : thread(std::move(thread)), future(std::move(future)) {}
             std::thread thread;
