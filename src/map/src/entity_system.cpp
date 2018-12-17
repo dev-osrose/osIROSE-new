@@ -99,6 +99,22 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     });
 }
 
+void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) {
+    if (entity == entt::null) return;
+    const auto* pos = try_get_component<Component::Position>();
+    float old_x = 0, old_y = 0;
+    if (!pos) {
+        pos = &add_component<Component::Position>(entity);
+        pos->z = 0;
+    } else {
+        old_x = pos->x;
+        old_y = pos->y;
+    }
+    pos->x = x;
+    pos->y = y;
+    nearby.update_position(entity, old_x, old_y, x, y);
+}
+
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
