@@ -123,6 +123,7 @@ void CMapClient::onDisconnected() {
   if (login_state_ == eSTATE::DEFAULT) return;
   auto tmp_state = login_state_;
   login_state_ = eSTATE::DEFAULT;
+  entitySystem->save_character(entity);
   entitySystem->delete_entity(entity);
 
   if (tmp_state != eSTATE::SWITCHING) {
