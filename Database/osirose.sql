@@ -131,7 +131,7 @@ CREATE TABLE `inventory` (
   `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
   `socket` int(10) unsigned NOT NULL DEFAULT '0',
   `price` int(11) unsigned NOT NULL DEFAULT '0',
-  `storage_type` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `storage_type` ENUM('inventory', 'wishlist', 'storage') NOT NULL DEFAULT 'inventory',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
@@ -155,7 +155,7 @@ CREATE TABLE `inventory_merge` (
   `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
   `socket` int(10) unsigned NOT NULL DEFAULT '0',
   `price` int(11) unsigned NOT NULL DEFAULT '0',
-  `storage_type` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `storage_type` ENUM('inventory', 'wishlist', 'storage') NOT NULL DEFAULT 'inventory',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
