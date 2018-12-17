@@ -143,6 +143,8 @@ class EntitySystem {
     void send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
     void sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
     
+    void delete_entity(RoseCommon::Entity entity);
+    
     template <class Rep, class Period>
     void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
