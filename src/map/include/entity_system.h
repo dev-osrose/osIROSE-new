@@ -16,6 +16,8 @@
 
 using namespace std::chrono_literals;
 
+class CMapClient;
+
 class EntitySystem {
     public:
         EntitySystem(std::chrono::milliseconds maxTimePerUpdate = 50ms);
@@ -36,7 +38,7 @@ class EntitySystem {
             work_queue.push_back(std::forward<Func>(task));
         }
 
-        RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId);
+        RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client);
         void save_character(RoseCommon::Entity) const;
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
@@ -136,6 +138,10 @@ class EntitySystem {
         item.set_data(item_to_data<T>(entity));
         return item;
     }
+    
+    void send_map(const RoseCommon::CRosePacket& packet);
+    void send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
+    void sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
     
     template <class Rep, class Period>
     void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
