@@ -20,7 +20,7 @@ class Nearby {
     
     std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
     
-    void update_position(RoseCommon::Entity entity);
+    void update_position(RoseCommon::Entity entity, float old_x, float old_y);
     
   private:
     using key_t = std::tuple<uint16_t, uint16_t>;
