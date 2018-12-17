@@ -146,6 +146,8 @@ class EntitySystem {
     
     void delete_entity(RoseCommon::Entity entity);
     
+    void update_position(RoseCommon::Entity entity, float x, float y);
+    
     template <class Rep, class Period>
     void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
         timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
