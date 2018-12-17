@@ -28,10 +28,21 @@
 
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate), nearby(*this) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+
+    // register recurrent stoof (like saving every 5min)
+    using std::chrono::litterals;
+    add_recurrent_timer(5min, [](EntitySystem& self) {
+        registry.view<Component::Client>().each([self](auto entity, auto &client_ptr) {
+            (void)client_ptr;
+            self.save_character(entity);
+        });
+    });
     
+
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
+
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
 }
