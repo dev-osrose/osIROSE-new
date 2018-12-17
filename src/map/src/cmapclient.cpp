@@ -98,6 +98,12 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
+void CMapClient::send(const RoseCommon::CRosePacket& packet) {
+    if (login_state_ == eSTATE::LOGGEDIN) {
+        CRoseClient::send(packet);
+    }
+}
+
 void CMapClient::updateSession() {
   logger_->trace("CMapClient::updateSession()");
   using namespace std::chrono_literals;
