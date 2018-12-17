@@ -19,10 +19,10 @@
 namespace RoseCommon {
 //#define STRESS_TEST
 
-CRoseClient::CRoseClient() : CRoseSocket(), isLoggedIn_(false) {
+CRoseClient::CRoseClient() : CRoseSocket() {
 }
 
-CRoseClient::CRoseClient(std::unique_ptr<Core::INetwork> _sock) : CRoseSocket(std::move(_sock)), isLoggedIn_(false) {
+CRoseClient::CRoseClient(std::unique_ptr<Core::INetwork> _sock) : CRoseSocket(std::move(_sock)) {
   set_active(true);
 }
 
