@@ -148,7 +148,6 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
     if (!res.empty()) {
       logger_->debug("Client {} auth OK.", get_id());
       login_state_ = eSTATE::LOGGEDIN;
-      isLoggedIn_ = true;
       const auto& row = res.front();
       userid_ = row.userid;
       charid_ = row.charid;
@@ -156,7 +155,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       bool platinium = false;
       platinium = row.platinium;
 
-      entity = entitySystem->load_character(charid_, platinium, sessionID);
+      entity = entitySystem->load_character(charid_, platinium, sessionID, std::weak_from_this());
 
       if (true) {
         Core::Config& config = Core::Config::getInstance();
