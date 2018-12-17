@@ -27,14 +27,19 @@
 #include "chat/normal_chat.h"
 
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate), nearby(*this) {
-	logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-
+    logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    
+    // callback for nearby calculations
+    registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
+    registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
 }
 
 void EntitySystem::stop() {
     work_queue.kill();
+    registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
+    registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
 }
 
 bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
