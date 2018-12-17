@@ -11,23 +11,21 @@ constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
     return {gx, gy};
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, Entity e) {
-    const auto* pos = entitySystem.try_get_component<Component::Position>();
+std::tuple<uint16_t, uint16_t> get_grid_position(const Registry& registry, Entity e) {
+    const auto* pos = registry.try_get_component<Component::Position>();
     if (!pos) return {0, 0};
     return get_grid_position(pos->x, pos->y);
 }
 }
 
-Nearby::Nearby(const EntitySystem& entitySystem) : entitySystem(entitySystem) {}
-
-void Nearby::add_entity(RoseCommon::Entity entity) {
+void Nearby::add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
   if (entity == entt::null) return;
-  grid[get_grid_position(entitySystem, entity)].push_back(entity);
+  grid[get_grid_position(registry, entity)].push_back(entity);
 }
 
-void remove_entity(RoseCommon::Entity entity) {
+void remove_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
   if (entity == entt::unll) return;
-  auto& list = grid[get_grid_position(entitySystem, entity)];
+  auto& list = grid[get_grid_position(registry, entity)];
   std::remove(list.begin(), list.end(), entity);
 }
     
@@ -47,10 +45,10 @@ std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const {
   return res;
 }
     
-void update_position(RoseCommon::Entity entity, float old_x, float old_y) {
+void update_position(RoseCommon::Entity entity, float old_x, float old_y, float x, float y) {
   if (old_x && old_y) {
     auto &list = grid[get_grid_position(old_x, old_y)];
     std::remove(list.begin(), list.end(), entity);
   }
-  grid[get_grid_position(entitySystem, entity)].push_back(entity);
+  grid[get_grid_position(x, y)].push_back(entity);
 }
