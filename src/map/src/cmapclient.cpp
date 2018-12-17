@@ -115,13 +115,15 @@ void CMapClient::updateSession() {
 void CMapClient::onDisconnected() {
   logger_->trace("CMapClient::OnDisconnected()");
   if (login_state_ == eSTATE::DEFAULT) return;
+  auto tmp_state = login_state_;
+  login_state_ = eSTATE::DEFAULT;
+  entitySystem->delete_entity(entity);
 
-  if (login_state_ != eSTATE::SWITCHING) {
+  if (tmp_state != eSTATE::SWITCHING) {
       Core::AccountTable table{};
       auto conn = Core::connectionPool.getConnection(Core::osirose);
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
-  login_state_ = eSTATE::DEFAULT;
 }
 
 bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
@@ -147,7 +149,6 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
     if (!res.empty()) {
       logger_->debug("Client {} auth OK.", get_id());
-      login_state_ = eSTATE::LOGGEDIN;
       const auto& row = res.front();
       userid_ = row.userid;
       charid_ = row.charid;
@@ -242,7 +243,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
         } else {
           //send(Packet::SrvTeleportReply::create(entity_));
         }
-
+        gin_state_ = eSTATE::LOGGEDIN;
       } else {
         logger_->debug("Something wrong happened when creating the entity");
         send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
