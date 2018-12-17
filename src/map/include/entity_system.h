@@ -65,6 +65,7 @@ class EntitySystem {
 
         void send_map(const RoseCommon::CRosePacket& packet);
         void send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
+        void send_nearby_except_me(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
         void sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet);
 
         void delete_entity(RoseCommon::Entity entity);
