@@ -67,7 +67,7 @@ void EntitySystem::run() {
     }
 }
 
-void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) {
+void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) const {
     registry.view<Component::Client>().each([](auto entity, auto &client_ptr) {
         (void)entity;
         if (auto client = client_ptr.client.lock()) {
@@ -76,7 +76,7 @@ void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) {
     });
 }
 
-void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
+void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
     registry.view<Component::Client>().each([entity, this](auto other, auto &client_ptr) {
         if (!nearby.is_nearby(entity, other)) return;
         if (auto client = client_ptr.client.lock()) {
@@ -85,7 +85,18 @@ void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRos
     });
 }
 
-void EntitySystem::sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
+void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
+    registry.view<Component::Client>().each([entity, this](auto other, auto &client_ptr) {
+        if (other != entity) {
+            if (!nearby.is_nearby(entity, other)) return;
+            if (auto client = client_ptr.client.lock()) {
+                client->send(packet);
+            }
+        }
+    });
+}
+
+void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
     if (auto client_ptr = registry.try_get<Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
             client->send(packet);
