@@ -130,6 +130,8 @@ CREATE TABLE `inventory` (
   `slot` int(11) unsigned NOT NULL DEFAULT '0',
   `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
   `socket` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` int(11) unsigned NOT NULL DEFAULT '0',
+  `storage_type` tinyint(4) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
@@ -137,26 +139,25 @@ CREATE TABLE `inventory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
--- Table structure for table `wishlist`
+-- Table structure for table `inventory_merge`
 
-DROP TABLE IF EXISTS `wishlist`;
+DROP TABLE IF EXISTS `inventory_merge`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wishlist` (
-    `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `char_id` int(11) unsigned NOT NULL DEFAULT '0',
-    `itemid` int(11) unsigned NOT  NULL DEFAULT '0',
-    `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
-    `amount` int(11) unsigned NOT NULL DEFAULT '0',
-    `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
-    `slot` int(11) unsigned NOT NULL DEFAULT '0',
-    `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
-    `socket` int(10) unsigned NOT NULL DEFAULT '0',
-    `price` int(11) unsigned NOT NULL DEFAULT '0',
-    PRIMARY KEY (`uid`),
-    UNIQUE KEY `id_UNIQUE` (`uid`),
-    KEY `char_id_idx` (`char_id`),
-    CONSTRAINT `wish_char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+CREATE TABLE `inventory_merge` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `char_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemid` int(11) unsigned NOT NULL DEFAULT '0',
+  `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
+  `amount` int(11) unsigned NOT NULL DEFAULT '0',
+  `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `slot` int(11) unsigned NOT NULL DEFAULT '0',
+  `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
+  `socket` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` int(11) unsigned NOT NULL DEFAULT '0',
+  `storage_type` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `id_UNIQUE` (`uid`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -279,29 +280,6 @@ CREATE TABLE `skill_db` (
   `script` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `storage`
---
-
-DROP TABLE IF EXISTS `storage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `storage` (
-  `owner` int(11) NOT NULL,
-  `itemnum` int(11) NOT NULL,
-  `itemtype` int(11) NOT NULL,
-  `refine` int(11) NOT NULL,
-  `durability` int(11) NOT NULL DEFAULT '40',
-  `lifespan` int(11) NOT NULL DEFAULT '100',
-  `slotnum` int(11) NOT NULL,
-  `count` int(11) NOT NULL DEFAULT '1',
-  `stats` int(11) NOT NULL DEFAULT '0',
-  `socketed` int(11) NOT NULL DEFAULT '0',
-  `appraised` int(11) NOT NULL DEFAULT '0',
-  `gem` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -648,4 +626,40 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_inventory` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_inventory`()
+    MODIFIES SQL DATA
+BEGIN
+  MERGE `inventory` AS TARGET USING `inventory_merge` AS SOURCE
+  ON (TARGET.char_id = SOURCE.char_id AND TARGET.slot = SOURCE.slot AND TARGET.storage_type = SOURCE.storage_type)		  
+  WHEN MATCHED
+  THEN UPDATE SET
+    TARGET.itemid = SOURCE.itemid,
+    TARGET.itemtype = SOURCE.itemtype,
+    TARGET.amount = SOURCE.amount,
+    TARGET.refine = SOURCE.refine,
+    TARGET.gem_opt = SOURCE.gem_opt,
+    TARGET.socket = SOURCE.socket,
+    TARGET.price = SOURCE.price
+  WHEN NOT MATCHED BY TARGET
+  THEN INSERT (char_id, itemid, itemtype, slot, amount, refine, gem_opt, socket, price, storage_type)
+    VALUES (SOURCE.char_id, SOURCE.itemtype, SOURCE.amount, SOURCE.refine, SOURCE.gem_opt, SOURCE.socket, SOURCE.price, SOURCE.storage_type)
+  WHEN NOT MATCHED BY SOURCE
+  THEN DELETE;
+END ;;
+DELIMITER ;
+								  
 -- Dump completed on 2016-10-08  0:41:39
