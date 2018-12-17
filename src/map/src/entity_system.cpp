@@ -1,8 +1,10 @@
 #include "entity_system.h"
+#include "cmapclient.h"
 #include "enumerate.h"
 #include "itemdb.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
+#include "components/client.h"
 #include "components/computed_values.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
@@ -60,7 +62,7 @@ void EntitySystem::run() {
     }
 }
 
-RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId) {
+RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
     Core::CharacterTable characters{};
@@ -87,7 +89,10 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     basicInfo.statPoints = charRow.statPoints;
     basicInfo.skillPoints = charRow.skillPoints;
     basicInfo.pkFlag = charRow.pkFlag;
-	basicInfo.stone = charRow.stone;
+    basicInfo.stone = charRow.stone;
+    
+    auto& component_client = prototype.set<Client>();
+    component_client.client = client;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
