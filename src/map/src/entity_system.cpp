@@ -62,6 +62,28 @@ void EntitySystem::run() {
     }
 }
 
+void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) {
+    registry.view<renderable>().each([](auto entity, auto &client_ptr) {
+        (void)entity;
+        if (auto client = client_ptr.client.lock()) {
+            client->send(packet);
+        }
+    });
+}
+
+void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
+    //TODO: add nearby computations
+    send_map(packet);
+}
+
+void EntitySystem::sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
+    if (auto client_ptr = registry.try_get<Component::Client>(entity)) {
+        if (auto client = client_ptr->client.lock()) {
+            client->send(packet);
+        }
+    }
+}
+
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
