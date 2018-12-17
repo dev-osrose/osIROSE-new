@@ -158,13 +158,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     basicInfo.skillPoints = charRow.skillPoints;
     basicInfo.pkFlag = charRow.pkFlag;
     basicInfo.stone = charRow.stone;
+    basicInfo.charId = charId;
     
     auto& component_client = prototype.set<Client>();
     component_client.client = client;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
-    computedValues.isOnMap.store(false);
     computedValues.moveMode = RoseCommon::MoveMode::WALK;
     computedValues.runSpeed = 0;
     computedValues.atkSpeed = 0;
@@ -277,7 +277,66 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 }
 
 void EntitySystem::save_character(RoseCommon::Entity character) const {
-    //TODO: should be done as a task
+    add_task([character](EntitySystem& self) {
+        auto conn = Core::connectionPool.getConnection(Core::osirose);
+        Core::CharacterTable characters{};
+        using sqlpp::parameter;
+        using namespace Component;
+        
+        const auto& basicInfo = self.get_component<BasicInfo>(character);
+        const auto& faction = prototype.set<Faction>();
+        const auto& characterGraphics = prototype.set<CharacterGraphics>();
+        const auto& guild = prototype.set<Guild>();
+        // TODO: save hotbar
+        // TODO: save inventory
+        const auto& level = prototype.set<Level>();
+        const auto& life = prototype.set<Life>();
+        const auto& magic = prototype.set<Magic>();
+        const auto& pos = prototype.set<Position>();
+        // TODO: save skills
+        const auto& stamina = prototype.set<Stamina>();
+        const auto& stats = prototype.set<Stats>();
+        // TODO: save wishlist
+
+        conn(sqlpp::update(characters).where(characters.id == basicInfo.charId).set(
+            characters.name = basicInfo.name,
+            characters.job = basicInfo.job,
+            characters.statPoints = basicInfo.statPoints,
+            characters.skillPoints = basicInfo.skillPoints,
+            characters.pkFlag = basicInfo.pkFlag,
+            characters.stone = basicInfo.stone,
+            characters.factionid = faction.id,
+            characters.factionRank = faction.rank,
+            characters.fame = faction.fame,
+            characters.factionFame1 = faction.factionFame[0],
+            characters.factionFame2 = faction.factionFame[1],
+            characters.factionPoints1 = faction.points[0],
+            characters.factionPoints2 = faction.points[1],
+            characters.factionPoints3 = faction.points[2],
+            characters.face = characterGraphics.face,
+            characters.hair = characterGraphics.hair,
+            characters.race = characterGraphics.race,
+            characters.clanid = guild.id,
+            characters.clanContribution = guild.contribution,
+            characters.clanRank = guild.rank,
+            characters.exp = level.xp,
+            characters.level = level.level,
+            characters.penaltyExp = level.penaltyXp,
+            characters.maxHp = life.maxHp,
+            characters.maxMp = magic.maxMp,
+            characters.x = pos.x,
+            characters.y = pos.y,
+            characters.reviveMap = pos.spawn,
+            characters.map = pos.map,
+            characters.stamina = stamina.stamina,
+            characters.str = stats.str,
+            characters.dex = stats.dex,
+            characters.int_ = stats.int_,
+            characters.con = stats.con,
+            characters.charm = stats.charm,
+            characters.sense = stats.sense
+        ));
+    });
 }
 
 RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
