@@ -26,7 +26,7 @@
 
 #include "chat/normal_chat.h"
 
-EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
+EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate), nearby(*this) {
 	logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
     // dispatcher registration
@@ -63,7 +63,7 @@ void EntitySystem::run() {
 }
 
 void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) {
-    registry.view<renderable>().each([](auto entity, auto &client_ptr) {
+    registry.view<Component::Client>().each([](auto entity, auto &client_ptr) {
         (void)entity;
         if (auto client = client_ptr.client.lock()) {
             client->send(packet);
@@ -72,8 +72,12 @@ void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) {
 }
 
 void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
-    //TODO: add nearby computations
-    send_map(packet);
+    registry.view<Component::Client>().each([entity, this](auto other, auto &client_ptr) {
+        if (!nearby.is_nearby(entity, other)) return;
+        if (auto client = client_ptr.client.lock()) {
+            client->send(packet);
+        }
+    });
 }
 
 void EntitySystem::sent_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) {
