@@ -30,11 +30,6 @@ class CRoseClient : public CRoseSocket {
   CRoseClient();
   CRoseClient(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseClient();
-
-  bool isLoggedIn() const { return isLoggedIn_; }
-
- protected:
-  bool isLoggedIn_;
 };
 
 }
