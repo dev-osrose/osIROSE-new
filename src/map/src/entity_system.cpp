@@ -115,6 +115,10 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     nearby.update_position(entity, old_x, old_y, x, y);
 }
 
+std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
+    return nearby.get_nearby(entity);
+}
+
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection(Core::osirose);
