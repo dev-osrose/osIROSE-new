@@ -41,7 +41,7 @@ bool is_nearby(RoseCommon::Entity first, RoseCommon::Entity second) const {
     
 std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const {
   std::vector<RoseCommon::Entity> res;
-  // TODO: populate res
+  // TODO: populate res and sort it by entity
   return res;
 }
     
