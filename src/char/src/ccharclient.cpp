@@ -96,7 +96,6 @@ bool CCharClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
     if (!res.empty()) {
       loginState_ = eSTATE::LOGGEDIN;
-      isLoggedIn_ = true;
       const auto &row = res.front();
       userId_ = row.userid;
       channelId_ = row.channelid;
