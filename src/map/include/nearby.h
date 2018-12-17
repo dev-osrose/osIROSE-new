@@ -16,6 +16,7 @@ class Nearby {
     
     bool is_nearby(RoseCommon::Entity first, RoseCommon::Entity second) const;
     
+    // returns a sorted vector, it's useful for std::set_difference
     std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
     
     void update_position(RoseCommon::Entity entity, float old_x, float old_y, float x, float y);
