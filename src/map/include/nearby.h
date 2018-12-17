@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <vector>
 #include <tuple>
-#include <entt.hpp>
 
 class Nearby {
   public:
