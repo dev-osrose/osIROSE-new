@@ -54,7 +54,6 @@ void CLoginClient::sendLoginReply(Packet::SrvLoginReply::Result Result) {
 
   if (Result == Packet::SrvLoginReply::OK) {
     login_state_ = eSTATE::LOGGEDIN;
-    isLoggedIn_ = true;
     packet.set_right(access_rights_);
 
     // loop the server list here
