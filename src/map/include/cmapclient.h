@@ -20,7 +20,9 @@
 
 #include "cli_join_server_req.h"
 
-class CMapClient : public RoseCommon::CRoseClient {
+#include <memory>
+
+class CMapClient : public RoseCommon::CRoseClient, std::enable_shared_from_this<CMapClient> {
  public:
   CMapClient();
   CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem>);
