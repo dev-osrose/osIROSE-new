@@ -6,6 +6,6 @@ class CMapClient;
 
 namespace Component {
 struct Client {
-  std::shared_ptr<CMapClient> client;  
+  std::weak_ptr<CMapClient> client;  
 };
 }
