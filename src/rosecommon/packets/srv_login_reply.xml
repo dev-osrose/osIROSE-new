@@ -3,7 +3,7 @@
     <element name = "result" type = "Result" />
     <element name = "right" type = "uint16_t" />
     <element name = "type" type = "uint16_t" />
-    <element name = "serversInfo" type = "ServerInfo" occurs = "unbounded" default = "none" />
+    <element name = "serversInfo" type = "ServerInfo" occurs = "unbounded" default = "none" ref = "true" />
 
     <simpleType name = "Result">
         <restriction base = "uint8_t">
@@ -25,7 +25,7 @@
     <complexType name = "ServerInfo">
         <sequence>
             <element name = "test" type = "char" />
-            <element name = "name" type = "std::string" />
+            <element name = "name" type = "std::string" ref = "true" />
             <element name = "id" type = "uint32_t" />
         </sequence>
     </complexType>
