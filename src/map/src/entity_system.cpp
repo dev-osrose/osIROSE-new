@@ -204,12 +204,17 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     prototype.set<Hotbar>();
 
     auto invRes =
-      conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable).where(inventoryTable.charId == charId));
+      conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
+	   .where(inventoryTable.charId == charId and inventoryTable.storage_type == "inventory" or inventoryTable.storage_type == "wishlist"));
+
+    auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
     for (const auto& row : invRes) {
-        if (row.slot >= RoseCommon::MAX_ITEMS) {
+        const bool is_inventory = row.storage_type == "inventory";
+        const auto maxItems = is_inventory ? RoseCommon::MAX_ITEMS : RoseCommon::MAX_WISHLIST;
+        if (row.slot >= maxItems) {
             continue;
-        }
+        }        
         Item item;
         item.isCreated = false;
         item.life = 1000;
@@ -218,8 +223,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
         item.refine = row.refine;
         item.count = row.amount;
         item.gemOpt = row.gemOpt;
-        item.price = 0;
-        inventory.items[row.slot] = load_item(row.itemtype, row.itemid, item);
+        item.price = row.price;
+        auto to_emplace = load_item(row.itemtype, row.itemid, item);
+        if (is_inventory) {
+            inventory.items[row.slot] = to_emplace;
+        } else {
+            wishlist.items[row.slot] = to_emplace;
+        }
     }
 
     auto& level = prototype.set<Level>();
@@ -264,24 +274,6 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     stats.headSize = 100;
 
     prototype.set<StatusEffects>();
-
-    /*auto wishRes = conn(sqlpp::select(sqlpp::all_of(wish)).from(wish).where(wish.charId == charId));
-    auto& wishlist = prototype.set<Wishlist>();
-    for (const auto& row : wishRes) {
-        if (row.slot >= RoseCommon::MAX_WISHLIST) {
-            continue;
-        }
-        Item item;
-        item.isCreated = false;
-        item.life = 1000;
-        item.hasSocket = row.socket;
-        item.isAppraised = true;
-        item.refine = row.refine;
-        item.count = row.amount;
-        item.gemOpt = row.gemOpt;
-        item.price = row.price;
-        wishlist.items[row.slot] = load_item(row.itemtype, row.itemid, item);
-    }*/
 
     std::lock_guard<std::mutex> lock(access);
     return prototype();
