@@ -1,9 +1,8 @@
 <packet ePacketType = "PAKCC_CHAR_LIST_REPLY">
     <element name = "characters" type = "CharInfo" occurs = "unbounded" occursSize = "uint8_t" ref = "true" default = "none" />
+    <include path = "dataconsts.h" />
 
     <include path = "string" system = "true" />
-
-    <includeXml path = "equipped_position.xml" />
 
     <complexType name = "EquippedItem">
         <choice>
@@ -27,7 +26,7 @@
             <element name = "platinium" type = "uint8_t" default = "0" />
             <element name = "face" type = "uint32_t" />
             <element name = "hair" type = "uint32_t" />
-            <element name = "items" type = "EquippedItem" occurs = "EquippedPosition::MAX_ITEMS" ref = "true" />
+            <element name = "items" type = "EquippedItem" occurs = "MAX_VISIBLE_ITEMS" ref = "true" />
         </sequence>
     </complexType>
 </packet>
