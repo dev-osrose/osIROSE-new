@@ -5,7 +5,7 @@
     <element name = "jobs" type = "uint16_t" occurs = "MAX_CONDITIONS_JOB" default = "{0}" />
     <element name = "planets" type = "uint16_t" occurs = "MAX_CONDITIONS_PLANET" default = "{0}" />
     <element name = "unions" type = "uint16_t" occurs = "MAX_CONDITIONS_UNION" default = "{0}" />
-    <element name = "quests" type = "Quest" occurs = "MAX_QUESTS" default = "{}" />
+    <element name = "quests" type = "Quest" occurs = "MAX_QUESTS" default = "{}" ref = "true" />
     <element name = "switches" type = "uint32_t" occurs = "MAX_SWITCHES" default = "{0}" />
 
     <complexType name = "Quest">
@@ -20,5 +20,5 @@
         </sequence>
     </complexType>
 
-    <element name = "wishlist" type = "Item" occurs = "MAX_WISHLIST" default = "{}" />
+    <element name = "wishlist" type = "Item" occurs = "MAX_WISHLIST" default = "{}" reef = "true" />
 </packet>
