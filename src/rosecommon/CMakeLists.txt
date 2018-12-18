@@ -134,8 +134,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_mousecmd.h
     src/packets/srv_normal_chat.cpp
     include/packets/srv_normal_chat.h
-    #  src/packets/srv_playerchar.cpp
-    #  include/packets/srv_playerchar.h
+    src/packets/srv_player_char.cpp
+    include/packets/srv_player_char.h
     src/packets/srv_remove_object.cpp
     include/packets/srv_remove_object.h
     src/packets/srv_screen_shot_time_reply.cpp
