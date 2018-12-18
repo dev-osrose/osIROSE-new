@@ -60,7 +60,7 @@ using Entity = uint32_t;
 using Registry = entt::registry<Entity>;
 }
 
-namespace PartyReply {
+/*namespace PartyReply {
 enum Reply : uint8_t {
     NOT_FOUND = 0,
     BUSY = 1,
@@ -84,6 +84,6 @@ enum Type : uint8_t {
     ECONOMY = 0,
     NPC
 };
-}
+}*/
 
 #endif
