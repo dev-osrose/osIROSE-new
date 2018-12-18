@@ -14,7 +14,7 @@
             <element name = "timer" type = "uint32_t" default = "0">
                 <documentation>timer: Unlimited if 0</documentation>
             </element>
-            <element name = "vars" type = "uint32_t" occurs = "MAX_QUEST_VARS" default = "{0}" />
+            <element name = "vars" type = "uint16_t" occurs = "MAX_QUEST_VARS" default = "{0}" />
             <element name = "switches" type = "uint32_t" default = "0" />
             <element name = "items" type = "Item" occurs = "MAX_QUEST_ITEMS" default = "{}" />
         </sequence>
