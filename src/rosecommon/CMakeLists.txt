@@ -136,8 +136,8 @@ SET(SOURCES_PACKETS
     include/packets/srv_normal_chat.h
     #  src/packets/srv_playerchar.cpp
     #  include/packets/srv_playerchar.h
-    #  src/packets/srv_removeobject.cpp
-    #  include/packets/srv_removeobject.h
+    src/packets/srv_remove_object.cpp
+    include/packets/srv_remove_object.h
     src/packets/srv_screen_shot_time_reply.cpp
     include/packets/srv_screen_shot_time_reply.h
     src/packets/srv_select_char_reply.cpp
