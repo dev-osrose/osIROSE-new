@@ -22,7 +22,6 @@ using CharacterTable = osiroseDatabase::Characters;
 using InventoryTable = osiroseDatabase::Inventory;
 using SkillTable = osiroseDatabase::Skill;
 using ItemDBTable = osiroseDatabase::ItemDb;
-using WishTable = osiroseDatabase::Wishlist;
 
 std::string escapeData(const std::string &data);
 

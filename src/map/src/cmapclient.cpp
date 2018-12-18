@@ -163,9 +163,10 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       bool platinium = false;
       platinium = row.platinium;
 
-      entity = entitySystem->load_character(charid_, platinium, sessionID, std::weak_from_this());
+      entity = entitySystem->load_character(charid_, platinium, sessionID, weak_from_this());
+      logger_->debug("character loaded");
 
-      if (true) {
+      if (entity != entt::null) {
         Core::Config& config = Core::Config::getInstance();
         conn(sqlpp::update(sessions)
                  .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
@@ -173,7 +174,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
 
-        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, basicInfo.id));
+        CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, basicInfo.id));
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
@@ -236,32 +237,32 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_tag(basicInfo.tag);
           packet.set_name(basicInfo.name);
 
-          send(packet);
+          CRoseClient::send(packet);
 
           auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
           packetInv.set_items(Core::transform(inventory.items, [this](const auto& entity) {
               return entitySystem->item_to_item<decltype(packetInv)>(entity);
           }));
-          send(packetInv);
+          CRoseClient::send(packetInv);
 
-          send(Packet::SrvQuestData::create());
+          CRoseClient::send(Packet::SrvQuestData::create());
 
-          send(Packet::SrvBillingMessage::create());
+          CRoseClient::send(Packet::SrvBillingMessage::create());
         } else {
-          //send(Packet::SrvTeleportReply::create(entity_));
+          //CRoseClient::send(Packet::SrvTeleportReply::create(entity_));
         }
-        gin_state_ = eSTATE::LOGGEDIN;
+        login_state_ = eSTATE::LOGGEDIN;
       } else {
         logger_->debug("Something wrong happened when creating the entity");
-        send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
+        CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
       }
     } else {
       logger_->debug("Client {} auth INVALID_PASS.", get_id());
-      send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::INVALID_PASSWORD, 0));
+      CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::INVALID_PASSWORD, 0));
     }
   } catch (const sqlpp::exception& e) {
     logger_->error("Error while accessing the database: {}", e.what());
-    send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
+    CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
   }
   return true;
 }

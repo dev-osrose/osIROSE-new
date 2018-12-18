@@ -26,13 +26,13 @@
 
 #include "chat/normal_chat.h"
 
-EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate), nearby(*this) {
+EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
     // register recurrent stoof (like saving every 5min)
-    using std::chrono::litterals;
+    using namespace std::chrono_literals;
     add_recurrent_timer(5min, [](EntitySystem& self) {
-        registry.view<Component::Client>().each([self](auto entity, auto &client_ptr) {
+        self.registry.view<Component::Client>().each([&self](auto entity, auto &client_ptr) {
             (void)client_ptr;
             self.save_character(entity);
         });
@@ -68,6 +68,7 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
 
 void EntitySystem::run() {
     for (auto [res, task] = work_queue.pop_front(); res;) {
+        logger->trace("doing work");
         {
             std::lock_guard<std::mutex> lock(access);
             std::invoke(std::move(task), *this);
@@ -79,7 +80,7 @@ void EntitySystem::run() {
 }
 
 void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) const {
-    registry.view<Component::Client>().each([](auto entity, auto &client_ptr) {
+    registry.view<const Component::Client>().each([&packet](auto entity, const auto &client_ptr) {
         (void)entity;
         if (auto client = client_ptr.client.lock()) {
             client->send(packet);
@@ -88,8 +89,8 @@ void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) const {
 }
 
 void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
-    registry.view<Component::Client>().each([entity, this](auto other, auto &client_ptr) {
-        if (!nearby.is_nearby(entity, other)) return;
+    registry.view<const Component::Client>().each([entity, this, &packet](auto other, const auto &client_ptr) {
+        if (!nearby.is_nearby(*this, entity, other)) return;
         if (auto client = client_ptr.client.lock()) {
             client->send(packet);
         }
@@ -97,9 +98,9 @@ void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRos
 }
 
 void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
-    registry.view<Component::Client>().each([entity, this](auto other, auto &client_ptr) {
+    registry.view<const Component::Client>().each([entity, this, &packet](auto other, const auto &client_ptr) {
         if (other != entity) {
-            if (!nearby.is_nearby(entity, other)) return;
+            if (!nearby.is_nearby(*this, entity, other)) return;
             if (auto client = client_ptr.client.lock()) {
                 client->send(packet);
             }
@@ -108,7 +109,7 @@ void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCo
 }
 
 void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
-    if (auto client_ptr = registry.try_get<Component::Client>(entity)) {
+    if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
             client->send(packet);
         }
@@ -123,7 +124,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
 
 void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) {
     if (entity == entt::null) return;
-    const auto* pos = try_get_component<Component::Position>();
+    auto* pos = try_get_component<Component::Position>(entity);
     float old_x = 0, old_y = 0;
     if (!pos) {
         pos = &add_component<Component::Position>(entity);
@@ -138,7 +139,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
 }
 
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
-    return nearby.get_nearby(entity);
+    return nearby.get_nearby(*this, entity);
 }
 
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
@@ -147,7 +148,6 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     Core::CharacterTable characters{};
     Core::InventoryTable inventoryTable{};
     Core::SkillTable skillsTable{};
-    Core::WishTable wish{};
 
     auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
                           .from(characters).where(characters.id == charId));
@@ -265,7 +265,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 
     prototype.set<StatusEffects>();
 
-    auto wishRes = conn(sqlpp::select(sqlpp::all_of(wish)).from(wish).where(wish.charId == charId));
+    /*auto wishRes = conn(sqlpp::select(sqlpp::all_of(wish)).from(wish).where(wish.charId == charId));
     auto& wishlist = prototype.set<Wishlist>();
     for (const auto& row : wishRes) {
         if (row.slot >= RoseCommon::MAX_WISHLIST) {
@@ -281,13 +281,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
         item.gemOpt = row.gemOpt;
         item.price = row.price;
         wishlist.items[row.slot] = load_item(row.itemtype, row.itemid, item);
-    }
+    }*/
 
     std::lock_guard<std::mutex> lock(access);
     return prototype();
 }
 
-void EntitySystem::save_character(RoseCommon::Entity character) const {
+void EntitySystem::save_character(RoseCommon::Entity character) {
     add_task([character](EntitySystem& self) {
         auto conn = Core::connectionPool.getConnection(Core::osirose);
         Core::CharacterTable characters{};
@@ -295,18 +295,18 @@ void EntitySystem::save_character(RoseCommon::Entity character) const {
         using namespace Component;
         
         const auto& basicInfo = self.get_component<BasicInfo>(character);
-        const auto& faction = prototype.set<Faction>();
-        const auto& characterGraphics = prototype.set<CharacterGraphics>();
-        const auto& guild = prototype.set<Guild>();
+        const auto& faction = self.get_component<Faction>(character);
+        const auto& characterGraphics = self.get_component<CharacterGraphics>(character);
+        const auto& guild = self.get_component<Guild>(character);
         // TODO: save hotbar
         // TODO: save inventory
-        const auto& level = prototype.set<Level>();
-        const auto& life = prototype.set<Life>();
-        const auto& magic = prototype.set<Magic>();
-        const auto& pos = prototype.set<Position>();
+        const auto& level = self.get_component<Level>(character);
+        const auto& life = self.get_component<Life>(character);
+        const auto& magic = self.get_component<Magic>(character);
+        const auto& pos = self.get_component<Position>(character);
         // TODO: save skills
-        const auto& stamina = prototype.set<Stamina>();
-        const auto& stats = prototype.set<Stats>();
+        const auto& stamina = self.get_component<Stamina>(character);
+        const auto& stats = self.get_component<Stats>(character);
         // TODO: save wishlist
 
         conn(sqlpp::update(characters).where(characters.id == basicInfo.charId).set(

@@ -15,6 +15,7 @@ SET( SOURCES_HEADER
   include/id_manager.h
   include/map_manager.h
   include/entity_system.h
+  include/nearby.h
   include/chat/normal_chat.h
   )
 
@@ -26,6 +27,7 @@ SET( SOURCES_MAIN
   src/id_manager.cpp
   src/map_manager.cpp
   src/entity_system.cpp
+  src/nearby.cpp
   src/chat/normal_chat.cpp
   )
 

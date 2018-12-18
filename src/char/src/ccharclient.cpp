@@ -23,6 +23,7 @@
 #include "srv_delete_char_reply.h"
 #include "srv_join_server_reply.h"
 #include "srv_switch_server.h"
+#include "dataconsts.h"
 
 using namespace RoseCommon;
 
@@ -46,6 +47,8 @@ constexpr size_t convertSlot(uint8_t slot) {
             return SrvCharListReply::WEAPON_R;
         case RoseCommon::EquippedPosition::WEAPON_L:
             return SrvCharListReply::WEAPON_L;
+        default:
+            break;
     }
     return SrvCharListReply::WEAPON_R;
 }

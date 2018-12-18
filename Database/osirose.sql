@@ -139,28 +139,6 @@ CREATE TABLE `inventory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
--- Table structure for table `inventory_merge`
-
-DROP TABLE IF EXISTS `inventory_merge`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `inventory_merge` (
-  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `char_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `itemid` int(11) unsigned NOT NULL DEFAULT '0',
-  `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
-  `amount` int(11) unsigned NOT NULL DEFAULT '0',
-  `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `slot` int(11) unsigned NOT NULL DEFAULT '0',
-  `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
-  `socket` int(10) unsigned NOT NULL DEFAULT '0',
-  `price` int(11) unsigned NOT NULL DEFAULT '0',
-  `storage_type` ENUM('inventory', 'wishlist', 'storage') NOT NULL DEFAULT 'inventory',
-  PRIMARY KEY (`uid`),
-  UNIQUE KEY `id_UNIQUE` (`uid`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Table structure for table `item_db`
 --

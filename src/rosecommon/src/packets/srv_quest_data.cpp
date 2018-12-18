@@ -317,6 +317,11 @@ SrvQuestData::SrvQuestData(CRoseReader reader) : CRosePacket(reader) {
             return;
         }
     }
+    for (size_t index = 0; index < MAX_WISHLIST; ++index) {
+        if (!reader.get_iserialize(wishlist[index])) {
+            return;
+        }
+    }
 }
 
 void SrvQuestData::set_episodes(const std::array<uint16_t, MAX_CONDITIONS_EPISODE> episodes) {
@@ -415,6 +420,22 @@ uint32_t SrvQuestData::get_switches(size_t index) const {
     return switches[index];
 }
 
+void SrvQuestData::set_wishlist(const std::array<SrvQuestData::Item, MAX_WISHLIST> wishlist) {
+    this->wishlist = wishlist;
+}
+
+void SrvQuestData::set_wishlist(const Item wishlist, size_t index) {
+    this->wishlist[index] = wishlist;
+}
+
+std::array<SrvQuestData::Item, MAX_WISHLIST> SrvQuestData::get_wishlist() const {
+    return wishlist;
+}
+
+SrvQuestData::Item SrvQuestData::get_wishlist(size_t index) const {
+    return wishlist[index];
+}
+
 SrvQuestData SrvQuestData::create() {
     SrvQuestData packet;
     return packet;
@@ -461,6 +482,11 @@ void SrvQuestData::pack(CRoseBasePolicy& writer) const {
             return;
         }
     }
+    for (const auto& elem : wishlist) {
+        if (!writer.set_iserialize(elem)) {
+            return;
+        }
+    }
 }
 
 constexpr size_t SrvQuestData::size() {
@@ -471,6 +497,7 @@ constexpr size_t SrvQuestData::size() {
     size += sizeof(uint16_t) * MAX_CONDITIONS_UNION;
     size += Quest::size() * MAX_QUESTS;
     size += sizeof(uint32_t) * MAX_SWITCHES;
+    size += Item::size() * MAX_WISHLIST;
     return size;
 }
 

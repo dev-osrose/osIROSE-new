@@ -41,7 +41,7 @@ class TimedCallbacks {
         }
     
         template <class Rep, class Period, class Func>
-        void add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, const Func& callback) {
+        void add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
             static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
             std::lock_guard<std::mutex> lock(mutex);
             // first we remove dead tasks from the vector

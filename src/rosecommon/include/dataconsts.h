@@ -275,34 +275,6 @@ enum Reply : uint8_t {
 };
 }
 
-/*namespace SetItem {
-struct Item : public RoseCommon::ISerialize {
-    Item() = default;
-    Item(const Item&) = default;
-    Item(Item&&) = default;
-    Item& operator=(const Item&) = default;
-    Item& operator=(Item&&) = default;
-    Item(uint8_t id, uint16_t header, uint32_t data) : id_(id), header_(header), data_(data) {}
-    virtual ~Item() = default;
-
-    virtual bool write(RoseCommon::CRoseBasePolicy& writer) const override {
-        if (!writer.set_uint8_t(id_)) return false;
-        if (!writer.set_uint16_t(header_)) return false;
-        return writer.set_uint32_t(data_);
-    }
-
-    virtual bool read(RoseCommon::CRoseReader& reader) override {
-        if (!reader.get_uint8_t(id_)) return false;
-        if (!reader.get_uint16_t(header_)) return false;
-        return reader.get_uint32_t(data_);
-    }
-
-    uint8_t id_;
-    uint16_t header_;
-    uint32_t data_;
-};
-}*/
-
 namespace ServerData {
 enum Type : uint8_t {
     ECONOMY = 0,

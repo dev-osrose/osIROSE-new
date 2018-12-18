@@ -152,6 +152,10 @@ class SrvQuestData : public CRosePacket {
         void set_switches(const uint32_t, size_t index);
         std::array<uint32_t, MAX_SWITCHES> get_switches() const;
         uint32_t get_switches(size_t index) const;
+        void set_wishlist(const std::array<Item, MAX_WISHLIST>);
+        void set_wishlist(const Item, size_t index);
+        std::array<Item, MAX_WISHLIST> get_wishlist() const;
+        Item get_wishlist(size_t index) const;
         
         
         static SrvQuestData create();
@@ -168,6 +172,7 @@ class SrvQuestData : public CRosePacket {
         std::array<uint16_t, MAX_CONDITIONS_UNION> unions = {0};
         std::array<Quest, MAX_QUESTS> quests = {};
         std::array<uint32_t, MAX_SWITCHES> switches = {0};
+        std::array<Item, MAX_WISHLIST> wishlist = {};
 };
 
 }

@@ -19,4 +19,6 @@
             <element name = "items" type = "Item" occurs = "MAX_QUEST_ITEMS" default = "{}" />
         </sequence>
     </complexType>
+
+    <element name = "wishlist" type = "Item" occurs = "MAX_WISHLIST" default = "{}" />
 </packet>
