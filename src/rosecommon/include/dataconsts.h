@@ -18,7 +18,6 @@
 #include <entt.hpp>
 
 #include "enums.h"
-#include "types.h"
 
 namespace RoseCommon {
 constexpr unsigned int MIN_SELL_TYPE = 1;
@@ -59,6 +58,9 @@ constexpr unsigned int MAX_WISHLIST = 30;
 using Entity = uint32_t;
 using Registry = entt::registry<Entity>;
 }
+
+// I place it after just in case we need any of the constexpr/using directives in this file
+#include "types.h"
 
 /*namespace PartyReply {
 enum Reply : uint8_t {
