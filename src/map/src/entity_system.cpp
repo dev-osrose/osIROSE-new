@@ -209,7 +209,6 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
     for (const auto& row : invRes) {
-        logger->trace("item {}", row.storageType);
         const bool is_inventory = row.storageType == "inventory";
         const auto maxItems = is_inventory ? RoseCommon::MAX_ITEMS : RoseCommon::MAX_WISHLIST;
         if (row.slot >= maxItems) {
