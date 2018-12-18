@@ -116,8 +116,8 @@ SET(SOURCES_PACKETS
     #  #------------------------------------------------
     src/packets/srv_accept_reply.cpp
     include/packets/srv_accept_reply.h
-    #  src/packets/srv_changemapreply.cpp
-    #  include/packets/srv_changemapreply.h
+    src/packets/srv_change_map_reply.cpp
+    include/packets/srv_change_map_reply.h
     src/packets/srv_create_char_reply.cpp
     include/packets/srv_create_char_reply.h
     src/packets/srv_delete_char_reply.cpp
