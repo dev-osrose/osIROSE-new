@@ -27,24 +27,24 @@ class SrvSelectCharReply : public CRosePacket {
             
             static constexpr size_t size();
             
-            void set_id(const unsigned int);
-            unsigned int get_id() const;
-            void set_gem_opt(const unsigned int);
-            unsigned int get_gem_opt() const;
-            void set_socket(const unsigned int);
-            unsigned int get_socket() const;
             void set_grade(const unsigned int);
             unsigned int get_grade() const;
+            void set_socket(const unsigned int);
+            unsigned int get_socket() const;
+            void set_gem_opt(const unsigned int);
+            unsigned int get_gem_opt() const;
+            void set_id(const unsigned int);
+            unsigned int get_id() const;
             void set_data(const uint32_t);
             uint32_t get_data() const;
             
             private:
                 union {
                     PACK(struct {
-                        unsigned int id : 10;
-                        unsigned int gem_opt : 9;
-                        unsigned int socket : 1;
                         unsigned int grade : 4;
+                        unsigned int socket : 1;
+                        unsigned int gem_opt : 9;
+                        unsigned int id : 10;
                     });
                     uint32_t data = 0;
                 } data;

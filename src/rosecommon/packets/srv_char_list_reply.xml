@@ -3,6 +3,7 @@
     <include path = "dataconsts.h" />
 
     <include path = "string" system = "true" />
+    <includeXml path = "equipped_position.xml" />
 
     <complexType name = "EquippedItem">
         <choice>

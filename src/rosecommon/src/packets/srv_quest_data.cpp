@@ -187,19 +187,19 @@ uint32_t SrvQuestData::Quest::get_timer() const {
     return timer;
 }
 
-void SrvQuestData::Quest::set_vars(const std::array<uint32_t, MAX_QUEST_VARS> vars) {
+void SrvQuestData::Quest::set_vars(const std::array<uint16_t, MAX_QUEST_VARS> vars) {
     this->vars = vars;
 }
 
-void SrvQuestData::Quest::set_vars(const uint32_t vars, size_t index) {
+void SrvQuestData::Quest::set_vars(const uint16_t vars, size_t index) {
     this->vars[index] = vars;
 }
 
-std::array<uint32_t, MAX_QUEST_VARS> SrvQuestData::Quest::get_vars() const {
+std::array<uint16_t, MAX_QUEST_VARS> SrvQuestData::Quest::get_vars() const {
     return vars;
 }
 
-uint32_t SrvQuestData::Quest::get_vars(size_t index) const {
+uint16_t SrvQuestData::Quest::get_vars(size_t index) const {
     return vars[index];
 }
 
@@ -235,7 +235,7 @@ bool SrvQuestData::Quest::write(CRoseBasePolicy& writer) const {
         return false;
     }
     for (size_t index = 0; index < MAX_QUEST_VARS; ++index) {
-        if (!writer.set_uint32_t(vars[index])) {
+        if (!writer.set_uint16_t(vars[index])) {
             return false;
         }
     }
@@ -258,7 +258,7 @@ bool SrvQuestData::Quest::read(CRoseReader& reader) {
         return false;
     }
     for (size_t index = 0; index < MAX_QUEST_VARS; ++index) {
-        if (!reader.get_uint32_t(vars[index])) {
+        if (!reader.get_uint16_t(vars[index])) {
             return false;
         }
     }
@@ -277,7 +277,7 @@ constexpr size_t SrvQuestData::Quest::size() {
     size_t size = 0;
     size += sizeof(uint16_t);
     size += sizeof(uint32_t);
-    size += sizeof(uint32_t) * MAX_QUEST_VARS;
+    size += sizeof(uint16_t) * MAX_QUEST_VARS;
     size += sizeof(uint32_t);
     size += Item::size() * MAX_QUEST_ITEMS;
     return size;
@@ -388,19 +388,19 @@ uint16_t SrvQuestData::get_unions(size_t index) const {
     return unions[index];
 }
 
-void SrvQuestData::set_quests(const std::array<SrvQuestData::Quest, MAX_QUESTS> quests) {
+void SrvQuestData::set_quests(const std::array<SrvQuestData::Quest, MAX_QUESTS>& quests) {
     this->quests = quests;
 }
 
-void SrvQuestData::set_quests(const Quest quests, size_t index) {
+void SrvQuestData::set_quests(const Quest& quests, size_t index) {
     this->quests[index] = quests;
 }
 
-std::array<SrvQuestData::Quest, MAX_QUESTS> SrvQuestData::get_quests() const {
+const std::array<SrvQuestData::Quest, MAX_QUESTS>& SrvQuestData::get_quests() const {
     return quests;
 }
 
-SrvQuestData::Quest SrvQuestData::get_quests(size_t index) const {
+const SrvQuestData::Quest& SrvQuestData::get_quests(size_t index) const {
     return quests[index];
 }
 

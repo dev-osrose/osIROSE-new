@@ -94,7 +94,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
   if (entitySystem->dispatch_packet(entity, RoseCommon::fetchPacket(_buffer))) {
       return true;
   }
-  logger_->warn("Packet {} not handled", to_underlying(CRosePacket::type(_buffer)));
+  logger_->warn("Packet 0x{0:02x} not handled", to_underlying(CRosePacket::type(_buffer)));
   return true;
 }
 

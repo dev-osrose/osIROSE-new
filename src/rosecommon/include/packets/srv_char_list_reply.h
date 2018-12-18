@@ -2,6 +2,7 @@
 
 
 #include "packetfactory.h"
+#include "dataconsts.h"
 #include <string>
 #include <vector>
 
@@ -83,9 +84,9 @@ class SrvCharListReply : public CRosePacket {
             uint32_t get_face() const;
             void set_hair(const uint32_t);
             uint32_t get_hair() const;
-            void set_items(const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>&);
+            void set_items(const std::array<EquippedItem, MAX_VISIBLE_ITEMS>&);
             void set_items(const EquippedItem&, size_t index);
-            const std::array<EquippedItem, EquippedPosition::MAX_ITEMS>& get_items() const;
+            const std::array<EquippedItem, MAX_VISIBLE_ITEMS>& get_items() const;
             const EquippedItem& get_items(size_t index) const;
             
             private:
@@ -97,7 +98,7 @@ class SrvCharListReply : public CRosePacket {
                 uint8_t platinium = 0;
                 uint32_t face;
                 uint32_t hair;
-                std::array<EquippedItem, EquippedPosition::MAX_ITEMS> items;
+                std::array<EquippedItem, MAX_VISIBLE_ITEMS> items;
         };
         
         

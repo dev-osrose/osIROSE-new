@@ -13,7 +13,7 @@ void Chat::normal_chat(EntitySystem& entitySystem, Entity entity, const CliNorma
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Chat::normal_chat()");
     logger->trace("entity {}, message {}", entity, packet.get_message());
-    const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
+    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     auto p = SrvNormalChat::create(basicInfo.id, packet.get_message());
-    entitySystem->send_nearby(entity, p);
+    entitySystem.send_nearby(entity, p);
 }

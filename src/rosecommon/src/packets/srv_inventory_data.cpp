@@ -193,19 +193,19 @@ int64_t SrvInventoryData::get_zuly() const {
     return zuly;
 }
 
-void SrvInventoryData::set_items(const std::array<SrvInventoryData::Item, MAX_ITEMS> items) {
+void SrvInventoryData::set_items(const std::array<SrvInventoryData::Item, MAX_ITEMS>& items) {
     this->items = items;
 }
 
-void SrvInventoryData::set_items(const Item items, size_t index) {
+void SrvInventoryData::set_items(const Item& items, size_t index) {
     this->items[index] = items;
 }
 
-std::array<SrvInventoryData::Item, MAX_ITEMS> SrvInventoryData::get_items() const {
+const std::array<SrvInventoryData::Item, MAX_ITEMS>& SrvInventoryData::get_items() const {
     return items;
 }
 
-SrvInventoryData::Item SrvInventoryData::get_items(size_t index) const {
+const SrvInventoryData::Item& SrvInventoryData::get_items(size_t index) const {
     return items[index];
 }
 

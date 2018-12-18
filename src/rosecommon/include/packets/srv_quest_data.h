@@ -107,10 +107,10 @@ class SrvQuestData : public CRosePacket {
             uint16_t get_id() const;
             void set_timer(const uint32_t);
             uint32_t get_timer() const;
-            void set_vars(const std::array<uint32_t, MAX_QUEST_VARS>);
-            void set_vars(const uint32_t, size_t index);
-            std::array<uint32_t, MAX_QUEST_VARS> get_vars() const;
-            uint32_t get_vars(size_t index) const;
+            void set_vars(const std::array<uint16_t, MAX_QUEST_VARS>);
+            void set_vars(const uint16_t, size_t index);
+            std::array<uint16_t, MAX_QUEST_VARS> get_vars() const;
+            uint16_t get_vars(size_t index) const;
             void set_switches(const uint32_t);
             uint32_t get_switches() const;
             void set_items(const std::array<Item, MAX_QUEST_ITEMS>);
@@ -122,7 +122,7 @@ class SrvQuestData : public CRosePacket {
                 uint16_t id = 0;
                 // timer: Unlimited if 0
                 uint32_t timer = 0;
-                std::array<uint32_t, MAX_QUEST_VARS> vars = {0};
+                std::array<uint16_t, MAX_QUEST_VARS> vars = {0};
                 uint32_t switches = 0;
                 std::array<Item, MAX_QUEST_ITEMS> items = {};
         };
@@ -144,10 +144,10 @@ class SrvQuestData : public CRosePacket {
         void set_unions(const uint16_t, size_t index);
         std::array<uint16_t, MAX_CONDITIONS_UNION> get_unions() const;
         uint16_t get_unions(size_t index) const;
-        void set_quests(const std::array<Quest, MAX_QUESTS>);
-        void set_quests(const Quest, size_t index);
-        std::array<Quest, MAX_QUESTS> get_quests() const;
-        Quest get_quests(size_t index) const;
+        void set_quests(const std::array<Quest, MAX_QUESTS>&);
+        void set_quests(const Quest&, size_t index);
+        const std::array<Quest, MAX_QUESTS>& get_quests() const;
+        const Quest& get_quests(size_t index) const;
         void set_switches(const std::array<uint32_t, MAX_SWITCHES>);
         void set_switches(const uint32_t, size_t index);
         std::array<uint32_t, MAX_SWITCHES> get_switches() const;

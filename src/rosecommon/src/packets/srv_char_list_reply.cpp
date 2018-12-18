@@ -126,7 +126,7 @@ uint32_t SrvCharListReply::CharInfo::get_hair() const {
     return hair;
 }
 
-void SrvCharListReply::CharInfo::set_items(const std::array<SrvCharListReply::EquippedItem, SrvCharListReply::EquippedPosition::MAX_ITEMS>& items) {
+void SrvCharListReply::CharInfo::set_items(const std::array<SrvCharListReply::EquippedItem, MAX_VISIBLE_ITEMS>& items) {
     this->items = items;
 }
 
@@ -134,7 +134,7 @@ void SrvCharListReply::CharInfo::set_items(const EquippedItem& items, size_t ind
     this->items[index] = items;
 }
 
-const std::array<SrvCharListReply::EquippedItem, SrvCharListReply::EquippedPosition::MAX_ITEMS>& SrvCharListReply::CharInfo::get_items() const {
+const std::array<SrvCharListReply::EquippedItem, MAX_VISIBLE_ITEMS>& SrvCharListReply::CharInfo::get_items() const {
     return items;
 }
 
@@ -167,7 +167,7 @@ bool SrvCharListReply::CharInfo::write(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(hair)) {
         return false;
     }
-    for (size_t index = 0; index < EquippedPosition::MAX_ITEMS; ++index) {
+    for (size_t index = 0; index < MAX_VISIBLE_ITEMS; ++index) {
         if (!writer.set_iserialize(items[index])) {
             return false;
         }
@@ -200,7 +200,7 @@ bool SrvCharListReply::CharInfo::read(CRoseReader& reader) {
     if (!reader.get_uint32_t(hair)) {
         return false;
     }
-    for (size_t index = 0; index < EquippedPosition::MAX_ITEMS; ++index) {
+    for (size_t index = 0; index < MAX_VISIBLE_ITEMS; ++index) {
         if (!reader.get_iserialize(items[index])) {
             return false;
         }
@@ -217,7 +217,7 @@ constexpr size_t SrvCharListReply::CharInfo::size() {
     size += sizeof(uint8_t);
     size += sizeof(uint32_t);
     size += sizeof(uint32_t);
-    size += EquippedItem::size() * EquippedPosition::MAX_ITEMS;
+    size += EquippedItem::size() * MAX_VISIBLE_ITEMS;
     return size;
 }
 

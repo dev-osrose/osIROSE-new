@@ -12,11 +12,11 @@ char SrvLoginReply::ServerInfo::get_test() const {
     return test;
 }
 
-void SrvLoginReply::ServerInfo::set_name(const std::string name) {
+void SrvLoginReply::ServerInfo::set_name(const std::string& name) {
     this->name = name;
 }
 
-std::string SrvLoginReply::ServerInfo::get_name() const {
+const std::string& SrvLoginReply::ServerInfo::get_name() const {
     return name;
 }
 
@@ -106,19 +106,19 @@ uint16_t SrvLoginReply::get_type() const {
     return type;
 }
 
-void SrvLoginReply::set_serversInfo(const std::vector<SrvLoginReply::ServerInfo> serversInfo) {
+void SrvLoginReply::set_serversInfo(const std::vector<SrvLoginReply::ServerInfo>& serversInfo) {
     this->serversInfo = serversInfo;
 }
 
-void SrvLoginReply::add_serversInfo(const ServerInfo serversInfo) {
+void SrvLoginReply::add_serversInfo(const ServerInfo& serversInfo) {
     this->serversInfo.emplace_back(serversInfo);
 }
 
-std::vector<SrvLoginReply::ServerInfo> SrvLoginReply::get_serversInfo() const {
+const std::vector<SrvLoginReply::ServerInfo>& SrvLoginReply::get_serversInfo() const {
     return serversInfo;
 }
 
-SrvLoginReply::ServerInfo SrvLoginReply::get_serversInfo(size_t index) const {
+const SrvLoginReply::ServerInfo& SrvLoginReply::get_serversInfo(size_t index) const {
     return serversInfo[index];
 }
 

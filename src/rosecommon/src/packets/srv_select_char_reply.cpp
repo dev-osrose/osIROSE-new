@@ -4,20 +4,12 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void SrvSelectCharReply::EquippedItem::set_id(const unsigned int id) {
-    this->data.id = id;
+void SrvSelectCharReply::EquippedItem::set_grade(const unsigned int grade) {
+    this->data.grade = grade;
 }
 
-unsigned int SrvSelectCharReply::EquippedItem::get_id() const {
-    return data.id;
-}
-
-void SrvSelectCharReply::EquippedItem::set_gem_opt(const unsigned int gem_opt) {
-    this->data.gem_opt = gem_opt;
-}
-
-unsigned int SrvSelectCharReply::EquippedItem::get_gem_opt() const {
-    return data.gem_opt;
+unsigned int SrvSelectCharReply::EquippedItem::get_grade() const {
+    return data.grade;
 }
 
 void SrvSelectCharReply::EquippedItem::set_socket(const unsigned int socket) {
@@ -28,12 +20,20 @@ unsigned int SrvSelectCharReply::EquippedItem::get_socket() const {
     return data.socket;
 }
 
-void SrvSelectCharReply::EquippedItem::set_grade(const unsigned int grade) {
-    this->data.grade = grade;
+void SrvSelectCharReply::EquippedItem::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
 }
 
-unsigned int SrvSelectCharReply::EquippedItem::get_grade() const {
-    return data.grade;
+unsigned int SrvSelectCharReply::EquippedItem::get_gem_opt() const {
+    return data.gem_opt;
+}
+
+void SrvSelectCharReply::EquippedItem::set_id(const unsigned int id) {
+    this->data.id = id;
+}
+
+unsigned int SrvSelectCharReply::EquippedItem::get_id() const {
+    return data.id;
 }
 
 void SrvSelectCharReply::EquippedItem::set_data(const uint32_t data) {

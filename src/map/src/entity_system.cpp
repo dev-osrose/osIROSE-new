@@ -68,7 +68,6 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
 
 void EntitySystem::run() {
     for (auto [res, task] = work_queue.pop_front(); res;) {
-        logger->trace("doing work");
         {
             std::lock_guard<std::mutex> lock(access);
             std::invoke(std::move(task), *this);
@@ -205,12 +204,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-	   .where(inventoryTable.charId == charId and inventoryTable.storage_type == "inventory" or inventoryTable.storage_type == "wishlist"));
+	   .where(inventoryTable.charId == charId and inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist"));
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
     for (const auto& row : invRes) {
-        const bool is_inventory = row.storage_type == "inventory";
+        logger->trace("item {}", row.storageType);
+        const bool is_inventory = row.storageType == "inventory";
         const auto maxItems = is_inventory ? RoseCommon::MAX_ITEMS : RoseCommon::MAX_WISHLIST;
         if (row.slot >= maxItems) {
             continue;

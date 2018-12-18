@@ -43,8 +43,8 @@ class SrvLoginReply : public CRosePacket {
             
             void set_test(const char);
             char get_test() const;
-            void set_name(const std::string);
-            std::string get_name() const;
+            void set_name(const std::string&);
+            const std::string& get_name() const;
             void set_id(const uint32_t);
             uint32_t get_id() const;
             
@@ -61,10 +61,10 @@ class SrvLoginReply : public CRosePacket {
         uint16_t get_right() const;
         void set_type(const uint16_t);
         uint16_t get_type() const;
-        void set_serversInfo(const std::vector<ServerInfo>);
-        void add_serversInfo(const ServerInfo);
-        std::vector<ServerInfo> get_serversInfo() const;
-        ServerInfo get_serversInfo(size_t index) const;
+        void set_serversInfo(const std::vector<ServerInfo>&);
+        void add_serversInfo(const ServerInfo&);
+        const std::vector<ServerInfo>& get_serversInfo() const;
+        const ServerInfo& get_serversInfo(size_t index) const;
         
         
         static SrvLoginReply create(const Result&, const uint16_t&, const uint16_t&);

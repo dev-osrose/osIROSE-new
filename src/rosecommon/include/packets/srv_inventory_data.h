@@ -100,10 +100,10 @@ class SrvInventoryData : public CRosePacket {
         
         void set_zuly(const int64_t);
         int64_t get_zuly() const;
-        void set_items(const std::array<Item, MAX_ITEMS>);
-        void set_items(const Item, size_t index);
-        std::array<Item, MAX_ITEMS> get_items() const;
-        Item get_items(size_t index) const;
+        void set_items(const std::array<Item, MAX_ITEMS>&);
+        void set_items(const Item&, size_t index);
+        const std::array<Item, MAX_ITEMS>& get_items() const;
+        const Item& get_items(size_t index) const;
         
         
         static SrvInventoryData create(const int64_t&);
