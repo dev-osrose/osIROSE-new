@@ -10,7 +10,7 @@
     <element name = "bodyHair" type = "uint32_t" default = "0">
         <documentation>It's actually the hair that is expected here</documentation>
     </element>
-    <includeXml path = "equipped_item.xml" default = "0" />
+    <includeXml path = "equipped_item.xml" />
     <element name = "equippedItems" type = "EquippedItem" occurs = "MAX_VISIBLE_ITEMS" ref = "true" default = "{}" />
     <element name = "stone" type = "uint8_t" default = "0" />
     <element name = "face" type = "uint8_t" default = "0" />
@@ -41,13 +41,13 @@
     <element name = "guildRank" type = "uint8_t" default = "0" />
     <element name = "pkFlag" type = "uint16_t" default = "0" />
     <element name = "stamina" type = "uint16_t" default = "0" />
-    <include path = "dataconsts.h" default = "0" />
+    <include path = "dataconsts.h" />
     <element name = "effects" type = "StatusEffect" ref = "true" occurs = "MAX_STATUS_EFFECTS" default = "{}" />
     <element name = "patHp" type = "uint16_t" default = "0" />
     <element name = "patCooldownTime" type = "uint32_t" default = "0" />
     <element name = "skills" type = "uint16_t" ref = "true" occurs = "MAX_SKILL_COUNT" default = "{0}" />
     <element name = "hotbar" type = "HotbarItem" ref = "true" occurs = "MAX_HOTBAR_ITEMS" default = "{}" />
     <element name = "tag" type = "uint32_t" default = "0" />
-    <include path = "string" system = "true" default = "0" />
+    <include path = "string" system = "true" />
     <element name = "name" type = "std::string" ref = "true" default = '"test"' />
 </packet>
