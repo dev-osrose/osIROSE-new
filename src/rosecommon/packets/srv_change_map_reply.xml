@@ -1,8 +1,8 @@
 <packet ePacketType = "PAKWC_CHANGE_MAP_REPLY">
     <element name = "objectIndex" type = "uint16_t" />
-    <element name = "currentHp" type = "uint16_t" />
-    <element name = "currentMp" type = "uint16_t" />
-    <element name = "currentXp" type = "uint16_t" />
+    <element name = "hp" type = "uint16_t" />
+    <element name = "mp" type = "uint16_t" />
+    <element name = "xp" type = "uint16_t" />
     <element name = "penalizeXp" type = "uint16_t" />
     <element name = "craftRate" type = "uint16_t" default = "0" />
     <element name = "updateTime" type = "uint16_t" default = "0" />
