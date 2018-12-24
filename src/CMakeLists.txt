@@ -25,7 +25,7 @@ if(WITH_MYSQL)
   add_compiler_flags(-DENABLE_MYSQL)
   
   include_directories(
-    SYSTEM ${MYSQL_INCLUDE_DIRS}
+    SYSTEM ${MYSQL_INCLUDE_DIR}
     SYSTEM ${SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR}
   )
 
