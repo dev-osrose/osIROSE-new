@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project(tools)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
 if(BUILD_TOOLS)
+  project(tools)
+
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
   include_directories(
     SYSTEM ${SPDLOG_ROOT}
   )
