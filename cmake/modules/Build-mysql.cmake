@@ -1,5 +1,7 @@
 set(MYSQL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
+message(STATUS "Building MySQL since MySQL not found")
+
 ExternalProject_Add(
   mysql
   URL https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.12.tar.gz
@@ -15,12 +17,19 @@ ExternalProject_Get_Property(
 
 set(MYSQL_INCLUDE_DIR "${install_dir}/include")
 if(WIN32)
+  set(MYSQL_LIBRARY_DIR "${install_dir}/lib")
+  set(MYSQL_LIBRARY "${install_dir}/lib/libmysqlclient.lib")
   set(MYSQL_LIBRARIES "${install_dir}/lib/libmysqlclient.lib" "${MYSQL_LIBRARIES}")
 else()
+  set(MYSQL_LIBRARY_DIR "${install_dir}/lib")
+  set(MYSQL_LIBRARY "${install_dir}/lib/libmysqlclient.so")
   set(MYSQL_LIBRARIES "${install_dir}/lib/libmysqlclient.so" "${MYSQL_LIBRARIES}")
 endif()
 if(NOT TARGET mysql::mysql)
   add_library(mysql::mysql INTERFACE IMPORTED)
+  add_dependencies(mysql::mysql mysql)
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_LINK_LIBRARIES "${MYSQL_LIBRARIES}")
 endif()
+
+mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARIES MYSQL_LIBRARY MYSQL_LIBRARY_PATH )

@@ -191,3 +191,5 @@ compile_commands.json
 cbuild
 __pycache__
 /3rdparty/CMake
+3rdparty/lib64/
+3rdparty/lib/
