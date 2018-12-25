@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <memory>
+#include "connection.h"
+#include "connectionpool.h"
 #include "ccharisc.h"
 #include "crosepacket.h"
 #include "ccharserver.h"
