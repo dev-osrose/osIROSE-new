@@ -22,8 +22,8 @@
     <include path = "dataconsts.h" />
     <include path = "string" system = "true" />
 
-    <element name = "inventory" type = "EquippedItem" occurs = "MAX_VISIBLE_ITEMS" ref = "true" default = "{}" />
-    <element name = "bullets" type = "Header" occurs = "BulletType::MAX_BULLET_TYPES" ref = "true" default = "{}" />
+    <element name = "inventory" type = "Item" occurs = "MAX_VISIBLE_ITEMS" ref = "true" default = "{}" />
+    <element name = "bullets" type = "BulletItem" occurs = "BulletType::MAX_BULLET_TYPES" ref = "true" default = "{}" />
     <element name = "job" type = "uint16_t" default = "0" />
     <element name = "level" type = "uint8_t" default = "0" />
     <element name = "ridingItems" type = "EquippedItem" occurs = "RidingItem::MAX_RIDING_ITEMS" ref = "true" default = "{}" />
