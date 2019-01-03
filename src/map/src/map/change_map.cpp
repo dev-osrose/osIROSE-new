@@ -4,6 +4,7 @@
 #include "entity_system.h"
 #include "cli_normal_chat.h"
 #include "srv_normal_chat.h"
+#include "cli_change_map_req.h"
 #include "components/basic_info.h"
 #include "whisper_char.h"
 
