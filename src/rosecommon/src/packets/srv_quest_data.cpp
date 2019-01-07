@@ -4,12 +4,12 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void SrvQuestData::Header::set_isCreated(const unsigned int isCreated) {
-    this->data.isCreated = isCreated;
+void SrvQuestData::Header::set_type(const unsigned int type) {
+    this->data.type = type;
 }
 
-unsigned int SrvQuestData::Header::get_isCreated() const {
-    return data.isCreated;
+unsigned int SrvQuestData::Header::get_type() const {
+    return data.type;
 }
 
 void SrvQuestData::Header::set_id(const unsigned int id) {
@@ -20,12 +20,12 @@ unsigned int SrvQuestData::Header::get_id() const {
     return data.id;
 }
 
-void SrvQuestData::Header::set_type(const unsigned int type) {
-    this->data.type = type;
+void SrvQuestData::Header::set_isCreated(const unsigned int isCreated) {
+    this->data.isCreated = isCreated;
 }
 
-unsigned int SrvQuestData::Header::get_type() const {
-    return data.type;
+unsigned int SrvQuestData::Header::get_isCreated() const {
+    return data.isCreated;
 }
 
 void SrvQuestData::Header::set_header(const uint16_t header) {
@@ -54,36 +54,12 @@ constexpr size_t SrvQuestData::Header::size() {
     return sizeof(data);
 }
 
-void SrvQuestData::Data::set_refine(const unsigned int refine) {
-    this->data.refine = refine;
+void SrvQuestData::Data::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
 }
 
-unsigned int SrvQuestData::Data::get_refine() const {
-    return data.refine;
-}
-
-void SrvQuestData::Data::set_isAppraised(const unsigned int isAppraised) {
-    this->data.isAppraised = isAppraised;
-}
-
-unsigned int SrvQuestData::Data::get_isAppraised() const {
-    return data.isAppraised;
-}
-
-void SrvQuestData::Data::set_hasSocket(const unsigned int hasSocket) {
-    this->data.hasSocket = hasSocket;
-}
-
-unsigned int SrvQuestData::Data::get_hasSocket() const {
-    return data.hasSocket;
-}
-
-void SrvQuestData::Data::set_life(const unsigned int life) {
-    this->data.life = life;
-}
-
-unsigned int SrvQuestData::Data::get_life() const {
-    return data.life;
+unsigned int SrvQuestData::Data::get_gem_opt() const {
+    return data.gem_opt;
 }
 
 void SrvQuestData::Data::set_durability(const unsigned int durability) {
@@ -94,12 +70,36 @@ unsigned int SrvQuestData::Data::get_durability() const {
     return data.durability;
 }
 
-void SrvQuestData::Data::set_gem_opt(const unsigned int gem_opt) {
-    this->data.gem_opt = gem_opt;
+void SrvQuestData::Data::set_life(const unsigned int life) {
+    this->data.life = life;
 }
 
-unsigned int SrvQuestData::Data::get_gem_opt() const {
-    return data.gem_opt;
+unsigned int SrvQuestData::Data::get_life() const {
+    return data.life;
+}
+
+void SrvQuestData::Data::set_hasSocket(const unsigned int hasSocket) {
+    this->data.hasSocket = hasSocket;
+}
+
+unsigned int SrvQuestData::Data::get_hasSocket() const {
+    return data.hasSocket;
+}
+
+void SrvQuestData::Data::set_isAppraised(const unsigned int isAppraised) {
+    this->data.isAppraised = isAppraised;
+}
+
+unsigned int SrvQuestData::Data::get_isAppraised() const {
+    return data.isAppraised;
+}
+
+void SrvQuestData::Data::set_refine(const unsigned int refine) {
+    this->data.refine = refine;
+}
+
+unsigned int SrvQuestData::Data::get_refine() const {
+    return data.refine;
 }
 
 void SrvQuestData::Data::set_count(const uint32_t count) {

@@ -4,12 +4,12 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void SrvInventoryData::Header::set_isCreated(const unsigned int isCreated) {
-    this->data.isCreated = isCreated;
+void SrvInventoryData::Header::set_type(const unsigned int type) {
+    this->data.type = type;
 }
 
-unsigned int SrvInventoryData::Header::get_isCreated() const {
-    return data.isCreated;
+unsigned int SrvInventoryData::Header::get_type() const {
+    return data.type;
 }
 
 void SrvInventoryData::Header::set_id(const unsigned int id) {
@@ -20,12 +20,12 @@ unsigned int SrvInventoryData::Header::get_id() const {
     return data.id;
 }
 
-void SrvInventoryData::Header::set_type(const unsigned int type) {
-    this->data.type = type;
+void SrvInventoryData::Header::set_isCreated(const unsigned int isCreated) {
+    this->data.isCreated = isCreated;
 }
 
-unsigned int SrvInventoryData::Header::get_type() const {
-    return data.type;
+unsigned int SrvInventoryData::Header::get_isCreated() const {
+    return data.isCreated;
 }
 
 void SrvInventoryData::Header::set_header(const uint16_t header) {
@@ -54,36 +54,12 @@ constexpr size_t SrvInventoryData::Header::size() {
     return sizeof(data);
 }
 
-void SrvInventoryData::Data::set_refine(const unsigned int refine) {
-    this->data.refine = refine;
+void SrvInventoryData::Data::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
 }
 
-unsigned int SrvInventoryData::Data::get_refine() const {
-    return data.refine;
-}
-
-void SrvInventoryData::Data::set_isAppraised(const unsigned int isAppraised) {
-    this->data.isAppraised = isAppraised;
-}
-
-unsigned int SrvInventoryData::Data::get_isAppraised() const {
-    return data.isAppraised;
-}
-
-void SrvInventoryData::Data::set_hasSocket(const unsigned int hasSocket) {
-    this->data.hasSocket = hasSocket;
-}
-
-unsigned int SrvInventoryData::Data::get_hasSocket() const {
-    return data.hasSocket;
-}
-
-void SrvInventoryData::Data::set_life(const unsigned int life) {
-    this->data.life = life;
-}
-
-unsigned int SrvInventoryData::Data::get_life() const {
-    return data.life;
+unsigned int SrvInventoryData::Data::get_gem_opt() const {
+    return data.gem_opt;
 }
 
 void SrvInventoryData::Data::set_durability(const unsigned int durability) {
@@ -94,12 +70,36 @@ unsigned int SrvInventoryData::Data::get_durability() const {
     return data.durability;
 }
 
-void SrvInventoryData::Data::set_gem_opt(const unsigned int gem_opt) {
-    this->data.gem_opt = gem_opt;
+void SrvInventoryData::Data::set_life(const unsigned int life) {
+    this->data.life = life;
 }
 
-unsigned int SrvInventoryData::Data::get_gem_opt() const {
-    return data.gem_opt;
+unsigned int SrvInventoryData::Data::get_life() const {
+    return data.life;
+}
+
+void SrvInventoryData::Data::set_hasSocket(const unsigned int hasSocket) {
+    this->data.hasSocket = hasSocket;
+}
+
+unsigned int SrvInventoryData::Data::get_hasSocket() const {
+    return data.hasSocket;
+}
+
+void SrvInventoryData::Data::set_isAppraised(const unsigned int isAppraised) {
+    this->data.isAppraised = isAppraised;
+}
+
+unsigned int SrvInventoryData::Data::get_isAppraised() const {
+    return data.isAppraised;
+}
+
+void SrvInventoryData::Data::set_refine(const unsigned int refine) {
+    this->data.refine = refine;
+}
+
+unsigned int SrvInventoryData::Data::get_refine() const {
+    return data.refine;
 }
 
 void SrvInventoryData::Data::set_count(const uint32_t count) {

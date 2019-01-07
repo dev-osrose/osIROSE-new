@@ -65,8 +65,8 @@ SET(SOURCES_PACKETS
     include/packets/cli_accept_req.h
     src/packets/cli_alive.cpp
     include/packets/cli_alive.h
-    #  src/packets/cli_changemapreq.cpp
-    #  include/packets/cli_changemapreq.h
+    src/packets/cli_change_map_req.cpp
+    include/packets/cli_change_map_req.h
     src/packets/cli_channel_list_req.cpp
     include/packets/cli_channel_list_req.h
     src/packets/cli_create_char_req.cpp

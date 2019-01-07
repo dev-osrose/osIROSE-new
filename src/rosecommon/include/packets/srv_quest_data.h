@@ -26,21 +26,21 @@ class SrvQuestData : public CRosePacket {
             
             static constexpr size_t size();
             
-            void set_isCreated(const unsigned int);
-            unsigned int get_isCreated() const;
-            void set_id(const unsigned int);
-            unsigned int get_id() const;
             void set_type(const unsigned int);
             unsigned int get_type() const;
+            void set_id(const unsigned int);
+            unsigned int get_id() const;
+            void set_isCreated(const unsigned int);
+            unsigned int get_isCreated() const;
             void set_header(const uint16_t);
             uint16_t get_header() const;
             
             private:
                 union {
                     PACK(struct {
-                        unsigned int isCreated : 1;
-                        unsigned int id : 10;
                         unsigned int type : 5;
+                        unsigned int id : 10;
+                        unsigned int isCreated : 1;
                     });
                     uint16_t header = 0;
                 } data;
@@ -52,30 +52,30 @@ class SrvQuestData : public CRosePacket {
             
             static constexpr size_t size();
             
-            void set_refine(const unsigned int);
-            unsigned int get_refine() const;
-            void set_isAppraised(const unsigned int);
-            unsigned int get_isAppraised() const;
-            void set_hasSocket(const unsigned int);
-            unsigned int get_hasSocket() const;
-            void set_life(const unsigned int);
-            unsigned int get_life() const;
-            void set_durability(const unsigned int);
-            unsigned int get_durability() const;
             void set_gem_opt(const unsigned int);
             unsigned int get_gem_opt() const;
+            void set_durability(const unsigned int);
+            unsigned int get_durability() const;
+            void set_life(const unsigned int);
+            unsigned int get_life() const;
+            void set_hasSocket(const unsigned int);
+            unsigned int get_hasSocket() const;
+            void set_isAppraised(const unsigned int);
+            unsigned int get_isAppraised() const;
+            void set_refine(const unsigned int);
+            unsigned int get_refine() const;
             void set_count(const uint32_t);
             uint32_t get_count() const;
             
             private:
                 union {
                     PACK(struct {
-                        unsigned int refine : 4;
-                        unsigned int isAppraised : 1;
-                        unsigned int hasSocket : 1;
-                        unsigned int life : 10;
-                        unsigned int durability : 7;
                         unsigned int gem_opt : 9;
+                        unsigned int durability : 7;
+                        unsigned int life : 10;
+                        unsigned int hasSocket : 1;
+                        unsigned int isAppraised : 1;
+                        unsigned int refine : 4;
                     });
                     uint32_t count = 0;
                 } data;

@@ -4,20 +4,136 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void SrvPlayerChar::EquippedItem::set_grade(const unsigned int grade) {
-    this->data.grade = grade;
+void SrvPlayerChar::Header::set_type(const unsigned int type) {
+    this->data.type = type;
 }
 
-unsigned int SrvPlayerChar::EquippedItem::get_grade() const {
-    return data.grade;
+unsigned int SrvPlayerChar::Header::get_type() const {
+    return data.type;
 }
 
-void SrvPlayerChar::EquippedItem::set_socket(const unsigned int socket) {
-    this->data.socket = socket;
+void SrvPlayerChar::Header::set_id(const unsigned int id) {
+    this->data.id = id;
 }
 
-unsigned int SrvPlayerChar::EquippedItem::get_socket() const {
-    return data.socket;
+unsigned int SrvPlayerChar::Header::get_id() const {
+    return data.id;
+}
+
+void SrvPlayerChar::Header::set_isCreated(const unsigned int isCreated) {
+    this->data.isCreated = isCreated;
+}
+
+unsigned int SrvPlayerChar::Header::get_isCreated() const {
+    return data.isCreated;
+}
+
+void SrvPlayerChar::Header::set_header(const uint16_t header) {
+    this->data.header = header;
+}
+
+uint16_t SrvPlayerChar::Header::get_header() const {
+    return data.header;
+}
+
+bool SrvPlayerChar::Header::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint16_t(data.header)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvPlayerChar::Header::read(CRoseReader& reader) {
+    if (!reader.get_uint16_t(data.header)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvPlayerChar::Header::size() {
+    return sizeof(data);
+}
+
+void SrvPlayerChar::Data::set_gem_opt(const unsigned int gem_opt) {
+    this->data.gem_opt = gem_opt;
+}
+
+unsigned int SrvPlayerChar::Data::get_gem_opt() const {
+    return data.gem_opt;
+}
+
+void SrvPlayerChar::Data::set_durability(const unsigned int durability) {
+    this->data.durability = durability;
+}
+
+unsigned int SrvPlayerChar::Data::get_durability() const {
+    return data.durability;
+}
+
+void SrvPlayerChar::Data::set_life(const unsigned int life) {
+    this->data.life = life;
+}
+
+unsigned int SrvPlayerChar::Data::get_life() const {
+    return data.life;
+}
+
+void SrvPlayerChar::Data::set_hasSocket(const unsigned int hasSocket) {
+    this->data.hasSocket = hasSocket;
+}
+
+unsigned int SrvPlayerChar::Data::get_hasSocket() const {
+    return data.hasSocket;
+}
+
+void SrvPlayerChar::Data::set_isAppraised(const unsigned int isAppraised) {
+    this->data.isAppraised = isAppraised;
+}
+
+unsigned int SrvPlayerChar::Data::get_isAppraised() const {
+    return data.isAppraised;
+}
+
+void SrvPlayerChar::Data::set_refine(const unsigned int refine) {
+    this->data.refine = refine;
+}
+
+unsigned int SrvPlayerChar::Data::get_refine() const {
+    return data.refine;
+}
+
+void SrvPlayerChar::Data::set_count(const uint32_t count) {
+    this->data.count = count;
+}
+
+uint32_t SrvPlayerChar::Data::get_count() const {
+    return data.count;
+}
+
+bool SrvPlayerChar::Data::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvPlayerChar::Data::read(CRoseReader& reader) {
+    if (!reader.get_uint32_t(data.count)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvPlayerChar::Data::size() {
+    return sizeof(data);
+}
+
+void SrvPlayerChar::EquippedItem::set_id(const unsigned int id) {
+    this->data.id = id;
+}
+
+unsigned int SrvPlayerChar::EquippedItem::get_id() const {
+    return data.id;
 }
 
 void SrvPlayerChar::EquippedItem::set_gem_opt(const unsigned int gem_opt) {
@@ -28,12 +144,20 @@ unsigned int SrvPlayerChar::EquippedItem::get_gem_opt() const {
     return data.gem_opt;
 }
 
-void SrvPlayerChar::EquippedItem::set_id(const unsigned int id) {
-    this->data.id = id;
+void SrvPlayerChar::EquippedItem::set_socket(const unsigned int socket) {
+    this->data.socket = socket;
 }
 
-unsigned int SrvPlayerChar::EquippedItem::get_id() const {
-    return data.id;
+unsigned int SrvPlayerChar::EquippedItem::get_socket() const {
+    return data.socket;
+}
+
+void SrvPlayerChar::EquippedItem::set_grade(const unsigned int grade) {
+    this->data.grade = grade;
+}
+
+unsigned int SrvPlayerChar::EquippedItem::get_grade() const {
+    return data.grade;
 }
 
 void SrvPlayerChar::EquippedItem::set_data(const uint32_t data) {
@@ -62,53 +186,88 @@ constexpr size_t SrvPlayerChar::EquippedItem::size() {
     return sizeof(data);
 }
 
-void SrvPlayerChar::Header::set_isCreated(const unsigned int isCreated) {
-    this->data.isCreated = isCreated;
+void SrvPlayerChar::Item::set_header(const SrvPlayerChar::Header header) {
+    this->header = header;
 }
 
-unsigned int SrvPlayerChar::Header::get_isCreated() const {
-    return data.isCreated;
+SrvPlayerChar::Header SrvPlayerChar::Item::get_header() const {
+    return header;
 }
 
-void SrvPlayerChar::Header::set_id(const unsigned int id) {
-    this->data.id = id;
+void SrvPlayerChar::Item::set_data(const SrvPlayerChar::Data data) {
+    this->data = data;
 }
 
-unsigned int SrvPlayerChar::Header::get_id() const {
-    return data.id;
+SrvPlayerChar::Data SrvPlayerChar::Item::get_data() const {
+    return data;
 }
 
-void SrvPlayerChar::Header::set_type(const unsigned int type) {
+bool SrvPlayerChar::Item::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_iserialize(header)) {
+        return false;
+    }
+    if (!writer.set_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+bool SrvPlayerChar::Item::read(CRoseReader& reader) {
+    if (!reader.get_iserialize(header)) {
+        return false;
+    }
+    if (!reader.get_iserialize(data)) {
+        return false;
+    }
+    return true;
+}
+
+constexpr size_t SrvPlayerChar::Item::size() {
+    size_t size = 0;
+    size += Header::size();
+    size += Data::size();
+    return size;
+}
+
+void SrvPlayerChar::BulletItem::set_type(const unsigned int type) {
     this->data.type = type;
 }
 
-unsigned int SrvPlayerChar::Header::get_type() const {
+unsigned int SrvPlayerChar::BulletItem::get_type() const {
     return data.type;
 }
 
-void SrvPlayerChar::Header::set_header(const uint16_t header) {
-    this->data.header = header;
+void SrvPlayerChar::BulletItem::set_id(const unsigned int id) {
+    this->data.id = id;
 }
 
-uint16_t SrvPlayerChar::Header::get_header() const {
-    return data.header;
+unsigned int SrvPlayerChar::BulletItem::get_id() const {
+    return data.id;
 }
 
-bool SrvPlayerChar::Header::write(CRoseBasePolicy& writer) const {
-    if (!writer.set_uint16_t(data.header)) {
+void SrvPlayerChar::BulletItem::set_data(const uint16_t data) {
+    this->data.data = data;
+}
+
+uint16_t SrvPlayerChar::BulletItem::get_data() const {
+    return data.data;
+}
+
+bool SrvPlayerChar::BulletItem::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint16_t(data.data)) {
         return false;
     }
     return true;
 }
 
-bool SrvPlayerChar::Header::read(CRoseReader& reader) {
-    if (!reader.get_uint16_t(data.header)) {
+bool SrvPlayerChar::BulletItem::read(CRoseReader& reader) {
+    if (!reader.get_uint16_t(data.data)) {
         return false;
     }
     return true;
 }
 
-constexpr size_t SrvPlayerChar::Header::size() {
+constexpr size_t SrvPlayerChar::BulletItem::size() {
     return sizeof(data);
 }
 
@@ -338,35 +497,35 @@ uint32_t SrvPlayerChar::get_hair() const {
     return hair;
 }
 
-void SrvPlayerChar::set_inventory(const std::array<SrvPlayerChar::EquippedItem, MAX_VISIBLE_ITEMS>& inventory) {
+void SrvPlayerChar::set_inventory(const std::array<SrvPlayerChar::Item, MAX_VISIBLE_ITEMS>& inventory) {
     this->inventory = inventory;
 }
 
-void SrvPlayerChar::set_inventory(const EquippedItem& inventory, size_t index) {
+void SrvPlayerChar::set_inventory(const Item& inventory, size_t index) {
     this->inventory[index] = inventory;
 }
 
-const std::array<SrvPlayerChar::EquippedItem, MAX_VISIBLE_ITEMS>& SrvPlayerChar::get_inventory() const {
+const std::array<SrvPlayerChar::Item, MAX_VISIBLE_ITEMS>& SrvPlayerChar::get_inventory() const {
     return inventory;
 }
 
-const SrvPlayerChar::EquippedItem& SrvPlayerChar::get_inventory(size_t index) const {
+const SrvPlayerChar::Item& SrvPlayerChar::get_inventory(size_t index) const {
     return inventory[index];
 }
 
-void SrvPlayerChar::set_bullets(const std::array<SrvPlayerChar::Header, BulletType::MAX_BULLET_TYPES>& bullets) {
+void SrvPlayerChar::set_bullets(const std::array<SrvPlayerChar::BulletItem, BulletType::MAX_BULLET_TYPES>& bullets) {
     this->bullets = bullets;
 }
 
-void SrvPlayerChar::set_bullets(const Header& bullets, size_t index) {
+void SrvPlayerChar::set_bullets(const BulletItem& bullets, size_t index) {
     this->bullets[index] = bullets;
 }
 
-const std::array<SrvPlayerChar::Header, BulletType::MAX_BULLET_TYPES>& SrvPlayerChar::get_bullets() const {
+const std::array<SrvPlayerChar::BulletItem, BulletType::MAX_BULLET_TYPES>& SrvPlayerChar::get_bullets() const {
     return bullets;
 }
 
-const SrvPlayerChar::Header& SrvPlayerChar::get_bullets(size_t index) const {
+const SrvPlayerChar::BulletItem& SrvPlayerChar::get_bullets(size_t index) const {
     return bullets[index];
 }
 
@@ -556,8 +715,8 @@ constexpr size_t SrvPlayerChar::size() {
     size += sizeof(uint8_t);
     size += sizeof(uint32_t);
     size += sizeof(uint32_t);
-    size += EquippedItem::size() * MAX_VISIBLE_ITEMS;
-    size += Header::size() * BulletType::MAX_BULLET_TYPES;
+    size += Item::size() * MAX_VISIBLE_ITEMS;
+    size += BulletItem::size() * BulletType::MAX_BULLET_TYPES;
     size += sizeof(uint16_t);
     size += sizeof(uint8_t);
     size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS;
