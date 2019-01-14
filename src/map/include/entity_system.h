@@ -173,17 +173,18 @@ auto EntitySystem::item_to_data(RoseCommon::Entity entity) const {
         return typename T::Data{};
     }
     const auto& item = get_component<Component::Item>(entity);
+    const auto& itemDef = get_component<RoseCommon::ItemDef>(entity);
         
     typename T::Data data;
-    if (item.count == 0) {
+    if (itemDef.type == RoseCommon::ItemType::CONSUMABLE || itemDef.type == RoseCommon::ItemType::ETC) {
+        data.set_count(item.count);
+    } else {
         data.set_refine(item.refine);
         data.set_isAppraised(item.isAppraised);
         data.set_hasSocket(item.hasSocket);
         data.set_life(item.life);
         data.set_durability(item.durability);
         data.set_gem_opt(item.gemOpt);
-    } else {
-        data.set_count(item.count);
     }
     return data;
 }

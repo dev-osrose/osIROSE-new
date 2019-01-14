@@ -208,6 +208,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
+    inventory.zuly = charRow.zuly;
     for (const auto& row : invRes) {
         const bool is_inventory = row.storageType == "inventory";
         const auto maxItems = is_inventory ? RoseCommon::MAX_ITEMS : RoseCommon::MAX_WISHLIST;
@@ -347,6 +348,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     if (!itemDb.itemExists(type, id)) {
+        logger->warn("No item {} {} in db", type, id);
         return entt::null;
     }
     const auto& def = itemDb.getItemDef(type, id);
@@ -373,7 +375,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
     if (entity == entt::null) {
         return entt::null;
     }
-    registry.replace<Component::Item>(entity, item);
+    auto& tmp = registry.replace<Component::Item>(entity, item);
     return entity;
 }
 
