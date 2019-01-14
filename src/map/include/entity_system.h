@@ -176,7 +176,7 @@ auto EntitySystem::item_to_data(RoseCommon::Entity entity) const {
     const auto& itemDef = get_component<RoseCommon::ItemDef>(entity);
         
     typename T::Data data;
-    if (itemDef.type == RoseCommon::ItemType::CONSUMABLE || itemDef.type == RoseCommon::ItemType::ETC) {
+    if (itemDef.type == RoseCommon::ItemType::CONSUMABLE) {
         data.set_count(item.count);
     } else {
         data.set_refine(item.refine);

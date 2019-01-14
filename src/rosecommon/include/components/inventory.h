@@ -22,11 +22,11 @@ struct Inventory {
     template <size_t N, size_t L>
     using const_wrapper = base_wrapper<std::add_const_t<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>, N, L>;
 
-    constexpr wrapper<0, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() {
+    constexpr wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() {
         return { items };
     }
 
-    constexpr wrapper<0, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() {
+    constexpr wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() {
         return { items };
     }
 
@@ -38,11 +38,11 @@ struct Inventory {
         return { items };
     }
 
-    constexpr const_wrapper<0, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
+    constexpr const_wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
         return { items };
     }
 
-    constexpr const_wrapper<0, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
+    constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
         return { items };
     }
 
