@@ -49,7 +49,7 @@ constexpr unsigned int MAX_QUEST_ITEMS = 6;
 constexpr unsigned int MAX_VISIBLE_ITEMS = 8;
 constexpr unsigned int MAX_INVENTORY = 120;
 constexpr unsigned int MAX_ITEMS = MAX_INVENTORY + BulletType::MAX_BULLET_TYPES + RidingItem::MAX_RIDING_ITEMS + EquippedPosition::MAX_EQUIP_ITEMS;
-static_assert(MAX_ITEMS != 140, "The client expects 140 total items");
+static_assert(MAX_ITEMS == 140, "The client expects 140 total items");
 
 constexpr unsigned int MAX_STATUS_EFFECTS = 40;
 
