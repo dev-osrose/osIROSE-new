@@ -198,9 +198,9 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_spawn(position.spawn);
           packet.set_bodyFace(characterGraphics.face);
           packet.set_bodyHair(characterGraphics.hair);
-          packet.set_equippedItems(Core::transform(inventory.getVisible(), [this](const auto& en) {
-            return entitySystem->item_to_equipped<decltype(packet)>(en);
-          }));
+          //packet.set_equippedItems(Core::transform(inventory.getVisible(), [this](const auto& en) {
+          //  return entitySystem->item_to_equipped<decltype(packet)>(en);
+          //}));
           packet.set_stone(basicInfo.stone);
           packet.set_face(characterGraphics.face);
           packet.set_hair(characterGraphics.hair);
@@ -240,9 +240,9 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           CRoseClient::send(packet);
 
           auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
-          packetInv.set_items(Core::transform(inventory.items, [this](const auto& entity) {
-              return entitySystem->item_to_item<decltype(packetInv)>(entity);
-          }));
+          //packetInv.set_items(Core::transform(inventory.items, [this](const auto& entity) {
+          //    return entitySystem->item_to_item<decltype(packetInv)>(entity);
+          //}));
           CRoseClient::send(packetInv);
 
           CRoseClient::send(Packet::SrvQuestData::create());
