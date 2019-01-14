@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "config.h"
 #include "cmapserver.h"
 #include "cmapclient.h"
 #include "cmapisc.h"

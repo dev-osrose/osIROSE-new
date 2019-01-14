@@ -16,6 +16,7 @@
 #include "systems/callbacksystem.h"
 #include "systems/combat_system.h"
 
+#include "srv_removeobject.h"
 #include "srv_npcchar.h"
 
 using namespace RoseCommon;

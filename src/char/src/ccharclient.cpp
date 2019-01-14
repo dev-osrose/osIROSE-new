@@ -21,6 +21,7 @@
 #include "cli_selectcharreq.h"
 #include "connection.h"
 #include "connectionpool.h"
+#include "config.h"
 #include "srv_channellistreply.h"
 #include "srv_characterlistreply.h"
 #include "srv_createcharreply.h"

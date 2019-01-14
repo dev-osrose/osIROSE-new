@@ -118,8 +118,48 @@ void ScriptLoader::load_script(std::string const& path) {
             ai_logic = std::move(ai_file->second);
         }
         env.set_function("registerNpc", [&ai_logic, this](int npc_id, sol::table npc_data) {
-            //if (map_id != map_id_) return;
-            //ai.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
+          // Battle data
+          auto walk_speed = npc_data.get<sol::optional<int>>("walk_speed");
+          auto run_speed = npc_data.get<sol::optional<int>>("run_speed");
+          auto right_weapon = npc_data.get<sol::optional<int>>("r_weapon");
+          auto left_weapon = npc_data.get<sol::optional<int>>("l_weapon");
+          auto level = npc_data.get<sol::optional<int>>("level");
+          auto hp = npc_data.get<sol::optional<int>>("hp");
+          auto attack = npc_data.get<sol::optional<int>>("attack");
+          auto hit = npc_data.get<sol::optional<int>>("hit");
+          auto def = npc_data.get<sol::optional<int>>("def");
+          auto res = npc_data.get<sol::optional<int>>("res");
+          auto avoid = npc_data.get<sol::optional<int>>("avoid");
+          auto attack_speed = npc_data.get<sol::optional<int>>("attack_spd");
+          auto is_magic_damage = npc_data.get<sol::optional<bool>>("is_magic_damage");
+          auto give_exp = npc_data.get<sol::optional<int>>("give_exp");
+          auto drop_type = npc_data.get<sol::optional<int>>("drop_type");
+          auto drop_money = npc_data.get<sol::optional<int>>("drop_money");
+          auto drop_item = npc_data.get<sol::optional<int>>("drop_item");
+          auto union_number = npc_data.get<sol::optional<int>>("union_number");
+          auto need_summon_count = npc_data.get<sol::optional<int>>("need_summon_count");
+          auto attack_range = npc_data.get<sol::optional<int>>("attack_range");
+          auto can_target = npc_data.get<sol::optional<int>>("can_target");
+          
+          //logic data
+          auto summon_mob_type = npc_data.get<sol::optional<int>>("summon_mob_type");
+          auto quest_type = npc_data.get<sol::optional<int>>("quest_type");
+          auto npc_type = npc_data.get<sol::optional<int>>("npc_type");
+          auto ai_type = npc_data.get<sol::optional<int>>("ai_type");
+          
+          // This is indexes into LIST_SELL.STB
+          auto sell_tab0 = npc_data.get<sol::optional<int>>("sell_tab0");
+          auto sell_tab1 = npc_data.get<sol::optional<int>>("sell_tab1");
+          auto sell_tab2 = npc_data.get<sol::optional<int>>("sell_tab2");
+          auto sell_tab3 = npc_data.get<sol::optional<int>>("sell_tab3");
+          
+          // Misc/graphical data
+          auto hit_material_type = npc_data.get<sol::optional<int>>("hit_material_type");
+          auto face_icon = npc_data.get<sol::optional<int>>("face_icon");
+          auto height = npc_data.get<sol::optional<int>>("height");
+          auto scale = npc_data.get<sol::optional<int>>("scale");
+          //logger_->info("{} - {} - {} - {} - {} - {}", run_speed.value(), scale.value(), level.value(), hp.value(), attack.value(), hit.value());
+          //ai.push_back(entity_system_->create_npc(npc_lua, npc_id, map_id, x, y, z, angle));
         });
         
         logger_->trace("(Re)loading scripts from '{}'", path);

@@ -52,13 +52,15 @@ endif()
 set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty")
 set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad" 
   "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/components"
-  "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/packets")
+  "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/packets"
+  "${CMAKE_CURRENT_SOURCE_DIR}/core/include/connection.h"
+)
 set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "asio.hpp")
 
 if(WIN32)
   set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "WinSock2.h;${COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS}")
 else()
-  set(COTIRE_PREFIX_IGNORE_PATHS "${COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS};/usr/include/inttypes.h")
+  set(COTIRE_PREFIX_IGNORE_PATHS "${COTIRE_PREFIX_IGNORE_PATHS};/usr/include/inttypes.h")
   set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "/usr;${COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS}")
 endif()
 

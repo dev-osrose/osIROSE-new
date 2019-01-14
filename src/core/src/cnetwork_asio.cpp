@@ -191,8 +191,13 @@ void CNetwork_Asio::ProcessSend() {
                 logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
 
                 switch(error.value()) {
+                  case asio::error::basic_errors::connection_aborted:
                   case asio::error::basic_errors::connection_reset:
                   case asio::error::basic_errors::network_reset:
+                  case asio::error::basic_errors::network_down:
+                  case asio::error::basic_errors::broken_pipe:
+                  case asio::error::basic_errors::shut_down:
+                  case asio::error::basic_errors::timed_out:
                     shutdown();
                     break;
                   default:
@@ -265,8 +270,13 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
                 }
                 break;
 
+              case asio::error::basic_errors::connection_aborted:
               case asio::error::basic_errors::connection_reset:
               case asio::error::basic_errors::network_reset:
+              case asio::error::basic_errors::network_down:
+              case asio::error::basic_errors::broken_pipe:
+              case asio::error::basic_errors::shut_down:
+              case asio::error::basic_errors::timed_out:
               case asio::error::misc_errors::eof:
                 if ( shutdown() ) {
                   logger_->info( "Socket {} disconnected.", get_id() );
