@@ -12,7 +12,7 @@ enum RidingItem : uint8_t {
     BODY = 0,
     ENGINE = 1,
     LEGS,
-    //OPTION, // weapon or back seat
+    OPTION, // weapon or back seat
     ARMS,
     MAX_RIDING_ITEMS
 };
