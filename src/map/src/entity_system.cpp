@@ -32,6 +32,7 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     // register recurrent stoof (like saving every 5min)
     using namespace std::chrono_literals;
     add_recurrent_timer(5min, [](EntitySystem& self) {
+        self.logger->trace("Saving characters on map");
         self.registry.view<Component::Client>().each([&self](auto entity, auto &client_ptr) {
             (void)client_ptr;
             self.save_character(entity);

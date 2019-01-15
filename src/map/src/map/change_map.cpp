@@ -1,4 +1,4 @@
-#include "change_map.h"
+#include "map/change_map.h"
 
 #include "logconsole.h"
 #include "entity_system.h"

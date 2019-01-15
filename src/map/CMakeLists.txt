@@ -17,6 +17,7 @@ SET( SOURCES_HEADER
   include/entity_system.h
   include/nearby.h
   include/chat/normal_chat.h
+  #include/map/change_map.h
   )
 
 SET( SOURCES_MAIN
@@ -29,6 +30,7 @@ SET( SOURCES_MAIN
   src/entity_system.cpp
   src/nearby.cpp
   src/chat/normal_chat.cpp
+  #  src/map/change_map.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

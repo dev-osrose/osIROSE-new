@@ -22,7 +22,7 @@
 
 #include <memory>
 
-class CMapClient : public RoseCommon::CRoseClient, std::enable_shared_from_this<CMapClient> {
+class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CMapClient> {
  public:
   CMapClient();
   CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem>);
