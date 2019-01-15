@@ -17,15 +17,17 @@
 #include "ccharserver.h"
 #include "connection.h"
 #include "connectionpool.h"
+#include "config.h"
+#include "dataconsts.h"
 #include "srv_channel_list_reply.h"
 #include "srv_char_list_reply.h"
 #include "srv_create_char_reply.h"
 #include "srv_delete_char_reply.h"
 #include "srv_join_server_reply.h"
 #include "srv_switch_server.h"
-#include "dataconsts.h"
 
 using namespace RoseCommon;
+const auto now = ::sqlpp::chrono::floor<::std::chrono::seconds>(std::chrono::system_clock::now());
 
 namespace {
 constexpr size_t convertSlot(uint8_t slot) {
@@ -157,6 +159,7 @@ bool CCharClient::sendCharListReply() {
 
   auto packet = Packet::SrvCharListReply::create();
 
+  std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
       Packet::SrvCharListReply::CharInfo charInfo;
@@ -166,7 +169,12 @@ bool CCharClient::sendCharListReply() {
       charInfo.set_job(row.job);
       charInfo.set_face(row.face);
       charInfo.set_hair(row.hair);
-      charInfo.set_remainSecsUntilDelete(row.deleteDate);
+      auto _remaining_time = 0;  // Get time in seconds until delete
+    
+      if(row.deleteDate.is_null() == false)
+        _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(row.deleteDate.value()), now_c);
+    
+      charInfo.set_remainSecsUntilDelete(_remaining_time);
     characterRealId_.push_back(row.id);
     Core::InventoryTable inv{};
     for (const auto &iv : conn(sqlpp::select(inv.slot, inv.itemid).from(inv).where(inv.charId == row.id and inv.slot < 10))) {
@@ -216,19 +224,31 @@ bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) 
     return true;
   }
 
-  if (P.get_charId() > 6) return false;
+  //TODO: change this to be variable
+  if (P->charId() > 6) return false;
 
+  uint8_t delete_type = (uint8_t)P->isDelete();
   uint32_t time = 0;
-  if (P.get_isDelete()) {
+
+  if (P->isDelete()) {
+    //TODO: if the character is a guild leader, time = -1 and don't delete character
     // we need to delete the char
-    time = std::time(nullptr);
-
-    std::string query = fmt::format("CALL delete_character({}, '{}');", userId_, Core::escapeData(P.get_name().c_str()));
-
-    auto conn = Core::connectionPool.getConnection(Core::osirose);
-    conn->execute(query);
+    Core::Config& config = Core::Config::getInstance();
+    if(config.charServer().instantCharDelete == false) {
+      //TODO: allow the server owner to set the time. This will also require the ability to change the time in sql
+      time = 60*60*24; // The default is one day from now
+    } else {
+      time = 0;
+      delete_type = 2;
+    }
   }
+  
+  std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P.get_name().c_str()), delete_type);
 
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  conn->execute(query);
+
+  // if time == -1, delete failed
   auto packet = Packet::SrvDeleteCharReply::create(time, P.get_name());
   send(packet);
   return true;
@@ -253,13 +273,17 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
     return true;
   }
 
-  loginState_ = eSTATE::TRANSFERING;
-
   uint8_t selected_id = P.get_charId();
   if (selected_id > characterRealId_.size()) {
     logger_->warn("Client {} is attempting to select a invalid character.", get_id());
     return false;
   }
+  // if (characterRealId_[selected_id]) {
+  //   logger_->warn("Client {} is attempting to select a character that is being deleted.", get_id());
+  //   return false;
+  // }
+  
+  loginState_ = eSTATE::TRANSFERING;
 
   std::string query =
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);

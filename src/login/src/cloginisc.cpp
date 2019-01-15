@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "connection.h"
+#include "connectionpool.h"
 #include "cloginisc.h"
 
 using namespace RoseCommon;
 
 CLoginISC::CLoginISC()
-    : CRoseISC(), channel_count_(0), min_right_(0), test_server_(false) {}
+    : CRoseISC(), login_state_(eSTATE::DEFAULT), channel_count_(0), min_right_(0), test_server_(false) {}
 
 CLoginISC::CLoginISC(std::unique_ptr<Core::INetwork> _sock)
     : CRoseISC(std::move(_sock)),
+      login_state_(eSTATE::DEFAULT),
       channel_count_(0),
       min_right_(0),
       test_server_(false) {}
@@ -31,7 +34,7 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::ISC_SERVER_AUTH:
-      return true;
+      return ServerAuth(Packet::IscServerAuth::create(_buffer));
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
@@ -43,8 +46,41 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
-  logger_->trace("CLoginISC::serverRegister(CRosePacket&& P)");
+bool CLoginISC::ServerAuth(RoseCommon::Packet::IscServerAuth&& P) {
+  logger_->trace("CLoginISC::ServerAuth(CRosePacket&& P)");
+  if(login_state_ != eSTATE::DEFAULT) {
+    logger_->warn("ISC {} is attempting to auth multiple times.", get_id());
+    return false;
+  }
+  std::string username_ = Core::escapeData(P.get_username());
+  std::string clientpass = Core::escapeData(P.get_password());
+  
+  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  Core::AccountTable table{};
+  try {
+    const auto res = conn(sqlpp::select(table.id)
+              .from(table).where(table.accountType == "system" and table.username == username_
+                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
+
+        if (!res.empty()) {
+          login_state_ = eSTATE::LOGGEDIN;
+          return true;
+        } else {
+          logger_->error("Char server auth from '{}' failed to auth with User: '{}' Pass: '{}'", get_address(), username_, clientpass);
+        }
+  } catch (const sqlpp::exception &e) {
+    logger_->error("Error while accessing the database: {}", e.what());
+  }
+  
+  return false;
+}
+
+bool CLoginISC::ServerRegister(Packet::IscServerRegister&& P) {
+  logger_->trace("CLoginISC::ServerRegister(CRosePacket&& P)");
+  if(login_state_ == eSTATE::DEFAULT) {
+    logger_->warn("ISC {} is attempting to register before auth.", get_id());
+    return false;
+  }
 
   Isc::ServerType _type = P.get_serverType();
 
@@ -74,15 +110,22 @@ bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
   this->set_name(server_name_);
 
   logger_->debug( "ISC Server Type: [{}]\n", socket_[SocketType::Client]->get_type());
+  
+  login_state_ = eSTATE::REGISTERED;
 
-  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
+  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n",
+                get_id(),
                 RoseCommon::Isc::serverTypeName(P.get_serverType()),
                   P.get_name(), P.get_addr(),
                   P.get_port());
   return true;
 }
 
-bool CLoginISC::serverShutdown(Packet::IscShutdown&& P) {
+bool CLoginISC::ServerShutdown(Packet::IscShutdown&& P) {
+  // if(login_state_ != eSTATE::REGISTERED) {
+  //   logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
+  //   return false;
+  // }
   channel_list_.remove_if([&](RoseCommon::tChannelInfo channel) {
     return channel.ChannelID == P.get_id();
   });

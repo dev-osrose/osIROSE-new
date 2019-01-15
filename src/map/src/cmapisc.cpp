@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "connection.h"
+#include "connectionpool.h"
 #include "cmapisc.h"
 #include "cmapserver.h"
 #include "config.h"
 #include "crosepacket.h"
+#include "isc_server_auth.h"
 #include "isc_shutdown.h"
 #include "isc_alive.h"
 #include "platform_defines.h"
@@ -87,18 +90,31 @@ bool CMapISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   //    this->set_type(_type);
   //  }
 
-  logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n", RoseCommon::Isc::serverTypeName(P.get_serverType()), P.get_name(),
+  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n", get_id(), RoseCommon::Isc::serverTypeName(P.get_serverType()), P.get_name(),
                 P.get_addr(), P.get_port());
   return false;
 }
 
 void CMapISC::onConnected() {
   Core::Config& config = Core::Config::getInstance();
-  auto packet = Packet::IscServerRegister::create(
-      RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
-      config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
-
-  send(packet);
+  {
+    auto packet = Packet::IscServerAut::create(
+        config.mapServer().charPassword,
+        config.mapServer().charUser);
+        
+    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
+                   packet.get_size(), (uint16_t)packet.get_type());
+    send(packet);
+  }
+  {
+    auto packet = Packet::IscServerRegister::create(
+        RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
+        config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
+  
+    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
+                   static_cast<uint16_t>(packet.get_type()));
+    send(packet);
+  }
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {

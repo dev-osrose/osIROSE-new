@@ -205,7 +205,6 @@ SET(SOURCES_PACKETS
     include/packets/srv_char_list_reply.h
     src/packets/isc_alive.cpp
     include/packets/isc_alive.h
-
 )
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADER})
