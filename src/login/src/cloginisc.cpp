@@ -17,6 +17,7 @@
 #include "cloginisc.h"
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
 CLoginISC::CLoginISC()
     : CRoseISC(), login_state_(eSTATE::DEFAULT), channel_count_(0), min_right_(0), test_server_(false) {}
@@ -34,19 +35,19 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_ALIVE:
       return true;
     case ePacketType::PAKCS_LOGIN_REQ:
-      return serverAuth(Packet::CliLoginReq::create(_buffer));
+      return serverAuth(CliLoginReq::create(_buffer));
     case ePacketType::ISC_SERVER_REGISTER:
-      return serverRegister(Packet::IscServerRegister::create(_buffer));
+      return serverRegister(IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
-      return serverShutdown(Packet::IscShutdown::create(_buffer));
+      return serverShutdown(IscShutdown::create(_buffer));
     default: { return CRoseISC::handlePacket(_buffer); }
   }
   return true;
 }
 
-bool CLoginISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
+bool CLoginISC::serverAuth(CliLoginReq&& P) {
   logger_->trace("CLoginISC::ServerAuth(CRosePacket&& P)");
   if(login_state_ != eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to auth multiple times.", get_id());
@@ -75,7 +76,7 @@ bool CLoginISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   return false;
 }
 
-bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
+bool CLoginISC::serverRegister(IscServerRegister&& P) {
   logger_->trace("CLoginISC::ServerRegister(CRosePacket&& P)");
   if(login_state_ == eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to register before auth.", get_id());
@@ -121,7 +122,7 @@ bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
   return true;
 }
 
-bool CLoginISC::serverShutdown(Packet::IscShutdown&& P) {
+bool CLoginISC::serverShutdown(IscShutdown&& P) {
   // if(login_state_ != eSTATE::REGISTERED) {
   //   logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
   //   return false;

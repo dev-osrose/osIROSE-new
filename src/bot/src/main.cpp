@@ -22,8 +22,6 @@
 #include "cli_join_server_req.h"
 #include "cli_normal_chat.h"
 
-#define SPDLOG_TRACE_ON
-
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
 uint16_t charPort = 29100;

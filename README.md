@@ -100,7 +100,7 @@ After running for the first time, the servers will create a config file in the c
 Database installation
 -----------------------
 
-To install the database, create a new database and then run `mysql -u<user> -p<password> <database_name> < Database/osirose.sql`. This will create all of the required tables for the server. Then run `mysql -u<user> -p<password> <database_name> < Database/item_db.sql` to populate the item table with all of the required information. This table was generated using client v137. If you are using a different client, please generate your own table to match the information you need.
+To install the database, create a new database and then run `mysql -u<user> -p<password> <database_name> < Database/osirose.sql`. This will create all of the required tables for the server. Then run `mysql -u<user> -p<password> <database_name> < Database/item_db.sql` to populate the item table with all of the required information. This table was generated using client v112_112na. If you are using a different client, please generate your own table to match the information you need.
 _TODO: add more information on the generation tool._
 
 Contributing
