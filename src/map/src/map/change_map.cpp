@@ -21,7 +21,7 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     const auto& level = entitySystem.get_component<Component::Level>(entity);
     entitySystem.send_to(entity, SrvChangeMapReply::create(
         basicInfo.id, life.hp, mana.mp, level.xp, level.penalize_xp,
-        entitySystem.get_world_time(), basicInfo.teamId)); // FIXME: /!\ teamId is uint32_t but the packet expects a uint16_t /!\
+        entitySystem.get_world_time(), basicInfo.teamId)); // FIXME: teamId is uint32_t but the packet expects a uint16_t
     Chat::send_whisper(entitySystem, entity, fmt::format("You are client {}", basicInfo.id));
     entitySystem.send_nearby_except_me(CMapClient::create_srv_player_char(entitySystem, entity));
     const auto& nearby_entities = entitySystem.get_nearby(entity);
