@@ -52,6 +52,10 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     register_dispatcher(std::function{Chat::normal_chat});
 }
 
+uint16_t EntitySystem::get_world_time() const {
+    return 0; //TODO: return a correct time
+}
+
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
     auto& basic = get_component<Component::BasicInfo>(entity);
     name_to_entity.insert({basic.name, entity});
