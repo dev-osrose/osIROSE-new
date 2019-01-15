@@ -90,9 +90,9 @@ void SrvSwitchServer::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvSwitchServer::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint32_t);
+    size += sizeof(uint16_t); // port
+    size += sizeof(uint32_t); // sessionId
+    size += sizeof(uint32_t); // sessionSeed
     return size;
 }
 

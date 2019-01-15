@@ -60,8 +60,8 @@ void SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvAcceptReply::size() {
     size_t size = 0;
-    size += sizeof(Result);
-    size += sizeof(uint32_t);
+    size += sizeof(Result); // result
+    size += sizeof(uint32_t); // randValue
     return size;
 }
 

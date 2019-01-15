@@ -36,7 +36,7 @@ bool CliJoinServerReq::Password::write(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliJoinServerReq::Password::size() {
     size_t size = 0;
-    size += 32;
+    size += 32; // password
     return size;
 }
 
@@ -97,8 +97,8 @@ void CliJoinServerReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliJoinServerReq::size() {
     size_t size = 0;
-    size += sizeof(uint32_t);
-    size += Password::size();
+    size += sizeof(uint32_t); // sessionId
+    size += Password::size(); // password
     return size;
 }
 

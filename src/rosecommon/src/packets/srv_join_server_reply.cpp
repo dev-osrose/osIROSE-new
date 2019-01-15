@@ -74,9 +74,9 @@ void SrvJoinServerReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvJoinServerReply::size() {
     size_t size = 0;
-    size += sizeof(Result);
-    size += sizeof(uint32_t);
-    size += sizeof(uint32_t);
+    size += sizeof(Result); // result
+    size += sizeof(uint32_t); // id
+    size += sizeof(uint32_t); // payFlag
     return size;
 }
 

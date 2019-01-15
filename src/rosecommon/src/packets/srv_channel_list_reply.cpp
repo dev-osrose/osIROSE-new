@@ -84,10 +84,10 @@ bool SrvChannelListReply::ChannelInfo::read(CRoseReader& reader) {
 
 constexpr size_t SrvChannelListReply::ChannelInfo::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint16_t);
+    size += sizeof(uint8_t); // id
+    size += sizeof(uint8_t); // lowAge
+    size += sizeof(uint8_t); // highAge
+    size += sizeof(uint16_t); // capacity
     return size;
 }
 
@@ -169,9 +169,9 @@ void SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvChannelListReply::size() {
     size_t size = 0;
-    size += sizeof(uint32_t);
-    size += sizeof(uint8_t);
-    size += ChannelInfo::size();
+    size += sizeof(uint32_t); // id
+    size += sizeof(uint8_t); // channels
+    size += ChannelInfo::size(); // channels
     return size;
 }
 

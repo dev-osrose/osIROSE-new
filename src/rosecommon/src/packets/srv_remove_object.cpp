@@ -45,7 +45,7 @@ void SrvRemoveObject::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvRemoveObject::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
+    size += sizeof(uint16_t); // id
     return size;
 }
 

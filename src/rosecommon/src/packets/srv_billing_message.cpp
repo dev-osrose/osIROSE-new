@@ -58,8 +58,8 @@ void SrvBillingMessage::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvBillingMessage::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
+    size += sizeof(uint16_t); // functionType
+    size += sizeof(uint32_t); // payFlag
     return size;
 }
 

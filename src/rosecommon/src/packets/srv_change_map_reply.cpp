@@ -231,19 +231,19 @@ void SrvChangeMapReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvChangeMapReply::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t) * MAX_SELL_TYPE;
-    size += sizeof(uint32_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
+    size += sizeof(uint16_t); // objectIndex
+    size += sizeof(uint16_t); // hp
+    size += sizeof(uint16_t); // mp
+    size += sizeof(uint16_t); // xp
+    size += sizeof(uint16_t); // penalizeXp
+    size += sizeof(uint16_t); // craftRate
+    size += sizeof(uint16_t); // updateTime
+    size += sizeof(uint16_t); // worldRate
+    size += sizeof(uint8_t); // townRate
+    size += sizeof(uint8_t) * MAX_SELL_TYPE; // itemRate
+    size += sizeof(uint32_t); // flags
+    size += sizeof(uint16_t); // worldTime
+    size += sizeof(uint16_t); // teamNumber
     return size;
 }
 

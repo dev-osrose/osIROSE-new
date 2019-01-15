@@ -120,10 +120,10 @@ void IscServerRegister::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t IscServerRegister::size() {
     size_t size = 0;
-    size += sizeof(Isc::ServerType);
-    size += sizeof(int32_t);
-    size += sizeof(int32_t);
-    size += sizeof(int32_t);
+    size += sizeof(Isc::ServerType); // serverType
+    size += sizeof(int32_t); // port
+    size += sizeof(int32_t); // right
+    size += sizeof(int32_t); // id
     return size;
 }
 

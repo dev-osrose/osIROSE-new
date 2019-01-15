@@ -105,11 +105,11 @@ void SrvScreenShotTimeReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvScreenShotTimeReply::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
+    size += sizeof(uint16_t); // year
+    size += sizeof(uint8_t); // month
+    size += sizeof(uint8_t); // day
+    size += sizeof(uint8_t); // hour
+    size += sizeof(uint8_t); // min
     return size;
 }
 

@@ -60,7 +60,7 @@ void SrvDeleteCharReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvDeleteCharReply::size() {
     size_t size = 0;
-    size += sizeof(uint32_t);
+    size += sizeof(uint32_t); // remainingTime
     return size;
 }
 

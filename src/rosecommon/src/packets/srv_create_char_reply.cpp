@@ -59,8 +59,8 @@ void SrvCreateCharReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvCreateCharReply::size() {
     size_t size = 0;
-    size += sizeof(Result);
-    size += sizeof(uint8_t);
+    size += sizeof(Result); // result
+    size += sizeof(uint8_t); // platininum
     return size;
 }
 

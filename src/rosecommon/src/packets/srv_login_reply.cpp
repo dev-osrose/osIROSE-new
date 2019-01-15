@@ -56,8 +56,8 @@ bool SrvLoginReply::ServerInfo::read(CRoseReader& reader) {
 
 constexpr size_t SrvLoginReply::ServerInfo::size() {
     size_t size = 0;
-    size += sizeof(char);
-    size += sizeof(uint32_t);
+    size += sizeof(char); // test
+    size += sizeof(uint32_t); // id
     return size;
 }
 
@@ -159,10 +159,10 @@ void SrvLoginReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvLoginReply::size() {
     size_t size = 0;
-    size += sizeof(Result);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += ServerInfo::size();
+    size += sizeof(Result); // result
+    size += sizeof(uint16_t); // right
+    size += sizeof(uint16_t); // type
+    size += ServerInfo::size(); // serversInfo
     return size;
 }
 

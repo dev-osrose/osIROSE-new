@@ -60,8 +60,8 @@ void CliChangeMapReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliChangeMapReq::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint16_t);
+    size += sizeof(uint8_t); // weightRate
+    size += sizeof(uint16_t); // z
     return size;
 }
 

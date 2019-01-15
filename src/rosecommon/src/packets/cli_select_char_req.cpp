@@ -90,9 +90,9 @@ void CliSelectCharReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliSelectCharReq::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
+    size += sizeof(uint8_t); // charId
+    size += sizeof(uint8_t); // runMode
+    size += sizeof(uint8_t); // rideMode
     return size;
 }
 

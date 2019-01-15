@@ -60,8 +60,8 @@ void IscShutdown::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t IscShutdown::size() {
     size_t size = 0;
-    size += sizeof(Isc::ServerType);
-    size += sizeof(int32_t);
+    size += sizeof(Isc::ServerType); // serverType
+    size += sizeof(int32_t); // id
     return size;
 }
 

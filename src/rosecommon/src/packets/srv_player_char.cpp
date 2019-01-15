@@ -224,8 +224,8 @@ bool SrvPlayerChar::Item::read(CRoseReader& reader) {
 
 constexpr size_t SrvPlayerChar::Item::size() {
     size_t size = 0;
-    size += Header::size();
-    size += Data::size();
+    size += Header::size(); // header
+    size += Data::size(); // data
     return size;
 }
 
@@ -698,30 +698,30 @@ void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvPlayerChar::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(float);
-    size += sizeof(float);
-    size += sizeof(float);
-    size += sizeof(float);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint8_t);
-    size += sizeof(int32_t);
-    size += sizeof(int32_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint32_t);
-    size += Item::size() * MAX_VISIBLE_ITEMS;
-    size += BulletItem::size() * BulletType::MAX_BULLET_TYPES;
-    size += sizeof(uint16_t);
-    size += sizeof(uint8_t);
-    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS;
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
+    size += sizeof(uint16_t); // id
+    size += sizeof(float); // x
+    size += sizeof(float); // y
+    size += sizeof(float); // destX
+    size += sizeof(float); // destY
+    size += sizeof(uint16_t); // command
+    size += sizeof(uint16_t); // targetId
+    size += sizeof(uint8_t); // moveMode
+    size += sizeof(int32_t); // hp
+    size += sizeof(int32_t); // teamId
+    size += sizeof(uint32_t); // statusFlag
+    size += sizeof(uint8_t); // race
+    size += sizeof(uint16_t); // runSpeed
+    size += sizeof(uint16_t); // atkSpeed
+    size += sizeof(uint8_t); // weightRate
+    size += sizeof(uint32_t); // face
+    size += sizeof(uint32_t); // hair
+    size += Item::size() * MAX_VISIBLE_ITEMS; // inventory
+    size += BulletItem::size() * BulletType::MAX_BULLET_TYPES; // bullets
+    size += sizeof(uint16_t); // job
+    size += sizeof(uint8_t); // level
+    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS; // ridingItems
+    size += sizeof(uint16_t); // z
+    size += sizeof(uint32_t); // subFlag
     return size;
 }
 

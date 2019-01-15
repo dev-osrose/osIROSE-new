@@ -166,8 +166,8 @@ bool SrvInventoryData::Item::read(CRoseReader& reader) {
 
 constexpr size_t SrvInventoryData::Item::size() {
     size_t size = 0;
-    size += Header::size();
-    size += Data::size();
+    size += Header::size(); // header
+    size += Data::size(); // data
     return size;
 }
 
@@ -238,8 +238,8 @@ void SrvInventoryData::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvInventoryData::size() {
     size_t size = 0;
-    size += sizeof(int64_t);
-    size += Item::size() * MAX_ITEMS;
+    size += sizeof(int64_t); // zuly
+    size += Item::size() * MAX_ITEMS; // items
     return size;
 }
 

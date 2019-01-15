@@ -75,8 +75,8 @@ void CliDeleteCharReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliDeleteCharReq::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
+    size += sizeof(uint8_t); // charId
+    size += sizeof(uint8_t); // isDelete
     return size;
 }
 

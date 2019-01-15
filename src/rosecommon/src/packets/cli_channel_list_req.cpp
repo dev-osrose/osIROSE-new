@@ -45,7 +45,7 @@ void CliChannelListReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliChannelListReq::size() {
     size_t size = 0;
-    size += sizeof(uint32_t);
+    size += sizeof(uint32_t); // serverId
     return size;
 }
 

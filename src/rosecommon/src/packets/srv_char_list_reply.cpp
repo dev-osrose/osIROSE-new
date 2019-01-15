@@ -210,14 +210,14 @@ bool SrvCharListReply::CharInfo::read(CRoseReader& reader) {
 
 constexpr size_t SrvCharListReply::CharInfo::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint32_t);
-    size += EquippedItem::size() * MAX_VISIBLE_ITEMS;
+    size += sizeof(uint8_t); // race
+    size += sizeof(uint16_t); // level
+    size += sizeof(uint16_t); // job
+    size += sizeof(uint32_t); // remainSecsUntilDelete
+    size += sizeof(uint8_t); // platinium
+    size += sizeof(uint32_t); // face
+    size += sizeof(uint32_t); // hair
+    size += EquippedItem::size() * MAX_VISIBLE_ITEMS; // items
     return size;
 }
 
@@ -284,8 +284,8 @@ void SrvCharListReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvCharListReply::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += CharInfo::size();
+    size += sizeof(uint8_t); // characters
+    size += CharInfo::size(); // characters
     return size;
 }
 

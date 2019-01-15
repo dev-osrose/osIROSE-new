@@ -60,8 +60,8 @@ void CliSrvSelectReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliSrvSelectReq::size() {
     size_t size = 0;
-    size += sizeof(uint32_t);
-    size += sizeof(uint8_t);
+    size += sizeof(uint32_t); // serverId
+    size += sizeof(uint8_t); // channelId
     return size;
 }
 

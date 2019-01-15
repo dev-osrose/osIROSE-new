@@ -166,8 +166,8 @@ bool SrvQuestData::Item::read(CRoseReader& reader) {
 
 constexpr size_t SrvQuestData::Item::size() {
     size_t size = 0;
-    size += Header::size();
-    size += Data::size();
+    size += Header::size(); // header
+    size += Data::size(); // data
     return size;
 }
 
@@ -275,11 +275,11 @@ bool SrvQuestData::Quest::read(CRoseReader& reader) {
 
 constexpr size_t SrvQuestData::Quest::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint16_t) * MAX_QUEST_VARS;
-    size += sizeof(uint32_t);
-    size += Item::size() * MAX_QUEST_ITEMS;
+    size += sizeof(uint16_t); // id
+    size += sizeof(uint32_t); // timer
+    size += sizeof(uint16_t) * MAX_QUEST_VARS; // vars
+    size += sizeof(uint32_t); // switches
+    size += Item::size() * MAX_QUEST_ITEMS; // items
     return size;
 }
 
@@ -491,13 +491,13 @@ void SrvQuestData::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvQuestData::size() {
     size_t size = 0;
-    size += sizeof(uint16_t) * MAX_CONDITIONS_EPISODE;
-    size += sizeof(uint16_t) * MAX_CONDITIONS_JOB;
-    size += sizeof(uint16_t) * MAX_CONDITIONS_PLANET;
-    size += sizeof(uint16_t) * MAX_CONDITIONS_UNION;
-    size += Quest::size() * MAX_QUESTS;
-    size += sizeof(uint32_t) * MAX_SWITCHES;
-    size += Item::size() * MAX_WISHLIST;
+    size += sizeof(uint16_t) * MAX_CONDITIONS_EPISODE; // episodes
+    size += sizeof(uint16_t) * MAX_CONDITIONS_JOB; // jobs
+    size += sizeof(uint16_t) * MAX_CONDITIONS_PLANET; // planets
+    size += sizeof(uint16_t) * MAX_CONDITIONS_UNION; // unions
+    size += Quest::size() * MAX_QUESTS; // quests
+    size += sizeof(uint32_t) * MAX_SWITCHES; // switches
+    size += Item::size() * MAX_WISHLIST; // wishlist
     return size;
 }
 

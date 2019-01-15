@@ -105,10 +105,10 @@ void SrvSrvSelectReply::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvSrvSelectReply::size() {
     size_t size = 0;
-    size += sizeof(Result);
-    size += sizeof(uint32_t);
-    size += sizeof(uint32_t);
-    size += sizeof(uint16_t);
+    size += sizeof(Result); // result
+    size += sizeof(uint32_t); // sessionId
+    size += sizeof(uint32_t); // cryptVal
+    size += sizeof(uint16_t); // port
     return size;
 }
 

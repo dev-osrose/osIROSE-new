@@ -36,7 +36,7 @@ bool CliLoginReq::Password::write(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliLoginReq::Password::size() {
     size_t size = 0;
-    size += 32;
+    size += 32; // password
     return size;
 }
 
@@ -97,7 +97,7 @@ void CliLoginReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliLoginReq::size() {
     size_t size = 0;
-    size += Password::size();
+    size += Password::size(); // password
     return size;
 }
 

@@ -60,7 +60,7 @@ void SrvNormalChat::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t SrvNormalChat::size() {
     size_t size = 0;
-    size += sizeof(uint16_t);
+    size += sizeof(uint16_t); // charId
     return size;
 }
 

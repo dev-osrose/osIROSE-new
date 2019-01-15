@@ -135,12 +135,12 @@ void CliCreateCharReq::pack(CRoseBasePolicy& writer) const {
 
 constexpr size_t CliCreateCharReq::size() {
     size_t size = 0;
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint8_t);
-    size += sizeof(uint16_t);
+    size += sizeof(uint8_t); // race
+    size += sizeof(uint8_t); // stone
+    size += sizeof(uint8_t); // hair
+    size += sizeof(uint8_t); // face
+    size += sizeof(uint8_t); // weapon
+    size += sizeof(uint16_t); // zone
     return size;
 }
 
