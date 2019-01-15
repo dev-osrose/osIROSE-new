@@ -79,6 +79,8 @@ class EntitySystem {
     
         RoseCommon::Entity get_entity_from_name(const std::string& name) const;
 
+        uint16_t get_world_time() const;
+
         template <class Rep, class Period>
         void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
         template <class Rep, class Period>
