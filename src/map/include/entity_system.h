@@ -89,6 +89,7 @@ class EntitySystem {
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
