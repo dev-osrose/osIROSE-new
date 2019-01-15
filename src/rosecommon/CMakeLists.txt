@@ -95,8 +95,8 @@ SET(SOURCES_PACKETS
     #  include/packets/cli_stop.h
     #  src/packets/cli_stopmoving.cpp
     #  include/packets/cli_stopmoving.h
-    #  src/packets/cli_whisperchat.cpp
-    #  include/packets/cli_whisperchat.h
+    src/packets/cli_whisper_chat.cpp
+    include/packets/cli_whisper_chat.h
     #  src/packets/cli_equipitem.cpp
     #  include/packets/cli_equipitem.h
     #  src/packets/cli_partyreq.cpp
@@ -152,8 +152,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_stopmoving.h
     src/packets/srv_switch_server.cpp
     include/packets/srv_switch_server.h
-    #  src/packets/srv_whisperchat.cpp
-    #  include/packets/srv_whisperchat.h
+    src/packets/srv_whisper_chat.cpp
+    include/packets/srv_whisper_chat.h
     #  src/packets/srv_equipitem.cpp
     #  include/packets/srv_equipitem.h
     #  src/packets/srv_setmoney.cpp
