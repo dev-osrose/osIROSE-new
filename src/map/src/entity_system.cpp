@@ -28,6 +28,8 @@
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
 
+#include "srv_remove_object.h"
+
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
@@ -50,10 +52,18 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     registry.construction<Component::Client>().connect<&EntitySystem::register_name>(this);
     registry.destruction<Component::Client>().connect<&EntitySystem::unregister_name>(this);
     
+    // callback for removing objects
+    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
+    
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
+}
+
+void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    const auto basicInfo& info = get_component<Component::BasicInfo>(entity);
+    send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -61,12 +71,12 @@ uint16_t EntitySystem::get_world_time() const {
 }
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
-    auto& basic = get_component<Component::BasicInfo>(entity);
+    const auto& basic = get_component<Component::BasicInfo>(entity);
     name_to_entity.insert({basic.name, entity});
 }
 
 void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
-    auto& basic = get_component<Component::BasicInfo>(entity);
+    const auto& basic = get_component<Component::BasicInfo>(entity);
     name_to_entity.erase(basic.name);
 }
 
