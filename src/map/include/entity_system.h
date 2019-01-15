@@ -3,6 +3,8 @@
 #include <functional>
 #include <chrono>
 #include <queue>
+#include <unordered_map>
+#include <string>
 
 #include "dataconsts.h"
 #include "logconsole.h"
@@ -74,6 +76,8 @@ class EntitySystem {
     
         // returns a sorted vector
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
+    
+        RoseCommon::Entity get_entity_from_name(const std::string& name) const;
 
         template <class Rep, class Period>
         void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
@@ -82,6 +86,7 @@ class EntitySystem {
 
     private:
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
+        std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
