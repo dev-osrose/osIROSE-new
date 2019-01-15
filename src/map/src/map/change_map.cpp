@@ -6,7 +6,7 @@
 #include "srv_normal_chat.h"
 #include "cli_change_map_req.h"
 #include "components/basic_info.h"
-#include "whisper_char.h"
+#include "chat/whisper_chat.h"
 
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
