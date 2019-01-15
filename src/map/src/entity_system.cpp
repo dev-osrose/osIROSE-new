@@ -43,15 +43,38 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
-
+    
+    // callback for updating the name_to_entity mapping
+    registry.construction<Component::Client>().connect<&EntitySystem::register_name>(this);
+    registry.destruction<Component::Client>().connect<&EntitySystem::unregister_name>(this);
+    
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
+}
+
+void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    auto& basic = get_component<Component::BasicInfo>(entity);
+    name_to_entity.insert({basic.name, entity});
+}
+
+void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    auto& basic = get_component<Component::BasicInfo>(entity);
+    name_to_entity.erase(basic.name);
+}
+
+RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) const {
+    auto res = name_to_entity.find(name);
+    if (res != name_to_entity.end())
+        return *res;
+    return entt::null;
 }
 
 void EntitySystem::stop() {
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
+    registry.construction<Component::Client>().disconnect<&EntitySystem::register_name>(this);
+    registry.destruction<Component::Client>().disconnect<&EntitySystem::unregister_name>(this);
 }
 
 bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
