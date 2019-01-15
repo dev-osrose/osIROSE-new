@@ -25,6 +25,8 @@
 #include "components/wishlist.h"
 
 #include "chat/normal_chat.h"
+#include "chat/whisper_chat.h"
+#include "map/change_map.h"
 
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
@@ -50,6 +52,8 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
+    register_dispatcher(std::function{Chat::whisper_chat});
+    register_dispatcher(std::function{Map::change_map_request});
 }
 
 uint16_t EntitySystem::get_world_time() const {
