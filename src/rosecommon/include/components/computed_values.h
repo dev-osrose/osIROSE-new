@@ -9,5 +9,7 @@ struct ComputedValues {
     uint16_t runSpeed;
     uint16_t atkSpeed;
     uint8_t weightRate;
+    uint32_t statusFlag;
+    uint32_t subFlag;
 };
 }

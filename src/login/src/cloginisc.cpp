@@ -33,8 +33,8 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
-      return ServerAuth(Packet::IscServerAuth::create(_buffer));
+    case ePacketType::PAKCS_LOGIN_REQ:
+      return serverAuth(Packet::CliLoginReq::create(_buffer));
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
@@ -46,7 +46,7 @@ bool CLoginISC::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CLoginISC::ServerAuth(RoseCommon::Packet::IscServerAuth&& P) {
+bool CLoginISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   logger_->trace("CLoginISC::ServerAuth(CRosePacket&& P)");
   if(login_state_ != eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to auth multiple times.", get_id());
@@ -75,7 +75,7 @@ bool CLoginISC::ServerAuth(RoseCommon::Packet::IscServerAuth&& P) {
   return false;
 }
 
-bool CLoginISC::ServerRegister(Packet::IscServerRegister&& P) {
+bool CLoginISC::serverRegister(Packet::IscServerRegister&& P) {
   logger_->trace("CLoginISC::ServerRegister(CRosePacket&& P)");
   if(login_state_ == eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to register before auth.", get_id());
@@ -121,7 +121,7 @@ bool CLoginISC::ServerRegister(Packet::IscServerRegister&& P) {
   return true;
 }
 
-bool CLoginISC::ServerShutdown(Packet::IscShutdown&& P) {
+bool CLoginISC::serverShutdown(Packet::IscShutdown&& P) {
   // if(login_state_ != eSTATE::REGISTERED) {
   //   logger_->warn("ISC {} is attempting to shutdown before registering.", get_id());
   //   return false;

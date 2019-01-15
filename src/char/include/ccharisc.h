@@ -16,7 +16,7 @@
 #define __CCHARISC_H__
 
 #include "croseisc.h"
-#include "isc_server_auth.h"
+#include "cli_login_req.h"
 #include "isc_server_register.h"
 
 class CCharServer;
@@ -30,12 +30,12 @@ class CCharISC : public RoseCommon::CRoseISC {
   void setLogin(bool val);
 
  protected:
-  bool ServerAuth(RoseCommon::Packet::IscServerAuth&& P);
-  bool ServerRegister(RoseCommon::Packet::IscServerRegister&& P);
-  bool HandlePacket(uint8_t* _buffer) override;
+  bool serverAuth(RoseCommon::Packet::CliLoginReq&& P);
+  bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
+  bool handlePacket(uint8_t* _buffer) override;
 
-  virtual void OnConnected() override;
-  virtual bool OnShutdown() override;
+  virtual void onConnected() override;
+  virtual bool onShutdown() override;
   
   enum class eSTATE {
     DEFAULT,

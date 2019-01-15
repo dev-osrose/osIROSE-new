@@ -18,7 +18,7 @@
 #include "cmapserver.h"
 #include "config.h"
 #include "crosepacket.h"
-#include "isc_server_auth.h"
+#include "cli_login_req.h"
 #include "isc_shutdown.h"
 #include "isc_alive.h"
 #include "platform_defines.h"
@@ -41,7 +41,7 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
+    case ePacketType::PAKCS_LOGIN_REQ:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
@@ -98,7 +98,7 @@ bool CMapISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
 void CMapISC::onConnected() {
   Core::Config& config = Core::Config::getInstance();
   {
-    auto packet = Packet::IscServerAut::create(
+    auto packet = Packet::CliLoginReq::create(
         config.mapServer().charPassword,
         config.mapServer().charUser);
         

@@ -30,6 +30,8 @@
 #include "components/basic_info.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
+#include "components/computed_values.h"
+#include "components/destination.h"
 #include "components/guild.h"
 #include "components/hotbar.h"
 #include "components/inventory.h"
@@ -41,7 +43,9 @@
 #include "components/stamina.h"
 #include "components/stats.h"
 #include "components/status_effects.h"
+#include "components/target.h"
 #include "components/wishlist.h"
+#include "itemdb.h"
 
 using namespace RoseCommon;
 
@@ -98,8 +102,12 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
+void CMapClient::set_on_map() {
+    login_state_ = eSTATE::ONMAP;
+}
+
 void CMapClient::send(const RoseCommon::CRosePacket& packet) {
-    if (login_state_ == eSTATE::LOGGEDIN) {
+    if (login_state_ == eSTATE::ONMAP) {
         CRoseClient::send(packet);
     }
 }
@@ -179,7 +187,64 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
           
-          auto packet = CMapClient::create_srv_player_char(*entitySystem, entity);
+          auto packet = Packet::SrvSelectCharReply::create();
+          const auto& characterGraphics = entitySystem->get_component<Component::CharacterGraphics>(entity);
+          const auto& position = entitySystem->get_component<Component::Position>(entity);
+          const auto& inventory = entitySystem->get_component<Component::Inventory>(entity);
+          const auto& faction = entitySystem->get_component<Component::Faction>(entity);
+          const auto& guild = entitySystem->get_component<Component::Guild>(entity);
+          const auto& level = entitySystem->get_component<Component::Level>(entity);
+          const auto& stats = entitySystem->get_component<Component::Stats>(entity);
+          const auto& life = entitySystem->get_component<Component::Life>(entity);
+          const auto& magic = entitySystem->get_component<Component::Magic>(entity);
+          const auto& stamina = entitySystem->get_component<Component::Stamina>(entity);
+          const auto& skills = entitySystem->get_component<Component::Skills>(entity);
+          const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
+          packet.set_race(characterGraphics.race);
+          packet.set_map(position.map);
+          packet.set_x(position.x);
+          packet.set_y(position.y);
+          packet.set_spawn(position.spawn);
+          packet.set_bodyFace(characterGraphics.face);
+          packet.set_bodyHair(characterGraphics.hair);
+          packet.set_equippedItems(Core::transform(inventory.getVisible(), [this](const auto& en) {
+              return entitySystem->item_to_equipped<decltype(packet)>(en);
+          }));
+          packet.set_stone(basicInfo.stone);
+          packet.set_face(characterGraphics.face);
+          packet.set_hair(characterGraphics.hair);
+          packet.set_job(basicInfo.job);
+          packet.set_factionId(faction.id);
+          packet.set_factionRank(faction.rank);
+          packet.set_fame(faction.fame);
+          packet.set_str(stats.str);
+          packet.set_dex(stats.dex);
+          packet.set_int_(stats.int_);
+          packet.set_con(stats.con);
+          packet.set_charm(stats.charm);
+          packet.set_sense(stats.sense);
+          packet.set_hp(life.hp);
+          packet.set_mp(magic.mp);
+          packet.set_xp(level.xp);
+          packet.set_level(level.level);
+          packet.set_statPoints(basicInfo.statPoints);
+          packet.set_skillPoints(basicInfo.skillPoints);
+          packet.set_bodySize(stats.bodySize);
+          packet.set_headSize(stats.headSize);
+          packet.set_penaltyXp(level.penaltyXp);
+          packet.set_factionFame(faction.factionFame);
+          packet.set_factionPoints(faction.points);
+          packet.set_guildId(guild.id);
+          packet.set_guildContribution(guild.contribution);
+          packet.set_guildRank(guild.rank);
+          packet.set_pkFlag(basicInfo.pkFlag);
+          packet.set_stamina(stamina.stamina);
+          packet.set_skills(Core::transform(skills.skills, [](const auto& skill) {
+              return skill.get_id();
+          }));
+          packet.set_hotbar(hotbar.items);
+          packet.set_tag(basicInfo.tag);
+          packet.set_name(basicInfo.name);
           
           CRoseClient::send(packet);
 
@@ -212,64 +277,57 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 }
 
 RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
-  auto packet = Packet::SrvSelectCharReply::create();
-  const auto& characterGraphics = entitySystem.get_component<Component::CharacterGraphics>(entity);
-  const auto& position = entitySystem.get_component<Component::Position>(entity);
-  const auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
-  const auto& faction = entitySystem.get_component<Component::Faction>(entity);
-  const auto& guild = entitySystem.get_component<Component::Guild>(entity);
-  const auto& level = entitySystem.get_component<Component::Level>(entity);
-  const auto& stats = entitySystem.get_component<Component::Stats>(entity);
-  const auto& life = entitySystem.get_component<Component::Life>(entity);
-  const auto& magic = entitySystem.get_component<Component::Magic>(entity);
-  const auto& stamina = entitySystem.get_component<Component::Stamina>(entity);
-  const auto& skills = entitySystem.get_component<Component::Skills>(entity);
-  const auto& hotbar = entitySystem.get_component<Component::Hotbar>(entity);
-  packet.set_race(characterGraphics.race);
-  packet.set_map(position.map);
-  packet.set_x(position.x);
-  packet.set_y(position.y);
-  packet.set_spawn(position.spawn);
-  packet.set_bodyFace(characterGraphics.face);
-  packet.set_bodyHair(characterGraphics.hair);
-  packet.set_equippedItems(Core::transform(inventory.getVisible(), [&entitySystem](const auto& en) {
-    return entitySystem.item_to_equipped<decltype(packet)>(en);
-  }));
-  packet.set_stone(basicInfo.stone);
-  packet.set_face(characterGraphics.face);
-  packet.set_hair(characterGraphics.hair);
-  packet.set_job(basicInfo.job);
-  packet.set_factionId(faction.id);
-  packet.set_factionRank(faction.rank);
-  packet.set_fame(faction.fame);
-  packet.set_str(stats.str);
-  packet.set_dex(stats.dex);
-  packet.set_int_(stats.int_);
-  packet.set_con(stats.con);
-  packet.set_charm(stats.charm);
-  packet.set_sense(stats.sense);
-  packet.set_hp(life.hp);
-  packet.set_mp(magic.mp);
-  packet.set_xp(level.xp);
-  packet.set_level(level.level);
-  packet.set_statPoints(basicInfo.statPoints);
-  packet.set_skillPoints(basicInfo.skillPoints);
-  packet.set_bodySize(stats.bodySize);
-  packet.set_headSize(stats.headSize);
-  packet.set_penaltyXp(level.penaltyXp);
-  packet.set_factionFame(faction.factionFame);
-  packet.set_factionPoints(faction.points);
-  packet.set_guildId(guild.id);
-  packet.set_guildContribution(guild.contribution);
-  packet.set_guildRank(guild.rank);
-  packet.set_pkFlag(basicInfo.pkFlag);
-  packet.set_stamina(stamina.stamina);
-  packet.set_skills(Core::transform(skills.skills, [](const auto& skill) {
-    return skill.get_id();
-  }));
-  packet.set_hotbar(hotbar.items);
-  packet.set_tag(basicInfo.tag);
-  packet.set_name(basicInfo.name);
-  
+    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto& characterGraphics = entitySystem.get_component<Component::CharacterGraphics>(entity);
+    const auto& position = entitySystem.get_component<Component::Position>(entity);
+    const auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
+    const auto& level = entitySystem.get_component<Component::Level>(entity);
+    const auto& life = entitySystem.get_component<Component::Life>(entity);
+    const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
+
+    auto packet = Packet::SrvPlayerChar();
+    packet.set_id(basicInfo.id);
+    packet.set_x(position.x);
+    packet.set_y(position.y);
+    if (const auto* dest = entitySystem.try_get_component<Component::Destination>(entity)) {
+        packet.set_destX(dest->x);
+        packet.set_destY(dest->y);
+    } else {
+        packet.set_destX(position.x);
+        packet.set_destY(position.y);
+    }
+    packet.set_command(computedValues.command);
+    if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target->target != entt::null) {
+        const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
+        packet.set_targetId(basicInfo.id);
+    } else {
+        packet.set_targetId(0);
+    }
+    packet.set_moveMode(computedValues.moveMode);
+    packet.set_hp(life.hp);
+    packet.set_teamId(basicInfo.teamId);
+    packet.set_statusFlag(computedValues.statusFlag);
+    packet.set_race(characterGraphics.race);
+    packet.set_runSpeed(computedValues.runSpeed);
+    packet.set_atkSpeed(computedValues.atkSpeed);
+    packet.set_weightRate(computedValues.weightRate);
+    packet.set_face(characterGraphics.face);
+    packet.set_hair(characterGraphics.hair);
+    packet.set_inventory(Core::transform(inventory.getVisible(), [&entitySystem](const auto& e) {
+        return entitySystem.item_to_item<decltype(packet)>(e);
+    }));
+    packet.set_bullets(Core::transform(inventory.getBullets(), [&entitySystem](const auto& e) {
+        Packet::SrvPlayerChar::BulletItem item;
+        const auto& itemDef = entitySystem.get_component<ItemDef>(e);
+        item.set_type(itemDef.type);
+        item.set_id(itemDef.id);
+        return item;
+    }));
+    packet.set_job(basicInfo.job);
+    packet.set_level(level.level);
+    packet.set_z(position.z);
+    packet.set_subFlag(computedValues.subFlag);
+    packet.set_name(basicInfo.name);
+    packet.set_fakeName(basicInfo.name);
   return packet;
 }

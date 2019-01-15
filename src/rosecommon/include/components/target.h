@@ -1,7 +1,9 @@
 #pragma once
 
+#include "dataconsts.h"
+
 namespace Component {
 struct Target {
-    uint16_t targetId;
+    RoseCommon::Entity target;
 };
 }

@@ -18,6 +18,7 @@
 #include "crosepacket.h"
 #include "entity_system.h"
 
+#include "srv_player_char.h"
 #include "cli_join_server_req.h"
 
 #include <memory>
@@ -32,6 +33,8 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   uint32_t get_session_id() const { return sessionId_; }
  
   void send(const RoseCommon::CRosePacket& packet);
+
+  void set_on_map();
  
   static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
 
@@ -47,6 +50,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,
+    ONMAP,
     SWITCHING,
   };
 

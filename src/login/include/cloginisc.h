@@ -17,7 +17,7 @@
 
 #include <forward_list>
 #include "croseisc.h"
-#include "isc_server_auth.h"
+#include "cli_login_req.h"
 #include "isc_server_register.h"
 #include "isc_shutdown.h"
 
@@ -38,7 +38,7 @@ class CLoginISC : public RoseCommon::CRoseISC {
 
  protected:
   bool handlePacket(uint8_t* _buffer) override;
-  bool ServerAuth(RoseCommon::Packet::IscServerAuth&& P);
+  bool serverAuth(RoseCommon::Packet::CliLoginReq&& P);
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
   bool serverShutdown(RoseCommon::Packet::IscShutdown&& P);
 

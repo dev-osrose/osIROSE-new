@@ -225,12 +225,12 @@ bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) 
   }
 
   //TODO: change this to be variable
-  if (P->charId() > 6) return false;
+  if (P.get_charId() > 6) return false;
 
-  uint8_t delete_type = (uint8_t)P->isDelete();
+  uint8_t delete_type = (uint8_t)P.get_isDelete();
   uint32_t time = 0;
 
-  if (P->isDelete()) {
+  if (P.get_isDelete()) {
     //TODO: if the character is a guild leader, time = -1 and don't delete character
     // we need to delete the char
     Core::Config& config = Core::Config::getInstance();

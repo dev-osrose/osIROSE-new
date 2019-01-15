@@ -30,7 +30,7 @@ bool NodeISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
+    case ePacketType::PAKCS_LOGIN_REQ:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));

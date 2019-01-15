@@ -1,4 +1,5 @@
 #include "entity_system.h"
+#include "connection.h"
 #include "cmapclient.h"
 #include "enumerate.h"
 #include "itemdb.h"
@@ -62,7 +63,7 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
-    const auto basicInfo& info = get_component<Component::BasicInfo>(entity);
+    const auto& basicInfo = get_component<Component::BasicInfo>(entity);
     send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
 }
 
@@ -83,7 +84,7 @@ void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity ent
 RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) const {
     auto res = name_to_entity.find(name);
     if (res != name_to_entity.end())
-        return *res;
+        return res->second;
     return entt::null;
 }
 
@@ -221,6 +222,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     computedValues.runSpeed = 0;
     computedValues.atkSpeed = 0;
     computedValues.weightRate = 0;
+    computedValues.statusFlag = 0;
+    computedValues.subFlag = 0;
     
     auto& faction = prototype.set<Faction>();
     faction.id = charRow.factionid;

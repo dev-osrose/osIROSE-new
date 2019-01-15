@@ -46,7 +46,6 @@ namespace RoseCommon {
 enum class ePacketType : uint16_t {
   ISCSTART = 0x300,
   ISC_ALIVE,
-  ISC_SERVER_AUTH,
   ISC_SERVER_REGISTER,
   ISC_TRANSFER,
   ISC_SHUTDOWN,

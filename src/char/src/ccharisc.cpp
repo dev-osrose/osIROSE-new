@@ -19,8 +19,6 @@
 #include "crosepacket.h"
 #include "ccharserver.h"
 #include "config.h"
-#include "isc_server_auth.h"
-#include "isc_server_register.h"
 #include "isc_shutdown.h"
 #include "isc_alive.h"
 
@@ -31,16 +29,16 @@ using namespace RoseCommon;
 CCharISC::CCharISC() : CRoseISC(), state_(eSTATE::DEFAULT), server_(nullptr) {}
 
 CCharISC::CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), state_(eSTATE::DEFAULT), server_(server) {
-  socket_[SocketType::Client]->registerOnConnected(std::bind(&CCharISC::OnConnected, this));
-  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CCharISC::OnShutdown, this));
+  socket_[SocketType::Client]->registerOnConnected(std::bind(&CCharISC::onConnected, this));
+  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CCharISC::onShutdown, this));
 }
 
 bool CCharISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
-      return ServerAuth(Packet::IscServerAuth::create(_buffer));
+    case ePacketType::PAKCS_LOGIN_REQ:
+      return serverAuth(Packet::CliLoginReq::create(_buffer));
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(
           Packet::IscServerRegister::create(_buffer));
@@ -56,7 +54,7 @@ bool CCharISC::handlePacket(uint8_t* _buffer) {
   return true;
 }
 
-bool CCharISC::ServerAuth(RoseCommon::Packet::IscServerAuth&& P) {
+bool CCharISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   logger_->trace("CCharISC::ServerAuth(CRosePacket P)");
   if(state_ != eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to auth multiple times.", get_id());
@@ -85,7 +83,7 @@ bool CCharISC::ServerAuth(RoseCommon::Packet::IscServerAuth&& P) {
   return false;
 }
 
-bool CCharISC::ServerRegister(RoseCommon::Packet::IscServerRegister&& P) {
+bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   logger_->trace("CCharISC::ServerRegister(CRosePacket* P)");
   if(state_ == eSTATE::DEFAULT) {
     logger_->warn("ISC {} is attempting to register before auth.", get_id());
@@ -146,7 +144,7 @@ void CCharISC::onConnected() {
 
   Core::Config& config = Core::Config::getInstance();
   {
-    auto packet = Packet::IscServerAuth(
+    auto packet = Packet::CliLoginReq::create(
         config.charServer().loginPassword,
         config.charServer().loginUser);
         
