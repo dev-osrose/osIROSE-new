@@ -48,14 +48,14 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
-    
+
     // callback for updating the name_to_entity mapping
-    registry.construction<Component::Client>().connect<&EntitySystem::register_name>(this);
-    registry.destruction<Component::Client>().connect<&EntitySystem::unregister_name>(this);
-    
+    registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
+    registry.destruction<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
+
     // callback for removing objects
     registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
-    
+
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
@@ -63,8 +63,11 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
-    const auto& basicInfo = get_component<Component::BasicInfo>(entity);
-    send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+    if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
+        send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
+        idManager.release_id(basicInfo->id);
+        basicInfo->id;
+    }    
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -73,12 +76,16 @@ uint16_t EntitySystem::get_world_time() const {
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
     const auto& basic = get_component<Component::BasicInfo>(entity);
-    name_to_entity.insert({basic.name, entity});
+    if (basic.name.size() {
+        name_to_entity.insert({basic.name, entity});
+    }
 }
 
 void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
     const auto& basic = get_component<Component::BasicInfo>(entity);
-    name_to_entity.erase(basic.name);
+    if (basic.name.size() {
+        name_to_entity.erase(basic.name);
+    }
 }
 
 RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) const {
@@ -92,8 +99,8 @@ void EntitySystem::stop() {
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
-    registry.construction<Component::Client>().disconnect<&EntitySystem::register_name>(this);
-    registry.destruction<Component::Client>().disconnect<&EntitySystem::unregister_name>(this);
+    registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
+    registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
 
 bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
@@ -160,6 +167,10 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
+        auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+        entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+        entitySystem.idManager.release_id(basicInfo.id);
+        basicInfo.id = 0;
         entitySystem.registry.destroy(entity);
     });
 }
@@ -420,7 +431,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
     if (entity == entt::null) {
         return entt::null;
     }
-    auto& tmp = registry.replace<Component::Item>(entity, item);
+    registry.replace<Component::Item>(entity, item);
     return entity;
 }
 
