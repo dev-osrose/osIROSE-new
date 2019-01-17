@@ -66,7 +66,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
         idManager.release_id(basicInfo->id);
-        basicInfo->id;
+        basicInfo->id = 0;
     }    
 }
 
@@ -76,14 +76,14 @@ uint16_t EntitySystem::get_world_time() const {
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
     const auto& basic = get_component<Component::BasicInfo>(entity);
-    if (basic.name.size() {
+    if (basic.name.size()) {
         name_to_entity.insert({basic.name, entity});
     }
 }
 
 void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
     const auto& basic = get_component<Component::BasicInfo>(entity);
-    if (basic.name.size() {
+    if (basic.name.size()) {
         name_to_entity.erase(basic.name);
     }
 }
