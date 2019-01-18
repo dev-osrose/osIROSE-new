@@ -91,7 +91,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     default:
       break;
   }
-  if (login_state_ != eSTATE::LOGGEDIN) {
+  if (login_state_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
     return CRoseClient::handlePacket(_buffer);
   }
