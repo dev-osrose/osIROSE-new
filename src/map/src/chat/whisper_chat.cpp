@@ -26,7 +26,7 @@ void Chat::whisper_chat(EntitySystem& entitySystem, Entity entity, const CliWhis
 void Chat::send_whisper(EntitySystem& entitySystem, Entity entity, const std::string& msg) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Chat::send_whisper()");
-    logger->trace("sending {} to {}", msg, entity);
+    logger->trace("sending '{}' to {}", msg, entity);
     auto p = SrvWhisperChat::create("server msg", msg);
     entitySystem.send_to(entity, p);
 }

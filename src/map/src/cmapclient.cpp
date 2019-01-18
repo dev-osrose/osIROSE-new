@@ -297,7 +297,7 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
         packet.set_destY(position.y);
     }
     packet.set_command(computedValues.command);
-    if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target->target != entt::null) {
+    if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
         const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
         packet.set_targetId(basicInfo.id);
     } else {

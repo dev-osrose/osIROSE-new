@@ -21,6 +21,7 @@
 #include "srv_switch_server.h"
 #include "cli_join_server_req.h"
 #include "cli_normal_chat.h"
+#include "cli_change_map_req.h"
 
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
@@ -334,6 +335,14 @@ private:
       break;
     case ePacketType::PAKWC_BILLING_MESSAGE:
       logger_->info("Got billing message reply");
+      logger_->info("Sending change map request");
+      {
+          auto packet = CliChangeMapReq::create(0, 0);
+          send(packet);
+      }
+      break;
+    case ePacketType::PAKWC_CHANGE_MAP_REPLY:
+      logger_->info("Got change map reply");
       logger_->info("Sending a chat message");
       {
           auto packet = CliNormalChat::create("This is a test message from a bot");
