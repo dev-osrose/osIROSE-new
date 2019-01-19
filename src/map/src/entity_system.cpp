@@ -63,6 +63,7 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    logger->trace("EntitySystem::remove_object");
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
         idManager.release_id(basicInfo->id);
@@ -75,6 +76,7 @@ uint16_t EntitySystem::get_world_time() const {
 }
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    logger->trace("EntitySystem::register_name");
     const auto& basic = get_component<Component::BasicInfo>(entity);
     if (basic.name.size()) {
         name_to_entity.insert({basic.name, entity});
@@ -82,6 +84,7 @@ void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entit
 }
 
 void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    logger->trace("EntitySystem::unregister_name");
     const auto& basic = get_component<Component::BasicInfo>(entity);
     if (basic.name.size()) {
         name_to_entity.erase(basic.name);
@@ -167,6 +170,7 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
+        entitySystem.logger->debug("Deleting entity {}", entity);
         auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
         entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
         entitySystem.idManager.release_id(basicInfo.id);

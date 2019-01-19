@@ -32,7 +32,7 @@ void Nearby::add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entit
 void Nearby::remove_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
   if (entity == entt::null) return;
   auto& list = grid[get_grid_position(registry, entity)];
-  std::remove(list.begin(), list.end(), entity);
+  list.erase(std::remove(list.begin(), list.end(), entity), list.end());
 }
     
 bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity first, RoseCommon::Entity second) const {

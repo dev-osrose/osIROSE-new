@@ -181,6 +181,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
                  .where(sessions.id == sessionID));
 
         const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);
+        logger_->debug("Entity {} has name {}", entity, basicInfo.name);
 
         CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, basicInfo.id));
 
