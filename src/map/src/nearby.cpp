@@ -52,7 +52,7 @@ std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySys
   for (uint16_t x = std::max(0, std::get<0>(pos) - 10); x < std::get<0>(pos) + 10; ++x) {
       for (uint16_t y = std::max(0, std::get<1>(pos) - 10); y < std::get<1>(pos) + 10; ++y) {
           if (const auto it = grid.find({x, y}); it != grid.cend()) {
-              res.insert(res.end(), it->cbegin(), it->cend());
+              res.insert(res.end(), it->second.cbegin(), it->second.cend());
           }
       }
   }
