@@ -48,6 +48,14 @@ bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity firs
 std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySystem, RoseCommon::Entity entity) const {
   std::vector<RoseCommon::Entity> res;
   // TODO: populate res and sort it by entity
+  auto pos = get_grid_position(entitySystem, entity);
+  for (uint16_t x = std::max(0, std::get<0>(pos) - 10); x < std::get<0>(pos) + 10; ++x) {
+      for (uint16_t y = std::max(0, std::get<1>(pos) - 10); y < std::get<1>(pos) + 10; ++y) {
+          if (const auto it = grid.find({x, y}); it != grid.cend()) {
+              res.insert(res.end(), it->cbegin(), it->cend());
+          }
+      }
+  }
   return res;
 }
     
