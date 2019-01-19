@@ -64,6 +64,8 @@ class EntitySystem {
         auto item_to_data(RoseCommon::Entity entity) const;
         template <typename T>
         auto item_to_item(RoseCommon::Entity entity) const;
+        template <typename T>
+        auto item_to_bullet(RoseCommon::Entity entity) const;
 
         void send_map(const RoseCommon::CRosePacket& packet) const;
         void send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const;
@@ -208,6 +210,18 @@ auto EntitySystem::item_to_item(RoseCommon::Entity entity) const {
     }
     item.set_header(item_to_header<T>(entity));
     item.set_data(item_to_data<T>(entity));
+    return item;
+}
+
+template <typename T>
+auto EntitySystem::item_to_bullet(RoseCommon::Entity entity) const {
+    typename T::BulletItem item{};
+    if (entity == entt::null) {
+        return item;
+    }
+    const auto& itemDef = get_component<RoseCommon::ItemDef>(entity);
+    item.set_type(itemDef.type);
+    item.set_id(itemDef.id);
     return item;
 }
 

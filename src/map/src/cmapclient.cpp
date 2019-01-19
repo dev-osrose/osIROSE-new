@@ -317,11 +317,7 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
         return entitySystem.item_to_item<decltype(packet)>(e);
     }));
     packet.set_bullets(Core::transform(inventory.getBullets(), [&entitySystem](const auto& e) {
-        Packet::SrvPlayerChar::BulletItem item;
-        const auto& itemDef = entitySystem.get_component<ItemDef>(e);
-        item.set_type(itemDef.type);
-        item.set_id(itemDef.id);
-        return item;
+        return entitySystem.item_to_bullet<decltype(packet)>(e);
     }));
     packet.set_job(basicInfo.job);
     packet.set_level(level.level);
