@@ -11,8 +11,8 @@
     <element name = "teamId" type = "int32_t" default = "0" />
     <element name = "statusFlag" type = "uint32_t" default = "0" />
     <element name = "race" type = "uint8_t" default = "0" />
-    <element name = "runSpeed" type = "uint16_t" default = "0" />
-    <element name = "atkSpeed" type = "uint16_t" default = "0" />
+    <element name = "runSpeed" type = "int16_t" default = "0" />
+    <element name = "atkSpeed" type = "int16_t" default = "0" />
     <element name = "weightRate" type = "uint8_t" default = "0" />
     <element name = "face" type = "uint32_t" default = "0" />
     <element name = "hair" type = "uint32_t" default = "0" />
@@ -22,13 +22,12 @@
     <include path = "dataconsts.h" />
     <include path = "string" system = "true" />
 
-    <element name = "inventory" type = "Item" occurs = "MAX_VISIBLE_ITEMS" ref = "true" default = "{}" />
-    <element name = "bullets" type = "BulletItem" occurs = "BulletType::MAX_BULLET_TYPES" ref = "true" default = "{}" />
-    <element name = "job" type = "uint16_t" default = "0" />
+    <element name = "inventory" type = "EquippedItem" occurs = "MAX_VISIBLE_ITEMS" ref = "true" default = "{}" />
+    <element name = "bullets" type = "Header" occurs = "BulletType::MAX_BULLET_TYPES" ref = "true" default = "{}" />
+    <element name = "job" type = "int16_t" default = "0" />
     <element name = "level" type = "uint8_t" default = "0" />
     <element name = "ridingItems" type = "EquippedItem" occurs = "RidingItem::MAX_RIDING_ITEMS" ref = "true" default = "{}" />
-    <element name = "z" type = "uint16_t" default = "0" />
+    <element name = "z" type = "int16_t" default = "0" />
     <element name = "subFlag" type = "uint32_t" default = "0" />
     <element name = "name" type = "std::string" ref = "true" default = "none" />
-    <element name = "fakeName" type = "std::string" ref = "true" default = "none" />
 </packet>

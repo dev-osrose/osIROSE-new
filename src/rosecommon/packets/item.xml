@@ -29,13 +29,3 @@
         <element name = "data" type = "Data" default = "{}" />
     </sequence>
 </complexType>
-
-<complexType name = "BulletItem">
-    <choice>
-        <sequence inline = "true">
-            <element name = "type" type = "unsigned int" bits = "5" />
-            <element name = "id" type = "unsigned int" bits = "10" />
-        </sequence>
-        <element name = "data" type = "uint16_t" default = "0" />
-    </choice>
-</complexType>

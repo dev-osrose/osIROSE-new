@@ -315,16 +315,15 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
     packet.set_face(characterGraphics.face);
     packet.set_hair(characterGraphics.hair);
     packet.set_inventory(Core::transform(inventory.getVisible(), [&entitySystem](const auto& e) {
-        return entitySystem.item_to_item<decltype(packet)>(e);
+        return entitySystem.item_to_equipped<decltype(packet)>(e);
     }));
     packet.set_bullets(Core::transform(inventory.getBullets(), [&entitySystem](const auto& e) {
-        return entitySystem.item_to_bullet<decltype(packet)>(e);
+        return entitySystem.item_to_header<decltype(packet)>(e);
     }));
     packet.set_job(basicInfo.job);
     packet.set_level(level.level);
     packet.set_z(position.z);
     packet.set_subFlag(computedValues.subFlag);
     packet.set_name(basicInfo.name);
-    packet.set_fakeName(basicInfo.name);
   return packet;
 }

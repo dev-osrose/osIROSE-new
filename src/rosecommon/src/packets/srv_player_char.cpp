@@ -4,130 +4,6 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void SrvPlayerChar::Header::set_type(const unsigned int type) {
-    this->data.type = type;
-}
-
-unsigned int SrvPlayerChar::Header::get_type() const {
-    return data.type;
-}
-
-void SrvPlayerChar::Header::set_id(const unsigned int id) {
-    this->data.id = id;
-}
-
-unsigned int SrvPlayerChar::Header::get_id() const {
-    return data.id;
-}
-
-void SrvPlayerChar::Header::set_isCreated(const unsigned int isCreated) {
-    this->data.isCreated = isCreated;
-}
-
-unsigned int SrvPlayerChar::Header::get_isCreated() const {
-    return data.isCreated;
-}
-
-void SrvPlayerChar::Header::set_header(const uint16_t header) {
-    this->data.header = header;
-}
-
-uint16_t SrvPlayerChar::Header::get_header() const {
-    return data.header;
-}
-
-bool SrvPlayerChar::Header::write(CRoseBasePolicy& writer) const {
-    if (!writer.set_uint16_t(data.header)) {
-        return false;
-    }
-    return true;
-}
-
-bool SrvPlayerChar::Header::read(CRoseReader& reader) {
-    if (!reader.get_uint16_t(data.header)) {
-        return false;
-    }
-    return true;
-}
-
-constexpr size_t SrvPlayerChar::Header::size() {
-    return sizeof(data);
-}
-
-void SrvPlayerChar::Data::set_gem_opt(const unsigned int gem_opt) {
-    this->data.gem_opt = gem_opt;
-}
-
-unsigned int SrvPlayerChar::Data::get_gem_opt() const {
-    return data.gem_opt;
-}
-
-void SrvPlayerChar::Data::set_durability(const unsigned int durability) {
-    this->data.durability = durability;
-}
-
-unsigned int SrvPlayerChar::Data::get_durability() const {
-    return data.durability;
-}
-
-void SrvPlayerChar::Data::set_life(const unsigned int life) {
-    this->data.life = life;
-}
-
-unsigned int SrvPlayerChar::Data::get_life() const {
-    return data.life;
-}
-
-void SrvPlayerChar::Data::set_hasSocket(const unsigned int hasSocket) {
-    this->data.hasSocket = hasSocket;
-}
-
-unsigned int SrvPlayerChar::Data::get_hasSocket() const {
-    return data.hasSocket;
-}
-
-void SrvPlayerChar::Data::set_isAppraised(const unsigned int isAppraised) {
-    this->data.isAppraised = isAppraised;
-}
-
-unsigned int SrvPlayerChar::Data::get_isAppraised() const {
-    return data.isAppraised;
-}
-
-void SrvPlayerChar::Data::set_refine(const unsigned int refine) {
-    this->data.refine = refine;
-}
-
-unsigned int SrvPlayerChar::Data::get_refine() const {
-    return data.refine;
-}
-
-void SrvPlayerChar::Data::set_count(const uint32_t count) {
-    this->data.count = count;
-}
-
-uint32_t SrvPlayerChar::Data::get_count() const {
-    return data.count;
-}
-
-bool SrvPlayerChar::Data::write(CRoseBasePolicy& writer) const {
-    if (!writer.set_uint32_t(data.count)) {
-        return false;
-    }
-    return true;
-}
-
-bool SrvPlayerChar::Data::read(CRoseReader& reader) {
-    if (!reader.get_uint32_t(data.count)) {
-        return false;
-    }
-    return true;
-}
-
-constexpr size_t SrvPlayerChar::Data::size() {
-    return sizeof(data);
-}
-
 void SrvPlayerChar::EquippedItem::set_id(const unsigned int id) {
     this->data.id = id;
 }
@@ -186,88 +62,53 @@ constexpr size_t SrvPlayerChar::EquippedItem::size() {
     return sizeof(data);
 }
 
-void SrvPlayerChar::Item::set_header(const SrvPlayerChar::Header header) {
-    this->header = header;
-}
-
-SrvPlayerChar::Header SrvPlayerChar::Item::get_header() const {
-    return header;
-}
-
-void SrvPlayerChar::Item::set_data(const SrvPlayerChar::Data data) {
-    this->data = data;
-}
-
-SrvPlayerChar::Data SrvPlayerChar::Item::get_data() const {
-    return data;
-}
-
-bool SrvPlayerChar::Item::write(CRoseBasePolicy& writer) const {
-    if (!writer.set_iserialize(header)) {
-        return false;
-    }
-    if (!writer.set_iserialize(data)) {
-        return false;
-    }
-    return true;
-}
-
-bool SrvPlayerChar::Item::read(CRoseReader& reader) {
-    if (!reader.get_iserialize(header)) {
-        return false;
-    }
-    if (!reader.get_iserialize(data)) {
-        return false;
-    }
-    return true;
-}
-
-constexpr size_t SrvPlayerChar::Item::size() {
-    size_t size = 0;
-    size += Header::size(); // header
-    size += Data::size(); // data
-    return size;
-}
-
-void SrvPlayerChar::BulletItem::set_type(const unsigned int type) {
+void SrvPlayerChar::Header::set_type(const unsigned int type) {
     this->data.type = type;
 }
 
-unsigned int SrvPlayerChar::BulletItem::get_type() const {
+unsigned int SrvPlayerChar::Header::get_type() const {
     return data.type;
 }
 
-void SrvPlayerChar::BulletItem::set_id(const unsigned int id) {
+void SrvPlayerChar::Header::set_id(const unsigned int id) {
     this->data.id = id;
 }
 
-unsigned int SrvPlayerChar::BulletItem::get_id() const {
+unsigned int SrvPlayerChar::Header::get_id() const {
     return data.id;
 }
 
-void SrvPlayerChar::BulletItem::set_data(const uint16_t data) {
-    this->data.data = data;
+void SrvPlayerChar::Header::set_isCreated(const unsigned int isCreated) {
+    this->data.isCreated = isCreated;
 }
 
-uint16_t SrvPlayerChar::BulletItem::get_data() const {
-    return data.data;
+unsigned int SrvPlayerChar::Header::get_isCreated() const {
+    return data.isCreated;
 }
 
-bool SrvPlayerChar::BulletItem::write(CRoseBasePolicy& writer) const {
-    if (!writer.set_uint16_t(data.data)) {
+void SrvPlayerChar::Header::set_header(const uint16_t header) {
+    this->data.header = header;
+}
+
+uint16_t SrvPlayerChar::Header::get_header() const {
+    return data.header;
+}
+
+bool SrvPlayerChar::Header::write(CRoseBasePolicy& writer) const {
+    if (!writer.set_uint16_t(data.header)) {
         return false;
     }
     return true;
 }
 
-bool SrvPlayerChar::BulletItem::read(CRoseReader& reader) {
-    if (!reader.get_uint16_t(data.data)) {
+bool SrvPlayerChar::Header::read(CRoseReader& reader) {
+    if (!reader.get_uint16_t(data.header)) {
         return false;
     }
     return true;
 }
 
-constexpr size_t SrvPlayerChar::BulletItem::size() {
+constexpr size_t SrvPlayerChar::Header::size() {
     return sizeof(data);
 }
 
@@ -311,10 +152,10 @@ SrvPlayerChar::SrvPlayerChar(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(race)) {
         return;
     }
-    if (!reader.get_uint16_t(runSpeed)) {
+    if (!reader.get_int16_t(runSpeed)) {
         return;
     }
-    if (!reader.get_uint16_t(atkSpeed)) {
+    if (!reader.get_int16_t(atkSpeed)) {
         return;
     }
     if (!reader.get_uint8_t(weightRate)) {
@@ -336,27 +177,24 @@ SrvPlayerChar::SrvPlayerChar(CRoseReader reader) : CRosePacket(reader) {
             return;
         }
     }
-    if (!reader.get_uint16_t(job)) {
+    if (!reader.get_int16_t(job)) {
         return;
     }
     if (!reader.get_uint8_t(level)) {
         return;
     }
-    for (size_t index = 0; index < RidingItem::MAX_RIDING_ITEMS; ++index) {
+    for (size_t index = 0; index < RidingItem::MAX_RIDING_ITEMS - 1; ++index) {
         if (!reader.get_iserialize(ridingItems[index])) {
             return;
         }
     }
-    if (!reader.get_uint16_t(z)) {
+    if (!reader.get_int16_t(z)) {
         return;
     }
     if (!reader.get_uint32_t(subFlag)) {
         return;
     }
     if (!reader.get_string(name)) {
-        return;
-    }
-    if (!reader.get_string(fakeName)) {
         return;
     }
 }
@@ -457,19 +295,19 @@ uint8_t SrvPlayerChar::get_race() const {
     return race;
 }
 
-void SrvPlayerChar::set_runSpeed(const uint16_t runSpeed) {
+void SrvPlayerChar::set_runSpeed(const int16_t runSpeed) {
     this->runSpeed = runSpeed;
 }
 
-uint16_t SrvPlayerChar::get_runSpeed() const {
+int16_t SrvPlayerChar::get_runSpeed() const {
     return runSpeed;
 }
 
-void SrvPlayerChar::set_atkSpeed(const uint16_t atkSpeed) {
+void SrvPlayerChar::set_atkSpeed(const int16_t atkSpeed) {
     this->atkSpeed = atkSpeed;
 }
 
-uint16_t SrvPlayerChar::get_atkSpeed() const {
+int16_t SrvPlayerChar::get_atkSpeed() const {
     return atkSpeed;
 }
 
@@ -497,43 +335,43 @@ uint32_t SrvPlayerChar::get_hair() const {
     return hair;
 }
 
-void SrvPlayerChar::set_inventory(const std::array<SrvPlayerChar::Item, MAX_VISIBLE_ITEMS>& inventory) {
+void SrvPlayerChar::set_inventory(const std::array<SrvPlayerChar::EquippedItem, MAX_VISIBLE_ITEMS>& inventory) {
     this->inventory = inventory;
 }
 
-void SrvPlayerChar::set_inventory(const Item& inventory, size_t index) {
+void SrvPlayerChar::set_inventory(const EquippedItem& inventory, size_t index) {
     this->inventory[index] = inventory;
 }
 
-const std::array<SrvPlayerChar::Item, MAX_VISIBLE_ITEMS>& SrvPlayerChar::get_inventory() const {
+const std::array<SrvPlayerChar::EquippedItem, MAX_VISIBLE_ITEMS>& SrvPlayerChar::get_inventory() const {
     return inventory;
 }
 
-const SrvPlayerChar::Item& SrvPlayerChar::get_inventory(size_t index) const {
+const SrvPlayerChar::EquippedItem& SrvPlayerChar::get_inventory(size_t index) const {
     return inventory[index];
 }
 
-void SrvPlayerChar::set_bullets(const std::array<SrvPlayerChar::BulletItem, BulletType::MAX_BULLET_TYPES>& bullets) {
+void SrvPlayerChar::set_bullets(const std::array<SrvPlayerChar::Header, BulletType::MAX_BULLET_TYPES>& bullets) {
     this->bullets = bullets;
 }
 
-void SrvPlayerChar::set_bullets(const BulletItem& bullets, size_t index) {
+void SrvPlayerChar::set_bullets(const Header& bullets, size_t index) {
     this->bullets[index] = bullets;
 }
 
-const std::array<SrvPlayerChar::BulletItem, BulletType::MAX_BULLET_TYPES>& SrvPlayerChar::get_bullets() const {
+const std::array<SrvPlayerChar::Header, BulletType::MAX_BULLET_TYPES>& SrvPlayerChar::get_bullets() const {
     return bullets;
 }
 
-const SrvPlayerChar::BulletItem& SrvPlayerChar::get_bullets(size_t index) const {
+const SrvPlayerChar::Header& SrvPlayerChar::get_bullets(size_t index) const {
     return bullets[index];
 }
 
-void SrvPlayerChar::set_job(const uint16_t job) {
+void SrvPlayerChar::set_job(const int16_t job) {
     this->job = job;
 }
 
-uint16_t SrvPlayerChar::get_job() const {
+int16_t SrvPlayerChar::get_job() const {
     return job;
 }
 
@@ -545,7 +383,7 @@ uint8_t SrvPlayerChar::get_level() const {
     return level;
 }
 
-void SrvPlayerChar::set_ridingItems(const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS>& ridingItems) {
+void SrvPlayerChar::set_ridingItems(const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>& ridingItems) {
     this->ridingItems = ridingItems;
 }
 
@@ -553,7 +391,7 @@ void SrvPlayerChar::set_ridingItems(const EquippedItem& ridingItems, size_t inde
     this->ridingItems[index] = ridingItems;
 }
 
-const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS>& SrvPlayerChar::get_ridingItems() const {
+const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>& SrvPlayerChar::get_ridingItems() const {
     return ridingItems;
 }
 
@@ -561,11 +399,11 @@ const SrvPlayerChar::EquippedItem& SrvPlayerChar::get_ridingItems(size_t index) 
     return ridingItems[index];
 }
 
-void SrvPlayerChar::set_z(const uint16_t z) {
+void SrvPlayerChar::set_z(const int16_t z) {
     this->z = z;
 }
 
-uint16_t SrvPlayerChar::get_z() const {
+int16_t SrvPlayerChar::get_z() const {
     return z;
 }
 
@@ -583,14 +421,6 @@ void SrvPlayerChar::set_name(const std::string& name) {
 
 const std::string& SrvPlayerChar::get_name() const {
     return name;
-}
-
-void SrvPlayerChar::set_fakeName(const std::string& fakeName) {
-    this->fakeName = fakeName;
-}
-
-const std::string& SrvPlayerChar::get_fakeName() const {
-    return fakeName;
 }
 
 SrvPlayerChar SrvPlayerChar::create(const uint16_t& id) {
@@ -646,10 +476,10 @@ void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(race)) {
         return;
     }
-    if (!writer.set_uint16_t(runSpeed)) {
+    if (!writer.set_int16_t(runSpeed)) {
         return;
     }
-    if (!writer.set_uint16_t(atkSpeed)) {
+    if (!writer.set_int16_t(atkSpeed)) {
         return;
     }
     if (!writer.set_uint8_t(weightRate)) {
@@ -671,7 +501,7 @@ void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
             return;
         }
     }
-    if (!writer.set_uint16_t(job)) {
+    if (!writer.set_int16_t(job)) {
         return;
     }
     if (!writer.set_uint8_t(level)) {
@@ -682,16 +512,13 @@ void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
             return;
         }
     }
-    if (!writer.set_uint16_t(z)) {
+    if (!writer.set_int16_t(z)) {
         return;
     }
     if (!writer.set_uint32_t(subFlag)) {
         return;
     }
     if (!writer.set_string(name)) {
-        return;
-    }
-    if (!writer.set_string(fakeName)) {
         return;
     }
 }
@@ -710,17 +537,17 @@ constexpr size_t SrvPlayerChar::size() {
     size += sizeof(int32_t); // teamId
     size += sizeof(uint32_t); // statusFlag
     size += sizeof(uint8_t); // race
-    size += sizeof(uint16_t); // runSpeed
-    size += sizeof(uint16_t); // atkSpeed
+    size += sizeof(int16_t); // runSpeed
+    size += sizeof(int16_t); // atkSpeed
     size += sizeof(uint8_t); // weightRate
     size += sizeof(uint32_t); // face
     size += sizeof(uint32_t); // hair
-    size += Item::size() * MAX_VISIBLE_ITEMS; // inventory
-    size += BulletItem::size() * BulletType::MAX_BULLET_TYPES; // bullets
-    size += sizeof(uint16_t); // job
+    size += EquippedItem::size() * MAX_VISIBLE_ITEMS; // inventory
+    size += Header::size() * BulletType::MAX_BULLET_TYPES; // bullets
+    size += sizeof(int16_t); // job
     size += sizeof(uint8_t); // level
-    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS; // ridingItems
-    size += sizeof(uint16_t); // z
+    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS - 1; // ridingItems
+    size += sizeof(int16_t); // z
     size += sizeof(uint32_t); // subFlag
     return size;
 }
