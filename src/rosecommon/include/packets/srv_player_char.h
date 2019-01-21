@@ -123,9 +123,9 @@ class SrvPlayerChar : public CRosePacket {
         int16_t get_job() const;
         void set_level(const uint8_t);
         uint8_t get_level() const;
-        void set_ridingItems(const std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>&);
+        void set_ridingItems(const std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS>&);
         void set_ridingItems(const EquippedItem&, size_t index);
-        const std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>& get_ridingItems() const;
+        const std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS>& get_ridingItems() const;
         const EquippedItem& get_ridingItems(size_t index) const;
         void set_z(const int16_t);
         int16_t get_z() const;
@@ -164,7 +164,7 @@ class SrvPlayerChar : public CRosePacket {
         std::array<Header, BulletType::MAX_BULLET_TYPES> bullets = {};
         int16_t job = 0;
         uint8_t level = 0;
-        std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1> ridingItems = {};
+        std::array<EquippedItem, RidingItem::MAX_RIDING_ITEMS> ridingItems = {};
         int16_t z = 0;
         uint32_t subFlag = 0;
         std::string name;

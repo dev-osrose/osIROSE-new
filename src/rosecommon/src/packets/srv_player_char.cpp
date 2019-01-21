@@ -183,7 +183,7 @@ SrvPlayerChar::SrvPlayerChar(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(level)) {
         return;
     }
-    for (size_t index = 0; index < RidingItem::MAX_RIDING_ITEMS - 1; ++index) {
+    for (size_t index = 0; index < RidingItem::MAX_RIDING_ITEMS; ++index) {
         if (!reader.get_iserialize(ridingItems[index])) {
             return;
         }
@@ -383,7 +383,7 @@ uint8_t SrvPlayerChar::get_level() const {
     return level;
 }
 
-void SrvPlayerChar::set_ridingItems(const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>& ridingItems) {
+void SrvPlayerChar::set_ridingItems(const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS>& ridingItems) {
     this->ridingItems = ridingItems;
 }
 
@@ -391,7 +391,7 @@ void SrvPlayerChar::set_ridingItems(const EquippedItem& ridingItems, size_t inde
     this->ridingItems[index] = ridingItems;
 }
 
-const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS - 1>& SrvPlayerChar::get_ridingItems() const {
+const std::array<SrvPlayerChar::EquippedItem, RidingItem::MAX_RIDING_ITEMS>& SrvPlayerChar::get_ridingItems() const {
     return ridingItems;
 }
 
@@ -546,7 +546,7 @@ constexpr size_t SrvPlayerChar::size() {
     size += Header::size() * BulletType::MAX_BULLET_TYPES; // bullets
     size += sizeof(int16_t); // job
     size += sizeof(uint8_t); // level
-    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS - 1; // ridingItems
+    size += EquippedItem::size() * RidingItem::MAX_RIDING_ITEMS; // ridingItems
     size += sizeof(int16_t); // z
     size += sizeof(uint32_t); // subFlag
     return size;
