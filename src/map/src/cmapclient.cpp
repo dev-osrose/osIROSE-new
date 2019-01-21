@@ -325,5 +325,6 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
     packet.set_z(position.z);
     packet.set_subFlag(computedValues.subFlag);
     packet.set_name(basicInfo.name);
+    packet.set_otherName(basicInfo.name);
   return packet;
 }

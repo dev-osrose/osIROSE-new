@@ -30,4 +30,5 @@
     <element name = "z" type = "int16_t" default = "0" />
     <element name = "subFlag" type = "uint32_t" default = "0" />
     <element name = "name" type = "std::string" ref = "true" default = "none" />
+    <element name = "otherName" type = "std::string" ref = "true" default = "none" />
 </packet>

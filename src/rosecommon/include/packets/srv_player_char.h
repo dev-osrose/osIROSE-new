@@ -133,6 +133,8 @@ class SrvPlayerChar : public CRosePacket {
         uint32_t get_subFlag() const;
         void set_name(const std::string&);
         const std::string& get_name() const;
+        void set_otherName(const std::string&);
+        const std::string& get_otherName() const;
         
         
         static SrvPlayerChar create(const uint16_t&);
@@ -168,6 +170,7 @@ class SrvPlayerChar : public CRosePacket {
         int16_t z = 0;
         uint32_t subFlag = 0;
         std::string name;
+        std::string otherName;
 };
 
 }

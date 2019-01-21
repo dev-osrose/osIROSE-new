@@ -197,6 +197,9 @@ SrvPlayerChar::SrvPlayerChar(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_string(name)) {
         return;
     }
+    if (!reader.get_string(otherName)) {
+        return;
+    }
 }
 
 void SrvPlayerChar::set_id(const uint16_t id) {
@@ -423,6 +426,14 @@ const std::string& SrvPlayerChar::get_name() const {
     return name;
 }
 
+void SrvPlayerChar::set_otherName(const std::string& otherName) {
+    this->otherName = otherName;
+}
+
+const std::string& SrvPlayerChar::get_otherName() const {
+    return otherName;
+}
+
 SrvPlayerChar SrvPlayerChar::create(const uint16_t& id) {
     SrvPlayerChar packet;
     packet.set_id(id);
@@ -519,6 +530,9 @@ void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
         return;
     }
     if (!writer.set_string(name)) {
+        return;
+    }
+    if (!writer.set_string(otherName)) {
         return;
     }
 }
