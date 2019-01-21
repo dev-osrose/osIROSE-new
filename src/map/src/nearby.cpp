@@ -56,6 +56,7 @@ std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySys
           }
       }
   }
+  std::sort(res.begin(), res.end());
   return res;
 }
     
