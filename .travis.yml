@@ -53,7 +53,7 @@ jobs:
     - &gccinit
       stage: prepare cache
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8"
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
       compiler: g++
       addons:
         apt:
@@ -90,7 +90,7 @@ jobs:
     - &clanginit
       stage: prepare cache
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0"
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
       compiler: clang++
       addons:
         apt:
@@ -129,11 +129,11 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-8 GCOV_EXEC=gcov-7
+        - export CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
@@ -157,11 +157,11 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-8 GCOV_EXEC=gcov-7
+        - export CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
@@ -188,7 +188,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -209,7 +209,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0" SUITE=tests BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -230,12 +230,12 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch = coverity_scan OR (type = cron AND branch = trunk)
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8"
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-8
-        - export GCOV_EXEC=gcov-7
+        - export CC=gcc-8 CXX=g++-8
+        - export GCOV_EXEC=gcov-8
       script: true
       addons:
         apt:
@@ -266,12 +266,12 @@ jobs:
 #    - <<: *gccinit
 #      stage: testing
 #      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
+#      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
 #      before_script:
-#        - export GCOV_EXEC=gcov-7
+#        - export GCOV_EXEC=gcov-8
 #        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
 #        - mysql --user="root" -e 'create database osirose;'
 #        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
@@ -283,12 +283,12 @@ jobs:
 #    - <<: *clanginit
 #      stage: testing
 #      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
+#      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0" SUITE=tests BUILD_TYPE=Release
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
 #      before_script:
-#        - export GCOV_EXEC=gcov-7
+#        - export GCOV_EXEC=gcov-8
 #        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
 #        - mysql --user="root" -e 'create database osirose;'
 #        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
@@ -300,14 +300,14 @@ jobs:
     - <<: *gccinit
       stage: testing
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
       cache: false
       before_install:
         - eval "${MATRIX_EVAL}"
       install: 
         - bash $CI_DIRECTORY/install-lcov.sh
       before_script:
-        - export GCOV_EXEC=gcov-7
+        - export GCOV_EXEC=gcov-8
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
