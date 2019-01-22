@@ -53,7 +53,7 @@ jobs:
     - &gccinit
       stage: prepare cache
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8"
       compiler: g++
       addons:
         apt:
@@ -62,7 +62,7 @@ jobs:
           - ubuntu-toolchain-r-test
           packages:
           - lcov
-          - g++-7
+          - g++-8
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
@@ -90,18 +90,18 @@ jobs:
     - &clanginit
       stage: prepare cache
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0"
       compiler: clang++
       addons:
         apt:
           sources:
           - deadsnakes
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-5.0
+          - llvm-toolchain-trusty-6.0
           packages:
           - lcov
-          - g++-7
-          - clang-5.0
+          - g++-8
+          - clang-6.0
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
@@ -129,11 +129,11 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-7 GCOV_EXEC=gcov-7
+        - export CC=gcc-7 CXX=g++-8 GCOV_EXEC=gcov-7
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
@@ -157,11 +157,11 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-7 GCOV_EXEC=gcov-7
+        - export CC=gcc-7 CXX=g++-8 GCOV_EXEC=gcov-7
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
@@ -188,7 +188,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -209,7 +209,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -230,11 +230,11 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch = coverity_scan OR (type = cron AND branch = trunk)
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8"
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
-        - export CC=gcc-7 CXX=g++-7
+        - export CC=gcc-7 CXX=g++-8
         - export GCOV_EXEC=gcov-7
       script: true
       addons:
@@ -244,12 +244,12 @@ jobs:
           - ubuntu-toolchain-r-test
           packages:
           - lcov
-          - g++-7
+          - g++-8
         coverity_scan:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-7 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-7 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-8 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
           build_command: "cmake --build . -- -j4"
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
@@ -266,7 +266,7 @@ jobs:
 #    - <<: *gccinit
 #      stage: testing
 #      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=tests BUILD_TYPE=Debug
+#      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
@@ -283,7 +283,7 @@ jobs:
 #    - <<: *clanginit
 #      stage: testing
 #      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
+#      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-5.0" SUITE=tests BUILD_TYPE=Release
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
@@ -300,7 +300,7 @@ jobs:
     - <<: *gccinit
       stage: testing
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
       cache: false
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -371,6 +371,6 @@ deploy:
   file: "${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz"
   on:
     repo: dev-osrose/osIROSE-new
-    condition: $CXX = "g++-7" && $BUILD_TYPE = "Release"
+    condition: $CXX = "g++-8" && $BUILD_TYPE = "Release"
     branch: trunk
     tags: true
