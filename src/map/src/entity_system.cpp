@@ -24,6 +24,7 @@
 #include "components/stamina.h"
 #include "components/stats.h"
 #include "components/status_effects.h"
+#include "components/target.h"
 #include "components/wishlist.h"
 
 #include "chat/normal_chat.h"
@@ -101,6 +102,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
         idManager.release_id(basicInfo->id);
+        id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
     }    
 }
@@ -115,6 +117,9 @@ void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entit
     if (basic.name.size()) {
         name_to_entity.insert({basic.name, entity});
     }
+    if (basic.id) {
+        id_to_entity.insert({basic.id, entity});
+    }
 }
 
 void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -123,11 +128,21 @@ void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity ent
     if (basic.name.size()) {
         name_to_entity.erase(basic.name);
     }
+    if (basic.id) {
+        id_to_entity.erase(basic.id);
+    }
 }
 
 RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) const {
     auto res = name_to_entity.find(name);
     if (res != name_to_entity.end())
+        return res->second;
+    return entt::null;
+}
+
+RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
+    auto res = id_to_entity.find(id);
+    if (res != id_to_entity.end())
         return res->second;
     return entt::null;
 }
@@ -209,6 +224,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
         auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
         entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
         entitySystem.idManager.release_id(basicInfo.id);
+        id_to_entity.erase(basicInfo.id);
         basicInfo.id = 0;
         entitySystem.registry.destroy(entity);
     });
