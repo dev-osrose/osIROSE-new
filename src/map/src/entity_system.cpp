@@ -7,6 +7,7 @@
 #include "components/basic_info.h"
 #include "components/client.h"
 #include "components/computed_values.h"
+#include "components/destination.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
 #include "components/guild.h"
@@ -28,8 +29,11 @@
 #include "chat/normal_chat.h"
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
+#include "mouse/mouse_cmd.h"
 
 #include "srv_remove_object.h"
+
+#include <algorithm>
 
 EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
@@ -53,6 +57,9 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
 
+    // callback to stop the moving entity when removed
+    registry.destruction<Component::Destination>().connect<&EntitySystem::stop_moving_entity>(this);
+
     // callback for removing objects
     registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
@@ -60,6 +67,17 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
+    register_dispatcher(std::function{Mouse::mouse_cmd});
+}
+
+void EntitySystem::stop_moving_entity(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    logger->trace("EntitySystem::stop_moving_entity");
+    // TODO: check cheat here, maybe force stop other clients later
+    auto& pos = get_component<Component::Position>(entity);
+    const auto& dest = get_component<Component::Destination>(entity);
+    pos.x = dest.x;
+    pos.y = dest.y;
+    pos.z = dest.z;
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -104,6 +122,7 @@ void EntitySystem::stop() {
     registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
     registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
+    registry.destruction<Component::Destination>().disconnect<&EntitySystem::stop_moving_entity>(this);
 }
 
 bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
@@ -183,16 +202,36 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     if (entity == entt::null) return;
     auto* pos = try_get_component<Component::Position>(entity);
     float old_x = 0, old_y = 0;
+    bool is_added = false;
     if (!pos) {
         pos = &add_component<Component::Position>(entity);
         pos->z = 0;
+        is_added = true;
     } else {
         old_x = pos->x;
         old_y = pos->y;
     }
+    const auto old_nearby = get_nearby(entity);
+
     pos->x = x;
     pos->y = y;
     nearby.update_position(entity, old_x, old_y, x, y);
+    if (is_added) {
+        return;
+    }
+    const auto new_nearby = get_nearby(entity);
+    std::vector<RoseCommon::Entity> to_remove;
+    std::vector<RoseCommon::Entity> to_add;
+    std::set_difference(old_nearby.begin(), old_nearby.end(), new_nearby.begin(), new_nearby.end(), std::back_inserter(to_remove));
+    std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
+
+    const auto& basicInfo = get_component<Component::BasicInfo>(entity);
+    for (const auto e : to_remove) {
+        send_to(e, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+    }
+    for (const auto e : to_add) {
+        send_to(e, CMapClient::create_srv_player_char(*this, entity));
+    }
 }
 
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {

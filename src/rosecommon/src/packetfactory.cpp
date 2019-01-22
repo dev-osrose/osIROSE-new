@@ -11,6 +11,7 @@
 #include "cli_delete_char_req.h"
 #include "cli_join_server_req.h"
 #include "cli_login_req.h"
+#include "cli_mouse_cmd.h"
 #include "cli_normal_chat.h"
 #include "cli_select_char_req.h"
 #include "cli_srv_select_req.h"
@@ -28,6 +29,7 @@
 #include "srv_inventory_data.h"
 #include "srv_join_server_reply.h"
 #include "srv_login_reply.h"
+#include "srv_mouse_cmd.h"
 #include "srv_normal_chat.h"
 #include "srv_player_char.h"
 #include "srv_quest_data.h"
@@ -54,6 +56,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_DELETE_CHAR_REQ, CliDeleteCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq);
@@ -76,6 +79,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_INVENTORY_DATA, SrvInventoryData);
     REGISTER_SEND_PACKET(ePacketType::PAKSC_JOIN_SERVER_REPLY, SrvJoinServerReply);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_LOGIN_REPLY, SrvLoginReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_PLAYER_CHAR, SrvPlayerChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData);

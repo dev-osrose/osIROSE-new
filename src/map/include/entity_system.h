@@ -55,6 +55,8 @@ class EntitySystem {
         void remove_component(RoseCommon::Entity entity);
         template <typename T>
         T& add_component(RoseCommon::Entity entity);
+        template <typename T>
+        T& add_or_replace_component(RoseCommon::Entity entity);
     
         template <typename T>
         auto item_to_equipped(RoseCommon::Entity entity) const;
@@ -90,6 +92,7 @@ class EntitySystem {
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void stop_moving_entity(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
@@ -144,6 +147,11 @@ void EntitySystem::remove_component(RoseCommon::Entity entity) {
 template <typename T>
 T& EntitySystem::add_component(RoseCommon::Entity entity) {
     return registry.assign<T>(entity);
+}
+
+template <typename T>
+T& EntitySystem::add_or_replace_component(RoseCommon::Entity entity) {
+    return registry.assign_or_replace<T>(entity);
 }
     
 template <typename T>

@@ -79,8 +79,8 @@ SET(SOURCES_PACKETS
     include/packets/cli_login_req.h
     #  src/packets/cli_logoutreq.cpp
     #  include/packets/cli_logoutreq.h
-    #  src/packets/cli_mousecmd.cpp
-    #  include/packets/cli_mousecmd.h
+    src/packets/cli_mouse_cmd.cpp
+    include/packets/cli_mouse_cmd.h
     src/packets/cli_normal_chat.cpp
     include/packets/cli_normal_chat.h
     #  src/packets/cli_revivereq.cpp
@@ -130,8 +130,8 @@ SET(SOURCES_PACKETS
     include/packets/srv_join_server_reply.h
     #  src/packets/srv_logoutreply.cpp
     #  include/packets/srv_logoutreply.h
-    #  src/packets/srv_mousecmd.cpp
-    #  include/packets/srv_mousecmd.h
+    src/packets/srv_mouse_cmd.cpp
+    include/packets/srv_mouse_cmd.h
     src/packets/srv_normal_chat.cpp
     include/packets/srv_normal_chat.h
     src/packets/srv_player_char.cpp
