@@ -47,7 +47,21 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
             self.save_character(entity);
         });
     });
-    
+
+    add_recurrent_timer(100ms, [](EntitySystem& self) {
+        self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each(auto entity, auto& pos, auto& dest, auto& values) {
+            const auto delta = 100ms;
+            const float speed = values->runSpeed;
+            const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.distance / speed)};
+            if (ntime <= delta || dest.distance == 0) {
+                self.remove_component<Component::Destination>(entity);
+            } else {
+                const auto tmp = delta / ntime;
+                self.update_position(entity, pos->x + dx * tmp, pos->y + dy * tmp);
+            }
+        });
+    });
+
 
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
@@ -273,7 +287,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
     computedValues.moveMode = RoseCommon::MoveMode::WALK;
-    computedValues.runSpeed = 0;
+    computedValues.runSpeed = 1;
     computedValues.atkSpeed = 0;
     computedValues.weightRate = 0;
     computedValues.statusFlag = 0;
