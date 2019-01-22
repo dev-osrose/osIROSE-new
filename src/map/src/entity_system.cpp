@@ -49,15 +49,17 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     });
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
-        self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each(auto entity, auto& pos, auto& dest, auto& values) {
+        self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
             const auto delta = 100ms;
-            const float speed = values->runSpeed;
-            const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.distance / speed)};
-            if (ntime <= delta || dest.distance == 0) {
+            const float speed = values.runSpeed;
+            const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.dist / speed)};
+            const float dx = dest.x - pos.x;
+            const float dy = dest.y - pos.y;
+            if (ntime <= delta || dest.dist == 0) {
                 self.remove_component<Component::Destination>(entity);
             } else {
                 const auto tmp = delta / ntime;
-                self.update_position(entity, pos->x + dx * tmp, pos->y + dy * tmp);
+                self.update_position(entity, pos.x + dx * tmp, pos.y + dy * tmp);
             }
         });
     });

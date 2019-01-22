@@ -21,9 +21,9 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     logger->trace("entity {}, target {} x {} y {}", entity, packet.get_targetId(), packet.get_x(), packet.get_y());
 
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-    const auto& pos = registry.get_component<Component::Position>(entity);
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
     // TODO: add target component
-    auto& dest = entitySystem.add_or_replace<Component::Destination>(entity);
+    auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
 
     dest.x = packet.get_x();
     dest.y = packet.get_y();
