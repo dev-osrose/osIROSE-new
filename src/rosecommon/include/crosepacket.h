@@ -95,7 +95,7 @@ class CRosePacket {
             writer.set_uint16_t(size);
             writer.set_uint16_t(to_underlying(get_type()));
             writer.set_uint16_t(get_CRC());
-            pack(writer);
+            pack(writer); // TODO: what to do with half-written packets
             return res;
         }
 
@@ -122,7 +122,7 @@ class CRosePacket {
         }
 
     protected:
-        virtual void pack(CRoseBasePolicy& writer) const = 0;
+        virtual bool pack(CRoseBasePolicy& writer) const = 0;
     
     private:
         uint16_t size_;

@@ -49,13 +49,14 @@ std::unique_ptr<CliSrvSelectReq> CliSrvSelectReq::allocate(const uint8_t* buffer
     return std::make_unique<CliSrvSelectReq>(reader);
 }
 
-void CliSrvSelectReq::pack(CRoseBasePolicy& writer) const {
+bool CliSrvSelectReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(serverId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(channelId)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliSrvSelectReq::size() {

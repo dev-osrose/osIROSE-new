@@ -25,7 +25,8 @@ std::unique_ptr<CliAcceptReq> CliAcceptReq::allocate(const uint8_t* buffer) {
     return std::make_unique<CliAcceptReq>(reader);
 }
 
-void CliAcceptReq::pack(CRoseBasePolicy&) const {
+bool CliAcceptReq::pack(CRoseBasePolicy&) const {
+    return true;
 }
 
 constexpr size_t CliAcceptReq::size() {

@@ -86,13 +86,14 @@ std::unique_ptr<CliLoginReq> CliLoginReq::allocate(const uint8_t* buffer) {
     return std::make_unique<CliLoginReq>(reader);
 }
 
-void CliLoginReq::pack(CRoseBasePolicy& writer) const {
+bool CliLoginReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_iserialize(password)) {
-        return;
+        return false;
     }
     if (!writer.set_string(username)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliLoginReq::size() {

@@ -25,7 +25,8 @@ std::unique_ptr<CliCharListReq> CliCharListReq::allocate(const uint8_t* buffer) 
     return std::make_unique<CliCharListReq>(reader);
 }
 
-void CliCharListReq::pack(CRoseBasePolicy&) const {
+bool CliCharListReq::pack(CRoseBasePolicy&) const {
+    return true;
 }
 
 constexpr size_t CliCharListReq::size() {

@@ -61,16 +61,17 @@ std::unique_ptr<CliStopMoving> CliStopMoving::allocate(const uint8_t* buffer) {
     return std::make_unique<CliStopMoving>(reader);
 }
 
-void CliStopMoving::pack(CRoseBasePolicy& writer) const {
+bool CliStopMoving::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_float(x)) {
-        return;
+        return false;
     }
     if (!writer.set_float(y)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(z)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliStopMoving::size() {

@@ -158,7 +158,7 @@ class SrvSelectCharReply : public CRosePacket {
         static std::unique_ptr<SrvSelectCharReply> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         uint8_t race = 0;

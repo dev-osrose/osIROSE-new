@@ -47,13 +47,14 @@ std::unique_ptr<SrvBillingMessage> SrvBillingMessage::allocate(const uint8_t* bu
     return std::make_unique<SrvBillingMessage>(reader);
 }
 
-void SrvBillingMessage::pack(CRoseBasePolicy& writer) const {
+bool SrvBillingMessage::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(functionType)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(payFlag)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvBillingMessage::size() {

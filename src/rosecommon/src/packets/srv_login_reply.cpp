@@ -140,21 +140,22 @@ std::unique_ptr<SrvLoginReply> SrvLoginReply::allocate(const uint8_t* buffer) {
     return std::make_unique<SrvLoginReply>(reader);
 }
 
-void SrvLoginReply::pack(CRoseBasePolicy& writer) const {
+bool SrvLoginReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(right)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(type)) {
-        return;
+        return false;
     }
     for (const auto& elem : serversInfo) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
+    return true;
 }
 
 constexpr size_t SrvLoginReply::size() {

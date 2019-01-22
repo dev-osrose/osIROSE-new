@@ -97,25 +97,26 @@ std::unique_ptr<IscServerRegister> IscServerRegister::allocate(const uint8_t* bu
     return std::make_unique<IscServerRegister>(reader);
 }
 
-void IscServerRegister::pack(CRoseBasePolicy& writer) const {
+bool IscServerRegister::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(serverType)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
     if (!writer.set_string(addr)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(port)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(right)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(id)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t IscServerRegister::size() {

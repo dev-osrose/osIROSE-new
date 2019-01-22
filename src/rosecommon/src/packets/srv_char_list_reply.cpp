@@ -271,15 +271,16 @@ std::unique_ptr<SrvCharListReply> SrvCharListReply::allocate(const uint8_t* buff
     return std::make_unique<SrvCharListReply>(reader);
 }
 
-void SrvCharListReply::pack(CRoseBasePolicy& writer) const {
+bool SrvCharListReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(characters.size())) {
-        return;
+        return false;
     }
     for (const auto& elem : characters) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
+    return true;
 }
 
 constexpr size_t SrvCharListReply::size() {

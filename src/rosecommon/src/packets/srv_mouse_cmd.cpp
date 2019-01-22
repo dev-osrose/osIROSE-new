@@ -92,25 +92,26 @@ std::unique_ptr<SrvMouseCmd> SrvMouseCmd::allocate(const uint8_t* buffer) {
     return std::make_unique<SrvMouseCmd>(reader);
 }
 
-void SrvMouseCmd::pack(CRoseBasePolicy& writer) const {
+bool SrvMouseCmd::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(id)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(targetId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(distance)) {
-        return;
+        return false;
     }
     if (!writer.set_float(x)) {
-        return;
+        return false;
     }
     if (!writer.set_float(y)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(z)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvMouseCmd::size() {

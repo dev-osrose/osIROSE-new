@@ -73,19 +73,20 @@ std::unique_ptr<CliMouseCmd> CliMouseCmd::allocate(const uint8_t* buffer) {
     return std::make_unique<CliMouseCmd>(reader);
 }
 
-void CliMouseCmd::pack(CRoseBasePolicy& writer) const {
+bool CliMouseCmd::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(targetId)) {
-        return;
+        return false;
     }
     if (!writer.set_float(x)) {
-        return;
+        return false;
     }
     if (!writer.set_float(y)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(z)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliMouseCmd::size() {

@@ -49,13 +49,14 @@ std::unique_ptr<CliChangeMapReq> CliChangeMapReq::allocate(const uint8_t* buffer
     return std::make_unique<CliChangeMapReq>(reader);
 }
 
-void CliChangeMapReq::pack(CRoseBasePolicy& writer) const {
+bool CliChangeMapReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(weightRate)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(z)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliChangeMapReq::size() {

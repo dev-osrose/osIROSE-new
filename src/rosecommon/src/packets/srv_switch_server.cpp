@@ -73,19 +73,20 @@ std::unique_ptr<SrvSwitchServer> SrvSwitchServer::allocate(const uint8_t* buffer
     return std::make_unique<SrvSwitchServer>(reader);
 }
 
-void SrvSwitchServer::pack(CRoseBasePolicy& writer) const {
+bool SrvSwitchServer::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(port)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(sessionId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(sessionSeed)) {
-        return;
+        return false;
     }
     if (!writer.set_string(ip)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvSwitchServer::size() {

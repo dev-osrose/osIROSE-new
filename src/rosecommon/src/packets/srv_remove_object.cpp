@@ -37,10 +37,11 @@ std::unique_ptr<SrvRemoveObject> SrvRemoveObject::allocate(const uint8_t* buffer
     return std::make_unique<SrvRemoveObject>(reader);
 }
 
-void SrvRemoveObject::pack(CRoseBasePolicy& writer) const {
+bool SrvRemoveObject::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(id)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvRemoveObject::size() {

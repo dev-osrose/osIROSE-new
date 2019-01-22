@@ -31,7 +31,7 @@ class IscShutdown : public CRosePacket {
         static std::unique_ptr<IscShutdown> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         Isc::ServerType serverType;

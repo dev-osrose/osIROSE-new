@@ -49,13 +49,14 @@ std::unique_ptr<SrvDeleteCharReply> SrvDeleteCharReply::allocate(const uint8_t* 
     return std::make_unique<SrvDeleteCharReply>(reader);
 }
 
-void SrvDeleteCharReply::pack(CRoseBasePolicy& writer) const {
+bool SrvDeleteCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(remainingTime)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvDeleteCharReply::size() {

@@ -48,13 +48,14 @@ std::unique_ptr<SrvCreateCharReply> SrvCreateCharReply::allocate(const uint8_t* 
     return std::make_unique<SrvCreateCharReply>(reader);
 }
 
-void SrvCreateCharReply::pack(CRoseBasePolicy& writer) const {
+bool SrvCreateCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(platininum)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvCreateCharReply::size() {

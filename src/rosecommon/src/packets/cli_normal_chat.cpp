@@ -37,10 +37,11 @@ std::unique_ptr<CliNormalChat> CliNormalChat::allocate(const uint8_t* buffer) {
     return std::make_unique<CliNormalChat>(reader);
 }
 
-void CliNormalChat::pack(CRoseBasePolicy& writer) const {
+bool CliNormalChat::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_string(message)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliNormalChat::size() {

@@ -59,7 +59,7 @@ class SrvChannelListReply : public CRosePacket {
         static std::unique_ptr<SrvChannelListReply> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         uint32_t id;

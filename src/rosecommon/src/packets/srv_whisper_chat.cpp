@@ -49,13 +49,14 @@ std::unique_ptr<SrvWhisperChat> SrvWhisperChat::allocate(const uint8_t* buffer) 
     return std::make_unique<SrvWhisperChat>(reader);
 }
 
-void SrvWhisperChat::pack(CRoseBasePolicy& writer) const {
+bool SrvWhisperChat::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_string(sender)) {
-        return;
+        return false;
     }
     if (!writer.set_string(message)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvWhisperChat::size() {

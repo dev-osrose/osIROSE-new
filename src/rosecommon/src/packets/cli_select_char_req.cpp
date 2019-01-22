@@ -73,19 +73,20 @@ std::unique_ptr<CliSelectCharReq> CliSelectCharReq::allocate(const uint8_t* buff
     return std::make_unique<CliSelectCharReq>(reader);
 }
 
-void CliSelectCharReq::pack(CRoseBasePolicy& writer) const {
+bool CliSelectCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(charId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(runMode)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(rideMode)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliSelectCharReq::size() {

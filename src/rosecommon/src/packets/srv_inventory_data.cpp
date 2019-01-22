@@ -225,15 +225,16 @@ std::unique_ptr<SrvInventoryData> SrvInventoryData::allocate(const uint8_t* buff
     return std::make_unique<SrvInventoryData>(reader);
 }
 
-void SrvInventoryData::pack(CRoseBasePolicy& writer) const {
+bool SrvInventoryData::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_int64_t(zuly)) {
-        return;
+        return false;
     }
     for (const auto& elem : items) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
+    return true;
 }
 
 constexpr size_t SrvInventoryData::size() {

@@ -163,7 +163,7 @@ class SrvQuestData : public CRosePacket {
         static std::unique_ptr<SrvQuestData> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         std::array<uint16_t, MAX_CONDITIONS_EPISODE> episodes = {0};
