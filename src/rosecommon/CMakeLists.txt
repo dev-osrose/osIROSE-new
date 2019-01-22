@@ -93,8 +93,8 @@ SET(SOURCES_PACKETS
     include/packets/cli_srv_select_req.h
     #  src/packets/cli_stop.cpp
     #  include/packets/cli_stop.h
-    #  src/packets/cli_stopmoving.cpp
-    #  include/packets/cli_stopmoving.h
+    src/packets/cli_stop_moving.cpp
+    include/packets/cli_stop_moving.h
     src/packets/cli_whisper_chat.cpp
     include/packets/cli_whisper_chat.h
     #  src/packets/cli_equipitem.cpp

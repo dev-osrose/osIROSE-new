@@ -15,6 +15,7 @@
 #include "cli_normal_chat.h"
 #include "cli_select_char_req.h"
 #include "cli_srv_select_req.h"
+#include "cli_stop_moving.h"
 #include "cli_whisper_chat.h"
 #include "isc_alive.h"
 #include "isc_server_register.h"
@@ -60,6 +61,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat);
     REGISTER_RECV_PACKET(ePacketType::ISC_ALIVE, IscAlive);
     REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister);
