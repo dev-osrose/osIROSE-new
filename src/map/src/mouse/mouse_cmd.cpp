@@ -32,8 +32,13 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     const float dx = pos.x - dest.x;
     const float dy = pos.y - dest.y;
     dest.dist = std::sqrt(dx * dx + dy * dy);
-
-    // TODO: add smooth update of position somehow
+    
+    if (packet.get_target() && (auto t = entitySystem.get_entity_from_id(packet.get_target())) != entt::null) {
+        auto& target = entitySystem.add_or_replace_component<Component::Target>(entity);
+        target.target = t;
+    } else {
+        entitySystem.remove_component<Component::Target>(entity);
+    }
 
     auto p = SrvMouseCmd::create(basicInfo.id);
     p.set_targetId(packet.get_targetId());
