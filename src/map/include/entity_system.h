@@ -80,6 +80,7 @@ class EntitySystem {
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
     
         RoseCommon::Entity get_entity_from_name(const std::string& name) const;
+        RoseCommon::Entity get_entity_from_id(uint16_t id) const;
 
         uint16_t get_world_time() const;
 
@@ -96,6 +97,7 @@ class EntitySystem {
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
+        std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
