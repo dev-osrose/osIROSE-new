@@ -140,7 +140,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: 
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -165,7 +165,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -220,7 +220,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -300,7 +300,7 @@ jobs:
     - <<: *gccinit
       stage: testing
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
       cache: false
       before_install:
         - eval "${MATRIX_EVAL}"
