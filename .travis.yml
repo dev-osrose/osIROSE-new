@@ -90,7 +90,7 @@ jobs:
     - &clanginit
       stage: prepare cache
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
+      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7"
       compiler: clang++
       addons:
         apt:
@@ -101,7 +101,7 @@ jobs:
           packages:
           - lcov
           - g++-8
-          - clang++-9
+          - clang++-7
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
@@ -188,7 +188,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-9 && CXX=clang++-9" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7" SUITE=tests BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -209,7 +209,7 @@ jobs:
     - <<: *clanginit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=clang-9 && CXX=clang++-9" SUITE=tests BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7" SUITE=tests BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -283,7 +283,7 @@ jobs:
 #    - <<: *clanginit
 #      stage: testing
 #      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=clang-9 && CXX=clang++-9" SUITE=tests BUILD_TYPE=Release
+#      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7" SUITE=tests BUILD_TYPE=Release
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
