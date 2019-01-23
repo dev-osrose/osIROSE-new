@@ -57,6 +57,8 @@ class EntitySystem {
         T& add_component(RoseCommon::Entity entity);
         template <typename T>
         T& add_or_replace_component(RoseCommon::Entity entity);
+        template <typename T>
+        bool has_component(RoseCommon::Entity entity) const;
     
         template <typename T>
         auto item_to_equipped(RoseCommon::Entity entity) const;
@@ -143,7 +145,9 @@ T* EntitySystem::try_get_component(RoseCommon::Entity entity) {
         
 template <typename T>
 void EntitySystem::remove_component(RoseCommon::Entity entity) {
-    registry.remove<T>(entity);
+    if (has_component<T>(entity)) {
+        registry.remove<T>(entity);
+    }
 }
     
 template <typename T>
@@ -154,6 +158,11 @@ T& EntitySystem::add_component(RoseCommon::Entity entity) {
 template <typename T>
 T& EntitySystem::add_or_replace_component(RoseCommon::Entity entity) {
     return registry.assign_or_replace<T>(entity);
+}
+
+template <typename T>
+bool EntitySystem::has_component(RoseCommon::Entity entity) const {
+    return registry.has<T>(entity);
 }
     
 template <typename T>

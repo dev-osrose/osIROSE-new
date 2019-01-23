@@ -224,7 +224,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
         auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
         entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
         entitySystem.idManager.release_id(basicInfo.id);
-        id_to_entity.erase(basicInfo.id);
+        entitySystem.id_to_entity.erase(basicInfo.id);
         basicInfo.id = 0;
         entitySystem.registry.destroy(entity);
     });
@@ -251,7 +251,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     if (is_added) {
         return;
     }
-    const auto new_nearby = get_nearby(entity);
+    /*const auto new_nearby = get_nearby(entity);
     std::vector<RoseCommon::Entity> to_remove;
     std::vector<RoseCommon::Entity> to_add;
     std::set_difference(old_nearby.begin(), old_nearby.end(), new_nearby.begin(), new_nearby.end(), std::back_inserter(to_remove));
@@ -263,7 +263,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     }
     for (const auto e : to_add) {
         send_to(e, CMapClient::create_srv_player_char(*this, entity));
-    }
+    }*/
 }
 
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {

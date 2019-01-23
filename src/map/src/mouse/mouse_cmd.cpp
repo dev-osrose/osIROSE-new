@@ -22,7 +22,6 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
 
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
-    // TODO: add target component
     auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
 
     dest.x = packet.get_x();
@@ -33,9 +32,12 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     const float dy = pos.y - dest.y;
     dest.dist = std::sqrt(dx * dx + dy * dy);
     
-    if (packet.get_target() && (auto t = entitySystem.get_entity_from_id(packet.get_target())) != entt::null) {
-        auto& target = entitySystem.add_or_replace_component<Component::Target>(entity);
-        target.target = t;
+    if (packet.get_targetId()) {
+        Entity t = entitySystem.get_entity_from_id(packet.get_targetId());
+        if (t != entt::null) {
+            auto& target = entitySystem.add_or_replace_component<Component::Target>(entity);
+            target.target = t;
+        }
     } else {
         entitySystem.remove_component<Component::Target>(entity);
     }
