@@ -86,13 +86,14 @@ std::unique_ptr<CliJoinServerReq> CliJoinServerReq::allocate(const uint8_t* buff
     return std::make_unique<CliJoinServerReq>(reader);
 }
 
-void CliJoinServerReq::pack(CRoseBasePolicy& writer) const {
+bool CliJoinServerReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(sessionId)) {
-        return;
+        return false;
     }
     if (!writer.set_iserialize(password)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliJoinServerReq::size() {

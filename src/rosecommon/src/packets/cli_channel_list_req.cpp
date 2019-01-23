@@ -37,10 +37,11 @@ std::unique_ptr<CliChannelListReq> CliChannelListReq::allocate(const uint8_t* bu
     return std::make_unique<CliChannelListReq>(reader);
 }
 
-void CliChannelListReq::pack(CRoseBasePolicy& writer) const {
+bool CliChannelListReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(serverId)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliChannelListReq::size() {

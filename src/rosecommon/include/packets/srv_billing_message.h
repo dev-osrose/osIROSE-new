@@ -30,7 +30,7 @@ class SrvBillingMessage : public CRosePacket {
         static std::unique_ptr<SrvBillingMessage> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         uint16_t functionType = 0x1001;

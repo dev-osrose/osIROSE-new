@@ -25,7 +25,8 @@ std::unique_ptr<CliAlive> CliAlive::allocate(const uint8_t* buffer) {
     return std::make_unique<CliAlive>(reader);
 }
 
-void CliAlive::pack(CRoseBasePolicy&) const {
+bool CliAlive::pack(CRoseBasePolicy&) const {
+    return true;
 }
 
 constexpr size_t CliAlive::size() {

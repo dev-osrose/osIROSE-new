@@ -49,13 +49,14 @@ std::unique_ptr<CliWhisperChat> CliWhisperChat::allocate(const uint8_t* buffer) 
     return std::make_unique<CliWhisperChat>(reader);
 }
 
-void CliWhisperChat::pack(CRoseBasePolicy& writer) const {
+bool CliWhisperChat::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_string(target)) {
-        return;
+        return false;
     }
     if (!writer.set_string(message)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliWhisperChat::size() {

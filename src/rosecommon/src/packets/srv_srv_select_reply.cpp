@@ -85,22 +85,23 @@ std::unique_ptr<SrvSrvSelectReply> SrvSrvSelectReply::allocate(const uint8_t* bu
     return std::make_unique<SrvSrvSelectReply>(reader);
 }
 
-void SrvSrvSelectReply::pack(CRoseBasePolicy& writer) const {
+bool SrvSrvSelectReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(sessionId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(cryptVal)) {
-        return;
+        return false;
     }
     if (!writer.set_string(ip)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(port)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvSrvSelectReply::size() {

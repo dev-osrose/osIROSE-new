@@ -85,22 +85,23 @@ std::unique_ptr<SrvScreenShotTimeReply> SrvScreenShotTimeReply::allocate(const u
     return std::make_unique<SrvScreenShotTimeReply>(reader);
 }
 
-void SrvScreenShotTimeReply::pack(CRoseBasePolicy& writer) const {
+bool SrvScreenShotTimeReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(year)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(month)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(day)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(hour)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(min)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvScreenShotTimeReply::size() {

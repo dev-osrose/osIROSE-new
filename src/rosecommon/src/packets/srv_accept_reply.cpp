@@ -49,13 +49,14 @@ std::unique_ptr<SrvAcceptReply> SrvAcceptReply::allocate(const uint8_t* buffer) 
     return std::make_unique<SrvAcceptReply>(reader);
 }
 
-void SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
+bool SrvAcceptReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(randValue)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvAcceptReply::size() {

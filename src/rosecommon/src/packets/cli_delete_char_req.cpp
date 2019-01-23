@@ -61,16 +61,17 @@ std::unique_ptr<CliDeleteCharReq> CliDeleteCharReq::allocate(const uint8_t* buff
     return std::make_unique<CliDeleteCharReq>(reader);
 }
 
-void CliDeleteCharReq::pack(CRoseBasePolicy& writer) const {
+bool CliDeleteCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(charId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(isDelete)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliDeleteCharReq::size() {

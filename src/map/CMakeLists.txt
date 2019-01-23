@@ -19,6 +19,7 @@ SET( SOURCES_HEADER
   include/chat/normal_chat.h
   include/chat/whisper_chat.h
   include/map/change_map.h
+  include/mouse/mouse_cmd.h
   )
 
 SET( SOURCES_MAIN
@@ -33,6 +34,7 @@ SET( SOURCES_MAIN
   src/chat/normal_chat.cpp
   src/chat/whisper_chat.cpp
   src/map/change_map.cpp
+  src/mouse/mouse_cmd.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

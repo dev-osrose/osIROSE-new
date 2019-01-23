@@ -49,13 +49,14 @@ std::unique_ptr<IscShutdown> IscShutdown::allocate(const uint8_t* buffer) {
     return std::make_unique<IscShutdown>(reader);
 }
 
-void IscShutdown::pack(CRoseBasePolicy& writer) const {
+bool IscShutdown::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(serverType)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(id)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t IscShutdown::size() {

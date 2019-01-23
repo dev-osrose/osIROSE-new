@@ -60,16 +60,17 @@ std::unique_ptr<SrvJoinServerReply> SrvJoinServerReply::allocate(const uint8_t* 
     return std::make_unique<SrvJoinServerReply>(reader);
 }
 
-void SrvJoinServerReply::pack(CRoseBasePolicy& writer) const {
+bool SrvJoinServerReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(result)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(id)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(payFlag)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvJoinServerReply::size() {

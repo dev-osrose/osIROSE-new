@@ -450,91 +450,92 @@ std::unique_ptr<SrvPlayerChar> SrvPlayerChar::allocate(const uint8_t* buffer) {
     return std::make_unique<SrvPlayerChar>(reader);
 }
 
-void SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
+bool SrvPlayerChar::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(id)) {
-        return;
+        return false;
     }
     if (!writer.set_float(x)) {
-        return;
+        return false;
     }
     if (!writer.set_float(y)) {
-        return;
+        return false;
     }
     if (!writer.set_float(destX)) {
-        return;
+        return false;
     }
     if (!writer.set_float(destY)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(command)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(targetId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(moveMode)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(hp)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(teamId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(statusFlag)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(race)) {
-        return;
+        return false;
     }
     if (!writer.set_int16_t(runSpeed)) {
-        return;
+        return false;
     }
     if (!writer.set_int16_t(atkSpeed)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(weightRate)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(face)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(hair)) {
-        return;
+        return false;
     }
     for (const auto& elem : inventory) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : bullets) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_int16_t(job)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(level)) {
-        return;
+        return false;
     }
     for (const auto& elem : ridingItems) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_int16_t(z)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(subFlag)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
     if (!writer.set_string(otherName)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvPlayerChar::size() {

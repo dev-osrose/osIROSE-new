@@ -153,18 +153,19 @@ std::unique_ptr<SrvChannelListReply> SrvChannelListReply::allocate(const uint8_t
     return std::make_unique<SrvChannelListReply>(reader);
 }
 
-void SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
+bool SrvChannelListReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint32_t(id)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(channels.size())) {
-        return;
+        return false;
     }
     for (const auto& elem : channels) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
+    return true;
 }
 
 constexpr size_t SrvChannelListReply::size() {

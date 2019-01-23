@@ -111,7 +111,7 @@ class SrvInventoryData : public CRosePacket {
         static std::unique_ptr<SrvInventoryData> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
         int64_t zuly;

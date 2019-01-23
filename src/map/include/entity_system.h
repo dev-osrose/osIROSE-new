@@ -55,6 +55,10 @@ class EntitySystem {
         void remove_component(RoseCommon::Entity entity);
         template <typename T>
         T& add_component(RoseCommon::Entity entity);
+        template <typename T>
+        T& add_or_replace_component(RoseCommon::Entity entity);
+        template <typename T>
+        bool has_component(RoseCommon::Entity entity) const;
     
         template <typename T>
         auto item_to_equipped(RoseCommon::Entity entity) const;
@@ -78,6 +82,7 @@ class EntitySystem {
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
     
         RoseCommon::Entity get_entity_from_name(const std::string& name) const;
+        RoseCommon::Entity get_entity_from_id(uint16_t id) const;
 
         uint16_t get_world_time() const;
 
@@ -90,9 +95,11 @@ class EntitySystem {
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void stop_moving_entity(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
+        std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
@@ -138,12 +145,24 @@ T* EntitySystem::try_get_component(RoseCommon::Entity entity) {
         
 template <typename T>
 void EntitySystem::remove_component(RoseCommon::Entity entity) {
-    registry.remove<T>(entity);
+    if (has_component<T>(entity)) {
+        registry.remove<T>(entity);
+    }
 }
     
 template <typename T>
 T& EntitySystem::add_component(RoseCommon::Entity entity) {
     return registry.assign<T>(entity);
+}
+
+template <typename T>
+T& EntitySystem::add_or_replace_component(RoseCommon::Entity entity) {
+    return registry.assign_or_replace<T>(entity);
+}
+
+template <typename T>
+bool EntitySystem::has_component(RoseCommon::Entity entity) const {
+    return registry.has<T>(entity);
 }
     
 template <typename T>

@@ -25,7 +25,8 @@ std::unique_ptr<IscAlive> IscAlive::allocate(const uint8_t* buffer) {
     return std::make_unique<IscAlive>(reader);
 }
 
-void IscAlive::pack(CRoseBasePolicy&) const {
+bool IscAlive::pack(CRoseBasePolicy&) const {
+    return true;
 }
 
 constexpr size_t IscAlive::size() {

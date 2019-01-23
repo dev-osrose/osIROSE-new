@@ -627,151 +627,152 @@ std::unique_ptr<SrvSelectCharReply> SrvSelectCharReply::allocate(const uint8_t* 
     return std::make_unique<SrvSelectCharReply>(reader);
 }
 
-void SrvSelectCharReply::pack(CRoseBasePolicy& writer) const {
+bool SrvSelectCharReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(race)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(map)) {
-        return;
+        return false;
     }
     if (!writer.set_float(x)) {
-        return;
+        return false;
     }
     if (!writer.set_float(y)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(spawn)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(bodyFace)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(bodyHair)) {
-        return;
+        return false;
     }
     for (const auto& elem : equippedItems) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_uint8_t(stone)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(face)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(hair)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(job)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(factionId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(factionRank)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(fame)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(str)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(dex)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(int_)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(con)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(charm)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(sense)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(hp)) {
-        return;
+        return false;
     }
     if (!writer.set_int32_t(mp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(xp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(level)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(statPoints)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(skillPoints)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(bodySize)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(headSize)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(penaltyXp)) {
-        return;
+        return false;
     }
     for (const auto& elem : factionFame) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : factionPoints) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_uint32_t(guildId)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(guildContribution)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(guildRank)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(pkFlag)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(stamina)) {
-        return;
+        return false;
     }
     for (const auto& elem : effects) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_uint16_t(patHp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint32_t(patCooldownTime)) {
-        return;
+        return false;
     }
     for (const auto& elem : skills) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : hotbar) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_uint32_t(tag)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvSelectCharReply::size() {

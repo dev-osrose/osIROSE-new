@@ -26,7 +26,7 @@ class IscAlive : public CRosePacket {
         static std::unique_ptr<IscAlive> allocate(const uint8_t*);
     
     protected:
-        virtual void pack(CRoseBasePolicy&) const override;
+        virtual bool pack(CRoseBasePolicy&) const override;
     
     private:
 };

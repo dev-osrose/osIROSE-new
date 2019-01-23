@@ -451,42 +451,43 @@ std::unique_ptr<SrvQuestData> SrvQuestData::allocate(const uint8_t* buffer) {
     return std::make_unique<SrvQuestData>(reader);
 }
 
-void SrvQuestData::pack(CRoseBasePolicy& writer) const {
+bool SrvQuestData::pack(CRoseBasePolicy& writer) const {
     for (const auto& elem : episodes) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : jobs) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : planets) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : unions) {
         if (!writer.set_uint16_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : quests) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : switches) {
         if (!writer.set_uint32_t(elem)) {
-            return;
+            return false;
         }
     }
     for (const auto& elem : wishlist) {
         if (!writer.set_iserialize(elem)) {
-            return;
+            return false;
         }
     }
+    return true;
 }
 
 constexpr size_t SrvQuestData::size() {

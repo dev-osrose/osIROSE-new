@@ -185,48 +185,49 @@ std::unique_ptr<SrvChangeMapReply> SrvChangeMapReply::allocate(const uint8_t* bu
     return std::make_unique<SrvChangeMapReply>(reader);
 }
 
-void SrvChangeMapReply::pack(CRoseBasePolicy& writer) const {
+bool SrvChangeMapReply::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint16_t(objectIndex)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(hp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(mp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(xp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(penalizeXp)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(craftRate)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(updateTime)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(worldRate)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(townRate)) {
-        return;
+        return false;
     }
     for (const auto& elem : itemRate) {
         if (!writer.set_uint8_t(elem)) {
-            return;
+            return false;
         }
     }
     if (!writer.set_uint32_t(flags)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(worldTime)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(teamNumber)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t SrvChangeMapReply::size() {

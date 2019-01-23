@@ -109,28 +109,29 @@ std::unique_ptr<CliCreateCharReq> CliCreateCharReq::allocate(const uint8_t* buff
     return std::make_unique<CliCreateCharReq>(reader);
 }
 
-void CliCreateCharReq::pack(CRoseBasePolicy& writer) const {
+bool CliCreateCharReq::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(race)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(stone)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(hair)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(face)) {
-        return;
+        return false;
     }
     if (!writer.set_uint8_t(weapon)) {
-        return;
+        return false;
     }
     if (!writer.set_uint16_t(zone)) {
-        return;
+        return false;
     }
     if (!writer.set_string(name)) {
-        return;
+        return false;
     }
+    return true;
 }
 
 constexpr size_t CliCreateCharReq::size() {
