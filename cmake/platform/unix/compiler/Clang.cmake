@@ -1,5 +1,6 @@
 message("-- using clang")
 
+add_compiler_flags(-std=c++17)
 add_compiler_flags(-Wno-keyword-compat -Wno-unused-command-line-argument)
 
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang )
