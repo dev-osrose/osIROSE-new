@@ -63,7 +63,7 @@ std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySys
 void Nearby::update_position(RoseCommon::Entity entity, float old_x, float old_y, float x, float y) {
   if (old_x && old_y) {
     auto &list = grid[get_grid_position(old_x, old_y)];
-    std::remove(list.begin(), list.end(), entity);
+    list.erase(std::remove(list.begin(), list.end(), entity), list.end());
   }
   grid[get_grid_position(x, y)].push_back(entity);
 }
