@@ -25,7 +25,7 @@ TEST(TestFinalServers, TestISCConnections) {
 
   charIsc.init("127.0.0.1", 29110);
   charIscClient->init("127.0.0.1", 29010);
-  charIscClient->SetLogin(true);
+  charIscClient->setLogin(true);
 
   mapIsc.init("127.0.0.1", 29210);
   mapIscClient->init("127.0.0.1", 29110);

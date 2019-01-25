@@ -1,0 +1,10 @@
+PAKWC_GLOBAL_VARS
+include dataconsts.h
+ServerData::Type type = ServerData::Type::ECONOMY e(uint8_t)
+uint32_t counter = 0
+uint16_t popBase = 0
+uint16_t devBase = 0
+uint16_t consume & [MAX_SELL_TYPE] = {0}
+uint16_t dev = 0
+uint32_t pop = 0
+uint32_t item & [MAX_SELL_TYPE] = {0}

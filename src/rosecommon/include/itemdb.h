@@ -26,8 +26,8 @@
 #include <functional>
 
 #include "singleton.h"
-#include "item.h"
 #include "hash.h"
+#include "dataconsts.h"
 
 namespace RoseCommon
 {
@@ -39,8 +39,9 @@ namespace RoseCommon
   * \author Raven
   * \date August 2016
   */
+
   struct ItemDef {
-    uint8_t type;
+    ItemType type;
     uint8_t subtype;
     uint16_t id;
     uint32_t buy_price;

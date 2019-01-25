@@ -17,12 +17,10 @@
 
 #include "croseclient.h"
 
-namespace RoseCommon {
-class CliJoinServerReq;
-class CliCreateCharReq;
-class CliDeleteCharReq;
-class CliSelectCharReq;
-}
+#include "cli_create_char_req.h"
+#include "cli_delete_char_req.h"
+#include "cli_join_server_req.h"
+#include "cli_select_char_req.h"
 
 class CCharServer;
 
@@ -34,15 +32,15 @@ class CCharClient : public RoseCommon::CRoseClient {
   uint32_t sessionId() const { return sessionId_; }
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer) override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
 
-  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
-  bool SendCharListReply();
-  bool SendCharCreateReply(std::unique_ptr<RoseCommon::CliCreateCharReq> P);
-  bool SendCharDeleteReply(std::unique_ptr<RoseCommon::CliDeleteCharReq> P);
-  bool SendCharSelectReply(std::unique_ptr<RoseCommon::CliSelectCharReq> P);
+  bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);
+  bool sendCharListReply();
+  bool sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P);
+  bool sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P);
+  bool sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P);
 
-  virtual void OnDisconnected() override;
+  virtual void onDisconnected() override;
 
  protected:
   void updateSession();

@@ -6,8 +6,7 @@
 //
 // http ://www.apache.org/licenses/LICENSE-2.0
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
+// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -17,39 +16,41 @@
 
 #include "croseclient.h"
 #include "crosepacket.h"
-#include "mappackets.h"
+#include "entity_system.h"
 
-#include "entitysystem.h"
+#include "srv_player_char.h"
+#include "cli_join_server_req.h"
 
 #include <memory>
-
-namespace RoseCommon {
-class CliJoinServerReq;
-}
 
 class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CMapClient> {
  public:
   CMapClient();
-  CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem> entitySystem);
+  CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<EntitySystem>);
 
   virtual ~CMapClient();
 
   uint32_t get_session_id() const { return sessionId_; }
+ 
+  void send(const RoseCommon::CRosePacket& packet);
 
-  void switch_server() { login_state_ = eSTATE::SWITCHING; }
+  void set_on_map();
+ 
+  static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
 
  protected:
-  virtual bool HandlePacket(uint8_t* _buffer) override;
-  virtual void OnDisconnected() override;
+  virtual bool handlePacket(uint8_t* _buffer) override;
+  virtual void onDisconnected() override;
 
   void updateSession();
 
-  bool LogoutReply();
-  bool JoinServerReply(std::unique_ptr<RoseCommon::CliJoinServerReq> P);
+  bool logoutReply();
+  bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);
 
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,
+    ONMAP,
     SWITCHING,
   };
 
@@ -58,7 +59,9 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   uint32_t sessionId_;
   uint32_t userid_;
   uint32_t charid_;
-  std::shared_ptr<EntitySystem> entitySystem_;
+
+  std::shared_ptr<EntitySystem> entitySystem;
+  RoseCommon::Entity entity;
 };
 
 #endif

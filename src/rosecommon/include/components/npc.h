@@ -1,8 +1,8 @@
 #pragma once
 
+namespace Component {
 struct Npc {
-    Npc(uint16_t id, uint16_t quest_id) : npc_id_(id), quest_id_(quest_id) {}
-
-    uint16_t npc_id_;
-    uint16_t quest_id_;
+    uint16_t npcId;
+    uint16_t npcIdQuest;
 };
+}

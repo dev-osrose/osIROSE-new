@@ -1,0 +1,16 @@
+PAKWC_CHANGE_MAP_REPLY
+uint16_t objectIndex
+uint16_t currentHp
+uint16_t currentMp
+uint16_t currentExp
+uint16_t penalizeExp
+
+uint16_t craftRate = 0
+uint16_t updateTime = 0
+uint16_t worldRate = 0
+uint8_t townRate = 0
+uint8_t itemRate [MAX_SELL_TYPE] = {0}
+uint32_t flags = 0
+
+uint16_t worldTime
+uint16_t teamNumber

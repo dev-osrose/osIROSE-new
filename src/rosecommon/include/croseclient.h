@@ -15,7 +15,6 @@
 #ifndef _CROSECLIENT_H_
 #define _CROSECLIENT_H_
 
-#include "entitycomponents.h"
 #include "crosesocket.h"
 
 namespace Core {
@@ -31,11 +30,6 @@ class CRoseClient : public CRoseSocket {
   CRoseClient();
   CRoseClient(std::unique_ptr<Core::INetwork> _sock);
   virtual ~CRoseClient();
-
-  Entity getEntity() const { return entity_; }
-
- protected:
-  Entity entity_;
 };
 
 }

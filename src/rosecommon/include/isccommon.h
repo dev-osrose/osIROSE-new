@@ -5,7 +5,7 @@
 
 namespace RoseCommon {
   namespace Isc {
-    enum class ServerType : uint8_t {
+    enum ServerType : uint8_t {
       LOGIN = 0,
         CHAR = 1,
         NODE = 2,

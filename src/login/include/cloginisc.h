@@ -17,15 +17,12 @@
 
 #include <forward_list>
 #include "croseisc.h"
+#include "cli_login_req.h"
+#include "isc_server_register.h"
+#include "isc_shutdown.h"
 
 namespace Core {
 class INetwork;
-}
-
-namespace RoseCommon {
-class IscLoginReq;
-class IscServerRegister;
-class IscShutdown;
 }
 
 class CLoginISC : public RoseCommon::CRoseISC {
@@ -33,18 +30,18 @@ class CLoginISC : public RoseCommon::CRoseISC {
   CLoginISC();
   CLoginISC(std::unique_ptr<Core::INetwork> _sock);
 
-  std::string GetName() { return server_name_; }
-  bool IsTestServer() { return test_server_; }
-  std::forward_list<RoseCommon::tChannelInfo> GetChannelList() const {
+  std::string getName() { return server_name_; }
+  bool isTestServer() { return test_server_; }
+  std::forward_list<RoseCommon::tChannelInfo> getChannelList() const {
     return channel_list_;
   }
 
  protected:
-  bool HandlePacket(uint8_t* _buffer) override;
-  bool ServerAuth(std::unique_ptr<RoseCommon::IscLoginReq> P);
-  bool ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P);
-  bool ServerShutdown(std::unique_ptr<RoseCommon::IscShutdown> P);
-  
+  bool handlePacket(uint8_t* _buffer) override;
+  bool serverAuth(RoseCommon::Packet::CliLoginReq&& P);
+  bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
+  bool serverShutdown(RoseCommon::Packet::IscShutdown&& P);
+
   enum class eSTATE {
     DEFAULT,
     LOGGEDIN,

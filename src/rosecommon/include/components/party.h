@@ -1,15 +1,12 @@
 #pragma once
 
 #include <memory>
+#include "party_base.h"
 
-struct PartyBase;
-
+namespace Component {
 struct Party {
-    Party() : isRequested_(false), isKicked_(false) {}
-    Party(std::shared_ptr<PartyBase> party) : isRequested_(false), isKicked_(false), party_(party) {}
-    Party(const Party &other) : isRequested_(false), isKicked_(false), party_(other.party_) {}
-
-    bool isRequested_;
-    bool isKicked_;
-    std::shared_ptr<PartyBase> party_;
+    std::shared_ptr<RoseCommon::PartyBase> party;
+    bool isKicked;
+    bool isRequested;
 };
+}

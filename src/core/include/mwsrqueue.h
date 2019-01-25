@@ -1,9 +1,9 @@
 #pragma once
 
 #include <mutex>
-#include "throw_assert.h"
-#include <pair>
+#include "throwassert.h"
 #include <utility>
+#include <condition_variable>
 
 namespace Core {
 
@@ -11,11 +11,11 @@ namespace Core {
 template <class Collection>
 class MWSRQueue {
   public:
-    using T = Collection::value_type;
+    using T = typename Collection::value_type;
     
     void push_back(T&& it) {
       {
-        std::unique_lock lock(_mx);
+        std::unique_lock lock(mx);
         coll.push_back(std::move(it));
       }
       
@@ -23,10 +23,10 @@ class MWSRQueue {
     }
     
     std::pair<bool, T> pop_front() {
-      std::unique_lock lock(_mx);
-      while (!coll.size() && !_killFlag)
+      std::unique_lock lock(mx);
+      while (!coll.size() && !killFlag)
         waitrd.wait(lock);
-      if (_killFlag)
+      if (killFlag)
         return {false, T()};
       throw_assert(coll.size() > 0, "There should be at least one element in the queue");
       T ret = std::move(coll.front());
@@ -37,17 +37,24 @@ class MWSRQueue {
     
     void kill() {
       {
-        std::unique_lock lock(_mx);
-        _killFlag = true;
+        std::unique_lock lock(mx);
+        killFlag = true;
       }
       waitrd.notify_all();
     }
+
+    size_t size() {
+        std::unique_lock lock(mx);
+        size_t size = coll.size();
+        lock.unlock();
+        return size;
+    }
     
   private:
-    std::mutex _mx;
-    std::condition_variable _waitrd;
-    Collection _coll;
-    bool _killFlag = false;
+    std::mutex mx;
+    std::condition_variable waitrd;
+    Collection coll;
+    bool killFlag = false;
 };
 
 }

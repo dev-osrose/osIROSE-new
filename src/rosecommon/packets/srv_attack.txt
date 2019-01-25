@@ -1,0 +1,7 @@
+PAKWC_ATTACK
+uint16_t attackerId entityA::BasicInfo::id
+uint16_t defenderId entityD::BasicInfo::id
+uint16_t dist entityA::Destination::dist
+float x entityA::Destination::x
+float y entityA::Destination::y
+uint16_t z entityA::Destination::z

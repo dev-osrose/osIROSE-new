@@ -1,24 +1,35 @@
 #pragma once
 
-#include "packetfactory.h"
-#include "entitycomponents.h"
 
+#include "packetfactory.h"
 
 namespace RoseCommon {
+namespace Packet {
 
-REGISTER_RECV_PACKET(ePacketType::PAKCS_ALIVE, CliAlive)
 class CliAlive : public CRosePacket {
-	private:
-		static const RecvPacketFactory::Initializer<uint8_t*> init;
-	public:
-		CliAlive();
-		CliAlive(uint8_t buffer[MAX_PACKET_SIZE]);
-
-		virtual ~CliAlive() = default;
-
-
-	protected:
-		virtual void pack() override;
+    public:
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKCS_ALIVE;
+        CliAlive();
+        CliAlive(CRoseReader reader);
+        CliAlive(CliAlive&&) = default;
+        CliAlive& operator=(CliAlive&&) = default;
+        ~CliAlive() = default;
+        
+        static constexpr size_t size();
+        
+        
+        
+        
+        
+        static CliAlive create();
+        static CliAlive create(const uint8_t*);
+        static std::unique_ptr<CliAlive> allocate(const uint8_t*);
+    
+    protected:
+        virtual bool pack(CRoseBasePolicy&) const override;
+    
+    private:
 };
 
+}
 }

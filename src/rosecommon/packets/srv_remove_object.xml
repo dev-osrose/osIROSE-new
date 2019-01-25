@@ -1,0 +1,3 @@
+<packet ePacketType = "PAKWC_REMOVE_OBJECT">
+    <element name = "id" type = "uint16_t" />
+</packet>

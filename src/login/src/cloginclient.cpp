@@ -18,20 +18,20 @@
 #include "croseisc.h"
 #include "packetfactory.h"
 #include "isccommon.h"
-#include "isc_serverregister.h"
-#include "srv_loginreply.h"
-#include "cli_loginreq.h"
+#include "isc_server_register.h"
+#include "cli_login_req.h"
 #include "connection.h"
 #include "connectionpool.h"
 #include "croseserver.h"
-#include "cli_channellistreq.h"
-#include "cli_srvselectreq.h"
-#include "srv_srvselectreply.h"
+#include "cli_channel_list_req.h"
+#include "cli_srv_select_req.h"
+#include "srv_srv_select_reply.h"
 #include "epackettype.h"
-#include "srv_channellistreply.h"
+#include "srv_channel_list_reply.h"
 #include "config.h"
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
 CLoginClient::CLoginClient()
     : CRoseClient(),
@@ -49,17 +49,17 @@ CLoginClient::CLoginClient(CLoginServer* server, std::unique_ptr<Core::INetwork>
       session_id_(0),
       server_(server) {}
 
-void CLoginClient::SendLoginReply(uint8_t Result) {
-  logger_->debug("SendLoginReply({})", Result);
-  auto packet = makePacket<ePacketType::PAKLC_LOGIN_REPLY>(Result, 0, 0);
+void CLoginClient::sendLoginReply(SrvLoginReply::Result Result) {
+  logger_->debug("sendLoginReply({})", Result);
+  auto packet = SrvLoginReply::create(Result, 0, 0);
 
-  if (Result == 0) {
+  if (Result == SrvLoginReply::OK) {
     login_state_ = eSTATE::LOGGEDIN;
-    packet->right() = access_rights_;
+    packet.set_right(access_rights_);
 
     // loop the server list here
     std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
-    for (auto& server : server_->GetISCList())
+    for (auto& server : server_->GetISCList()) {
       if (server->get_type() == Isc::ServerType::CHAR) {
         CLoginISC* svr = static_cast<CLoginISC*>(server.get());
         if (!svr) {
@@ -67,15 +67,19 @@ void CLoginClient::SendLoginReply(uint8_t Result) {
         }
 
         // This if check is needed since the client actually looks for this.
-        packet->addServer(svr->GetName(), svr->get_id() + 1,
-                          svr->IsTestServer());
+        auto info = SrvLoginReply::ServerInfo();
+        info.set_name(svr->getName());
+        info.set_id(svr->get_id() + 1);
+        info.set_test(svr->isTestServer() ? '@' : ' ');
+        packet.add_serversInfo(info);
       }
+    }
   }
 
-  this->send(*packet);
+  send(packet);
 }
 
-bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
+bool CLoginClient::userLogin(CliLoginReq&& P) {
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
                   get_id());
@@ -93,12 +97,12 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
   if (serverCount < 1) {
     // Servers are under inspection
-    SendLoginReply(SrvLoginReply::FAILED);
+    sendLoginReply(SrvLoginReply::FAILED);
     return true;
   }
 
-  username_ = Core::escapeData(P->username());
-  std::string clientpass = Core::escapeData(P->password());
+  username_ = Core::escapeData(P.get_username());
+  std::string clientpass = Core::escapeData(P.get_password());
 
   logger_->debug("Client sent '{}' as the password", clientpass);
 
@@ -118,7 +122,7 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
 
             if (access_rights_ < 1) {
                 // Banned
-                SendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
+                sendLoginReply(SrvLoginReply::NO_RIGHT_TO_CONNECT);
                 return false;
             }
 
@@ -132,14 +136,14 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                                               table.lasttime = std::chrono::system_clock::now())
                      .where(table.id == userid_));
                 this->set_name(username_);
-                SendLoginReply(SrvLoginReply::OK);
+                sendLoginReply(SrvLoginReply::OK);
             } else {
                 // Online already
-                SendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
+                sendLoginReply(SrvLoginReply::ALREADY_LOGGEDIN);
             }
         } else {
             if (!conn(sqlpp::select(table.id).from(table).where(table.username == username_)).empty())
-                SendLoginReply(SrvLoginReply::INVALID_PASSWORD);
+                sendLoginReply(SrvLoginReply::INVALID_PASSWORD);
             else {
                 // The user doesn't exist or server is down.
                 auto& config = Core::Config::getInstance();
@@ -148,17 +152,17 @@ bool CLoginClient::UserLogin(std::unique_ptr<RoseCommon::CliLoginReq> P) {
                     std::string query = fmt::format("CALL create_account('{}', '{}');", username_, clientpass);
                     conn->execute(query);
                 }
-                SendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
+                sendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
             }
         }
   } catch (const sqlpp::exception &e) {
     logger_->error("Error while accessing the database: {}", e.what());
-        SendLoginReply(SrvLoginReply::FAILED);
+        sendLoginReply(SrvLoginReply::FAILED);
   }
   return true;
 }
 
-void CLoginClient::OnDisconnected() {
+void CLoginClient::onDisconnected() {
   Core::SessionTable session{};
   auto conn = Core::connectionPool.getConnection(Core::osirose);
   auto res = conn(sqlpp::select(session.id).from(session)
@@ -170,16 +174,16 @@ void CLoginClient::OnDisconnected() {
   }
 }
 
-bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P) {
+bool CLoginClient::channelList(CliChannelListReq&& P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to get channel list before logging in.",
         get_id());
     return true;
   }
-  uint32_t ServerID = P->serverId()-1;
+  uint32_t ServerID = P.get_serverId()-1;
 
-  auto packet = makePacket<ePacketType::PAKLC_CHANNEL_LIST_REPLY>(ServerID+1);
+  auto packet = SrvChannelListReply::create(ServerID+1);
   std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
   for (auto& obj : server_->GetISCList()) {
     CLoginISC* server = static_cast<CLoginISC*>(obj.get());
@@ -188,27 +192,32 @@ bool CLoginClient::ChannelList(std::unique_ptr<RoseCommon::CliChannelListReq> P)
     }
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == ServerID) {
-      for (tChannelInfo& info : server->GetChannelList()) {
-        packet->addChannel(info.channelName, info.ChannelID+1, 0);
+      for (tChannelInfo& info : server->getChannelList()) {
+        auto channel = SrvChannelListReply::ChannelInfo();
+        channel.set_id(info.ChannelID + 1);
+        channel.set_name(info.channelName);
+        channel.set_lowAge(0);
+        channel.set_highAge(0);
+        channel.set_capacity(0);
+        packet.add_channels(channel);
       }
     }
   }
 
-  this->send(*packet);
+  this->send(packet);
   logger_->trace("Client {}: Channel List end.", get_id());
   return true;
 }
 
-bool CLoginClient::ServerSelect(
-    std::unique_ptr<RoseCommon::CliSrvSelectReq> P) {
+bool CLoginClient::serverSelect(CliSrvSelectReq&& P) {
   if (login_state_ != eSTATE::LOGGEDIN) {
     logger_->warn(
         "Client {} is attempting to select a server before logging in.",
         get_id());
     return true;
   }
-  uint32_t serverID = P->serverId()-1;
-  uint8_t channelID = P->channelId()-1;
+  uint32_t serverID = P.get_serverId()-1;
+  uint8_t channelID = P.get_channelId()-1;
   login_state_ = eSTATE::TRANSFERING;
 
   // 0 = Good to go
@@ -229,10 +238,10 @@ bool CLoginClient::ServerSelect(
                     session.channelid = channelID,
                     session.time = std::chrono::system_clock::now()));
 
-      auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
+      auto packet = SrvSrvSelectReply::create(
           SrvSrvSelectReply::OK, session_id_, 0,
           server->get_address(), server->get_port());
-      this->send(*packet);
+      this->send(packet);
       break;
     }
   }
@@ -240,21 +249,21 @@ bool CLoginClient::ServerSelect(
   return true;
 }
 
-bool CLoginClient::HandlePacket(uint8_t* _buffer) {
-  logger_->trace("CLoginClient::HandlePacket start");
+bool CLoginClient::handlePacket(uint8_t* _buffer) {
+  logger_->trace("CLoginClient::handlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_CHANNEL_LIST_REQ:
-      return ChannelList(
-          getPacket<ePacketType::PAKCS_CHANNEL_LIST_REQ>(_buffer));
+      return channelList(
+          CliChannelListReq::create(_buffer));
     case ePacketType::PAKCS_SRV_SELECT_REQ:
-      return ServerSelect(
-          getPacket<ePacketType::PAKCS_SRV_SELECT_REQ>(_buffer));
+      return serverSelect(
+          CliSrvSelectReq::create(_buffer));
     case ePacketType::PAKCS_LOGIN_REQ:
-      return UserLogin(getPacket<ePacketType::PAKCS_LOGIN_REQ>(_buffer));
+      return userLogin(CliLoginReq::create(_buffer));
 
     default:
-      return CRoseClient::HandlePacket(_buffer);
+      return CRoseClient::handlePacket(_buffer);
   }
-  logger_->trace("CLoginClient::HandlePacket end");
+  logger_->trace("CLoginClient::handlePacket end");
   return true;
 }

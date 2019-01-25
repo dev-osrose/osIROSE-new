@@ -1,0 +1,3 @@
+PAKCS_PARTY_CHAT
+include string
+std::string message &

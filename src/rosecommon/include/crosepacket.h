@@ -29,9 +29,7 @@
 #include <cassert>
 #include <type_traits>
 #include "epackettype.h"
-#include "iscontainer.h"
-
-#define MAX_PACKET_SIZE 0x7FF
+#include "crosewriter.h"
 
 namespace RoseCommon {
 
@@ -52,37 +50,52 @@ namespace RoseCommon {
  */
 class CRosePacket {
     public:
-        CRosePacket(ePacketType type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(type), CRC_(CRC) {
+        CRosePacket(ePacketType type, uint16_t CRC = 0, uint8_t reserved = 0) : size_(0), type_(type), CRC_(CRC) {
           (void)reserved;
-          *this << size_ << (uint16_t)type_ << CRC;
         }
 
-        CRosePacket(uint16_t type, uint16_t CRC = 0, uint8_t reserved = 0) : current_(buffer_), size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
+        CRosePacket(uint16_t type, uint16_t CRC = 0, uint8_t reserved = 0) : size_(0), type_(static_cast<ePacketType>(type)), CRC_(CRC) {
           (void)reserved;
-          *this << size_ << (uint16_t)type_ << CRC;
         }
 
-        CRosePacket(const uint8_t buffer[MAX_PACKET_SIZE]) : current_(buffer_) {
-          std::memcpy(buffer_, buffer, CRosePacket::size(buffer));
-          *this >> size_ >> type_ >> CRC_;
+        CRosePacket(CRoseReader& reader) {
+            reader.get_uint16_t(size_);
+            uint16_t type;
+            reader.get_uint16_t(type);
+            type_ = static_cast<ePacketType>(type);
+            reader.get_uint16_t(CRC_);
         }
-        virtual ~CRosePacket() {}
 
-        ePacketType type() const {return type_;}
-        uint16_t size() const {return size_;}
-        uint16_t CRC() const {return CRC_;}
-        uint8_t* data() {return buffer_+6;}
-        void resetCurrent() {current_ = buffer_;}
+        virtual ~CRosePacket() = default;
+
+        ePacketType get_type() const {return type_;}
+        uint16_t get_size() const {
+            if (size_ != 0)
+                return size_;
+            CRoseSizer sizer(0, 0);
+            pack(sizer);
+            uint16_t size = sizer.get_size();
+            size += sizeof(size_);
+            size += sizeof(type_);
+            size += sizeof(CRC_);
+            const_cast<CRosePacket*>(this)->size_ = size;
+            return size_;
+        }
+        uint16_t get_CRC() const {return CRC_;}
 
         /*!
          * \brief Function to get the structured buffer
          *
          * This function will call pack(), and return a copy of it's internal buffer
          */
-        std::unique_ptr<uint8_t[]> getPacked() {
-            pack();
-            auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size_]);
-            std::memcpy(res.get(), buffer_, size_);
+        virtual std::unique_ptr<uint8_t[]> getPacked() const {
+            uint16_t size = get_size();
+            auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
+            CRoseWriter writer(res.get(), size);
+            writer.set_uint16_t(size);
+            writer.set_uint16_t(to_underlying(get_type()));
+            writer.set_uint16_t(get_CRC());
+            pack(writer); // TODO: what to do with half-written packets
             return res;
         }
 
@@ -90,124 +103,28 @@ class CRosePacket {
          * \brief Helper function to extract the size from a buffer
          */
         static uint16_t size(const uint8_t buffer[MAX_PACKET_SIZE]) {
-            return read<uint16_t>(const_cast<uint8_t*>(buffer));
+            return CRoseReader::read_at<uint16_t>(buffer);
         }
 
         /*!
          * \brief Helper function to extract the type from a buffer
          */
         static ePacketType type(const uint8_t buffer[MAX_PACKET_SIZE]) {
-            return read<ePacketType>(const_cast<uint8_t*>(buffer + sizeof(uint16_t)));
+            return CRoseReader::read_at<ePacketType>(buffer + sizeof(uint16_t));
         }
 
         /*!
          * \brief Helper function to extract the CRC code from a buffer
          */
         static uint8_t CRC(const uint8_t buffer[MAX_PACKET_SIZE]) {
-            return read<uint8_t>(const_cast<uint8_t*>(buffer +
-                                sizeof(uint16_t) + sizeof(ePacketType)));
+            return CRoseReader::read_at<uint8_t>(buffer +
+                                sizeof(uint16_t) + sizeof(ePacketType));
         }
 
     protected:
-        /*!
-         * \brief Reimplement this function to include last minute logic before the packet is written to an external buffer
-         */
-        virtual void pack() {}
-
-        template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
-        friend CRosePacket &operator<<(CRosePacket &os, const T &data) {
-            os.writeNext<T>(data);
-            return os;
-        }
-
-        template <typename T>
-        friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator<<(CRosePacket &os, const T &data) {
-            for (const auto &it : data)
-                os << it;
-            return os;
-        }
-
-        friend CRosePacket &operator<<(CRosePacket &os, const std::string &data) {
-            for (const auto &it : data)
-                os.writeNext<char>(it);
-            os.writeNext<char>(0);
-            return os;
-        }
-
-        friend CRosePacket &operator<<(CRosePacket &os, const char *data) {
-            while (*data)
-                os << *(data++);
-            return os;
-        }
-
-        template <size_t count>
-        friend CRosePacket &operator<<(CRosePacket &os, const char (&data)[count]) {
-            for (size_t i = 0; i < count; ++i)
-                os << data[i];
-            return os;
-        }
-
-        template <typename T, typename std::enable_if<!Core::is_container<T>::value>::type* = nullptr>
-        friend CRosePacket &operator>>(CRosePacket &os, T &data) {
-            data = os.readNext<T>();
-            return os;
-        }
-
-        template <typename T>
-        friend typename std::enable_if<Core::is_container<T>::value, CRosePacket>::type &operator>>(CRosePacket &os, T &data) {
-            for (auto &it : data)
-              os >> it;
-            return os;
-        }
-
-        template <size_t count>
-        friend CRosePacket &operator>>(CRosePacket &os, char (&data)[count]) {
-            for (size_t i = 0; i < count; ++i)
-              os >> data[i];
-            return os;
-        }
-
-        friend CRosePacket &operator>>(CRosePacket &os, std::string &data) {
-            while (auto next = os.readNext<char>())
-                data.push_back(next);
-            return os;
-        }
-
+        virtual bool pack(CRoseBasePolicy& writer) const = 0;
+    
     private:
-        template <typename T, typename = std::enable_if<!Core::is_container<T>::value>>
-        static T read(uint8_t *data) {
-            static_assert(std::is_copy_constructible<T>::value, "CRosePacket doesn't know how to copy construct this type!");
-            return *reinterpret_cast<T*>(data);
-        }
-
-        template <typename T, typename = std::enable_if<!Core::is_container<T>::value>>
-        static void write(uint8_t *data, const T &payload) {
-            static_assert(std::is_copy_assignable<T>::value, "CRosePacket doesn't know how to copy assign this type!");
-            *reinterpret_cast<T*>(data) = payload;
-        }
-
-        template <typename T>
-        T readNext() {
-            if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
-                return T();
-            auto tmp = current_;
-            current_ += sizeof(T);
-            return read<T>(tmp);
-        }
-
-        template <typename T>
-        void writeNext(const T &payload) {
-            if (current_ + sizeof(T) >= buffer_ + sizeof(buffer_))
-                return;
-            auto tmp = current_;
-            current_ += sizeof(T);
-            size_ += sizeof(T);
-            write<T>(tmp, payload);
-            write<uint16_t>(buffer_, size_);
-        }
-
-        uint8_t buffer_[MAX_PACKET_SIZE];
-        uint8_t *current_;
         uint16_t size_;
         ePacketType type_;
         uint16_t CRC_;

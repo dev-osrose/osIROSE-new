@@ -1,0 +1,4 @@
+PAKWC_EQUIP_ITEM
+uint16_t id BasicInfo::id
+int16_t slot
+uint32_t item Inventory::items.getVisible() {slot}

@@ -1,0 +1,3 @@
+PAKCS_NORMAL_CHAT
+include string
+std::string message &

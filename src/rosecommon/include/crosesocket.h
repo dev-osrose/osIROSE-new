@@ -48,20 +48,19 @@ class CRoseSocket {
 
     if(true == is_server)
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnServerReceived, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnServerSend, this, std::placeholders::_1));
-      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnServerDisconnected, this));
+      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2));
+      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1));
+      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onServerDisconnected, this));
     }
     else
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2));
+      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1));
+      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
     }
   };
 
-  virtual bool send(std::unique_ptr<CRosePacket>&& _buffer, int socket_id = static_cast<int>(SocketType::Client));
-  virtual bool send(CRosePacket& _buffer, int socket_id = static_cast<int>(SocketType::Client));
+  virtual bool send(const CRosePacket& _buffer, int socket_id = static_cast<int>(SocketType::Client));
   virtual bool send(std::unique_ptr<uint8_t[]> _buffer, int socket_id = static_cast<int>(SocketType::Client));
 
   virtual uint32_t get_obj_id(int socket_id = static_cast<int>(SocketType::Client)) const {
@@ -128,15 +127,15 @@ class CRoseSocket {
 
  protected:
   // Callback functions
-  virtual void OnDisconnected();
-  virtual bool OnReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
-  virtual bool OnSend([[maybe_unused]] uint8_t* _buffer) ;
-  virtual bool HandlePacket(uint8_t* _buffer) ;
+  virtual void onDisconnected();
+  virtual bool onReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
+  virtual bool onSend([[maybe_unused]] uint8_t* _buffer) ;
+  virtual bool handlePacket(uint8_t* _buffer) ;
   
-  virtual void OnServerDisconnected();
-  virtual bool OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
-  virtual bool OnServerSend([[maybe_unused]] uint8_t* _buffer) ;
-  virtual bool HandleServerPacket([[maybe_unused]] uint8_t* _buffer) ;
+  virtual void onServerDisconnected();
+  virtual bool onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
+  virtual bool onServerSend([[maybe_unused]] uint8_t* _buffer) ;
+  virtual bool handleServerPacket([[maybe_unused]] uint8_t* _buffer) ;
 
   PacketCodec crypt_;
   std::unique_ptr<Core::INetwork> socket_[static_cast<int>(SocketType::MaxSockets)];

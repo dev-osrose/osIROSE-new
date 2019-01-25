@@ -1,0 +1,3 @@
+PAKCS_SRV_SELECT_REQ
+uint32_t serverId
+uint8_t channelId

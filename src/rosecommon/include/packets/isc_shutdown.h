@@ -1,32 +1,42 @@
 #pragma once
 
+
 #include "packetfactory.h"
-#include "entitycomponents.h"
-#include <isccommon.h>
+#include "isccommon.h"
 
 namespace RoseCommon {
+namespace Packet {
 
-REGISTER_SEND_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown)
-REGISTER_RECV_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown)
 class IscShutdown : public CRosePacket {
- private:
-  static const RecvPacketFactory::Initializer<uint8_t*> init;
-	public:
-		IscShutdown();
-		IscShutdown(uint8_t buffer[MAX_PACKET_SIZE]);
-    IscShutdown(Isc::ServerType serverType, int32_t id);
-
-		virtual ~IscShutdown() = default;
-
-    Isc::ServerType serverType() const;
-    int32_t id() const;
-
-	protected:
-		virtual void pack() override;
-
- private:
-    Isc::ServerType serverType_;
-    int32_t id_;
+    public:
+        static constexpr ePacketType PACKET_ID = ePacketType::ISC_SHUTDOWN;
+        IscShutdown();
+        IscShutdown(CRoseReader reader);
+        IscShutdown(IscShutdown&&) = default;
+        IscShutdown& operator=(IscShutdown&&) = default;
+        ~IscShutdown() = default;
+        
+        static constexpr size_t size();
+        
+        
+        
+        void set_serverType(const Isc::ServerType);
+        Isc::ServerType get_serverType() const;
+        void set_id(const int32_t);
+        int32_t get_id() const;
+        
+        
+        static IscShutdown create(const Isc::ServerType&, const int32_t&);
+        static IscShutdown create(const uint8_t*);
+        static std::unique_ptr<IscShutdown> allocate(const uint8_t*);
+    
+    protected:
+        virtual bool pack(CRoseBasePolicy&) const override;
+    
+    private:
+        Isc::ServerType serverType;
+        int32_t id;
 };
 
+}
 }

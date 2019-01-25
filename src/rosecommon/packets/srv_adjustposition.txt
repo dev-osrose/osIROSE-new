@@ -1,0 +1,5 @@
+PAKWC_ADJUST_POSITION
+uint16_t id BasicInfo::id
+float x Position::x
+float y Position::y
+float z Position::z

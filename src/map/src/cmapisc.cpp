@@ -18,9 +18,9 @@
 #include "cmapserver.h"
 #include "config.h"
 #include "crosepacket.h"
-#include "isc_loginreq.h"
-#include "isc_serverregister.h"
+#include "cli_login_req.h"
 #include "isc_shutdown.h"
+#include "isc_alive.h"
 #include "platform_defines.h"
 
 using namespace RoseCommon;
@@ -31,34 +31,34 @@ CMapISC::CMapISC() : CRoseISC(), server_(nullptr) {
 
 CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
   socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
-  socket_[SocketType::Client]->registerOnConnected(std::bind(&CMapISC::OnConnected, this));
-  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::OnShutdown, this));
+  socket_[SocketType::Client]->registerOnConnected(std::bind(&CMapISC::onConnected, this));
+  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::onShutdown, this));
 }
 
-bool CMapISC::IsChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
+bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
-bool CMapISC::HandlePacket(uint8_t* _buffer) {
+bool CMapISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
+    case ePacketType::PAKCS_LOGIN_REQ:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return ServerRegister(getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
+      return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
-      CRoseISC::HandlePacket(_buffer);
+      CRoseISC::handlePacket(_buffer);
       return false;
     }
   }
   return true;
 }
 
-bool CMapISC::ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P) {
-  logger_->trace("CMapISC::ServerRegister(CRosePacket* P)");
+bool CMapISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
+  logger_->trace("CMapISC::serverRegister");
 
   //  int16_t _type = 0;
   //  _type = pMapServer.type();
@@ -90,41 +90,41 @@ bool CMapISC::ServerRegister(std::unique_ptr<RoseCommon::IscServerRegister> P) {
   //    this->set_type(_type);
   //  }
 
-  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n", get_id(), RoseCommon::Isc::serverTypeName(P->serverType()), P->name(),
-                P->addr(), P->port());
+  logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n", get_id(), RoseCommon::Isc::serverTypeName(P.get_serverType()), P.get_name(),
+                P.get_addr(), P.get_port());
   return false;
 }
 
-void CMapISC::OnConnected() {
+void CMapISC::onConnected() {
   Core::Config& config = Core::Config::getInstance();
   {
-    auto packet = makePacket<ePacketType::ISC_SERVER_AUTH>(
+    auto packet = Packet::CliLoginReq::create(
         config.mapServer().charPassword,
         config.mapServer().charUser);
         
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
-                   packet->size(), (uint16_t)packet->type());
-    send(*packet);
+                   packet.get_size(), (uint16_t)packet.get_type());
+    send(packet);
   }
   {
-    auto packet = makePacket<ePacketType::ISC_SERVER_REGISTER>(
+    auto packet = Packet::IscServerRegister::create(
         RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
         config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
   
-    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet->size(),
-                   static_cast<uint16_t>(packet->type()));
-    send(std::move(packet));
+    logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
+                   static_cast<uint16_t>(packet.get_type()));
+    send(packet);
   }
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
-      while (is_active() == true && IsChar() == true) {
+      while (is_active() == true && isChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
         if (dt > (1000 * 60) * 1)  // wait 1 minute before pinging
         {
           logger_->trace("Sending ISC_ALIVE");
-          send(std::make_unique<CRosePacket>(ePacketType::ISC_ALIVE));
+          send(Packet::IscAlive());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
@@ -133,8 +133,8 @@ void CMapISC::OnConnected() {
   }
 }
 
-bool CMapISC::OnShutdown() {
-  logger_->trace("CMapISC::OnDisconnected()");
+bool CMapISC::onShutdown() {
+  logger_->trace("CMapISC::onDisconnected");
   bool result = true;
 
   if (is_active() == true) {
@@ -144,7 +144,7 @@ bool CMapISC::OnShutdown() {
         result = false;
       }
     } else {
-      auto packet = makePacket<ePacketType::ISC_SHUTDOWN>();
+      auto packet = Packet::IscShutdown::create(get_type(), get_id());
       std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
       for (auto& server : server_->GetISCList()) {
         CMapISC* svr = static_cast<CMapISC*>(server.get());
@@ -152,7 +152,7 @@ bool CMapISC::OnShutdown() {
           continue;
         }
         if (svr->get_type() == RoseCommon::Isc::ServerType::CHAR) {
-          svr->send(*packet);
+          svr->send(packet);
           break;
         }
       }

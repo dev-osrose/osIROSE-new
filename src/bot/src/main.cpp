@@ -6,22 +6,22 @@
 #include "crosesocket.h"
 #include "cnetwork_asio.h"
 #include "network_thread_pool.h"
-#include "srv_characterlistreply.h"
-#include "cli_acceptreq.h"
-#include "cli_loginreq.h"
-#include "srv_loginreply.h"
-#include "cli_channellistreq.h"
-#include "srv_channellistreply.h"
-#include "cli_srvselectreq.h"
-#include "srv_srvselectreply.h"
-#include "cli_joinserverreq.h"
-#include "srv_joinserverreply.h"
-#include "cli_charlistreq.h"
-#include "cli_selectcharreq.h"
-#include "srv_switchserver.h"
-#include "cli_joinserverreq.h"
-
-#define SPDLOG_TRACE_ON
+#include "srv_char_list_reply.h"
+#include "cli_accept_req.h"
+#include "cli_login_req.h"
+#include "srv_login_reply.h"
+#include "cli_channel_list_req.h"
+#include "srv_channel_list_reply.h"
+#include "cli_srv_select_req.h"
+#include "srv_srv_select_reply.h"
+#include "cli_join_server_req.h"
+#include "srv_join_server_reply.h"
+#include "cli_char_list_req.h"
+#include "cli_select_char_req.h"
+#include "srv_switch_server.h"
+#include "cli_join_server_req.h"
+#include "cli_normal_chat.h"
+#include "cli_change_map_req.h"
 
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
@@ -29,24 +29,25 @@ uint16_t charPort = 29100;
 uint16_t mapPort = 29110;
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
 class Client : public CRoseSocket {
     public:
     Client(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)) {
-        socket_->registerOnConnected(std::bind(&Client::OnConnected, this));
-        socket_->registerOnSend(std::bind(&Client::OnSend, this, std::placeholders::_1));
-        socket_->registerOnReceived(std::bind(&Client::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
+        socket_[SocketType::Client]->registerOnConnected(std::bind(&Client::onConnected, this));
+        socket_[SocketType::Client]->registerOnSend(std::bind(&Client::onSend, this, std::placeholders::_1));
+        socket_[SocketType::Client]->registerOnReceived(std::bind(&Client::onReceived, this, std::placeholders::_1, std::placeholders::_2));
     }
     virtual ~Client() = default;
 
     protected:
-        virtual void OnConnected() {
+        virtual void onConnected() {
             logger_->trace("Client::OnConnected");
             auto packet = CliAcceptReq();
             send(packet);
         }
 
-        virtual bool OnSend(uint8_t *buffer) {
+        virtual bool onSend(uint8_t *buffer) {
             logger_->trace("Client::OnSend");
             (void)buffer;
 #ifndef DISABLE_CRYPT
@@ -55,7 +56,7 @@ class Client : public CRoseSocket {
             return true;
         }
 
-        virtual bool OnReceived(uint16_t& packetSize, uint8_t *buffer) {
+        virtual bool onReceived(uint16_t& packetSize, uint8_t *buffer) {
             logger_->trace("Client::OnReceived");
             if (packetSize == 6) {
 #ifndef DISABLE_CRYPT
@@ -65,7 +66,7 @@ class Client : public CRoseSocket {
 #endif
                 if (packetSize < 6 || packetSize > MAX_PACKET_SIZE) {
                     logger_->debug("Server sent incorrect block header");
-                    socket_->reset_internal_buffer();
+                    socket_[SocketType::Client]->reset_internal_buffer();
                     return false;
                 }
 
@@ -75,7 +76,7 @@ class Client : public CRoseSocket {
 #ifndef DISABLE_CRYPT
             if (!crypt_.decodeServerBody(reinterpret_cast<unsigned char*>(buffer))) {
                 logger_->debug("Server sent an illegal block");
-                socket_->reset_internal_buffer();
+                socket_[SocketType::Client]->reset_internal_buffer();
                 return false;
             }
 #endif
@@ -91,21 +92,21 @@ class Client : public CRoseSocket {
             recv_mutex_.lock();
             recv_queue_.push(std::move(res));
             recv_mutex_.unlock();
-            socket_->dispatch([this]() {
-                    if (socket_->is_active()) {
+            socket_[SocketType::Client]->dispatch([this]() {
+                    if (socket_[SocketType::Client]->is_active()) {
                         recv_mutex_.lock();
                         if (!recv_queue_.empty()) {
                             std::unique_ptr<uint8_t[]> buffer = std::move(recv_queue_.front());
                             recv_queue_.pop();
-                            if (!HandlePacket(buffer.get())) {
+                            if (!handlePacket(buffer.get())) {
                                 logger_->debug("HandlePacket returned false, disconnecting server");
-                                socket_->shutdown();
+                                socket_[SocketType::Client]->shutdown();
                             }
                         }
                         recv_mutex_.unlock();
                     }
                     });
-            socket_->reset_internal_buffer();
+            socket_[SocketType::Client]->reset_internal_buffer();
             return true;
         }
 };
@@ -132,55 +133,56 @@ class LoginClient : public Client {
         std::string ip_;
         uint16_t port_;
 
-        virtual bool HandlePacket(uint8_t *buffer) override {
+        virtual bool handlePacket(uint8_t *buffer) override {
             logger_->trace("LoginClient::HandlePacket");
             switch (CRosePacket::type(buffer)) {
                 case ePacketType::PAKSS_ACCEPT_REPLY:
                     logger_->info("Got accept reply");
                     logger_->info("Trying to login");
                     {
-                        auto packet = CliLoginReq("098f6bcd4621d373cade4e832627b4f6", "test2");
+                        auto packet = CliLoginReq::create(std::string("098f6bcd4621d373cade4e832627b4f6"), "test2");
                         send(packet);
                     }
                     break;
                 case ePacketType::PAKLC_LOGIN_REPLY:
                     logger_->info("Got a login reply");
                     {
-                        auto reply = SrvLoginReply(buffer);
-                        logger_->info("Got reply result: {}, right: {}, type: {}", reply.result(), reply.right(), reply.type());
-                        if (reply.result() != 0)
+                        auto reply = SrvLoginReply::create(buffer);
+                        logger_->info("Got reply result: {}, right: {}, type: {}", reply.get_result(), reply.get_right(), reply.get_type());
+                        if (reply.get_result() != 0)
                             return false;
                         logger_->info("Server list:");
-                        for (const auto &server : reply.servers())
-                            logger_->info("{}({}) : {}", server.name_, server.id_, server.test_);
-                        auto packet = CliChannelListReq(reply.servers()[0].id_);
+                        for (const auto &server : reply.get_serversInfo())
+                            logger_->info("{}({}) : test = {}", server.get_name(), server.get_id(), server.get_test());
+                        auto packet = CliChannelListReq::create(reply.get_serversInfo()[0].get_id());
                         send(packet);
                     }
                     break;
                 case ePacketType::PAKLC_CHANNEL_LIST_REPLY:
                     logger_->info("Got channel list reply");
                     {
-                        auto reply = SrvChannelListReply(buffer);
-                        logger_->info("Got channels for server: {}", reply.id());
-                        if (!reply.channels().size())
+                        auto reply = SrvChannelListReply::create(buffer);
+                        logger_->info("Got channels for server: {}", reply.get_id());
+                        if (!reply.get_channels().size())
                             return false;
                         logger_->info("Channel list:");
-                        for (const auto &channel : reply.channels())
-                            logger_->info("{}({}): {}-{}, {}%", channel.name_, channel.id_, channel.lowAge_, channel.highAge_, channel.capacity_);
-                        auto packet = CliSrvSelectReq(reply.id(), reply.channels()[0].id_);
+                        for (const auto &channel : reply.get_channels())
+                            logger_->info("{}({}): {}-{}, {}%", channel.get_name(),
+                                    channel.get_id(), channel.get_lowAge(), channel.get_highAge(), channel.get_capacity());
+                        auto packet = CliSrvSelectReq::create(reply.get_id(), reply.get_channels()[0].get_id());
                         send(packet);
                     }
                     break;
                 case ePacketType::PAKLC_SRV_SELECT_REPLY:
                     logger_->info("Got server select reply");
                     {
-                        auto reply = SrvSrvSelectReply(buffer);
-                        logger_->info("Got reply result: {}", reply.result());
-                        if (reply.result() != SrvSrvSelectReply::OK)
+                        auto reply = SrvSrvSelectReply::create(buffer);
+                        logger_->info("Got reply result: {}", reply.get_result());
+                        if (reply.get_result() != SrvSrvSelectReply::OK)
                             return false;
-                        sessionId_ = reply.sessionId();
-                        ip_ = reply.ip();
-                        port_ = reply.port();
+                        sessionId_ = reply.get_sessionId();
+                        ip_ = reply.get_ip();
+                        port_ = reply.get_port();
                         return false;
                     }
                 default:
@@ -193,7 +195,7 @@ class LoginClient : public Client {
 
 class CharClient : public Client {
     public:
-  CharClient(uint32_t sessionId, std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)), sessionId_(sessionId) {}
+  CharClient(uint32_t sessionId, std::unique_ptr<Core::INetwork> sock) : Client(std::move(sock)), sessionId_(sessionId), isOk_(false) {}
       virtual ~CharClient() = default;
 
   uint32_t sessionId() const {
@@ -212,28 +214,31 @@ class CharClient : public Client {
     return ip_;
   }
 
+  bool isOk() const { return isOk_; }
+
     private:
         uint32_t sessionId_;
         uint16_t port_;
         uint32_t sessionSeed_;
         std::string ip_;
+        bool isOk_;
 
-        virtual bool HandlePacket(uint8_t *buffer) override {
+        virtual bool handlePacket(uint8_t *buffer) override {
             logger_->trace("CharClient::HandlePacket");
             switch (CRosePacket::type(buffer)) {
             case ePacketType::PAKSS_ACCEPT_REPLY:
               logger_->info("asking for joinning server");
               {
-                auto packet = CliJoinServerReq(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+                auto packet = CliJoinServerReq::create(sessionId_, std::string("098f6bcd4621d373cade4e832627b4f6"));
                 send(packet);
               }
               break;
             case ePacketType::PAKSC_JOIN_SERVER_REPLY:
               logger_->info("Got join server reply:");
               {
-                auto reply = SrvJoinServerReply(buffer);
-                logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.result(), reply.id(), reply.payFlag());
-                if (reply.result() != SrvJoinServerReply::OK)
+                auto reply = SrvJoinServerReply::create(buffer);
+                logger_->info("Reply: {}, id: {}, payFlag: {}", (uint8_t)reply.get_result(), reply.get_id(), reply.get_payFlag());
+                if (reply.get_result() != SrvJoinServerReply::OK)
                   return false;
                 auto packet = CliCharListReq();
                 send(packet);
@@ -242,44 +247,50 @@ class CharClient : public Client {
             case ePacketType::PAKCC_CHAR_LIST_REPLY:
               logger_->info("Got character list");
               {
-                auto reply = SrvCharacterListReply(buffer);
-                logger_->info("This account has {} characters", reply.getCharacterCount());
+                auto reply = SrvCharListReply::create(buffer);
+                logger_->info("This account has {} characters", reply.get_characters().size());
                 logger_->info("Character list:");
-                for (const auto &it : reply.getCharacters()) {
-                  logger_->info("name: {}", it.name_);
-                  logger_->info("level: {}", it.level_);
-                  logger_->info("job: {}", it.job_);
-                  logger_->info("race: {}", it.race_);
-                  logger_->info("face: {}", it.face_);
-                  logger_->info("hair: {}", it.hair_);
-                  logger_->info("platinium: {}", it.platinum_);
-                  logger_->info("seconds until delete: {}", it.remain_sec_unitl_delete_);
+                for (const auto &it : reply.get_characters()) {
+                  logger_->info("name: {}", it.get_name());
+                  logger_->info("level: {}", it.get_level());
+                  logger_->info("job: {}", it.get_job());
+                  logger_->info("race: {}", it.get_race());
+                  logger_->info("face: {}", it.get_face());
+                  logger_->info("hair: {}", it.get_hair());
+                  logger_->info("platinium: {}", it.get_platinium());
+                  logger_->info("seconds until delete: {}", it.get_remainSecsUntilDelete());
                   logger_->info("items:");
-                  for (size_t i = 0; i < SrvCharacterListReply::MAX_EQUIPPED_ITEMS; ++i) {
+                  size_t i = 0;
+                  for (const auto& item : it.get_items()) {
                     logger_->info("Item in position {}", i);
-                    const auto &item = it.items_[i];
-                    logger_->info("id: {}", item.id_);
-                    if (item.id_ == 0)
+                    logger_->info("id: {}", item.get_id());
+                    if (item.get_id() == 0)
                       continue;
-                    logger_->info("gemOpt: {}", item.gem_op_);
-                    logger_->info("socket: {}", item.socket_);
-                    logger_->info("grade: {}", item.grade_);
+                    logger_->info("gemOpt: {}", item.get_gem_opt());
+                    logger_->info("socket: {}", item.get_socket());
+                    logger_->info("grade: {}", item.get_grade());
+                    ++i;
                   }
                 }
-                auto packet = CliSelectCharReq(0, 0, 0, reply.getCharacters()[0].name_);
+                if (reply.get_characters().size() == 0) {
+                    logger_->info("No character!");
+                    return false;
+                }
+                auto packet = CliSelectCharReq::create(0, 0, 0, reply.get_characters()[0].get_name());
                 send(packet);
               }
               break;
             case ePacketType::PAKCC_SWITCH_SERVER:
               logger_->info("Got character select reply");
               {
-                auto reply = SrvSwitchServer(buffer);
-                ip_ = reply.ip();
-                port_ = reply.port();
-                sessionId_ = reply.sessionId();
-                sessionSeed_ = reply.sessionSeed();
+                auto reply = SrvSwitchServer::create(buffer);
+                ip_ = reply.get_ip();
+                port_ = reply.get_port();
+                sessionId_ = reply.get_sessionId();
+                sessionSeed_ = reply.get_sessionSeed();
+                isOk_ = true;
               }
-              return false;
+              return true;
             default:
               logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
               return false;
@@ -297,7 +308,7 @@ private:
   uint32_t sessionId_;
   uint32_t sessionSeed_;
 
-  virtual bool HandlePacket(uint8_t *buffer) override {
+  virtual bool handlePacket(uint8_t *buffer) override {
     logger_->trace("MapClient::HandlePacket");
     (void)buffer;
     (void)sessionId_;
@@ -306,7 +317,7 @@ private:
     case ePacketType::PAKSS_ACCEPT_REPLY:
       logger_->info("asking for joinning server");
       {
-        auto packet = CliJoinServerReq(sessionId_, "098f6bcd4621d373cade4e832627b4f6");
+        auto packet = CliJoinServerReq::create(sessionId_, std::string("098f6bcd4621d373cade4e832627b4f6"));
         send(packet);
       }
       break;
@@ -324,6 +335,19 @@ private:
       break;
     case ePacketType::PAKWC_BILLING_MESSAGE:
       logger_->info("Got billing message reply");
+      logger_->info("Sending change map request");
+      {
+          auto packet = CliChangeMapReq::create(0, 0);
+          send(packet);
+      }
+      break;
+    case ePacketType::PAKWC_CHANGE_MAP_REPLY:
+      logger_->info("Got change map reply");
+      logger_->info("Sending a chat message");
+      {
+          auto packet = CliNormalChat::create("This is a test message from a bot");
+          send(packet);
+      }
       break;
     default:
       logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
@@ -371,7 +395,7 @@ int main(int argc, char* argv[]) {
 
     auto socket = std::make_unique<Core::CNetwork_Asio>();
     socket->init(ip, loginPort);
-    log->info("Connecting to login server");
+    log->info("Connecting to login server: {}:{}", ip, loginPort);
     LoginClient loginClient{std::move(socket)};
     loginClient.connect();
     loginClient.start_recv();
@@ -379,23 +403,23 @@ int main(int argc, char* argv[]) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     if (loginClient.ip().size()) {
-        log->info("Connecting to char server");
+        log->info("Connecting to char server: {}:{}", loginClient.ip(), loginClient.port());
         socket = std::make_unique<Core::CNetwork_Asio>();
         socket->init(loginClient.ip(), loginClient.port());
         CharClient charClient{loginClient.sessionId(), std::move(socket)};
         charClient.connect();
         charClient.start_recv();
-        while (charClient.is_active())
+        while (charClient.is_active() && !charClient.isOk())
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         if (charClient.ip().size()) {
-          log->info("Connecting to map server");
+          log->info("Connecting to map server: {}:{}", charClient.ip(), charClient.port());
           socket = std::make_unique<Core::CNetwork_Asio>();
           socket->init(charClient.ip(), charClient.port());
           MapClient mapClient{charClient.sessionId(), charClient.sessionSeed(), std::move(socket)};
           mapClient.connect();
           mapClient.start_recv();
-          while (mapClient.is_active())
+          while (mapClient.is_active() && charClient.is_active())
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }

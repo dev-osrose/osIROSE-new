@@ -14,5 +14,5 @@ class IdManager {
     
     private:
         std::unordered_set<uint16_t> _free_ids;
-        uint16_t _max_id = 0;
+        uint16_t _max_id = 1; // first ID is 1
 };

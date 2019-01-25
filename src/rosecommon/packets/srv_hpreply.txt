@@ -1,0 +1,3 @@
+PAKWC_HP_REPLY
+uint16_t id BasicInfo::id
+int32_t hp AdvancedInfo::hp

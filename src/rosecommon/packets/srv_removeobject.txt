@@ -1,0 +1,2 @@
+PAKWC_REMOVE_OBJECT
+uint16_t id BasicInfo::id

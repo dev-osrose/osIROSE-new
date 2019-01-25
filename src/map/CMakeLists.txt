@@ -12,21 +12,14 @@ SET( SOURCES_HEADER
   include/cmapserver.h
   include/cmapclient.h
   include/cmapisc.h
-  include/entitysystem.h
-  include/systemmanager.h
   include/id_manager.h
-  include/script_loader.h
   include/map_manager.h
-  include/gm_commands.h
-  include/systems/system.h
-  include/systems/movementsystem.h
-  include/systems/updatesystem.h
-  include/systems/chatsystem.h
-  include/systems/inventorysystem.h
-  include/systems/partysystem.h
-  include/systems/mapsystem.h
-  include/systems/callbacksystem.h
-  include/systems/combat_system.h
+  include/entity_system.h
+  include/nearby.h
+  include/chat/normal_chat.h
+  include/chat/whisper_chat.h
+  include/map/change_map.h
+  include/mouse/mouse_cmd.h
   )
 
 SET( SOURCES_MAIN
@@ -34,20 +27,14 @@ SET( SOURCES_MAIN
   src/cmapserver.cpp
   src/cmapclient.cpp
   src/cmapisc.cpp
-  src/entitysystem.cpp
-  src/systemmanager.cpp
   src/id_manager.cpp
-  src/script_loader.cpp
   src/map_manager.cpp
-  src/gm_commands.cpp
-  src/systems/movementsystem.cpp
-  src/systems/updatesystem.cpp
-  src/systems/chatsystem.cpp
-  src/systems/inventorysystem.cpp
-  src/systems/partysystem.cpp
-  src/systems/mapsystem.cpp
-  src/systems/callbacksystem.cpp
-  src/systems/combat_system.cpp
+  src/entity_system.cpp
+  src/nearby.cpp
+  src/chat/normal_chat.cpp
+  src/chat/whisper_chat.cpp
+  src/map/change_map.cpp
+  src/mouse/mouse_cmd.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

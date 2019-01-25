@@ -15,15 +15,16 @@ set( SOURCES_HEADER
   include/connectionpool.h
   include/connection.h
   include/singleton.h
-  include/riterator.h
   include/platform_defines.h
-  include/iscontainer.h
-  include/makevector.h
   include/factory.h
   include/crash_report.h
   include/hash.h
   include/fuzzy_matching.h
   include/random.h
+  include/mwsrqueue.h
+  include/enumerate.h
+  include/transform.h
+  include/fire_once.h
 )
 
 set( SOURCES_BASE

@@ -1,0 +1,2 @@
+PAKCS_CHANNEL_LIST_REQ
+uint32_t serverId

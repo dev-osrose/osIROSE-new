@@ -16,15 +16,10 @@
 #include "nodeclient.h"
 #include "packetfactory.h"
 #include "croseserver.h"
-#include "srv_srvselectreply.h"
 #include "epackettype.h"
 #include "config.h"
 
 using namespace RoseCommon;
-
-namespace RoseCommon {
-  REGISTER_RECV_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply)
-};
 
 NodeClient::NodeClient()
   : CRoseClient(),
@@ -42,18 +37,16 @@ NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
     session_id_( 0 ),
     server_connection_(std::make_unique<Core::CNetwork_Asio>()) {}
 
-bool NodeClient::ServerSelectReply(
-  std::unique_ptr<SrvSrvSelectReply> P) {
-
+bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   auto& config = Core::Config::getInstance();
-  auto packet = makePacket<ePacketType::PAKLC_SRV_SELECT_REPLY>(
-    P->result(), P->sessionId(), P->cryptVal(),
+  auto packet = Packet::SrvSrvSelectReply::create(
+    P.get_result(), P.get_sessionId(), P.get_cryptVal(),
     config.serverData().ip, config.loginServer().clientPort); // Replace this with MY current ip address
-  send( *packet );
+  send(packet);
   return true;
 }
 
-bool NodeClient::HandlePacket(uint8_t* _buffer) {
+bool NodeClient::handlePacket(uint8_t* _buffer) {
   logger_->trace( "NodeClient::HandlePacket start" );
   switch ( CRosePacket::type( _buffer ) ) {
     default:
@@ -67,12 +60,12 @@ bool NodeClient::HandlePacket(uint8_t* _buffer) {
   }
 }
 
-bool NodeClient::HandleServerPacket(uint8_t* _buffer) {
+bool NodeClient::handleServerPacket(uint8_t* _buffer) {
   logger_->trace( "NodeClient::HandleServerPacket start" );
   switch ( CRosePacket::type( _buffer ) ) {
     case ePacketType::PAKLC_SRV_SELECT_REPLY:
-      return ServerSelectReply(
-        getPacket<ePacketType::PAKLC_SRV_SELECT_REPLY>( _buffer ) );
+      return serverSelectReply(
+        Packet::SrvSrvSelectReply::create(_buffer));
     default:
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );

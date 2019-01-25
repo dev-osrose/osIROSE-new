@@ -1,0 +1,4 @@
+PAKCS_STOP_MOVING
+float x
+float y
+int16_t z

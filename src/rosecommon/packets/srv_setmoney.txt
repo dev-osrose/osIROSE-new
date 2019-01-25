@@ -1,0 +1,2 @@
+PAKWC_SET_MONEY
+int64_t zuly AdvancedInfo::zuly

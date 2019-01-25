@@ -21,38 +21,32 @@ set( SOURCES_HEADER
   include/croseisc.h
   include/crosepacket.h
   include/epackettype.h
-  include/mappackets.h
   include/isccommon.h
-  include/item.h
   include/itemdb.h
-  include/partybase.h
-  include/luaapi.h
-  include/itemapi.h
-  include/entityapi.h
-  include/components/advancedinfo.h
-  include/components/basicinfo.h
-  include/components/bulletitems.h
-  include/components/charactergraphics.h
-  include/components/characterinfo.h
+  include/crosewriter.h
+  include/components/basic_info.h
+  include/components/computed_values.h
   include/components/destination.h
-  include/components/graphics.h
+  include/components/faction.h
+  include/components/character_graphics.h
+  include/components/guild.h
   include/components/hotbar.h
   include/components/inventory.h
-  include/components/position.h
-  include/components/ridingitems.h
-  include/components/skills.h
-  include/components/socketconnector.h
-  include/components/stats.h
-  include/components/statuseffects.h
-  include/components/wishlist.h
-  include/components/quests.h
+  include/components/item.h
+  include/components/level.h
+  include/components/life.h
+  include/components/magic.h
   include/components/npc.h
-  include/components/warpgate.h
-  include/components/spawner.h
-  include/components/callbacks.h
-  include/components/buffs.h
-  include/components/damage.h
-  include/components/playerspawn.h
+  include/components/owner.h
+  include/components/party.h
+  include/components/pat.h
+  include/components/position.h
+  include/components/skills.h
+  include/components/stamina.h
+  include/components/stats.h
+  include/components/status_effects.h
+  include/components/target.h
+  include/components/wishlist.h
 )
 
 SET(SOURCES_BASE
@@ -61,156 +55,156 @@ SET(SOURCES_BASE
   src/croseserver.cpp
   src/croseclient.cpp
   src/croseisc.cpp
-  src/mappackets.cpp
-  src/item.cpp
   src/itemdb.cpp
-  src/entitycomponents.cpp
   src/isccommon.cpp
-  src/itemapi.cpp
+  src/packetfactory.cpp
 )
 
 SET(SOURCES_PACKETS
-  src/packets/cli_acceptreq.cpp
-  include/packets/cli_acceptreq.h
-  src/packets/cli_alive.cpp
-  include/packets/cli_alive.h
-  src/packets/cli_changemapreq.cpp
-  include/packets/cli_changemapreq.h
-  src/packets/cli_channellistreq.cpp
-  include/packets/cli_channellistreq.h
-  src/packets/cli_createcharreq.cpp
-  include/packets/cli_createcharreq.h
-  src/packets/cli_deletecharreq.cpp
-  include/packets/cli_deletecharreq.h
-  src/packets/cli_joinserverreq.cpp
-  include/packets/cli_joinserverreq.h
-  src/packets/cli_loginreq.cpp
-  include/packets/cli_loginreq.h
-  src/packets/cli_logoutreq.cpp
-  include/packets/cli_logoutreq.h
-  src/packets/cli_mousecmd.cpp
-  include/packets/cli_mousecmd.h
-  src/packets/cli_normalchat.cpp
-  include/packets/cli_normalchat.h
-  src/packets/cli_revivereq.cpp
-  include/packets/cli_revivereq.h
-  src/packets/cli_screenshottimereq.cpp
-  include/packets/cli_screenshottimereq.h
-  src/packets/cli_selectcharreq.cpp
-  include/packets/cli_selectcharreq.h
-  src/packets/cli_srvselectreq.cpp
-  include/packets/cli_srvselectreq.h
-  src/packets/cli_stop.cpp
-  include/packets/cli_stop.h
-  src/packets/cli_stopmoving.cpp
-  include/packets/cli_stopmoving.h
-  src/packets/cli_whisperchat.cpp
-  include/packets/cli_whisperchat.h
-  src/packets/cli_equipitem.cpp
-  include/packets/cli_equipitem.h
-  src/packets/cli_partyreq.cpp
-  include/packets/cli_partyreq.h
-  src/packets/cli_partyreply.cpp
-  include/packets/cli_partyreply.h
-  src/packets/cli_partychat.cpp
-  include/packets/cli_partychat.h
-  src/packets/cli_charlistreq.cpp
-  include/packets/cli_charlistreq.h
-  src/packets/cli_dropitem.cpp
-  include/packets/cli_dropitem.h
-  src/packets/cli_attack.cpp
-  include/packets/cli_attack.h
-  src/packets/cli_hpreq.cpp
-  include/packets/cli_hpreq.h
-  #------------------------------------------------
-  src/packets/srv_acceptreply.cpp
-  include/packets/srv_acceptreply.h
-#  src/packets/srv_changemap.cpp
-  include/packets/srv_changemapreply.h
-  src/packets/srv_createcharreply.cpp
-  include/packets/srv_createcharreply.h
-  src/packets/srv_deletecharreply.cpp
-  include/packets/srv_deletecharreply.h
-  src/packets/srv_initdata.cpp
-  include/packets/srv_initdata.h
-  src/packets/srv_inventorydata.cpp
-  include/packets/srv_inventorydata.h
-  src/packets/srv_joinserverreply.cpp
-  include/packets/srv_joinserverreply.h
-  src/packets/srv_logoutreply.cpp
-  include/packets/srv_logoutreply.h
-  src/packets/srv_mousecmd.cpp
-  include/packets/srv_mousecmd.h
-  src/packets/srv_normalchat.cpp
-  include/packets/srv_normalchat.h
-  src/packets/srv_playerchar.cpp
-  include/packets/srv_playerchar.h
-  src/packets/srv_removeobject.cpp
-  include/packets/srv_removeobject.h
-  src/packets/srv_screenshottimereply.cpp
-  include/packets/srv_screenshottimereply.h
-  src/packets/srv_selectcharreply.cpp
-  include/packets/srv_selectcharreply.h
-#  src/packets/srv_serverdata.cpp
-  include/packets/srv_serverdata.h
-  src/packets/srv_srvselectreply.cpp
-  include/packets/srv_srvselectreply.h
-  src/packets/srv_stop.cpp
-  include/packets/srv_stop.h
-  src/packets/srv_stopmoving.cpp
-  include/packets/srv_stopmoving.h
-  src/packets/srv_switchserver.cpp
-  include/packets/srv_switchserver.h
-  src/packets/srv_whisperchat.cpp
-  include/packets/srv_whisperchat.h
-  src/packets/srv_equipitem.cpp
-  include/packets/srv_equipitem.h
-  src/packets/srv_setmoney.cpp
-  include/packets/srv_setmoney.h
-  src/packets/srv_setitem.cpp
-  include/packets/srv_setitem.h
-  src/packets/srv_partyreq.cpp
-  include/packets/srv_partyreq.h
-  src/packets/srv_partyreply.cpp
-  include/packets/srv_partyreply.h
-  src/packets/srv_partymember.cpp
-  include/packets/srv_partymember.h
-  src/packets/srv_partychat.cpp
-  include/packets/srv_partychat.h
-  src/packets/srv_loginreply.cpp
-  include/packets/srv_loginreply.h
-  src/packets/srv_channellistreply.cpp
-  include/packets/srv_channellistreply.h
-  src/packets/srv_questdata.cpp
-  include/packets/srv_questdata.h
-  src/packets/srv_dropitem.cpp
-  include/packets/srv_dropitem.h
-  src/packets/srv_mobchar.cpp
-  include/packets/srv_mobchar.h
-  src/packets/srv_npcchar.cpp
-  include/packets/srv_npcchar.h
-  src/packets/srv_adjustposition.cpp
-  include/packets/srv_adjustposition.h
-  src/packets/srv_teleportreply.cpp
-  include/packets/srv_teleportreply.h
-  src/packets/srv_attack.cpp
-  include/packets/srv_attack.h
-  src/packets/srv_hpreply.cpp
-  include/packets/srv_hpreply.h
-  src/packets/srv_sethpandmp.cpp
-  include/packets/srv_sethpandmp.h
-  src/packets/srv_damage.cpp
-  include/packets/srv_damage.h
-  #---------------------------------------------------------
-  src/packets/isc_serverregister.cpp
-  include/packets/isc_serverregister.h
-  src/packets/isc_loginreq.cpp
-  include/packets/isc_loginreq.h
-  src/packets/isc_shutdown.cpp
-  include/packets/isc_shutdown.h
-  src/packets/srv_characterlistreply.cpp
-  include/packets/srv_characterlistreply.h
-
+    src/packets/cli_accept_req.cpp
+    include/packets/cli_accept_req.h
+    src/packets/cli_alive.cpp
+    include/packets/cli_alive.h
+    src/packets/cli_change_map_req.cpp
+    include/packets/cli_change_map_req.h
+    src/packets/cli_channel_list_req.cpp
+    include/packets/cli_channel_list_req.h
+    src/packets/cli_create_char_req.cpp
+    include/packets/cli_create_char_req.h
+    src/packets/cli_delete_char_req.cpp
+    include/packets/cli_delete_char_req.h
+    src/packets/cli_join_server_req.cpp
+    include/packets/cli_join_server_req.h
+    src/packets/cli_login_req.cpp
+    include/packets/cli_login_req.h
+    #  src/packets/cli_logoutreq.cpp
+    #  include/packets/cli_logoutreq.h
+    src/packets/cli_mouse_cmd.cpp
+    include/packets/cli_mouse_cmd.h
+    src/packets/cli_normal_chat.cpp
+    include/packets/cli_normal_chat.h
+    #  src/packets/cli_revivereq.cpp
+    #  include/packets/cli_revivereq.h
+    #  src/packets/cli_screenshottimereq.cpp
+    #  include/packets/cli_screenshottimereq.h
+    src/packets/cli_select_char_req.cpp
+    include/packets/cli_select_char_req.h
+    src/packets/cli_srv_select_req.cpp
+    include/packets/cli_srv_select_req.h
+    #  src/packets/cli_stop.cpp
+    #  include/packets/cli_stop.h
+    src/packets/cli_stop_moving.cpp
+    include/packets/cli_stop_moving.h
+    src/packets/cli_whisper_chat.cpp
+    include/packets/cli_whisper_chat.h
+    #  src/packets/cli_equipitem.cpp
+    #  include/packets/cli_equipitem.h
+    #  src/packets/cli_partyreq.cpp
+    #  include/packets/cli_partyreq.h
+    #  src/packets/cli_partyreply.cpp
+    #  include/packets/cli_partyreply.h
+    #  src/packets/cli_partychat.cpp
+    #  include/packets/cli_partychat.h
+    src/packets/cli_char_list_req.cpp
+    include/packets/cli_char_list_req.h
+    #  src/packets/cli_dropitem.cpp
+    #  include/packets/cli_dropitem.h
+    #  src/packets/cli_attack.cpp
+    #  include/packets/cli_attack.h
+    #  src/packets/cli_hpreq.cpp
+    #  include/packets/cli_hpreq.h
+    #  #------------------------------------------------
+    src/packets/srv_accept_reply.cpp
+    include/packets/srv_accept_reply.h
+    src/packets/srv_change_map_reply.cpp
+    include/packets/srv_change_map_reply.h
+    src/packets/srv_create_char_reply.cpp
+    include/packets/srv_create_char_reply.h
+    src/packets/srv_delete_char_reply.cpp
+    include/packets/srv_delete_char_reply.h
+    #  src/packets/srv_initdata.cpp
+    #  include/packets/srv_initdata.h
+    src/packets/srv_inventory_data.cpp
+    include/packets/srv_inventory_data.h
+    src/packets/srv_join_server_reply.cpp
+    include/packets/srv_join_server_reply.h
+    #  src/packets/srv_logoutreply.cpp
+    #  include/packets/srv_logoutreply.h
+    src/packets/srv_mouse_cmd.cpp
+    include/packets/srv_mouse_cmd.h
+    src/packets/srv_normal_chat.cpp
+    include/packets/srv_normal_chat.h
+    src/packets/srv_player_char.cpp
+    include/packets/srv_player_char.h
+    src/packets/srv_remove_object.cpp
+    include/packets/srv_remove_object.h
+    src/packets/srv_screen_shot_time_reply.cpp
+    include/packets/srv_screen_shot_time_reply.h
+    src/packets/srv_select_char_reply.cpp
+    include/packets/srv_select_char_reply.h
+    #  src/packets/srv_globalvars.cpp
+    #  include/packets/srv_globalvars.h
+    src/packets/srv_srv_select_reply.cpp
+    include/packets/srv_srv_select_reply.h
+    #  src/packets/srv_stop.cpp
+    #  include/packets/srv_stop.h
+    #  src/packets/srv_stopmoving.cpp
+    #  include/packets/srv_stopmoving.h
+    src/packets/srv_switch_server.cpp
+    include/packets/srv_switch_server.h
+    src/packets/srv_whisper_chat.cpp
+    include/packets/srv_whisper_chat.h
+    #  src/packets/srv_equipitem.cpp
+    #  include/packets/srv_equipitem.h
+    #  src/packets/srv_setmoney.cpp
+    #  include/packets/srv_setmoney.h
+    #  src/packets/srv_setitem.cpp
+    #  include/packets/srv_setitem.h
+    #  src/packets/srv_partyreq.cpp
+    #  include/packets/srv_partyreq.h
+    #  src/packets/srv_partyreply.cpp
+    #  include/packets/srv_partyreply.h
+    #  src/packets/srv_partymember.cpp
+    #  include/packets/srv_partymember.h
+    #  src/packets/srv_partychat.cpp
+    #  include/packets/srv_partychat.h
+    src/packets/srv_login_reply.cpp
+    include/packets/srv_login_reply.h
+    src/packets/srv_channel_list_reply.cpp
+    include/packets/srv_channel_list_reply.h
+    src/packets/srv_quest_data.cpp
+    include/packets/srv_quest_data.h
+    #  src/packets/srv_dropitem.cpp
+    #  include/packets/srv_dropitem.h
+    #  src/packets/srv_mobchar.cpp
+    #  include/packets/srv_mobchar.h
+    #  src/packets/srv_npcchar.cpp
+    #  include/packets/srv_npcchar.h
+    #  src/packets/srv_adjustposition.cpp
+    #  include/packets/srv_adjustposition.h
+    #  src/packets/srv_teleportreply.cpp
+    #  include/packets/srv_teleportreply.h
+    #  src/packets/srv_setmoney.cpp
+    #  include/packets/srv_setmoney.h
+    #  src/packets/srv_attack.cpp
+    #  include/packets/srv_attack.h
+    #  src/packets/srv_hpreply.cpp
+    #  include/packets/srv_hpreply.h
+    #  src/packets/srv_sethpandmp.cpp
+    #  include/packets/srv_sethpandmp.h
+    #  src/packets/srv_damage.cpp
+    #  include/packets/srv_damage.h
+    src/packets/srv_billing_message.cpp
+    include/packets/srv_billing_message.h
+    #  #---------------------------------------------------------
+    src/packets/isc_server_register.cpp
+    include/packets/isc_server_register.h
+    src/packets/isc_shutdown.cpp
+    include/packets/isc_shutdown.h
+    src/packets/srv_char_list_reply.cpp
+    include/packets/srv_char_list_reply.h
+    src/packets/isc_alive.cpp
+    include/packets/isc_alive.h
 )
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${SOURCES_PACKETS} ${SOURCES_HEADER})

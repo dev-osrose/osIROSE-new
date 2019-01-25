@@ -13,8 +13,6 @@
 // limitations under the License.
 
 #include "nodeisc.h"
-#include "isc_serverregister.h"
-#include "isc_shutdown.h"
 
 using namespace RoseCommon;
 
@@ -27,28 +25,28 @@ NodeISC::NodeISC(std::unique_ptr<Core::INetwork> _sock)
       min_right_(0),
       test_server_(false) {}
 
-bool NodeISC::HandlePacket(uint8_t* _buffer) {
+bool NodeISC::handlePacket(uint8_t* _buffer) {
   logger_->trace("NodeISC::HandlePacket(uint8_t* _buffer)");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::ISC_ALIVE:
       return true;
-    case ePacketType::ISC_SERVER_AUTH:
+    case ePacketType::PAKCS_LOGIN_REQ:
       return true;
     case ePacketType::ISC_SERVER_REGISTER:
-      return ServerRegister(getPacket<ePacketType::ISC_SERVER_REGISTER>(_buffer));
+      return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return true;
     case ePacketType::ISC_SHUTDOWN:
-      return ServerShutdown(getPacket<ePacketType::ISC_SHUTDOWN>(_buffer));
-    default: { return CRoseISC::HandlePacket(_buffer); }
+      return serverShutdown(Packet::IscShutdown::create(_buffer));
+    default: { return CRoseISC::handlePacket(_buffer); }
   }
   return true;
 }
 
-bool NodeISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
+bool NodeISC::serverRegister(Packet::IscServerRegister&& P) {
   logger_->trace("NodeISC::ServerRegister(const CRosePacket& P)");
 
-  uint8_t _type = to_underlying(P->serverType());
+  Isc::ServerType _type = P.get_serverType();
 
   // 1 == char server
   // 2 == node server
@@ -58,17 +56,17 @@ bool NodeISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
 
   // todo: replace these numbers with the actual enum name
   if (_type == Isc::ServerType::CHAR) {
-    server_name_ = P->name();
-    socket_[SocketType::Client]->set_address(P->addr());
-    socket_[SocketType::Client]->set_port(P->port());
-    min_right_ = P->right();
+    server_name_ = P.get_name();
+    socket_[SocketType::Client]->set_address(P.get_addr());
+    socket_[SocketType::Client]->set_port(P.get_port());
+    min_right_ = P.get_right();
     socket_[SocketType::Client]->set_type(_type);
   } else if (_type == Isc::ServerType::MAP_MASTER) {
     // todo: add channel connections here (_type == 3)
     tChannelInfo channel;
-    channel.channelName = P->name();
-    channel.ChannelID = P->id();
-    channel.MinRight = P->right();
+    channel.channelName = P.get_name();
+    channel.ChannelID = P.get_id();
+    channel.MinRight = P.get_right();
     channel_list_.push_front(channel);
     channel_count_++;
   }
@@ -76,15 +74,15 @@ bool NodeISC::ServerRegister(std::unique_ptr<IscServerRegister> P) {
   logger_->debug( "ISC Server Type: [{}]\n", socket_[SocketType::Client]->get_type());
 
   logger_->info("ISC Server Connected: [{}, {}, {}:{}]\n",
-                RoseCommon::Isc::serverTypeName(P->serverType()),
-                  P->name(), P->addr(),
-                  P->port());
+                RoseCommon::Isc::serverTypeName(P.get_serverType()),
+                  P.get_name(), P.get_addr(),
+                  P.get_port());
   return true;
 }
 
-bool NodeISC::ServerShutdown(std::unique_ptr<IscShutdown> P) {
+bool NodeISC::serverShutdown(Packet::IscShutdown&& P) {
   channel_list_.remove_if([&](RoseCommon::tChannelInfo channel) {
-    return channel.ChannelID == P->id();
+    return channel.ChannelID == P.get_id();
   });
   return true;
 }

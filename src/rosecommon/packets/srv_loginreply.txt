@@ -1,0 +1,7 @@
+PAKLC_LOGIN_REPLY
+include dataconsts.h
+LoginReply::eResult result e(uint8_t)
+uint16_t right
+uint16_t type
+include vector
+std::vector<LoginReply::ServerInfo> serversInfo I == & s()

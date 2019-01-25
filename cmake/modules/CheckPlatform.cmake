@@ -13,3 +13,5 @@ if(UNIX OR MINGW)
 elseif(WIN32)
   include(${CMAKE_PLATFORM_PATH}/win32/platform.cmake)
 endif()
+
+include(${CMAKE_MODULE_PATH}/TestCompiler.cmake)

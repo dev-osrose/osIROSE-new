@@ -15,8 +15,8 @@
 #include <ctime>
 #include "crosesocket.h"
 #include "epackettype.h"
-#include "srv_acceptreply.h"
-#include "srv_screenshottimereply.h"
+#include "srv_accept_reply.h"
+#include "srv_screen_shot_time_reply.h"
 
 namespace RoseCommon {
 
@@ -30,9 +30,9 @@ CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock) : crypt_() {
   logger_ = Core::CLog::GetLogger(Core::log_type::NETWORK).lock();
 
   socket_[static_cast<int>(SocketType::Client)] = std::move(_sock);
-  socket_[static_cast<int>(SocketType::Client)]->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-  socket_[static_cast<int>(SocketType::Client)]->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-  socket_[static_cast<int>(SocketType::Client)]->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+  socket_[static_cast<int>(SocketType::Client)]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2));
+  socket_[static_cast<int>(SocketType::Client)]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1));
+  socket_[static_cast<int>(SocketType::Client)]->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
 
   socket_[static_cast<int>(SocketType::Client)]->reset_internal_buffer();
 }
@@ -45,15 +45,15 @@ CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server, 
   
   if(true == is_server)
   {
-    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnServerReceived, this, std::placeholders::_1, std::placeholders::_2));
-    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnServerSend, this, std::placeholders::_1));
-    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnServerDisconnected, this));
+    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2));
+    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1));
+    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onServerDisconnected, this));
   }
   else
   {
-    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::OnReceived, this, std::placeholders::_1, std::placeholders::_2));
-    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::OnSend, this, std::placeholders::_1));
-    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::OnDisconnected, this));
+    socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2));
+    socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1));
+    socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
   }
 
   socket_[socket_id]->reset_internal_buffer();
@@ -64,11 +64,7 @@ CRoseSocket::~CRoseSocket() {
   logger_.reset();
 }
 
-bool CRoseSocket::send(std::unique_ptr<CRosePacket>&& _buffer, int socket_id) {
-  return CRoseSocket::send(_buffer->getPacked(), socket_id);
-}
-
-bool CRoseSocket::send(CRosePacket& _buffer, int socket_id) {
+bool CRoseSocket::send(const CRosePacket& _buffer, int socket_id) {
   return CRoseSocket::send(_buffer.getPacked(), socket_id);
 }
 
@@ -80,10 +76,10 @@ bool CRoseSocket::send(std::unique_ptr<uint8_t[]> _buffer, int socket_id) {
 }
 
 // Callback functions
-void CRoseSocket::OnDisconnected() {}
+void CRoseSocket::onDisconnected() {}
 
 // TODO The socket ids in this fuction need to be fixed.
-bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
+bool CRoseSocket::onReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
   ///*
   if (packet_size_ == 6) {
@@ -139,12 +135,12 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             recv_queue_.pop();
             recv_mutex_.unlock();
 
-            rtnVal = HandlePacket(_buffer.get());
+            rtnVal = handlePacket(_buffer.get());
             _buffer.reset(nullptr);
 
             if(rtnVal == false) {
               // Abort connection
-              logger_->debug("HandlePacket returned false, disconnecting client.");
+              logger_->debug("handlePacket returned false, disconnecting client.");
               socket_[0]->shutdown();
               // TODO: if this happens, we should disconnect ALL of the sockets.
             }
@@ -160,7 +156,7 @@ bool CRoseSocket::OnReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   return rtnVal;
 }
 
-bool CRoseSocket::OnSend([[maybe_unused]] uint8_t* _buffer) {
+bool CRoseSocket::onSend([[maybe_unused]] uint8_t* _buffer) {
   (void)_buffer;
 #ifndef DISABLE_CRYPT
   crypt_.encodeServerPacket(_buffer);
@@ -168,8 +164,8 @@ bool CRoseSocket::OnSend([[maybe_unused]] uint8_t* _buffer) {
   return true;
 }
 
-bool CRoseSocket::HandlePacket(uint8_t* _buffer) {
-  logger_->trace("CRoseSocket::HandlePacket start");
+bool CRoseSocket::handlePacket(uint8_t* _buffer) {
+  logger_->trace("CRoseSocket::handlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
@@ -177,7 +173,7 @@ bool CRoseSocket::HandlePacket(uint8_t* _buffer) {
           std::unique_ptr<CRosePacket>(new CRosePacket(ePacketType::PAKCS_ALIVE));
       send(*packet);
 #endif
-      //return CNetwork_Asio::HandlePacket(_buffer);
+      //return CNetwork_Asio::handlePacket(_buffer);
       break;
     }
 #ifdef STRESS_TEST
@@ -189,13 +185,13 @@ bool CRoseSocket::HandlePacket(uint8_t* _buffer) {
 #endif
     case ePacketType::PAKCS_ACCEPT_REQ: {
       // Encryption stuff
-      auto packet = makePacket<ePacketType::PAKSS_ACCEPT_REPLY>(std::time(nullptr));
-      send(*packet);
+      auto packet = Packet::SrvAcceptReply::create(Packet::SrvAcceptReply::ACCEPTED, std::time(nullptr));
+      send(packet);
       break;
     }
     case ePacketType::PAKCS_SCREEN_SHOT_TIME_REQ: {
-      auto packet = makePacket<ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY>();
-      send(*packet);
+      auto packet = Packet::SrvScreenShotTimeReply::create(0, 0, 0, 0, 0);
+      send(packet);
       break;
     }
     default: {
@@ -203,15 +199,15 @@ bool CRoseSocket::HandlePacket(uint8_t* _buffer) {
       return false;
     }
   }
-  logger_->trace("CRoseSocket::HandlePacket end");
+  logger_->trace("CRoseSocket::handlePacket end");
   return true;
 }
 
 // Server Callback functions
-void CRoseSocket::OnServerDisconnected() {}
+void CRoseSocket::onServerDisconnected() {}
 
 //TODO The socket ids in this fuction need to be fixed.
-bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
+bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
     bool rtnVal = true;
   ///*
   if (packet_size_ == 6) {
@@ -266,12 +262,12 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             std::unique_ptr<uint8_t[]> _buffer = std::move(recv_queue_.front());
             recv_queue_.pop();
 
-            rtnVal = HandleServerPacket(_buffer.get());
+            rtnVal = handleServerPacket(_buffer.get());
             _buffer.reset(nullptr);
 
             if(rtnVal == false) {
               // Abort connection
-              logger_->debug("HandlePacket returned false, disconnecting client.");
+              logger_->debug("handlePacket returned false, disconnecting client.");
               socket_[0]->shutdown();
             }
           }
@@ -284,16 +280,16 @@ bool CRoseSocket::OnServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   return rtnVal;
 }
 
-bool CRoseSocket::OnServerSend([[maybe_unused]] uint8_t* _buffer) {
+bool CRoseSocket::onServerSend([[maybe_unused]] uint8_t* _buffer) {
 #ifndef DISABLE_CRYPT
   crypt_.encodeServerPacket(_buffer);
 #endif
   return true;
 }
 
-bool CRoseSocket::HandleServerPacket([[maybe_unused]] uint8_t* _buffer) {
-  logger_->trace("CRoseSocket::HandleServerPacket start");
-  logger_->trace("CRoseSocket::HandlePacket end");
+bool CRoseSocket::handleServerPacket([[maybe_unused]] uint8_t* _buffer) {
+  logger_->trace("CRoseSocket::handleServerPacket start");
+  logger_->trace("CRoseSocket::handlePacket end");
   return true;
 }
 

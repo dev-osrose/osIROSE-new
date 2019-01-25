@@ -131,33 +131,12 @@ CREATE TABLE `inventory` (
   `slot` int(11) unsigned NOT NULL DEFAULT '0',
   `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
   `socket` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` int(11) unsigned NOT NULL DEFAULT '0',
+  `storage_type` ENUM('inventory', 'wishlist', 'storage') NOT NULL DEFAULT 'inventory',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `char_id_idx` (`char_id`),
   CONSTRAINT `char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
--- Table structure for table `wishlist`
-
-DROP TABLE IF EXISTS `wishlist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wishlist` (
-    `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `char_id` int(11) unsigned NOT NULL DEFAULT '0',
-    `itemid` int(11) unsigned NOT  NULL DEFAULT '0',
-    `itemtype` int(11) unsigned NOT NULL DEFAULT '0',
-    `amount` int(11) unsigned NOT NULL DEFAULT '0',
-    `refine` tinyint(3) unsigned NOT NULL DEFAULT '0',
-    `slot` int(11) unsigned NOT NULL DEFAULT '0',
-    `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
-    `socket` int(10) unsigned NOT NULL DEFAULT '0',
-    `price` int(11) unsigned NOT NULL DEFAULT '0',
-    PRIMARY KEY (`uid`),
-    UNIQUE KEY `id_UNIQUE` (`uid`),
-    KEY `char_id_idx` (`char_id`),
-    CONSTRAINT `wish_char_id` FOREIGN KEY (`char_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -280,29 +259,6 @@ CREATE TABLE `skill_db` (
   `script` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `storage`
---
-
-DROP TABLE IF EXISTS `storage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `storage` (
-  `owner` int(11) NOT NULL,
-  `itemnum` int(11) NOT NULL,
-  `itemtype` int(11) NOT NULL,
-  `refine` int(11) NOT NULL,
-  `durability` int(11) NOT NULL DEFAULT '40',
-  `lifespan` int(11) NOT NULL DEFAULT '100',
-  `slotnum` int(11) NOT NULL,
-  `count` int(11) NOT NULL DEFAULT '1',
-  `stats` int(11) NOT NULL DEFAULT '0',
-  `socketed` int(11) NOT NULL DEFAULT '0',
-  `appraised` int(11) NOT NULL DEFAULT '0',
-  `gem` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -652,13 +608,5 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
+								  
 -- Dump completed on 2016-10-08  0:41:39

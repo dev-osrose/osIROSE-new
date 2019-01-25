@@ -1,18 +1,36 @@
 #include "cli_alive.h"
-#include "throwassert.h"
 
-namespace RoseCommon {
+using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 
-const RecvPacketFactory::Initializer<uint8_t*> CliAlive::init = RecvPacketFactory::Initializer<uint8_t*>(ePacketType::PAKCS_ALIVE, &createPacket<CliAlive>);
 
-CliAlive::CliAlive() : CRosePacket(ePacketType::PAKCS_ALIVE) {}
 
-CliAlive::CliAlive(uint8_t buffer[MAX_PACKET_SIZE]) : CRosePacket(buffer) {
-	throw_assert(type() == ePacketType::PAKCS_ALIVE, "Not the right packet: " << to_underlying(type()));
+CliAlive::CliAlive() : CRosePacket(CliAlive::PACKET_ID) {}
+
+CliAlive::CliAlive(CRoseReader reader) : CRosePacket(reader) {
 }
 
-
-void CliAlive::pack() {
+CliAlive CliAlive::create() {
+    CliAlive packet;
+    return packet;
 }
 
+CliAlive CliAlive::create(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return CliAlive(reader);
 }
+
+std::unique_ptr<CliAlive> CliAlive::allocate(const uint8_t* buffer) {
+    CRoseReader reader(buffer, CRosePacket::size(buffer));
+    return std::make_unique<CliAlive>(reader);
+}
+
+bool CliAlive::pack(CRoseBasePolicy&) const {
+    return true;
+}
+
+constexpr size_t CliAlive::size() {
+    size_t size = 0;
+    return size;
+}
+
