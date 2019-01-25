@@ -112,8 +112,9 @@ else()
   set(PATCH_SCRIPT_PATH ${CMAKE_SCRIPT_PATH}/patch.sh)
 endif()
 
-
-find_package(Threads REQUIRED)
+if(NOT CLANG)
+  find_package(Threads ${REQUIRED_IF_OPTION})
+endif()
 
 #set(ENV{LUA_DIR} ${CMAKE_THIRD_PARTY_DIR})
 #find_package(Lua ${REQUIRED_IF_OPTION})
