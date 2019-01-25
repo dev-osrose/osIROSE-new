@@ -47,8 +47,6 @@
 #define MAX_PACKET_SIZE 0x7FF
 #endif
 
-#define SPDLOG_TRACE_ON
-
 using asio::ip::tcp;
 namespace Core {
 
