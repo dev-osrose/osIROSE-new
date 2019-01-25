@@ -97,7 +97,7 @@ jobs:
           sources:
           - deadsnakes
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty
+          - llvm-toolchain-trusty-8
           packages:
           - lcov
           - g++-8
