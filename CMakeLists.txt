@@ -148,15 +148,16 @@ if(NOT CURL_FOUND)
   include(BuildCURL)
 endif()
 
+include(Build-HinnantDate)
+include(Build-sqlpp11)
+include(Build-sqlpp11-connector-stl)
+
 if(WITH_MYSQL)
   if(BUILD_MYSQL AND NOT MYSQL_FOUND)
     include(Build-mysql)
   endif()
 
-  include(Build-HinnantDate)
-  include(Build-sqlpp11)
   include(Build-sqlpp11-connector-mysql)
-  
   include(SQLPPGenerator)
 endif()
 
