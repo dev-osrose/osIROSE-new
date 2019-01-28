@@ -25,9 +25,9 @@ template <typename... Args>
 class Parser {
     public:
         Parser(std::stringstream&& ss) {
-            is_arg_ok.reserve(sizeof...(Args));
-            for_each(args, [&ss, this](auto& data) {
-                is_arg_ok.push_back(parse(ss, data));
+            size_t index = 0;
+            for_each(args, [&ss, &index, this](auto& data) {
+                is_arg_ok[index++] = parse(ss, data);
             });
         }
 
@@ -37,7 +37,7 @@ class Parser {
             });
         }
 
-        std::vector<bool> is_arg_ok;
+        std::array<bool, sizeof...(Args)> is_arg_ok;
         std::tuple<Args...> args;
 
     private:
