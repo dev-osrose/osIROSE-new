@@ -9,6 +9,12 @@
 #include "mysqlconnection.h"
 #include "connection.h"
 
+using Core::ConnectionPool;
+
+#ifdef ENABLE_MYSQL
+ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+#endif
+
 TEST(TestMySQL_Database, TestItemDatabase)
 {
   Core::Config& config = Core::Config::getInstance();

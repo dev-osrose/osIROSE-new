@@ -9,6 +9,13 @@
 #include "ccharisc.h"
 #include "cmapisc.h"
 
+#include "connection.h"
+using Core::ConnectionPool;
+
+#ifdef ENABLE_MYSQL
+ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+#endif
+
 using namespace RoseCommon;
 
 TEST(TestFinalServers, TestISCConnections) {

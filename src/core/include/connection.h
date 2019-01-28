@@ -3,7 +3,7 @@
 #include "connectionpool.h"
 #include "osiroseDatabase.h"
 #include <sqlpp11/sqlpp11.h>
-#include <sqlpp11/container/connection.h>
+#include <sqlpp11/sqlite3/connection.h>
 #ifdef ENABLE_MYSQL
 #  include <sqlpp11/mysql/connection.h>
 #  include "mysqlconnection.h"

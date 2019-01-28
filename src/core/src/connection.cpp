@@ -1,11 +1,11 @@
 #include <string>
 #include "connection.h"
 
-using Core::ConnectionPool;
+// using Core::ConnectionPool;
 
-#ifdef ENABLE_MYSQL
-ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
-#endif
+// #ifdef ENABLE_MYSQL
+// ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+// #endif
 
 static bool replaceAll(std::string &str, const std::string &from, const std::string &to) {
     size_t pos = 0;

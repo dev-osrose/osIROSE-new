@@ -23,6 +23,12 @@
 
 #include "cloginserver.h"
 
+using Core::ConnectionPool;
+
+#ifdef ENABLE_MYSQL
+ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+#endif
+
 namespace {
 void DisplayTitle()
 {

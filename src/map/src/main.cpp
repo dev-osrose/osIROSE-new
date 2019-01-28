@@ -25,6 +25,12 @@
 #include "map_manager.h"
 #include "packetfactory.h"
 
+using Core::ConnectionPool;
+
+#ifdef ENABLE_MYSQL
+ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+#endif
+
 namespace {
 void DisplayTitle() {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);

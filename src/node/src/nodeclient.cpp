@@ -39,12 +39,7 @@ NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
 
 bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   auto& config = Core::Config::getInstance();
-  
-  // auto& db = NodeSessions::getInstance().getDb();
-  
   //TODO: push the data into the sqlite db
-  
-  //db.run(insert_into(tab).set(tab.id = P.get_sessionId(), tab.charIp = P.get_ip(), tab.charPort = P.get_port()));
   
   auto packet = Packet::SrvSrvSelectReply::create(
     P.get_result(), P.get_sessionId(), P.get_cryptVal(),

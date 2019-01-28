@@ -13,6 +13,7 @@
 
 #include <curl/curl.h>
 #include <cxxopts.hpp>
+#include <chrono>
 
 #include "crash_report.h"
 #include "nodeserver.h"
@@ -24,7 +25,8 @@
 
 #include "connection.h"
 
-#include <chrono>
+using Core::ConnectionPool;
+ConnectionPool<sqlpp::sqlite3::connection> &Core::connectionPool = ConnectionPool<sqlpp::sqlite3::connection>::getInstance();
 
 namespace {
 void DisplayTitle()
