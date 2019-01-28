@@ -15,12 +15,14 @@ set( SOURCES_MAIN
 set( SOURCES_HEADER
   include/nodeserver.h
   include/nodeclient.h
-  include/nodeisc.h )
+  include/nodeisc.h
+  include/nodesessions.h)
 
 set( SOURCES_BASE
   src/nodeserver.cpp
   src/nodeclient.cpp
-  src/nodeisc.cpp )
+  src/nodeisc.cpp
+  src/nodesessions.cpp)
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
@@ -38,7 +40,12 @@ endif()
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon)
 
+add_dependencies(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+
 generate_symbol_data(${PROJECT})
+
+set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_IGNORE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/nodesessions.h")
 
 if (COMMAND cotire)
   cotire(${PROJECT})

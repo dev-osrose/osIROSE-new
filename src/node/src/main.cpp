@@ -13,15 +13,16 @@
 
 #include <curl/curl.h>
 #include <cxxopts.hpp>
+
 #include "crash_report.h"
 #include "nodeserver.h"
+#include "nodesessions.h"
 #include "config.h"
 #include "logconsole.h"
 #include "version.h"
 #include "network_thread_pool.h"
 
 #include "connection.h"
-#include "mysqlconnection.h"
 
 #include <chrono>
 
@@ -261,6 +262,8 @@ int main(int argc, char* argv[]) {
         log->info( "IP address is \"{}\"", ip_addr );
       }
     }
+    
+    NodeSessions::getInstance();
 
     NodeServer loginServer;
     NodeServer charServer;

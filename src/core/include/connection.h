@@ -3,6 +3,7 @@
 #include "connectionpool.h"
 #include "osiroseDatabase.h"
 #include <sqlpp11/sqlpp11.h>
+#include <sqlpp11/container/connection.h>
 #ifdef ENABLE_MYSQL
 #  include <sqlpp11/mysql/connection.h>
 #  include "mysqlconnection.h"
@@ -11,6 +12,7 @@
 namespace Core {
 
 const std::string osirose = "osirose";
+const std::string node = "node";
 
 #ifdef ENABLE_MYSQL
 extern ConnectionPool<sqlpp::mysql::connection> &connectionPool;

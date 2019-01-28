@@ -116,6 +116,7 @@ endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
+#find_package(sqlite3 ${REQUIRED_IF_OPTION})
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})
@@ -148,9 +149,12 @@ if(NOT CURL_FOUND)
   include(BuildCURL)
 endif()
 
+if(NOT SQLITE3_FOUND)
+  include(Build-sqlite3)
+endif()
 include(Build-HinnantDate)
 include(Build-sqlpp11)
-include(Build-sqlpp11-connector-stl)
+include(Build-sqlpp11-connector-sqlite3)
 
 if(WITH_MYSQL)
   if(BUILD_MYSQL AND NOT MYSQL_FOUND)
