@@ -30,7 +30,6 @@ ExternalProject_Get_Property(
 )
 
 set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR "${install_dir}/include")
-set(SQLPP11_EXE_PATH "${install_dir}/bin/sqlpp11-ddl2cpp")
 if(WIN32)
   set(SQLPP11_MYSQL_LIBRARIES "${install_dir}/lib/sqlpp-mysql.lib" "${MYSQL_LIBRARIES}")
 else()

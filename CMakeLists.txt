@@ -155,6 +155,7 @@ endif()
 include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
+include(SQLPPGenerator)
 
 if(WITH_MYSQL)
   if(BUILD_MYSQL AND NOT MYSQL_FOUND)
@@ -162,7 +163,6 @@ if(WITH_MYSQL)
   endif()
 
   include(Build-sqlpp11-connector-mysql)
-  include(SQLPPGenerator)
 endif()
 
 if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
