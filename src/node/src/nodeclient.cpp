@@ -39,9 +39,14 @@ NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
 
 bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   auto& config = Core::Config::getInstance();
+  
+  // auto ip_addr = P.get_ip();
+  // auto port = P.get_port();
   auto packet = Packet::SrvSrvSelectReply::create(
     P.get_result(), P.get_sessionId(), P.get_cryptVal(),
-    config.serverData().ip, config.loginServer().clientPort); // Replace this with MY current ip address
+    config.serverData().ip, config.charServer().clientPort); // Replace this with MY current ip address
+    
+  // Tell the client to connect to me!
   send(packet);
   return true;
 }

@@ -27,7 +27,7 @@ namespace RoseCommon {
 
 enum SocketType : unsigned int {
   Client = 0,
-  NortWestMap,  NorthMap,   NorthEastMap,
+  NorthWestMap,  NorthMap,   NorthEastMap,
   WestMap,      CurrentMap, EastMap,
   SouthWestMap, SouthMap,   SouthEastMap,
   MaxSockets 
