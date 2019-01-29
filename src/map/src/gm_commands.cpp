@@ -90,6 +90,7 @@ static constexpr const std::unordered_map<std::string, std::tuple<uint16_t, void
 void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::optional<std::string>> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage: /help [command]");
+        return;
     }
     Chat::send_whisper(entitySystem, entity, "help (<required args> [optional args]):");
     if (!parser.get_arg<0>()) {
