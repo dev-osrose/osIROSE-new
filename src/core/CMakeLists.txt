@@ -25,6 +25,7 @@ set( SOURCES_HEADER
   include/enumerate.h
   include/transform.h
   include/fire_once.h
+  include/iterate_tuple.h
 )
 
 set( SOURCES_BASE
