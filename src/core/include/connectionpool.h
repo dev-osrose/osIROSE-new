@@ -1,11 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <string>
 #include <functional>
+#include <memory>
+#include <tuple>
+#include <vector>
 #include <utility>
-#include <unordered_map>
 
 #include "singleton.h"
 #include "tuple_index.h"
