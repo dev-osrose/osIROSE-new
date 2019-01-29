@@ -4,29 +4,18 @@
 #include <optional>
 #include <functional>
 
-template <std::size_t... Idx>
-auto make_index_dispatcher(std::index_sequence<Idx...>) {
-    return [] (auto&& f) { (f(std::integral_constant<std::size_t,Idx>{}), ...); };
-}
+#include "iterate_tuple.h"
+#include "dataconsts.h"
+#include "entity_system.h"
+#include "chat/whisper_chat.h"
 
-template <std::size_t N>
-auto make_index_dispatcher() {
-    return make_index_dispatcher(std::make_index_sequence<N>{}); 
-}
-
-template <typename Tuple, typename Func>
-void for_each(Tuple&& t, Func&& f) {
-    constexpr auto n = std::tuple_size<std::decay_t<Tuple>>::value;
-    auto dispatcher = make_index_dispatcher<n>();
-    dispatcher([&f,&t](auto idx) { f(std::get<idx>(std::forward<Tuple>(t))); });
-}
-
+namespace {
 template <typename... Args>
 class Parser {
     public:
         Parser(std::stringstream&& ss) {
             size_t index = 0;
-            for_each(args, [&ss, &index, this](auto& data) {
+            Core::for_each(args, [&ss, &index, this](auto& data) {
                 is_arg_ok[index++] = parse(ss, data);
             });
         }
@@ -67,27 +56,45 @@ class Parser<> {
         }
 };
 
+
+void item(EntitySystem&, RoseCommon::Entity, Parser<int, int>) {
+}
+
+void teleport(EntitySystem&, RoseCommon::Entity, Parser<int, int, int, std::optional<uint16_t>>) {
+}
+
+void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
+}
+}
+
 #define REGISTER_FUNCTION(f) [](EntitySystem& en, Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
 
-void item(EntitySystem&, Entity, Parser<int, int>) {
-}
+void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
 
-void help(EntitySystem& entitySystem, Entity entity, Parser<>) {
-    Chat::send_whisper(entitySystem, entity, "help (<required args> [optional args]):");
-}
-
-void teleport(EntitySystem&, Entity, Parser<int, int, int, std::optional<uint16_t>>) {
-}
-
-void zuly(EntitySystem&, Entity, Parser<int>) {
-}
-
-static std::unordered_map<std::string, std::tuple<uint16_t, void(*)(EntitySystem&, Entity, std::stringstream&&), std::string>> commands = {
-    {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
+static constexpr const std::unordered_map<std::string, std::tuple<uint16_t, void(*)(EntitySystem&, Entity, std::stringstream&&), std::string>> commands = {
+    //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
-    {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
-    {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
+    //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
+    //{"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };
+
+void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::optional<std::string>> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage: /help [command]");
+    }
+    Chat::send_whisper(entitySystem, entity, "help (<required args> [optional args]):");
+    if (!std::get<0>(parser.args)) {
+        for (const auto& command : commands) {
+            Chat::send_whisper(entitySystem, entity, std::get<2>(command.second));
+        }
+    } else {
+        if (const auto it = commands.find(std::get<0>(parser.args).value()); it != commands.end()) {
+            Chat::send_whisper(entitySystem, entity, std::get<2>(it->second));
+        } else {
+            Chat::send_whisper(entitySystem, entity, fmt::format("Error, no command {} found.", std::get<0>(parser.args)));
+        }
+    }
+}
 
 void execute_gm(EntitySystem& entitySystem, Entity entity, const std::string& message) {
     if (message[0] != '/') {
