@@ -26,6 +26,10 @@ class Parser {
             });
         }
         
+        bool is_arg_good(size_t index) const {
+            return is_arg_ok[index];
+        }
+        
         template <size_t N>
         decltype(auto) get_arg() {
             return std::get<N>(args);
