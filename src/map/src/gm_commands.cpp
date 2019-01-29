@@ -3,6 +3,7 @@
 #include <tuple>
 #include <optional>
 #include <functional>
+#include <unordered_map>
 
 #include "iterate_tuple.h"
 #include "dataconsts.h"
@@ -87,6 +88,10 @@ static constexpr const std::unordered_map<std::string, std::tuple<uint16_t, void
     //{"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };
 
+static constexpr const std::unordered_map<std::string, std::string> aliases = {
+    {"/halp", "/help"}
+};
+
 void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::optional<std::string>> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage: /help [command]");
@@ -113,7 +118,10 @@ void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std
     ss >> command;
     if (const auto it = commands.find(command); it != commands.end() && access_level >= std::get<0>(it->second)) {
         std::get<1>(it->second)(entitySystem, entity, std::move(ss));
-    } else {
+    } else if (const auto it = aliases.find(command); it != aliases.end()) {
+        const auto jt = commands.find(it->second);
+        std::get<1>(jt->second)(entitySystem, entity, std::move(ss));
+    } else 
         Chat::send_whisper(entitySystem, entity, "Error, no known command/not enough permissions");
     }
 }
