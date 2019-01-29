@@ -82,14 +82,14 @@ void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
 
 void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
 
-static constexpr const std::unordered_map<std::string, std::tuple<uint16_t, void(*)(EntitySystem&, Entity, std::stringstream&&), std::string>> commands = {
+static const std::unordered_map<std::string, std::tuple<uint16_t, void(*)(EntitySystem&, Entity, std::stringstream&&), std::string>> commands = {
     //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     //{"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };
 
-static constexpr const std::unordered_map<std::string, std::string> aliases = {
+static const std::unordered_map<std::string, std::string> aliases = {
     {"/halp", "/help"}
 };
 
