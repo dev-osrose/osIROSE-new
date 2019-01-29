@@ -32,18 +32,7 @@ class NodeClient : public RoseCommon::CRoseClient {
   bool serverSelectReply(RoseCommon::Packet::SrvSrvSelectReply&& P);
   bool clientAcceptReq(RoseCommon::Packet::CliAcceptReq&& P);
 
-  enum class eSTATE {
-    DEFAULT,
-    LOGGEDIN,
-    TRANSFERING,
-  };
-
-  uint16_t access_rights_;
-  std::string username_;
-  eSTATE login_state_;
-  uint32_t userid_;
   uint32_t session_id_;
-  CRoseSocket server_connection_;
 };
 
 #endif

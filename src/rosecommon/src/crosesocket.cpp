@@ -208,7 +208,8 @@ void CRoseSocket::onServerDisconnected() {}
 
 //TODO The socket ids in this fuction need to be fixed.
 bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
-    bool rtnVal = true;
+  logger_->trace("CRoseSocket::onServerReceived start");
+  bool rtnVal = true;
   ///*
   if (packet_size_ == 6) {
 #ifndef DISABLE_CRYPT
@@ -219,7 +220,7 @@ bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
 
     if (packet_size_ < 6 || packet_size_ > MAX_PACKET_SIZE) {
       logger_->debug("Client sent incorrect block header");
-      socket_[0]->reset_internal_buffer();
+      socket_[RoseCommon::SocketType::CurrentMap]->reset_internal_buffer();
       return false;
     }
 
@@ -231,7 +232,7 @@ bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   if (!crypt_.decodeServerBody(reinterpret_cast<unsigned char*>(buffer_))) {
     // ERROR!!!
     logger_->debug( "Client sent illegal block" );
-    socket_[0]->reset_internal_buffer();
+    socket_[RoseCommon::SocketType::CurrentMap]->reset_internal_buffer();
     return false;
   }
 #endif
@@ -251,8 +252,8 @@ bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   recv_queue_.push(std::move(res));
   recv_mutex_.unlock();
 
-  socket_[0]->dispatch([this]() {
-    if (true == socket_[0]->is_active()) {
+  socket_[RoseCommon::SocketType::CurrentMap]->dispatch([this]() {
+    if (true == socket_[RoseCommon::SocketType::CurrentMap]->is_active()) {
           recv_mutex_.lock();
           bool recv_empty = recv_queue_.empty();
 
@@ -268,21 +269,21 @@ bool CRoseSocket::onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) {
             if(rtnVal == false) {
               // Abort connection
               logger_->debug("handlePacket returned false, disconnecting client.");
-              socket_[0]->shutdown();
+              socket_[RoseCommon::SocketType::CurrentMap]->shutdown();
             }
           }
           recv_mutex_.unlock();
         }
       });
 
-  socket_[0]->reset_internal_buffer();
+  socket_[RoseCommon::SocketType::CurrentMap]->reset_internal_buffer();
   //*/
   return rtnVal;
 }
 
 bool CRoseSocket::onServerSend([[maybe_unused]] uint8_t* _buffer) {
 #ifndef DISABLE_CRYPT
-  crypt_.encodeServerPacket(_buffer);
+  crypt_.encodeClientPacket(_buffer);
 #endif
   return true;
 }

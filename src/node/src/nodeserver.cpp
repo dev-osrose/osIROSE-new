@@ -34,6 +34,8 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   nClient->set_active(true);
   nClient->start_recv();
   
+  nClient->set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
+  
   // Core::Config& config = Core::Config::getInstance();
   
   // // Disconnect from the current server

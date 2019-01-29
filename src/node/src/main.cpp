@@ -241,12 +241,12 @@ int main(int argc, char* argv[]) {
     if(auto log = console.lock())
       log->info( "Starting up server..." );
 
-    Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.nodeServer().logLevel);
     DisplayTitle();
     CheckUser();
 
     if(auto log = console.lock()) {
-      log->set_level((spdlog::level::level_enum)config.loginServer().logLevel);
+      log->set_level((spdlog::level::level_enum)config.nodeServer().logLevel);
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
