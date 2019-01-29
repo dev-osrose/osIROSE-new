@@ -18,6 +18,7 @@
 #include "croseserver.h"
 #include "epackettype.h"
 #include "config.h"
+#include "nodesessions.h"
 
 using namespace RoseCommon;
 

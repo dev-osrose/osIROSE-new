@@ -3,7 +3,6 @@
 #include "connectionpool.h"
 #include "osiroseDatabase.h"
 #include <sqlpp11/sqlpp11.h>
-#include <sqlpp11/sqlite3/connection.h>
 #ifdef ENABLE_MYSQL
 #  include <sqlpp11/mysql/connection.h>
 #  include "mysqlconnection.h"
@@ -19,12 +18,6 @@ struct Osirose {
 
 extern ConnectionPool<Osirose> &connectionPool;
 #endif
-
-struct Node {
-    using type = sqlpp::sqlite3::connection;
-};
-
-extern ConnectionPool<Node> &connectionPoolMem;
 
 using AccountTable = osiroseDatabase::Accounts;
 using SessionTable = osiroseDatabase::Sessions;

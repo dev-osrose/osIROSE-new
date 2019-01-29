@@ -34,17 +34,17 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   nClient->set_active(true);
   nClient->start_recv();
   
-  Core::Config& config = Core::Config::getInstance();
+  // Core::Config& config = Core::Config::getInstance();
   
-  // Disconnect from the current server
-  disconnect(RoseCommon::SocketType::CurrentMap);
+  // // Disconnect from the current server
+  // disconnect(RoseCommon::SocketType::CurrentMap);
   
-  // Set up our socket to connect to the login server
-  init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
+  // // Set up our socket to connect to the login server
+  // init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
   
-  // Actually connect to the new server
-  connect(RoseCommon::SocketType::CurrentMap);
+  // // Actually connect to the new server
+  // connect(RoseCommon::SocketType::CurrentMap);
   
   logger_->info("Client connected from: {}", _address.c_str());
-  isc_list_.push_front(std::move(nClient));
+  client_list_.push_front(std::move(nClient));
 }

@@ -14,6 +14,4 @@
 
 #include "nodesessions.h"
 
-NodeSessions::NodeSessions()  {
-  
-}
+Core::ConnectionPool<Node> &connectionPoolMem = Core::ConnectionPool<Node>::getInstance();

@@ -92,7 +92,6 @@ macro (compile_test name path)
   if(WITH_MYSQL)
       target_link_libraries(${TEST_NAME} mysql::mysql)
   endif()
-  target_link_libraries(${TEST_NAME} sqlite3::sqlite3)
 
   add_dependencies(${TEST_NAME} ${PROJECT_LIB})
   target_link_libraries(${TEST_NAME} ${PROJECT_LIB})

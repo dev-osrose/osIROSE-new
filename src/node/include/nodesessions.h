@@ -20,26 +20,15 @@
 #include <sqlite3.h>
 #include <sqlpp11/sqlpp11.h>
 #include <sqlpp11/sqlite3/sqlite3.h>
-#include <singleton.h>
+#include "connectionpool.h"
+#include "nodeSessions.h"
 
-class NodeSessions : public Singleton<NodeSessions> {
-  public:
-    // struct sessions {
-    //   uint32_t id;
-    //   uint16_t charPort;
-    //   uint16_t worldPort;
-    //   std::string charIp;
-    //   std::string worldIp;
-    // };
-  
-    NodeSessions();
-    virtual ~NodeSessions() = default;
-    
-    // auto& getDb() { return db; }
-    
-  private:
-    // sqlpp::container::connection<std::vector<sessions>> db;
-  
+struct Node {
+    using type = sqlpp::sqlite3::connection;
 };
+
+extern Core::ConnectionPool<Node> &connectionPoolMem;
+
+using NodeSessionsTable = nodeSessions::Sessions;
 
 #endif

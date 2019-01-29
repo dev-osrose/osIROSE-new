@@ -34,7 +34,6 @@ target_link_libraries(${PROJECT} CURL::libcurl)
 if(WITH_MYSQL)
   target_link_libraries(${PROJECT} mysql::mysql)
 endif()
-target_link_libraries(${PROJECT} sqlite3::sqlite3)
 
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
