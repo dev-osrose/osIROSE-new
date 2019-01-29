@@ -171,8 +171,8 @@ int main(int argc, char* argv[]) {
     }
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
-    Core::connectionPool.addConnector(
-        Core::osirose, std::bind(Core::mysqlFactory, config.database().user, config.database().password,
+    Core::connectionPool.addConnector<Core::Osirose>(
+          std::bind(Core::mysqlFactory, config.database().user, config.database().password,
                                  config.database().database, config.database().host, config.database().port));
 
     MapManager app(config.mapServer().mapId);
