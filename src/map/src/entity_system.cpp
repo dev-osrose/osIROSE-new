@@ -271,7 +271,7 @@ std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity enti
 
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
-    auto conn = Core::connectionPool.getConnection(Core::osirose);
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
     Core::CharacterTable characters{};
     Core::InventoryTable inventoryTable{};
     Core::SkillTable skillsTable{};
@@ -411,7 +411,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
 
 void EntitySystem::save_character(RoseCommon::Entity character) {
     add_task([character](EntitySystem& self) {
-        auto conn = Core::connectionPool.getConnection(Core::osirose);
+        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
         Core::CharacterTable characters{};
         using sqlpp::parameter;
         using namespace Component;
