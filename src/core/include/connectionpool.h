@@ -12,7 +12,7 @@
 namespace Core {
 
 template <typename... Connectors>
-class ConnectionPool : public Core::Singleton<ConnectionPool<Connectors...>> {
+class ConnectionPool : public Singleton<ConnectionPool<Connectors...>> {
     public:
         template <typename C>
         class Wrapper {
