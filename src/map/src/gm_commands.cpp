@@ -97,9 +97,6 @@ void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::opt
 }
 
 void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& message) {
-    if (message[0] != '/') {
-        return;
-    }
     const uint16_t access_level = entitySystem.component<Component::SocketConnector>(entity).access_level;
     std::stringstream ss(message);
     std::string command;
