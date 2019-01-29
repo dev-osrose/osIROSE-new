@@ -16,7 +16,7 @@ void Chat::normal_chat(EntitySystem& entitySystem, Entity entity, const CliNorma
     logger->trace("Chat::normal_chat()");
     logger->trace("entity {}, message {}", entity, packet.get_message());
     if (packet.get_message()[0] == '/') {
-        gm_commands(entitySystem, entity, packet.get_message());
+        execute_gm(entitySystem, entity, packet.get_message());
     } else {
         const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
         auto p = SrvNormalChat::create(basicInfo.id, packet.get_message());
