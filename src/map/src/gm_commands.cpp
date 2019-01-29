@@ -9,6 +9,7 @@
 #include "dataconsts.h"
 #include "entity_system.h"
 #include "chat/whisper_chat.h"
+#include "components/client.h"
 
 namespace {
 template <typename... Args>
@@ -112,7 +113,7 @@ void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::opt
 }
 
 void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& message) {
-    const uint16_t access_level = entitySystem.component<Component::SocketConnector>(entity).access_level;
+    const uint16_t access_level = entitySystem.component<Component::Client>(entity).access_level;
     std::stringstream ss(message);
     std::string command;
     ss >> command;
