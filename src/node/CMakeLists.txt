@@ -49,8 +49,7 @@ endif()
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon)
 
-add_dependencies(${PROJECT} SQLPP11::sqlpp11_sqlite3)
-target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+target_link_libraries(${PROJECT} sqlite3::sqlite3)
 
 generate_symbol_data(${PROJECT})
 

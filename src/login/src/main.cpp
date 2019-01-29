@@ -23,10 +23,6 @@
 
 #include "cloginserver.h"
 
-#ifdef ENABLE_MYSQL
-Core::ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
-#endif
-
 namespace {
 void DisplayTitle()
 {

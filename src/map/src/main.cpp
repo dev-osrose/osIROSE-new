@@ -25,10 +25,6 @@
 #include "map_manager.h"
 #include "packetfactory.h"
 
-#ifdef ENABLE_MYSQL
-Core::ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
-#endif
-
 namespace {
 void DisplayTitle() {
   auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);

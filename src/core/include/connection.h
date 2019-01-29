@@ -20,6 +20,12 @@ struct Osirose {
 extern ConnectionPool<Osirose> &connectionPool;
 #endif
 
+struct Node {
+    using type = sqlpp::sqlite3::connection;
+};
+
+extern ConnectionPool<Node> &connectionPoolMem;
+
 using AccountTable = osiroseDatabase::Accounts;
 using SessionTable = osiroseDatabase::Sessions;
 using CharacterTable = osiroseDatabase::Characters;

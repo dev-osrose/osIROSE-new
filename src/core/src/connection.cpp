@@ -1,6 +1,13 @@
 #include <string>
 #include "connection.h"
 
+using Core::ConnectionPool;
+
+#ifdef ENABLE_MYSQL
+ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
+#endif
+ConnectionPool<Core::Node> &Core::connectionPoolMem = ConnectionPool<Core::Node>::getInstance();
+
 static bool replaceAll(std::string &str, const std::string &from, const std::string &to) {
     size_t pos = 0;
     bool isFound = false;

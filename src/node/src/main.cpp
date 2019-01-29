@@ -25,9 +25,6 @@
 
 #include "connection.h"
 
-using Core::ConnectionPool;
-ConnectionPool<sqlpp::sqlite3::connection> &Core::connectionPool = ConnectionPool<sqlpp::sqlite3::connection>::getInstance();
-
 namespace {
 void DisplayTitle()
 {
@@ -265,7 +262,9 @@ int main(int argc, char* argv[]) {
       }
     }
     
-    NodeSessions::getInstance();
+    // Core::connectionPool.addConnector(Core::node, std::bind(
+    //   Core::sqlite3Factory,
+    //   ":memory:"));
 
     NodeServer loginServer;
     NodeServer charServer;
