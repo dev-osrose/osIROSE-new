@@ -113,5 +113,7 @@ void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std
     ss >> command;
     if (const auto it = commands.find(command); it != commands.end() && access_level >= std::get<0>(it->second)) {
         std::get<1>(it->second)(entitySystem, entity, std::move(ss));
+    } else {
+        Chat::send_whisper(entitySystem, entity, "Error, no known command/not enough permissions");
     }
 }
