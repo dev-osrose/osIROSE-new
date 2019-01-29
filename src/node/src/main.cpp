@@ -262,9 +262,12 @@ int main(int argc, char* argv[]) {
       }
     }
     
-    // Core::connectionPool.addConnector(Core::node, std::bind(
-    //   Core::sqlite3Factory,
-    //   ":memory:"));
+    sqlpp::sqlite3::connection_config db_config;
+    db_config.path_to_database = ":memory:";
+    db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
+    db_config.debug = true;
+    
+    connectionPoolMem.addConnector(NodeDB, [&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
 
     NodeServer loginServer;
     NodeServer charServer;

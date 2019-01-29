@@ -23,11 +23,11 @@
 #include "connectionpool.h"
 #include "nodeSessions.h"
 
-struct Node {
+struct NodeDB {
     using type = sqlpp::sqlite3::connection;
 };
 
-extern Core::ConnectionPool<Node> &connectionPoolMem;
+extern Core::ConnectionPool<NodeDB> &connectionPoolMem;
 
 using NodeSessionsTable = nodeSessions::Sessions;
 

@@ -14,4 +14,4 @@
 
 #include "nodesessions.h"
 
-Core::ConnectionPool<Node> &connectionPoolMem = Core::ConnectionPool<Node>::getInstance();
+Core::ConnectionPool<NodeDB> &connectionPoolMem = Core::ConnectionPool<NodeDB>::getInstance();

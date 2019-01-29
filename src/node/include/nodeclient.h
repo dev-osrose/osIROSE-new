@@ -17,6 +17,7 @@
 
 #include "croseclient.h"
 #include "srv_srv_select_reply.h"
+#include "cli_accept_req.h"
 
 class NodeClient : public RoseCommon::CRoseClient {
  public:
@@ -29,6 +30,7 @@ class NodeClient : public RoseCommon::CRoseClient {
 
   // Packet Helper Functions
   bool serverSelectReply(RoseCommon::Packet::SrvSrvSelectReply&& P);
+  bool clientAcceptReq(RoseCommon::Packet::CliAcceptReq&& P);
 
   enum class eSTATE {
     DEFAULT,
