@@ -200,7 +200,7 @@ int main(int argc, char* argv[]) {
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
-    Core::connectionPool.addConnector(Core::osirose, std::bind(
+    Core::connectionPool.addConnector<Core::osirose>(std::bind(
                 Core::mysqlFactory,
                 config.database().user,
                 config.database().password,
