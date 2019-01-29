@@ -122,7 +122,7 @@ void CMapClient::updateSession() {
 
   time = Core::Time::GetTickCount();
   Core::SessionTable session{};
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == get_id()));
 }
 
@@ -136,7 +136,7 @@ void CMapClient::onDisconnected() {
 
   if (tmp_state != eSTATE::SWITCHING) {
       Core::AccountTable table{};
-      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
 }
@@ -152,7 +152,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
   uint32_t sessionID = P.get_sessionId();
   std::string password = Core::escapeData(P.get_password());
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable accounts{};
   Core::SessionTable sessions{};
   try {
