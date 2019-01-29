@@ -13,7 +13,7 @@ TEST(TestMySQL_Database, TestItemDatabase)
 {
   Core::Config& config = Core::Config::getInstance();
 
-  Core::connectionPool.addConnector(Core::osirose, std::bind(
+  Core::connectionPool.addConnector<Core::Osirose>(std::bind(
                                       Core::mysqlFactory,
                                       config.database().user,
                                       config.database().password,
