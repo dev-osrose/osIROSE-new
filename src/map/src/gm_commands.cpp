@@ -25,11 +25,16 @@ class Parser {
                 return i;
             });
         }
+        
+        template <size_t N>
+        decltype(auto) get_arg() {
+            return std::get<N>(args);
+        }
 
+    private:
         std::array<bool, sizeof...(Args)> is_arg_ok;
         std::tuple<Args...> args;
 
-    private:
         template <typename T>
         static bool parse(std::stringstream& ss, T& h) {
             return static_cast<bool>(ss >> h);
@@ -83,15 +88,15 @@ void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::opt
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage: /help [command]");
     }
     Chat::send_whisper(entitySystem, entity, "help (<required args> [optional args]):");
-    if (!std::get<0>(parser.args)) {
+    if (!parser.get_arg<0>()) {
         for (const auto& command : commands) {
             Chat::send_whisper(entitySystem, entity, std::get<2>(command.second));
         }
     } else {
-        if (const auto it = commands.find(std::get<0>(parser.args).value()); it != commands.end()) {
+        if (const auto it = commands.find(parser.get_arg<0>().value()); it != commands.end()) {
             Chat::send_whisper(entitySystem, entity, std::get<2>(it->second));
         } else {
-            Chat::send_whisper(entitySystem, entity, fmt::format("Error, no command {} found.", std::get<0>(parser.args)));
+            Chat::send_whisper(entitySystem, entity, fmt::format("Error, no command {} found.", parser.get_arg<0>()));
         }
     }
 }
