@@ -267,7 +267,21 @@ int main(int argc, char* argv[]) {
     db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
     db_config.debug = true;
     
-    connectionPoolMem.addConnector(NodeDB, [&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
+    connectionPoolMem.addConnector<NodeDB>([&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
+    {
+      auto conn = connectionPoolMem.getConnection<NodeDB>();
+      NodeSessionsTable table{};
+      conn->execute(R"(CREATE TABLE sessions (
+  		  id int(10) NOT NULL,
+        charip varchar(20) DEFAULT NULL,
+        charport int(20) DEFAULT NULL,
+        worldip varchar(20) DEFAULT NULL,
+        worldport int(20) DEFAULT NULL
+  		))");
+  		
+  		// Clear the table everything
+  		conn(remove_from(table).unconditionally());
+    }
 
     NodeServer loginServer;
     NodeServer charServer;
