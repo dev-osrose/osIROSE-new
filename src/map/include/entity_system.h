@@ -36,7 +36,7 @@ class EntitySystem {
         template <typename Func>
         void add_task(Func&& task);
 
-        RoseCommon::Entity load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client);
+        RoseCommon::Entity load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client);
         void save_character(RoseCommon::Entity);
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);

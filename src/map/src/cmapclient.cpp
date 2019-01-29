@@ -168,10 +168,8 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       userid_ = row.userid;
       charid_ = row.charid;
       sessionId_ = sessionID;
-      bool platinium = false;
-      platinium = row.platinium;
 
-      entity = entitySystem->load_character(charid_, platinium, sessionID, weak_from_this());
+      entity = entitySystem->load_character(charid_, row.access, sessionID, weak_from_this());
       logger_->debug("character loaded");
 
       if (entity != entt::null) {

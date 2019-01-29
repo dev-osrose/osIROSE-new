@@ -269,7 +269,7 @@ std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity enti
     return nearby.get_nearby(*this, entity);
 }
 
-RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
+RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
     Core::CharacterTable characters{};
@@ -300,6 +300,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, bool platinium,
     
     auto& component_client = prototype.set<Client>();
     component_client.client = client;
+    component_client.access_level = access_level;
 
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
