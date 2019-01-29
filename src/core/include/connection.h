@@ -10,10 +10,12 @@
 
 namespace Core {
 
-const std::string osirose = "osirose";
-
 #ifdef ENABLE_MYSQL
-extern ConnectionPool<sqlpp::mysql::connection> &connectionPool;
+struct Osirose {
+    using type = sqlpp::mysql::connection;
+};
+
+extern ConnectionPool<Osirose> &connectionPool;
 #endif
 
 using AccountTable = osiroseDatabase::Accounts;
