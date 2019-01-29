@@ -6,6 +6,7 @@ class CMapClient;
 
 namespace Component {
 struct Client {
-  std::weak_ptr<CMapClient> client;  
+  std::weak_ptr<CMapClient> client;
+  uint16_t access_level;
 };
 }

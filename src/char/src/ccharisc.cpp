@@ -63,7 +63,7 @@ bool CCharISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   std::string username_ = Core::escapeData(P.get_username());
   std::string clientpass = Core::escapeData(P.get_password());
   
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable table{};
   try {
     const auto res = conn(sqlpp::select(table.id, table.password)

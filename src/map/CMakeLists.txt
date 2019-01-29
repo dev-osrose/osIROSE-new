@@ -16,6 +16,7 @@ SET( SOURCES_HEADER
   include/map_manager.h
   include/entity_system.h
   include/nearby.h
+  include/gm_commands.h
   include/chat/normal_chat.h
   include/chat/whisper_chat.h
   include/map/change_map.h
@@ -31,6 +32,7 @@ SET( SOURCES_MAIN
   src/map_manager.cpp
   src/entity_system.cpp
   src/nearby.cpp
+  src/gm_commands.cpp
   src/chat/normal_chat.cpp
   src/chat/whisper_chat.cpp
   src/map/change_map.cpp

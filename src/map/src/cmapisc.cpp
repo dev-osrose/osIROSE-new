@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "connection.h"
-#include "connectionpool.h"
 #include "cmapisc.h"
 #include "cmapserver.h"
 #include "config.h"

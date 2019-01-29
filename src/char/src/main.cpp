@@ -24,10 +24,8 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 
-using Core::ConnectionPool;
-
 #ifdef ENABLE_MYSQL
-ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+Core::ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
 #endif
 
 namespace {
@@ -192,7 +190,7 @@ int main(int argc, char* argv[]) {
   }
   Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
-  Core::connectionPool.addConnector(Core::osirose, std::bind(
+  Core::connectionPool.addConnector<Core::Osirose>(std::bind(
             Core::mysqlFactory,
             config.database().user,
             config.database().password,

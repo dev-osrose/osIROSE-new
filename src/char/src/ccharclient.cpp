@@ -100,7 +100,7 @@ void CCharClient::updateSession() {
   time = Core::Time::GetTickCount();
   logger_->trace("CCharClient::updateSession()");
   Core::SessionTable session{};
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   conn(sqlpp::update(session).set(session.time = std::chrono::system_clock::now()).where(session.userid == userId_));
 }
 
@@ -115,7 +115,7 @@ bool CCharClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
   uint32_t sessionID = P.get_sessionId();
   std::string password = Core::escapeData(P.get_password());
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable accounts{};
   Core::SessionTable sessions{};
   try {
@@ -154,7 +154,7 @@ bool CCharClient::sendCharListReply() {
     return true;
   }
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::CharacterTable table{};
 
   auto packet = Packet::SrvCharListReply::create();
@@ -202,7 +202,7 @@ bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) 
   std::string query = fmt::format("CALL create_char('{}', {}, {}, {}, {}, {});", Core::escapeData(P.get_name().c_str()),
                                   userId_, P.get_race(), P.get_face(), P.get_hair(), P.get_stone());
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   auto res = Packet::SrvCreateCharReply::OK;
   try {
     conn->execute(query);
@@ -245,7 +245,7 @@ bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) 
   
   std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P.get_name().c_str()), delete_type);
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   conn->execute(query);
 
   // if time == -1, delete failed
@@ -258,7 +258,7 @@ void CCharClient::onDisconnected() {
   logger_->trace("CCharClient::onDisconnected()");
   Core::SessionTable session{};
   Core::AccountTable table{};
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   const auto res = conn(sqlpp::select(table.online).from(table).where(table.id == userId_));
   if (!res.empty())
     if (res.front().online) conn(sqlpp::remove_from(session).where(session.userid == userId_));
@@ -288,7 +288,7 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
   std::string query =
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   conn->execute(query);
 
   Core::CharacterTable table{};

@@ -106,7 +106,7 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
 
   logger_->debug("Client sent '{}' as the password", clientpass);
 
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable table{};
   Core::SessionTable session{};
   try {
@@ -164,7 +164,7 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
 
 void CLoginClient::onDisconnected() {
   Core::SessionTable session{};
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   auto res = conn(sqlpp::select(session.id).from(session)
                   .where(session.id == session_id_));
   if (res.empty()) {
@@ -231,7 +231,7 @@ bool CLoginClient::serverSelect(CliSrvSelectReq&& P) {
     if (server->get_type() == Isc::ServerType::CHAR &&
         server->get_id() == serverID) {
       Core::SessionTable session{};
-      auto conn = Core::connectionPool.getConnection(Core::osirose);
+      auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::insert_into(session).set(
                     session.id = session_id_,
                     session.userid = userid_,

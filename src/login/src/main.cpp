@@ -23,10 +23,8 @@
 
 #include "cloginserver.h"
 
-using Core::ConnectionPool;
-
 #ifdef ENABLE_MYSQL
-ConnectionPool<sqlpp::mysql::connection> &Core::connectionPool = ConnectionPool<sqlpp::mysql::connection>::getInstance();
+Core::ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
 #endif
 
 namespace {
@@ -174,7 +172,7 @@ void deleteStaleSessions() {
   if (Core::Time::GetTickCount() - time < 5min)
     return;
   time = Core::Time::GetTickCount();
-  auto conn = Core::connectionPool.getConnection(Core::osirose);
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable session{};
   Core::AccountTable table{};
   conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
@@ -206,7 +204,7 @@ int main(int argc, char* argv[]) {
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
 
-    Core::connectionPool.addConnector(Core::osirose, std::bind(
+    Core::connectionPool.addConnector<Core::Osirose>(std::bind(
                 Core::mysqlFactory,
                 config.database().user,
                 config.database().password,

@@ -22,7 +22,7 @@ void ItemDatabase::initialize() {
 
 
   // Load the item db table
-  auto conn = Core::connectionPool.getConnection( Core::osirose );
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::ItemDBTable itemdb{};
   try {
     ItemDef newItem;
