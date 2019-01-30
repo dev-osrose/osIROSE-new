@@ -45,6 +45,7 @@ class CRoseSocket {
                           bool is_server = false) 
   {
     socket_[socket_id] = std::move(_val);
+    socket_[socket_id]->set_socket_id(socket_id);
 
     if(true == is_server)
     {
