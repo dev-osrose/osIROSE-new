@@ -62,27 +62,21 @@ bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
 bool NodeClient::clientAcceptReq(Packet::CliAcceptReq&& P) {
   logger_->trace( "NodeClient::clientAcceptReq start" );
   auto& config = Core::Config::getInstance();
-  //TODO: check the sqlite db to see if this client is already 'connected'
-  
-  logger_->debug("Disconnecting from current server");
+
   // Disconnect from the current server
   disconnect(RoseCommon::SocketType::CurrentMap);
   
-  logger_->debug("Setting up the socket to connect to the login server");
   // Set up our socket to connect to the login server
   init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
   
-  logger_->debug("Connecting to the server");
   // Actually connect to the new server
   connect(RoseCommon::SocketType::CurrentMap);
   
-  logger_->debug("start the recv call for the server now that we are connected");
+  // Make sure we get the data from the server
   start_recv(RoseCommon::SocketType::CurrentMap);
-
-  logger_->debug("sending the packet to the server");
+  
   // Send the packet to the server
   send(P, SocketType::CurrentMap);
-  logger_->debug("returning true");
   return true;
 }
 

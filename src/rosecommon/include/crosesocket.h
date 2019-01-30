@@ -48,14 +48,14 @@ class CRoseSocket {
 
     if(true == is_server)
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1));
+      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1, std::placeholders::_2));
       socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onServerDisconnected, this));
     }
     else
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1));
+      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1, std::placeholders::_2));
       socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
     }
   };
@@ -128,16 +128,16 @@ class CRoseSocket {
  protected:
   // Callback functions
   virtual void onDisconnected();
-  virtual bool onReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
-  virtual bool onSend([[maybe_unused]] uint8_t* _buffer) ;
+  virtual bool onReceived(uint16_t socket_id_, uint16_t& packet_size_, uint8_t* buffer_) ;
+  virtual bool onSend(uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) ;
   virtual bool handlePacket(uint8_t* _buffer) ;
   
   virtual void onServerDisconnected();
-  virtual bool onServerReceived(uint16_t& packet_size_, uint8_t* buffer_) ;
-  virtual bool onServerSend([[maybe_unused]] uint8_t* _buffer) ;
+  virtual bool onServerReceived(uint16_t socket_id_, uint16_t& packet_size_, uint8_t* buffer_) ;
+  virtual bool onServerSend(uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) ;
   virtual bool handleServerPacket([[maybe_unused]] uint8_t* _buffer) ;
 
-  PacketCodec crypt_;
+  PacketCodec crypt_[static_cast<int>(SocketType::MaxSockets)];
   std::unique_ptr<Core::INetwork> socket_[static_cast<int>(SocketType::MaxSockets)];
 
   std::mutex recv_mutex_;

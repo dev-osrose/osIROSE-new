@@ -176,7 +176,7 @@ void CNetwork_Asio::ProcessSend() {
       logger_->trace( "{}", out.c_str() );
 #endif
 
-      if (OnSend(raw_ptr)) {
+      if (OnSend(socket_id_, raw_ptr)) {
         asio::async_write(
             socket_, asio::buffer(raw_ptr, _size),
             [this](const asio::error_code& error,
@@ -248,7 +248,7 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
           packet_offset_ += (uint16_t)length;
           update_time_ = (Core::Time::GetTickCount());
           if ( !errorCode ) {
-            if (OnReceived(packet_size_, buffer_) == false) {
+            if (OnReceived(this->socket_id_, packet_size_, buffer_) == false) {
               logger_->debug(
                 "OnReceived aborted the connection, disconnecting...");
               shutdown();

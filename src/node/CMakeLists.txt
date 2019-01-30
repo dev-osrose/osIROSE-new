@@ -15,13 +15,11 @@ set( SOURCES_MAIN
 set( SOURCES_HEADER
   include/nodeserver.h
   include/nodeclient.h
-  include/nodeisc.h
   include/nodesessions.h)
 
 set( SOURCES_BASE
   src/nodeserver.cpp
   src/nodeclient.cpp
-  src/nodeisc.cpp
   src/nodesessions.cpp)
 
 set(args
