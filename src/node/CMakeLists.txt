@@ -51,7 +51,7 @@ target_link_libraries(${PROJECT} sqlite3::sqlite3)
 
 generate_symbol_data(${PROJECT})
 
-set_property (DIRECTORY PROPERTY COTIRE_PREFIX_HEADER_IGNORE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/nodesessions.h")
+set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
 if (COMMAND cotire)
   cotire(${PROJECT})

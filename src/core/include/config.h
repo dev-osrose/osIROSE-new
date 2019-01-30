@@ -72,7 +72,8 @@ class Config {
   };
   struct ServerData {
     uint32_t id = 0;
-    std::string ip = "127.0.0.1";
+    std::string externalIp = "127.0.0.1";
+    std::string listenIp = "127.0.0.1";
     std::string iscListenIp = "127.0.0.1";
     std::string autoConfigureUrl = "http://ipv4.myexternalip.com/raw";
 #ifndef _WIN32
@@ -148,7 +149,7 @@ class Config {
 }
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
-VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
+VISITABLE_STRUCT(Core::Config::ServerData, id, externalIp, listenIp, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, instantCharDelete, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);

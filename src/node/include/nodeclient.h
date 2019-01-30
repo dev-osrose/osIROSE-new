@@ -28,6 +28,7 @@ class NodeClient : public RoseCommon::CRoseClient {
  public:
   NodeClient();
   NodeClient(std::unique_ptr<Core::INetwork> _sock);
+  ~NodeClient();
 
  protected:
   virtual bool onShutdown();

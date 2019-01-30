@@ -175,7 +175,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       if (entity != entt::null) {
         Core::Config& config = Core::Config::getInstance();
         conn(sqlpp::update(sessions)
-                 .set(sessions.worldip = config.serverData().ip, sessions.worldport = config.mapServer().clientPort)
+                 .set(sessions.worldip = config.serverData().externalIp, sessions.worldport = config.mapServer().clientPort)
                  .where(sessions.id == sessionID));
 
         const auto& basicInfo = entitySystem->get_component<Component::BasicInfo>(entity);

@@ -35,6 +35,17 @@ NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
       socket_[SocketType::Client]->registerOnShutdown(std::bind(&NodeClient::onShutdown, this));
     }
 
+NodeClient::~NodeClient() {
+  for( unsigned int i = 1; i < SocketType::MaxSockets; ++i )
+  {
+    if(socket_[i] != nullptr)
+    {
+      socket_[i]->shutdown(true);
+      socket_[i]->set_active(false);
+    }
+  }
+}
+
 //---------------------------------
 // SERVER PACKETS
 bool NodeClient::serverAcceptReply(Packet::SrvAcceptReply&& P) {
@@ -61,7 +72,7 @@ bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   
   auto packet = Packet::SrvSrvSelectReply::create(
     P.get_result(), P.get_sessionId(), P.get_cryptVal(),
-    config.serverData().ip, config.charServer().clientPort); // Replace this with MY current ip address
+    config.serverData().externalIp, config.charServer().clientPort); // Replace this with MY current ip address
     
   // Tell the client to connect to me!
   send(packet);
@@ -77,7 +88,7 @@ bool NodeClient::serverSwitchServer(Packet::SrvSwitchServer&& P) {
   conn(update(table).set(table.state = 2, table.worldip = P.get_ip(), table.worldport = P.get_port()).where(table.id == P.get_sessionId()));
   
   auto packet = Packet::SrvSwitchServer::create(
-    config.mapServer().clientPort, P.get_sessionId(), P.get_sessionSeed(), config.serverData().ip );
+    config.mapServer().clientPort, P.get_sessionId(), P.get_sessionSeed(), config.serverData().externalIp );
 
   // Tell the client to connect to me!
   send(packet);
@@ -100,16 +111,9 @@ bool NodeClient::clientLoginReq(Packet::CliLoginReq&& P) {
   logger_->trace( "NodeClient::clientLoginReq start" );
   auto& config = Core::Config::getInstance();
 
-  // Disconnect from the current server
   disconnect(RoseCommon::SocketType::CurrentMap);
-  
-  // Set up our socket to connect to the login server
   init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
-  
-  // Actually connect to the new server
   connect(RoseCommon::SocketType::CurrentMap);
-  
-  // Make sure we get the data from the server
   start_recv(RoseCommon::SocketType::CurrentMap);
   
   auto packet = Packet::CliAcceptReq::create();
@@ -152,6 +156,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
         return false;
     }
     disconnect(RoseCommon::SocketType::CurrentMap);
+    set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
     init(ip, port, RoseCommon::SocketType::CurrentMap);
     connect(RoseCommon::SocketType::CurrentMap);
     start_recv(RoseCommon::SocketType::CurrentMap);
@@ -219,11 +224,14 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
 
 bool NodeClient::onShutdown() {
   logger_->trace("NodeClient::onShutdown()");
-  
+  set_active(false);
   for( unsigned int i = 1; i < SocketType::MaxSockets; ++i )
   {
-    socket_[i].reset();
+    if(socket_[i] != nullptr)
+    {
+      socket_[i]->shutdown(true);
+      socket_[i]->set_active(false);
+    }
   }
-  
   return true;
 }

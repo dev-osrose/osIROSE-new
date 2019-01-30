@@ -15,7 +15,6 @@
 #include "cnetwork_asio.h"
 #include "nodeserver.h"
 #include "nodeclient.h"
-#include "nodeisc.h"
 #include "epackettype.h"
 #include "config.h"
 #include "platform_defines.h"
@@ -36,17 +35,6 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   nClient->start_recv();
   
   nClient->set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
-  
-  // Core::Config& config = Core::Config::getInstance();
-  
-  // // Disconnect from the current server
-  // disconnect(RoseCommon::SocketType::CurrentMap);
-  
-  // // Set up our socket to connect to the login server
-  // init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
-  
-  // // Actually connect to the new server
-  // connect(RoseCommon::SocketType::CurrentMap);
   
   logger_->info("Client connected from: {}", _address.c_str());
   client_list_.push_front(std::move(nClient));

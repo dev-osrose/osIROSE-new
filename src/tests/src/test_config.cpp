@@ -23,7 +23,7 @@ TEST(Config, TestServer) {
   Core::Config &config = Core::Config::getInstance();
   auto &sd = config.serverData();
   EXPECT_EQ(0, sd.id);
-  EXPECT_EQ("127.0.0.1", sd.ip);
+  EXPECT_EQ("127.0.0.1", sd.listenIp);
   EXPECT_EQ(1, sd.accessLevel);
   EXPECT_EQ(0, sd.parentId);
   EXPECT_EQ(0, sd.maxConnections);

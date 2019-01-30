@@ -74,6 +74,8 @@ void ParseCommandLine(int argc, char** argv)
     ;
     
     options.add_options("Networking")
+    ("external_ip", "external IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
     ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
       ->default_value("0.0.0.0"), "IP")
     ("client_port", "Client listen port", cxxopts::value<int>()
@@ -116,9 +118,12 @@ void ParseCommandLine(int argc, char** argv)
     // Since this is a login server startup function we can get away with a little bit of overhead
     if( options.count("log_level") )
       config.loginServer().logLevel = options["log_level"].as<int>();
+      
+    if( options.count("external_ip") )
+      config.serverData().externalIp = options["external_ip"].as<std::string>();
 
     if( options.count("client_ip") )
-      config.serverData().ip = options["client_ip"].as<std::string>();
+      config.serverData().listenIp = options["client_ip"].as<std::string>();
 
     if( options.count("client_port") )
       config.loginServer().clientPort = options["client_port"].as<int>();
@@ -202,7 +207,7 @@ int main(int argc, char* argv[]) {
   iscClient->connect();
   iscClient->start_recv();
 
-  clientServer.init(config.serverData().ip, config.charServer().clientPort);
+  clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
   clientServer.listen();
   clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
 
