@@ -174,6 +174,15 @@ int main(int argc, char* argv[]) {
       log->debug("Debug logs are enabled.");
     }
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    // if( true == config.serverData().autoConfigureAddress )
+    // {
+    //   std::string ip_addr = get_current_net_address();
+    //   ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
+    //   if(auto log = console.lock()) {
+    //     log->info( "Overriding external ip address to \"{}\"", ip_addr );
+    //   }
+    //   config.serverData().externalIp = ip_addr;
+    // }
 
     Core::connectionPool.addConnector<Core::Osirose>(
           std::bind(Core::mysqlFactory, config.database().user, config.database().password,

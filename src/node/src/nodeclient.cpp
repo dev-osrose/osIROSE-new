@@ -50,8 +50,11 @@ NodeClient::~NodeClient() {
 // SERVER PACKETS
 bool NodeClient::serverAcceptReply(Packet::SrvAcceptReply&& P) {
   logger_->trace( "NodeClient::serverAcceptReply start" );
-  //crypt_[SocketType::CurrentMap].changeSeed(P.get_randValue());
-  
+
+#ifdef DYNAMIC_CRYPT
+  crypt_[SocketType::CurrentMap].changeSeed(P.get_randValue());
+#endif
+
   // Send the login packet to the server
   if(buffered_packet_ != nullptr)
   {
@@ -103,7 +106,12 @@ bool NodeClient::clientAcceptReq([[maybe_unused]] Packet::CliAcceptReq&& P) {
   auto cryptKey = std::time(nullptr);
   auto packet = Packet::SrvAcceptReply::create(Packet::SrvAcceptReply::ACCEPTED, cryptKey);
   send(packet);
-  //crypt_[SocketType::Client].changeSeed(cryptKey);
+  
+#ifdef DYNAMIC_CRYPT
+  // This may need to move to OnRecv to init the table AFTER the packet above is sent
+  crypt_[SocketType::Client].changeSeed(cryptKey);
+#endif
+
   return true;
 }
 

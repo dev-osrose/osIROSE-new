@@ -257,14 +257,14 @@ int main(int argc, char* argv[]) {
     }
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
-    std::string ip_addr = config.serverData().listenIp;
     if( true == config.serverData().autoConfigureAddress )
     {
-      ip_addr = get_current_net_address();
+      std::string ip_addr = get_current_net_address();
       ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
       if(auto log = console.lock()) {
-        log->info( "IP address is \"{}\"", ip_addr );
+        log->info( "Overriding external ip address to \"{}\"", ip_addr );
       }
+      config.serverData().externalIp = ip_addr;
     }
     
     sqlpp::sqlite3::connection_config db_config;
@@ -294,13 +294,13 @@ int main(int argc, char* argv[]) {
     NodeServer charServer;
     NodeServer mapServer;
 
-    loginServer.init(ip_addr, config.loginServer().clientPort);
+    loginServer.init(config.serverData().listenIp, config.loginServer().clientPort);
     loginServer.listen();
 
-    charServer.init(ip_addr, config.charServer().clientPort);
+    charServer.init(config.serverData().listenIp, config.charServer().clientPort);
     charServer.listen();
 
-    mapServer.init(ip_addr, config.mapServer().clientPort);
+    mapServer.init(config.serverData().listenIp, config.mapServer().clientPort);
     mapServer.listen();
 
     while (loginServer.is_active()) {
