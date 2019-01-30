@@ -78,11 +78,11 @@ void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
 }
 }
 
-#define REGISTER_FUNCTION(f) [](EntitySystem& en, Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
+#define REGISTER_FUNCTION(f) [](EntitySystem& en, RoseCommon::Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
 
 void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
 
-static const std::unordered_map<std::string, std::tuple<uint16_t, void(*)(EntitySystem&, Entity, std::stringstream&&), std::string>> commands = {
+static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
     //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
@@ -107,13 +107,13 @@ void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::opt
         if (const auto it = commands.find(parser.get_arg<0>().value()); it != commands.end()) {
             Chat::send_whisper(entitySystem, entity, std::get<2>(it->second));
         } else {
-            Chat::send_whisper(entitySystem, entity, fmt::format("Error, no command {} found.", parser.get_arg<0>()));
+            Chat::send_whisper(entitySystem, entity, fmt::format("Error, no command {} found.", parser.get_arg<0>().value()));
         }
     }
 }
 
 void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& message) {
-    const uint16_t access_level = entitySystem.component<Component::Client>(entity).access_level;
+    const uint16_t access_level = entitySystem.get_component<Component::Client>(entity).access_level;
     std::stringstream ss(message);
     std::string command;
     ss >> command;
