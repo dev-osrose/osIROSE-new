@@ -18,6 +18,9 @@ void LuaLoader::load_file(const std::string& path) {
         // clear the eventual data from a previous load
         lua_db.delete_filename(path);
 
+        // this is a reference, every copy is shallow so we
+        // should be able to delete them without risk of segfaults or
+        // undefined functions (if we have multiple stuff in the same env)
         sol::environment env{state, sol::create, state.globals()};
         // warp gates
         env.set_function("warp_gate", [this, env, path](std::string alias,
@@ -25,14 +28,17 @@ void LuaLoader::load_file(const std::string& path) {
             int _map_id, float x, float y, float z, float angle,
             float x_scale, float y_scale, float z_scale) {
             if (map_id != _map_id) return; // we skip anything that isn't needed
-            // do something here
+            // create the warp and get the entity
+            //warps.register_lua(path, env, entity);
         });
 
         // npc positioning
         env.set_function("npc", [this, env, path](std::string npc_lua, int npc_id,
             int _map_id, float x, float y, float z, float angle) {
             if (map_id != _map_id) return;
-            // do something here
+            // create the npc and get the entity
+            // 
+            //npcs.register_lua(path, env, entity);
         });
 
         // spawner
@@ -40,7 +46,8 @@ void LuaLoader::load_file(const std::string& path) {
             int mob_count, int limit, int interval, int range,
             int _map_id, float x, float y, float z) {
             if (map_id != _map_id) return;
-            // do something here
+            // create the spawner and get the entity
+            //spawners.register_lua(path, env, entity);
         });
 
         // revive points
@@ -70,5 +77,16 @@ void LuaLoader::load_file(const std::string& path) {
         state.script_file(path, env);
     } catch (const sol::error& e) {
         logger->error("Error (re)loading lua scripts '{}' : {}", path, e.what());
+    }
+}
+
+void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua) {
+    sol::environment env{state, sol::create, state.globals()};
+
+    try {
+        state.script(lua, env);
+        items.register_lua(env, type, id);
+    } catch (const sol::error& e) {
+        logger->error("Error (re)loading item lua script: {}", e.what());
     }
 }

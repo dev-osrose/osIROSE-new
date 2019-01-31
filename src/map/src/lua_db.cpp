@@ -5,20 +5,21 @@ void LuaDb::store_lua(const std::string& filename, sol::environment env, int npc
     Data d;
     d.filename = filename;
     d.env = env;
-    d.data = data;
+    d.data = npc_data;
+    d.api = std::make_shared<NpcLuaApi>(env);
     data.emplace(npc_id, d);
 }
 
-std::optional<const sol::table&> LuaDb::get_table(int npc_id) const {
+std::weak_ptr<NpcLuaApi> LuaDb::get_lua_api(int npc_id) {
     if (const auto it = data.find(npc_id); it != data.end()) {
-        return {it->second.data};
+        return it->second.api;
     }
     return {};
 }
 
-std::optional<sol::environment&> LuaDb::get_env(int npc_id) {
+std::optional<LuaDb::LuaData> LuaDb::get_data(int npc_id) const {
     if (const auto it = data.find(npc_id); it != data.end()) {
-        return {it->second.env};
+        return {{it->second.data}};
     }
     return {};
 }

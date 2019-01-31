@@ -2,6 +2,7 @@
 
 #include "logconsole.h"
 #include "lua_db.h"
+#include "lua_storage.h"
 
 #include <sol.hpp>
 
@@ -12,6 +13,8 @@ class EntitySystem;
 class LuaLoader {
     public:
         LuaLoader(EntitySystem&, uint16_t map_id, const std::string& path);
+
+        void load_lua_item(uint8_t type, uint16_t id, const std::string& lua);
     
     protected:
         void load_file(const std::string& path); // relative path
@@ -24,4 +27,9 @@ class LuaLoader {
         sol::state state;
         
         LuaDb lua_db;
+        LuaStorage npcs;
+        LuaStorage spawners;
+        LuaStorage warps;
+        LuaStorage points;
+        LuaItem items;
 };
