@@ -173,7 +173,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
     send(packet, SocketType::CurrentMap);
     buffered_packet_ = std::make_unique<Packet::CliJoinServerReq>(Packet::CliJoinServerReq::create(P.getPacked().get()));
   } else {
-    logger_->debug("Lul, this guy!!! He's trying to join without logging in first! IP: {}", get_address());
+    logger_->warn("Lul, this guy!!! He's trying to join without logging in first! IP: {}", get_address());
     return false;
   }
   return true;
