@@ -178,8 +178,8 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_dropitem.h
     #  src/packets/srv_mobchar.cpp
     #  include/packets/srv_mobchar.h
-    #  src/packets/srv_npcchar.cpp
-    #  include/packets/srv_npcchar.h
+    src/packets/srv_npc_char.cpp
+    include/packets/srv_npc_char.h
     #  src/packets/srv_adjustposition.cpp
     #  include/packets/srv_adjustposition.h
     #  src/packets/srv_teleportreply.cpp

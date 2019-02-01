@@ -287,7 +287,11 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
         send_to(e, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
     }
     for (const auto e : to_add) {
-        send_to(e, CMapClient::create_srv_player_char(*this, entity));
+        if (entitySystem.try_get<Component::Npc>(other)) {
+            send_to(e, CMapClient::create_srv_npc_char(*this, entity));
+        } else {
+            send_to(e, CMapClient::create_srv_player_char(*this, entity));
+        }
     }
 }
 
@@ -544,4 +548,35 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 
 void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
     // TODO: should be done as a task???
+}
+
+RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
+    logger->trace("EntitySystem::create_npc");
+    using namespace Component;
+    entt::prototype prototype(registry);
+    auto& basic = prototype.set<BasicInfo>();
+    basic.id = idManager.get_free_id();
+    basic.teamId = basic.id;
+
+    auto& computed_values = prototype.set<ComputedValues>();
+    computed_values.moveMode = RoseCommon::MoveMode::WALK;
+    computed_values.command = RoseCommon::Command::STOP;
+    computed_values.statusFlag = 0;
+
+    auto& life = prototype.set<Life>();
+    life.hp = 1;
+    life.maxHp = 1;
+
+    auto& pos = prototype.set<Position>();
+    pos.x = x * 100;
+    pos.y = y * 100;
+    pos.z = static_cast<uint16_t>(z);
+    pos.map = map_id;
+    pos.npcAngle = angle;
+
+    auto& npc = prototype.set<Npc>();
+    npc.id = npc_id;
+    npc.quest = quest_id;
+
+    return protype();
 }

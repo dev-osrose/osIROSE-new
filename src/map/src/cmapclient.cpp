@@ -38,6 +38,7 @@
 #include "components/level.h"
 #include "components/life.h"
 #include "components/magic.h"
+#include "components/npc.h"
 #include "components/position.h"
 #include "components/skills.h"
 #include "components/stamina.h"
@@ -324,5 +325,37 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
     packet.set_subFlag(computedValues.subFlag);
     packet.set_name(basicInfo.name);
     packet.set_otherName(basicInfo.name);
+  return packet;
+}
+
+RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+  const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+  const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
+  const auto& npc = entitySystem.get_component<Component::Npc>(entity);
+  const auto& life = entitySystem.get_component<Component::Life>(entity);
+
+  auto packet = Packet::SrvNpcChar::create(basicInfo.id);
+  packet.set_x(pos.x);
+  packet.set_y(pos.y);
+  if (const auto* dest = entitySystem.try_get_component<Component::Destination>(entity)) {
+    packet.set_destX(dest->x);
+    packet.set_destY(dest->y);
+  }
+  packet.set_command(computedValues.command);
+  if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
+      const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
+      packet.set_targetId(basicInfo.id);
+  } else {
+      packet.set_targetId(0);
+  }
+  packet.set_moveMode(computedValues.moveMode);
+  packet.set_hp(life.hp);
+  packet.set_teamId(basicInfo.teamId);
+  packet.set_statusFlag(computedValues.statusFlag);
+  packet.set_npcId(npc.id);
+  packet.set_questId(npc.quest);
+  packet.set_angle(pos.npcAngle);
+  
   return packet;
 }

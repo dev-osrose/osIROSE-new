@@ -20,6 +20,7 @@
 
 #include "srv_player_char.h"
 #include "cli_join_server_req.h"
+#include "srv_npc_char.h"
 
 #include <memory>
 
@@ -37,6 +38,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   void set_on_map();
  
   static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
+  static RoseCommon::Packet::SrvNpcChar create_srv_npc_char(const EntitySystem&, RoseCommon::Entity);
 
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;

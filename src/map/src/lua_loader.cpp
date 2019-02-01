@@ -1,6 +1,7 @@
 #include "lua_loader.h"
 #include "entity_system.h"
 #include "throwassert.h"
+#include "cmapclient.h"
 
 LuaLoader::LuaLoader(EntitySystem& entitySystem, uint16_t map_id, const std::string& path)
     : entitySystem(entitySystem), logger(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()), map_id(map_id) {
@@ -37,8 +38,13 @@ void LuaLoader::load_file(const std::string& path) {
             int _map_id, float x, float y, float z, float angle) {
             if (map_id != _map_id) return;
             // create the npc and get the entity
-            // 
-            //npcs.register_lua(path, env, entity);
+            int quest_id = 0;
+            if (!npc_lua.empty()) {
+                quest_id = std::stoi(npc_lua);
+            }
+            auto entity = entitySystem.create_npc(quest_id, npc_id, x, y, z, angle);
+            npcs.register_lua(path, env, entity);
+            entitySystem.send_nearby_except_me(entity, CMapClient::create_srv_npc_char(entitySystem, entity));
         });
 
         // spawner

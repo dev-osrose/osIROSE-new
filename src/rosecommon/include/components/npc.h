@@ -2,7 +2,7 @@
 
 namespace Component {
 struct Npc {
-    uint16_t npcId;
-    uint16_t npcIdQuest;
+    uint16_t id;
+    uint16_t quest;
 };
 }

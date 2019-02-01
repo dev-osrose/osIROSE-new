@@ -43,6 +43,8 @@ class EntitySystem {
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
+        RoseCommon::Entity create_npc(int quest_id, int npc_id, float x, float y, float z, float angle);
+
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;
         template <typename T>
