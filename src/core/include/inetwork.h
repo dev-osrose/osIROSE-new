@@ -61,6 +61,7 @@ class INetwork {
         network_id_(0),
         network_type_(0),
         network_port_(0),
+        socket_id_(0),
         network_name_(""),
         network_address_(""),
         update_time_(Core::Time::GetTickCount()) {
@@ -132,6 +133,7 @@ class INetwork {
   virtual void set_id(uint32_t _val) { network_id_ = _val; }
   virtual void set_type(uint32_t _val) { network_type_ = _val; }
   virtual void set_port(uint16_t _val) { network_port_ = _val; }
+  virtual void set_socket_id(uint16_t _val) { socket_id_ = _val; }
   virtual void set_name(const std::string _val) { network_name_ = _val; }
   virtual void set_address(std::string _val) { network_address_ = _val; }
   virtual void set_update_time(const std::chrono::steady_clock::time_point time) { update_time_ = time; }
@@ -139,6 +141,7 @@ class INetwork {
   virtual uint32_t get_id() const { return network_id_; }
   virtual uint32_t get_type() const { return network_type_; }
   virtual uint16_t get_port() const { return network_port_; }
+  virtual uint16_t get_socket_id() const { return socket_id_; }
   virtual std::string get_name() const { return network_name_; }
   virtual std::string get_address() const { return network_address_; }
   virtual std::chrono::steady_clock::time_point get_update_time() const { return update_time_; }
@@ -152,8 +155,8 @@ class INetwork {
   void registerOnDisconnect(std::function<bool()> _val) { OnDisconnect = _val; }
   void registerOnDisconnected(std::function<void()> _val) { OnDisconnected = _val; }
   void registerOnReceive(std::function<bool()> _val) { OnReceive = _val; }
-  void registerOnReceived(std::function<bool(uint16_t&, uint8_t*)> _val) { OnReceived = _val; }
-  void registerOnSend(std::function<bool(uint8_t*)> _val) { OnSend = _val; }
+  void registerOnReceived(std::function<bool(uint16_t, uint16_t&, uint8_t*)> _val) { OnReceived = _val; }
+  void registerOnSend(std::function<bool(uint16_t, uint8_t*)> _val) { OnSend = _val; }
   void registerOnSent(std::function<void()> _val) { OnSent = _val; }
   void registerOnShutdown(std::function<bool()> _val) { OnShutdown = _val; }
 
@@ -161,8 +164,8 @@ class INetwork {
     std::function<void()> fnDummyVoid = []() {};
     std::function<bool()> fnDummyBool = []() { return true; };
     std::function<void(std::unique_ptr<Core::INetwork>)> fnDummyAccepted = [](std::unique_ptr<Core::INetwork>) {};
-    std::function<bool(uint8_t*)> fnDummySend = [](uint8_t*) { return true; };
-    std::function<bool(uint16_t&, uint8_t*)> fnDummyRecv = [](uint16_t&, uint8_t*) {
+    std::function<bool(uint16_t, uint8_t*)> fnDummySend = [](uint16_t, uint8_t*) { return true; };
+    std::function<bool(uint16_t, uint16_t&, uint8_t*)> fnDummyRecv = [](uint16_t, uint16_t&, uint8_t*) {
       std::cout << "Shit is broken!\n";
       return true;
     };
@@ -191,17 +194,16 @@ class INetwork {
   std::function<bool()> OnDisconnect;
   std::function<void()> OnDisconnected;
   std::function<bool()> OnReceive;
-  std::function<bool(uint16_t&, uint8_t*)> OnReceived;
-  std::function<bool(uint8_t*)> OnSend;
+  std::function<bool(uint16_t, uint16_t&, uint8_t*)> OnReceived;
+  std::function<bool(uint16_t, uint8_t*)> OnSend;
   std::function<void()> OnSent;
   std::function<bool()> OnShutdown;
 
   protected:
-
-  // private:
   uint32_t network_id_;
   uint32_t network_type_;
   uint16_t network_port_;
+  uint16_t socket_id_;
 
   std::string network_name_;
   std::string network_address_;

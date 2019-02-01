@@ -15,13 +15,13 @@ class CLoginClient_Mock : public CLoginClient {
    virtual void set_socket(std::unique_ptr<Core::INetwork> _val) {
     CLoginClient::set_socket(std::move(_val));
 
-    socket_[0]->registerOnSend(std::bind(&CLoginClient_Mock::OnSend, this, std::placeholders::_1));
+    socket_[0]->registerOnSend(std::bind(&CLoginClient_Mock::OnSend, this, std::placeholders::_1, std::placeholders::_2));
    }
 
  protected:
 
-  virtual bool OnSend(uint8_t* _buffer) {
-    crypt_.encodeClientPacket(_buffer);
+  virtual bool OnSend(uint16_t socketId, uint8_t* _buffer) {
+    crypt_[socketId].encodeClientPacket(_buffer);
     return true;
   }
 };

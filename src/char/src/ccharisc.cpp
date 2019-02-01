@@ -156,7 +156,7 @@ void CCharISC::onConnected() {
   {
     auto packet = Packet::IscServerRegister::create(
         RoseCommon::Isc::ServerType::CHAR,
-        config.charServer().worldName, config.serverData().ip,
+        config.charServer().worldName, config.serverData().externalIp,
         config.charServer().clientPort,
         config.charServer().accessLevel,
         get_id());

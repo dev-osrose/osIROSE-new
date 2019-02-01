@@ -73,6 +73,8 @@ void ParseCommandLine(int argc, char** argv)
     ;
     
     options.add_options("Networking")
+    ("external_ip", "external IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
     ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
       ->default_value("0.0.0.0"), "IP")
     ("client_port", "Client listen port", cxxopts::value<int>()
@@ -116,8 +118,11 @@ void ParseCommandLine(int argc, char** argv)
     if( options.count("log_level") )
       config.loginServer().logLevel = options["log_level"].as<int>();
 
+    if( options.count("external_ip") )
+      config.serverData().externalIp = options["external_ip"].as<std::string>();
+      
     if( options.count("client_ip") )
-      config.serverData().ip = options["client_ip"].as<std::string>();
+      config.serverData().listenIp = options["client_ip"].as<std::string>();
 
     if( options.count("client_port") )
       config.loginServer().clientPort = options["client_port"].as<int>();
@@ -199,6 +204,15 @@ int main(int argc, char* argv[]) {
     }
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    // if( true == config.serverData().autoConfigureAddress )
+    // {
+    //   std::string ip_addr = get_current_net_address();
+    //   ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
+    //   if(auto log = console.lock()) {
+    //     log->info( "Overriding external ip address to \"{}\"", ip_addr );
+    //   }
+    //   config.serverData().externalIp = ip_addr;
+    // }
 
     Core::connectionPool.addConnector<Core::Osirose>(std::bind(
                 Core::mysqlFactory,
@@ -211,7 +225,7 @@ int main(int argc, char* argv[]) {
     CLoginServer iscServer(true);
     CLoginServer clientServer(false, &iscServer);
 
-    clientServer.init(config.serverData().ip, config.loginServer().clientPort);
+    clientServer.init(config.serverData().listenIp, config.loginServer().clientPort);
     clientServer.listen();
 
     iscServer.init(config.serverData().iscListenIp, config.loginServer().iscPort);
