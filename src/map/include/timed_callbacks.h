@@ -14,12 +14,24 @@ class TimedCallbacks {
         using error_code = boost::system::error_code;
 
     public:
+        struct Wrapper {
+            Wrapper(std::weak_ptr<Timer> timer) : timer(timer) {}
+
+            void cancel() {
+                if (auto tmp = timer.lock()) {
+                    tmp->cancel();
+                }
+            }
+            private:
+                std::weak_ptr<Timer> timer;
+        };
+
         template <class Rep, class Period, class Func>
-        void add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+        Wrapper add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
             static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
             auto instance = Core::NetworkThreadPool::GetInstance();
             auto *io_context = instance.Get_IO_Service();
-            auto t = std::make_unique<Timer>(*io_context, timeout);
+            auto t = std::make_shared<Timer>(*io_context, timeout);
             std::lock_guard<std::mutex> guard(mutex);
             t.async_wait([this, pos = timers.begin(), callback = std::forward<Func>(callback)](const error_code& error) mutable {
                 if (error != boost::asio::error::operation_aborted) {
@@ -28,18 +40,20 @@ class TimedCallbacks {
                     timers.erase(pos);
                 }
             });
-            timers.push_front(std::move(t));
+            timers.push_front(t);
+            return t;
         }
     
         template <class Rep, class Period, class Func>
-        void add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+        Wrapper add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
             static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
             auto instance = Core::NetworkThreadPool::GetInstance();
             auto *io_context = instance.Get_IO_Service();
-            auto t = std::make_unique<Timer>(*io_context, timeout);
+            auto t = std::make_shared<Timer>(*io_context, timeout);
             t.async_wait(std::bind(&TimedCallbacks::recurrent_task, std::placeholders::_1, t.get(), timeout, std::forward<Func>(callback)));
             std::lock_guard<std::mutex> guard(mutex);
-            timers.push_front(std::move(t));
+            timers.push_front(t);
+            return t;
         }
     
     private:
@@ -53,5 +67,5 @@ class TimedCallbacks {
         }
 
         std::mutex mutex;
-        std::vector<std::unique_ptr<boost::asio::steady_timer>> timers;
+        std::vector<std::shared_ptr<Timer>> timers;
 };

@@ -87,9 +87,9 @@ class EntitySystem {
         uint16_t get_world_time() const;
 
         template <class Rep, class Period>
-        void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
+        TimedCallbacks::Wrapper add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
         template <class Rep, class Period>
-        void add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
+        TimedCallbacks::Wrapper add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
 
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
@@ -231,15 +231,15 @@ auto EntitySystem::item_to_item(RoseCommon::Entity entity) const {
 }
 
 template <class Rep, class Period>
-void EntitySystem::add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
-    timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
+TimedCallbacks::Wrapper EntitySystem::add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
+    return timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(std::move(callback));
     });
 }
 
 template <class Rep, class Period>
-void EntitySystem::add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback) {
-    timers.add_recurrent_callback(timeout, [this, callback = std::move(callback)]() mutable {
+TimedCallbacks::Wrapper EntitySystem::add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback) {
+    return timers.add_recurrent_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(callback);
     });
 }

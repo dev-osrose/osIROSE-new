@@ -38,9 +38,17 @@
 #include <algorithm>
 
 void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
-    auto& lua = registry.get<Component::ItemLua>(entity);
-    if (const auto tmp = lua.api.lock()) {
-        tmp->on_delete();
+    {
+        auto* lua = registry.try_get<Component::ItemLua>(entity);
+        if (lua && const auto tmp = lua->api.lock()) {
+            tmp->on_delete();
+        }
+    }
+    {
+        auto* lua = registry.try_get<Component::NpcLua>(entity);
+        if (lua && const auto tmp = lua->api.lock()) {
+            tmp->on_delete();
+        }
     }
 }
 
