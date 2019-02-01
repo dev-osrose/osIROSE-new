@@ -81,6 +81,7 @@ class EntitySystem {
         void delete_entity(RoseCommon::Entity entity);
 
         void update_position(RoseCommon::Entity entity, float x, float y);
+        void teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id);
     
         // returns a sorted vector
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;

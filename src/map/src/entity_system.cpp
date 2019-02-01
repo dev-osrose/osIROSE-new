@@ -299,6 +299,36 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     }
 }
 
+void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id) {
+    logger->trace("EntitySystem::teleport_entity");
+    logger->debug("Teleporting {} to {}-{}-{}", entity, map_id, x, y);
+    remove_component<Component::Target>(entity);
+    remove_component<Component::Destination>(entity);
+    auto& pos = get_component<Component::Position>(entity);
+    if (pos.map == map_id) {
+        // we teleport the character on the same map
+        Component::Position tmp = pos;
+        tmp.x = x;
+        tmp.y = y;
+        // we trigger the callback to send obj removal for nearby clients
+        remove_component<Component::Position>(entity);
+        // we re-add the component with 
+        registry.add<Component::Position>(entity, tmp);
+        // send PAKWC_TELEPORT_REPLY
+        send_nearby_except_me(entity, CMapClient::create_srv_player_char(entitySystem, entity));
+        const auto& nearby_entities = entitySystem.get_nearby(entity);
+        for (auto other : nearby_entities) {
+            if (other != entity) {
+                entitySystem.send_to_entity(entity, other);
+            }
+        }
+    } else {
+        // we ask the client to reconnect
+        // mark the client as switching (do not delete session in DB)
+        // send PAKCC_SWITCH_SERVER
+    }
+}
+
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
     return nearby.get_nearby(*this, entity);
 }
