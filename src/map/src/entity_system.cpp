@@ -312,7 +312,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         tmp.y = y;
         // we trigger the callback to send obj removal for nearby clients
         remove_component<Component::Position>(entity);
-        // we re-add the component with 
+        // we re-add the component to trigger moar callbacks
         registry.add<Component::Position>(entity, tmp);
         // send PAKWC_TELEPORT_REPLY
         send_nearby_except_me(entity, CMapClient::create_srv_player_char(entitySystem, entity));
