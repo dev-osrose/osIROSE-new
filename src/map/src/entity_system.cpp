@@ -243,6 +243,14 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
     }
 }
 
+void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const {
+    if (entitySystem.try_get<Component::Npc>(other)) {
+        send_to(entity, CMapClient::create_srv_npc_char(*this, other));
+    } else {
+        send_to(entity, CMapClient::create_srv_player_char(*this, other));
+    }
+}
+
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
@@ -287,11 +295,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
         send_to(e, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
     }
     for (const auto e : to_add) {
-        if (entitySystem.try_get<Component::Npc>(other)) {
-            send_to(e, CMapClient::create_srv_npc_char(*this, entity));
-        } else {
-            send_to(e, CMapClient::create_srv_player_char(*this, entity));
-        }
+        send_to_entity(entity, e);
     }
 }
 

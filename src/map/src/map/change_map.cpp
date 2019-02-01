@@ -37,11 +37,7 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     const auto& nearby_entities = entitySystem.get_nearby(entity);
     for (auto other : nearby_entities) {
         if (other != entity) {
-            if (entitySystem.try_get<Component::Npc>(other)) {
-                entitySystem.send_to(entity, CMapClient::create_srv_npc_char(entitySystem, other));
-            } else {
-                entitySystem.send_to(entity, CMapClient::create_srv_player_char(entitySystem, other));
-            }
+            entitySystem.send_to_entity(entity, other);
         }
     }
 }
