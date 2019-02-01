@@ -36,8 +36,15 @@
 
 #include <algorithm>
 
-EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
+EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
+    lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+
+    // load item lua
+    const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
+    itemDb.store_lua([this](uint8_t type, uint16_t id, const std::string& lua) {
+        lua_loader.load_lua_item(type, id, lua);
+    });
 
     // register recurrent stoof (like saving every 5min)
     using namespace std::chrono_literals;

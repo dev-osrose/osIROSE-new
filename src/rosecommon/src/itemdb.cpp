@@ -49,6 +49,12 @@ void ItemDatabase::initialize() {
   catch ( sqlpp::exception& ) { }
 }
 
+void ItemDatabase::store_lua(std::function<void(uint8_t type, uint16_t id, const std::string& lua)> f) const {
+    for (const auto& it : _database) {
+      f(std::get<0>(it.first), std::get<1>(it.first), it.second.script);
+    }
+}
+
 bool ItemDatabase::itemExists(uint8_t type, uint16_t id) const {
     return _database.count(ItemDatabase::key_t{type, id}) != 0;
 }

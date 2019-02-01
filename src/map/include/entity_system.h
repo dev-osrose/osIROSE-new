@@ -23,7 +23,7 @@ class CMapClient;
 
 class EntitySystem {
     public:
-        EntitySystem(std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate = 50ms);
 
         void run();
         void stop();
@@ -107,6 +107,7 @@ class EntitySystem {
         TimedCallbacks timers;
         PacketDispatcher dispatcher;
         Nearby nearby;
+        LuaLoader lua_loader;
 };
 
 
