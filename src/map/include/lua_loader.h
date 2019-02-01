@@ -15,6 +15,7 @@ class LuaLoader {
         LuaLoader(EntitySystem&, uint16_t map_id, const std::string& path);
 
         void load_lua_item(uint8_t type, uint16_t id, const std::string& lua);
+        std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id) const;
     
     protected:
         void load_file(const std::string& path); // relative path

@@ -16,6 +16,7 @@
 #include "components/item.h"
 #include "components/level.h"
 #include "components/life.h"
+#include "components/lua.h"
 #include "components/magic.h"
 #include "components/npc.h"
 #include "components/owner.h"
@@ -35,6 +36,13 @@
 #include "srv_remove_object.h"
 
 #include <algorithm>
+
+void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+    auto& lua = registry.get<Component::ItemLua>(entity);
+    if (const auto tmp = lua.api.lock()) {
+        tmp->on_delete();
+    }
+}
 
 EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
@@ -96,6 +104,9 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
 
     // callback for removing objects
     registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
+
+    // callback for destroying lua
+    registry.destruction<Component::ItemLua>().connect<&destroy_lua>();
 
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
@@ -503,6 +514,12 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.price = 0;
 
     prototype.set<RoseCommon::ItemDef>(def);
+
+    auto& lua = prototype.set<ItemLua>();
+    lua.api = lua_loader.get_lua_item(type, id);
+    if (const auto tmp = lua.api.lock(); tmp) {
+        tmp->on_init();
+    }
 	
     std::lock_guard<std::mutex> lock(access);
     return prototype();

@@ -90,3 +90,7 @@ void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua)
         logger->error("Error (re)loading item lua script: {}", e.what());
     }
 }
+
+std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id) const {
+    return items.get_lua_api(type, id);
+}
