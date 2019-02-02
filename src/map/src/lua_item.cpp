@@ -4,7 +4,7 @@ void LuaItem::register_lua(sol::environment env, uint8_t type, uint16_t id) {
     Data d;
     d.api = std::make_shared<ItemLuaApi>(env);
     d.env = env;
-    data.emplace({type, id}, d);
+    data.emplace(std::tuple{type, id}, d);
 }
 
 void LuaItem::delete_item(uint8_t type, uint16_t id) {

@@ -16,6 +16,7 @@
 #include "timed_callbacks.h"
 #include "packet_dispatcher.h"
 #include "nearby.h"
+#include "lua_loader.h"
 
 using namespace std::chrono_literals;
 
@@ -43,7 +44,7 @@ class EntitySystem {
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
-        RoseCommon::Entity create_npc(int quest_id, int npc_id, float x, float y, float z, float angle);
+        RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
 
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;

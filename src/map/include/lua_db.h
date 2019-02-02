@@ -4,7 +4,8 @@
 #include <string>
 #include <optional>
 #include <unordered_map>
-#include <unordered_multimap>
+
+#include "lua_api.h"
 
 // stores npc related lua that can be instanciated at any time
 class LuaDb {

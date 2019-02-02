@@ -35,6 +35,7 @@ set( SOURCES_HEADER
   include/components/item.h
   include/components/level.h
   include/components/life.h
+  include/components/lua.h
   include/components/magic.h
   include/components/npc.h
   include/components/owner.h

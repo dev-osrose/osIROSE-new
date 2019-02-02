@@ -40,14 +40,18 @@
 void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     {
         auto* lua = registry.try_get<Component::ItemLua>(entity);
-        if (lua && const auto tmp = lua->api.lock()) {
-            tmp->on_delete();
+        if (lua) {
+            if (const auto tmp = lua->api.lock()) {
+                tmp->on_delete();
+            }
         }
     }
     {
         auto* lua = registry.try_get<Component::NpcLua>(entity);
-        if (lua && const auto tmp = lua->api.lock()) {
-            tmp->on_delete();
+        if (lua) {
+            if (const auto tmp = lua->api.lock()) {
+                tmp->on_delete();
+            }
         }
     }
 }
@@ -244,7 +248,7 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
 }
 
 void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const {
-    if (entitySystem.try_get<Component::Npc>(other)) {
+    if (try_get_component<Component::Npc>(other)) {
         send_to(entity, CMapClient::create_srv_npc_char(*this, other));
     } else {
         send_to(entity, CMapClient::create_srv_player_char(*this, other));
@@ -313,13 +317,13 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         // we trigger the callback to send obj removal for nearby clients
         remove_component<Component::Position>(entity);
         // we re-add the component to trigger moar callbacks
-        registry.add<Component::Position>(entity, tmp);
+        registry.assign<Component::Position>(entity, tmp);
         // send PAKWC_TELEPORT_REPLY
-        send_nearby_except_me(entity, CMapClient::create_srv_player_char(entitySystem, entity));
-        const auto& nearby_entities = entitySystem.get_nearby(entity);
+        send_nearby_except_me(entity, CMapClient::create_srv_player_char(*this, entity));
+        const auto& nearby_entities = get_nearby(entity);
         for (auto other : nearby_entities) {
             if (other != entity) {
-                entitySystem.send_to_entity(entity, other);
+                send_to_entity(entity, other);
             }
         }
     } else {
@@ -612,5 +616,5 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     npc.id = npc_id;
     npc.quest = quest_id;
 
-    return protype();
+    return prototype();
 }

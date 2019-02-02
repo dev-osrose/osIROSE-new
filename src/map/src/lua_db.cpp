@@ -27,7 +27,7 @@ std::optional<LuaDb::LuaData> LuaDb::get_data(int npc_id) const {
 void LuaDb::delete_npc_data(int npc_id) {
     if (const auto it = data.find(npc_id); it != data.end()) {
         const auto range = filename_to_id.equal_range(it->second.filename);
-        for (const auto jt = range.first; jt != range.second; ++jt) {
+        for (auto jt = range.first; jt != range.second; ++jt) {
             if (jt->second == npc_id) {
                 filename_to_id.erase(jt);
                 break;
@@ -38,8 +38,8 @@ void LuaDb::delete_npc_data(int npc_id) {
 }
 
 void LuaDb::delete_filename(const std::string& filename) {
-    const auto range = filename_to_id.equal_range(filename)
-    for (const auto it = range.first; it != range.second; ++it) {
+    const auto range = filename_to_id.equal_range(filename);
+    for (auto it = range.first; it != range.second; ++it) {
         data.erase(it->second);
     }
     filename_to_id.erase(range.first, range.second);

@@ -7,10 +7,10 @@ LuaLoader::LuaLoader(EntitySystem& entitySystem, uint16_t map_id, const std::str
     : entitySystem(entitySystem), logger(Core::CLog::GetLogger(Core::log_type::SCRIPTLOADER).lock()), map_id(map_id) {
     size_t pos = path.find_last_of('/');
     throw_assert(pos != std::string::npos, "Error, default path '" << path << "' is not valid");
-    base = path.substr(0, pos + 1);
+    std::string base = path.substr(0, pos + 1);
     // check if needed: state.open_libraries();
     state.set_function("include", [this, base](std::string path) {
-        load_lua(base + path);
+        load_file(base + path);
     });
 }
 
@@ -42,7 +42,7 @@ void LuaLoader::load_file(const std::string& path) {
             if (!npc_lua.empty()) {
                 quest_id = std::stoi(npc_lua);
             }
-            auto entity = entitySystem.create_npc(quest_id, npc_id, x, y, z, angle);
+            auto entity = entitySystem.create_npc(quest_id, npc_id, map_id, x, y, z, angle);
             npcs.register_lua(path, env, entity);
             entitySystem.send_nearby_except_me(entity, CMapClient::create_srv_npc_char(entitySystem, entity));
         });
@@ -76,7 +76,6 @@ void LuaLoader::load_file(const std::string& path) {
 
         // register npc (both mobs and npcs)
         env.set_function("registerNpc", [this, env, path](int npc_id, sol::table npc_data) {
-            if (map_id != _map_id) return;
             lua_db.store_lua(path, env, npc_id, npc_data);
         });
 
@@ -97,6 +96,6 @@ void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua)
     }
 }
 
-std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id) const {
+std::weak_ptr<ItemLuaApi> LuaLoader::get_lua_item(uint8_t type, uint16_t id) {
     return items.get_lua_api(type, id);
 }

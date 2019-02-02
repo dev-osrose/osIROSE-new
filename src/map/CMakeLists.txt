@@ -21,6 +21,11 @@ SET( SOURCES_HEADER
   include/chat/whisper_chat.h
   include/map/change_map.h
   include/mouse/mouse_cmd.h
+  include/lua_api.h
+  include/lua_db.h
+  include/lua_item.h
+  include/lua_loader.h
+  include/lua_storage.h
   )
 
 SET( SOURCES_MAIN
@@ -37,6 +42,10 @@ SET( SOURCES_MAIN
   src/chat/whisper_chat.cpp
   src/map/change_map.cpp
   src/mouse/mouse_cmd.cpp
+  src/lua_db.cpp
+  src/lua_item.cpp
+  src/lua_loader.cpp
+  src/lua_storage.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
