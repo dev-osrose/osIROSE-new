@@ -18,7 +18,6 @@ class LuaLoader {
         void load_lua_item(uint8_t type, uint16_t id, const std::string& lua);
         std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id);
     
-    protected:
         void load_file(const std::string& path); // relative path
 
     private:

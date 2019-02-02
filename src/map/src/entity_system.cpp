@@ -125,6 +125,9 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+
+    // load npc/mob/warpgates/spawn points lua
+    lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -249,6 +252,7 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
 
 void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const {
     if (try_get_component<Component::Npc>(other)) {
+        logger->trace("sending an npc");
         send_to(entity, CMapClient::create_srv_npc_char(*this, other));
     } else {
         send_to(entity, CMapClient::create_srv_player_char(*this, other));

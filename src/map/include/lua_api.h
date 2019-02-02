@@ -7,7 +7,7 @@
 
 class LuaApi {
     public:
-        LuaApi(sol::environment& env) : env(env), logger(Core::CLog::GetLogger(Core::log_type::SYSTEM)) {}
+        LuaApi(sol::environment env) : env(env), logger(Core::CLog::GetLogger(Core::log_type::SYSTEM)) {}
 
         bool on_init() { return safe_lua_call<bool>("OnInit"); }
         bool on_create() { return safe_lua_call<bool>("OnCreate"); }
@@ -35,13 +35,13 @@ class LuaApi {
         }
 
     private:
-        sol::environment& env;
+        sol::environment env;
         std::shared_ptr<spdlog::logger> logger;
 };
 
 class ItemLuaApi : public LuaApi {
     public:
-        ItemLuaApi(sol::environment& env) : LuaApi(env) {}
+        ItemLuaApi(sol::environment env) : LuaApi(env) {}
 
         bool on_equip(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnEquip", entity); }
         bool on_unequip(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnUnequip", entity); }
@@ -52,7 +52,7 @@ class ItemLuaApi : public LuaApi {
 
 class NpcLuaApi : public LuaApi {
     public:
-        NpcLuaApi(sol::environment& env) : LuaApi(env) {}
+        NpcLuaApi(sol::environment env) : LuaApi(env) {}
 
         void on_dead(RoseCommon::Entity entity) { safe_lua_call<void>("OnDead", entity); }
         void on_damaged(RoseCommon::Entity entity) { safe_lua_call<void>("OnDamaged", entity); }
