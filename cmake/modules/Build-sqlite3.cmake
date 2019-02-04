@@ -5,6 +5,7 @@ message(STATUS "Building sqlite3 since sqlite3 was not found")
 set(_byproducts
   ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.lib
   ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.so
+  ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.a
 )
 
 ExternalProject_Add(
