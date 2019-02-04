@@ -3,6 +3,7 @@
 #include "cmapclient.h"
 #include "enumerate.h"
 #include "itemdb.h"
+#include "config.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
 #include "components/client.h"
@@ -401,7 +402,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
                 config.mapServer().clientPort + map_id,
                 client->get_session_id(),
                 0,
-                config.serverData().ip
+                config.serverData().externalIp
             ), true);
         }
     }
