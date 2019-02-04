@@ -1,4 +1,0 @@
-PAKCS_WHISPER_CHAT
-include string
-std::string targetId &
-std::string message &

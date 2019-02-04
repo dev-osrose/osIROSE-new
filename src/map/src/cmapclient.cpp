@@ -24,7 +24,6 @@
 #include "srv_join_server_reply.h"
 #include "srv_quest_data.h"
 #include "srv_select_char_reply.h"
-//#include "srv_teleport_reply.h"
 #include "srv_billing_message.h"
 
 #include "components/basic_info.h"
@@ -38,6 +37,7 @@
 #include "components/level.h"
 #include "components/life.h"
 #include "components/magic.h"
+#include "components/mob.h"
 #include "components/npc.h"
 #include "components/position.h"
 #include "components/skills.h"
@@ -359,7 +359,39 @@ RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySyste
   packet.set_statusFlag(computedValues.statusFlag);
   packet.set_npcId(npc.id);
   packet.set_questId(npc.quest);
-  packet.set_angle(pos.npcAngle);
+  packet.set_angle(npc.angle);
+  packet.set_eventStatus(npc.event_status);
+  
+  return packet;
+}
+
+RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+  const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+  const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
+  const auto& mob = entitySystem.get_component<Component::Mob>(entity);
+  const auto& life = entitySystem.get_component<Component::Life>(entity);
+
+  auto packet = Packet::SrvMobChar::create(basicInfo.id);
+  packet.set_x(pos.x);
+  packet.set_y(pos.y);
+  if (const auto* dest = entitySystem.try_get_component<Component::Destination>(entity)) {
+    packet.set_destX(dest->x);
+    packet.set_destY(dest->y);
+  }
+  packet.set_command(computedValues.command);
+  if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
+      const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
+      packet.set_targetId(basicInfo.id);
+  } else {
+      packet.set_targetId(0);
+  }
+  packet.set_moveMode(computedValues.moveMode);
+  packet.set_hp(life.hp);
+  packet.set_teamId(basicInfo.teamId);
+  packet.set_statusFlag(computedValues.statusFlag);
+  packet.set_npcId(mob.id);
+  packet.set_questId(mob.quest);
   
   return packet;
 }

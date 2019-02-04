@@ -8,14 +8,14 @@
 namespace RoseCommon {
 namespace Packet {
 
-class SrvNpcChar : public CRosePacket {
+class SrvMobChar : public CRosePacket {
     public:
-        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_NPC_CHAR;
-        SrvNpcChar();
-        SrvNpcChar(CRoseReader reader);
-        SrvNpcChar(SrvNpcChar&&) = default;
-        SrvNpcChar& operator=(SrvNpcChar&&) = default;
-        ~SrvNpcChar() = default;
+        static constexpr ePacketType PACKET_ID = ePacketType::PAKWC_MOB_CHAR;
+        SrvMobChar();
+        SrvMobChar(CRoseReader reader);
+        SrvMobChar(SrvMobChar&&) = default;
+        SrvMobChar& operator=(SrvMobChar&&) = default;
+        ~SrvMobChar() = default;
         
         static constexpr size_t size();
         
@@ -47,15 +47,11 @@ class SrvNpcChar : public CRosePacket {
         uint16_t get_npcId() const;
         void set_questId(const uint16_t);
         uint16_t get_questId() const;
-        void set_angle(const float);
-        float get_angle() const;
-        void set_eventStatus(const uint16_t);
-        uint16_t get_eventStatus() const;
         
         
-        static SrvNpcChar create(const uint16_t&);
-        static SrvNpcChar create(const uint8_t*);
-        static std::unique_ptr<SrvNpcChar> allocate(const uint8_t*);
+        static SrvMobChar create(const uint16_t&);
+        static SrvMobChar create(const uint8_t*);
+        static std::unique_ptr<SrvMobChar> allocate(const uint8_t*);
     
     protected:
         virtual bool pack(CRoseBasePolicy&) const override;
@@ -74,8 +70,6 @@ class SrvNpcChar : public CRosePacket {
         uint32_t statusFlag = 0;
         uint16_t npcId = 0;
         uint16_t questId = 0;
-        float angle = 0;
-        uint16_t eventStatus = 0;
 };
 
 }

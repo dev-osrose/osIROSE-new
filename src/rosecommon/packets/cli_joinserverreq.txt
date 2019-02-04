@@ -1,4 +1,0 @@
-PAKCS_JOIN_SERVER_REQ
-uint32_t sessionId
-include string
-std::string password 32 &

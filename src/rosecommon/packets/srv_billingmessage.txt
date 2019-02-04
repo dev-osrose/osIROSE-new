@@ -1,3 +1,0 @@
-PAKWC_BILLING_MESSAGE
-uint16_t functionType = 0x1001
-uint32_t payFlag = 2

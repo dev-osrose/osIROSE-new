@@ -1,5 +1,0 @@
-PAKWC_INVENTORY_DATA
-int64_t zuly AdvancedInfo::zuly
-include vector
-include item.h
-RoseCommon::Item items & == I Inventory::items [Inventory::maxItems]

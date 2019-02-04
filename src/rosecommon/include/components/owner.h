@@ -1,7 +1,9 @@
 #pragma once
 
+#include "dataconsts.h"
+
 namespace Component {
 struct Owner {
-    uint16_t ownerId;
+    RoseCommon::Entity owner;
 };
 }

@@ -15,7 +15,7 @@ class TimedCallbacks {
 
     public:
         struct Wrapper {
-            Wrapper(std::weak_ptr<Timer> timer) : timer(timer) {}
+            Wrapper(std::weak_ptr<Timer> timer = std::weak_ptr<Timer>()) : timer(timer) {}
 
             void cancel() {
                 if (auto tmp = timer.lock()) {

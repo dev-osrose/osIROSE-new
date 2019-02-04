@@ -25,6 +25,9 @@ class CMapClient;
 class EntitySystem {
     public:
         EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(const EntitySystem&) = delete;
+        EntitySystem(EntitySystem&&) = default;
+        ~EntitySystem() = default;
 
         void run();
         void stop();
@@ -46,6 +49,8 @@ class EntitySystem {
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
         RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale);
+        RoseCommon::Entity create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z);
+        RoseCommon::Entity create_mob(RoseCommon::Entity spawner);
 
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;
@@ -102,6 +107,7 @@ class EntitySystem {
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;

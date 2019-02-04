@@ -26,6 +26,7 @@ SET( SOURCES_HEADER
   include/lua_item.h
   include/lua_loader.h
   include/lua_storage.h
+  include/components/spawner.h
   )
 
 SET( SOURCES_MAIN

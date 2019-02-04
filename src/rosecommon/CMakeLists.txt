@@ -37,6 +37,7 @@ set( SOURCES_HEADER
   include/components/life.h
   include/components/lua.h
   include/components/magic.h
+  include/components/mob.h
   include/components/npc.h
   include/components/owner.h
   include/components/party.h
@@ -178,14 +179,14 @@ SET(SOURCES_PACKETS
     include/packets/srv_quest_data.h
     #  src/packets/srv_dropitem.cpp
     #  include/packets/srv_dropitem.h
-    #  src/packets/srv_mobchar.cpp
-    #  include/packets/srv_mobchar.h
+    src/packets/srv_mob_char.cpp
+    include/packets/srv_mob_char.h
     src/packets/srv_npc_char.cpp
     include/packets/srv_npc_char.h
     #  src/packets/srv_adjustposition.cpp
     #  include/packets/srv_adjustposition.h
-    #  src/packets/srv_teleportreply.cpp
-    #  include/packets/srv_teleportreply.h
+    src/packets/srv_teleport_reply.cpp
+    include/packets/srv_teleport_reply.h
     #  src/packets/srv_setmoney.cpp
     #  include/packets/srv_setmoney.h
     #  src/packets/srv_attack.cpp

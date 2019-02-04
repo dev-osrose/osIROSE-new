@@ -1,4 +1,0 @@
-PAKCS_LOGIN_REQ
-include string
-std::string password 32 &
-std::string username &
