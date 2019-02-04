@@ -33,9 +33,10 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
 
   uint32_t get_session_id() const { return sessionId_; }
  
-  void send(const RoseCommon::CRosePacket& packet);
+  void send(const RoseCommon::CRosePacket& packet, bool force = false);
 
   void set_on_map();
+  void switch_server();
  
   static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
   static RoseCommon::Packet::SrvNpcChar create_srv_npc_char(const EntitySystem&, RoseCommon::Entity);

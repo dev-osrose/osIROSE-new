@@ -35,8 +35,10 @@
 #include "mouse/mouse_cmd.h"
 
 #include "srv_remove_object.h"
+#include "srv_switch_server.h"
 
 #include <algorithm>
+#include <cmath>
 
 void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     {
@@ -243,10 +245,10 @@ void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCo
     });
 }
 
-void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
+void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet, bool force) const {
     if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
-            client->send(packet);
+            client->send(packet, force);
         }
     }
 }
@@ -345,9 +347,22 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
             }
         }
     } else {
-        // we ask the client to reconnect
-        // mark the client as switching (do not delete session in DB)
-        // send PAKCC_SWITCH_SERVER
+        // we update the position to save it
+        pos.x = x;
+        pos.y = y;
+        if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
+        if (auto client = client_ptr->client.lock()) {
+            client->switch_server();
+            auto& config = Core::Config::getInstance();
+            // force send the packet as the client isn't on the map anymore technically
+            send_to(entity, RoseCommon::Packet::SrvSwitchServer::create(
+                config.mapServer().clientPort + map_id,
+                client->get_session_id(),
+                0,
+                config.serverData().ip
+            ), true);
+        }
+    }
     }
 }
 
@@ -640,16 +655,26 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 RoseCommon::Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
     logger->trace("EntitySystem::create_warpgate");
     using namespace Component;
-    entt::prototype prototy(registry);
+    entt::prototype prototype(registry);
 
     auto& warpgate = prototype.set<Warpgate>();
     warpgate.dest_map = dest_map_id;
-    warpgate.min_x = 0;
-    warpgate.min_y = 0;
-    warpgate.min_z = 0;
-    warpgate.max_x = 0;
-    warpgate.max_y = 0;
-    warpgate.max_z = 0;
+    // scale * rotation(axe z) * translation
+    // assume angle in radians
+    const float cos = std::cos(angle);
+    const float sin = std::sin(angle);
+    const float min_x_trans = Warpgate::model_min_x + x;
+    const float min_y_trans = Warpgate::model_min_y + y;
+    const float min_z_trans = Warpgate::model_min_z + z;
+    const float max_x_trans = Warpgate::model_max_x + x;
+    const float max_y_trans = Warpgate::model_max_y + y;
+    const float max_z_trans = Warpgate::model_max_z + z;
+    warpgate.min_x = x_scale * (min_x_trans * cos - min_y_trans * sin);
+    warpgate.min_y = y_scale * (min_y_trans * cos + min_x_trans * sin);
+    warpgate.min_z = z_scale * min_z_trans;
+    warpgate.max_x = x_scale * (max_x_trans * cos - max_y_trans * sin);
+    warpgate.max_y = y_scale * (max_y_trans * cos + max_x_trans * sin);
+    warpgate.max_z = z_scale * max_z_trans;
     // TODO: compute values for warpgate
     
     auto& dest = prototype.set<Destination>();

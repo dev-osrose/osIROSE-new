@@ -107,8 +107,12 @@ void CMapClient::set_on_map() {
     login_state_ = eSTATE::ONMAP;
 }
 
-void CMapClient::send(const RoseCommon::CRosePacket& packet) {
-    if (login_state_ == eSTATE::ONMAP) {
+void CMapClient::switch_server() {
+  login_state_ = eSTATE::SWITCHING;
+}
+
+void CMapClient::send(const RoseCommon::CRosePacket& packet, bool force) {
+    if (login_state_ == eSTATE::ONMAP || force) {
         CRoseClient::send(packet);
     }
 }

@@ -24,14 +24,15 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     const auto& life = entitySystem.get_component<Component::Life>(entity);
     const auto& magic = entitySystem.get_component<Component::Magic>(entity);
     const auto& level = entitySystem.get_component<Component::Level>(entity);
+    // force send the packet as the client isn't technically on the map yet
+    entitySystem.send_to(entity, SrvChangeMapReply::create(
+        basicInfo.id, life.hp, magic.mp, level.xp, level.penaltyXp,
+        entitySystem.get_world_time(), basicInfo.teamId), true); // FIXME: teamId is uint32_t but the packet expects a uint16_t
     if (const auto client_ptr = entitySystem.try_get_component<Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
             client->set_on_map();
         }
     }
-    entitySystem.send_to(entity, SrvChangeMapReply::create(
-        basicInfo.id, life.hp, magic.mp, level.xp, level.penaltyXp,
-        entitySystem.get_world_time(), basicInfo.teamId)); // FIXME: teamId is uint32_t but the packet expects a uint16_t
     Chat::send_whisper(entitySystem, entity, fmt::format("You are client {}", basicInfo.id));
     entitySystem.send_nearby_except_me(entity, CMapClient::create_srv_player_char(entitySystem, entity));
     const auto& nearby_entities = entitySystem.get_nearby(entity);
