@@ -52,8 +52,8 @@ void LuaLoader::load_file(const std::string& path) {
             int mob_count, int limit, int interval, int range,
             int _map_id, float x, float y, float z) {
             if (map_id != _map_id) return;
-            // create the spawner and get the entity
-            //spawners.register_lua(path, env, entity);
+            auto entity = entitySystem.create_spawner(alias, mob_id, mob_count, limit, interval, range, _map_id, x, y, z);
+            spawners.register_lua(path, env, entity);
         });
 
         // revive points
