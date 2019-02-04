@@ -10,6 +10,7 @@
 
 namespace Core {
 
+
 #ifdef ENABLE_MYSQL
 struct Osirose {
     using type = sqlpp::mysql::connection;

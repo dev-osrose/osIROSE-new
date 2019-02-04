@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "cnetwork_asio.h"
 #include "nodeserver.h"
 #include "nodeclient.h"
-#include "nodeisc.h"
 #include "epackettype.h"
 #include "config.h"
 #include "platform_defines.h"
@@ -33,6 +33,9 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   nClient->set_update_time(Core::Time::GetTickCount());
   nClient->set_active(true);
   nClient->start_recv();
+  
+  nClient->set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
+  
   logger_->info("Client connected from: {}", _address.c_str());
-  isc_list_.push_front(std::move(nClient));
+  client_list_.push_front(std::move(nClient));
 }

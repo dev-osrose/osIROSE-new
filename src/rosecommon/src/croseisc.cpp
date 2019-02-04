@@ -21,8 +21,8 @@ CRoseISC::CRoseISC() : CRoseClient() {
 }
 
 CRoseISC::CRoseISC(std::unique_ptr<Core::INetwork> _sock) : CRoseClient(std::move(_sock)) {
-  socket_[SocketType::Client]->registerOnReceived(std::bind(&CRoseISC::onReceived, this, std::placeholders::_1, std::placeholders::_2));
-  socket_[SocketType::Client]->registerOnSend(std::bind(&CRoseISC::onSend, this, std::placeholders::_1));
+  socket_[SocketType::Client]->registerOnReceived(std::bind(&CRoseISC::onReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+  socket_[SocketType::Client]->registerOnSend(std::bind(&CRoseISC::onSend, this, std::placeholders::_1, std::placeholders::_2));
   socket_[SocketType::Client]->registerOnConnected(std::bind(&CRoseISC::onConnected, this));
   socket_[SocketType::Client]->registerOnShutdown(std::bind(&CRoseISC::onShutdown, this));
 
@@ -36,7 +36,7 @@ void CRoseISC::onConnected() {
 
 bool CRoseISC::onShutdown() { return true; }
 
-bool CRoseISC::onReceived(uint16_t& packet_size_, uint8_t* buffer_) {
+bool CRoseISC::onReceived([[maybe_unused]] uint16_t socket_id_, uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;
   if (packet_size_ == 6) {
     packet_size_ = (uint16_t)buffer_[0];
@@ -90,7 +90,7 @@ bool CRoseISC::onReceived(uint16_t& packet_size_, uint8_t* buffer_) {
   return rtnVal;
 }
 
-bool CRoseISC::onSend(uint8_t* _buffer) {
+bool CRoseISC::onSend([[maybe_unused]] uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) {
   // TODO: Encrypt the isc buffer.
   (void)_buffer;
   return true;

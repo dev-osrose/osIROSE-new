@@ -9,6 +9,8 @@
 #include "ccharisc.h"
 #include "cmapisc.h"
 
+#include "connection.h"
+
 using namespace RoseCommon;
 
 TEST(TestFinalServers, TestISCConnections) {

@@ -35,8 +35,8 @@ class Client : public CRoseSocket {
     public:
     Client(std::unique_ptr<Core::INetwork> sock) : CRoseSocket(std::move(sock)) {
         socket_[SocketType::Client]->registerOnConnected(std::bind(&Client::onConnected, this));
-        socket_[SocketType::Client]->registerOnSend(std::bind(&Client::onSend, this, std::placeholders::_1));
-        socket_[SocketType::Client]->registerOnReceived(std::bind(&Client::onReceived, this, std::placeholders::_1, std::placeholders::_2));
+        socket_[SocketType::Client]->registerOnSend(std::bind(&Client::onSend, this, std::placeholders::_1, std::placeholders::_2));
+        socket_[SocketType::Client]->registerOnReceived(std::bind(&Client::onReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     }
     virtual ~Client() = default;
 
@@ -47,20 +47,20 @@ class Client : public CRoseSocket {
             send(packet);
         }
 
-        virtual bool onSend(uint8_t *buffer) {
+        virtual bool onSend(uint16_t socketId, uint8_t *buffer) {
             logger_->trace("Client::OnSend");
             (void)buffer;
 #ifndef DISABLE_CRYPT
-            crypt_.encodeClientPacket(buffer);
+            crypt_[socketId].encodeClientPacket(buffer);
 #endif
             return true;
         }
 
-        virtual bool onReceived(uint16_t& packetSize, uint8_t *buffer) {
+        virtual bool onReceived(uint16_t socketId, uint16_t& packetSize, uint8_t *buffer) {
             logger_->trace("Client::OnReceived");
             if (packetSize == 6) {
 #ifndef DISABLE_CRYPT
-                packetSize = crypt_.decodeServerHeader(reinterpret_cast<unsigned char*>(buffer));
+                packetSize = crypt_[socketId].decodeServerHeader(reinterpret_cast<unsigned char*>(buffer));
 #else
                 packetSize = buffer[0];
 #endif
@@ -74,7 +74,7 @@ class Client : public CRoseSocket {
                     return true;
             }
 #ifndef DISABLE_CRYPT
-            if (!crypt_.decodeServerBody(reinterpret_cast<unsigned char*>(buffer))) {
+            if (!crypt_[socketId].decodeServerBody(reinterpret_cast<unsigned char*>(buffer))) {
                 logger_->debug("Server sent an illegal block");
                 socket_[SocketType::Client]->reset_internal_buffer();
                 return false;

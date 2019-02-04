@@ -16,32 +16,36 @@
 #define _NODECLIENT_H_
 
 #include "croseclient.h"
+#include "srv_accept_reply.h"
 #include "srv_srv_select_reply.h"
+#include "srv_switch_server.h"
+
+#include "cli_accept_req.h"
+#include "cli_login_req.h"
+#include "cli_join_server_req.h"
 
 class NodeClient : public RoseCommon::CRoseClient {
  public:
   NodeClient();
   NodeClient(std::unique_ptr<Core::INetwork> _sock);
+  ~NodeClient();
 
  protected:
+  virtual bool onShutdown();
   virtual bool handlePacket(uint8_t* _buffer) override;
   virtual bool handleServerPacket(uint8_t* _buffer) override;
 
   // Packet Helper Functions
+  bool serverAcceptReply(RoseCommon::Packet::SrvAcceptReply&& P);
   bool serverSelectReply(RoseCommon::Packet::SrvSrvSelectReply&& P);
+  bool serverSwitchServer(RoseCommon::Packet::SrvSwitchServer&& P);
+  
+  bool clientAcceptReq(RoseCommon::Packet::CliAcceptReq&& P);
+  bool clientLoginReq(RoseCommon::Packet::CliLoginReq&& P);
+  bool clientJoinServerReq(RoseCommon::Packet::CliJoinServerReq&& P);
 
-  enum class eSTATE {
-    DEFAULT,
-    LOGGEDIN,
-    TRANSFERING,
-  };
-
-  uint16_t access_rights_;
-  std::string username_;
-  eSTATE login_state_;
-  uint32_t userid_;
   uint32_t session_id_;
-  CRoseSocket server_connection_;
+  std::unique_ptr<RoseCommon::CRosePacket> buffered_packet_;
 };
 
 #endif

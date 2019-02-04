@@ -72,7 +72,8 @@ class Config {
   };
   struct ServerData {
     uint32_t id = 0;
-    std::string ip = "127.0.0.1";
+    std::string externalIp = "127.0.0.1";
+    std::string listenIp = "127.0.0.1";
     std::string iscListenIp = "127.0.0.1";
     std::string autoConfigureUrl = "http://ipv4.myexternalip.com/raw";
 #ifndef _WIN32
@@ -118,12 +119,18 @@ class Config {
     std::string luaScript = "scripts/root.lua";
     uint8_t logLevel = 2;
   };
+  struct NodeServer {
+    std::string loginIp = "127.0.0.1";
+    uint16_t loginPort = 29000;
+    uint8_t logLevel = 2;
+  };
   struct Configuration {
     Database database;
     ServerData serverData;
     LoginServer loginServer;
     CharServer charServer;
     MapServer mapServer;
+    NodeServer nodeServer;
   };
 
  private:
@@ -135,16 +142,18 @@ class Config {
   LoginServer& loginServer() { return config_.loginServer; }
   CharServer& charServer() { return config_.charServer; }
   MapServer& mapServer() { return config_.mapServer; }
+  NodeServer& nodeServer() { return config_.nodeServer; }
 
 };
 
 }
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
-VISITABLE_STRUCT(Core::Config::ServerData, id, ip, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
+VISITABLE_STRUCT(Core::Config::ServerData, id, externalIp, listenIp, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, instantCharDelete, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);
-VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer);
+VISITABLE_STRUCT(Core::Config::NodeServer, loginIp, loginPort, logLevel);
+VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer, nodeServer);
 
 #endif /* !_CONFIG_H_ */

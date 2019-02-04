@@ -108,6 +108,11 @@ if (WITH_MYSQL)
   target_link_libraries(${PROJECT} SQLPP11::SQLPP11_MYSQL)
 endif()
 
+add_dependencies(${PROJECT} sqlite3::sqlite3)
+target_link_libraries(${PROJECT} sqlite3::sqlite3)
+add_dependencies(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+
 set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
 if (COMMAND cotire)
   cotire(${PROJECT})

@@ -13,6 +13,7 @@ ExternalProject_Get_Property(
   install_dir
 )
 
+set(SQLPP11_EXE_PATH "${install_dir}/bin/sqlpp11-ddl2cpp")
 set(SQLPP11_INCLUDE_DIR "${install_dir}/include")
 if(NOT TARGET SQLPP11::SQLPP11)
   add_library(SQLPP11::SQLPP11 INTERFACE IMPORTED)

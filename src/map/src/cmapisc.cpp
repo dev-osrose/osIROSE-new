@@ -106,7 +106,7 @@ void CMapISC::onConnected() {
   }
   {
     auto packet = Packet::IscServerRegister::create(
-        RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().ip,
+        RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().externalIp,
         config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
   
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),

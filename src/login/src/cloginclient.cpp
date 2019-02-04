@@ -103,6 +103,8 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
 
   username_ = Core::escapeData(P.get_username());
   std::string clientpass = Core::escapeData(P.get_password());
+  
+  set_name(username_);
 
   logger_->debug("Client sent '{}' as the password", clientpass);
 

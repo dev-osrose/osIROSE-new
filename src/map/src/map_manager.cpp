@@ -21,7 +21,7 @@ MapManager::MapManager(std::vector<uint16_t> maps):
 
     for (uint16_t id : maps) {
         auto map = std::make_unique<CMapServer>(false, id, &isc_server_);
-        map->init(config.serverData().ip, config.mapServer().clientPort + id);
+        map->init(config.serverData().listenIp, config.mapServer().clientPort + id);
         map->listen();
         CMapServer* map_ptr = map.get();
         maps_.emplace_back(std::pair([this, map = std::move(map)] () {

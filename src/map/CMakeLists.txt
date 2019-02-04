@@ -60,7 +60,6 @@ if(WITH_MYSQL)
   target_link_libraries(${PROJECT} mysql::mysql)
 endif()
 
-
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
   target_link_libraries(${PROJECT} wsock32.lib)

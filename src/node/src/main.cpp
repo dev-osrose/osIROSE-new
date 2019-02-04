@@ -13,17 +13,17 @@
 
 #include <curl/curl.h>
 #include <cxxopts.hpp>
+#include <chrono>
+
 #include "crash_report.h"
 #include "nodeserver.h"
+#include "nodesessions.h"
 #include "config.h"
 #include "logconsole.h"
 #include "version.h"
 #include "network_thread_pool.h"
 
 #include "connection.h"
-#include "mysqlconnection.h"
-
-#include <chrono>
 
 namespace {
 void DisplayTitle()
@@ -141,6 +141,8 @@ void ParseCommandLine(int argc, char** argv)
     ;
     
     options.add_options("Networking")
+    ("external_ip", "external IP Address", cxxopts::value<std::string>()
+      ->default_value("127.0.0.1"), "IP")
     ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
       ->default_value("0.0.0.0"), "IP")
     ("client_port", "Client listen port", cxxopts::value<int>()
@@ -183,9 +185,12 @@ void ParseCommandLine(int argc, char** argv)
     // Since this is a login server startup function we can get away with a little bit of overhead
     if( options.count("log_level") )
       config.loginServer().logLevel = options["log_level"].as<int>();
+      
+    if( options.count("external_ip") )
+      config.serverData().externalIp = options["external_ip"].as<std::string>();
 
     if( options.count("client_ip") )
-      config.serverData().ip = options["client_ip"].as<std::string>();
+      config.serverData().listenIp = options["client_ip"].as<std::string>();
 
     if( options.count("client_port") )
       config.loginServer().clientPort = options["client_port"].as<int>();
@@ -241,38 +246,61 @@ int main(int argc, char* argv[]) {
     if(auto log = console.lock())
       log->info( "Starting up server..." );
 
-    Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
+    Core::CLog::SetLevel((spdlog::level::level_enum)config.nodeServer().logLevel);
     DisplayTitle();
     CheckUser();
 
     if(auto log = console.lock()) {
-      log->set_level((spdlog::level::level_enum)config.loginServer().logLevel);
+      log->set_level((spdlog::level::level_enum)config.nodeServer().logLevel);
       log->trace("Trace logs are enabled.");
       log->debug("Debug logs are enabled.");
     }
 
     Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
-    std::string ip_addr = config.serverData().ip;
     if( true == config.serverData().autoConfigureAddress )
     {
-      ip_addr = get_current_net_address();
+      std::string ip_addr = get_current_net_address();
       ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
       if(auto log = console.lock()) {
-        log->info( "IP address is \"{}\"", ip_addr );
+        log->info( "Overriding external ip address to \"{}\"", ip_addr );
       }
+      config.serverData().externalIp = ip_addr;
+    }
+    
+    sqlpp::sqlite3::connection_config db_config;
+    db_config.path_to_database = ":memory:";
+    db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
+    db_config.debug = true;
+    
+    connectionPoolMem.addConnector<NodeDB>([&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
+    {
+      auto conn = connectionPoolMem.getConnection<NodeDB>();
+      NodeSessionsTable table{};
+      conn->execute(R"(CREATE TABLE sessions (
+  		  id int(10) NOT NULL,
+  		  name varchar(64) DEFAULT NULL,
+        state int(2) NOT NULL DEFAULT 0,
+        charip varchar(20) DEFAULT NULL,
+        charport int(20) DEFAULT NULL,
+        worldip varchar(20) DEFAULT NULL,
+        worldport int(20) DEFAULT NULL
+  		))");
+  		
+  		// Clear the table everything
+  		conn(remove_from(table).unconditionally());
     }
 
     NodeServer loginServer;
     NodeServer charServer;
     NodeServer mapServer;
 
-    loginServer.init(ip_addr, config.loginServer().clientPort);
+    loginServer.init(config.serverData().listenIp, config.loginServer().clientPort);
     loginServer.listen();
 
-    charServer.init(ip_addr, config.charServer().clientPort);
+    charServer.init(config.serverData().listenIp, config.charServer().clientPort);
     charServer.listen();
 
-    mapServer.init(ip_addr, config.mapServer().clientPort);
+    mapServer.init(config.serverData().listenIp, config.mapServer().clientPort);
     mapServer.listen();
 
     while (loginServer.is_active()) {
