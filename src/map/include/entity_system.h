@@ -45,6 +45,7 @@ class EntitySystem {
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
+        RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale);
 
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;

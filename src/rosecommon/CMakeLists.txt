@@ -47,6 +47,7 @@ set( SOURCES_HEADER
   include/components/stats.h
   include/components/status_effects.h
   include/components/target.h
+  include/components/warpgate.h
   include/components/wishlist.h
 )
 

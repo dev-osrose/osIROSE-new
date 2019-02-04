@@ -29,8 +29,8 @@ void LuaLoader::load_file(const std::string& path) {
             int _map_id, float x, float y, float z, float angle,
             float x_scale, float y_scale, float z_scale) {
             if (map_id != _map_id) return; // we skip anything that isn't needed
-            // create the warp and get the entity
-            //warps.register_lua(path, env, entity);
+            auto entity = entitySystem.create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, x, y, z, angle, x_scale, y_scale, z_scale);
+            warps.register_lua(path, env, entity);
         });
 
         // npc positioning

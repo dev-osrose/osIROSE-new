@@ -27,6 +27,7 @@
 #include "components/status_effects.h"
 #include "components/target.h"
 #include "components/wishlist.h"
+#include "components/warpgate.h"
 
 #include "chat/normal_chat.h"
 #include "chat/whisper_chat.h"
@@ -266,8 +267,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
         entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
         entitySystem.idManager.release_id(basicInfo.id);
         entitySystem.id_to_entity.erase(basicInfo.id);
-        basicInfo.id = 0;
-        entitySystem.registry.destroy(entity);
+        basicInfo.id = 0; entitySystem.registry.destroy(entity);
     });
 }
 
@@ -289,6 +289,20 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     pos->x = x;
     pos->y = y;
     nearby.update_position(entity, old_x, old_y, x, y);
+
+    // check for warpgates
+    registry.view<Component::Warpgate, Component::Destination>().each([this, pos](auto entity, auto& warpgate, auto& destination) {
+        if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
+            return;
+        }
+        float x = destination.x;
+        float y = destination.y;
+        uint16_t map = warpgate.dest_map;
+        add_task([entity, x, y, map](EntitySystem& self) {
+            self.teleport_entity(entity, x, y, map);
+        });
+    });
+
     if (is_added) {
         return;
     }
@@ -619,6 +633,29 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& npc = prototype.set<Npc>();
     npc.id = npc_id;
     npc.quest = quest_id;
+
+    return prototype();
+}
+
+RoseCommon::Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
+    logger->trace("EntitySystem::create_warpgate");
+    using namespace Component;
+    entt::prototype prototy(registry);
+
+    auto& warpgate = prototype.set<Warpgate>();
+    warpgate.dest_map = dest_map_id;
+    warpgate.min_x = 0;
+    warpgate.min_y = 0;
+    warpgate.min_z = 0;
+    warpgate.max_x = 0;
+    warpgate.max_y = 0;
+    warpgate.max_z = 0;
+    // TODO: compute values for warpgate
+    
+    auto& dest = prototype.set<Destination>();
+    dest.x = dest_x;
+    dest.y = dest_y;
+    dest.z = dest_z;
 
     return prototype();
 }
