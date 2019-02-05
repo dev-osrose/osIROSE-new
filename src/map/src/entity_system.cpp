@@ -352,7 +352,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     for (const auto other : to_remove) {
         send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
         if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
-            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic.id));
+            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
         }
     }
     for (const auto other : to_add) {
