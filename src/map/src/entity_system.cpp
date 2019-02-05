@@ -513,11 +513,11 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     level.penaltyXp = charRow.penaltyExp;
 
     auto& life = prototype.set<Life>();
-    life.hp = charRow.maxHp / 3; // you only get 30% of your health when login in
+    life.hp = charRow.current_hp <= 0 ? charRow.maxHp / 3 : charRow.current_hp;
     life.maxHp = charRow.maxHp;
 
     auto& magic = prototype.set<Magic>();
-    magic.mp = charRow.maxMp / 3;
+    magic.mp = charRow.current_mp <= 0 ? charRow.maxMp / 3 : charRow.current_mp;
     magic.maxMp = charRow.maxMp;
 
     auto& pos = prototype.set<Position>();
