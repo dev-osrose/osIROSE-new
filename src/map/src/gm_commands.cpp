@@ -76,7 +76,7 @@ void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int,
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /tp <map_id> <x> <y> [client_id]");
         return;
     }
-    entitySystem.teleport_entity(entity, parser.get_arg<0>(), parser.get_arg<1>(), parser.get_arg<2>());
+    entitySystem.teleport_entity(entity, parser.get_arg<1>(), parser.get_arg<2>(), parser.get_arg<0>());
 }
 
 void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
