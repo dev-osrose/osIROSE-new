@@ -88,7 +88,7 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
 
 if(NOT LUA_FOUND)
-  add_dependencies(${PROJECT} lua)
+  add_dependencies(${PROJECT} lua::lua)
 endif()
 
 if(NOT CURL_FOUND)
