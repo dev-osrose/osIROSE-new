@@ -129,7 +129,7 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=tests BUILD_TYPE=Debug
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
@@ -157,7 +157,7 @@ jobs:
     - <<: *gccinit
       stage: compile
       if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Release
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=tests BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
       before_script:
