@@ -49,7 +49,7 @@ class Parser {
         template <typename T>
         static bool parse(std::stringstream& ss, std::optional<T>& h) {
             T tmp;
-            const bool has_data = ss >> tmp;
+            const bool has_data = static_cast<bool>(ss >> tmp);
             if (has_data) {
                 h = tmp;
             }
