@@ -705,23 +705,18 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias, int dest_map
 
     auto& warpgate = prototype.set<Warpgate>();
     warpgate.dest_map = dest_map_id;
-    // scale * rotation(axe z) * translation
-    // assume angle in radians
-    const float cos = std::cos(angle);
-    const float sin = std::sin(angle);
-    const float min_x_trans = Warpgate::model_min_x + x * 100;
-    const float min_y_trans = Warpgate::model_min_y + y * 100;
-    const float min_z_trans = Warpgate::model_min_z + z * 100;
-    const float max_x_trans = Warpgate::model_max_x + x * 100;
-    const float max_y_trans = Warpgate::model_max_y + y * 100;
-    const float max_z_trans = Warpgate::model_max_z + z * 100;
-    warpgate.min_x = x_scale * (min_x_trans * cos - min_y_trans * sin);
-    warpgate.min_y = y_scale * (min_y_trans * cos + min_x_trans * sin);
-    warpgate.min_z = z_scale * min_z_trans;
-    warpgate.max_x = x_scale * (max_x_trans * cos - max_y_trans * sin);
-    warpgate.max_y = y_scale * (max_y_trans * cos + max_x_trans * sin);
-    warpgate.max_z = z_scale * max_z_trans;
-    // TODO: compute values for warpgate
+    // rot (axis -y) * trans * scale
+    // angle in radians
+    const float w = std::cos(angle / 2.f);
+    x *= 100;
+    y *= 100;
+    z *= 100;
+    warpgate.min_x = x - Warpgate::model_min_x * x_scale - 2.f * w * z_scale * Warpgate::model_min_z;
+    warpgate.min_y = y + y_scale * Warpgate::model_min_y;
+    warpgate.min_z = z + 2 * w * x_scale * Warpgate::model_min_x - z_scale * Warpgate::model_min_z;
+    warpgate.max_x = x - Warpgate::model_max_x * x_scale - 2.f * w * z_scale * Warpgate::model_max_z;
+    warpgate.max_y = y + y_scale * Warpgate::model_max_y;
+    warpgate.max_z = z + 2 * w * x_scale * Warpgate::model_max_x - z_scale * Warpgate::model_max_z;
     
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;
