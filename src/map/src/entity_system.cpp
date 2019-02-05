@@ -781,7 +781,7 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto& basic_info = prototype.set<BasicInfo>();
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
-    basic_info.teamId = basic_info.id;
+    basic_info.teamId = -1;
 
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
