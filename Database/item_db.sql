@@ -1,6 +1,5 @@
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(1, "Flu Mask", "Medical mask with an “x” mark on it that protects its wearer from contagious airborne diseases.", 1, 111, 850, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -44,7 +43,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(2, "Black Mask", "A black mask that covers half of the face.", 1, 111, 950, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -90,7 +88,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(3, "ButterFly Mask", "A splendid mask that seems to be worn in masquerades.", 1, 111, 1000, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -134,7 +131,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(4, "Zorro Mask", "A mask that served as the symbol of a chivalrous thief. Its wearer is compelled to perform acts of righteousness.", 1, 111, 1100, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -180,7 +176,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(5, "Persian Mask ", "A silken mask that evokes a mysterious feeling.", 1, 111, 1100, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -224,7 +219,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(6, "Wicked Mask", "You can't trust the intentions of anyone who wears this mask…", 1, 111, 1250, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -270,7 +264,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(7, "Jolly Front Mask", "An innocuously dopey mask that conceals your true intentions once you put it on.", 1, 111, 1350, 10, 3, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -314,7 +307,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(8, "Iron Mask", "Iron mask that covers half of the face when worn.", 1, 111, 1400, 10, 10, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -360,7 +352,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(9, "Totem Mask", "A mask that is the standard for use in totem ceremonies.", 1, 111, 1550, 10, 5, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -404,7 +395,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(10, "Goblin Mask", "A mask modeled after the faces of the members of the Goblin race.", 1, 111, 1550, 10, 7, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -450,7 +440,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(11, "Ashura Mask", "A mask of a face that is half man and half woman.", 1, 111, 1700, 10, 5, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -494,7 +483,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(12, "Orc Mask", "A mask modeled after the faces of the members of the Orc race.", 1, 111, 1850, 0, 0, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -544,7 +532,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -597,7 +584,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(14, "Mask of Truth", "A mask that projects an honest heart.", 1, 111, 2050, 0, 0, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -641,7 +627,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(15, "Mask of Venus", "A mask of Venus' cold facial expression.", 1, 111, 2100, 0, 0, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -687,7 +672,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(16, "Demon Mask", "A grim faced mask that will scare a child so much, he won't even think of crying.", 1, 111, 2250, 0, 0, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -731,7 +715,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(31, "Glasses Frame", "A glasses frame without any lenses.", 1, 112, 1000, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -777,7 +760,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(32, "Dork Glasses", "A pair of thick glasses usually worn by diligent students.", 1, 112, 1100, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -821,7 +803,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(33, "Thick Framed Glasses", "A pair of square framed glasses.", 1, 112, 1150, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -867,7 +848,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(34, "Sunglasses", "A pair of glasses with darkly tinted lenses that protect the eyes from strong sunlight.", 1, 112, 1250, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -911,7 +891,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(35, "Charming Sunglasses", "A pair of charming glasses with darkly tinted lenses that protect the eyes from strong sunlight.", 1, 112, 1300, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -957,7 +936,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(36, "Swimming Goggles", "A pair of goggles which helps its wearer to see better while underwater.", 1, 112, 1300, 10, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -1001,7 +979,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(38, "Cart Goggles", "A pair of goggles usually worn while driving a Cart.", 1, 112, 1600, 10, 3, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1047,7 +1024,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(62, "Pierrot Nose", "A funny looking red nose that is usually worn by clowns.", 1, 113, 800, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -1092,7 +1068,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(64, "Pinocchio Nose ", "A wooden nose that grows when its wearer lies.", 1, 113, 950, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -1136,7 +1111,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(73, "Santa Beard", "Jolly and cheery facial hair. It's annoying to wear it while you're eating.", 1, 113, 1700, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1216,7 +1190,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(151, "Scream Mask", "A dreadful mask that actually appeared in a popular horror movie.", 1, 111, 1000, 1, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 10
@@ -1260,7 +1233,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(152, "Nomadic Mask", "Mask usually worn by villains during their entrance in the movies.", 1, 111, 1000, 1, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1306,7 +1278,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(153, "Mummy Face", "Frighten your enemies by wrapping your face in bandages like a mummy.", 1, 111, 1000, 1, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 12
@@ -1350,7 +1321,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(156, "Jason Mask", "A hockey mask very much like the one worn by Jason in the Friday the 13th films.", 1, 111, 350, 1, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1396,7 +1366,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(157, "Scream Mask", "A dreadful mask that actually appeared in a popular horror movie.", 1, 111, 350, 1, 2, 0, 0, 0, 0, 0, 247, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 15
@@ -1440,7 +1409,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(161, "Star Glasses", "Lovely glasses with a star shaped frame.", 1, 112, 1000, 1, 3, 0, 0, 0, 0, 0, 247, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1486,7 +1454,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(162, "Matrix Eye", "Fashionable glasses worn by the man who disappeared while investigating the truth of what's really controlling the Visitors.", 1, 112, 1000, 1, 3, 0, 0, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -1530,7 +1497,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(171, "Rat Tail Mustache", "A false mustache that is known as a mouse's tail. Wearing it brings you a step closer to true elegance.", 1, 113, 1000, 1, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -1576,7 +1542,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(172, "Oro's Present", "A helmet made of gold whose function is mainly ceremonial.", 1, 113, 1000, 1, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -1620,7 +1585,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(181, "Junon Mask", "A gift from the Junon Order. (Quest Reward)", 1, 111, 1000, 10, 1, 0, 0, 0, 0, 0, 247, "use_restriction = 2
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -2051,7 +2015,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2105,7 +2068,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2159,7 +2121,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2213,7 +2174,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2267,7 +2227,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2321,7 +2280,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2375,7 +2333,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -2773,7 +2730,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 30
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -2827,7 +2783,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -2881,7 +2836,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -2935,7 +2889,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -2989,7 +2942,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -3043,7 +2995,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -4120,7 +4071,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -4174,7 +4124,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -4228,7 +4177,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -4311,7 +4259,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(201, "False Scalp", "A cap which makes its wearer look… bald?", 2, 124, 2850, 0, 3, 0, 4, 0, 0, 0, 247, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -4432,7 +4379,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 14
 reqTable[1].value = 30
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 13
@@ -4486,7 +4432,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 2
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4543,7 +4488,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4600,7 +4544,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4657,7 +4600,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4714,7 +4656,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4771,7 +4712,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4828,7 +4768,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4885,7 +4824,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4942,7 +4880,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -4999,7 +4936,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5056,7 +4992,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5113,7 +5048,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5170,7 +5104,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5227,7 +5160,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5284,7 +5216,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -5341,7 +5272,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5398,7 +5328,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5455,7 +5384,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5512,7 +5440,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5569,7 +5496,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5626,7 +5552,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5683,7 +5608,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5740,7 +5664,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5797,7 +5720,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5854,7 +5776,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5911,7 +5832,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -5968,7 +5888,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6025,7 +5944,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6082,7 +6000,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6139,7 +6056,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6196,7 +6112,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6253,7 +6168,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6310,7 +6224,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6367,7 +6280,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6424,7 +6336,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6481,7 +6392,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6538,7 +6448,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6595,7 +6504,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6652,7 +6560,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -6709,7 +6616,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -6766,7 +6672,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -6823,7 +6728,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -6880,7 +6784,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -6937,7 +6840,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -6994,7 +6896,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7051,7 +6952,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7108,7 +7008,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7165,7 +7064,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7222,7 +7120,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7279,7 +7176,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7336,7 +7232,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7393,7 +7288,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7447,7 +7341,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7504,7 +7397,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7561,7 +7453,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7618,7 +7509,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7675,7 +7565,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7732,7 +7621,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7789,7 +7677,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7843,7 +7730,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7900,7 +7786,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -7957,7 +7842,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8014,7 +7898,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8071,7 +7954,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8128,7 +8010,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8185,7 +8066,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8239,7 +8119,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8296,7 +8175,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8353,7 +8231,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8410,7 +8287,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8467,7 +8343,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8524,7 +8399,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8581,7 +8455,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8635,7 +8508,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8692,7 +8564,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8749,7 +8620,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8806,7 +8676,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8863,7 +8732,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8920,7 +8788,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -8977,7 +8844,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9031,7 +8897,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9088,7 +8953,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9145,7 +9009,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9202,7 +9065,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9259,7 +9121,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9316,7 +9177,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9373,7 +9233,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9427,7 +9286,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -9484,7 +9342,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -9541,7 +9398,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -9598,7 +9454,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9655,7 +9510,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9712,7 +9566,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9769,7 +9622,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9826,7 +9678,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9883,7 +9734,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -9940,7 +9790,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -9997,7 +9846,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10054,7 +9902,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10111,7 +9958,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10168,7 +10014,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10225,7 +10070,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10282,7 +10126,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10336,7 +10179,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10393,7 +10235,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10450,7 +10291,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10507,7 +10347,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10564,7 +10403,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10621,7 +10459,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10678,7 +10515,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10732,7 +10568,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10789,7 +10624,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10846,7 +10680,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10903,7 +10736,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -10960,7 +10792,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11017,7 +10848,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11074,7 +10904,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11128,7 +10957,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11185,7 +11013,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11242,7 +11069,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11299,7 +11125,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11356,7 +11181,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11413,7 +11237,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11470,7 +11293,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11524,7 +11346,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11581,7 +11402,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11638,7 +11458,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11695,7 +11514,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11752,7 +11570,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11809,7 +11626,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11866,7 +11682,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11920,7 +11735,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -11977,7 +11791,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12034,7 +11847,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12091,7 +11903,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12148,7 +11959,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12205,7 +12015,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12262,7 +12071,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -12316,7 +12124,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -12373,7 +12180,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -12430,7 +12236,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -12487,7 +12292,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12544,7 +12348,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12601,7 +12404,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12658,7 +12460,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12715,7 +12516,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12772,7 +12572,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12829,7 +12628,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12886,7 +12684,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -12943,7 +12740,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13000,7 +12796,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13057,7 +12852,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13114,7 +12908,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13171,7 +12964,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13225,7 +13017,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13282,7 +13073,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13339,7 +13129,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13396,7 +13185,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13453,7 +13241,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13510,7 +13297,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13567,7 +13353,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13621,7 +13406,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13678,7 +13462,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13735,7 +13518,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13792,7 +13574,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13849,7 +13630,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13906,7 +13686,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -13963,7 +13742,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14017,7 +13795,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14074,7 +13851,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14131,7 +13907,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14188,7 +13963,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14245,7 +14019,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14302,7 +14075,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14359,7 +14131,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14413,7 +14184,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14470,7 +14240,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14527,7 +14296,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14584,7 +14352,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14641,7 +14408,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14698,7 +14464,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14755,7 +14520,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14809,7 +14573,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14866,7 +14629,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14923,7 +14685,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -14980,7 +14741,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15037,7 +14797,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15094,7 +14853,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15151,7 +14909,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15205,7 +14962,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -15262,7 +15018,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -15319,7 +15074,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -15376,7 +15130,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15433,7 +15186,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15490,7 +15242,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15547,7 +15298,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15604,7 +15354,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15661,7 +15410,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15718,7 +15466,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15775,7 +15522,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15832,7 +15578,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15889,7 +15634,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -15946,7 +15690,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16003,7 +15746,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16060,7 +15802,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16114,7 +15855,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16171,7 +15911,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16228,7 +15967,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16285,7 +16023,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16342,7 +16079,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16399,7 +16135,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16456,7 +16191,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16510,7 +16244,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16567,7 +16300,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16624,7 +16356,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16681,7 +16412,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16738,7 +16468,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16795,7 +16524,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16852,7 +16580,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16906,7 +16633,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -16963,7 +16689,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17020,7 +16745,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17077,7 +16801,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17134,7 +16857,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17191,7 +16913,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17248,7 +16969,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17302,7 +17022,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17359,7 +17078,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17416,7 +17134,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17473,7 +17190,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17530,7 +17246,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17587,7 +17302,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17644,7 +17358,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17698,7 +17411,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17755,7 +17467,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17812,7 +17523,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17869,7 +17579,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17926,7 +17635,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -17983,7 +17691,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -18040,7 +17747,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -18094,7 +17800,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -18151,7 +17856,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -18208,7 +17912,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -18261,7 +17964,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(801, "Panda Hat", "A cute and pretty Panda hat. It makes a nice present, but it's nicer to keep to yourself.", 2, 123, 1000, 0, 3, 0, 5, 0, 0, 0, 243, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -18305,7 +18007,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(802, "Bug Hat", "It looks like the head of a little bug. Once you wear it, it makes you feel thirsty somehow…", 2, 123, 1000, 0, 3, 0, 5, 0, 0, 0, 243, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -18351,7 +18052,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(803, "Lion Hat", "A symbol of valor that makes monsters fear you when you wear it.", 2, 123, 1000, 0, 3, 0, 5, 0, 0, 0, 243, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -18395,7 +18095,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(804, "Cat Hat", "It's a hat made in the form of a sweet little kitty.", 2, 123, 1000, 0, 3, 0, 5, 0, 0, 0, 243, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -18441,7 +18140,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(811, "Junon Native Headdress", "A hat worn by the ancient natives of Junon Planet.", 2, 124, 1000, 0, 1, 0, 2, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -18486,7 +18184,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(812, "Red Chicken Hat", "A hat formed in the image of a wild, red chicken.", 2, 124, 1000, 0, 1, 0, 2, 0, 0, 0, 247, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -18530,7 +18227,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(813, "Lizard Hat", "It is said that if you tame a small lizard, it will become obedient enough to rest on your head.", 2, 124, 1000, 0, 1, 0, 2, 0, 0, 0, 247, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -19097,7 +18793,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19151,7 +18846,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19205,7 +18899,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19259,7 +18952,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19313,7 +19005,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19367,7 +19058,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19421,7 +19111,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -19810,7 +19499,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -19864,7 +19552,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 30
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -19918,7 +19605,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -19972,7 +19658,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -20026,7 +19711,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -20080,7 +19764,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -20134,7 +19817,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -20790,7 +20472,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -20847,7 +20528,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -20901,7 +20581,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -21127,7 +20806,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -21215,7 +20893,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 2
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21272,7 +20949,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21329,7 +21005,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21386,7 +21061,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21443,7 +21117,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21500,7 +21173,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21557,7 +21229,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21614,7 +21285,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21671,7 +21341,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21728,7 +21397,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21785,7 +21453,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21842,7 +21509,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21899,7 +21565,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -21956,7 +21621,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -22013,7 +21677,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -22070,7 +21733,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22127,7 +21789,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22184,7 +21845,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22241,7 +21901,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22298,7 +21957,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22355,7 +22013,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22412,7 +22069,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22469,7 +22125,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22526,7 +22181,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22583,7 +22237,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22640,7 +22293,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22697,7 +22349,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22754,7 +22405,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22811,7 +22461,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22868,7 +22517,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22925,7 +22573,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -22982,7 +22629,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23039,7 +22685,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23096,7 +22741,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23153,7 +22797,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23210,7 +22853,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23267,7 +22909,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23324,7 +22965,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23381,7 +23021,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -23438,7 +23077,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23495,7 +23133,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23552,7 +23189,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23609,7 +23245,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 3
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23666,7 +23301,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23723,7 +23357,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23780,7 +23413,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23837,7 +23469,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23894,7 +23525,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -23951,7 +23581,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24008,7 +23637,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24065,7 +23693,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24122,7 +23749,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24179,7 +23805,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24236,7 +23861,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24293,7 +23917,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24350,7 +23973,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24407,7 +24029,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24464,7 +24085,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24521,7 +24141,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24578,7 +24197,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24635,7 +24253,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24692,7 +24309,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24749,7 +24365,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24806,7 +24421,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24863,7 +24477,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24917,7 +24530,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -24974,7 +24586,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25031,7 +24642,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25088,7 +24698,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25145,7 +24754,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25202,7 +24810,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25259,7 +24866,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25313,7 +24919,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25370,7 +24975,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25427,7 +25031,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25484,7 +25087,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25541,7 +25143,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25598,7 +25199,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25655,7 +25255,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25709,7 +25308,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25766,7 +25364,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25823,7 +25420,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25880,7 +25476,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25937,7 +25532,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -25994,7 +25588,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26051,7 +25644,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26105,7 +25697,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26162,7 +25753,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26219,7 +25809,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26276,7 +25865,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26333,7 +25921,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26390,7 +25977,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26447,7 +26033,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26501,7 +26086,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26558,7 +26142,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26615,7 +26198,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26672,7 +26254,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26729,7 +26310,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26786,7 +26366,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26843,7 +26422,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -26897,7 +26475,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -26954,7 +26531,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -27011,7 +26587,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -27068,7 +26643,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27125,7 +26699,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27182,7 +26755,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27239,7 +26811,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27296,7 +26867,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27353,7 +26923,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27410,7 +26979,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27467,7 +27035,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27524,7 +27091,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27581,7 +27147,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27638,7 +27203,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27695,7 +27259,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27752,7 +27315,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27806,7 +27368,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27863,7 +27424,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27920,7 +27480,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -27977,7 +27536,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28034,7 +27592,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28091,7 +27648,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28148,7 +27704,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28202,7 +27757,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28259,7 +27813,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28316,7 +27869,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28373,7 +27925,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28430,7 +27981,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28487,7 +28037,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28544,7 +28093,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28598,7 +28146,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28655,7 +28202,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28712,7 +28258,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28769,7 +28314,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28826,7 +28370,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28883,7 +28426,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28940,7 +28482,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -28994,7 +28535,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29051,7 +28591,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29108,7 +28647,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29165,7 +28703,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29222,7 +28759,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29279,7 +28815,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29336,7 +28871,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29390,7 +28924,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29447,7 +28980,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29504,7 +29036,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29561,7 +29092,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29618,7 +29148,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29675,7 +29204,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29732,7 +29260,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -29786,7 +29313,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -29843,7 +29369,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -29900,7 +29425,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -29957,7 +29481,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30014,7 +29537,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30071,7 +29593,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30128,7 +29649,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30185,7 +29705,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30242,7 +29761,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30299,7 +29817,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30356,7 +29873,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30413,7 +29929,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30470,7 +29985,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30527,7 +30041,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30584,7 +30097,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30641,7 +30153,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30695,7 +30206,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30752,7 +30262,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30809,7 +30318,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30866,7 +30374,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30923,7 +30430,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -30980,7 +30486,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31037,7 +30542,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31091,7 +30595,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31148,7 +30651,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31205,7 +30707,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31262,7 +30763,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31319,7 +30819,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31376,7 +30875,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31433,7 +30931,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31487,7 +30984,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31544,7 +31040,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31601,7 +31096,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31658,7 +31152,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31715,7 +31208,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31772,7 +31264,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31829,7 +31320,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31883,7 +31373,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31940,7 +31429,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -31997,7 +31485,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32054,7 +31541,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32111,7 +31597,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32168,7 +31653,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32225,7 +31709,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32279,7 +31762,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32336,7 +31818,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32393,7 +31874,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32450,7 +31930,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32507,7 +31986,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32564,7 +32042,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32621,7 +32098,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32675,7 +32151,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -32732,7 +32207,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -32789,7 +32263,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -32846,7 +32319,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32903,7 +32375,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -32960,7 +32431,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33017,7 +32487,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33074,7 +32543,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33131,7 +32599,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33188,7 +32655,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33245,7 +32711,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33302,7 +32767,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33359,7 +32823,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33416,7 +32879,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33473,7 +32935,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33530,7 +32991,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33584,7 +33044,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33641,7 +33100,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33698,7 +33156,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33755,7 +33212,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33812,7 +33268,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33869,7 +33324,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33926,7 +33380,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -33980,7 +33433,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34037,7 +33489,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34094,7 +33545,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34151,7 +33601,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34208,7 +33657,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34265,7 +33713,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34322,7 +33769,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34376,7 +33822,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34433,7 +33878,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34490,7 +33934,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34547,7 +33990,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34604,7 +34046,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34661,7 +34102,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34718,7 +34158,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34772,7 +34211,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34829,7 +34267,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34886,7 +34323,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -34943,7 +34379,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35000,7 +34435,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35057,7 +34491,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35114,7 +34547,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35168,7 +34600,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35225,7 +34656,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35282,7 +34712,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35339,7 +34768,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35396,7 +34824,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35453,7 +34880,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35510,7 +34936,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -35564,7 +34989,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -35621,7 +35045,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -35678,7 +35101,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -36113,7 +35535,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36167,7 +35588,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36221,7 +35641,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36275,7 +35694,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36329,7 +35747,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36383,7 +35800,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -36437,7 +35853,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -37738,7 +37153,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -37795,7 +37209,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -37852,7 +37265,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -37943,7 +37355,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 2
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38000,7 +37411,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38057,7 +37467,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38114,7 +37523,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38171,7 +37579,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38228,7 +37635,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38285,7 +37691,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38342,7 +37747,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38399,7 +37803,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38456,7 +37859,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38513,7 +37915,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38570,7 +37971,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38627,7 +38027,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38684,7 +38083,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38741,7 +38139,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38798,7 +38195,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38855,7 +38251,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38912,7 +38307,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -38966,7 +38360,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39023,7 +38416,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39080,7 +38472,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39137,7 +38528,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39194,7 +38584,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39251,7 +38640,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39308,7 +38696,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39365,7 +38752,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39422,7 +38808,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39479,7 +38864,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39536,7 +38920,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39593,7 +38976,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39650,7 +39032,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39707,7 +39088,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39764,7 +39144,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39821,7 +39200,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39878,7 +39256,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39935,7 +39312,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -39992,7 +39368,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -40049,7 +39424,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -40106,7 +39480,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -40163,7 +39536,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40220,7 +39592,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40277,7 +39648,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40334,7 +39704,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40391,7 +39760,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40448,7 +39816,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40505,7 +39872,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40562,7 +39928,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40619,7 +39984,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40676,7 +40040,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40733,7 +40096,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40790,7 +40152,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40847,7 +40208,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40901,7 +40261,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -40958,7 +40317,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41015,7 +40373,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41072,7 +40429,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41129,7 +40485,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41186,7 +40541,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41243,7 +40597,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41297,7 +40650,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41354,7 +40706,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41411,7 +40762,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41468,7 +40818,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41525,7 +40874,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41582,7 +40930,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41639,7 +40986,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41693,7 +41039,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41750,7 +41095,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41807,7 +41151,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41864,7 +41207,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41921,7 +41263,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -41978,7 +41319,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42035,7 +41375,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42089,7 +41428,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42146,7 +41484,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42203,7 +41540,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42260,7 +41596,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42317,7 +41652,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42374,7 +41708,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42431,7 +41764,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42485,7 +41817,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42542,7 +41873,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42599,7 +41929,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42656,7 +41985,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42713,7 +42041,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42770,7 +42097,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42827,7 +42153,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -42881,7 +42206,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -42938,7 +42262,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -42995,7 +42318,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -43052,7 +42374,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43109,7 +42430,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43166,7 +42486,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43223,7 +42542,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43280,7 +42598,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43337,7 +42654,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43394,7 +42710,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43451,7 +42766,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43508,7 +42822,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43565,7 +42878,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43622,7 +42934,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43679,7 +42990,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43736,7 +43046,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43790,7 +43099,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43847,7 +43155,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43904,7 +43211,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -43961,7 +43267,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44018,7 +43323,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44075,7 +43379,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44132,7 +43435,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44186,7 +43488,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44243,7 +43544,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44300,7 +43600,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44357,7 +43656,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44414,7 +43712,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44471,7 +43768,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44528,7 +43824,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44582,7 +43877,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44639,7 +43933,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44696,7 +43989,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44753,7 +44045,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44810,7 +44101,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44867,7 +44157,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44924,7 +44213,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -44978,7 +44266,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45035,7 +44322,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45092,7 +44378,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45149,7 +44434,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45206,7 +44490,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45263,7 +44546,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45320,7 +44602,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45374,7 +44655,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45431,7 +44711,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45488,7 +44767,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45545,7 +44823,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45602,7 +44879,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45659,7 +44935,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45716,7 +44991,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45770,7 +45044,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -45827,7 +45100,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -45884,7 +45156,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -45941,7 +45212,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -45998,7 +45268,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46055,7 +45324,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46112,7 +45380,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46169,7 +45436,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46226,7 +45492,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46283,7 +45548,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46340,7 +45604,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46397,7 +45660,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46454,7 +45716,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46511,7 +45772,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46568,7 +45828,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46625,7 +45884,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46679,7 +45937,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46736,7 +45993,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46793,7 +46049,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46850,7 +46105,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46907,7 +46161,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -46964,7 +46217,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47021,7 +46273,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47075,7 +46326,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47132,7 +46382,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47189,7 +46438,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47246,7 +46494,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47303,7 +46550,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47360,7 +46606,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47417,7 +46662,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47471,7 +46715,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47528,7 +46771,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47585,7 +46827,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47642,7 +46883,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47699,7 +46939,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47756,7 +46995,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47813,7 +47051,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47867,7 +47104,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47924,7 +47160,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -47981,7 +47216,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48038,7 +47272,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48095,7 +47328,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48152,7 +47384,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48209,7 +47440,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48263,7 +47493,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48320,7 +47549,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48377,7 +47605,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48434,7 +47661,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48491,7 +47717,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48548,7 +47773,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48605,7 +47829,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48659,7 +47882,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -48716,7 +47938,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -48773,7 +47994,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -48830,7 +48050,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48887,7 +48106,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -48944,7 +48162,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49001,7 +48218,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49058,7 +48274,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49115,7 +48330,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49172,7 +48386,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49229,7 +48442,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49286,7 +48498,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49343,7 +48554,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49400,7 +48610,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49457,7 +48666,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49514,7 +48722,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49568,7 +48775,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49625,7 +48831,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49682,7 +48887,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49739,7 +48943,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49796,7 +48999,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49853,7 +49055,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49910,7 +49111,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -49964,7 +49164,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50021,7 +49220,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50078,7 +49276,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50135,7 +49332,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50192,7 +49388,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50249,7 +49444,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50306,7 +49500,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50360,7 +49553,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50417,7 +49609,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50474,7 +49665,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50531,7 +49721,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50588,7 +49777,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50645,7 +49833,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50702,7 +49889,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50756,7 +49942,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50813,7 +49998,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50870,7 +50054,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50927,7 +50110,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -50984,7 +50166,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51041,7 +50222,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51098,7 +50278,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51152,7 +50331,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51209,7 +50387,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51266,7 +50443,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51323,7 +50499,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51380,7 +50555,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51437,7 +50611,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51494,7 +50667,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -51548,7 +50720,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -51605,7 +50776,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -51662,7 +50832,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -53670,7 +52839,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -53853,7 +53021,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -53941,7 +53108,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 7
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -53998,7 +53164,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54055,7 +53220,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 5
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54112,7 +53276,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54169,7 +53332,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54226,7 +53388,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54283,7 +53444,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54340,7 +53500,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54397,7 +53556,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54454,7 +53612,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54511,7 +53668,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54568,7 +53724,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54625,7 +53780,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54682,7 +53836,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54739,7 +53892,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54796,7 +53948,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54853,7 +54004,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54910,7 +54060,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -54967,7 +54116,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55024,7 +54172,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55081,7 +54228,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55138,7 +54284,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55195,7 +54340,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55252,7 +54396,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55309,7 +54452,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55366,7 +54508,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55423,7 +54564,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55480,7 +54620,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55537,7 +54676,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55594,7 +54732,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55651,7 +54788,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55708,7 +54844,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55765,7 +54900,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55822,7 +54956,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55879,7 +55012,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55936,7 +55068,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -55993,7 +55124,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56050,7 +55180,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56107,7 +55236,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56164,7 +55292,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56221,7 +55348,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56278,7 +55404,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 1
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56335,7 +55460,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 3
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56392,7 +55516,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56449,7 +55572,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56506,7 +55628,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56563,7 +55684,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56620,7 +55740,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56677,7 +55796,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56734,7 +55852,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56791,7 +55908,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56848,7 +55964,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 0
 reqTable[1].value = 0
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56905,7 +56020,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -56962,7 +56076,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57019,7 +56132,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57076,7 +56188,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57133,7 +56244,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57190,7 +56300,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57247,7 +56356,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57304,7 +56412,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57361,7 +56468,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57418,7 +56524,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57475,7 +56580,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57532,7 +56636,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57589,7 +56692,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57643,7 +56745,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57700,7 +56801,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57757,7 +56857,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57814,7 +56913,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57871,7 +56969,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57928,7 +57025,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -57985,7 +57081,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58039,7 +57134,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58096,7 +57190,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58153,7 +57246,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58210,7 +57302,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58267,7 +57358,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58324,7 +57414,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58381,7 +57470,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58435,7 +57523,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58492,7 +57579,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58549,7 +57635,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58606,7 +57691,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58663,7 +57747,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58720,7 +57803,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58777,7 +57859,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58831,7 +57912,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58888,7 +57968,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -58945,7 +58024,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59002,7 +58080,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59059,7 +58136,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59116,7 +58192,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59173,7 +58248,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59227,7 +58301,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59284,7 +58357,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59341,7 +58413,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59398,7 +58469,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59455,7 +58525,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59512,7 +58581,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59569,7 +58637,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59623,7 +58690,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -59680,7 +58746,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -59737,7 +58802,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -59794,7 +58858,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59851,7 +58914,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59908,7 +58970,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -59965,7 +59026,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60022,7 +59082,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60079,7 +59138,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60136,7 +59194,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60193,7 +59250,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60250,7 +59306,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60307,7 +59362,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60364,7 +59418,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60421,7 +59474,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60478,7 +59530,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60532,7 +59583,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60589,7 +59639,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60646,7 +59695,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60703,7 +59751,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60760,7 +59807,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60817,7 +59863,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60874,7 +59919,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60928,7 +59972,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -60985,7 +60028,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61042,7 +60084,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61099,7 +60140,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61156,7 +60196,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61213,7 +60252,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61270,7 +60308,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61324,7 +60361,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61381,7 +60417,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61438,7 +60473,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61495,7 +60529,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61552,7 +60585,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61609,7 +60641,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61666,7 +60697,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61720,7 +60750,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61777,7 +60806,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61834,7 +60862,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61891,7 +60918,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -61948,7 +60974,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62005,7 +61030,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62062,7 +61086,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62116,7 +61139,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62173,7 +61195,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62230,7 +61251,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62287,7 +61307,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62344,7 +61363,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62401,7 +61419,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62458,7 +61475,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62512,7 +61528,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -62569,7 +61584,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -62626,7 +61640,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -62683,7 +61696,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62740,7 +61752,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62797,7 +61808,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62854,7 +61864,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62911,7 +61920,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -62968,7 +61976,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63025,7 +62032,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63082,7 +62088,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63139,7 +62144,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63196,7 +62200,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63253,7 +62256,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63310,7 +62312,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63367,7 +62368,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63421,7 +62421,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63478,7 +62477,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63535,7 +62533,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63592,7 +62589,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63649,7 +62645,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63706,7 +62701,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63763,7 +62757,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63817,7 +62810,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63874,7 +62866,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63931,7 +62922,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -63988,7 +62978,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64045,7 +63034,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64102,7 +63090,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64159,7 +63146,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64213,7 +63199,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64270,7 +63255,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64327,7 +63311,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64384,7 +63367,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64441,7 +63423,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64498,7 +63479,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64555,7 +63535,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64609,7 +63588,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64666,7 +63644,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64723,7 +63700,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64780,7 +63756,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64837,7 +63812,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64894,7 +63868,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -64951,7 +63924,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65005,7 +63977,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65062,7 +64033,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65119,7 +64089,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65176,7 +64145,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65233,7 +64201,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65290,7 +64257,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65347,7 +64313,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65401,7 +64366,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -65458,7 +64422,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -65515,7 +64478,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -65572,7 +64534,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65629,7 +64590,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65686,7 +64646,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65743,7 +64702,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65800,7 +64758,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65857,7 +64814,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65914,7 +64870,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -65971,7 +64926,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66028,7 +64982,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66085,7 +65038,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66142,7 +65094,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66199,7 +65150,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66256,7 +65206,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66310,7 +65259,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66367,7 +65315,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66424,7 +65371,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66481,7 +65427,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66538,7 +65483,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66595,7 +65539,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66652,7 +65595,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66706,7 +65648,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66763,7 +65704,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66820,7 +65760,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66877,7 +65816,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66934,7 +65872,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -66991,7 +65928,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67048,7 +65984,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67102,7 +66037,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67159,7 +66093,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67216,7 +66149,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67273,7 +66205,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67330,7 +66261,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67387,7 +66317,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67444,7 +66373,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67498,7 +66426,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67555,7 +66482,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67612,7 +66538,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67669,7 +66594,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67726,7 +66650,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67783,7 +66706,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67840,7 +66762,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67894,7 +66815,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -67951,7 +66871,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68008,7 +66927,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68065,7 +66983,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68122,7 +67039,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68179,7 +67095,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68236,7 +67151,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -68290,7 +67204,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -68347,7 +67260,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -68404,7 +67316,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -68461,7 +67372,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 8
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68515,7 +67425,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 18
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68569,7 +67478,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68623,7 +67531,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 62
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68677,7 +67584,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 78
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68731,7 +67637,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 86
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68785,7 +67690,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -68839,7 +67743,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -68893,7 +67796,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -68947,7 +67849,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69001,7 +67902,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69055,7 +67955,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69109,7 +68008,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69163,7 +68061,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69217,7 +68114,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 76
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69271,7 +68167,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69325,7 +68220,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 125
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -69760,7 +68654,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 7
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -69817,7 +68710,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 8
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -69874,7 +68766,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 9
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -69931,7 +68822,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 10
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -69988,7 +68878,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 11
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70045,7 +68934,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 12
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70102,7 +68990,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 13
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70159,7 +69046,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 17
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70216,7 +69102,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 18
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70273,7 +69158,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 19
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70330,7 +69214,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70387,7 +69270,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 21
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70444,7 +69326,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 22
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70501,7 +69382,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 23
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70558,7 +69438,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70615,7 +69494,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70672,7 +69550,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 47
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70729,7 +69606,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 48
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70786,7 +69662,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 49
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70843,7 +69718,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70900,7 +69774,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 51
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -70957,7 +69830,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 61
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71014,7 +69886,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 62
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71071,7 +69942,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 63
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71128,7 +69998,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 64
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71185,7 +70054,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71242,7 +70110,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 66
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71299,7 +70166,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 67
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71356,7 +70222,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71413,7 +70278,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 78
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71470,7 +70334,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71527,7 +70390,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71584,7 +70446,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71641,7 +70502,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 82
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71698,7 +70558,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 83
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71755,7 +70614,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 85
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71812,7 +70670,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 86
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71869,7 +70726,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 87
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71926,7 +70782,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 88
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -71983,7 +70838,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 89
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -72040,7 +70894,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -72097,7 +70950,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 91
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -72154,7 +71006,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72211,7 +71062,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72268,7 +71118,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 16
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72325,7 +71174,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 17
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72382,7 +71230,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 18
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72439,7 +71286,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 19
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72496,7 +71342,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72553,7 +71398,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 24
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72610,7 +71454,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72667,7 +71510,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 26
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72724,7 +71566,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 27
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72781,7 +71622,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 28
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72838,7 +71678,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 29
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72895,7 +71734,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 30
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -72952,7 +71790,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 34
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73009,7 +71846,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73066,7 +71902,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 36
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73123,7 +71958,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 37
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73180,7 +72014,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 38
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73237,7 +72070,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 39
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73294,7 +72126,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73351,7 +72182,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 44
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73408,7 +72238,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73465,7 +72294,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73522,7 +72350,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 47
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73579,7 +72406,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 48
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73636,7 +72462,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 49
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73693,7 +72518,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73750,7 +72574,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 49
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73807,7 +72630,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73864,7 +72686,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 51
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73921,7 +72742,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 52
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -73978,7 +72798,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 53
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74035,7 +72854,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 54
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74092,7 +72910,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74149,7 +72966,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 59
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74206,7 +73022,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74263,7 +73078,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 61
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74320,7 +73134,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 62
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74377,7 +73190,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 63
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74434,7 +73246,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 64
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74491,7 +73302,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74548,7 +73358,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74605,7 +73414,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74662,7 +73470,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 71
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74719,7 +73526,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 72
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74776,7 +73582,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74833,7 +73638,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 74
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74890,7 +73694,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -74947,7 +73750,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75004,7 +73806,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 76
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75061,7 +73862,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75118,7 +73918,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 78
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75175,7 +73974,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75232,7 +74030,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75289,7 +74086,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75346,7 +74142,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 94
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75403,7 +74198,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 95
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75460,7 +74254,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 96
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75517,7 +74310,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 97
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75574,7 +74366,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 98
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75631,7 +74422,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 99
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75688,7 +74478,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -75745,7 +74534,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 11
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -75802,7 +74590,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 12
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -75859,7 +74646,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 13
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -75916,7 +74702,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 14
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -75973,7 +74758,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 15
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76030,7 +74814,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 16
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76087,7 +74870,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 17
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76144,7 +74926,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 21
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76201,7 +74982,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 22
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76258,7 +75038,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 23
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76315,7 +75094,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 24
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76372,7 +75150,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 25
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76429,7 +75206,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 26
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76486,7 +75262,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 27
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76543,7 +75318,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 31
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76600,7 +75374,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 32
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76657,7 +75430,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 33
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76714,7 +75486,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 34
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76771,7 +75542,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 35
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76828,7 +75598,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 36
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76885,7 +75654,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 37
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76942,7 +75710,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 41
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -76999,7 +75766,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 42
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77056,7 +75822,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 43
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77113,7 +75878,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 44
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77170,7 +75934,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 45
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77227,7 +75990,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77284,7 +76046,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 47
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77341,7 +76102,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 49
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77398,7 +76158,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77455,7 +76214,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 51
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77512,7 +76270,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 52
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77569,7 +76326,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 53
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77626,7 +76382,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 54
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77683,7 +76438,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77740,7 +76494,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77797,7 +76550,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 66
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77854,7 +76606,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 67
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77911,7 +76662,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 68
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -77968,7 +76718,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78025,7 +76774,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78082,7 +76830,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 71
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78139,7 +76886,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78196,7 +76942,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 74
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78253,7 +76998,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78310,7 +77054,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 76
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78367,7 +77110,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78424,7 +77166,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 78
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78481,7 +77222,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 0
@@ -78534,7 +77274,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(731, "Fairy Pod", "A fabulous wing and bag combination.", 6, 162, 1000, 0, 5, 0, 10, 0, 0, 0, 248, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -78578,7 +77317,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(741, "Scented Butterfly Wing", "A mysterious butterfly that can only live on the back of a person with a good sense of smell.", 6, 163, 1200, 0, 20, 0, 1, 0, 0, 0, 248, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -78624,7 +77362,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(742, "Seraph Wing", "Wings that call out to a great angel. But actually…", 6, 163, 1200, 0, 20, 0, 8, 0, 0, 0, 248, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -78668,7 +77405,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(743, "Succubus Wing", "The wings of a seductive Succubus.", 6, 163, 1200, 0, 20, 0, 5, 0, 0, 0, 248, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -78714,7 +77450,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(751, "Magic Pumpkin Shield", "A magical shield that can be pretty noisy if you don't walk carefully.", 6, 161, 1000, 0, 30, 0, 5, 0, 0, 0, 248, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -78758,7 +77493,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(752, "Iron Skull Shield", "A metal plated skull of a huge creature.", 6, 161, 1000, 0, 30, 0, 20, 0, 0, 0, 248, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -78842,7 +77576,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 25
@@ -78895,7 +77628,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(1, "Shining Ring", "A shining ring that attracts people's attention and admiration.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -78939,7 +77671,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(2, "Heavy Ring", "A heavy ring that requires a little bit of strength to wear on your finger.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -78985,7 +77716,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(3, "Faint Ring", "A ring that does not clearly appear to the eyes at first.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 13
@@ -79029,7 +77759,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(4, "Fine Ring", "A thin ring that must be handled carefully.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79075,7 +77804,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(5, "Pierced Ring", "A ring that has a hole in it, aside from the one you put your finger through.", 7, 171, 2350, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -79119,7 +77847,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(6, "Smooth Ring", "A very smooth, polished looking ring.", 7, 171, 2350, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79165,7 +77892,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(7, "Amulet Ring", "A grotesque looking ring that is said to have some kind of effect when it is burned and its ashes are eaten…", 7, 171, 2350, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -79209,7 +77935,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(8, "Glass Ring", "A ring made out of glass that looks very fragile.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79255,7 +77980,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(9, "Pointed Ring", "A ring that is pointed at the top.", 7, 171, 2050, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 18
@@ -79299,7 +78023,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(10, "Solid Ring", "A stout ring that looks indestructible.", 7, 171, 2350, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79345,7 +78068,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(11, "Glamour Ring", "A mysterious ring that is rumored to enhance its wearer's beauty.", 7, 171, 7700, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -79389,7 +78111,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(12, "Charming Ring", "A beautifully crafted ring that attracts people with but a glance.", 7, 171, 8000, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79435,7 +78156,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(13, "Talisman Ring", "A magical ring that wards off evil.", 7, 171, 13600, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -79479,7 +78199,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(14, "Recovery Ring", "A ring that aids its wearer in restoring HP faster.", 7, 171, 12700, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79525,7 +78244,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(15, "Meditation Ring", "A ring that aids its wearer in spiritual training.", 7, 171, 13200, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -79569,7 +78287,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(16, "Critical Ring", "A ring that aids its wearer in doing critical attacks.", 7, 171, 26950, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79615,7 +78332,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(17, "Alluring Ring", "A ring that is rumored to work perfectly in seduction.", 7, 171, 26350, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -79659,7 +78375,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(18, "Fascinating Ring", "A magically enhanced ring that is rumored to attract people.", 7, 171, 31650, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79705,7 +78420,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(19, "Ring of Magic", "A ring made from a magical stone that wards off evil from its wearer.", 7, 171, 46400, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -79749,7 +78463,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(20, "Lizard Ring", "A ring made out of a lizard's tail.", 7, 171, 33900, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79795,7 +78508,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(21, "Crackshot Ring", "A ring that is rumored to be worn by William Tell, the legendary archer.", 7, 171, 70600, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -79839,7 +78551,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(22, "Mage Ring", "A ring usually worn by Mages. You'd have the complete set if you had the Mage Earring and Mage Necklace.", 7, 171, 43800, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79885,7 +78596,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(23, "Gorgeous Ring", "A ring that is beautifully engraved and attracts people.", 7, 171, 82200, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -79929,7 +78639,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(24, "Dazzling Ring", "A ring shining with a mysterious light that attracts people.", 7, 171, 92650, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -79975,7 +78684,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(25, "Dark Ring", "A ring made out of materials stored in a dark place longer than 100 days. It's good at warding off evil.", 7, 171, 139300, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -80019,7 +78727,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(26, "Cure Ring", "A ring shining with a mysterious light that heals the wounded.", 7, 171, 91550, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80065,7 +78772,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(27, "Sage Ring", "A ring that is rumored to be worn by sages. It's better than the Mage Ring.", 7, 171, 93950, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -80110,7 +78816,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(28, "Deadshot Ring", "A ring that is rumored to be worn by Robin Hood, the legendary archer.", 7, 171, 222100, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -80154,7 +78859,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(29, "Sunset Ring", "A ring that shines with red light just like a sunset. Those who see it feel a sense of romantic loss.", 7, 171, 465410, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80202,7 +78906,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(30, "Full Moon Ring", "Rumored to be crafted under a full moon, this ring shines with a suspicious light.", 7, 171, 537750, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80255,7 +78958,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 31
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 18
@@ -80308,7 +79010,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(81, "Shining Necklace", "A beautiful necklace that sparkles with light.", 7, 172, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -80352,7 +79053,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(82, "Light Necklace", "A necklace that is so light, you might forget that you're wearing it.", 7, 172, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80398,7 +79098,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(83, "Textual Necklace", "A necklace with characters written on it. It's textually stimulating.", 7, 172, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 12
@@ -80442,7 +79141,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(84, "Fine Necklace", "Made from an incredibly thin thread, you've got to handle this necklace carefully lest you accidentally break it.", 7, 172, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80488,7 +79186,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(85, "Pierced Necklace", "A necklace with a hole in it, aside from the one you put your head through.", 7, 172, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -80532,7 +79229,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(86, "Glass Necklace", "A fragile glass necklace that looks like it could break at any time. Handle with tender, loving care.", 7, 172, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80578,7 +79274,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(87, "Smooth Necklace", "A silky smooth necklace for silky smooth people.", 7, 172, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 22
@@ -80622,7 +79317,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(88, "Pointed Necklace", "A necklace with a tapered point that looks unsafe.", 7, 172, 4100, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80668,7 +79362,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(89, "Solid Necklace", "A necklace so tough, even smashing it with a stone wouldn't crack it.", 7, 172, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -80712,7 +79405,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(90, "Amulet Necklace", "A grotesque looking necklace that is said to have some kind of effect when it is burned and its ashes are eaten…", 7, 172, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80758,7 +79450,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(91, "Glamour Necklace", "A necklace that lends an air of glamorous beauty.", 7, 172, 15350, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -80802,7 +79493,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(92, "Charming Necklace", "This necklace's pretty craftsmanship is sure to lure the attraction of others.", 7, 172, 16000, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80848,7 +79538,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(93, "Talisman Necklace", "A necklace that offers protection from the forces of evil.", 7, 172, 27200, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -80892,7 +79581,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(94, "Recovery Necklace", "A necklace that helps speed recovery from your wounds when worn.", 7, 172, 25400, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -80938,7 +79626,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(95, "Meditation Necklace", "A necklace which raises one's will and emotional strength.", 7, 172, 26400, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -80982,7 +79669,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(96, "Evasion Necklace", "A necklace that contains a power which helps you to evade enemy attacks.", 7, 172, 54000, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81028,7 +79714,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(97, "Alluring Necklace", "It is said that wearing this necklace makes one more alluring to the opposite sex.", 7, 172, 52700, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -81072,7 +79757,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(98, "Fascinating Necklace", "A necklace that is enchanted to capture the fascination of those who see it.", 7, 172, 63200, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81118,7 +79802,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(99, "Necklace of Magic", "A necklace made from a magical stone that will protect you from evil.", 7, 172, 92800, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -81162,7 +79845,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(100, "Lizard Necklace", "A necklace that is, in essence, a lizard's tail.", 7, 172, 67750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81208,7 +79890,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(101, "Mage Necklace", "A necklace for Mages. If you had the Mage Ring and Mage Earrings, you'd have the complete set.", 7, 172, 85050, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -81252,7 +79933,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(102, "Lucky Necklace", "Necklace that many warriors are said to wear to escape enemy attack.", 7, 172, 170250, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81298,7 +79978,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(103, "Gorgeous Necklace", "A showy necklace that commands attention.", 7, 172, 164450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -81342,7 +80021,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(104, "Dazzling Necklace", "A necklace that dazzles with a strange light.", 7, 172, 185300, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81388,7 +80066,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(105, "Dark Necklace", "A necklace made of materials placed in darkness for 100 days. Somehow, it offers protection from evil.", 7, 172, 278550, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -81432,7 +80109,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(106, "Cure Necklace", "A necklace that glows with the light of healing.", 7, 172, 183050, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81478,7 +80154,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(107, "Sage Necklace", "A necklace for sages that is more effective than the Mage Necklace.", 7, 172, 187900, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -81523,7 +80198,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(108, "Shadow Necklace", "A necklace that helps you to hide in the shadows.", 7, 172, 444200, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 22
@@ -81567,7 +80241,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(109, "Sunset Necklace", "During the sunset, this necklace creates an illusion of two young lovers facing each other.", 7, 172, 821060, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81616,7 +80289,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(110, "Full Moon Necklace", "A necklace that was crafted under a full moon, and shines with a suspicious light.", 7, 172, 949550, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -81664,7 +80336,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(151, "Shining Earring", "Beautiful earrings that glimmer with attractive light.", 7, 173, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -81708,7 +80379,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(152, "Light Earring", "Earrings that are so light, you forget you're wearing them.", 7, 173, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81754,7 +80424,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(153, "Textual Earring", "Earrings with writing on them that's textually attractive.", 7, 173, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 12
@@ -81798,7 +80467,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(154, "Heavy Earring", "Heavy earrings that might place a strain on weaker earlobes.", 7, 173, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81844,7 +80512,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(155, "Pierced Earring", "Earrings with holes in them.", 7, 173, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 20
@@ -81888,7 +80555,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(156, "Glass Earring", "Fragile looking earrings that should be carefully handled.", 7, 173, 4150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -81934,7 +80600,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(157, "Smooth Earring", "Sleek, smooth earrings for sleek, smooth people.", 7, 173, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 22
@@ -81978,7 +80643,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(158, "Pointed Earring", "Earrings that are tapered to sharp points.", 7, 173, 4100, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82024,7 +80688,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(159, "Solid Earring", "Earrings that won't break if you smash them up with rocks.", 7, 173, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -82068,7 +80731,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(160, "Amulet Earring", "Strange looking earrings that are said to have some kind of effect when burned and the ashes are eaten…", 7, 173, 4750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82114,7 +80776,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(161, "Glamour Earring", "Earrings that lend an aura of glamour to the wearer.", 7, 173, 15350, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -82158,7 +80819,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(162, "Charming Earring", "Charmingly crafted earrings which bring delight to those who see them.", 7, 173, 16000, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82204,7 +80864,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(163, "Talisman Earring", "Earrings that offer protection from the forces of evil.", 7, 173, 27200, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -82248,7 +80907,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(164, "Recovery Earring", "Earrings that help speed recovery from your wounds when worn.", 7, 173, 25400, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82294,7 +80952,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(165, "Meditation Earring", "Earrings which help raise one's will and emotional strength.", 7, 173, 26400, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -82338,7 +80995,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(166, "Critical Earring", "When worn, these earrings raise the probability of inflicting critical attacks.", 7, 173, 43350, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82384,7 +81040,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(167, "Alluring Earring", "It is said that wearing these earrings makes one more alluring to the opposite sex.", 7, 173, 52700, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -82428,7 +81083,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(168, "Fascinating Earring", "Enchanted earrings that capture the fascination of those who see them.", 7, 173, 63200, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82474,7 +81128,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(169, "Earring of Magic", "Earrings made from magical stone that will protect you from evil.", 7, 173, 92800, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -82518,7 +81171,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(170, "Lizard Earring", "Earrings colored with the blood of lizards.", 7, 173, 67750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82564,7 +81216,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(171, "Mage Earring", "Earrings usually worn by Mages. If you had the Mage Ring and Mage Necklace, you'd have the complete set.", 7, 173, 85050, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -82608,7 +81259,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(172, "Deadly Earring", "Earrings that many warriors are said to wear to escape enemy attack.", 7, 173, 131150, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82654,7 +81304,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(173, "Gorgeous Earring", "Showy earrings that command attention.", 7, 173, 164450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -82698,7 +81347,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(174, "Dazzling Earring", "Earrings that dazzle with a strange light.", 7, 173, 185300, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82744,7 +81392,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(175, "Dark Earring", "Earrings made of materials placed in darkness for 100 days. Somehow, they offer protection from evil.", 7, 173, 278550, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -82788,7 +81435,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(176, "Cure Earring", "Earrings that glow with the light of healing.", 7, 173, 183050, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82834,7 +81480,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(177, "Sage Earring", "Earrings for sages that are more effective that Mage Earrings.", 7, 173, 187900, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -82878,7 +81523,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(178, "Assassin Earring", "Earrings worn by assassins to help them quickly slay their victims.", 7, 173, 354300, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -82924,7 +81568,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(179, "Noble Lady's Earring", "Earrings that carry an air of refinement and elegance.", 7, 173, 414000, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -82968,7 +81611,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(180, "Angel Earring", "Wearing these earrings is said to raise one's heroic glamour.", 7, 173, 479550, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83014,7 +81656,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(181, "Holy Earring", "Sacred earrings that were created using holy water.", 7, 173, 689450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -83058,7 +81699,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(182, "Tranquil Earring", "Earrings that bring a sense of peace and tranquility to the wearer.", 7, 173, 374750, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83104,7 +81744,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(183, "Silence Earring", "Earrings that bring silence around its wearer's surroundings.", 7, 173, 422000, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -83148,7 +81787,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(184, "One-Shot Earring", "Earrings created by a bowman who lived by the battle cry, 'one shot, one kill.'", 7, 173, 804900, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83194,7 +81832,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(185, "Twinkling", "Earrings created to make someone fall in love with you just by looking at them.", 7, 173, 903250, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -83238,7 +81875,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(186, "Siren's Song", "Earrings in which the siren's song of temptation has been sealed.", 7, 173, 1008850, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83284,7 +81920,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(187, "Silver Earring", "Earrings constructed from silver crystal that has been purified for 1,000 days.", 7, 173, 1489500, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 21
@@ -83328,7 +81963,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(188, "Holy Spirit's Earring", "Earrings constructed of blessed stone.", 7, 173, 768900, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83374,7 +82008,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(189, "Saint's Earring", "Earrings made with saintly power which bring stability to a troubled soul.", 7, 173, 842400, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 28
@@ -83418,7 +82051,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(190, "Death Blow", "Earrings enchanted with the curse of death. It's said that the breath of the dead rests on these earrings.", 7, 173, 1623350, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83498,7 +82130,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(252, "Socket Ring", "There's a socket in this ring where you can insert a Gem.", 7, 171, 3450, 10, 1, 0, 0, 0, 0, 0, 99, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 18
@@ -83576,7 +82207,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(262, "Socket Necklace", "There's a socket in this necklace where you can insert a Gem.", 7, 172, 3950, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83656,7 +82286,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(272, "Socket Earring", "There's a socket in these earrings where you can insert a Gem.", 7, 173, 4100, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -83700,7 +82329,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(281, "Cornell's Necklace", "A gift from Cornell. (Quest Reward)", 7, 172, 9450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 2
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83746,7 +82374,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(282, "Lena's Earring", "A gift from Lena. (Quest Reward)", 7, 173, 9450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 2
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -83790,7 +82417,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(283, "Keenu's Ring", "A gift from Keenu. (Quest Reward)", 7, 171, 9450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 2
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -83836,7 +82462,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(284, "Full Moon Necklace", "A necklace that was crafted under a full moon, and shines with a suspicious light. (Quest Reward)", 7, 172, 9450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 2
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -83880,7 +82505,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(285, "Silence Earring", "Earrings that brings silence to its wearer's surroundings. (Quest Reward)", 7, 173, 9450, 10, 1, 0, 0, 0, 0, 0, 95, "use_restriction = 2
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -91472,7 +90096,6 @@ reqTable[1].value = 10
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 28
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91529,7 +90152,6 @@ reqTable[1].value = 20
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 44
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91586,7 +90208,6 @@ reqTable[1].value = 30
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 59
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91643,7 +90264,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91700,7 +90320,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91757,7 +90376,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91814,7 +90432,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91871,7 +90488,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 135
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91928,7 +90544,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -91985,7 +90600,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 165
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92042,7 +90656,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92099,7 +90712,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 195
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92156,7 +90768,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 210
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92213,7 +90824,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 224
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92270,7 +90880,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 239
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92327,7 +90936,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 254
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92384,7 +90992,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 269
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92441,7 +91048,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 283
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92498,7 +91104,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 298
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92555,7 +91160,6 @@ reqTable[1].value = 10
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 32
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92612,7 +91216,6 @@ reqTable[1].value = 20
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 49
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92669,7 +91272,6 @@ reqTable[1].value = 30
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92726,7 +91328,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92783,7 +91384,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 98
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92840,7 +91440,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92897,7 +91496,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 130
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -92954,7 +91552,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 145
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93011,7 +91608,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 161
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93068,7 +91664,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 177
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93125,7 +91720,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 193
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93182,7 +91776,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 208
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93239,7 +91832,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 224
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93296,7 +91888,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 240
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93353,7 +91944,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 255
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93410,7 +92000,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 271
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93467,7 +92056,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 287
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -93524,7 +92112,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 302
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -95237,7 +93824,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 63
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -95340,7 +93926,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 96
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -95397,7 +93982,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 96
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -95454,7 +94038,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 112
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -95557,7 +94140,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 128
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -95660,7 +94242,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 143
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -95717,7 +94298,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 143
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -95774,7 +94354,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 159
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -95877,7 +94456,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 175
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -95934,7 +94512,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 175
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -95991,7 +94568,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 191
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -96094,7 +94670,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 206
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -96152,11 +94727,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 222
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -96175,16 +94745,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -96209,11 +94773,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 238
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -96232,16 +94791,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -96266,11 +94819,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 253
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -96289,16 +94837,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -96323,11 +94865,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 269
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -96346,16 +94883,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -96472,11 +95003,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 316
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -96495,16 +95021,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -96528,7 +95048,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -96631,7 +95150,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 86
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -96734,7 +95252,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 103
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -96791,7 +95308,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -96894,7 +95410,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 137
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -96951,7 +95466,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 137
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -97008,7 +95522,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -97111,7 +95624,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 171
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -97214,7 +95726,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 188
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -97317,7 +95828,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 205
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -97374,7 +95884,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 205
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -97477,7 +95986,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 238
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -97581,11 +96089,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 272
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -97604,16 +96107,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -97638,11 +96135,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 288
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -97661,16 +96153,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -97695,11 +96181,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 305
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 39
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -97718,16 +96199,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -97798,11 +96273,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 338
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -97821,16 +96291,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -97854,7 +96318,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 74
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -97957,7 +96420,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 87
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98014,7 +96476,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 87
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -98071,7 +96532,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98128,7 +96588,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -98185,7 +96644,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 125
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98288,7 +96746,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 138
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98345,7 +96802,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 138
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -98402,7 +96858,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 151
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -98505,7 +96960,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 163
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98562,7 +97016,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 163
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -98619,7 +97072,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 176
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98723,11 +97175,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 188
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -98746,16 +97193,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -98779,7 +97220,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 83
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -98882,7 +97322,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 117
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -98939,7 +97378,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 117
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -98996,7 +97434,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 133
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -99053,7 +97490,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 133
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -99156,7 +97592,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 149
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -99259,7 +97694,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 166
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -99362,7 +97796,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 198
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -99419,7 +97852,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 198
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -99476,7 +97908,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 214
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -99533,7 +97964,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 231
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -99591,11 +98021,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 263
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -99614,16 +98039,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -99648,11 +98067,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 279
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -99671,16 +98085,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -99797,11 +98205,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 327
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -99820,16 +98223,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -99853,7 +98250,6 @@ reqTable[1].value = 15
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -99956,7 +98352,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100013,7 +98408,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -100070,7 +98464,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 91
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100173,7 +98566,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 109
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -100276,7 +98668,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 127
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100379,7 +98770,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 162
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100482,7 +98872,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -100585,7 +98974,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 197
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100642,7 +99030,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 197
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -100699,7 +99086,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 232
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -100802,7 +99188,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 249
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -100860,11 +99245,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 266
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -100883,16 +99263,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -100917,11 +99291,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 284
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -100940,16 +99309,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -100974,11 +99337,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 301
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -100997,16 +99355,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -101031,11 +99383,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 318
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 39
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -101054,16 +99401,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -101088,11 +99429,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 335
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -101111,16 +99447,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -101144,7 +99474,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -101247,7 +99576,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 92
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -101350,7 +99678,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 108
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -101407,7 +99734,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 108
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -101510,7 +99836,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 123
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -101567,7 +99892,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 123
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -101670,7 +99994,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 139
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -101727,7 +100050,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 139
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -101784,7 +100106,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -101887,7 +100208,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 169
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -101990,7 +100310,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 184
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -102139,7 +100458,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 214
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -102197,11 +100515,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 230
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -102220,16 +100533,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -102254,11 +100561,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 245
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -102277,16 +100579,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -102311,11 +100607,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 260
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -102334,16 +100625,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -102460,11 +100745,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 305
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -102483,16 +100763,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -102516,7 +100790,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 61
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -102619,7 +100892,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -102722,7 +100994,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 92
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -102825,7 +101096,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 108
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -102882,7 +101152,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 108
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -102939,7 +101208,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 123
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -103042,7 +101310,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -103145,7 +101412,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 169
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -103248,7 +101514,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 184
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -103351,7 +101616,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 214
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -103409,11 +101673,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 230
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103432,16 +101691,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103466,11 +101719,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 245
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103489,16 +101737,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103523,11 +101765,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 260
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103546,16 +101783,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103580,11 +101811,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 275
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103603,16 +101829,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103637,11 +101857,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 290
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103660,16 +101875,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103694,11 +101903,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 305
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -103717,16 +101921,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -103750,7 +101948,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 64
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -103853,7 +102050,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -103910,7 +102106,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -103967,7 +102162,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 94
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -104070,7 +102264,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 109
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -104127,7 +102320,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 109
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -104184,7 +102376,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 124
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -104287,7 +102478,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 153
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -104390,7 +102580,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 168
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -104493,7 +102682,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 183
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -104550,7 +102738,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 183
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -104607,7 +102794,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 212
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -104757,11 +102943,6 @@ reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 256
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -104780,16 +102961,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -104860,11 +103035,6 @@ reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 285
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -104883,16 +103053,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -104917,11 +103081,6 @@ reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 299
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -104940,16 +103099,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -104973,7 +103126,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -105076,7 +103228,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -105133,7 +103284,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -105190,7 +103340,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -105293,7 +103442,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -105396,7 +103544,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -105499,7 +103646,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 99
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -105556,7 +103702,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 99
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -105613,7 +103758,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 116
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -105717,11 +103861,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 124
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -105740,16 +103879,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -105774,11 +103907,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 133
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -105797,16 +103925,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -105831,11 +103953,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 141
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -105854,16 +103971,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -105888,11 +103999,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 150
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -105911,16 +104017,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -105991,11 +104091,6 @@ reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 167
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -106014,16 +104109,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -106047,7 +104136,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 59
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106107,7 +104195,6 @@ reqTable[1].value = 20
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 59
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106164,7 +104251,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106224,7 +104310,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106284,7 +104369,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106344,7 +104428,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106404,7 +104487,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106461,7 +104543,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106521,7 +104602,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106578,7 +104658,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106638,7 +104717,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106695,7 +104773,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 135
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106755,7 +104832,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 135
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106815,7 +104891,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106875,7 +104950,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106932,7 +105006,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 165
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -106992,7 +105065,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 165
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107049,7 +105121,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107109,7 +105180,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107169,7 +105239,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 195
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107229,7 +105298,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 210
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107289,7 +105357,6 @@ reqTable[1].value = 130
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 224
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107346,14 +105413,10 @@ reqTable[1].value = 145
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 239
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 25
-bonusTable[2] = {}
-bonusTable[2].type = 38
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -107406,7 +105469,6 @@ reqTable[1].value = 150
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 254
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107463,14 +105525,10 @@ reqTable[1].value = 165
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 269
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 26
-bonusTable[2] = {}
-bonusTable[2].type = 39
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -107523,14 +105581,10 @@ reqTable[1].value = 175
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 283
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 26
-bonusTable[2] = {}
-bonusTable[2].type = 38
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -107583,14 +105637,10 @@ reqTable[1].value = 185
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 298
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 26
-bonusTable[2] = {}
-bonusTable[2].type = 38
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -107643,7 +105693,6 @@ reqTable[1].value = 25
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107703,7 +105752,6 @@ reqTable[1].value = 20
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 65
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107760,7 +105808,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107820,7 +105867,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107880,7 +105926,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 98
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107940,7 +105985,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 98
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -107997,7 +106041,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108057,7 +106100,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108117,7 +106159,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 130
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108177,7 +106218,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 130
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108234,7 +106274,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 161
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108294,7 +106333,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 161
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108351,7 +106389,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 177
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108411,7 +106448,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 177
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108468,7 +106504,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 193
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108528,7 +106563,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 193
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108585,7 +106619,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 224
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108642,7 +106675,6 @@ reqTable[1].value = 130
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 240
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -108699,14 +106731,10 @@ reqTable[1].value = 145
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 255
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 19
-bonusTable[2] = {}
-bonusTable[2].type = 38
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -108759,14 +106787,10 @@ reqTable[1].value = 155
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 271
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 20
-bonusTable[2] = {}
-bonusTable[2].type = 24
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -108819,14 +106843,10 @@ reqTable[1].value = 165
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 287
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 21
-bonusTable[2] = {}
-bonusTable[2].type = 39
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -108879,14 +106899,10 @@ reqTable[1].value = 175
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 302
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
 bonusTable[1].value = 22
-bonusTable[2] = {}
-bonusTable[2].type = 38
-bonusTable[2].value = 
 
 function OnInit()
   return true
@@ -108939,7 +106955,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -108996,7 +107011,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109099,7 +107113,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 91
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -109156,7 +107169,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 91
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109259,7 +107271,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 106
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109362,7 +107373,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 122
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -109419,7 +107429,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 122
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109476,7 +107485,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 137
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109579,7 +107587,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 152
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109682,7 +107689,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 167
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -109739,7 +107745,6 @@ reqTable[1].value = 95
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 167
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109796,7 +107801,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 182
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109853,7 +107857,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 197
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109910,7 +107913,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 212
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 11
@@ -109968,11 +107970,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 227
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -109991,16 +107988,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110025,11 +108016,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 242
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -110048,16 +108034,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110082,11 +108062,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 257
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -110105,16 +108080,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110139,11 +108108,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 272
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -110162,16 +108126,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110196,11 +108154,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 287
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -110219,16 +108172,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110253,11 +108200,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 302
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 11
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -110276,16 +108218,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -110309,7 +108245,6 @@ reqTable[1].value = 35
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 58
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -110412,7 +108347,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -110469,7 +108403,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -110526,7 +108459,6 @@ reqTable[1].value = 45
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 69
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -110583,7 +108515,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -110640,7 +108571,6 @@ reqTable[1].value = 55
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -110743,7 +108673,6 @@ reqTable[1].value = 65
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 93
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -110846,7 +108775,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -110903,7 +108831,6 @@ reqTable[1].value = 75
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -110960,7 +108887,6 @@ reqTable[1].value = 85
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 116
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -111109,7 +109035,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 140
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -111166,7 +109091,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 151
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -111223,7 +109147,6 @@ reqTable[1].value = 100
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 163
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -111327,11 +109250,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 174
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111350,16 +109268,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111384,11 +109296,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 186
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111407,16 +109314,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111487,11 +109388,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 209
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111510,16 +109406,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111544,11 +109434,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 220
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111567,16 +109452,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111647,11 +109526,6 @@ reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 232
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111670,16 +109544,10 @@ function OnEquip(entity)
       return false
     end
   end
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111697,11 +109565,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(807, "Small Axe", "An Axe commonly used by ruffians and trouble makers.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111715,16 +109578,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111742,11 +109599,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(808, "Small Axe", "An Axe commonly used by ruffians and trouble makers.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 39
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111760,16 +109612,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111787,11 +109633,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(809, "Small Axe", "An Axe commonly used by ruffians and trouble makers.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 26
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111805,16 +109646,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111832,11 +109667,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(810, "Small Axe", "An Axe commonly used by ruffians and trouble makers.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111850,16 +109680,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111911,11 +109735,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(812, "Battle Axe", "A specially crafted weapon that can be used as both an axe and a hammer.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 38
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111929,16 +109748,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -111956,11 +109769,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(813, "Battle Axe", "A specially crafted weapon that can be used as both an axe and a hammer.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 39
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -111974,16 +109782,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -112001,11 +109803,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(814, "Battle Axe", "A specially crafted weapon that can be used as both an axe and a hammer.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 26
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -112019,16 +109816,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -112046,11 +109837,6 @@ end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(815, "Battle Axe", "A specially crafted weapon that can be used as both an axe and a hammer.", 8, 0, 0, 0, 0, 14, 0, 200, 3, 0, 0, "use_restriction = 0
 
 
-bonusTable = {}
-bonusTable[1] = {}
-bonusTable[1].type = 24
-bonusTable[1].value = 
-
 function OnInit()
   return true
 end
@@ -112064,16 +109850,10 @@ function OnDelete()
 end
 
 function OnEquip(entity)
-  for i, data in ipairs(bonusTable) do
-    addBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
 function OnUnequip(entity)
-  for i, data in ipairs(bonusTable) do
-    removeBonusAttr(entity, data.type, data.value)
-  end
   return true
 end
 
@@ -115013,7 +112793,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115073,7 +112852,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 96
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115130,7 +112908,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 112
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115190,7 +112967,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 128
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115247,7 +113023,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 143
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115307,7 +113082,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 159
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115361,7 +113135,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 117
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -115415,7 +113188,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 171
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -115469,7 +113241,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -115523,7 +113294,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -115577,7 +113347,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 97
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -115631,7 +113400,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 156
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 29
@@ -115685,7 +113453,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 123
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 38
@@ -115739,7 +113506,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 181
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -115793,7 +113559,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 125
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 26
@@ -115847,7 +113612,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 176
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 22
@@ -115904,7 +113668,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 77
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -115964,7 +113727,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 92
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116021,7 +113783,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 108
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116081,7 +113842,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 123
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116138,7 +113898,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 139
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116198,7 +113957,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116255,7 +114013,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 79
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116315,7 +114072,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 94
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116372,7 +114128,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 109
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116432,7 +114187,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 124
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116489,7 +114243,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 139
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116549,7 +114302,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 13
 reqTable[2].value = 153
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116606,7 +114358,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 37
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116666,7 +114417,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 46
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116723,7 +114473,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 55
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116783,7 +114532,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 64
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116840,7 +114588,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 73
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116900,7 +114647,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 10
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -116957,7 +114703,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117017,7 +114762,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117074,7 +114818,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 105
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117134,7 +114877,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117191,7 +114933,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 135
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117251,7 +114992,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117308,7 +115048,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 81
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117368,7 +115107,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 98
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117425,7 +115163,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117485,7 +115222,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 130
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117542,7 +115278,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 145
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117602,7 +115337,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 12
 reqTable[2].value = 161
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117659,7 +115393,6 @@ reqTable[1].value = 40
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117719,7 +115452,6 @@ reqTable[1].value = 50
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 91
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117776,7 +115508,6 @@ reqTable[1].value = 60
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 106
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117836,7 +115567,6 @@ reqTable[1].value = 70
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 122
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117893,7 +115623,6 @@ reqTable[1].value = 80
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 137
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -117953,7 +115682,6 @@ reqTable[1].value = 90
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 152
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -118007,7 +115735,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 84
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 22
@@ -118061,7 +115788,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 122
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118115,7 +115841,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 11
 reqTable[2].value = 154
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 18
@@ -118165,7 +115890,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(1, "Wooden Shield", "An ordinary wooden shield that was originally used as a lid for a pot.", 9, 261, 225, 0, 8, 0, 3, 0, 0, 0, 811, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118214,7 +115938,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118268,7 +115991,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 36
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118322,7 +116044,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 52
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118376,7 +116097,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 68
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118430,7 +116150,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 84
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118484,7 +116203,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118538,7 +116256,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 114
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118592,7 +116309,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 128
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118646,7 +116362,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 140
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118700,7 +116415,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 152
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118754,7 +116468,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 164
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118808,7 +116521,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118862,7 +116574,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 198
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118916,7 +116627,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 218
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -118970,7 +116680,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 240
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -119024,7 +116733,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 10
 reqTable[1].value = 264
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -119074,7 +116782,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(31, "Jelly Bean Doll", "A doll made in the likeness of a Jelly Bean.", 9, 261, 6450, 0, 3, 0, 1, 0, 0, 0, 841, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -119118,7 +116825,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(32, "Choropy Doll", "A doll that looks exactly like a Choropy.", 9, 261, 9750, 0, 3, 0, 1, 0, 0, 0, 842, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -119164,7 +116870,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(33, "Pumpkin Doll", "A doll made in the likeness of a Pumpkin.", 9, 261, 13700, 0, 4, 0, 1, 0, 0, 0, 843, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -119208,7 +116913,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(34, "HoneyBee Doll", "A doll that looks exactly like a HoneyBee.", 9, 261, 18350, 0, 4, 0, 1, 0, 0, 0, 844, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -119254,7 +116958,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(35, "Surfboard", "A simply designed surfboard that's a must-have item during the summer.", 9, 261, 3000, 0, 2, 0, 1, 0, 0, 0, 845, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 14
@@ -119298,7 +117001,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(61, "Book of Standards", "A book in which the fundamentals of life are written.", 9, 261, 1725, 0, 0, 0, 1, 0, 0, 0, 871, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -119348,7 +117050,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 20
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119405,7 +117106,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 30
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119462,7 +117162,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 40
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119519,7 +117218,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119576,7 +117274,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 60
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119630,7 +117327,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119684,7 +117380,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119738,7 +117433,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 90
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119792,7 +117486,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119849,7 +117542,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 110
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119906,7 +117598,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 120
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -119963,7 +117654,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 130
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120020,7 +117710,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 140
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120077,7 +117766,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120134,7 +117822,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 165
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120191,7 +117878,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 180
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120248,7 +117934,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120305,7 +117990,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 220
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120362,7 +118046,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 12
 reqTable[1].value = 240
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 39
@@ -120419,7 +118102,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 62
@@ -120473,7 +118155,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 600
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 63
@@ -120527,7 +118208,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 900
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 64
@@ -120581,7 +118261,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 400
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 62
@@ -120635,7 +118314,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 800
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 63
@@ -120689,7 +118367,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 64
@@ -120743,7 +118420,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 500
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 62
@@ -120797,7 +118473,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1000
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 63
@@ -120851,7 +118526,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1500
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 64
@@ -121120,7 +118794,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 68
@@ -121174,7 +118847,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 69
@@ -121228,7 +118900,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 70
@@ -121282,7 +118953,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 68
@@ -121336,7 +119006,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 250
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 69
@@ -121390,7 +119059,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 350
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 70
@@ -121745,7 +119413,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 2
@@ -121799,7 +119466,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 2
@@ -121853,7 +119519,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 5
@@ -121907,7 +119572,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 6
@@ -122391,7 +120055,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 65
@@ -122445,7 +120108,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 250
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 65
@@ -122499,7 +120161,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 400
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 65
@@ -122553,7 +120214,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 550
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 66
@@ -122607,7 +120267,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 700
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 66
@@ -122661,7 +120320,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 850
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 66
@@ -122715,7 +120373,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1000
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 67
@@ -122769,7 +120426,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 67
@@ -122823,7 +120479,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 67
@@ -122877,7 +120532,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1450
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -122931,7 +120585,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1600
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -122985,7 +120638,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1750
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123039,7 +120691,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1900
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123093,7 +120744,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 2050
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123147,7 +120797,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 2200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123201,7 +120850,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 2350
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123255,7 +120903,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 2500
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123309,7 +120956,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 2650
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123363,7 +121009,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -123417,7 +121062,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 50
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 71
@@ -123471,7 +121115,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 75
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 71
@@ -123525,7 +121168,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 100
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 71
@@ -123579,7 +121221,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 125
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 72
@@ -123633,7 +121274,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 72
@@ -123687,7 +121327,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 175
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 72
@@ -123741,7 +121380,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 200
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 73
@@ -123795,7 +121433,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 225
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 73
@@ -123849,7 +121486,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 250
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 73
@@ -123903,7 +121539,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 250
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 73
@@ -123957,7 +121592,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 4
@@ -124011,7 +121645,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 325
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 4
@@ -124065,7 +121698,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1450
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 75
@@ -124119,7 +121751,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 1600
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 75
@@ -124173,7 +121804,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 275
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 76
@@ -124227,7 +121857,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 76
@@ -124281,7 +121910,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 700
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 1
@@ -124335,7 +121963,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 500
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 4
@@ -124432,7 +122059,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 16
 reqTable[1].value = 300
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 3
@@ -124486,7 +122112,6 @@ reqTable = {}
 reqTable[1] = {}
 reqTable[1].type = 17
 reqTable[1].value = 150
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 5
@@ -157063,7 +154688,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 31
 reqTable[2].value = 70
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157120,7 +154744,6 @@ reqTable = {}
 reqTable[2] = {}
 reqTable[2].type = 31
 reqTable[2].value = 80
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157309,7 +154932,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(132, "Sheft Engine", "An improved version of the Fornef Engine.", 14, 522, 233800, 0, 5, 0, 0, 0, 0, 31, 246, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 24
@@ -157356,7 +154978,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(133, "Luxem Engine", "A recently invented generator whose design is based on the latest studies on Mana generation.", 14, 522, 282000, 0, 5, 0, 0, 0, 0, 31, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -157507,7 +155128,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(231, "Stand Leg", "An older type of Castle Gear leg that is barely capable of walking.", 14, 532, 219500, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157554,7 +155174,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(232, "Runihol Leg", "Castle Gear legs that are capable of movement, but aren't built efficiently enough for running.", 14, 532, 246700, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -157671,7 +155290,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(321, "Jet Booster", "High quality booster for professional drivers who desire high speed.", 14, 551, 5000, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157715,7 +155333,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(331, "Punch Arms", "Basic Castle Gear weapon designed to punch.", 14, 552, 423500, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -157764,7 +155381,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(332, "Drill Arms", "Extremely noisy arm weapons designed to drill holes in castles or into the ground.", 14, 552, 499200, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157811,7 +155427,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(333, "Sword Wheel Arms", "Arm weapons designed to raze castles or destroy huge trees.", 14, 552, 551400, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[2] = {}
@@ -157891,7 +155506,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(335, "Spear Arms", "Arm weapons that provide strong close range attacks with a spear, and defense with a shield.", 14, 552, 604200, 0, 10, 0, 0, 0, 0, 31, 246, "use_restriction = 0
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -157939,7 +155553,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(401, "Spike Wheel", "Wheels equipped with spikes for offensive purposes.", 14, 551, 2500, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -157983,7 +155596,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(402, "Speed Wing", "Aerodynamic Cart accessory that cuts through the wind at high speeds.", 14, 551, 3000, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -158029,7 +155641,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(403, "Wind Booster", "Basic equipment for Mana Turbo Tuning that allows for enjoyable cruising.", 14, 551, 4000, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -158074,7 +155685,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(404, "Jet Booster", "High quality booster for professional drivers who desire high speed.", 14, 551, 5000, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 23
@@ -158118,7 +155728,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(405, "Sun Roof", "Protective covering that blocks the glare of the sun.", 14, 551, 3000, 0, 5, 0, 0, 0, 0, 21, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -158167,7 +155776,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(421, "Meister W Frame", "A classic Cart body painted in a classy white color.", 14, 511, 10000, 0, 10, 0, 0, 0, 0, 21, 246, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -158214,7 +155822,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(422, "Meister R Frame", "A classic Cart body painted in a regal red color.", 14, 511, 10000, 0, 10, 0, 0, 0, 0, 21, 246, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -158263,7 +155870,6 @@ function OnUse(entity)
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(423, "Meister B Frame", "A classic Cart body painted in an illustrious black color.", 14, 511, 10000, 0, 10, 0, 0, 0, 0, 21, 246, "use_restriction = 6
 
-
 bonusTable = {}
 bonusTable[1] = {}
 bonusTable[1].type = 19
@@ -158310,7 +155916,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(424, "Meister Y Frame", "A classic Cart body painted in a flamboyant yellow color.", 14, 511, 10000, 0, 10, 0, 0, 0, 0, 21, 246, "use_restriction = 6
-
 
 bonusTable = {}
 bonusTable[1] = {}
@@ -158392,7 +155997,6 @@ function OnUse(entity)
   return true
 end");
 REPLACE into item_db(id, name, `desc`, type, subtype, price_buy, price_sell, weight, attack, defense, `range`, slots, equip_jobs, view_id, script) values(601, "Steel Backseat", "A backseat made of steel with a downy cushion. It's actually quite comfortable.", 14, 551, 1500000, 0, 15, 0, 0, 0, 0, 21, 246, "use_restriction = 0
-
 
 bonusTable = {}
 bonusTable[1] = {}
