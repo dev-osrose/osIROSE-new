@@ -211,9 +211,9 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
     if (!dispatcher.is_supported(*packet.get())) {
         return false;
     }
-    add_task(std::move([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
+    add_task([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
         dispatcher.dispatch(entitySystem, entity, std::move(packet));
-    }));
+    });
     return true;
 }
 
@@ -351,7 +351,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     const auto& basicInfo = get_component<Component::BasicInfo>(entity);
     for (const auto other : to_remove) {
         send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
-        if (const auto* basic = get_component<Component::BasicInfo>(other)) {
+        if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
             send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic.id));
         }
     }
@@ -517,11 +517,11 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     level.penaltyXp = charRow.penaltyExp;
 
     auto& life = prototype.set<Life>();
-    life.hp = charRow.current_hp <= 0 ? charRow.maxHp / 3 : charRow.current_hp;
+    life.hp = charRow.currentHp <= 0 ? charRow.maxHp / 3 : charRow.currentHp;
     life.maxHp = charRow.maxHp;
 
     auto& magic = prototype.set<Magic>();
-    magic.mp = charRow.current_mp <= 0 ? charRow.maxMp / 3 : charRow.current_mp;
+    magic.mp = charRow.currentMp <= 0 ? charRow.maxMp / 3 : charRow.currentMp;
     magic.maxMp = charRow.maxMp;
 
     auto& pos = prototype.set<Position>();
