@@ -357,7 +357,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     }
     for (const auto other : to_add) {
         send_to_entity(entity, other);
-        end_to_entity(other, entity);
+        send_to_entity(other, entity);
     }
 }
 
