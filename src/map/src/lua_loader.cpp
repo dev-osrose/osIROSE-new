@@ -99,3 +99,7 @@ void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua)
 std::weak_ptr<ItemLuaApi> LuaLoader::get_lua_item(uint8_t type, uint16_t id) {
     return items.get_lua_api(type, id);
 }
+
+std::optional<LuaDb::LuaData> LuaLoader::get_data(int npc_id) const {
+    return lua_db.get_data(npc_id);
+}

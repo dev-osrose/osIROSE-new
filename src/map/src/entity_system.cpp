@@ -351,13 +351,13 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     const auto& basicInfo = get_component<Component::BasicInfo>(entity);
     for (const auto other : to_remove) {
         send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
-	if (const auto* basic = get_component<Component::BasicInfo>(other)) {
+        if (const auto* basic = get_component<Component::BasicInfo>(other)) {
             send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic.id));
         }
     }
     for (const auto other : to_add) {
         send_to_entity(entity, other);
-	send_to_entity(other, entity);
+        end_to_entity(other, entity);
     }
 }
 
@@ -777,6 +777,8 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     const auto& spawn = get_component<Spawner>(spawner);
     const auto& spos = get_component<Position>(spawner);
 
+    auto data = lua_loader.get_data(spawn.mob_id);
+
     auto& basic_info = prototype.set<BasicInfo>();
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
@@ -792,15 +794,15 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto& computed_values = prototype.set<ComputedValues>();
     computed_values.command = RoseCommon::Command::STOP;
     computed_values.moveMode = RoseCommon::MoveMode::WALK;
-    computed_values.runSpeed = 0;
-    computed_values.atkSpeed = 0;
+    computed_values.runSpeed = data ? data.value().get_run_speed() : 0;
+    computed_values.atkSpeed = data ? data.value().get_attack_spd() : 0;
     computed_values.weightRate = 0;
     computed_values.statusFlag = 0;
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    life.hp = 1;
-    life.maxHp = 1;
+    life.hp = data ? data.value().get_hp() : 1;
+    life.maxHp = life.hp;
 
     auto& mob = prototype.set<Mob>();
     mob.id = spawn.mob_id;

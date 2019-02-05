@@ -13,7 +13,7 @@ class LuaDb {
         void store_lua(const std::string& filename, sol::environment env, int npc_id, sol::table npc_data);
         
         struct LuaData {
-            LuaData(const sol::table& table) : data(table) {}
+            LuaData(sol::table table) : data(table) {}
             
             int get_walk_speed() { return get_data<int>("walk_speed"); }
             int get_run_speed() { return get_data<int>("run_speed"); }
@@ -55,7 +55,7 @@ class LuaDb {
                     return {static_cast<T>(data[name])};
                 }
 
-                const sol::table& data;
+                sol::table data;
         };
 
         std::weak_ptr<NpcLuaApi> get_lua_api(int npc_id);
