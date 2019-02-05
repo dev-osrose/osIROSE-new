@@ -145,13 +145,13 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest --output-on-failure
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
-        - cd ..
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build
+        - rm -rf ${TRAVIS_BUILD_DIR}/build/bin/symbols
+        - cd ${TRAVIS_BUILD_DIR}
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include scripts
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *gccinit
@@ -162,6 +162,9 @@ jobs:
         - eval "${MATRIX_EVAL}"
       before_script:
         - export CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
@@ -170,6 +173,7 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
+        - ctest --output-on-failure
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
