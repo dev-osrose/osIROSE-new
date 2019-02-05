@@ -349,11 +349,15 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
 
     const auto& basicInfo = get_component<Component::BasicInfo>(entity);
-    for (const auto e : to_remove) {
-        send_to(e, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+    for (const auto other : to_remove) {
+        send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+	if (const auto* basic = get_component<Component::BasicInfo>(other)) {
+            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic.id));
+        }
     }
-    for (const auto e : to_add) {
-        send_to_entity(entity, e);
+    for (const auto other : to_add) {
+        send_to_entity(entity, other);
+	send_to_entity(other, entity);
     }
 }
 
