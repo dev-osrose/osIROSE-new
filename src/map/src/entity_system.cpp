@@ -153,7 +153,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
         idManager.release_id(basicInfo->id);
         id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
-    }    
+    }
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -369,13 +369,6 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
     auto& pos = get_component<Component::Position>(entity);
     if (pos.map == map_id) {
         // we teleport the character on the same map
-        Component::Position tmp = pos;
-        tmp.x = x;
-        tmp.y = y;
-        // we trigger the callback to send obj removal for nearby clients
-        remove_component<Component::Position>(entity);
-        // we re-add the component to trigger moar callbacks
-        registry.assign<Component::Position>(entity, tmp);
         const auto& basic = get_component<Component::BasicInfo>(entity);
         const auto& computed_values = get_component<Component::ComputedValues>(entity);
         send_to(entity, RoseCommon::Packet::SrvTeleportReply::create(
@@ -386,30 +379,25 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
             computed_values.moveMode,
             0 // computed_values.rideMode (FIXME: we don't have it yet)
         ));
-        send_nearby_except_me(entity, CMapClient::create_srv_player_char(*this, entity));
-        const auto& nearby_entities = get_nearby(entity);
-        for (auto other : nearby_entities) {
-            if (other != entity) {
-                send_to_entity(entity, other);
-            }
-        }
+        update_position(entity, x, y);
     } else {
         // we update the position to save it
         pos.x = x;
         pos.y = y;
+        pos.map = map_id;
         if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
-        if (auto client = client_ptr->client.lock()) {
-            client->switch_server();
-            auto& config = Core::Config::getInstance();
-            // force send the packet as the client isn't on the map anymore technically
-            send_to(entity, RoseCommon::Packet::SrvSwitchServer::create(
-                config.mapServer().clientPort + map_id,
-                client->get_session_id(),
-                0,
-                config.serverData().externalIp
-            ), true);
+            if (auto client = client_ptr->client.lock()) {
+                client->switch_server();
+                auto& config = Core::Config::getInstance();
+                // force send the packet as the client isn't on the map anymore technically
+                send_to(entity, RoseCommon::Packet::SrvSwitchServer::create(
+                    config.mapServer().clientPort + map_id,
+                    client->get_session_id(),
+                    0,
+                    config.serverData().externalIp
+                ), true);
+            }
         }
-    }
     }
 }
 
@@ -721,6 +709,15 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias, int dest_map
     warpgate.max_x = x - Warpgate::model_max_x * x_scale - 2.f * w * z_scale * Warpgate::model_max_z;
     warpgate.max_y = y + y_scale * Warpgate::model_max_y;
     warpgate.max_z = z + 2 * w * x_scale * Warpgate::model_max_x - z_scale * Warpgate::model_max_z;
+
+    logger->trace("warpgate at {} {} {} - {} {} {}",
+            warpgate.min_x,
+            warpgate.min_y,
+            warpgate.min_z,
+            warpgate.max_x,
+            warpgate.max_y,
+            warpgate.max_z);
+
     
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;
