@@ -48,7 +48,7 @@ class EntitySystem {
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
-        RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale);
+        RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
         RoseCommon::Entity create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z);
         RoseCommon::Entity create_mob(RoseCommon::Entity spawner);
 
