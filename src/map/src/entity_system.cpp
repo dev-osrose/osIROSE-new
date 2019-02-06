@@ -691,34 +691,22 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float x, float y, float z, float angle, float x_scale, float y_scale, float z_scale) {
+RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
+	int dest_map_id, float dest_x, float dest_y, float dest_z,
+	float min_x, float min_y, float min_z,
+    float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
     using namespace Component;
     entt::prototype prototype(registry);
 
     auto& warpgate = prototype.set<Warpgate>();
     warpgate.dest_map = dest_map_id;
-    // rot (axis -y) * trans * scale
-    // angle in radians
-    const float w = std::cos(angle / 2.f);
-    x *= 100;
-    y *= 100;
-    z *= 100;
-    warpgate.min_x = x - Warpgate::model_min_x * x_scale - 2.f * w * z_scale * Warpgate::model_min_z;
-    warpgate.min_y = y + y_scale * Warpgate::model_min_y;
-    warpgate.min_z = z + 2 * w * x_scale * Warpgate::model_min_x - z_scale * Warpgate::model_min_z;
-    warpgate.max_x = x - Warpgate::model_max_x * x_scale - 2.f * w * z_scale * Warpgate::model_max_z;
-    warpgate.max_y = y + y_scale * Warpgate::model_max_y;
-    warpgate.max_z = z + 2 * w * x_scale * Warpgate::model_max_x - z_scale * Warpgate::model_max_z;
-
-    logger->trace("warpgate at {} {} {} - {} {} {}",
-            warpgate.min_x,
-            warpgate.min_y,
-            warpgate.min_z,
-            warpgate.max_x,
-            warpgate.max_y,
-            warpgate.max_z);
-
+    warpgate.min_x = min_x;
+    warpgate.min_y = min_y;
+    warpgate.min_z = min_z;
+    warpgate.max_x = max_x;
+    warpgate.max_y = max_y;
+    warpgate.max_z = max_z;
     
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;
