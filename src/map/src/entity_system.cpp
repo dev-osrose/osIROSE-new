@@ -701,12 +701,12 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
 
     auto& warpgate = prototype.set<Warpgate>();
     warpgate.dest_map = dest_map_id;
-    warpgate.min_x = min_x;
-    warpgate.min_y = min_y;
-    warpgate.min_z = min_z;
-    warpgate.max_x = max_x;
-    warpgate.max_y = max_y;
-    warpgate.max_z = max_z;
+    warpgate.min_x = min_x * 100;
+    warpgate.min_y = min_y * 100;
+    warpgate.min_z = min_z * 100;
+    warpgate.max_x = max_x * 100;
+    warpgate.max_y = max_y * 100;
+    warpgate.max_z = max_z * 100;
     
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;

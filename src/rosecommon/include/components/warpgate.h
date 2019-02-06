@@ -11,10 +11,10 @@ struct Warpgate {
 
     uint16_t dest_map;
 
-    bool is_point_in(float x, float y, float z) {
+    bool is_point_in(float x, float y, [[maybe_unused]] float z) {
+        // we don't test z as we don't have any reliable data about it
         if (x >= min_x && x <= max_x &&
-            y >= min_y && y <= max_y &&
-            z >= min_z && z <= max_z) {
+            y >= min_y && y <= max_y) {
             return true;
         }
         return false;
