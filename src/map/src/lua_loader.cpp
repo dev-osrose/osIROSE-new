@@ -26,10 +26,10 @@ void LuaLoader::load_file(const std::string& path) {
         // warp gates
         env.set_function("warp_gate", [this, env, path](std::string alias,
             int dest_map_id, float dest_x, float dest_y, float dest_z,
-            int _map_id, float x, float y, float z, float angle,
-            float x_scale, float y_scale, float z_scale) {
+            int _map_id, float min_x, float min_y, float min_z,
+            float max_x, float max_y, float max_z) {
             if (map_id != _map_id) return; // we skip anything that isn't needed
-            auto entity = entitySystem.create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, x, y, z, angle, x_scale, y_scale, z_scale);
+            auto entity = entitySystem.create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, min_x, min_y, min_z, max_x, max_y, max_z);
             warps.register_lua(path, env, entity);
         });
 
