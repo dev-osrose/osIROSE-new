@@ -385,6 +385,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         pos.x = x;
         pos.y = y;
         pos.map = map_id;
+        save_character(entity);
         if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
             if (auto client = client_ptr->client.lock()) {
                 client->switch_server();

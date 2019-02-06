@@ -25,6 +25,7 @@
 #include "srv_quest_data.h"
 #include "srv_select_char_reply.h"
 #include "srv_billing_message.h"
+#include "srv_teleport_reply.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -262,7 +263,17 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           CRoseClient::send(Packet::SrvBillingMessage::create());
         } else {
-          //CRoseClient::send(Packet::SrvTeleportReply::create(entity_));
+          const auto& basic = entitySystem->get_component<Component::BasicInfo>(entity);
+          const auto& computed_values = entitySystem->get_component<Component::ComputedValues>(entity);
+          const auto& pos = entitySystem->get_component<Component::Position>(entity);
+          CRoseClient::send(RoseCommon::Packet::SrvTeleportReply::create(
+              basic.id,
+              pos.map,
+              pos.x,
+              pos.y,
+              computed_values.moveMode,
+              0 // computed_values.rideMode (FIXME: we don't have it yet)
+          ));
         }
         login_state_ = eSTATE::LOGGEDIN;
       } else {
