@@ -328,13 +328,16 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
 
     // check for warpgates
     registry.view<Component::Warpgate, Component::Destination>().each([this, pos](auto entity, auto& warpgate, auto& destination) {
+        logger->trace("pos {} {} checking warpgate {} {} {}", pos->x, pos->y, warpgate.min_x, warpgate.min_y, warpgate.min_z);
         if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
             return;
         }
+        logger->trace("good to go!");
         float x = destination.x;
         float y = destination.y;
         uint16_t map = warpgate.dest_map;
         add_task([entity, x, y, map](EntitySystem& self) {
+            self.logger->trace("wooo teleporting!");
             self.teleport_entity(entity, x, y, map);
         });
     });
