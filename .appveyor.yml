@@ -2,8 +2,7 @@ version: '{branch}.ci.{build}'
 init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
 
-image: 
-#- Previous Visual Studio 2017
+image:
 - Visual Studio 2017
 
 configuration:
@@ -62,7 +61,7 @@ build:
 
 build_script:
 - cmd: cd build
-- cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
+- cmd: C:\msys64\1.0\bin\bash.exe -c "%PROJECT_PATH%/cmake/scripts/msys_build.bat"
 
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }
