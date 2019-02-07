@@ -1,14 +1,9 @@
 set(SQLPP11_SQLITE3_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(WIN32)
-  set(_byproducts
+set(_byproducts
     ${SQLPP11_SQLITE3_INSTALL_DIR}/lib/libsqlpp11-connector-sqlite3.lib
-  )
-else()
-  set(_byproducts
     ${SQLPP11_SQLITE3_INSTALL_DIR}/lib/libsqlpp11-connector-sqlite3.a
   )
-endif()
 
 ExternalProject_Add(
   sqlpp11-connector-sqlite3
@@ -27,7 +22,7 @@ ExternalProject_Get_Property(
 )
 
 set(SQLPP_CONNECTOR_SQLITE3_INCLUDE_DIR "${install_dir}/include")
-if(WIN32)
+if(NOT MINGW AND WIN32)
   set(SQLPP11_SQLITE3_LIBRARIES "${install_dir}/lib/sqlpp11-connector-sqlite3.lib" "${SQLITE3_LIBRARIES}")
 else()
   set(SQLPP11_SQLITE3_LIBRARIES "${install_dir}/lib/libsqlpp11-connector-sqlite3.a" "${SQLITE3_LIBRARIES}")

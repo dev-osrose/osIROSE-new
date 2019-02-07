@@ -46,7 +46,7 @@ ExternalProject_Get_Property(
   install_dir
 )
 
-if(WIN32)
+if(NOT MINGW AND WIN32)
   set(LUA_LIBRARY "${install_dir}/lib/lua.lib")
   set(LUA_LIBRARIES "${LUA_LIBRARY}")
   set(LUA_INSTALL_LIBS "${install_dir}/lib/liblua.dll")

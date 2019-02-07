@@ -28,9 +28,13 @@
 namespace RoseCommon {
 
 #ifdef _WIN32
-#define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pack(pop))
+  #ifndef __MINGW32__
+    #define PACK(...) __pragma(pack(push, 1)) __VA_ARGS__ __pragma(pack(pop))
+  #else
+    #define PACK(...) __VA_ARGS__ __attribute__((__packed__))
+  #endif
 #else
-#define PACK(...) __VA_ARGS__ __attribute__((__packed__))
+  #define PACK(...) __VA_ARGS__ __attribute__((__packed__))
 #endif
 
 #ifndef MAX_PACKET_SIZE

@@ -5,7 +5,7 @@ set(PROJECT LoginServer)
 
 project(${PROJECT})
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+if (GCC)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
 endif()
 
@@ -35,8 +35,9 @@ if(WITH_MYSQL)
   target_link_libraries(${PROJECT} mysql::mysql)
 endif()
 
-if (MSVC)
-  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
+if (MINGW)
+  target_link_libraries(${PROJECT} wsock32 ws2_32)
+elseif (MSVC)
   target_link_libraries(${PROJECT} wsock32.lib)
 endif()
 
@@ -47,7 +48,10 @@ endif()
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon)
 
-generate_symbol_data(${PROJECT})
+if(WITH_CRASH_REPORTS)
+  generate_symbol_data(${PROJECT})
+endif()
+
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()

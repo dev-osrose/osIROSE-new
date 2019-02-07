@@ -103,6 +103,12 @@ if(WITH_CRASH_REPORTS)
   target_link_libraries(${PROJECT} Breakpad::Breakpad)
 endif()
 
+if (MINGW)
+  target_link_libraries(${PROJECT} wsock32 ws2_32)
+elseif (MSVC)
+  target_link_libraries(${PROJECT} wsock32.lib)
+endif()
+
 if (WITH_MYSQL)
   add_dependencies(${PROJECT} SQLPP11::SQLPP11_MYSQL)
   target_link_libraries(${PROJECT} SQLPP11::SQLPP11_MYSQL)

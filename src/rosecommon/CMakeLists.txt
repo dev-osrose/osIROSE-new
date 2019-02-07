@@ -215,10 +215,6 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
 
-if (MSVC)
-  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
-endif()
-
 add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)
 
@@ -226,7 +222,6 @@ if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua)
 endif()
 target_link_libraries(${PROJECT} lua::lua)
-
 
 if (COMMAND cotire)
   cotire(${PROJECT})

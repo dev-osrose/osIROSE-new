@@ -20,18 +20,31 @@ endif()
 
 option(BUILD_TOOLS "Build server tools" OFF)
 option(BUILD_TESTS "Build various unit tests." ${DEV_SETTING})
+option(WITH_CRASH_REPORTS "Enable crash dump generation" ON)
 option(WITH_GTEST "Add GTest support" ${DEV_SETTING})
 option(WITH_GMOCK "Add GMock support" ${DEV_SETTING})
+option(WITH_MYSQL "Use MySQL connection" ON)
+option(DEBUG "enable debug build" OFF)
+
+if(MINGW)
+  message(STATUS "MINGW doesn't support gtest, gmock, or breakpad. Disabling these features...")
+  set(BUILD_TESTS OFF)
+  set(WITH_GTEST OFF)
+  set(WITH_GMOCK OFF)
+  set(WITH_CRASH_REPORTS OFF)
+endif()
+
+if(NOT WITH_CRASH_REPORTS AND NOT BUILD_TESTS)
+  set(WITH_GTEST OFF)
+  set(WITH_GMOCK OFF)
+endif()
+
 if(BUILD_TESTS OR WITH_GTEST)
   include(CTest)
   enable_testing()
   
   option(WITH_COVERAGE_REPORTS "Enable generating code coverage report" OFF)
 endif()
-
-option(WITH_CRASH_REPORTS "Enable crash dump generation" ON)
-option(WITH_MYSQL "Use MySQL connection" ON)
-option(DEBUG "enable debug build" OFF)
 
 option(FORCE_SYS_DEPS "Force the use of system libs")
 if(FORCE_SYS_DEPS)
@@ -53,7 +66,6 @@ endif()
 #------------------------------------------------------------------------------
 
 if(WIN32)
-  
 endif()
 
 
