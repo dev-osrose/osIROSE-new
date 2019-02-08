@@ -4,19 +4,19 @@
 
 namespace Component {
 struct Warpgate {
-    float x;
-    float y;
-    float z;
-    float range;
+    float min_x;
+    float min_y;
+    float min_z;
+    float max_x;
+    float max_y;
+    float max_z;
     static constexpr int character_size = 10;
 
     uint16_t dest_map;
 
-    bool is_point_in(float x, float y, float z) {
-        x = x - this->x;
-        y = y - this->y;
-        z = z - this->z;
-        return !(character_size + range < std::sqrt(x * x + y * y + z * z));
+    bool is_point_in(float x, float y, [[maybe_unused]] float z) {
+        return x + character_size >= min_x && x - character_size <= max_x
+            && y + character_size >= min_y && y - character_size <= max_y;
     }
 };
 }

@@ -328,7 +328,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
 
     // check for warpgates
     registry.view<Component::Warpgate, Component::Destination>().each([this, pos](auto entity, auto& warpgate, auto& destination) {
-        logger->trace("pos {} {} checking warpgate {} {} {}", pos->x, pos->y, warpgate.min_x, warpgate.min_y, warpgate.min_z);
+        logger->trace("pos {} {} checking warpgate {} {} {} {}", pos->x, pos->y, warpgate.min_x, warpgate.min_y, warpgate.max_x, warpgate.max_y);
         if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
             return;
         }
@@ -704,19 +704,12 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
 
     auto& warpgate = prototype.set<Warpgate>();
     warpgate.dest_map = dest_map_id;
-    min_x *= 100.f;
-    min_y *= 100.f;
-    min_z *= 100.f;
-    max_x *= 100.f;
-    max_y *= 100.f;
-    max_z *= 100.f;
-    const float x = max_x - min_x;
-    const float y = max_y - min_y;
-    const float z = max_z - min_z;
-    warpgate.range = std::sqrt(x * x + y * y + z * z) / 2.f;
-    warpgate.x = min_x + warpgate.range * x;
-    warpgate.y = min_y + warpgate.range * y;
-    warpgate.z = min_z + warpgate.range * z;
+    warpgate.min_x = min_x * 100.f;
+    warpgate.min_y = min_y * 100.f;
+    warpgate.min_z = min_z;
+    warpgate.max_x = max_x * 100.f;
+    warpgate.max_y = max_y * 100.f;
+    warpgate.max_z = max_z;
     
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;
