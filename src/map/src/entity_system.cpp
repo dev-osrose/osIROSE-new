@@ -89,7 +89,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
         self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, auto& inv, auto& computed) {
             (void)inv;
-            computed.runSpeed = 425;
+            computed.runSpeed = 433;
             if (computed.moveMode == RoseCommon::MoveMode::WALK) {
                 computed.runSpeed = 200;
             }
