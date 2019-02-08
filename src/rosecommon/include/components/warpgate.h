@@ -14,9 +14,17 @@ struct Warpgate {
 
     uint16_t dest_map;
 
+    inline float squared(float x) { return x * x; }
+    
     bool is_point_in(float x, float y, [[maybe_unused]] float z) {
-        return x + character_size >= min_x && x - character_size <= max_x
-            && y + character_size >= min_y && y - character_size <= max_y;
+        float dist_squared = squared(character_size);
+        if (x < min_x) dist_squared -= squared(x - min_x);
+        else if (x > max_x) dist_squared -= squared(x - max_x);
+        if (y < min_y) dist_squared -= squared(y - min_y);
+        else if (y > max_y) dist_squared -= squared(y - max_y);
+        //if (z < min_z) dist_squared -= squared(z - min_z);
+        //else if (z > max_z) dist_squared -= squared(z - max_z);
+        return dist_squared > 0;
     }
 };
 }
