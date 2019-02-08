@@ -10,11 +10,11 @@ struct Warpgate {
     float max_x;
     float max_y;
     float max_z;
-    static constexpr int character_size = 10;
+    static constexpr float character_size = 10.f;
 
     uint16_t dest_map;
 
-    inline float squared(float x) { return x * x; }
+    static constexpr inline float squared(float x) { return x * x; }
     
     bool is_point_in(float x, float y, [[maybe_unused]] float z) {
         float dist_squared = squared(character_size);
