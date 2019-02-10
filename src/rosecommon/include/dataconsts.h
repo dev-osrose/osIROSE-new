@@ -65,25 +65,7 @@ using Registry = entt::registry<Entity>;
 // I place it after just in case we need any of the constexpr/using directives in this file
 #include "types.h"
 
-/*namespace PartyReply {
-enum Reply : uint8_t {
-    NOT_FOUND = 0,
-    BUSY = 1,
-    ACCEPT_MAKE,
-    ACCEPT_JOIN,
-    REJECT,
-    DESTROY,
-    FULL,
-    INVALID_LEVEL,
-    CHANGE_OWNER,
-    CHANGE_OWNER_DISCONNECT,
-    NO_CHANGE_TARGET,
-    KICK = 0x80,
-    DISCONNECT,
-    REJOIN
-};
-}
-
+/*
 namespace ServerData {
 enum Type : uint8_t {
     ECONOMY = 0,

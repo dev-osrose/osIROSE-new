@@ -1,0 +1,16 @@
+<packet ePacketType = "PAKWC_PARTY_REQ">
+    <element name = "request" type = "Request" />
+    <element name = "tag" type = "uint32_t" />
+    <include path = "string" system = "true" />
+    <element name = "name" type = "std::string" ref = "true" />
+
+    <simpleType name = "Request">
+        <restriction base = "uint8_t">
+            <enumeration value = "MAKE" />
+            <enumeration value = "JOIN" />
+            <enumeration value = "LEFT" />
+            <enumeration value = "CHANGE_OWNER" />
+            <enumeration value = "KICK" id = "0x80" />
+        </restriction>
+    </simpleType>
+</packet>

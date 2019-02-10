@@ -121,4 +121,123 @@ struct StatusEffect : public ISerialize {
         uint16_t unkown = 0;
         std::chrono::milliseconds dt = 0ms;
 };
+
+struct PartyData : public ISerialize {
+    virtual bool read(CRoseReader& reader) override {
+        int8_t size = 0;
+        if (!reader.get_int8_t(size)) return false;
+        if (size == -1) { // it's a leaver
+            if (!reader.get_uint32_t(tag_leaver)) return false;
+            if (!reader.get_uint32_t(tag_leader)) return false;
+        } else { // it's an add
+            for (int8_t i = 0; i < size; ++i) {
+                MemberData member;
+                if (!reader.get_iserialize(member)) return false;
+                members.push_back(member);
+            }
+        }
+        return true;
+    }
+
+    virtual bool write(CRoseBasePolicy& writer) const override {
+        if (is_delete) {
+            if (!writer.set_int8_t(-1)) return false;
+            if (!writer.set_uint32_t(tag_leaver)) return false;
+            if (!writer.set_uint32_t(tag_leader)) return false;
+        } else {
+            if (!writer.set_int8_t(members.size())) return false;
+            for (const auto& it : members) {
+                if (!writer.set_iserialize(it)) return falsem
+            }
+        }
+        return true;
+    }
+    
+    static constexpr size_t size() { return sizeof(int8_t); }
+
+    void set_tagLeaver(uint32_t leaver) {
+        is_delete = true;
+        tag_leaver = leaver;
+    }
+
+    void set_tagLeader(uint32_t leader) {
+        is_delete = true;
+        tag_leader = leader;
+    }
+
+    struct MemberData : public ISerialize {
+        virtual bool read(CRoseReader& reader) override {
+            if (!reader.get_uint32_t(tag)) return false;
+            if (!reader.get_uint16_t(id)) return false;
+            if (!reader.get_int32_t(max_hp)) return false;
+            if (!reader.get_int32_t(hp)) return false;
+            if (!reader.get_uint32_t(status_flag)) return false;
+            if (!reader.get_uint16_t(con)) return false;
+            if (!reader.get_uint16_t(recovery_hp)) return false;
+            if (!reader.get_uint16_t(recovery_mp)) return false;
+            if (!reader.get_uint16_t(stamina)) return false;
+            if (!reader.get_string(name)) return false;
+            return true;
+        }
+
+        virtual bool write(CRoseBasePolicy& writer) const override {
+            if (!writer.set_uint32_t(tag)) return false;
+            if (!writer.set_uint16_t(id)) return false;
+            if (!writer.set_int32_t(max_hp)) return false;
+            if (!writer.set_int32_t(hp)) return false;
+            if (!writer.set_uint32_t(status_flag)) return false;
+            if (!writer.set_uint16_t(con)) return false;
+            if (!writer.set_uint16_t(recovery_hp)) return false;
+            if (!writer.set_uint16_t(recovery_mp)) return false;
+            if (!writer.set_uint16_t(stamina)) return false;
+            if (!writer.set_string(name)) return false;
+            return true;
+        }
+
+        uint32_t get_tag() const { return tag; }
+        uint16_t get_id() const { return id; }
+        int32_t get_maxHp() const { return max_hp; }
+        int32_t get_hp() const { return hp; }
+        uint32_t get_statusFlag() const { return status_flag; }
+        uint16_t get_con() const { return con; }
+        uint16_t get_recoveryHp() const { return recovery_hp; }
+        uint16_t get_recoveryMp() const { return recovery_mp; }
+        uint16_t get_stamina() const { return stamina; }
+        const std::string& get_name() const { return name; }
+
+        void set_tag(uint32_t data) { tag = data; }
+        void set_id(uint16_t data) { id = data; }
+        void set_maxHp(int32_t data) { max_hp = data; }
+        void set_hp(int32_t data) { hp = data; }
+        void set_statusFlag(uint32_t data) { status_flag = data; }
+        void set_con(uint16_t data) { con = data; }
+        void set_recoveryHp(uint16_t data) { recovery_hp = data; }
+        void set_recoveryMp(uint16_t data) { recovery_mp = data; }
+        void set_stamina(uint16_t data) { stamina = data; }
+        void set_name(const std::string& data) { name = data; }
+
+        private:
+            uint32_t tag;
+            uint16_t id;
+            int32_t max_hp;
+            int32_t hp;
+            uint32_t status_flag;
+            uint16_t con;
+            uint16_t recovery_hp;
+            uint16_t recovery_mp;
+            uint16_t stamina;
+            std::string name;
+    };
+
+    void add_member(MemberData member) {
+        members.push_back(member);
+    }
+
+    private:
+        bool is_delete = false;
+        uint32_t tag_leaver;
+        uint32_t tag_leader;
+        std::vector<MemberData> members;
+};
+
 }

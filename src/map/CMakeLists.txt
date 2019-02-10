@@ -32,6 +32,7 @@ SET( SOURCES_HEADER
   include/components/spawner.h
   include/items/inventory.h
   include/utils/name_to_session.h
+  include/party/party.h
   )
 
 SET( SOURCES_MAIN

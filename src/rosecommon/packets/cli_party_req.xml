@@ -1,0 +1,14 @@
+<packet ePacketType = "PAKCS_PARTY_REQ">
+    <element name = "request" type = "Request" />
+    <element name = "idXorTag" type = "uint32_t" />
+
+    <simpleType name = "Request">
+        <restriction base = "uint8_t">
+            <enumeration value = "MAKE" />
+            <enumeration value = "JOIN" />
+            <enumeration value = "LEFT" />
+            <enumeration value = "CHANGE_OWNER" />
+            <enumeration value = "KICK" id = "0x81" />
+        </restriction>
+    </simpleType>
+</packet>
