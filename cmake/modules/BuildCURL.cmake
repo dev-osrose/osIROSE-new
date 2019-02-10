@@ -1,10 +1,13 @@
 set(CURL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(WIN32)
-  set(_byproducts
+set(_byproducts
     ${CURL_INSTALL_DIR}/lib/libcurl_imp.lib
     ${CURL_INSTALL_DIR}/lib/libcurl-d_imp.lib
+    ${CURL_INSTALL_DIR}/lib/libcurl.a
+    ${CURL_INSTALL_DIR}/lib/libcurl.so
   )
+
+if(WIN32)
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git
@@ -14,10 +17,6 @@ if(WIN32)
     INSTALL_DIR ${CURL_INSTALL_DIR}
   )
 else()
-  set(_byproducts
-    ${CURL_INSTALL_DIR}/lib/libcurl.a
-    ${CURL_INSTALL_DIR}/lib/libcurl.so
-  )
   ExternalProject_Add(
     curl
     GIT_REPOSITORY https://github.com/curl/curl.git

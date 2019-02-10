@@ -16,6 +16,7 @@
 #include "timed_callbacks.h"
 #include "packet_dispatcher.h"
 #include "nearby.h"
+#include "lua_loader.h"
 
 using namespace std::chrono_literals;
 
@@ -23,7 +24,10 @@ class CMapClient;
 
 class EntitySystem {
     public:
-        EntitySystem(std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(const EntitySystem&) = delete;
+        EntitySystem(EntitySystem&&) = default;
+        ~EntitySystem() = default;
 
         void run();
         void stop();
@@ -42,6 +46,11 @@ class EntitySystem {
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
         RoseCommon::Entity create_item(uint8_t type, uint16_t id);
+
+        RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
+        RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
+        RoseCommon::Entity create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z);
+        RoseCommon::Entity create_mob(RoseCommon::Entity spawner);
 
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;
@@ -72,11 +81,14 @@ class EntitySystem {
         void send_map(const RoseCommon::CRosePacket& packet) const;
         void send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const;
         void send_nearby_except_me(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const;
-        void send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const;
+        void send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet, bool force = false) const;
+
+        void send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const;
 
         void delete_entity(RoseCommon::Entity entity);
 
         void update_position(RoseCommon::Entity entity, float x, float y);
+        void teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id);
     
         // returns a sorted vector
         std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
@@ -87,14 +99,15 @@ class EntitySystem {
         uint16_t get_world_time() const;
 
         template <class Rep, class Period>
-        void add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
+        TimedCallbacks::Wrapper add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback);
         template <class Rep, class Period>
-        void add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
+        TimedCallbacks::Wrapper add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
 
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
@@ -107,6 +120,7 @@ class EntitySystem {
         TimedCallbacks timers;
         PacketDispatcher dispatcher;
         Nearby nearby;
+        LuaLoader lua_loader;
 };
 
 
@@ -230,15 +244,15 @@ auto EntitySystem::item_to_item(RoseCommon::Entity entity) const {
 }
 
 template <class Rep, class Period>
-void EntitySystem::add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
-    timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
+TimedCallbacks::Wrapper EntitySystem::add_timer(const std::chrono::duration<Rep, Period>& timeout, Core::fire_once<void(EntitySystem&)>&& callback) {
+    return timers.add_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(std::move(callback));
     });
 }
 
 template <class Rep, class Period>
-void EntitySystem::add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback) {
-    timers.add_recurrent_callback(timeout, [this, callback = std::move(callback)]() mutable {
+TimedCallbacks::Wrapper EntitySystem::add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback) {
+    return timers.add_recurrent_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(callback);
     });
 }

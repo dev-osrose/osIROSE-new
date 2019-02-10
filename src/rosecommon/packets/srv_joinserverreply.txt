@@ -1,5 +1,0 @@
-PAKSC_JOIN_SERVER_REPLY
-include dataconsts.h
-JoinServerReply::Result result e(uint8_t)
-uint32_t id
-uint32_t payFlag = 0

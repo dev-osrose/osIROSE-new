@@ -22,10 +22,12 @@
 #ifndef _CNETWORK_ASIO_H_
 #define _CNETWORK_ASIO_H_
 
-#ifdef _WIN32
-#pragma warning(push)
-#pragma warning(disable : 6011 6031 6102 6255 6258 6326 6387)
-#define _WIN32_WINNT 0x0601
+#ifdef _WIN32 
+  #ifndef __MINGW32__
+    #pragma warning(push)
+    #pragma warning(disable : 6011 6031 6102 6255 6258 6326 6387)
+    #define _WIN32_WINNT 0x0601
+  #endif
 #endif
 
 #include <asio.hpp>
@@ -34,7 +36,9 @@
 #include <spdlog/spdlog.h>
 
 #ifdef _WIN32
-#pragma warning(pop)
+  #ifndef __MINGW32__
+    #pragma warning(pop)
+  #endif
 #endif
 
 #include <thread>
@@ -44,7 +48,7 @@
 #include "network_thread_pool.h"
 
 #ifndef MAX_PACKET_SIZE
-#define MAX_PACKET_SIZE 0x7FF
+  #define MAX_PACKET_SIZE 0x7FF
 #endif
 
 using asio::ip::tcp;

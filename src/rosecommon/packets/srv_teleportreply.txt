@@ -1,7 +1,0 @@
-PAKWC_TELEPORT_REPLY
-uint16_t id BasicInfo::id
-uint16_t map Position::map
-float x Position::x
-float y Position::y
-uint8_t moveMode AdvancedInfo::moveMode
-uint8_t rideMode = 0

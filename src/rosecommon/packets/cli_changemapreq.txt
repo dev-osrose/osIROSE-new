@@ -1,3 +1,0 @@
-PAKCS_CHANGE_MAP_REQ
-uint8_t weightRate
-uint16_t z

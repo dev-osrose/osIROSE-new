@@ -22,6 +22,7 @@
 #include "cli_join_server_req.h"
 #include "cli_normal_chat.h"
 #include "cli_change_map_req.h"
+#include "cli_mouse_cmd.h"
 
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
@@ -343,15 +344,18 @@ private:
       break;
     case ePacketType::PAKWC_CHANGE_MAP_REPLY:
       logger_->info("Got change map reply");
-      logger_->info("Sending a chat message");
+      logger_->info("Moving to warpgate");
       {
-          auto packet = CliNormalChat::create("This is a test message from a bot");
+          auto x = 527000;
+          auto y = 554000;
+          auto z = 2000;
+          auto packet = CliMouseCmd::create(0, x, y, z);
           send(packet);
       }
       break;
     default:
       logger_->info("Received a packet : 0x{0:04x}", (uint16_t)CRosePacket::type(buffer));
-      return false;
+      return true;
     }
     return true;
   }

@@ -1,9 +1,0 @@
-ISC_SERVER_REGISTER
-include isccommon.h
-include string
-Isc::ServerType serverType e(uint8_t)
-std::string name &
-std::string addr &
-int32_t port
-int32_t right
-int32_t id

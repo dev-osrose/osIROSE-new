@@ -1,4 +1,0 @@
-PAKCC_CREATE_CHAR_REPLY
-include dataconsts.h
-CreateCharReply::Result result e(uint8_t)
-uint8_t platinium = 0

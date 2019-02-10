@@ -1,8 +1,0 @@
-PAKLC_SRV_SELECT_REPLY
-include dataconsts.h
-SrvSelectReply::Result result e(uint8_t)
-uint32_t sessionId
-uint32_t cryptVal
-include string
-std::string ip &
-uint16_t port

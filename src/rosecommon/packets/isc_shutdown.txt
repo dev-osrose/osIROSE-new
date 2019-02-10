@@ -1,4 +1,0 @@
-ISC_SHUTDOWN
-include isccommon.h
-Isc::ServerType serverType e(uint8_t)
-int32_t id

@@ -1,4 +1,0 @@
-PAKCC_DELETE_CHAR_REPLY
-uint32_t remainingTime
-include string
-std::string name

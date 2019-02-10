@@ -1,19 +1,18 @@
 set(BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(WIN32 AND NOT MINGW)  
-  set(_byproducts)
-  if(NOT MSBUILD)
-    set(_byproducts
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/lib/common.lib
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/lib/crash_generation_client.lib
-      
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib/common.lib
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib/exception_handler.lib
-      ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib/crash_generation_client.lib
-    )
-  endif()
+set(_byproducts
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad.a
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad_client.a
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/lib/common.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/lib/crash_generation_client.lib
+    
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib/common.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib/exception_handler.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib/crash_generation_client.lib
+  )
 
+if(WIN32)  
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
@@ -76,13 +75,6 @@ if(WIN32 AND NOT MINGW)
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/tools/windows/binaries/" "<INSTALL_DIR>/bin" "*.exe"
   )
 else()
-
-  # This is a workaround for Ninja not allowing us to build if these libs weren't built before
-  set(_byproducts
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad.a
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/libbreakpad_client.a
-  )
-
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad

@@ -80,6 +80,8 @@ namespace RoseCommon
 
     bool itemExists(uint8_t type, uint16_t id) const;
 
+    void store_lua(std::function<void(uint8_t type, uint16_t id, const std::string& lua)> f) const;
+
   private:
     void initialize();
     ItemDatabase() { initialize(); }

@@ -3,6 +3,7 @@
 #include "cmapclient.h"
 #include "enumerate.h"
 #include "itemdb.h"
+#include "config.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
 #include "components/client.h"
@@ -16,28 +17,63 @@
 #include "components/item.h"
 #include "components/level.h"
 #include "components/life.h"
+#include "components/lua.h"
 #include "components/magic.h"
+#include "components/mob.h"
 #include "components/npc.h"
 #include "components/owner.h"
 #include "components/position.h"
+#include "components/spawner.h"
 #include "components/skills.h"
 #include "components/stamina.h"
 #include "components/stats.h"
 #include "components/status_effects.h"
 #include "components/target.h"
 #include "components/wishlist.h"
+#include "components/warpgate.h"
 
 #include "chat/normal_chat.h"
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
 
+#include "random.h"
+
 #include "srv_remove_object.h"
+#include "srv_switch_server.h"
+#include "srv_teleport_reply.h"
 
 #include <algorithm>
+#include <cmath>
 
-EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate) {
+void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+    {
+        auto* lua = registry.try_get<Component::ItemLua>(entity);
+        if (lua) {
+            if (const auto tmp = lua->api.lock()) {
+                tmp->on_delete();
+            }
+        }
+    }
+    {
+        auto* lua = registry.try_get<Component::NpcLua>(entity);
+        if (lua) {
+            if (const auto tmp = lua->api.lock()) {
+                tmp->on_delete();
+            }
+        }
+    }
+}
+
+EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
+    lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+
+    // load item lua
+    const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
+    itemDb.store_lua([this](uint8_t type, uint16_t id, const std::string& lua) {
+        lua_loader.load_lua_item(type, id, lua);
+    });
 
     // register recurrent stoof (like saving every 5min)
     using namespace std::chrono_literals;
@@ -50,9 +86,10 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     });
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
+        // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
         self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, auto& inv, auto& computed) {
             (void)inv;
-            computed.runSpeed = 425;
+            computed.runSpeed = 433;
             if (computed.moveMode == RoseCommon::MoveMode::WALK) {
                 computed.runSpeed = 200;
             }
@@ -90,11 +127,23 @@ EntitySystem::EntitySystem(std::chrono::milliseconds maxTimePerUpdate) : maxTime
     // callback for removing objects
     registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
+    // callback for destroying lua
+    registry.destruction<Component::ItemLua>().connect<&destroy_lua>();
+
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+
+    // load npc/mob/warpgates/spawn points lua
+    lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
+}
+
+void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    logger->trace("EntitySystem::remove_spawner");
+    auto& spawner = get_component<Component::Spawner>(entity);
+    spawner.callback.cancel();
 }
 
 void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -104,7 +153,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
         idManager.release_id(basicInfo->id);
         id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
-    }    
+    }
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -162,9 +211,9 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
     if (!dispatcher.is_supported(*packet.get())) {
         return false;
     }
-    add_task(std::move([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
+    add_task([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
         dispatcher.dispatch(entitySystem, entity, std::move(packet));
-    }));
+    });
     return true;
 }
 
@@ -209,22 +258,51 @@ void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCo
     });
 }
 
-void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
+void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet, bool force) const {
     if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
-            client->send(packet);
+            client->send(packet, force);
         }
+    }
+}
+
+void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const {
+    if (try_get_component<Component::Npc>(other)) {
+        send_to(entity, CMapClient::create_srv_npc_char(*this, other));
+    } else if (try_get_component<Component::Mob>(other)) {
+        send_to(entity, CMapClient::create_srv_mob_char(*this, other));
+    } else if (try_get_component<Component::Client>(other)) {
+        send_to(entity, CMapClient::create_srv_player_char(*this, other));
     }
 }
 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
-        auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-        entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
-        entitySystem.idManager.release_id(basicInfo.id);
-        entitySystem.id_to_entity.erase(basicInfo.id);
-        basicInfo.id = 0;
+        if (auto* basicInfo = entitySystem.try_get_component<Component::BasicInfo>(entity)) {
+            entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
+            entitySystem.idManager.release_id(basicInfo->id);
+            entitySystem.id_to_entity.erase(basicInfo->id);
+            basicInfo->id = 0;
+        }
+        if (auto* owner = entitySystem.try_get_component<Component::Owner>(entity)) {
+            // we have an owner, update it
+            if (auto* spawner = entitySystem.try_get_component<Component::Spawner>(owner->owner)) {
+                spawner->mobs.erase(std::remove(spawner->mobs.begin(), spawner->mobs.end(), entity), spawner->mobs.end());
+            }
+        }
+        // we delete all entities owned by this entity
+        entitySystem.registry.view<Component::Owner>().each([&entitySystem, entity](auto en, auto& owner) {
+            if (owner.owner == entity) {
+                entitySystem.delete_entity(en);
+            }
+        });
+        // we remove the target from others as it is deleted
+        entitySystem.registry.view<Component::Target>().each([&entitySystem, entity](auto en, auto& target) {
+            if (target.target == entity) {
+                entitySystem.remove_component<Component::Target>(en);
+            }
+        });
         entitySystem.registry.destroy(entity);
     });
 }
@@ -247,6 +325,20 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     pos->x = x;
     pos->y = y;
     nearby.update_position(entity, old_x, old_y, x, y);
+
+    // check for warpgates
+    registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
+        if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
+            return;
+        }
+        float x = destination.x;
+        float y = destination.y;
+        uint16_t map = warpgate.dest_map;
+        add_task([entity, x, y, map](EntitySystem& self) {
+            self.teleport_entity(entity, x, y, map);
+        });
+    });
+
     if (is_added) {
         return;
     }
@@ -257,11 +349,56 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
 
     const auto& basicInfo = get_component<Component::BasicInfo>(entity);
-    for (const auto e : to_remove) {
-        send_to(e, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+    for (const auto other : to_remove) {
+        send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+        if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
+            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
+        }
     }
-    for (const auto e : to_add) {
-        send_to(e, CMapClient::create_srv_player_char(*this, entity));
+    for (const auto other : to_add) {
+        send_to_entity(entity, other);
+        send_to_entity(other, entity);
+    }
+}
+
+void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id) {
+    logger->trace("EntitySystem::teleport_entity");
+    logger->debug("Teleporting {} to {}-{}-{}", entity, map_id, x, y);
+    remove_component<Component::Target>(entity);
+    remove_component<Component::Destination>(entity);
+    auto& pos = get_component<Component::Position>(entity);
+    if (pos.map == map_id) {
+        // we teleport the character on the same map
+        const auto& basic = get_component<Component::BasicInfo>(entity);
+        const auto& computed_values = get_component<Component::ComputedValues>(entity);
+        send_to(entity, RoseCommon::Packet::SrvTeleportReply::create(
+            basic.id,
+            map_id,
+            x,
+            y,
+            computed_values.moveMode,
+            0 // computed_values.rideMode (FIXME: we don't have it yet)
+        ));
+        update_position(entity, x, y);
+    } else {
+        // we update the position to save it
+        pos.x = x;
+        pos.y = y;
+        pos.map = map_id;
+        save_character(entity);
+        if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
+            if (auto client = client_ptr->client.lock()) {
+                client->switch_server();
+                auto& config = Core::Config::getInstance();
+                // force send the packet as the client isn't on the map anymore technically
+                send_to(entity, RoseCommon::Packet::SrvSwitchServer::create(
+                    config.mapServer().clientPort + map_id,
+                    client->get_session_id(),
+                    0,
+                    config.serverData().externalIp
+                ), true);
+            }
+        }
     }
 }
 
@@ -369,11 +506,11 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     level.penaltyXp = charRow.penaltyExp;
 
     auto& life = prototype.set<Life>();
-    life.hp = charRow.maxHp / 3; // you only get 30% of your health when login in
+    life.hp = charRow.currentHp <= 0 ? charRow.maxHp / 3 : charRow.currentHp;
     life.maxHp = charRow.maxHp;
 
     auto& magic = prototype.set<Magic>();
-    magic.mp = charRow.maxMp / 3;
+    magic.mp = charRow.currentMp <= 0 ? charRow.maxMp / 3 : charRow.currentMp;
     magic.maxMp = charRow.maxMp;
 
     auto& pos = prototype.set<Position>();
@@ -496,6 +633,12 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.price = 0;
 
     prototype.set<RoseCommon::ItemDef>(def);
+
+    auto& lua = prototype.set<ItemLua>();
+    lua.api = lua_loader.get_lua_item(type, id);
+    if (const auto tmp = lua.api.lock(); tmp) {
+        tmp->on_init();
+    }
 	
     std::lock_guard<std::mutex> lock(access);
     return prototype();
@@ -511,5 +654,150 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 }
 
 void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
-    // TODO: should be done as a task???
+    // TODO: should be done as a task??? no
+}
+
+RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
+    logger->trace("EntitySystem::create_npc");
+    using namespace Component;
+    entt::prototype prototype(registry);
+    auto& basic = prototype.set<BasicInfo>();
+    basic.id = idManager.get_free_id();
+    basic.teamId = basic.id;
+
+    auto& computed_values = prototype.set<ComputedValues>();
+    computed_values.moveMode = RoseCommon::MoveMode::WALK;
+    computed_values.command = RoseCommon::Command::STOP;
+    computed_values.statusFlag = 0;
+
+    auto& life = prototype.set<Life>();
+    life.hp = 1;
+    life.maxHp = 1;
+
+    auto& pos = prototype.set<Position>();
+    pos.x = x * 100;
+    pos.y = y * 100;
+    pos.z = static_cast<uint16_t>(z);
+    pos.map = map_id;
+
+    auto& npc = prototype.set<Npc>();
+    npc.id = npc_id;
+    npc.quest = quest_id;
+    npc.angle = angle;
+    npc.event_status = 0;
+
+    // TODO: add lua
+
+    return prototype();
+}
+
+RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
+	int dest_map_id, float dest_x, float dest_y, float dest_z,
+	float min_x, float min_y, float min_z,
+    float max_x, float max_y, float max_z) {
+    logger->trace("EntitySystem::create_warpgate");
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    auto& warpgate = prototype.set<Warpgate>();
+    warpgate.dest_map = dest_map_id;
+    warpgate.min_x = min_x * 100.f;
+    warpgate.min_y = min_y * 100.f;
+    warpgate.min_z = min_z;
+    warpgate.max_x = max_x * 100.f;
+    warpgate.max_y = max_y * 100.f;
+    warpgate.max_z = max_z;
+    
+    auto& dest = prototype.set<Destination>();
+    dest.x = dest_x * 100;
+    dest.y = dest_y * 100;
+    dest.z = dest_z * 100;
+
+    // TODO: add lua
+
+    return prototype();
+}
+
+RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+    logger->trace("EntitySystem::create_spawner");
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    auto& spawner = prototype.set<Spawner>();
+    spawner.mob_id = mob_id;
+    spawner.max_mobs = mob_count;
+    spawner.max_once = limit;
+    spawner.interval = std::chrono::seconds(interval);
+    spawner.range = range * 100;
+    spawner.mobs.reserve(mob_count);
+
+    auto& pos = prototype.set<Position>();
+    pos.x = x * 100;
+    pos.y = y * 100;
+    pos.z = z * 100;
+    pos.map = map_id;
+
+    auto entity = prototype();
+
+    spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
+        auto& spawner = self.get_component<Spawner>(entity);
+        if (spawner.mobs.size() < spawner.max_mobs) {
+            int number = Core::Random::getInstance().get_uniform(0, std::min(static_cast<size_t>(spawner.max_once), spawner.max_mobs - spawner.mobs.size()));
+            for (int i = 0; i < number; ++i) {
+                const auto mob = self.create_mob(entity);
+                spawner.mobs.push_back(mob);
+                self.send_nearby_except_me(entity, CMapClient::create_srv_mob_char(self, mob));
+            }
+        }
+    });
+
+    // TODO: add lua
+
+    return entity;
+}
+
+RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
+    logger->trace("EntitySystem::create_mob");
+    using namespace Component;
+    entt::prototype prototype(registry);
+    const auto& spawn = get_component<Spawner>(spawner);
+    const auto& spos = get_component<Position>(spawner);
+
+    auto data = lua_loader.get_data(spawn.mob_id);
+
+    auto& basic_info = prototype.set<BasicInfo>();
+    basic_info.id = idManager.get_free_id();
+    basic_info.tag = basic_info.id;
+    basic_info.teamId = -1;
+
+    auto& position = prototype.set<Position>();
+    auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
+    position.x = std::get<0>(pos);
+    position.y = std::get<1>(pos);
+    position.z = spos.z;
+    position.map = spos.map;
+
+    auto& computed_values = prototype.set<ComputedValues>();
+    computed_values.command = RoseCommon::Command::STOP;
+    computed_values.moveMode = RoseCommon::MoveMode::WALK;
+    computed_values.runSpeed = data ? data.value().get_run_speed() : 0;
+    computed_values.atkSpeed = data ? data.value().get_attack_spd() : 0;
+    computed_values.weightRate = 0;
+    computed_values.statusFlag = 0;
+    computed_values.subFlag = 0;
+
+    auto& life = prototype.set<Life>();
+    life.hp = data ? data.value().get_hp() : 1;
+    life.maxHp = life.hp;
+
+    auto& mob = prototype.set<Mob>();
+    mob.id = spawn.mob_id;
+    mob.quest = 0;
+
+    auto& owner = prototype.set<Owner>();
+    owner.owner = spawner;
+
+    // TODO: add lua
+
+    return prototype();
 }

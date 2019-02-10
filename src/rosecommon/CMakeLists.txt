@@ -35,7 +35,9 @@ set( SOURCES_HEADER
   include/components/item.h
   include/components/level.h
   include/components/life.h
+  include/components/lua.h
   include/components/magic.h
+  include/components/mob.h
   include/components/npc.h
   include/components/owner.h
   include/components/party.h
@@ -46,6 +48,7 @@ set( SOURCES_HEADER
   include/components/stats.h
   include/components/status_effects.h
   include/components/target.h
+  include/components/warpgate.h
   include/components/wishlist.h
 )
 
@@ -176,14 +179,14 @@ SET(SOURCES_PACKETS
     include/packets/srv_quest_data.h
     #  src/packets/srv_dropitem.cpp
     #  include/packets/srv_dropitem.h
-    #  src/packets/srv_mobchar.cpp
-    #  include/packets/srv_mobchar.h
-    #  src/packets/srv_npcchar.cpp
-    #  include/packets/srv_npcchar.h
+    src/packets/srv_mob_char.cpp
+    include/packets/srv_mob_char.h
+    src/packets/srv_npc_char.cpp
+    include/packets/srv_npc_char.h
     #  src/packets/srv_adjustposition.cpp
     #  include/packets/srv_adjustposition.h
-    #  src/packets/srv_teleportreply.cpp
-    #  include/packets/srv_teleportreply.h
+    src/packets/srv_teleport_reply.cpp
+    include/packets/srv_teleport_reply.h
     #  src/packets/srv_setmoney.cpp
     #  include/packets/srv_setmoney.h
     #  src/packets/srv_attack.cpp
@@ -212,10 +215,6 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
 
-if (MSVC)
-  set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
-endif()
-
 add_dependencies(${PROJECT} Core)
 target_link_libraries(${PROJECT} Core)
 
@@ -223,7 +222,6 @@ if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua)
 endif()
 target_link_libraries(${PROJECT} lua::lua)
-
 
 if (COMMAND cotire)
   cotire(${PROJECT})

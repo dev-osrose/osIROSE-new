@@ -20,8 +20,8 @@
 #include <sqlite3.h>
 #include <sqlpp11/sqlpp11.h>
 #include <sqlpp11/sqlite3/sqlite3.h>
+#include <nodeSessionDB.h>
 #include "connectionpool.h"
-#include "nodeSessions.h"
 
 struct NodeDB {
     using type = sqlpp::sqlite3::connection;
@@ -29,6 +29,6 @@ struct NodeDB {
 
 extern Core::ConnectionPool<NodeDB> &connectionPoolMem;
 
-using NodeSessionsTable = nodeSessions::Sessions;
+using NodeSessionsTable = nodeSessionDB::Sessions;
 
 #endif

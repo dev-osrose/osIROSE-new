@@ -1,5 +1,7 @@
 #pragma once
 
+/* Generated with IDL v0.1.0 */
+
 
 #include "packetfactory.h"
 #include "dataconsts.h"

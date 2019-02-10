@@ -1,5 +1,0 @@
-PAKCS_DELETE_CHAR_REQ
-uint8_t charId
-uint8_t isDelete
-include string
-std::string name &

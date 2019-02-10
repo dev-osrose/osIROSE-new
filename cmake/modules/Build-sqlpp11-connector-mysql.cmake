@@ -1,16 +1,10 @@
 set(SQLPP11_MYSQL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
-if(WIN32)
-  set(_byproducts
-    ${SQLPP11_MYSQL_INSTALL_DIR}/bin/sqlpp11-ddl2cpp
-    ${SQLPP11_MYSQL_INSTALL_DIR}/lib/sqlpp-mysql.lib
-  )
-else()
-  set(_byproducts
-    ${SQLPP11_MYSQL_INSTALL_DIR}/bin/sqlpp11-ddl2cpp
-    ${SQLPP11_MYSQL_INSTALL_DIR}/lib/libsqlpp-mysql.a
-  )
-endif()
+set(_byproducts
+  ${SQLPP11_MYSQL_INSTALL_DIR}/bin/sqlpp11-ddl2cpp
+  ${SQLPP11_MYSQL_INSTALL_DIR}/lib/libsqlpp-mysql.lib
+  ${SQLPP11_MYSQL_INSTALL_DIR}/lib/libsqlpp-mysql.a
+)
 
 ExternalProject_Add(
   sqlpp11-connector-mysql
@@ -30,7 +24,7 @@ ExternalProject_Get_Property(
 )
 
 set(SQLPP_CONNECTOR_MYSQL_INCLUDE_DIR "${install_dir}/include")
-if(WIN32)
+if(NOT MINGW AND WIN32)
   set(SQLPP11_MYSQL_LIBRARIES "${install_dir}/lib/sqlpp-mysql.lib" "${MYSQL_LIBRARIES}")
 else()
   set(SQLPP11_MYSQL_LIBRARIES "${install_dir}/lib/libsqlpp-mysql.a" "${MYSQL_LIBRARIES}")

@@ -33,7 +33,7 @@ if(WITH_MYSQL)
     ${MYSQL_LIBRARY_PATH}
   )
   
-  if(WIN32)
+  if(MYSQL_FOUND AND WIN32)
     file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
        DESTINATION "${CMAKE_BINARY_DIR}/bin/")
     if(MSBUILD)

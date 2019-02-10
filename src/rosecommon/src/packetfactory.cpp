@@ -30,8 +30,10 @@
 #include "srv_inventory_data.h"
 #include "srv_join_server_reply.h"
 #include "srv_login_reply.h"
+#include "srv_mob_char.h"
 #include "srv_mouse_cmd.h"
 #include "srv_normal_chat.h"
+#include "srv_npc_char.h"
 #include "srv_player_char.h"
 #include "srv_quest_data.h"
 #include "srv_remove_object.h"
@@ -39,6 +41,7 @@
 #include "srv_select_char_reply.h"
 #include "srv_srv_select_reply.h"
 #include "srv_switch_server.h"
+#include "srv_teleport_reply.h"
 #include "srv_whisper_chat.h"
 
 using namespace RoseCommon;
@@ -81,8 +84,10 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_INVENTORY_DATA, SrvInventoryData);
     REGISTER_SEND_PACKET(ePacketType::PAKSC_JOIN_SERVER_REPLY, SrvJoinServerReply);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_LOGIN_REPLY, SrvLoginReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_MOB_CHAR, SrvMobChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_NPC_CHAR, SrvNpcChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_PLAYER_CHAR, SrvPlayerChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject);
@@ -90,5 +95,6 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_SWITCH_SERVER, SrvSwitchServer);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_TELEPORT_REPLY, SrvTeleportReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_WHISPER_CHAT, SrvWhisperChat);
 }

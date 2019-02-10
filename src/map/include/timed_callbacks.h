@@ -1,82 +1,75 @@
 #pragma once
 
 #include <functional>
-#include <thread>
 #include <mutex>
-#include <vector>
-#include <condition_variable>
+#include <list>
 #include <chrono>
-#include <future>
-#include <algorithm>
 
 #include "fire_once.h"
+#include "network_thread_pool.h"
 
 class TimedCallbacks {
+    private:
+        using Timer = asio::steady_timer;
+        using error_code = asio::error_code;
+
     public:
-        ~TimedCallbacks() {
-            cv.notify_all();
-            std::lock_guard<std::mutex> lock(mutex);
-            for (auto& it : callbacks) {
-                it.thread.join();
-            }
-        }
-        
-        template <class Rep, class Period, class Func>
-        void add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
-            static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
-            std::lock_guard<std::mutex> lock(mutex);
-            // first we remove dead tasks from the vector
-            remove_dead_tasks();
-            // we then add the callback
-            std::promise<void> promise;
-            std::future<void> future = promise.get_future();
-            std::thread thread([this, timeout, callback = std::forward<Func>(callback), promise = std::move(promise)]() mutable {
-                std::unique_lock<std::mutex> lock(mutex);
-                if (cv.wait_for(lock, timeout) == std::cv_status::timeout) {
-                    std::invoke(std::forward<Func>(callback));
+        struct Wrapper {
+            Wrapper(std::weak_ptr<Timer> timer = std::weak_ptr<Timer>()) : timer(timer) {}
+
+            void cancel() {
+                if (auto tmp = timer.lock()) {
+                    tmp->cancel();
                 }
-                promise.set_value_at_thread_exit();
+            }
+            private:
+                std::weak_ptr<Timer> timer;
+        };
+
+        template <class Rep, class Period, class Func>
+        Wrapper add_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+            static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
+            auto& instance = Core::NetworkThreadPool::GetInstance();
+            auto *io_context = instance.Get_IO_Service();
+            auto t = std::make_shared<Timer>(*io_context, timeout);
+            std::lock_guard<std::mutex> guard(mutex);
+            t->async_wait([this, pos = timers.begin(), callback = std::forward<Func>(callback)](const error_code& error) mutable {
+                if (error != asio::error::operation_aborted) {
+                    std::invoke(std::forward<Func>(callback));
+                    std::lock_guard<std::mutex> guard(mutex);
+                    timers.erase(pos);
+                }
             });
-            callbacks.emplace_back(std::move(thread), std::move(future));
+            timers.push_front(t);
+            return {t};
         }
     
         template <class Rep, class Period, class Func>
-        void add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+        Wrapper add_recurrent_callback(const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
             static_assert(std::is_invocable_v<Func>, "timer functions should be void(*)()");
-            std::lock_guard<std::mutex> lock(mutex);
-            // first we remove dead tasks from the vector
-            remove_dead_tasks();
-            // we then add the callback
-            std::promise<void> promise;
-            std::future<void> future = promise.get_future();
-            std::thread thread([this, timeout, callback, promise = std::move(promise)]() mutable {
-                std::unique_lock<std::mutex> lock(mutex);
-                while (cv.wait_for(lock, timeout) == std::cv_status::timeout) {
-                    std::invoke(callback);
-                }
-                promise.set_value_at_thread_exit();
+            auto& instance = Core::NetworkThreadPool::GetInstance();
+            auto *io_context = instance.Get_IO_Service();
+            auto t = std::make_shared<Timer>(*io_context, timeout);
+            t->async_wait([timeout, t = t.get(), callback = std::forward<Func>(callback)](const error_code& error) mutable {
+                recurrent_task(error, t, timeout, std::forward<Func>(callback));
             });
-            callbacks.emplace_back(std::move(thread), std::move(future));
+            std::lock_guard<std::mutex> guard(mutex);
+            timers.push_front(t);
+            return {t};
         }
     
     private:
-        void remove_dead_tasks() {
-            std::remove_if(callbacks.begin(), callbacks.end(), [](auto& callback) {
-                if (callback.future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-                    callback.thread.join();
-                    return true;
-                }
-                return false;
-            });
+        template <class Rep, class Period, class Func>
+        static void recurrent_task(const error_code& error, Timer* t, const std::chrono::duration<Rep, Period>& timeout, Func&& callback) {
+            if (error != asio::error::operation_aborted) {
+                std::invoke(callback);
+                t->expires_at(t->expiry() + timeout);
+                t->async_wait([timeout, t, callback = std::forward<Func>(callback)](const error_code& error) mutable {
+                    recurrent_task(error, t, timeout, std::forward<Func>(callback));
+                });
+            }
         }
-    
-        struct Callback {
-            Callback(std::thread&& thread, std::future<void>&& future) : thread(std::move(thread)), future(std::move(future)) {}
-            std::thread thread;
-            std::future<void> future;
-        };
-        
-        std::condition_variable cv;
+
         std::mutex mutex;
-        std::vector<Callback> callbacks;
+        std::list<std::shared_ptr<Timer>> timers;
 };

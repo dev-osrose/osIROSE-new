@@ -31,7 +31,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server)
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
-    entitySystem = std::make_shared<EntitySystem>();
+    entitySystem = std::make_shared<EntitySystem>(map_idx_);
   } else {
     // We are a master/node process
     // We accept player connections and redirect their packet data to the

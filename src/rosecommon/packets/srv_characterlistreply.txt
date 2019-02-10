@@ -1,4 +1,0 @@
-PAKCC_CHAR_LIST_REPLY
-include dataconsts.h
-include vector
-std::vector<CharListReply::CharInfo> characters s(uint8_t) I & ==

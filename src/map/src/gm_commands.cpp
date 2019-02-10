@@ -49,7 +49,7 @@ class Parser {
         template <typename T>
         static bool parse(std::stringstream& ss, std::optional<T>& h) {
             T tmp;
-            const bool has_data = ss >> tmp;
+            const bool has_data = static_cast<bool>(ss >> tmp);
             if (has_data) {
                 h = tmp;
             }
@@ -71,7 +71,12 @@ class Parser<> {
 void item(EntitySystem&, RoseCommon::Entity, Parser<int, int>) {
 }
 
-void teleport(EntitySystem&, RoseCommon::Entity, Parser<int, int, int, std::optional<uint16_t>>) {
+void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, std::optional<uint16_t>> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /tp <map_id> <x> <y> [client_id]");
+        return;
+    }
+    entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
 }
 
 void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
@@ -86,11 +91,12 @@ static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<
     //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
-    //{"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
+    {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };
 
 static const std::unordered_map<std::string, std::string> aliases = {
-    {"/halp", "/help"}
+    {"/halp", "/help"},
+    {"/teleport", "/tp"}
 };
 
 void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::optional<std::string>> parser) {

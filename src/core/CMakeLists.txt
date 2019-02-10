@@ -88,7 +88,7 @@ target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
 
 if(NOT LUA_FOUND)
-  add_dependencies(${PROJECT} lua)
+  add_dependencies(${PROJECT} lua::lua)
 endif()
 
 if(NOT CURL_FOUND)
@@ -101,6 +101,12 @@ if(WITH_CRASH_REPORTS)
   endif()
   
   target_link_libraries(${PROJECT} Breakpad::Breakpad)
+endif()
+
+if (MINGW)
+  target_link_libraries(${PROJECT} wsock32 ws2_32)
+elseif (MSVC)
+  target_link_libraries(${PROJECT} wsock32.lib)
 endif()
 
 if (WITH_MYSQL)
