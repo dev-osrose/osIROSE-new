@@ -1,6 +1,0 @@
-PAKWC_PARTY_REQ
-include dataconsts.h
-PartyReq::Request request e(uint8_t)
-uint32_t tag BasicInfo::tag
-include string
-std::string name & BasicInfo::name

@@ -1,4 +1,0 @@
-PAKWC_PARTY_CHAT
-uint16_t charId
-include string
-std::string message &

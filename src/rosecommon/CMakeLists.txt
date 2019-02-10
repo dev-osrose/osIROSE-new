@@ -24,6 +24,7 @@ set( SOURCES_HEADER
   include/isccommon.h
   include/itemdb.h
   include/crosewriter.h
+  include/party_base.h
   include/components/basic_info.h
   include/components/computed_values.h
   include/components/destination.h
@@ -102,12 +103,12 @@ SET(SOURCES_PACKETS
     include/packets/cli_whisper_chat.h
     #  src/packets/cli_equipitem.cpp
     #  include/packets/cli_equipitem.h
-    #  src/packets/cli_partyreq.cpp
-    #  include/packets/cli_partyreq.h
-    #  src/packets/cli_partyreply.cpp
-    #  include/packets/cli_partyreply.h
-    #  src/packets/cli_partychat.cpp
-    #  include/packets/cli_partychat.h
+    src/packets/cli_party_req.cpp
+    include/packets/cli_party_req.h
+    src/packets/cli_party_reply.cpp
+    include/packets/cli_party_reply.h
+    src/packets/cli_party_chat.cpp
+    include/packets/cli_party_chat.h
     src/packets/cli_char_list_req.cpp
     include/packets/cli_char_list_req.h
     #  src/packets/cli_dropitem.cpp
@@ -163,14 +164,14 @@ SET(SOURCES_PACKETS
     #  include/packets/srv_setmoney.h
     #  src/packets/srv_setitem.cpp
     #  include/packets/srv_setitem.h
-    #  src/packets/srv_partyreq.cpp
-    #  include/packets/srv_partyreq.h
-    #  src/packets/srv_partyreply.cpp
-    #  include/packets/srv_partyreply.h
-    #  src/packets/srv_partymember.cpp
-    #  include/packets/srv_partymember.h
-    #  src/packets/srv_partychat.cpp
-    #  include/packets/srv_partychat.h
+    src/packets/srv_party_req.cpp
+    include/packets/srv_party_req.h
+    src/packets/srv_party_reply.cpp
+    include/packets/srv_party_reply.h
+    src/packets/srv_party_member.cpp
+    include/packets/srv_party_member.h
+    src/packets/srv_party_chat.cpp
+    include/packets/srv_party_chat.h
     src/packets/srv_login_reply.cpp
     include/packets/srv_login_reply.h
     src/packets/srv_channel_list_reply.cpp

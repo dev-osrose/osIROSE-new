@@ -1,0 +1,23 @@
+<packet ePacketType = "PAKCS_PARTY_REPLY">
+    <element name = "reply" type = "Reply" />
+    <element name = "idXorTag" type = "uint32_t" />
+
+    <simpleType name = "Reply">
+        <restriction base = "uint8_t">
+            <enumeration value = "NOT_FOUND" />
+            <enumeration value = "BUSY" />
+            <enumeration value = "ACCEPT_MAKE" />
+            <enumeration value = "ACCEPT_JOIN" />
+            <enumeration value = "REJECT" />
+            <enumeration value = "DESTROY" />
+            <enumeration value = "FULL_MEMBERS" />
+            <enumeration value = "INVALID_LEVEL" />
+            <enumeration value = "CHANGE_OWNER" />
+            <enumeration value = "CHANGE_OWNER_DISCONNECT" />
+            <enumeration value = "NO_CHANGE_TARGET" />
+            <enumeration value = "KICK" id = "0x80" />
+            <enumeration value = "DISCONNECT" />
+            <enumeration value = "REJOIN" />
+        </restriction>
+    </simpleType>
+</packet>
