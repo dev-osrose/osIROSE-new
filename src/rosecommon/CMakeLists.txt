@@ -19,6 +19,7 @@ set( SOURCES_HEADER
   include/isccommon.h
   include/itemdb.h
   include/crosewriter.h
+  include/party_base.h
   include/components/basic_info.h
   include/components/combat.h
   include/components/computed_values.h

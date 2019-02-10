@@ -72,12 +72,4 @@ enum ItemType : uint8_t {
 
 }
 
-namespace PartyReq {
-enum Request : uint8_t {
-    MAKE = 0,
-    JOIN = 1,
-    LEFT,
-    CHANGE_OWNER,
-    KICK = 0x81
-};
 }
