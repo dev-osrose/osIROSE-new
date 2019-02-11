@@ -128,6 +128,78 @@ void change_leader(EntitySystem& entitySystem, RoseCommon::Entity current_leader
 void party_request(EntitySystem& entitySystem, RoseCommon::Entity, const CliPartyReq& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::party_request");
+    const RoseCommon::Entity other = entitySystem.get_entity_from_tag(packet.get_idXorTag());
+    if (other == entt::null || !entitySystem.has_component<Component::Client>(other)) {
+        logger->warn("Client {} requested a party with the non existing char {}", entity, packet.get_idXorTag());
+        return;
+    }
+    switch (packet.get_request()) {
+        case CliPartyReq::MAKE:
+            {
+                const auto* p = entitySystem.try_get_component<Component::Party>(entity);
+                if (p && p->party) {
+                    logger->warn("Client {} tried to create a party when already in a party", entity);
+                    return;
+                }
+                auto& pp = entitySystem.add_component<Component::Party>(entity);
+                pp.isRequested = true;
+                entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
+                            entitySystem.get_component<Component::BasicInfo>(entity).tag));
+                break;
+            }
+        case CliPartyReq::JOIN:
+            {
+                auto* p = entitySystem.try_get_component<Component::Party>(entity);
+                if (!p || !p->party) {
+                    logger->warn("Client {} tried to execute an action on its party but doesn't have one", entity);
+                    return;
+                }
+                p->isRequested = true;
+                entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
+                            entitySystem.get_component<Component::BasicInfo(entity).tag));
+                break;
+            }
+        case CliPartyReq::LEFT:
+            {
+                if (!entitySystem.has_component<Component::Party>(entity)) {
+                    logger->warn("Client {} tried to leave the party but doesn't have one", entity);
+                    return;
+                }
+                remove_member(entitySystem, entity);
+                entitySystem.remove_component<Component::Party>(entity);
+                break;
+            }
+        case CliPartyReq::CHANGE_OWNER:
+            {
+                const auto* p = entitySystem.try_get_component<Component::Party>(entity);
+                if (!p || !p->party) {
+                    logger->warn("Client {} tried to give up ownership but doesn't have a party", entity);
+                    return;
+                } else if (p->party->leader != entity) {
+                    logger->warn("Client {} tried to give up ownership but doesn't have it", entity);
+                    return;
+                }
+                change_leader(entitySystem, entity, other);
+                break;
+            }
+        case CliPartyReq::KICK:
+            {
+                auto* p = entitySystem.try_get_component<Component::Party>(entity);
+                if (!p || !p->party) {
+                    logger->warn("Client {} tried to kick a member party but isn't in one", entity);
+                    return;
+                } else if (!p->party->is_member(other)) {
+                    logger->warn("Client {} tried to kick a member that isn't in its party", entity);
+                    return;
+                }
+                entitySystem.get_component<Component::Party>(other).isKicked = true;
+                remove_member(entitySystem, other);
+                entitySystem.remove_component<Component::Party>(other);
+                break;
+            }
+        default:
+            logger->warn("Client {} sent a non valid request code {}", entity, packet.get_request());
+    }
 }
 
 void party_reply(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliPartyReply& packet) {
