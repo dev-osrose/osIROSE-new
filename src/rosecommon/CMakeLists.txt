@@ -58,6 +58,7 @@ SET(SOURCES_BASE
   src/itemdb.cpp
   src/isccommon.cpp
   src/packetfactory.cpp
+  src/party_base.cpp
 )
 
 set(IDL_TYPE_FILES

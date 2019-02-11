@@ -71,5 +71,3 @@ enum ItemType : uint8_t {
 };
 
 }
-
-}

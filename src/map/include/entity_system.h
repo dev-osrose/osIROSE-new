@@ -110,6 +110,7 @@ class EntitySystem {
     
         RoseCommon::Entity get_entity_from_name(const std::string& name) const;
         RoseCommon::Entity get_entity_from_id(uint16_t id) const;
+        RoseCommon::Entity get_entity_from_tag(uint32_t tag) const;
 
         uint16_t get_world_time() const;
 
@@ -134,6 +135,7 @@ class EntitySystem {
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
         std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
+        std::unordered_map<uint32_t, RoseCommon::Entity> tag_to_entity;
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
