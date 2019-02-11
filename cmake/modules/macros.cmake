@@ -20,8 +20,15 @@ function(CREATE_VERSION_FILE)
       OUTPUT_VARIABLE GIT_COMMIT_HASH
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    execute_process(
+      COMMAND git describe --abbrev=0 --tags
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE GIT_LATEST_TAG
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
   else()
     set(GIT_BRANCH "")
+    set(GIT_LATEST_TAG "")
     set(GIT_COMMIT_HASH "")
   endif()
   # --------------------------
