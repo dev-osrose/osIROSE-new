@@ -48,6 +48,7 @@ SET( SOURCES_MAIN
   src/lua_item.cpp
   src/lua_loader.cpp
   src/lua_storage.cpp
+  src/party/party.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

@@ -22,6 +22,7 @@
 #include "components/mob.h"
 #include "components/npc.h"
 #include "components/owner.h"
+#include "components/party.h"
 #include "components/position.h"
 #include "components/spawner.h"
 #include "components/skills.h"
@@ -36,6 +37,7 @@
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
+#include "party/party.h"
 
 #include "random.h"
 
@@ -135,6 +137,8 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+    register_dispatcher(std::function{Party::party_request});
+    register_dispatcher(std::function{Party::party_request});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
@@ -152,6 +156,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
         idManager.release_id(basicInfo->id);
         id_to_entity.erase(basicInfo->id);
+        tag_to_entity.erase(basicInfo->tag);
         basicInfo->id = 0;
     }
 }
@@ -168,6 +173,7 @@ void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entit
     }
     if (basic.id) {
         id_to_entity.insert({basic.id, entity});
+        tag_to_entity.insert({basic.tag, entity});
     }
 }
 
@@ -179,6 +185,7 @@ void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity ent
     }
     if (basic.id) {
         id_to_entity.erase(basic.id);
+        tag_to_entity.erase(basic.tag);
     }
 }
 
@@ -192,6 +199,13 @@ RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) c
 RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
     auto res = id_to_entity.find(id);
     if (res != id_to_entity.end())
+        return res->second;
+    return entt::null;
+}
+
+RoseCommon::Entity EntitySystem::get_entity_from_tag(uint32_t tag) const {
+    auto res = tag_to_entity.find(tag);
+    if (res != tag_to_entity.end())
         return res->second;
     return entt::null;
 }
@@ -283,6 +297,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
             entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
             entitySystem.idManager.release_id(basicInfo->id);
             entitySystem.id_to_entity.erase(basicInfo->id);
+            entitySystem.tag_to_entity.erase(basicInfo->tag);
             basicInfo->id = 0;
         }
         if (auto* owner = entitySystem.try_get_component<Component::Owner>(entity)) {
@@ -303,6 +318,10 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                 entitySystem.remove_component<Component::Target>(en);
             }
         });
+        if (entitySystem.has_component<Component::Party>(entity)) {
+            // there is a party, let's be removed from it
+            Party::remove_member(entitySystem, entity);
+        }
         entitySystem.registry.destroy(entity);
     });
 }

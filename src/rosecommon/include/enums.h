@@ -61,6 +61,7 @@ enum ItemType : uint8_t {
 
 }
 
+/*
 namespace ReviveReq {
     enum ReviveReq : uint8_t {
         REVIVE_POS = 1,
@@ -68,5 +69,4 @@ namespace ReviveReq {
         START_POST,
         CURRENT_POS
     };
-}
-}
+}*/

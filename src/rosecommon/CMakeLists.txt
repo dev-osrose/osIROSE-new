@@ -62,6 +62,7 @@ SET(SOURCES_BASE
   src/itemdb.cpp
   src/isccommon.cpp
   src/packetfactory.cpp
+  src/party_base.cpp
 )
 
 SET(SOURCES_PACKETS

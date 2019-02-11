@@ -13,6 +13,9 @@
 #include "cli_login_req.h"
 #include "cli_mouse_cmd.h"
 #include "cli_normal_chat.h"
+#include "cli_party_chat.h"
+#include "cli_party_reply.h"
+#include "cli_party_req.h"
 #include "cli_select_char_req.h"
 #include "cli_srv_select_req.h"
 #include "cli_stop_moving.h"
@@ -34,6 +37,10 @@
 #include "srv_mouse_cmd.h"
 #include "srv_normal_chat.h"
 #include "srv_npc_char.h"
+#include "srv_party_chat.h"
+#include "srv_party_member.h"
+#include "srv_party_reply.h"
+#include "srv_party_req.h"
 #include "srv_player_char.h"
 #include "srv_quest_data.h"
 #include "srv_remove_object.h"
@@ -62,6 +69,9 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_CHAT, CliPartyChat);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_REPLY, CliPartyReply);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_PARTY_REQ, CliPartyReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving);
@@ -88,6 +98,10 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_MOUSE_CMD, SrvMouseCmd);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NPC_CHAR, SrvNpcChar);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_CHAT, SrvPartyChat);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_MEMBER, SrvPartyMember);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REPLY, SrvPartyReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_PARTY_REQ, SrvPartyReq);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_PLAYER_CHAR, SrvPlayerChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject);
