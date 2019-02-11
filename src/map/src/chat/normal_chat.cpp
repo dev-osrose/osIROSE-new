@@ -19,7 +19,7 @@ void Chat::normal_chat(EntitySystem& entitySystem, Entity entity, const CliNorma
         execute_gm(entitySystem, entity, packet.get_message());
     } else {
         const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-        auto p = SrvNormalChat::create(basicInfo.id, packet.get_message());
+        const auto p = SrvNormalChat::create(basicInfo.id, packet.get_message());
         entitySystem.send_nearby(entity, p);
     }
 }
