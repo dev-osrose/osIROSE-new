@@ -24,11 +24,11 @@ class SrvPartyMember : public CRosePacket {
         
         void set_rules(const uint8_t);
         uint8_t get_rules() const;
-        void set_data(const RoseCommon::PartyData);
-        RoseCommon::PartyData get_data() const;
+        void set_data(const PartyData);
+        PartyData get_data() const;
         
         
-        static SrvPartyMember create(const uint8_t&, const RoseCommon::PartyData&);
+        static SrvPartyMember create(const uint8_t&, const PartyData&);
         static SrvPartyMember create(const uint8_t*);
         static std::unique_ptr<SrvPartyMember> allocate(const uint8_t*);
     
@@ -37,7 +37,7 @@ class SrvPartyMember : public CRosePacket {
     
     private:
         uint8_t rules;
-        RoseCommon::PartyData data;
+        PartyData data;
 };
 
 }

@@ -147,7 +147,7 @@ struct PartyData : public ISerialize {
         } else {
             if (!writer.set_int8_t(members.size())) return false;
             for (const auto& it : members) {
-                if (!writer.set_iserialize(it)) return falsem
+                if (!writer.set_iserialize(it)) return false;
             }
         }
         return true;

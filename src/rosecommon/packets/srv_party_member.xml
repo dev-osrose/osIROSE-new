@@ -1,5 +1,5 @@
 <packet ePacketType = "PAKWC_PARTY_MEMBER">
     <element name = "rules" type = "uint8_t" />
     <include path = "dataconsts.h" />
-    <element name = "data" type = "RoseCommon::PartyData" />
+    <element name = "data" type = "PartyData" />
 </packet>

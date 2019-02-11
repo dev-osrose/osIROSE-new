@@ -57,6 +57,7 @@ SET( SOURCES_MAIN
   src/lua_storage.cpp
   src/items/inventory.cpp
   src/utils/name_to_session.cpp
+  src/party/party.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

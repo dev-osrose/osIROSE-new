@@ -11,7 +11,7 @@ SrvPartyMember::SrvPartyMember(CRoseReader reader) : CRosePacket(reader) {
     if (!reader.get_uint8_t(rules)) {
         return;
     }
-    if (!reader.get_PartyData(data)) {
+    if (!reader.get_iserialize(data)) {
         return;
     }
 }
@@ -24,15 +24,15 @@ uint8_t SrvPartyMember::get_rules() const {
     return rules;
 }
 
-void SrvPartyMember::set_data(const RoseCommon::PartyData data) {
+void SrvPartyMember::set_data(const PartyData data) {
     this->data = data;
 }
 
-RoseCommon::PartyData SrvPartyMember::get_data() const {
+PartyData SrvPartyMember::get_data() const {
     return data;
 }
 
-SrvPartyMember SrvPartyMember::create(const uint8_t& rules, const RoseCommon::PartyData& data) {
+SrvPartyMember SrvPartyMember::create(const uint8_t& rules, const PartyData& data) {
     SrvPartyMember packet;
     packet.set_rules(rules);
     packet.set_data(data);
@@ -53,7 +53,7 @@ bool SrvPartyMember::pack(CRoseBasePolicy& writer) const {
     if (!writer.set_uint8_t(rules)) {
         return false;
     }
-    if (!writer.set_PartyData(data)) {
+    if (!writer.set_iserialize(data)) {
         return false;
     }
     return true;
@@ -62,7 +62,7 @@ bool SrvPartyMember::pack(CRoseBasePolicy& writer) const {
 constexpr size_t SrvPartyMember::size() {
     size_t size = 0;
     size += sizeof(uint8_t); // rules
-    size += sizeof(RoseCommon::PartyData); // data
+    size += sizeof(PartyData); // data
     return size;
 }
 
