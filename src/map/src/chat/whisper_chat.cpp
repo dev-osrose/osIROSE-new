@@ -19,7 +19,7 @@ void Chat::whisper_chat(EntitySystem& entitySystem, Entity entity, const CliWhis
         return;
     }
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-    auto p = SrvWhisperChat::create(basicInfo.name, packet.get_message());
+    const auto p = SrvWhisperChat::create(basicInfo.name, packet.get_message());
     entitySystem.send_to(other, p);
 }
 
@@ -27,6 +27,6 @@ void Chat::send_whisper(EntitySystem& entitySystem, Entity entity, const std::st
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Chat::send_whisper()");
     logger->trace("sending '{}' to {}", msg, entity);
-    auto p = SrvWhisperChat::create("server msg", msg);
+    const auto p = SrvWhisperChat::create("server msg", msg);
     entitySystem.send_to(entity, p);
 }
