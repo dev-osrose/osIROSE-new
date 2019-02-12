@@ -32,10 +32,10 @@ void DisplayTitle()
   if(auto log = console.lock())
   {
     log->info( "--------------------------------" );
-    log->info( "        osIROSE 2 Alpha         " );
+    log->info( "            osIROSE 2           " );
     log->info( "  http://forum.dev-osrose.com/  " );
     log->info( "--------------------------------" );
-    log->info( "Git Branch/Revision: {}/{}", GIT_BRANCH, GIT_COMMIT_HASH );
+    log->info( "Git Branch/Tag/Revision: {}/{}/{}", GIT_BRANCH, GIT_LATEST_TAG, GIT_COMMIT_HASH );
   }
 }
 

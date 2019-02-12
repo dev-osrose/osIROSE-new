@@ -63,8 +63,14 @@ SET(SOURCES_BASE
   src/packetfactory.cpp
 )
 
+set(IDL_TYPE_FILES
+  packets/equipped_item.xml
+  packets/equipped_position.xml
+  packets/item.xml
+)
+
 set(IDL_FILES
-  packets/cli_accept.req.xml
+  packets/cli_accept_req.xml
   packets/cli_alive.xml
   packets/cli_change_map_req.xml
   packets/cli_channel_list_req.xml
@@ -80,12 +86,9 @@ set(IDL_FILES
   packets/cli_srv_select_req.xml
   packets/cli_stop_moving.xml
   packets/cli_whisper_chat.xml
-  packets/equipped_item.xml
-  packets/equipped_position.xml
   packets/isc_alive.xml
   packets/isc_server_register.xml
   packets/isc_shutdown.xml
-  packets/item.xml
   packets/srv_accept_reply.xml
   packets/srv_billing_message.xml
   packets/srv_change_map_reply.xml
@@ -104,28 +107,30 @@ set(IDL_FILES
   packets/srv_player_char.xml
   packets/srv_quest_data.xml
   packets/srv_remove_object.xml
-  packets/srv_screen_shot_reply.xml
+  packets/srv_screen_shot_time_reply.xml
   packets/srv_select_char_reply.xml
-  packets/srv_srv_selec_reply.xml
+  packets/srv_srv_select_reply.xml
   packets/srv_switch_server.xml
   packets/srv_teleport_reply.xml
   packets/srv_whisper_chat.xml
 )
 
 set(args
+  TARGET RosePackets
   IDLFILES ${IDL_FILES}
   IDLROOT ${CMAKE_CURRENT_SOURCE_DIR}/packets
-  OUTPATH ${CMAKE_GEN_SRC_DIR}/packets
+  SRC_OUTPATH src/packets
+  HDR_OUTPATH ${CMAKE_GEN_SRC_DIR}/packets
 )
 
-GENERATE_PACKETS(PACKET_SOURCES PACKET_HEADERS ${args})
+generate_packets(PACKET_SOURCES PACKET_HEADERS ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${PACKET_SOURCES} ${PACKET_HEADERS} ${SOURCES_HEADER})
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/packets>)
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
 
 add_dependencies(${PROJECT} Core)
+add_dependencies(${PROJECT} RosePackets_generated)
 target_link_libraries(${PROJECT} Core)
 
 if(NOT LUA_FOUND)

@@ -201,6 +201,7 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 include_directories(${CMAKE_GEN_SRC_DIR})
+include_directories(${CMAKE_GEN_SRC_DIR}/packets)
 
 file(COPY "${CMAKE_SOURCE_DIR}/scripts"
        DESTINATION "${CMAKE_BINARY_DIR}/bin")

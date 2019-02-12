@@ -1,34 +1,21 @@
 function(GENERATE_PACKETS SRCS HDRS)
-  cmake_parse_arguments(ARG "DEBUG" "IDLROOT;OUTPATH;EXPORT_MACRO;TARGET" "IDLFILES" ${ARGN})
+  cmake_parse_arguments(ARG "DEBUG" "IDLROOT;HDR_OUTPATH;SRC_OUTPATH;TARGET" "IDLFILES" ${ARGN})
 
   if(NOT ARG_IDLFILES)
     message(SEND_ERROR "Error: GENERATE_PACKETS() called without any idl files")
     return()
   endif(NOT ARG_IDLFILES)
-
-  list(LENGTH ARG_IDLROOT IDLROOT_LENGTH)
-  if(IDLROOT_LENGTH GREATER 1)
-    message(SEND_ERROR "Error: GENERATE_PACKETS() called with too many IDLROOTs, only one is allowed")
-    return()
-  endif()
-
-  list(LENGTH ARG_OUTPATH OUTPATH_LENGTH)
-  if(OUTPATH_LENGTH GREATER 1)
-    message(SEND_ERROR "Error: GENERATE_PACKETS() called with too many outpaths, only one is allowed")
-    return()
-  endif()
-
-  if(OUTPATH_LENGTH EQUAL 1)
-    set(OUTPATH ${ARG_OUTPATH})
-  endif()
-
-  if(IDLROOT_LENGTH EQUAL 1)
-    set(IDLROOT ${ARG_IDLROOT})
-  endif()
+  
+  set(SRC_OUTPATH ${ARG_SRC_OUTPATH})
+  set(HDR_OUTPATH ${ARG_HDR_OUTPATH})
+  set(IDLROOT ${ARG_IDLROOT})
+  set(TARGET ${ARG_TARGET})
 
   if(ARG_DEBUG)
-    message("OUTPATH: ${OUTPATH}")
-    message("IDLFILES: ${ARG_IDLFILES}")
+    message("SRC_OUTPATH: ${SRC_OUTPATH}")
+    message("HDR_OUTPATH: ${HDR_OUTPATH}")
+    message("IDLFILES: ${IDLROOT}")
+    message("TARGET: ${TARGET}")
   endif()
 
   set(${SRCS})
@@ -76,8 +63,8 @@ function(GENERATE_PACKETS SRCS HDRS)
         message("  EXT_CLEANED_FILE=${EXT_CLEANED_FILE}")
     endif()
 
-    set(CXX_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.cpp")
-    set(H_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.h")
+    set(CXX_FILE "${SRC_OUTPATH}/${EXT_CLEANED_FILE}.cpp")
+    set(H_FILE "${HDR_OUTPATH}/${EXT_CLEANED_FILE}.h")
 
     if(ARG_DEBUG)
       message("  CXX_FILE=${CXX_FILE}")
@@ -89,13 +76,14 @@ function(GENERATE_PACKETS SRCS HDRS)
 
     add_custom_command(
       OUTPUT "${H_FILE}" "${CXX_FILE}"
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
-      COMMAND ${IDL_GEN_EXE_PATH} ${MATCH_PATH} -h ${OUTPATH} -c ${OUTPATH}
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${SRC_OUTPATH}
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${HDR_OUTPATH}
+      COMMAND ${IDL_GEN_EXE_PATH} ${MATCH_PATH} -h ${HDR_OUTPATH} -c ${SRC_OUTPATH}
       COMMENT "Running C++ packetGenerator compiler on ${MATCH_PATH} with root ${IDLROOT}, generating: ${CXX_FILE}, ${H_FILE}"
       VERBATIM)
   endforeach()
   
-  add_custom_target(${EXT_CLEANED_FILE}_generated
+  add_custom_target(${TARGET}_generated
     DEPENDS ${${SRCS}} ${${HDRS}}
   )
   

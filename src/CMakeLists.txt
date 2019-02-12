@@ -52,7 +52,7 @@ endif()
 set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty")
 set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad" 
   "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/components"
-  "${CMAKE_CURRENT_SOURCE_DIR}/rosecommon/include/packets"
+  "${CMAKE_GEN_SRC_DIR}/packets"
   "${CMAKE_CURRENT_SOURCE_DIR}/core/include/connection.h"
 )
 set(COTIRE_PREFIX_INCLUDE_PRIORITY_PATHS "asio.hpp")
