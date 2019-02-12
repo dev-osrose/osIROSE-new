@@ -156,6 +156,7 @@ include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
+include(PacketGenerator)
 
 if(WITH_MYSQL)
   if(BUILD_MYSQL AND NOT MYSQL_FOUND)
