@@ -26,6 +26,7 @@
 #include "srv_select_char_reply.h"
 #include "srv_billing_message.h"
 #include "srv_teleport_reply.h"
+#include "srv_logout_reply.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -90,6 +91,8 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
       break;
     case ePacketType::PAKCS_ACCEPT_REQ:
       return CRoseClient::handlePacket(_buffer);
+    case ePacketType::PAKCS_LOGOUT_REQ:
+      return logoutReply();
     default:
       break;
   }
@@ -145,6 +148,12 @@ void CMapClient::onDisconnected() {
       auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
+}
+
+bool CMapClient::logoutReply() {
+  uint16_t waitTime = 0;
+  CRoseClient::send(Packet::SrvLogoutReply::create(waitTime));
+  return true;
 }
 
 bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
