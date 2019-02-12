@@ -27,6 +27,7 @@
 #include "srv_billing_message.h"
 #include "srv_teleport_reply.h"
 #include "srv_logout_reply.h"
+#include "srv_chan_char_reply.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -78,9 +79,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return joinServerReply(Packet::CliJoinServerReq::create(_buffer));  // Allow client to connect
     case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
-      logger_->warn("Change character hasn't been implemented yet.");
-      // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
-      // change their character
+      CRoseClient::send(Packet::SrvChanCharReply::create());
       return true;
     }
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
