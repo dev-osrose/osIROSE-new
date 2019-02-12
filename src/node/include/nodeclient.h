@@ -19,6 +19,8 @@
 #include "srv_accept_reply.h"
 #include "srv_srv_select_reply.h"
 #include "srv_switch_server.h"
+#include "srv_logout_reply.h"
+#include "srv_chan_char_reply.h"
 
 #include "cli_accept_req.h"
 #include "cli_login_req.h"
@@ -39,6 +41,8 @@ class NodeClient : public RoseCommon::CRoseClient {
   bool serverAcceptReply(RoseCommon::Packet::SrvAcceptReply&& P);
   bool serverSelectReply(RoseCommon::Packet::SrvSrvSelectReply&& P);
   bool serverSwitchServer(RoseCommon::Packet::SrvSwitchServer&& P);
+  bool serverChangeCharReply(RoseCommon::Packet::SrvChanCharReply&& P);
+  bool serverLogoutReply(RoseCommon::Packet::SrvLogoutReply&& P);
   
   bool clientAcceptReq(RoseCommon::Packet::CliAcceptReq&& P);
   bool clientLoginReq(RoseCommon::Packet::CliLoginReq&& P);

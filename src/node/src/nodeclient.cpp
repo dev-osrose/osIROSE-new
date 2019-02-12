@@ -48,7 +48,7 @@ NodeClient::~NodeClient() {
 
 //---------------------------------
 // SERVER PACKETS
-bool NodeClient::serverAcceptReply(Packet::SrvAcceptReply&& P) {
+bool NodeClient::serverAcceptReply([[maybe_unused]] Packet::SrvAcceptReply&& P) {
   logger_->trace( "NodeClient::serverAcceptReply start" );
 
 #ifdef DYNAMIC_CRYPT
@@ -95,6 +95,33 @@ bool NodeClient::serverSwitchServer(Packet::SrvSwitchServer&& P) {
 
   // Tell the client to connect to me!
   send(packet);
+  return true;
+}
+
+bool NodeClient::serverChangeCharReply(Packet::SrvChanCharReply&& P) {
+  logger_->trace( "NodeClient::serverChangeCharReply start" );
+  
+  // Let the client know they are allowed to change.
+  send(P);
+  
+  socket_[SocketType::CurrentMap]->shutdown(true);
+  socket_[SocketType::CurrentMap]->set_active(false);
+  shutdown(true);
+  return true;
+}
+
+bool NodeClient::serverLogoutReply(Packet::SrvLogoutReply&& P) {
+  logger_->trace( "NodeClient::serverLogoutReply start" );
+  
+  // Let the client know the reply from the server before dcing them.
+  send(P);
+  
+  if(P.get_waitTime() <= 0)
+  {
+    socket_[SocketType::CurrentMap]->shutdown(true);
+    socket_[SocketType::CurrentMap]->set_active(false);
+    shutdown(true);
+  }
   return true;
 }
 
@@ -220,6 +247,12 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
     case ePacketType::PAKCC_SWITCH_SERVER:
       return serverSwitchServer(
         Packet::SrvSwitchServer::create(_buffer));
+    case ePacketType::PAKCC_CHAN_CHAR_REPLY:
+      return serverChangeCharReply(
+        Packet::SrvChanCharReply::create(_buffer));
+    case ePacketType::PAKWC_LOGOUT_REPLY:
+      return serverLogoutReply(
+        Packet::SrvLogoutReply::create(_buffer));
     default:
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
@@ -228,6 +261,7 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
       return true;
     }
   }
+  return true;
 }
 
 bool NodeClient::onShutdown() {
