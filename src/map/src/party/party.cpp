@@ -12,6 +12,7 @@
 
 #include "srv_party_reply.h"
 #include "srv_party_member.h"
+#include "srv_party_req.h"
 
 #include "party_base.h"
 
@@ -125,7 +126,7 @@ void change_leader(EntitySystem& entitySystem, RoseCommon::Entity current_leader
     }
 }
 
-void party_request(EntitySystem& entitySystem, RoseCommon::Entity, const CliPartyReq& packet) {
+void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const CliPartyReq& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::party_request");
     const RoseCommon::Entity other = entitySystem.get_entity_from_tag(packet.get_idXorTag());
@@ -141,10 +142,11 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity, const CliPart
                     logger->warn("Client {} tried to create a party when already in a party", entity);
                     return;
                 }
+                const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
                 auto& pp = entitySystem.add_component<Component::Party>(entity);
                 pp.isRequested = true;
                 entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
-                            entitySystem.get_component<Component::BasicInfo>(entity).tag));
+                            basicInfo.tag, basicInfo.name));
                 break;
             }
         case CliPartyReq::JOIN:
@@ -154,9 +156,10 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity, const CliPart
                     logger->warn("Client {} tried to execute an action on its party but doesn't have one", entity);
                     return;
                 }
+                const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
                 p->isRequested = true;
                 entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
-                            entitySystem.get_component<Component::BasicInfo(entity).tag));
+                            basicInfo.tag, basicInfo.name));
                 break;
             }
         case CliPartyReq::LEFT:
