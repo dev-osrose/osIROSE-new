@@ -129,6 +129,7 @@ class EntitySystem {
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
+        void remove_party(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         bool loading;
         std::chrono::steady_clock::time_point prevTime;
