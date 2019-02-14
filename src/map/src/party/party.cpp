@@ -41,7 +41,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
     const auto& stats = entitySystem.get_component<Component::Stats>(member);
     const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(member);
     const auto& stamina = entitySystem.get_component<Component::Stamina>(member);
-    m.set_tag(basicInfo.tag);
+    m.set_tag(basicInfo.id); // FIXME: the client doesn't handle tags well
     m.set_id(basicInfo.id);
     m.set_maxHp(life.maxHp);
     m.set_hp(life.hp);
@@ -63,7 +63,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
         const auto& stats = entitySystem.get_component<Component::Stats>(it);
         const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(it);
         const auto& stamina = entitySystem.get_component<Component::Stamina>(it);
-        m.set_tag(basicInfo.tag);
+        m.set_tag(basicInfo.id);
         m.set_id(basicInfo.id);
         m.set_maxHp(life.maxHp);
         m.set_hp(life.hp);
