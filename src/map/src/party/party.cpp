@@ -92,14 +92,14 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
         return;
     }
     const RoseCommon::Entity initiator = p.isKicked ? party->leader : member;
-    const uint32_t tag = entitySystem.get_component<Component::BasicInfo>(initiator).tag;
-    entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, tag));
+    const uint32_t id = entitySystem.get_component<Component::BasicInfo>(initiator).id;
+    entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, id));
     if (party->members.size() == 1) {
         entitySystem.remove_component<Component::Party>(party->members[0]);
         return;
     }
-    const uint32_t leaver = entitySystem.get_component<Component::BasicInfo>(member).tag;
-    const uint32_t leader = entitySystem.get_component<Component::BasicInfo>(party->leader).tag;
+    const uint32_t leaver = entitySystem.get_component<Component::BasicInfo>(member).id;
+    const uint32_t leader = entitySystem.get_component<Component::BasicInfo>(party->leader).id;
     RoseCommon::PartyData data;
     data.set_tagLeaver(leaver);
     data.set_tagLeader(leader);
@@ -120,16 +120,16 @@ void change_leader(EntitySystem& entitySystem, RoseCommon::Entity current_leader
     if (!party->change_leader(new_leader)) {
         return;
     }
-    const uint32_t tag = entitySystem.get_component<Component::BasicInfo>(new_leader).tag;
+    const uint32_t id = entitySystem.get_component<Component::BasicInfo>(new_leader).id;
     for (const auto& it : party->members) {
-        entitySystem.send_to(it, SrvPartyReply::create(SrvPartyReply::CHANGE_OWNER, tag));
+        entitySystem.send_to(it, SrvPartyReply::create(SrvPartyReply::CHANGE_OWNER, id));
     }
 }
 
 void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const CliPartyReq& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::party_request");
-    const RoseCommon::Entity other = entitySystem.get_entity_from_tag(packet.get_idXorTag());
+    const RoseCommon::Entity other = entitySystem.get_entity_from_id(packet.get_idXorTag());
     if (other == entt::null || !entitySystem.has_component<Component::Client>(other)) {
         logger->warn("Client {} requested a party with the non existing char {}", entity, packet.get_idXorTag());
         return;
@@ -146,7 +146,7 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const 
                 auto& pp = entitySystem.add_component<Component::Party>(entity);
                 pp.isRequested = true;
                 entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
-                            basicInfo.tag, basicInfo.name));
+                            basicInfo.id, basicInfo.name));
                 break;
             }
         case CliPartyReq::JOIN:
@@ -159,7 +159,7 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const 
                 const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
                 p->isRequested = true;
                 entitySystem.send_to(other, SrvPartyReq::create(static_cast<SrvPartyReq::Request>(packet.get_request()),
-                            basicInfo.tag, basicInfo.name));
+                            basicInfo.id, basicInfo.name));
                 break;
             }
         case CliPartyReq::LEFT:
@@ -208,7 +208,7 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const 
 void party_reply(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliPartyReply& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::party_reply");
-    const RoseCommon::Entity other = entitySystem.get_entity_from_tag(packet.get_idXorTag());
+    const RoseCommon::Entity other = entitySystem.get_entity_from_id(packet.get_idXorTag());
     if (other == entt::null || !entitySystem.has_component<Component::Client>(other)) {
         logger->warn("Client {} replied to a party request of the non existing char {}", entity, packet.get_idXorTag());
         return;
@@ -226,13 +226,13 @@ void party_reply(EntitySystem& entitySystem, RoseCommon::Entity entity, const Ro
                 entitySystem.remove_component<Component::Party>(other);
             }
             entitySystem.send_to(other, SrvPartyReply::create(static_cast<SrvPartyReply::Reply>(packet.get_reply()),
-                        entitySystem.get_component<Component::BasicInfo>(entity).tag));
+                        entitySystem.get_component<Component::BasicInfo>(entity).id));
             break;
         case CliPartyReply::ACCEPT_MAKE:
         case CliPartyReply::ACCEPT_JOIN:
             p->isRequested = false;
             entitySystem.send_to(other, SrvPartyReply::create(static_cast<SrvPartyReply::Reply>(packet.get_reply()),
-                        entitySystem.get_component<Component::BasicInfo>(entity).tag));
+                        entitySystem.get_component<Component::BasicInfo>(entity).id));
             add_member(entitySystem, other, entity);
             break;
         default:
