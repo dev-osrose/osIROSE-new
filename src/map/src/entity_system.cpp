@@ -188,6 +188,9 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
+    
+    // callback for party removal
+    registry.destruction<Component::Party>().connect<&EntitySystem::remove_party>(this);
 
     // callback for updating the name_to_entity mapping
     registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
@@ -221,6 +224,10 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
 uint16_t EntitySystem::get_free_id() {
     return idManager.get_free_id();
+}
+
+void EntitySystem::remove_party(RoseCommon::Registry&, RoseCommon::Entity entity) {
+    Party::remove_member(*this, entity);
 }
 
 void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -300,6 +307,7 @@ void EntitySystem::stop() {
     registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
     registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
+    registry.destruction<Component::Party>().disconnect<&EntitySystem::remove_party>(this);
 }
 
 bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
