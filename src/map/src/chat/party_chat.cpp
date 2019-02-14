@@ -20,7 +20,7 @@ void Chat::party_chat(EntitySystem& entitySystem, Entity entity, const CliPartyC
     }
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto pp = SrvPartyChat::create(basicInfo.id, packet.get_message());
-    for (const auto& it : p->members) {
+    for (const auto& it : p->party->members) {
         entitySystem.send_to(it, pp);
     }
 }
