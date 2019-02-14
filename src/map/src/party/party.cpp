@@ -84,7 +84,6 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
     logger->trace("Party::remove_member");
     auto& p = entitySystem.get_component<Component::Party>(member);
     if (!p.party) { // no party
-        entitySystem.remove_component<Component::Party>(member);
         return;
     }
     auto party = p.party;
@@ -94,7 +93,9 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
     const RoseCommon::Entity initiator = p.isKicked ? party->leader : member;
     const uint32_t id = entitySystem.get_component<Component::BasicInfo>(initiator).id;
     entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, id));
-    if (party->members.size() == 1) {
+    if (party->members.size() == 0) {
+        return;
+    } else if (party->members.size() == 1) {
         entitySystem.remove_component<Component::Party>(party->members[0]);
         return;
     }
@@ -168,7 +169,6 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const 
                     logger->warn("Client {} tried to leave the party but doesn't have one", entity);
                     return;
                 }
-                remove_member(entitySystem, entity);
                 entitySystem.remove_component<Component::Party>(entity);
                 break;
             }
@@ -196,7 +196,6 @@ void party_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const 
                     return;
                 }
                 entitySystem.get_component<Component::Party>(other).isKicked = true;
-                remove_member(entitySystem, other);
                 entitySystem.remove_component<Component::Party>(other);
                 break;
             }
