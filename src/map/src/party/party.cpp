@@ -55,7 +55,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
     for (const auto& it : party->members) {
         entitySystem.send_to(it, SrvPartyMember::create(party->options, data));
     }
-    RoseCommon::PartyData ppp;
+    data = RoseCommon::PartyData{};
     for (const auto& it : party->members) {
         RoseCommon::PartyData::MemberData m;
         const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(it);
@@ -75,7 +75,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
         m.set_name(basicInfo.name);
         data.add_member(m);
     }
-    entitySystem.send_to(member, SrvPartyMember::create(party->options, ppp));
+    entitySystem.send_to(member, SrvPartyMember::create(party->options, data));
     party->add_member(member);
 }
 
