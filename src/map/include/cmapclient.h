@@ -20,6 +20,7 @@
 
 #include "srv_player_char.h"
 #include "cli_join_server_req.h"
+#include "cli_change_char_req.h"
 #include "srv_npc_char.h"
 #include "srv_mob_char.h"
 
@@ -51,6 +52,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
 
   bool logoutReply();
   bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);
+  bool changeCharacterReply(RoseCommon::Packet::CliChangeCharReq&& P);
 
   enum class eSTATE {
     DEFAULT,

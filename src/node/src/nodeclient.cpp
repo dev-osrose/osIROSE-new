@@ -72,6 +72,7 @@ bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   NodeSessionsTable table{};
   
   conn(insert_into(table).set(table.id = P.get_sessionId(), table.name = get_name(), table.state = 1, table.charip = P.get_ip(), table.charport = P.get_port()));
+  session_id_ = P.get_sessionId();
   
   auto packet = Packet::SrvSrvSelectReply::create(
     P.get_result(), P.get_sessionId(), P.get_cryptVal(),
@@ -89,6 +90,7 @@ bool NodeClient::serverSwitchServer(Packet::SrvSwitchServer&& P) {
   auto conn = connectionPoolMem.getConnection<NodeDB>();
   NodeSessionsTable table{};
   conn(update(table).set(table.state = 2, table.worldip = P.get_ip(), table.worldport = P.get_port()).where(table.id == P.get_sessionId()));
+  session_id_ = P.get_sessionId();
   
   auto packet = Packet::SrvSwitchServer::create(
     config.mapServer().clientPort, P.get_sessionId(), P.get_sessionSeed(), config.serverData().externalIp );
@@ -101,9 +103,12 @@ bool NodeClient::serverSwitchServer(Packet::SrvSwitchServer&& P) {
 bool NodeClient::serverChangeCharReply(Packet::SrvChanCharReply&& P) {
   logger_->trace( "NodeClient::serverChangeCharReply start" );
   
+  auto conn = connectionPoolMem.getConnection<NodeDB>();
+  NodeSessionsTable table{};
+  conn(update(table).set(table.state = 1).where(table.id == session_id_));
+  
   // Let the client know they are allowed to change.
   send(P);
-  
   socket_[SocketType::CurrentMap]->shutdown(true);
   socket_[SocketType::CurrentMap]->set_active(false);
   shutdown(true);
@@ -166,6 +171,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
   auto conn = connectionPoolMem.getConnection<NodeDB>();
   NodeSessionsTable table{};
 
+  session_id_ = P.get_sessionId();
   const auto res = conn(sqlpp::select(table.id, table.name, table.state, table.charip, table.charport, table.worldip, table.worldport).from(table).where(table.id == P.get_sessionId()));
   if (!res.empty()) {
     const auto &row = res.front();

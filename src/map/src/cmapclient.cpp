@@ -78,10 +78,8 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
       break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return joinServerReply(Packet::CliJoinServerReq::create(_buffer));  // Allow client to connect
-    case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
-      CRoseClient::send(Packet::SrvChanCharReply::create());
-      return true;
-    }
+    case ePacketType::PAKCS_CHANGE_CHAR_REQ:
+      return changeCharacterReply(Packet::CliChangeCharReq::create(_buffer));
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
       if (login_state_ != eSTATE::LOGGEDIN) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
@@ -149,7 +147,18 @@ void CMapClient::onDisconnected() {
   }
 }
 
+bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliChangeCharReq&& P) {
+  logger_->debug("CMapClient::changeCharacterReply()");
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+  Core::SessionTable sessions{};
+  conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::tvin(""), sessions.worldport = sqlpp::tvin(0)).where(sessions.id == sessionId_));
+  CRoseClient::send(Packet::SrvChanCharReply::create());
+  logger_->debug("CMapClient::changeCharacterReply() end");
+  return true;
+}
+
 bool CMapClient::logoutReply() {
+  logger_->trace("CMapClient::logoutReply()");
   uint16_t waitTime = 0;
   CRoseClient::send(Packet::SrvLogoutReply::create(waitTime));
   return true;

@@ -72,6 +72,7 @@ set(IDL_TYPE_FILES
 set(IDL_FILES
   packets/cli_accept_req.xml
   packets/cli_alive.xml
+  packets/cli_change_char_req.xml
   packets/cli_change_map_req.xml
   packets/cli_channel_list_req.xml
   packets/cli_char_list_req.xml
@@ -120,7 +121,7 @@ set(args
   TARGET RosePackets
   IDLFILES ${IDL_FILES}
   IDLROOT ${CMAKE_CURRENT_SOURCE_DIR}/packets
-  SRC_OUTPATH src/packets
+  SRC_OUTPATH ${CMAKE_GEN_SRC_DIR}/packets
   HDR_OUTPATH ${CMAKE_GEN_SRC_DIR}/packets
 )
 

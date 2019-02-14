@@ -149,7 +149,7 @@ bool CCharClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 bool CCharClient::sendCharListReply() {
   logger_->trace("CCharClient::sendCharListReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to get the char list before logging in.", get_id());
     return true;
   }
@@ -195,7 +195,7 @@ bool CCharClient::sendCharListReply() {
 bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) {
   logger_->trace("CCharClient::sendCharCreateReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to get the create a char before logging in.", get_id());
     return true;
   }
@@ -219,7 +219,7 @@ bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) 
 bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) {
   logger_->trace("CCharClient::sendCharDeleteReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to delete a char before logging in.", get_id());
     return true;
   }
@@ -268,7 +268,7 @@ void CCharClient::onDisconnected() {
 bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) {
   logger_->trace("CCharClient::sendCharSelectReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to select a char before logging in.", get_id());
     return true;
   }
@@ -283,7 +283,7 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
   //   return false;
   // }
   
-  loginState_ = eSTATE::TRANSFERING;
+  //loginState_ = eSTATE::TRANSFERING;
 
   std::string query =
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);
