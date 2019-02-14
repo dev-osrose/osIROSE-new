@@ -148,12 +148,11 @@ void CMapClient::onDisconnected() {
 }
 
 bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliChangeCharReq&& P) {
-  logger_->debug("CMapClient::changeCharacterReply()");
+  logger_->trace("CMapClient::changeCharacterReply()");
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable sessions{};
   conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::tvin(""), sessions.worldport = sqlpp::tvin(0)).where(sessions.id == sessionId_));
   CRoseClient::send(Packet::SrvChanCharReply::create());
-  logger_->debug("CMapClient::changeCharacterReply() end");
   return true;
 }
 
