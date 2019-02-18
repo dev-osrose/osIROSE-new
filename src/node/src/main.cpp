@@ -270,7 +270,9 @@ int main(int argc, char* argv[]) {
     sqlpp::sqlite3::connection_config db_config;
     db_config.path_to_database = ":memory:";
     db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
-    db_config.debug = true;
+    
+    if(config.nodeServer().logLevel <= spdlog::level::level_enum::debug)
+      db_config.debug = true;
     
     connectionPoolMem.addConnector<NodeDB>([&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
     {
@@ -283,7 +285,8 @@ int main(int argc, char* argv[]) {
         charip varchar(20) DEFAULT NULL,
         charport int(20) DEFAULT NULL,
         worldip varchar(20) DEFAULT NULL,
-        worldport int(20) DEFAULT NULL
+        worldport int(20) DEFAULT NULL,
+        PRIMARY KEY (`id`)
   		))");
   		
   		// Clear the table everything

@@ -150,7 +150,7 @@ jobs:
         - cp lib/*.so bin
         - rm -rf ${TRAVIS_BUILD_DIR}/build/bin/symbols
         - cd ${TRAVIS_BUILD_DIR}
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include scripts
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build/bin 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts
         - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *gccinit
@@ -177,16 +177,13 @@ jobs:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz bin ${TRAVIS_BUILD_DIR}/scripts
         - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
         - curl -F symfile=@LoginServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@CharServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@MapServer.sym $BREAKPAD_SERVER/symfiles
         - curl -F symfile=@NodeServer.sym $BREAKPAD_SERVER/symfiles
         - rm *.sym
-        - cd ${TRAVIS_BUILD_DIR}
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build/bin 3rdparty/include scripts
-        #- curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz bin ${TRAVIS_BUILD_DIR}/scripts
 
     - <<: *clanginit
       stage: compile
@@ -256,12 +253,12 @@ jobs:
           build_command: "cmake --build . -- -j4"
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
-        - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/cov-int
-        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
+        - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/cov-int
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
       after_failure:
         - mkdir ${TRAVIS_BUILD_DIR}/public
-        - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/cov-int
-        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
+        - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/cov-int
+        - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
         - chmod +x send.sh
         - ./send.sh failure $WEBHOOK_URL
@@ -322,13 +319,13 @@ notifications:
 
 #after_success:
 #  - mkdir ${TRAVIS_BUILD_DIR}/public
-#  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
-##  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
+#  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/build/lib ${TRAVIS_BUILD_DIR}/Database
+##  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/success/
   
 after_failure:
   - mkdir ${TRAVIS_BUILD_DIR}/public
-  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/3rdparty ${TRAVIS_BUILD_DIR}/build ${TRAVIS_BUILD_DIR}/src ${TRAVIS_BUILD_DIR}/Database /tmp/dumps
-  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
+  - tar -czvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/3rdparty ${TRAVIS_BUILD_DIR}/build ${TRAVIS_BUILD_DIR}/src ${TRAVIS_BUILD_DIR}/Database /tmp/dumps
+  - curl --ftp-create-dirs -T ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz -u $FTP_USER:$FTP_PASSWORD $FTP_HOST/failure/
   - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh failure $WEBHOOK_URL
@@ -337,7 +334,7 @@ deploy:
   provider: releases
   api_key:
     secure: u0DKBv0ZaE8+J/WxJTyEyY+PVgtk8ymuOfRN3IxglSEG+JFgGhiUQLD9lZ0S5n3lQZ5b8MPmtbnwuX1XY2PtnWKrb+5OVRR5yvAcR9P0pY1SxtMR4uATVxdFCXim347xn98trRuIomACrLHD/D75HN46hAfPc/gGektguuMr6b2hph2bgGZ2Hd3EPSZq4Q2gAVwHislJLyLf8tX6lvwlIqb3mpaZPRQNBma2AhTTRQOq8u1Fkz9sLV5VDI3AdhfE//+cVCzPX1I2piLKDqZ2MNQNwlWwLaKUy33SDFIUndu6QQhFsL1XDUIXsxhTqu8Y4Qbs1Ksx7iCh1oAPIot7wdI1hJna51vKtMh9tK6r64QNc8GkbEuH7aWbSS0o0w3vx8hzvuDRzj0+gNTDCkEadvPSLExpRGgg8jZSz0C70VQzi+obG6cR9CGkUETlvUmLMaqd6H+WAQwRPUof/cnZUZNW/NAYTR6GSvcTgJOyZy/P0Q5vzsat3LhvpshC9IUzOM3v3GDcQ1s6JL3PRz8dKTzz4et9FpVkn77YW8h7Dgv3Ygag/cAN0dsV4Ds77HImacDSE6BiNm5uenE4CEQeUbWq4PLJl/PDu5V9z9QbCTHKP2STNMg3vCPjg0Sl6RGG+8s5u2LfuZeRQue19UDjnYMsifkxRy+zKr+FYW29c10=
-  file: "${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${TRAVIS_JOB_NUMBER}-${BUILD_TYPE}.tar.gz"
+  file: "${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz"
   on:
     repo: dev-osrose/osIROSE-new
     condition: $CXX = "g++-8" && $BUILD_TYPE = "Release"
