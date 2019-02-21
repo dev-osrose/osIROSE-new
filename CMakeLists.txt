@@ -117,6 +117,7 @@ endif()
 find_package(Threads ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 #find_package(sqlite3 ${REQUIRED_IF_OPTION})
+find_package(PacketGenerator)
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})
@@ -156,6 +157,10 @@ include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
+
+if(NOT IDL_FOUND)
+  include(Build-packet-generator)
+endif()
 include(PacketGenerator)
 
 if(WITH_MYSQL)
