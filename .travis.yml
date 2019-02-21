@@ -139,7 +139,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script: 
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -167,7 +167,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -199,7 +199,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -220,7 +220,7 @@ jobs:
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ccache --version
@@ -249,7 +249,7 @@ jobs:
           project:
             name: "$TRAVIS_REPO_SLUG"
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-8 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-8 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
           build_command: "cmake --build . -- -j4"
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
