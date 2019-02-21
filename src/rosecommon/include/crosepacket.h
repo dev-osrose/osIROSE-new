@@ -58,11 +58,11 @@ class CRosePacket {
           (void)reserved;
         }
 
-        CRosePacket(CRoseReader& reader) {
+        CRosePacket(CRoseReader& reader) : size_(0), type_(static_cast<ePacketType>(0)), CRC_(0) {
             reader.get_uint16_t(size_);
             uint16_t type;
-            reader.get_uint16_t(type);
-            type_ = static_cast<ePacketType>(type);
+            if(reader.get_uint16_t(type) == true)
+              type_ = static_cast<ePacketType>(type);
             reader.get_uint16_t(CRC_);
         }
 
