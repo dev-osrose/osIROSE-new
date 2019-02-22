@@ -1,6 +1,5 @@
 sudo: false
-dist: trusty
-group: edge
+dist: xenial
 language: cpp
 
 env:
@@ -79,7 +78,7 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        - bash $CI_DIRECTORY/install-ccache.sh
+        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -97,7 +96,7 @@ jobs:
           sources:
           - deadsnakes
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-7
+          - llvm-toolchain-xenial-7
           packages:
           - lcov
           - g++-7
@@ -118,7 +117,7 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        - bash $CI_DIRECTORY/install-ccache.sh
+        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -247,7 +246,6 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        - bash $CI_DIRECTORY/install-ccache.sh
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
@@ -262,13 +260,14 @@ jobs:
           packages:
           - lcov
           - g++-8
+          - libcurl4-openssl-dev
         coverity_scan:
           project:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-8 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
-          build_command: "cmake --build . -- -j4"
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_failure:
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
