@@ -250,6 +250,7 @@ jobs:
         - bash $CI_DIRECTORY/install-ccache.sh
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
+        - pip install --user pyparsing
         - export CC=gcc-8 CXX=g++-8
         - export GCOV_EXEC=gcov-8
       script: true
