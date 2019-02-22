@@ -178,10 +178,10 @@ jobs:
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
-        - curl --data-binary @LoginServer.sym $BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN
-        - curl --data-binary @CharServer.sym $BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN
-        - curl --data-binary @MapServer.sym $BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN
-        - curl --data-binary @NodeServer.sym $BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN
+        - curl --data-binary @LoginServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+        - curl --data-binary @CharServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+        - curl --data-binary @MapServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+        - curl --data-binary @NodeServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
         - rm *.sym
         - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts
 
