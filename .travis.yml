@@ -141,16 +141,12 @@ jobs:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
-      after_script:
-        - ccache --version
-        - ccache --show-stats
       after_success:
         - mkdir ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
         - cp lib/*.so bin
-        #- rm -rf ${TRAVIS_BUILD_DIR}/build/bin/symbols
         - cd ${TRAVIS_BUILD_DIR}
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts > /dev/null
         - curl --ftp-create-dirs --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --upload-file ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz --url ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *gccinit
@@ -183,7 +179,7 @@ jobs:
         - curl --data-binary @MapServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
         - curl --data-binary @NodeServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
         - rm *.sym
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts
+        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts > /dev/null
 
     - <<: *clanginit
       stage: compile
@@ -270,6 +266,8 @@ jobs:
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_failure:
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
         - chmod +x send.sh
         - ./send.sh failure $WEBHOOK_URL
