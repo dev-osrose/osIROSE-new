@@ -228,8 +228,7 @@ jobs:
         - ccache --show-stats
         - ctest --output-on-failure
 
-    - <<: *gccinit
-      stage: compile
+    - stage: compile
       if: branch = coverity_scan OR (type = cron AND branch = trunk)
       env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" BUILD_TYPE=Release
       before_install:
