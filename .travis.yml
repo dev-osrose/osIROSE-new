@@ -223,8 +223,52 @@ jobs:
         - ccache --show-stats
         - ctest --output-on-failure
 
-    - stage: compile
-      if: branch = coverity_scan OR (type = cron AND branch = trunk)
+    - <<: *gccinit
+      stage: testing
+      if: branch != coverity_scan
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
+      cache: false
+      before_install:
+        - eval "${MATRIX_EVAL}"
+      install: 
+        - bash $CI_DIRECTORY/install-lcov.sh
+      before_script:
+        - export GCOV_EXEC=gcov-8
+        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+        - mysql --user="root" -e 'create database osirose;'
+        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --remote-name ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+        - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
+      script:
+        - cd build
+        - ${LCOV_PATH} --directory . --zerocounters
+        - ${LCOV_PATH} -q -c -i -d . -o coverage.base
+        - ./bin/TestConfig
+        - ./bin/TestConsole
+        - ./bin/TestMySQLDB
+        - ./bin/TestASIONetwork
+        - ./bin/TestRoseCrypt
+        - ./bin/TestRoseNetwork
+        - ./bin/TestLoginServer
+        - ./bin/TestCharServer
+        - ./bin/TestAllServers
+        - ./bin/TestRosePackets
+        #- ./bin/TestSystems
+        - ${LCOV_PATH} -q --directory . --capture --output-file coverage.info
+        - ${LCOV_PATH} -q -a coverage.base -a coverage.info --output-file coverage.total
+        - ${LCOV_PATH} -q --remove coverage.total "/usr/*" "${TRAVIS_BUILD_DIR}/tools/*" "${TRAVIS_BUILD_DIR}/3rdparty/*" "${TRAVIS_BUILD_DIR}/src/tests/*" "${TRAVIS_BUILD_DIR}/src/rosecommon/*/packets/*" --output-file coverage.info.cleaned
+        - ${GENHTML_PATH} -o coverage coverage.info.cleaned
+        - coveralls-lcov coverage.info.cleaned
+        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+      after_success:
+        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} ${AZG_HOST} --quote '-DELE success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz' > /dev/null
+        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
+
+    - &covinit
+      stage: compile
+      if: branch = coverity_scan
       env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
@@ -272,48 +316,18 @@ jobs:
         - chmod +x send.sh
         - ./send.sh failure $WEBHOOK_URL
 
-    - <<: *gccinit
-      stage: testing
-      if: branch != coverity_scan
-      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
-      cache: false
-      before_install:
-        - eval "${MATRIX_EVAL}"
-      install: 
-        - bash $CI_DIRECTORY/install-lcov.sh
-      before_script:
-        - export GCOV_EXEC=gcov-8
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --remote-name ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
-        - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
-      script:
-        - cd build
-        - ${LCOV_PATH} --directory . --zerocounters
-        - ${LCOV_PATH} -q -c -i -d . -o coverage.base
-        - ./bin/TestConfig
-        - ./bin/TestConsole
-        - ./bin/TestMySQLDB
-        - ./bin/TestASIONetwork
-        - ./bin/TestRoseCrypt
-        - ./bin/TestRoseNetwork
-        - ./bin/TestLoginServer
-        - ./bin/TestCharServer
-        - ./bin/TestAllServers
-        - ./bin/TestRosePackets
-        #- ./bin/TestSystems
-        - ${LCOV_PATH} -q --directory . --capture --output-file coverage.info
-        - ${LCOV_PATH} -q -a coverage.base -a coverage.info --output-file coverage.total
-        - ${LCOV_PATH} -q --remove coverage.total "/usr/*" "${TRAVIS_BUILD_DIR}/tools/*" "${TRAVIS_BUILD_DIR}/3rdparty/*" "${TRAVIS_BUILD_DIR}/src/tests/*" "${TRAVIS_BUILD_DIR}/src/rosecommon/*/packets/*" --output-file coverage.info.cleaned
-        - ${GENHTML_PATH} -o coverage coverage.info.cleaned
-        - coveralls-lcov coverage.info.cleaned
-        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-      after_success:
-        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} ${AZG_HOST} --quote '-DELE success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz' > /dev/null
-        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
-        - chmod +x send.sh
-        - ./send.sh success $WEBHOOK_URL
+    - <<: *covinit
+      stage: compile
+      if: (type = cron AND branch = trunk)
+      addons:
+        coverity_scan:
+          project:
+            name: "$TRAVIS_REPO_SLUG"
+            version: 0.3
+          notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
+          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
+          branch_pattern: trunk
 
 notifications:
   webhooks:
