@@ -88,10 +88,6 @@ set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
 # find all packages which are needed
 #------------------------------------------------------------------------------
 
-if(NOT WIN32)
-  set(REQUIRED_ON_UNIX REQUIRED)
-endif()
-
 if(WITH_COTIRE)
   include(cotire OPTIONAL)
 endif()
@@ -116,7 +112,6 @@ endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
-#find_package(sqlite3 ${REQUIRED_IF_OPTION})
 find_package(PacketGenerator)
 
 if(WITH_GTEST)
