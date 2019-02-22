@@ -268,7 +268,7 @@ jobs:
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
           build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cov-configure --comptype gcc --compiler ccache --template && cov-configure --comptype gcc --compiler /usr/lib/ccache/g++-8 && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF .."
           build_command: "cmake --build . -- -j4"
-          branch_pattern: *
+          branch_pattern: coverity_scan OR trunk
       after_failure:
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
         - chmod +x send.sh
