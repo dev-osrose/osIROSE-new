@@ -62,6 +62,7 @@ jobs:
           packages:
           - lcov
           - g++-8
+          - libcurl4-openssl-dev
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
@@ -83,7 +84,7 @@ jobs:
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
-        - bash $CI_DIRECTORY/install-mysql.sh
+        - pip install --user pyparsing
       script: true
 
     - &clanginit
@@ -101,6 +102,7 @@ jobs:
           - lcov
           - g++-7
           - clang++-7
+          - libcurl4-openssl-dev
       before_install:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
@@ -122,7 +124,7 @@ jobs:
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
-        - bash $CI_DIRECTORY/install-mysql.sh
+        - pip install --user pyparsing
       script: true
 
     - <<: *gccinit
