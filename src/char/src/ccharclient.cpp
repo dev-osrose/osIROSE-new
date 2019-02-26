@@ -149,7 +149,7 @@ bool CCharClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 bool CCharClient::sendCharListReply() {
   logger_->trace("CCharClient::sendCharListReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to get the char list before logging in.", get_id());
     return true;
   }
@@ -162,19 +162,19 @@ bool CCharClient::sendCharListReply() {
   std::time_t now_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
-      Packet::SrvCharListReply::CharInfo charInfo;
-      charInfo.set_name(row.name);
-      charInfo.set_race(row.race);
-      charInfo.set_level(row.level);
-      charInfo.set_job(row.job);
-      charInfo.set_face(row.face);
-      charInfo.set_hair(row.hair);
-      auto _remaining_time = 0;  // Get time in seconds until delete
-    
-      if(row.deleteDate.is_null() == false)
-        _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(row.deleteDate.value()), now_c);
-    
-      charInfo.set_remainSecsUntilDelete(_remaining_time);
+    Packet::SrvCharListReply::CharInfo charInfo;
+    charInfo.set_name(row.name);
+    charInfo.set_race(row.race);
+    charInfo.set_level(row.level);
+    charInfo.set_job(row.job);
+    charInfo.set_face(row.face);
+    charInfo.set_hair(row.hair);
+    auto _remaining_time = 0;  // Get time in seconds until delete
+  
+    if(row.deleteDate.is_null() == false)
+      _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(row.deleteDate.value()), now_c);
+  
+    charInfo.set_remainSecsUntilDelete(_remaining_time);
     characterRealId_.push_back(row.id);
     Core::InventoryTable inv{};
     for (const auto &iv : conn(sqlpp::select(inv.slot, inv.itemid).from(inv).where(inv.charId == row.id and inv.slot < 10))) {
@@ -195,7 +195,7 @@ bool CCharClient::sendCharListReply() {
 bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) {
   logger_->trace("CCharClient::sendCharCreateReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to get the create a char before logging in.", get_id());
     return true;
   }
@@ -219,7 +219,7 @@ bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) 
 bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) {
   logger_->trace("CCharClient::sendCharDeleteReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to delete a char before logging in.", get_id());
     return true;
   }
@@ -268,7 +268,7 @@ void CCharClient::onDisconnected() {
 bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) {
   logger_->trace("CCharClient::sendCharSelectReply");
 
-  if (loginState_ != eSTATE::LOGGEDIN) {
+  if (loginState_ == eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to select a char before logging in.", get_id());
     return true;
   }
@@ -283,7 +283,7 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
   //   return false;
   // }
   
-  loginState_ = eSTATE::TRANSFERING;
+  //loginState_ = eSTATE::TRANSFERING;
 
   std::string query =
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);

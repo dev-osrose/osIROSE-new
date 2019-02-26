@@ -1,0 +1,3 @@
+<packet ePacketType = "PAKWC_LOGOUT_REPLY">
+    <element name = "waitTime" type = "uint16_t" />
+</packet>

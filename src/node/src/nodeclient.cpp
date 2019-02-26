@@ -48,7 +48,7 @@ NodeClient::~NodeClient() {
 
 //---------------------------------
 // SERVER PACKETS
-bool NodeClient::serverAcceptReply(Packet::SrvAcceptReply&& P) {
+bool NodeClient::serverAcceptReply([[maybe_unused]] Packet::SrvAcceptReply&& P) {
   logger_->trace( "NodeClient::serverAcceptReply start" );
 
 #ifdef DYNAMIC_CRYPT
@@ -72,6 +72,7 @@ bool NodeClient::serverSelectReply(Packet::SrvSrvSelectReply&& P) {
   NodeSessionsTable table{};
   
   conn(insert_into(table).set(table.id = P.get_sessionId(), table.name = get_name(), table.state = 1, table.charip = P.get_ip(), table.charport = P.get_port()));
+  session_id_ = P.get_sessionId();
   
   auto packet = Packet::SrvSrvSelectReply::create(
     P.get_result(), P.get_sessionId(), P.get_cryptVal(),
@@ -89,12 +90,43 @@ bool NodeClient::serverSwitchServer(Packet::SrvSwitchServer&& P) {
   auto conn = connectionPoolMem.getConnection<NodeDB>();
   NodeSessionsTable table{};
   conn(update(table).set(table.state = 2, table.worldip = P.get_ip(), table.worldport = P.get_port()).where(table.id == P.get_sessionId()));
+  session_id_ = P.get_sessionId();
   
   auto packet = Packet::SrvSwitchServer::create(
     config.mapServer().clientPort, P.get_sessionId(), P.get_sessionSeed(), config.serverData().externalIp );
 
   // Tell the client to connect to me!
   send(packet);
+  return true;
+}
+
+bool NodeClient::serverChangeCharReply(Packet::SrvChanCharReply&& P) {
+  logger_->trace( "NodeClient::serverChangeCharReply start" );
+  
+  auto conn = connectionPoolMem.getConnection<NodeDB>();
+  NodeSessionsTable table{};
+  conn(update(table).set(table.state = 1).where(table.id == session_id_));
+  
+  // Let the client know they are allowed to change.
+  send(P);
+  socket_[SocketType::CurrentMap]->shutdown(true);
+  socket_[SocketType::CurrentMap]->set_active(false);
+  shutdown(true);
+  return true;
+}
+
+bool NodeClient::serverLogoutReply(Packet::SrvLogoutReply&& P) {
+  logger_->trace( "NodeClient::serverLogoutReply start" );
+  
+  // Let the client know the reply from the server before dcing them.
+  send(P);
+  
+  if(P.get_waitTime() <= 0)
+  {
+    socket_[SocketType::CurrentMap]->shutdown(true);
+    socket_[SocketType::CurrentMap]->set_active(false);
+    shutdown(true);
+  }
   return true;
 }
 
@@ -139,6 +171,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
   auto conn = connectionPoolMem.getConnection<NodeDB>();
   NodeSessionsTable table{};
 
+  session_id_ = P.get_sessionId();
   const auto res = conn(sqlpp::select(table.id, table.name, table.state, table.charip, table.charport, table.worldip, table.worldport).from(table).where(table.id == P.get_sessionId()));
   if (!res.empty()) {
     const auto &row = res.front();
@@ -220,6 +253,12 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
     case ePacketType::PAKCC_SWITCH_SERVER:
       return serverSwitchServer(
         Packet::SrvSwitchServer::create(_buffer));
+    case ePacketType::PAKCC_CHAN_CHAR_REPLY:
+      return serverChangeCharReply(
+        Packet::SrvChanCharReply::create(_buffer));
+    case ePacketType::PAKWC_LOGOUT_REPLY:
+      return serverLogoutReply(
+        Packet::SrvLogoutReply::create(_buffer));
     default:
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
@@ -228,6 +267,7 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
       return true;
     }
   }
+  return true;
 }
 
 bool NodeClient::onShutdown() {

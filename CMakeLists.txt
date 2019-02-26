@@ -88,10 +88,6 @@ set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
 # find all packages which are needed
 #------------------------------------------------------------------------------
 
-if(NOT WIN32)
-  set(REQUIRED_ON_UNIX REQUIRED)
-endif()
-
 if(WITH_COTIRE)
   include(cotire OPTIONAL)
 endif()
@@ -116,7 +112,7 @@ endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
-#find_package(sqlite3 ${REQUIRED_IF_OPTION})
+find_package(PacketGenerator)
 
 if(WITH_GTEST)
     find_package(GTest ${REQUIRED_IF_OPTION})
@@ -156,6 +152,11 @@ include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
+
+if(NOT IDL_FOUND)
+  include(Build-packet-generator)
+endif()
+include(PacketGenerator)
 
 if(WITH_MYSQL)
   if(BUILD_MYSQL AND NOT MYSQL_FOUND)
@@ -200,6 +201,7 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 
 CREATE_VERSION_FILE()
 include_directories(${CMAKE_GEN_SRC_DIR})
+include_directories(${CMAKE_GEN_SRC_DIR}/packets)
 
 file(COPY "${CMAKE_SOURCE_DIR}/scripts"
        DESTINATION "${CMAKE_BINARY_DIR}/bin")

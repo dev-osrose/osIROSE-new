@@ -26,6 +26,8 @@
 #include "srv_select_char_reply.h"
 #include "srv_billing_message.h"
 #include "srv_teleport_reply.h"
+#include "srv_logout_reply.h"
+#include "srv_chan_char_reply.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -76,12 +78,8 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
       break;
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
       return joinServerReply(Packet::CliJoinServerReq::create(_buffer));  // Allow client to connect
-    case ePacketType::PAKCS_CHANGE_CHAR_REQ: {
-      logger_->warn("Change character hasn't been implemented yet.");
-      // TODO: Send ePacketType::PAKCC_CHAN_CHAR_REPLY to the client with the character/node server ip and port to
-      // change their character
-      return true;
-    }
+    case ePacketType::PAKCS_CHANGE_CHAR_REQ:
+      return changeCharacterReply(Packet::CliChangeCharReq::create(_buffer));
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
       if (login_state_ != eSTATE::LOGGEDIN) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
@@ -90,6 +88,8 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
       break;
     case ePacketType::PAKCS_ACCEPT_REQ:
       return CRoseClient::handlePacket(_buffer);
+    case ePacketType::PAKCS_LOGOUT_REQ:
+      return logoutReply();
     default:
       break;
   }
@@ -145,6 +145,22 @@ void CMapClient::onDisconnected() {
       auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
   }
+}
+
+bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliChangeCharReq&& P) {
+  logger_->trace("CMapClient::changeCharacterReply()");
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+  Core::SessionTable sessions{};
+  conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::tvin(""), sessions.worldport = sqlpp::tvin(0)).where(sessions.id == sessionId_));
+  CRoseClient::send(Packet::SrvChanCharReply::create());
+  return true;
+}
+
+bool CMapClient::logoutReply() {
+  logger_->trace("CMapClient::logoutReply()");
+  uint16_t waitTime = 0;
+  CRoseClient::send(Packet::SrvLogoutReply::create(waitTime));
+  return true;
 }
 
 bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
