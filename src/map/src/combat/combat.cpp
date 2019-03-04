@@ -5,9 +5,12 @@
 #include "entity_system.h"
 
 #include "srv_attack.h"
+#include "srv_hp_reply.h"
 
 #include "components/basic_info.h"
 #include "components/destination.h"
+#include "components/life.h"
+#include "components/magic.h"
 #include "components/position.h"
 #include "components/target.h"
 #include "components/damage.h"
@@ -17,14 +20,29 @@
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
+
+void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliHpReq& packet) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  if (packet.get_targetId()) {
+    Entity t = entitySystem.get_entity_from_id(packet.get_targetId());
+    if (t != entt::null) {
+      const auto& life = entitySystem.get_component<Component::Life>(t);
+      
+      auto p = SrvHpReply::create(packet.get_targetId(), life.hp);
+      entitySystem.send_to(entity, p);
+    }
+  }
+}
+
+
 std::pair<float, float> get_range_position(const EntitySystem& entitySystem, Entity character, Entity target, float range) {
-    const auto& char_pos = entitySystem.get_component<Component::Position>(character);
-    const auto& target_pos = entitySystem.get_component<Component::Position>(target);
-    std::pair<float, float> vector{char_pos.x - target_pos.x, char_pos.y - target_pos.y};
-    const float length = sqrt(vector.first * vector.first + vector.second * vector.second);
-    vector.first /= length;
-    vector.second /= length;
-    return {vector.first * range, vector.second * range};
+  const auto& char_pos = entitySystem.get_component<Component::Position>(character);
+  const auto& target_pos = entitySystem.get_component<Component::Position>(target);
+  std::pair<float, float> vector{char_pos.x - target_pos.x, char_pos.y - target_pos.y};
+  const float length = sqrt(vector.first * vector.first + vector.second * vector.second);
+  vector.first /= length;
+  vector.second /= length;
+  return {vector.first * range, vector.second * range};
 }
 
 void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& packet) {
@@ -66,7 +84,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   //logger->trace("Combat::update");
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
-  const auto& damage = entitySystem.get_component<Component::Damage>(entity);
+  auto& life = entitySystem.get_component<Component::Life>(entity);
+  auto& damage = entitySystem.get_component<Component::Damage>(entity);
   
   //TODO:: Update buffs
   //TODO:: Update HP
@@ -74,7 +93,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   // Check to see if we have a target component
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
-    const auto& target = entitySystem.get_component<Component::Target>(entity);
+    auto& target = entitySystem.get_component<Component::Target>(entity);
     // Are we in attack range?
     //TODO:: Update apply damage to target
   }
@@ -87,6 +106,8 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  auto& life = entitySystem.get_component<Component::Life>(entity);
+  auto& magic = entitySystem.get_component<Component::Magic>(entity);
   
   uint16_t map_id = pos.map;
   float x = 0.f, y = 0.f;
@@ -119,5 +140,7 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
     }
   }
   
+  life.hp = (life.maxHp * 0.3f);
+  magic.mp = 0;
   //TODO:: Do teleport here
 }

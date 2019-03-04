@@ -119,7 +119,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     
     add_recurrent_timer(50ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Damage>().each([&self](auto entity, auto& dmg) {
+        self.registry.view<Component::Damage>().each([&self](auto entity, [[maybe_unused]] auto& dmg) {
             Combat::update(self, entity);
         });
     });
@@ -145,6 +145,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
     register_dispatcher(std::function{Combat::attack});
+    register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});
 
     // load npc/mob/warpgates/spawn points lua
