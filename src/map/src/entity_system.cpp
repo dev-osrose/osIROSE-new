@@ -8,6 +8,7 @@
 #include "components/basic_info.h"
 #include "components/client.h"
 #include "components/computed_values.h"
+#include "components/damage.h"
 #include "components/destination.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
@@ -36,6 +37,7 @@
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
+#include "combat/combat.h"
 
 #include "random.h"
 
@@ -114,6 +116,13 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
             }
         });
     });
+    
+    add_recurrent_timer(50ms, [](EntitySystem& self) {
+        // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
+        self.registry.view<Component::Damage>().each([&self](auto entity, auto& dmg) {
+            Combat::update(self, entity);
+        });
+    });
 
 
     // callback for nearby calculations
@@ -135,6 +144,8 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+    register_dispatcher(std::function{Combat::attack});
+    register_dispatcher(std::function{Combat::revive});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
