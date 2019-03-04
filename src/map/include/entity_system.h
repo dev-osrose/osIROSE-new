@@ -104,7 +104,7 @@ class EntitySystem {
         TimedCallbacks::Wrapper add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
 
         template <typename... Components>
-        auto get_entities_with_components(RoseCommon::Entity entity);
+        auto get_entities_with_components();
 
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
