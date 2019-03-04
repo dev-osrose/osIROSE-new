@@ -103,6 +103,9 @@ class EntitySystem {
         template <class Rep, class Period>
         TimedCallbacks::Wrapper add_recurrent_timer(const std::chrono::duration<Rep, Period>& timeout, std::function<void(EntitySystem&)> callback);
 
+        template <typename... Components>
+        auto get_entities_with_components(RoseCommon::Entity entity);
+
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
         void unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity);
@@ -255,4 +258,9 @@ TimedCallbacks::Wrapper EntitySystem::add_recurrent_timer(const std::chrono::dur
     return timers.add_recurrent_callback(timeout, [this, callback = std::move(callback)]() mutable {
         add_task(callback);
     });
+}
+
+template <typename... Components>
+auto EntitySystem::get_entities_with_components() {
+    return registry.view<Components...>();
 }
