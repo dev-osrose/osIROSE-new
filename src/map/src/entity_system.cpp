@@ -23,6 +23,7 @@
 #include "components/mob.h"
 #include "components/npc.h"
 #include "components/owner.h"
+#include "components/player_spawn.h"
 #include "components/position.h"
 #include "components/spawner.h"
 #include "components/skills.h"

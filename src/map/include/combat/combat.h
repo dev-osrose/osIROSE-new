@@ -13,4 +13,8 @@ namespace Combat {
   void revive(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliReviveReq&);
   
   void update(EntitySystem&, RoseCommon::Entity);
+  
+  RoseCommon::Entity get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
+  RoseCommon::Entity get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
+  RoseCommon::Entity get_start_spawn(EntitySystem& entitySystem);
 }

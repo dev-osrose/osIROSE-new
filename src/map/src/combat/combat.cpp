@@ -1,6 +1,7 @@
 #include <utility>
 #include "combat/combat.h"
 
+#include "random.h"
 #include "logconsole.h"
 #include "entity_system.h"
 
@@ -11,6 +12,7 @@
 #include "components/destination.h"
 #include "components/life.h"
 #include "components/magic.h"
+#include "components/player_spawn.h"
 #include "components/position.h"
 #include "components/target.h"
 #include "components/damage.h"
@@ -81,7 +83,6 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
 
 void Combat::update(EntitySystem& entitySystem, Entity entity) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  //logger->trace("Combat::update");
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
@@ -99,7 +100,65 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   }
 }
 
-#define	RAND(value) ( rand() % value ) // This is only temp
+RoseCommon::Entity Combat::get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  logger->trace("Combat::get_closest_spawn start");
+  const auto& position = entitySystem.get_component<Component::Position>(player);
+  
+  RoseCommon::Entity closest = {};
+  float closestDist = 999999999999;
+  
+  for (RoseCommon::Entity entity : entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
+    const auto& spawnPosition = entitySystem.get_component<Component::Position>(entity);
+    
+    if(spawnPosition.map != position.map) continue;
+    
+    float dx = spawnPosition.x - position.x;
+    float dy = spawnPosition.y - position.y;
+    float distance = std::sqrt(dx * dx + dy * dy);
+    
+    if(distance < closestDist) {
+      closest = entity;
+      closestDist = distance;
+    }
+  }
+  logger->trace("Combat::get_closest_spawn end");
+  return closest;
+}
+
+RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  logger->trace("Combat::get_saved_spawn start");
+  const auto& position = entitySystem.get_component<Component::Position>(player);
+
+  for (RoseCommon::Entity entity : entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
+    const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
+    if(spawninfo.type == Component::PlayerSpawn::RESPAWN_POINT) {
+      const auto& spawnPosition = entitySystem.get_component<Component::Position>(entity);
+
+      if(spawnPosition.map == position.spawn)
+        return entity;
+    }
+  }
+  
+  logger->trace("Combat::get_saved_spawn unable to find the saved spawn point");
+  return {};
+}
+
+RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  logger->trace("Combat::get_start_spawn start");
+  for (RoseCommon::Entity entity : entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
+    const auto& spawnPosition = entitySystem.get_component<Component::Position>(entity);
+    const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
+    
+    if(spawninfo.type == Component::PlayerSpawn::START_POINT)
+      return entity;
+  }
+  
+  return {};
+}
+
 void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliReviveReq& packet) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::revive");
@@ -116,21 +175,48 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   {
     case CliReviveReq::ReviveRequest::REVIVE_POSITION: 
     {
-      // auto& dest = entitySystem.get_component<Component::Position>(e);
-      // x = dest.x + (RAND(1001) - 500);
-      // y = dest.y + (RAND(1001) - 500);
+      if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+        auto& dest = entitySystem.get_component<Component::Position>(e);
+        x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+        y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+      }
       break;
     }
     case CliReviveReq::ReviveRequest::SAVE_POSITION: 
     {
+      if (Entity e = get_saved_spawn(entitySystem, entity); e) {
+        auto& dest = entitySystem.get_component<Component::Position>(e);
+        
+        if(dest.map == 20 && basicInfo.job) {
+          if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+            auto& dest = entitySystem.get_component<Component::Position>(e);
+            x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+            y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+          }
+          break;
+        }
+        
+        if(pos.map != dest.map) {
+          map_id = dest.map;
+        }
+        x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+        y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+      }
       break;
     }
     case CliReviveReq::ReviveRequest::START_POSITION: 
     {
+      if (Entity e = get_start_spawn(entitySystem); e) {
+        auto& dest = entitySystem.get_component<Component::Position>(e);
+        x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+        y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
+      }
       break;
     }
     case CliReviveReq::ReviveRequest::CURRENT_POSITION: 
     {
+      x = pos.x;
+      y = pos.y;
       break;
     }
     default:
@@ -142,5 +228,6 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   
   life.hp = (life.maxHp * 0.3f);
   magic.mp = 0;
-  //TODO:: Do teleport here
+
+  entitySystem.teleport_entity(entity, x, y, map_id);
 }
