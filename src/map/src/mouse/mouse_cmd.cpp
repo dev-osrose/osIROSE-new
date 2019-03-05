@@ -6,6 +6,7 @@
 #include "srv_mouse_cmd.h"
 
 #include "components/basic_info.h"
+#include "components/computed_values.h"
 #include "components/destination.h"
 #include "components/position.h"
 #include "components/target.h"
@@ -23,6 +24,9 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
+    auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
+    
+    values.command = RoseCommon::Command::MOVE;
 
     dest.x = packet.get_x();
     dest.y = packet.get_y();
