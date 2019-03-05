@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "combat/combat.h"
 
 #include "random.h"
@@ -160,6 +161,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
         attack.apply_ = true;
       }
     }
+    
+    std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
   }
   
   // Check to see if we have a target component
