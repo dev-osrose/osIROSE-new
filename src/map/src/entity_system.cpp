@@ -107,6 +107,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
             dest.dist = distance;
             if (ntime <= delta || distance == 0) {
                 self.remove_component<Component::Destination>(entity);
+		values.command = RoseCommon::Command::STOP;
                 self.update_position(entity, dest.x, dest.y);
             } else {
                 const auto tmp = delta / ntime;
