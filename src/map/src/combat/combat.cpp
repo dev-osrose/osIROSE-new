@@ -23,7 +23,7 @@ using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
 
-void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliHpReq& packet) {
+void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const CliHpReq& packet) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   if (packet.get_targetId()) {
     Entity t = entitySystem.get_entity_from_id(packet.get_targetId());

@@ -59,19 +59,22 @@ void LuaLoader::load_file(const std::string& path) {
         // revive points
         env.set_function("revive_point", [this, env, path](int _map_id, float x, float y) {
             if (map_id != _map_id) return;
-            // do something here
+            auto entity = entitySystem.create_player_spawn(Component::PlayerSpawn::REVIVE_POINT, _map_id, x, y);
+            player_spawns.register_lua(path, env, entity);
         });
 
         // start point
         env.set_function("start_point", [this, env, path](int _map_id, float x, float y) {
             if (map_id != _map_id) return;
-            // do something here
+            auto entity = entitySystem.create_player_spawn(Component::PlayerSpawn::START_POINT, _map_id, x, y);
+            player_spawns.register_lua(path, env, entity);
         });
 
         // respawn point
         env.set_function("respawn_point", [this, env, path](int _map_id, float x, float y) {
             if (map_id != _map_id) return;
-            // do something here
+            auto entity = entitySystem.create_player_spawn(Component::PlayerSpawn::RESPAWN_POINT, _map_id, x, y);
+            player_spawns.register_lua(path, env, entity);
         });
 
         // register npc (both mobs and npcs)

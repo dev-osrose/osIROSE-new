@@ -12,6 +12,7 @@
 #include "fire_once.h"
 #include "id_manager.h"
 #include "components/item.h"
+#include "components/player_spawn.h"
 #include "itemdb.h"
 #include "timed_callbacks.h"
 #include "packet_dispatcher.h"
@@ -51,6 +52,8 @@ class EntitySystem {
         RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
         RoseCommon::Entity create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z);
         RoseCommon::Entity create_mob(RoseCommon::Entity spawner);
+        RoseCommon::Entity create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y);
+        
 
         template <typename T>
         const T& get_component(RoseCommon::Entity entity) const;

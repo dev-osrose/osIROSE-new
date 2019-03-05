@@ -769,6 +769,21 @@ RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, i
     return entity;
 }
 
+RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y) {
+    logger->trace("EntitySystem::create_player_spawn");
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    auto& spawn = prototype.set<PlayerSpawn>(type);
+    auto& pos = prototype.set<Position>();
+    pos.x = x * 100;
+    pos.y = y * 100;
+    pos.z = 0; // we don't care about Z for now
+    pos.map = map_id;
+
+    return prototype();
+}
+
 RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     logger->trace("EntitySystem::create_mob");
     using namespace Component;
