@@ -30,6 +30,7 @@
 #include "srv_channel_list_reply.h"
 #include "srv_char_list_reply.h"
 #include "srv_create_char_reply.h"
+#include "srv_damage.h"
 #include "srv_delete_char_reply.h"
 #include "srv_hp_reply.h"
 #include "srv_inventory_data.h"
@@ -89,6 +90,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_CHANGE_MAP_REPLY, SrvChangeMapReply);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_CHAR_LIST_REPLY, SrvCharListReply);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_CREATE_CHAR_REPLY, SrvCreateCharReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_DAMAGE, SrvDamage);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_DELETE_CHAR_REPLY, SrvDeleteCharReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_HP_REPLY, SrvHpReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_INVENTORY_DATA, SrvInventoryData);

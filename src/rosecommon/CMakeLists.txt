@@ -102,6 +102,7 @@ set(IDL_FILES
   packets/srv_channel_list_reply.xml
   packets/srv_char_list_reply.xml
   packets/srv_create_char_reply.xml
+  packets/srv_damage.xml
   packets/srv_delete_char_reply.xml
   packets/srv_hp_reply.xml
   packets/srv_inventory_data.xml
