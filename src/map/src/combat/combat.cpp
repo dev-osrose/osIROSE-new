@@ -133,9 +133,10 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   
   //TODO:: Update buffs
   //TODO:: Update HP
-  if(life.hp > 0)
+  if(life.hp > 0 && (life.hp != life.maxHp || magic.mp != magic.maxMp))
   {
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
+    
     {
       int32_t amount = (int32_t)std::ceil(life.maxHp * 0.02);
       amount = amount * stanceModifier;
@@ -144,6 +145,9 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       life.hp += amount;
     }
     
+    if(life.hp > life.maxHp)
+      life.hp = life.maxHp;
+    
     {
       int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
       amount = amount * stanceModifier;
@@ -151,10 +155,6 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       //TODO: Take into account MP regen buffs
       magic.mp += amount;
     }
-    
-    //TODO:: Should we allow overheal for the damage step later?
-    if(life.hp > life.maxHp)
-      life.hp = life.maxHp;
 
     if(magic.mp > magic.maxMp)
       magic.mp = magic.maxMp;
@@ -199,14 +199,6 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
           attack.action_ |= DAMAGE_ACTION_DEAD;
           auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_ + 30000, attack.action_);
           entitySystem.send_nearby(entity, p);
-          
-          //Do this only if the entity is a mob
-          // entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
-          
-          // remove components that we can't have if we are dead!
-          entitySystem.remove_component<Component::Damage>(entity);
-          entitySystem.remove_component<Component::Target>(entity);
-          entitySystem.remove_component<Component::Destination>(entity);
         } else {
           logger->debug("applied {} damage to entity {} {}.", attack.value_, basicInfo.name, basicInfo.id);
           
@@ -224,8 +216,18 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     }
     life.hp = adjusted_hp;
     
-    if(life.hp <= 0)
+    if(life.hp <= 0) {
+      //Do this only if the entity is a mob
+      if(basicInfo.teamId == -1)
+        entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
+        
       queuedDamage.damage_.clear();
+      
+      // remove components that we can't have if we are dead!
+      entitySystem.remove_component<Component::Damage>(entity);
+      entitySystem.remove_component<Component::Target>(entity);
+      entitySystem.remove_component<Component::Destination>(entity);
+    }
     else
       std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
   }
@@ -234,9 +236,10 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
+    const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
     
     // Are we in attack range?
-    if(get_range_to(entitySystem, entity, target.target) <= 10)
+    if(targetBasicInfo.teamId == -1 && get_range_to(entitySystem, entity, target.target) <= 10)
     {
       if(entitySystem.has_component<Component::Damage>(target.target) == false) {
         entitySystem.add_component<Component::Damage>(target.target);

@@ -456,8 +456,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
     computedValues.moveMode = RoseCommon::MoveMode::RUN;
-    computedValues.runSpeed = 0;
-    computedValues.atkSpeed = 0;
+    computedValues.runSpeed = 200; // 200 is walk speed.
+    computedValues.atkSpeed = 30;
     computedValues.weightRate = 0;
     computedValues.statusFlag = 0;
     computedValues.subFlag = 0;
@@ -687,6 +687,10 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& life = prototype.set<Life>();
     life.hp = 1;
     life.maxHp = 1;
+    
+    auto& magic = prototype.set<Magic>();
+    magic.mp = 1;
+    magic.maxMp = 1;
 
     auto& pos = prototype.set<Position>();
     pos.x = x * 100;
@@ -825,6 +829,10 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto& life = prototype.set<Life>();
     life.hp = data ? data.value().get_hp() * level.level : 1;
     life.maxHp = life.hp * level.level;
+    
+    auto& magic = prototype.set<Magic>();
+    magic.mp = 0;
+    magic.maxMp = 0;
 
     auto& mob = prototype.set<Mob>();
     mob.id = spawn.mob_id;
