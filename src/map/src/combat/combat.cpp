@@ -177,6 +177,12 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
         Entity attacker = entitySystem.get_entity_from_id(attack.attacker_);
         logger->debug("Applying damage to entity {} {}", basicInfo.name, basicInfo.id);
         
+        if(adjusted_hp <= 0) {
+          logger->debug("Entity {} {} is dead already, not applying damage", basicInfo.name, basicInfo.id);
+          attack.value_ = 0;
+          continue;
+        }
+        
         if((adjusted_hp - attack.value_) <= 0) {
           logger->debug("Entity {} {} will die from {} damage", basicInfo.name, basicInfo.id, attack.value_);
           total_applied_damage = attack.value_ + adjusted_hp;
@@ -218,7 +224,10 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     }
     life.hp = adjusted_hp;
     
-    std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
+    if(life.hp <= 0)
+      queuedDamage.damage_.clear();
+    else
+      std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
   }
   
   // Check to see if we have a target component
