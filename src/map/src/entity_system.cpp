@@ -68,7 +68,7 @@ void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     }
 }
 
-EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
+EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : loading(true), maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
@@ -151,6 +151,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
+    loading = false;
 }
 
 void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -753,6 +754,7 @@ RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, i
     auto entity = prototype();
 
     spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
+        if(self.is_loading()) return;
         auto& spawner = self.get_component<Spawner>(entity);
         if (spawner.mobs.size() < spawner.max_mobs) {
             int number = Core::Random::getInstance().get_uniform(0, std::min(static_cast<size_t>(spawner.max_once), spawner.max_mobs - spawner.mobs.size()));
@@ -792,6 +794,8 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     const auto& spos = get_component<Position>(spawner);
 
     auto data = lua_loader.get_data(spawn.mob_id);
+    if(!data)
+        logger->warn("EntitySystem::create_mob unable to get mob data for {}", spawn.mob_id);
 
     auto& basic_info = prototype.set<BasicInfo>();
     basic_info.id = idManager.get_free_id();

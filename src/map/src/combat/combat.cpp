@@ -9,6 +9,7 @@
 #include "srv_attack.h"
 #include "srv_damage.h"
 #include "srv_hp_reply.h"
+#include "srv_mouse_cmd.h"
 
 #include "components/basic_info.h"
 #include "components/destination.h"
@@ -43,13 +44,21 @@ void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const CliHpRe
 
 
 std::pair<float, float> Combat::get_range_position(const EntitySystem& entitySystem, Entity character, Entity target, float range) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& char_pos = entitySystem.get_component<Component::Position>(character);
   const auto& target_pos = entitySystem.get_component<Component::Position>(target);
   std::pair<float, float> vector{char_pos.x - target_pos.x, char_pos.y - target_pos.y};
   const float length = sqrt(vector.first * vector.first + vector.second * vector.second);
+  
+  if(length <= range) {
+    logger->debug("within range, returning x,y {},{}", vector.first, vector.second);
+    return vector;
+  }
+  
   vector.first /= length;
   vector.second /= length;
-  return {vector.first * range, vector.second * range};
+  logger->debug("out of range, returning x,y {},{}", (vector.first * range) + target_pos.x, (vector.second * range) + target_pos.y);
+  return {(vector.first * range) + target_pos.x, (vector.second * range) + target_pos.y};
 }
 
 float Combat::get_range_to(const EntitySystem& entitySystem, Entity character, Entity target) {
@@ -59,7 +68,7 @@ float Combat::get_range_to(const EntitySystem& entitySystem, Entity character, E
   const float dx = char_pos.x - target_pos.x;
   const float dy = char_pos.y - target_pos.y;
   
-  return std::sqrt(dx * dx + dy * dy);
+  return std::sqrt(dx * dx + dy * dy) * 0.01f;
 }
 
 void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& packet) {
@@ -76,12 +85,14 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
     if (t != entt::null) {
       auto& target = entitySystem.add_or_replace_component<Component::Target>(entity);
       target.target = t;
+  
+      logger->debug("distance to target is {}", get_range_to(entitySystem, entity, t));
       
       //TODO: Check distance to target, if not in attack range, move into max attack range
-      if(get_range_to(entitySystem, entity, t) > 1)
+      if(get_range_to(entitySystem, entity, t) > 10)
       {
         auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
-        auto npos = get_range_position(entitySystem, entity, t);
+        auto npos = get_range_position(entitySystem, entity, t, 5);
         dest.x = npos.first;
         dest.y = npos.second;
         dest.z = 0;
@@ -89,15 +100,23 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
         const float dx = pos.x - dest.x;
         const float dy = pos.y - dest.y;
         dest.dist = std::sqrt(dx * dx + dy * dy);
+        
+        auto p = SrvMouseCmd::create(basicInfo.id);
+        p.set_targetId(packet.get_targetId());
+        p.set_x(dest.x);
+        p.set_y(dest.y);
+        entitySystem.send_nearby(entity, p);
       }
-      
-      // This packet acts as an attack and mouse_cmd all in one, we don't want the mouse_cmd portion 
-      // of it as it can cause some issues with attack animations going off before it should
-      // auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
-      // p.set_x(dest.x);
-      // p.set_y(dest.y);
-      // p.set_distance(dest.dist);
-      // entitySystem.send_nearby(entity, p);
+      else
+      {
+        // This packet acts as an attack and mouse_cmd all in one, we don't want the mouse_cmd portion 
+        // of it as it can cause some issues with attack animations going off before it should
+        auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
+        p.set_x(pos.x);
+        p.set_y(pos.y);
+        p.set_z(0);
+        entitySystem.send_nearby(entity, p);
+      }
     }
   }
 }
@@ -142,10 +161,13 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
           auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_ + 30000, attack.action_);
           entitySystem.send_nearby(entity, p);
           
+          //Do this only if the entity is a mob
+          // entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
+          
           // remove components that we can't have if we are dead!
           entitySystem.remove_component<Component::Damage>(entity);
-          entitySystem.remove_component<Component::Destination>(entity);
           entitySystem.remove_component<Component::Target>(entity);
+          entitySystem.remove_component<Component::Destination>(entity);
         } else {
           logger->debug("applied {} damage to entity {} {}.", attack.value_, basicInfo.name, basicInfo.id);
           
@@ -169,8 +191,18 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
+    
     // Are we in attack range?
-    //TODO:: Update apply damage to target
+    if(get_range_to(entitySystem, entity, target.target) <= 10)
+    {
+      if(entitySystem.has_component<Component::Damage>(target.target) == false) {
+        entitySystem.add_component<Component::Damage>(target.target);
+      }
+      
+      logger->debug("queuing damage to target entity");
+      auto& damage = entitySystem.get_component<Component::Damage>(target.target);
+      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 1);
+    }
   }
 }
 

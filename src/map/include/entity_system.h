@@ -108,6 +108,8 @@ class EntitySystem {
 
         template <typename... Components>
         auto get_entities_with_components();
+        
+        bool is_loading() const { return loading; }
 
     private:
         void register_name(RoseCommon::Registry&, RoseCommon::Entity entity);
@@ -115,6 +117,7 @@ class EntitySystem {
         void remove_object(RoseCommon::Registry&, RoseCommon::Entity entity);
         void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
     
+        bool loading;
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
         std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
