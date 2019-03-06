@@ -801,6 +801,10 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
     basic_info.teamId = -1;
+    
+    auto& level = prototype.set<Level>();
+    level.level = data ? data.value().get_level() : 1;
+    level.xp = data ? data.value().get_give_exp() : 0; // This is the reward xp for when this mob dies
 
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
@@ -819,8 +823,8 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    life.hp = data ? data.value().get_hp() : 1;
-    life.maxHp = life.hp;
+    life.hp = data ? data.value().get_hp() * level.level : 1;
+    life.maxHp = life.hp * level.level;
 
     auto& mob = prototype.set<Mob>();
     mob.id = spawn.mob_id;
