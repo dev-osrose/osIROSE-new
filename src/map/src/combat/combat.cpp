@@ -10,8 +10,10 @@
 #include "srv_damage.h"
 #include "srv_hp_reply.h"
 #include "srv_mouse_cmd.h"
+#include "srv_set_hp_and_mp.h"
 
 #include "components/basic_info.h"
+#include "components/computed_values.h"
 #include "components/destination.h"
 #include "components/life.h"
 #include "components/magic.h"
@@ -92,7 +94,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
       if(get_range_to(entitySystem, entity, t) > 10)
       {
         auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
-        auto npos = get_range_position(entitySystem, entity, t, 5);
+        auto npos = get_range_position(entitySystem, entity, t, 500);
         dest.x = npos.first;
         dest.y = npos.second;
         dest.z = 0;
@@ -126,9 +128,40 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
+  auto& magic = entitySystem.get_component<Component::Magic>(entity);
+  auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   
   //TODO:: Update buffs
   //TODO:: Update HP
+  if(life.hp > 0)
+  {
+    int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
+    {
+      int32_t amount = (int32_t)std::ceil(life.maxHp * 0.02);
+      amount = amount * stanceModifier;
+      //TODO: update amount based on equipment values
+      //TODO: Take into account HP regen buffs
+      life.hp += amount;
+    }
+    
+    {
+      int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
+      amount = amount * stanceModifier;
+      //TODO: update amount based on equipment values
+      //TODO: Take into account MP regen buffs
+      magic.mp += amount;
+    }
+    
+    //TODO:: Should we allow overheal for the damage step later?
+    if(life.hp > life.maxHp)
+      life.hp = life.maxHp;
+
+    if(magic.mp > magic.maxMp)
+      magic.mp = magic.maxMp;
+
+    auto p = SrvSetHpAndMp::create(basicInfo.id, life.hp, magic.mp);
+    entitySystem.send_nearby(entity, p);
+  }
   
   if(entitySystem.has_component<Component::Damage>(entity) == true)
   {
@@ -183,6 +216,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
         attack.apply_ = true;
       }
     }
+    life.hp = adjusted_hp;
     
     std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
   }
@@ -201,7 +235,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       
       logger->debug("queuing damage to target entity");
       auto& damage = entitySystem.get_component<Component::Damage>(target.target);
-      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 1);
+      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 15);
     }
   }
 }

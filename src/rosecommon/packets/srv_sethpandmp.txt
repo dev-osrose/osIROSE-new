@@ -1,4 +1,0 @@
-PAKWC_SET_HP_AND_MP
-uint16_t id BasicInfo::id
-uint16_t hp
-uint16_t mp
