@@ -17,6 +17,8 @@
 #include "components/destination.h"
 #include "components/life.h"
 #include "components/magic.h"
+#include "components/mob.h"
+#include "components/npc.h"
 #include "components/player_spawn.h"
 #include "components/position.h"
 #include "components/target.h"
@@ -209,19 +211,13 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     queuedDamage.damage_.clear();
     
     if(life.hp <= 0) {
-      //Do this only if the entity is a mob
-      if(basicInfo.teamId == -1)
+      if(entitySystem.has_component<Component::Mob>(entity) == true)
         entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
-        
-      queuedDamage.damage_.clear();
       
       // remove components that we can't have if we are dead!
       entitySystem.remove_component<Component::Damage>(entity);
       entitySystem.remove_component<Component::Target>(entity);
       entitySystem.remove_component<Component::Destination>(entity);
-    }
-    else {
-      std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ || 0 == i.value_); });
     }
   }
   
@@ -232,16 +228,20 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
     const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
-    // Are we in attack range?
-    if(targetBasicInfo.teamId == -1 && targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
+    if(entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true ||
+      (false) ) // TODO:: Check if this map has PVP turned on
     {
-      if(entitySystem.has_component<Component::Damage>(target.target) == false) {
-        entitySystem.add_component<Component::Damage>(target.target);
+      // Are we in attack range?
+      if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
+      {
+        if(entitySystem.has_component<Component::Damage>(target.target) == false) {
+          entitySystem.add_component<Component::Damage>(target.target);
+        }
+        
+        logger->debug("queuing damage to target entity");
+        auto& damage = entitySystem.get_component<Component::Damage>(target.target);
+        damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 30);
       }
-      
-      logger->debug("queuing damage to target entity");
-      auto& damage = entitySystem.get_component<Component::Damage>(target.target);
-      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 30);
     }
   }
 }

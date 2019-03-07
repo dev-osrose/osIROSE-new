@@ -106,8 +106,10 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
                 break;
               }
               default:
+              {
                 computed.runSpeed = 200;
                 break;
+              }
             }
             if(computed.runSpeed < 200) computed.runSpeed = 200;
             
