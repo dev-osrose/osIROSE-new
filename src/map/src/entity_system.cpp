@@ -90,15 +90,29 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, auto& inv, auto& computed) {
-            (void)inv;
+        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
             computed.runSpeed = 433;
-            if (computed.moveMode == RoseCommon::MoveMode::WALK) {
+            switch(computed.moveMode) {
+              case RoseCommon::MoveMode::WALK:
+              {
+                // This is a fixed speed
                 computed.runSpeed = 200;
-            }
-            if (computed.moveMode == RoseCommon::MoveMode::RUN) {
+                break;
+              }
+              case RoseCommon::MoveMode::RUN:
+              {
+                // (get original speed + any move speed increase from items (stat 6) - any movement decrease from items (stat 7)) + Fairy additonal movement speed
                 computed.runSpeed += stats.dex * 0.8500001;
+                break;
+              }
+              default:
+                computed.runSpeed = 200;
+                break;
             }
+            if(computed.runSpeed < 200) computed.runSpeed = 200;
+            
+            computed.atkSpeed = 30; // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
+            if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
         self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
             const auto delta = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(100ms);
@@ -120,7 +134,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     
     add_recurrent_timer(50ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Life>().each([&self](auto entity, [[maybe_unused]] auto& life) {
+        self.registry.view<Component::Life, Component::Magic>().each([&self](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& magic) {
             Combat::update(self, entity);
         });
     });
@@ -456,7 +470,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
     computedValues.moveMode = RoseCommon::MoveMode::RUN;
-    computedValues.runSpeed = 200; // 200 is walk speed.
+    computedValues.runSpeed = 200; // 200 is walk speed. min this value can be is 200
     computedValues.atkSpeed = 30;
     computedValues.weightRate = 0;
     computedValues.statusFlag = 0;
@@ -486,7 +500,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-	   .where(inventoryTable.charId == charId and inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist"));
+     .where(inventoryTable.charId == charId and inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist"));
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
@@ -532,7 +546,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     pos.y = charRow.y;
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
-	pos.map = charRow.map;
+  pos.map = charRow.map;
 
     auto skillRes =
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
@@ -653,7 +667,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     if (const auto tmp = lua.api.lock(); tmp) {
         tmp->on_init();
     }
-	
+  
     std::lock_guard<std::mutex> lock(access);
     return prototype();
 }
@@ -687,10 +701,6 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& life = prototype.set<Life>();
     life.hp = 1;
     life.maxHp = 1;
-    
-    auto& magic = prototype.set<Magic>();
-    magic.mp = 1;
-    magic.maxMp = 1;
 
     auto& pos = prototype.set<Position>();
     pos.x = x * 100;
@@ -710,8 +720,8 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 }
 
 RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
-	int dest_map_id, float dest_x, float dest_y, float dest_z,
-	float min_x, float min_y, float min_z,
+  int dest_map_id, float dest_x, float dest_y, float dest_z,
+  float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
     using namespace Component;
@@ -808,6 +818,10 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     
     auto& level = prototype.set<Level>();
     level.level = data ? data.value().get_level() : 1;
+    
+    if(level.level <= 0)
+        level.level = 1;
+    
     level.xp = data ? data.value().get_give_exp() : 0; // This is the reward xp for when this mob dies
 
     auto& position = prototype.set<Position>();
@@ -827,7 +841,7 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    life.hp = data ? data.value().get_hp() * level.level : 1;
+    life.hp = data ? data.value().get_hp() : 1;
     life.maxHp = life.hp * level.level;
     
     auto& magic = prototype.set<Magic>();

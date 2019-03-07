@@ -70,7 +70,7 @@ float Combat::get_range_to(const EntitySystem& entitySystem, Entity character, E
   const float dx = char_pos.x - target_pos.x;
   const float dy = char_pos.y - target_pos.y;
   
-  return std::sqrt(dx * dx + dy * dy) * 0.01f;
+  return std::sqrt(dx * dx + dy * dy) * 0.001f;
 }
 
 void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& packet) {
@@ -91,7 +91,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
       logger->debug("distance to target is {}", get_range_to(entitySystem, entity, t));
       
       //TODO: Check distance to target, if not in attack range, move into max attack range
-      if(get_range_to(entitySystem, entity, t) > 10)
+      if(get_range_to(entitySystem, entity, t) > 1)
       {
         auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
         auto npos = get_range_position(entitySystem, entity, t, 500);
@@ -133,32 +133,32 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   
   //TODO:: Update buffs
   //TODO:: Update HP
-  if(life.hp > 0 && (life.hp != life.maxHp || magic.mp != magic.maxMp))
+  if(false) // Regen happens every 4 seconds
   {
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
-    
+    if(life.hp > 0 && life.hp != life.maxHp)
     {
       int32_t amount = (int32_t)std::ceil(life.maxHp * 0.02);
       amount = amount * stanceModifier;
       //TODO: update amount based on equipment values
       //TODO: Take into account HP regen buffs
       life.hp += amount;
+      
+      if(life.hp > life.maxHp)
+        life.hp = life.maxHp;
     }
     
-    if(life.hp > life.maxHp)
-      life.hp = life.maxHp;
-    
+    if(magic.mp != magic.maxMp)
     {
       int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
       amount = amount * stanceModifier;
       //TODO: update amount based on equipment values
       //TODO: Take into account MP regen buffs
       magic.mp += amount;
+  
+      if(magic.mp > magic.maxMp)
+        magic.mp = magic.maxMp;
     }
-
-    if(magic.mp > magic.maxMp)
-      magic.mp = magic.maxMp;
-
     auto p = SrvSetHpAndMp::create(basicInfo.id, life.hp, magic.mp);
     entitySystem.send_nearby(entity, p);
   }
@@ -169,52 +169,44 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     int32_t adjusted_hp = life.hp;
     uint32_t total_applied_damage = 0;
     
-    for(auto attack : queuedDamage.damage_)
+    for(auto& attack : queuedDamage.damage_)
     {
-      if(attack.apply_) {
-        // We waited at least one update before applying damage, apply it now
-        //TODO:: Apply damage to this entity
-        Entity attacker = entitySystem.get_entity_from_id(attack.attacker_);
-        logger->debug("Applying damage to entity {} {}", basicInfo.name, basicInfo.id);
-        
-        if(adjusted_hp <= 0) {
-          logger->debug("Entity {} {} is dead already, not applying damage", basicInfo.name, basicInfo.id);
-          attack.value_ = 0;
-          continue;
-        }
-        
-        if((adjusted_hp - attack.value_) <= 0) {
-          logger->debug("Entity {} {} will die from {} damage", basicInfo.name, basicInfo.id, attack.value_);
-          total_applied_damage = attack.value_ + adjusted_hp;
-          adjusted_hp = 0;
-          //TODO: Credit this attacker as the one who killed this entity.
-        } else {
-          total_applied_damage += attack.value_;
-          adjusted_hp -= attack.value_;
-        }
-        
-        if(adjusted_hp <= 0) {
-          //TODO: Get dropped item data here and send it with the DAMAGE packet
-          attack.action_ &= ~DAMAGE_ACTION_HIT;
-          attack.action_ |= DAMAGE_ACTION_DEAD;
-          auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_ + 30000, attack.action_);
-          entitySystem.send_nearby(entity, p);
-        } else {
-          logger->debug("applied {} damage to entity {} {}.", attack.value_, basicInfo.name, basicInfo.id);
-          
-          auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
-          entitySystem.send_to(entity, p);
-          entitySystem.send_to(attacker, p);
-        }
-        
-        // Reset the damage value to 0 for next pass
-        attack.value_ = 0;
+      // We waited at least one update before applying damage, apply it now
+      Entity attacker = entitySystem.get_entity_from_id(attack.attacker_);
+      logger->debug("Applying damage to entity {} {}", basicInfo.name, basicInfo.id);
+      
+      if(adjusted_hp <= 0) {
+        logger->debug("Entity {} {} is dead already, not applying damage", basicInfo.name, basicInfo.id);
+        //attack.value_ = 0;
+        continue;
+      }
+      
+      if((adjusted_hp - attack.value_) <= 0) {
+        logger->debug("Entity {} {} will die from {} damage", basicInfo.name, basicInfo.id, attack.value_);
+        total_applied_damage = attack.value_ + adjusted_hp;
+        adjusted_hp = 0;
+        //TODO: Credit this attacker as the one who killed this entity.
       } else {
-        // Apply any new damage on next update
-        attack.apply_ = true;
+        total_applied_damage += attack.value_;
+        adjusted_hp -= attack.value_;
+      }
+      
+      if(adjusted_hp <= 0) {
+        //TODO: Get dropped item data here and send it with the DAMAGE packet
+        attack.action_ &= ~DAMAGE_ACTION_HIT;
+        attack.action_ |= DAMAGE_ACTION_DEAD;
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
+        entitySystem.send_nearby(entity, p);
+      } else {
+        logger->debug("applied {} damage to entity {} {}.", attack.value_, basicInfo.name, basicInfo.id);
+        
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
+        entitySystem.send_to(entity, p);
+        entitySystem.send_to(attacker, p);
       }
     }
     life.hp = adjusted_hp;
+    queuedDamage.damage_.clear();
     
     if(life.hp <= 0) {
       //Do this only if the entity is a mob
@@ -228,8 +220,9 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       entitySystem.remove_component<Component::Target>(entity);
       entitySystem.remove_component<Component::Destination>(entity);
     }
-    else
-      std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ && 0 == i.value_); });
+    else {
+      std::remove_if(queuedDamage.damage_.begin(), queuedDamage.damage_.end(), [] (auto &i) { return (true == i.apply_ || 0 == i.value_); });
+    }
   }
   
   // Check to see if we have a target component
@@ -237,9 +230,10 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
     const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
+    const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
     // Are we in attack range?
-    if(targetBasicInfo.teamId == -1 && get_range_to(entitySystem, entity, target.target) <= 10)
+    if(targetBasicInfo.teamId == -1 && targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
     {
       if(entitySystem.has_component<Component::Damage>(target.target) == false) {
         entitySystem.add_component<Component::Damage>(target.target);
@@ -247,7 +241,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       
       logger->debug("queuing damage to target entity");
       auto& damage = entitySystem.get_component<Component::Damage>(target.target);
-      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 15);
+      damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 30);
     }
   }
 }
