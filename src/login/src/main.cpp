@@ -182,6 +182,33 @@ void deleteStaleSessions() {
 }
 
 volatile std::sig_atomic_t gSignalStatus = 0;
+
+void delete_stale_parties() {
+  using namespace std::chrono_literals;
+  using ::date::floor;
+  static std::chrono::steady_clock::time_point time{};
+  if (Core::Time::GetTickCount() - time < 5min) {
+    return;
+  }
+  time = Core::Time::GetTickCount();
+  auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+  Core::PartyTable party{};
+  Core::PartyMembers party_members{};
+  SQLPP_ALIAS_PROVIDER(total);
+  const auto party_count = conn(sqlpp::select(party.id,
+    sqlpp::count(sqlpp::all_of(party_members)).as(total))
+      .from(party_members.join(party).on(party.id == party_members.id)));
+  std::vector<int> to_remove;
+  for (const auto& row : party_count) {
+    if (party_count.total == 0) {
+      to_remove.push_back(party_count.id);
+    }
+  }
+  for (const auto& party : to_remove) {
+    conn(sqlpp::remove_from(party).where(party.id == party));
+  }
+}
+
 } // end namespace
 
 int main(int argc, char* argv[]) {
