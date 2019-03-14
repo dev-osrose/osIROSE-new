@@ -200,7 +200,7 @@ void delete_stale_parties() {
       .from(party_members.join(party).on(party.id == party_members.id)));
   std::vector<int> to_remove;
   for (const auto& row : party_count) {
-    if (party_count.total == 0) {
+    if (party_count.total <= 1) {
       to_remove.push_back(party_count.id);
     }
   }
