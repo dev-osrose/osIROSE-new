@@ -198,13 +198,30 @@ DROP TABLE IF EXISTS `party`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `party` (
-  `party_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(24) NOT NULL DEFAULT '',
-  `leader_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Leader''s Account ID',
-  `leader_char` int(11) NOT NULL DEFAULT '0' COMMENT 'Character ID',
+  `leader_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Leader''s char ID',
+  `options` int(11) NOT NULL DEFAULT '0',
+  'level' int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`party_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Parties persist until they are disbanded.';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `party_members`
+--
+
+DROP TABLE IF EXISTS `party_members`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `party_members` (
+  `id` int(10) unsigned NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `rank` datetime NOT NULL DEFAULT GETDATE() COMMENT 'Sort by oldest first',
+  PRIMARY KEY (`id`, `member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `sessions`
