@@ -202,8 +202,8 @@ CREATE TABLE `party` (
   `name` varchar(24) NOT NULL DEFAULT '',
   `leader_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Leader''s char ID',
   `options` int(11) NOT NULL DEFAULT '0',
-  'level' int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`party_id`)
+  `level` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Parties persist until they are disbanded.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -217,7 +217,7 @@ DROP TABLE IF EXISTS `party_members`;
 CREATE TABLE `party_members` (
   `id` int(10) unsigned NOT NULL,
   `member_id` int(11) NOT NULL,
-  `rank` datetime NOT NULL DEFAULT GETDATE() COMMENT 'Sort by oldest first',
+  `rank` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Sort by oldest first',
   PRIMARY KEY (`id`, `member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
