@@ -183,6 +183,8 @@ void deleteStaleSessions() {
 
 volatile std::sig_atomic_t gSignalStatus = 0;
 
+SQLPP_ALIAS_PROVIDER(total);
+
 void delete_stale_parties() {
   using namespace std::chrono_literals;
   using ::date::floor;
@@ -193,19 +195,28 @@ void delete_stale_parties() {
   time = Core::Time::GetTickCount();
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::PartyTable party{};
-  Core::PartyMembers party_members{};
-  SQLPP_ALIAS_PROVIDER(total);
-  const auto party_count = conn(sqlpp::select(party.id,
-    sqlpp::count(sqlpp::all_of(party_members)).as(total))
-      .from(party_members.join(party).on(party.id == party_members.id)));
+  Core::PartyMembersTable party_members{};
+
+  auto party_count = conn(sqlpp::select(party.id,
+    sqlpp::count(party_members.id).as(total),
+    party_members.memberId)
+      .from(party_members.join(party).on(party.id == party_members.id))
+      .unconditionally());
   std::vector<int> to_remove;
+  std::vector<std::pair<int, int>> members_to_remove;
   for (const auto& row : party_count) {
-    if (party_count.total <= 1) {
-      to_remove.push_back(party_count.id);
+    if (row.total <= 1) {
+      to_remove.push_back(row.id);
+    }
+    if (static_cast<long int>(row.total) == 1) {
+      members_to_remove.emplace_back(row.id, row.memberId);
     }
   }
-  for (const auto& party : to_remove) {
-    conn(sqlpp::remove_from(party).where(party.id == party));
+  for (const auto& p : to_remove) {
+    conn(sqlpp::remove_from(party).where(party.id == p));
+  }
+  for (const auto& member : members_to_remove) {
+    conn(sqlpp::remove_from(party_members).where(party_members.id == member.first and party_members.memberId == member.second));
   }
 }
 
@@ -270,6 +281,7 @@ int main(int argc, char* argv[]) {
         clientServer.shutdown(true);
         iscServer.shutdown(true);
       }
+      delete_stale_parties();
     }
 
     if(auto log = console.lock())
