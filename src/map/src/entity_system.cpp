@@ -546,6 +546,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     Core::CharacterTable characters{};
     Core::InventoryTable inventoryTable{};
     Core::SkillTable skillsTable{};
+    Core::Partytable partyTable{};
+    Core::PartyMembersTable partyMembersTable{};
 
     auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
                           .from(characters).where(characters.id == charId));
@@ -677,6 +679,12 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     stats.headSize = 100;
 
     prototype.set<StatusEffects>();
+
+    // set party stoof
+    auto party_id = conn(sqlpp::select(partyMembersTable.id).from(partyMembersTable).where(partyMembersTable.memberId == charId));
+    if (!party_id.empty()) {
+        
+    }
 
     std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
