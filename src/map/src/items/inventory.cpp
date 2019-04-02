@@ -2,6 +2,7 @@
 #include "entity_system.h"
 
 #include "components/inventory.h"
+#include "components/lua.h"
 
 using namespace RoseCommon;
 using namespace Items;
@@ -42,10 +43,50 @@ void Items::swap_item(EntitySystem& entitySystem, RoseCommon::Entity entity, siz
     std::swap(inventory[pos1], inventory[pos2]);
 }
 
-ReturnValue Items::equip_item(EntitySystem&, RoseCommon::Entity entity, size_t from, size_t to) {
+ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t from, size_t to) {
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+
+    const RoseCommon::Entity equipped = inv.getEquipped()[to];
+    if (equipped != entt::null) {
+        const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
+        if (const auto tmp = lua.api.lock(); tmp) {
+            if (!tmp->on_unequip(entity)) {
+                return ReturnValue::REQUIREMENTS_NOT_MET;
+            }
+        }
+    }
+    const RoseCommon::Entity to_equip = inv.getInventory()[from];
+    if (from != entt::null) {
+        const auto& lua = entitySystem.get_component<Component::ItemLua>(to_equip);
+        if (const auto tmp = lua.api.lock(); tmp) {
+            if (!tmp->on_unequip(entity)) {
+                return ReturnValue::REQUIREMENTS_NOT_MET;
+            }
+        }
+    }
+    swap_item(entitySystem, entity, from, to);
+    // TODO: send update packet(s) to self & nearby or fail
     return ReturnValue::OK;
 }
 
-ReturnValue Items::unequip_item(EntitySystem&, RoseCommon::Entity entity, size_t from) {
+ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t from) {
+    const size_t to = get_first_available_spot(entitySystem, entity);
+    if (to == 0) {
+        return ReturnValue::NO_SPACE;
+    }
+
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+
+    const RoseCommon::Entity equipped = inv.getEquipped()[from];
+    if (equipped != entt::null) {
+        const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
+        if (const auto tmp = lua.api.lock(); tmp) {
+            if (!tmp->on_unequip(entity)) {
+                return ReturnValue::REQUIREMENTS_NOT_MET;
+            }
+        }
+    }
+    swap_item(entitySystem, entity, from, to);
+    // TODO: send update packet(s) to self & nearby or fail
     return ReturnValue::OK;
 }
