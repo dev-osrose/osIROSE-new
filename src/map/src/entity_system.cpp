@@ -34,6 +34,7 @@
 
 #include "chat/normal_chat.h"
 #include "chat/whisper_chat.h"
+#include "chat/shout_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
 
@@ -133,6 +134,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
+    register_dispatcher(std::function{Chat::shout_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
 
