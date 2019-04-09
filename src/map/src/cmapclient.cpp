@@ -81,7 +81,7 @@ bool CMapClient::handlePacket(uint8_t* _buffer) {
     case ePacketType::PAKCS_CHANGE_CHAR_REQ:
       return changeCharacterReply(Packet::CliChangeCharReq::create(_buffer));
     case ePacketType::PAKCS_CHANGE_MAP_REQ:
-      if (login_state_ != eSTATE::LOGGEDIN) {
+      if (login_state_ != eSTATE::LOGGEDIN && login_state_ != eSTATE::ONMAP) {
         logger_->warn("Client {} is attempting to execute an action before logging in.", get_id());
         return true;
       }
