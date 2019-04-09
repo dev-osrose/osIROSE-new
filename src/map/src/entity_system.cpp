@@ -36,6 +36,7 @@
 #include "chat/whisper_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
+#include "items/inventory.h"
 
 #include "random.h"
 
@@ -135,6 +136,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+    register_dispatcher(std::function{Items::equip_item_packet});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
