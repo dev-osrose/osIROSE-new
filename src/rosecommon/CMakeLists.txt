@@ -99,6 +99,7 @@ set(IDL_FILES
   packets/srv_char_list_reply.xml
   packets/srv_create_char_reply.xml
   packets/srv_delete_char_reply.xml
+  packets/srv_equip_item.xml
   packets/srv_inventory_data.xml
   packets/srv_join_server_reply.xml
   packets/srv_login_reply.xml

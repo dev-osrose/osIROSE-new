@@ -1,8 +1,11 @@
 #include "items/inventory.h"
 #include "entity_system.h"
 
+#include "components/basicInfo.h"
 #include "components/inventory.h"
 #include "components/lua.h"
+
+#include "srv_equip_item.h"
 
 using namespace RoseCommon;
 using namespace Items;
@@ -65,7 +68,10 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
         }
     }
     swap_item(entitySystem, entity, from, to);
-    // TODO: send update packet(s) to self & nearby or fail
+    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
+            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.getInventory()[to]));
+    entitySystem.send_nearby(entity, packet);
     return ReturnValue::OK;
 }
 
@@ -87,7 +93,10 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
         }
     }
     swap_item(entitySystem, entity, from, to);
-    // TODO: send update packet(s) to self & nearby or fail
+    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
+            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.getInventory()[from]));
+    entitySystem.send_nearby(entity, packet);
     return ReturnValue::OK;
 }
 
@@ -96,7 +105,11 @@ void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity ent
     logger->trace("equip_item_packet");
     logger->trace("from {} to {}", packet.get_slotFrom(), packet.get_slotTo());
     const auto from = packet.get_slotFrom() - decltype(std::declval<Component::Inventory>().getInventory())::offset();
-    const auto to = packet.get_slotTo() - decltype(std::declval<Component::Inventory>().getEquipped())::offset();
+    const auto to = packet.get_slotTo() == 0 ? 0 : packet.get_slotTo() - decltype(std::declval<Component::Inventory>().getEquipped())::offset();
     logger->trace("translated from {} to {}", from, to);
-    equip_item(entitySystem, entity, from, to);
+    if (to == 0) { // we want to unequip something, 0 being a "fake" no-item flag
+        unequip_item(entitySystem, entity, from);
+    } else {
+        equip_item(entitySystem, entity, from, to);
+    }
 }
