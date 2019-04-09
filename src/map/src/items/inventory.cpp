@@ -90,3 +90,13 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
     // TODO: send update packet(s) to self & nearby or fail
     return ReturnValue::OK;
 }
+
+void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipItem& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("equip_item_packet");
+    logger->trace("from {} to {}", packet.get_slotFrom(), packet.get_slotTo());
+    const auto from = packet.get_slotFrom() - decltype(std::declval<Component::Inventory>().getInventory())::offset();
+    const auto to = packet.get_slotTo() - decltype(std::declval<Component::Inventory>().getEquipped())::offset();
+    logger->trace("translated from {} to {}", from, to);
+    equip_item(entitySystem, entity, from, to);
+}

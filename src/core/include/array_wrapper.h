@@ -12,6 +12,14 @@ struct array_wrapper {
     constexpr auto& operator[](size_t index) {
         return iterable[N + index];
     }
+
+    static constexpr size_t size() noexcept {
+        return L;
+    }
+
+    static constexpr size_t offset() noexcept {
+        return N;
+    }
 };
 
 template <typename T, size_t N, size_t L>

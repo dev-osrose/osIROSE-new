@@ -3,6 +3,8 @@
 #include "dataconsts.h"
 #include <optional>
 
+#include "cli_equip_item.h"
+
 class EntitySystem;
 
 namespace Items {
@@ -22,5 +24,7 @@ ReturnValue equip_item(EntitySystem&, RoseCommon::Entity, size_t from, size_t to
 // the unequipped item will be put in the first available spot
 ReturnValue unequip_item(EntitySystem&, RoseCommon::Entity, size_t from);
 
+
 // TODO: drop, pickup
+void equip_item_packet(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliEquipItem&);
 }

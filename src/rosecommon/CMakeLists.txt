@@ -78,6 +78,7 @@ set(IDL_FILES
   packets/cli_char_list_req.xml
   packets/cli_create_char_req.xml
   packets/cli_delete_char_req.xml
+  packets/cli_equip_item.xml
   packets/cli_join_server_req.xml
   packets/cli_login_req.xml
   packets/cli_logout_req.xml
