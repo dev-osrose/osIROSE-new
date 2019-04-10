@@ -55,8 +55,8 @@ std::pair<float, float> Combat::get_range_position(const EntitySystem& entitySys
   const float length = sqrt(vector.first * vector.first + vector.second * vector.second);
   
   if(length <= range) {
-    logger->debug("within range, returning x,y {},{}", vector.first, vector.second);
-    return vector;
+    logger->debug("within range, returning x,y {},{}", char_pos.x, char_pos.y);
+    return {char_pos.x, char_pos.y};
   }
   
   vector.first /= length;
@@ -137,6 +137,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   //TODO:: Update HP
   if(false) // Regen happens every 4 seconds
   {
+    uint32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
     if(life.hp > 0 && life.hp != life.maxHp)
     {
@@ -148,9 +149,11 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       
       if(life.hp > life.maxHp)
         life.hp = life.maxHp;
+        
+      hp = life.hp;
     }
     
-    if(magic.mp != magic.maxMp)
+    if(entitySystem.has_component<Component::Magic>(entity) == true && magic.mp != magic.maxMp)
     {
       int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
       amount = amount * stanceModifier;
@@ -160,11 +163,14 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   
       if(magic.mp > magic.maxMp)
         magic.mp = magic.maxMp;
+        
+      mp = magic.mp;
     }
-    auto p = SrvSetHpAndMp::create(basicInfo.id, life.hp, magic.mp);
+    auto p = SrvSetHpAndMp::create(basicInfo.id, hp, mp);
     entitySystem.send_nearby(entity, p);
   }
   
+  // Check if there is damage queued
   if(entitySystem.has_component<Component::Damage>(entity) == true)
   {
     auto& queuedDamage = entitySystem.get_component<Component::Damage>(entity);
@@ -228,8 +234,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
     const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
-    if(entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true ||
-      (false) ) // TODO:: Check if this map has PVP turned on
+    if((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
+      (false) ) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
     {
       // Are we in attack range?
       if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
