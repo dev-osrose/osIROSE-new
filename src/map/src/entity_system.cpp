@@ -630,7 +630,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.hasSocket = false;
     item.isAppraised = false;
     item.refine = 0;
-    item.count = 0;
+    item.count = 1;
     item.gemOpt = 0;
     item.price = 0;
 

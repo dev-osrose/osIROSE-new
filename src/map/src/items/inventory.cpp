@@ -1,9 +1,12 @@
 #include "items/inventory.h"
 #include "entity_system.h"
+#include "dataconsts.h"
 
 #include "components/basic_info.h"
 #include "components/inventory.h"
+#include "components/item.h"
 #include "components/lua.h"
+#include "itemdb.h"
 
 #include "srv_equip_item.h"
 #include "srv_set_item.h"
@@ -11,12 +14,28 @@
 using namespace RoseCommon;
 using namespace Items;
 
-size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     size_t res = 0;
+    bool stackable = false;
+    uint8_t type = 0;
+    uint16_t id = 0;
+    if (item != entt::null) {
+        const auto& i = entitySystem.get_component<RoseCommon::ItemDef>(item);
+        stackable = i.is_stackable;
+        type = i.type;
+        id = i.id;
+    }
+
     for (const auto item : inv.getInventory()) {
         if (item == entt::null) {
             return res;
+        } else if (stackable) {
+            const auto& i = entitySystem.get_component<RoseCommon::ItemDef>(item);
+            const auto& it = entitySystem.get_component<Component::Item>(item);
+            if (i.type == type && i.id == id && it.count < RoseCommon::MAX_STACK) {
+                return res;
+            }
         }
         ++res;
     }
@@ -24,12 +43,33 @@ size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCom
 }
 
 ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
-    const size_t pos = get_first_available_spot(entitySystem, entity);
+    const size_t pos = get_first_available_spot(entitySystem, entity, item);
     if (pos == 0) {
         return ReturnValue::NO_SPACE;
     }
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    inv.getInventory()[pos] = item;
+    if (inv.getInventory()[pos] == entt::null) {
+        inv.getInventory()[pos] = item;
+    } else {
+        // add the stack
+        auto& i = entitySystem.get_component<Component::Item>(inv.getInventory()[pos]);
+        auto& it = entitySystem.get_component<Component::Item>(item);
+        if (i.count + it.count < RoseCommon::MAX_STACK) {
+            // below max stack
+            i.count += it.count;
+        } else {
+            // split the stack in two or more
+            const uint32_t stack_tmp1 = i.count;
+            const uint32_t stack_tmp2 = it.count;
+            it.count -= RoseCommon::MAX_STACK - i.count;
+            i.count = RoseCommon::MAX_STACK;
+            if (add_item(entitySystem, entity, item) == ReturnValue::NO_SPACE) {
+                it.count = stack_tmp2;
+                i.count = stack_tmp1;
+                return ReturnValue::NO_SPACE;
+            }
+        }
+    }
     RoseCommon::Packet::SrvSetItem::IndexAndItem index;
     index.set_index(pos + decltype(inv.getInventory())::offset());
     index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(item));

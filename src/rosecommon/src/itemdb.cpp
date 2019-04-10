@@ -11,6 +11,7 @@ ItemDef::ItemDef(): type( ItemType::WEARABLE ),
                     buy_price( 0 ),
                     sell_price( 0 ),
                     weight( 0 ),
+                    is_stackable( 0 ),
                     atk( 0 ),
                     def( 0 ),
                     range( 0 ),
@@ -33,6 +34,7 @@ void ItemDatabase::initialize() {
       newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
       newItem.sell_price = static_cast<uint32_t>(row.priceSell);
       newItem.weight = static_cast<uint16_t>(row.weight);
+      newItem.is_stackable = newItem.type >= 10 && newItem.type <= 13;
       newItem.atk = static_cast<uint16_t>(row.attack);
       newItem.def = static_cast<uint16_t>(row.defense);
       newItem.slots = static_cast<uint8_t>(row.slots);

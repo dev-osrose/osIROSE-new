@@ -15,7 +15,7 @@ enum class ReturnValue {
 };
 
 // returns the first available spot in the inventory or 0 if there is no more space
-size_t get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity);
+size_t get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item = entt::null);
 ReturnValue add_item(EntitySystem&, RoseCommon::Entity entity, RoseCommon::Entity item);
 // will be entt::null if there is no item at that position
 RoseCommon::Entity remove_item(EntitySystem&, RoseCommon::Entity entity, size_t pos);
