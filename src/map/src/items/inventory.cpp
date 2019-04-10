@@ -1,7 +1,7 @@
 #include "items/inventory.h"
 #include "entity_system.h"
 
-#include "components/basicInfo.h"
+#include "components/basic_info.h"
 #include "components/inventory.h"
 #include "components/lua.h"
 
