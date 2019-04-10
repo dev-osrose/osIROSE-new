@@ -30,6 +30,7 @@ environment:
   MYSQL_PATH: C:\Program Files\MySQL\MySQL Server 5.7
   MYSQL_CONNECTOR_PATH: C:\Program Files\MySQL\MySQL Connector C 6.1
   PROJECT_PATH: C:\projects\osIROSE
+  PROJECT_PATH_MSYS: /c/projects/osIROSE
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
@@ -40,6 +41,9 @@ environment:
 
 matrix:
   fast_finish: true
+  allow_failures:
+      # Known compiler bug prevents success
+      - image: Visual Studio 2017
 
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
@@ -61,7 +65,7 @@ build:
 
 build_script:
 - cmd: cd build
-- cmd: C:\msys64\1.0\bin\bash.exe -c "%PROJECT_PATH%/cmake/scripts/msys_build.bat"
+- cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }
@@ -86,7 +90,7 @@ on_success:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 success $env:WEBHOOK_URL
   - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
+  - cmd: SET PATH=%PROJECT_PATH%\3rdparty\bin;%PATH%
   #- curl --connect-timeout 30 -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
   #- curl --connect-timeout 30 -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
   #- curl --connect-timeout 30 -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
