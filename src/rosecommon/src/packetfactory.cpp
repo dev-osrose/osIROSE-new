@@ -40,6 +40,7 @@
 #include "srv_remove_object.h"
 #include "srv_screen_shot_time_reply.h"
 #include "srv_select_char_reply.h"
+#include "srv_set_item.h"
 #include "srv_srv_select_reply.h"
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
@@ -95,6 +96,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject);
     REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTimeReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_ITEM, SrvSetItem);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_SWITCH_SERVER, SrvSwitchServer);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_TELEPORT_REPLY, SrvTeleportReply);

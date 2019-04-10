@@ -10,6 +10,7 @@
 #include "entity_system.h"
 #include "chat/whisper_chat.h"
 #include "components/client.h"
+#include "items/inventory.h"
 
 namespace {
 template <typename... Args>
@@ -68,7 +69,19 @@ class Parser<> {
 };
 
 
-void item(EntitySystem&, RoseCommon::Entity, Parser<int, int>) {
+void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /item <type> <id>");
+    }
+    const auto item = entitySystem.create_item(parser.get_arg<0>(), parser.get_arg<1>());
+    switch (Items::add_item(entitySystem, entity, item)) {
+        case Items::ReturnValue::NO_SPACE:
+            Chat::send_whisper(entitySystem, entity, "Not enough space left in your inventory.");
+            break;
+        default:
+            Chat::send_whisper(entitySystem, entity, "Item added.");
+            break;
+    }
 }
 
 void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, std::optional<uint16_t>> parser) {
@@ -88,7 +101,7 @@ void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
 void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
 
 static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
-    //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
+    {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}

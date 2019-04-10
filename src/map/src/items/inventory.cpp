@@ -6,6 +6,7 @@
 #include "components/lua.h"
 
 #include "srv_equip_item.h"
+#include "srv_set_item.h"
 
 using namespace RoseCommon;
 using namespace Items;
@@ -29,6 +30,12 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
     }
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     inv.getInventory()[pos] = item;
+    RoseCommon::Packet::SrvSetItem::IndexAndItem index;
+    index.set_index(pos + decltype(inv.getInventory())::offset());
+    index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(item));
+    auto packet = RoseCommon::Packet::SrvSetItem::create();
+    packet.add_items(index);
+    entitySystem.send_to(entity, packet);
     return ReturnValue::OK;
 }
 
