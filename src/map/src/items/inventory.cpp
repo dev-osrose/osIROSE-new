@@ -89,7 +89,6 @@ RoseCommon::Entity Items::remove_item(EntitySystem& entitySystem, RoseCommon::En
 
 void Items::swap_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t pos1, size_t pos2) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    auto inventory = inv.getInventory();
     std::swap(inv.items[pos1], inv.items[pos2]);
 }
 
