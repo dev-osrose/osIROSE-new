@@ -6,11 +6,11 @@ struct array_wrapper {
     T& iterable;
 
     constexpr auto operator[](size_t index) const {
-        return iterable[N + index];
+        return iterable[index];
     }
 
     constexpr auto& operator[](size_t index) {
-        return iterable[N + index];
+        return iterable[index];
     }
 
     static constexpr size_t size() noexcept {
