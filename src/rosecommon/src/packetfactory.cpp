@@ -9,6 +9,7 @@
 #include "cli_char_list_req.h"
 #include "cli_create_char_req.h"
 #include "cli_delete_char_req.h"
+#include "cli_drop_item.h"
 #include "cli_equip_item.h"
 #include "cli_join_server_req.h"
 #include "cli_login_req.h"
@@ -61,6 +62,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_CHAR_LIST_REQ, CliCharListReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_DELETE_CHAR_REQ, CliDeleteCharReq);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_DROP_ITEM, CliDropItem);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd);

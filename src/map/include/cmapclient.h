@@ -23,6 +23,7 @@
 #include "cli_change_char_req.h"
 #include "srv_npc_char.h"
 #include "srv_mob_char.h"
+#include "srv_drop_item.h"
 
 #include <memory>
 
@@ -43,6 +44,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
   static RoseCommon::Packet::SrvNpcChar create_srv_npc_char(const EntitySystem&, RoseCommon::Entity);
   static RoseCommon::Packet::SrvMobChar create_srv_mob_char(const EntitySystem&, RoseCommon::Entity entity);
+  static RoseCommon::Packet::SrvDropItem create_srv_drop_item(const EntitySystem&, RoseCommon::Entity entity);
 
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;

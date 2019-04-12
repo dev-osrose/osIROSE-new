@@ -42,6 +42,7 @@
 #include "components/magic.h"
 #include "components/mob.h"
 #include "components/npc.h"
+#include "components/owner.h"
 #include "components/position.h"
 #include "components/skills.h"
 #include "components/stamina.h"
@@ -421,4 +422,20 @@ RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySyste
   packet.set_questId(mob.quest);
   
   return packet;
+}
+
+RoseCommon::Packet::SrvDropItem CMapClient::create_srv_drop_item(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+
+    auto packet = Packet::SrvDropItem::create();
+    packet.set_x(pos.x);
+    packet.set_y(pos.y);
+    packet.set_item(entitySystem.item_to_item<Packet::SrvDropItem>(entity));
+    packet.set_id(basicInfo.id);
+    if (const auto* owner = entitySystem.try_get_component<Component::Owner>(entity); owner && owner->owner != entt::null) {
+        const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(owner->owner);
+        packet.set_ownerId(basicInfo.id);
+    }
+    return packet;
 }

@@ -44,6 +44,7 @@
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
 
+
 #include <algorithm>
 #include <cmath>
 
@@ -137,9 +138,14 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
     register_dispatcher(std::function{Items::equip_item_packet});
+    register_dispatcher(std::function{Items::drop_item_packet});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
+}
+
+uint16_t EntitySystem::get_free_id() {
+    return idManager.get_free_id();
 }
 
 void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -275,6 +281,8 @@ void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity 
         send_to(entity, CMapClient::create_srv_mob_char(*this, other));
     } else if (try_get_component<Component::Client>(other)) {
         send_to(entity, CMapClient::create_srv_player_char(*this, other));
+    } else if (try_get_component<Component::Item>(other)) {
+        send_to(entity, CMapClient::create_srv_drop_item(*this, other));
     }
 }
 
@@ -328,33 +336,34 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     pos->y = y;
     nearby.update_position(entity, old_x, old_y, x, y);
 
-    // check for warpgates
-    registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
-        if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
-            return;
-        }
-        float x = destination.x;
-        float y = destination.y;
-        uint16_t map = warpgate.dest_map;
-        add_task([entity, x, y, map](EntitySystem& self) {
-            self.teleport_entity(entity, x, y, map);
+    // check for warpgates if entity can be teleported
+    if (has_component<Component::BasicInfo>(entity)) {
+        registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
+            if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
+                return;
+            }
+            float x = destination.x;
+            float y = destination.y;
+            uint16_t map = warpgate.dest_map;
+            add_task([entity, x, y, map](EntitySystem& self) {
+                self.teleport_entity(entity, x, y, map);
+            });
         });
-    });
-
-    if (is_added) {
-        return;
     }
+
     const auto new_nearby = get_nearby(entity);
     std::vector<RoseCommon::Entity> to_remove;
     std::vector<RoseCommon::Entity> to_add;
     std::set_difference(old_nearby.begin(), old_nearby.end(), new_nearby.begin(), new_nearby.end(), std::back_inserter(to_remove));
     std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
 
-    const auto& basicInfo = get_component<Component::BasicInfo>(entity);
-    for (const auto other : to_remove) {
-        send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
-        if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
-            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
+    if (!is_added) {
+        const auto& basicInfo = get_component<Component::BasicInfo>(entity);
+        for (const auto other : to_remove) {
+            send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+            if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
+                send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
+            }
         }
     }
     for (const auto other : to_add) {
@@ -612,7 +621,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     });
 }
 
-RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
+RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count) {
     using namespace Component;
     entt::prototype prototype(registry);
     
@@ -630,7 +639,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.hasSocket = false;
     item.isAppraised = false;
     item.refine = 0;
-    item.count = 1;
+    item.count = count;
     item.gemOpt = 0;
     item.price = 0;
 

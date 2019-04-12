@@ -1,3 +1,0 @@
-PAKCS_DROP_ITEM
-uint8_t item
-uint32_t quantity

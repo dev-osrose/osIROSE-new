@@ -48,6 +48,7 @@ constexpr unsigned int MAX_QUEST_SWITCHES = 32;
 constexpr unsigned int MAX_QUEST_VARS = 10;
 constexpr unsigned int MAX_QUEST_ITEMS = 6;
     
+constexpr float        DROP_RANGE = 50.f;
 constexpr unsigned int MAX_VISIBLE_ITEMS = 8;
 constexpr unsigned int MAX_INVENTORY = 120;
 constexpr unsigned int MAX_ITEMS = MAX_INVENTORY + BulletType::MAX_BULLET_TYPES + RidingItem::MAX_RIDING_ITEMS + EquippedPosition::MAX_EQUIP_ITEMS;

@@ -78,6 +78,7 @@ set(IDL_FILES
   packets/cli_char_list_req.xml
   packets/cli_create_char_req.xml
   packets/cli_delete_char_req.xml
+  packets/cli_drop_item.xml
   packets/cli_equip_item.xml
   packets/cli_join_server_req.xml
   packets/cli_login_req.xml
@@ -99,6 +100,7 @@ set(IDL_FILES
   packets/srv_char_list_reply.xml
   packets/srv_create_char_reply.xml
   packets/srv_delete_char_reply.xml
+  packets/srv_drop_item.xml
   packets/srv_equip_item.xml
   packets/srv_inventory_data.xml
   packets/srv_join_server_reply.xml

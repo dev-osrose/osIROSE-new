@@ -1,11 +1,14 @@
 #include "items/inventory.h"
 #include "entity_system.h"
 #include "dataconsts.h"
+#include "random.h"
 
 #include "components/basic_info.h"
 #include "components/inventory.h"
 #include "components/item.h"
 #include "components/lua.h"
+#include "components/position.h"
+#include "components/owner.h"
 #include "itemdb.h"
 
 #include "srv_equip_item.h"
@@ -13,6 +16,20 @@
 
 using namespace RoseCommon;
 using namespace Items;
+
+namespace {
+inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity entity, size_t spot) {
+    const auto& item = entitySystem.get_component<ItemDef>(entity);
+    if (spot > 9 && spot != 14) { // non equip items TODO: put that magic value somewhere else
+        return false;
+    }
+    return item.type == spot;
+}
+
+inline bool is_spot_equipped(size_t spot) {
+    return spot > 9 && spot != 14;
+}
+}
 
 size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
@@ -79,11 +96,42 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
     return ReturnValue::OK;
 }
 
-RoseCommon::Entity Items::remove_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t pos) {
+RoseCommon::Entity Items::remove_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t pos, uint32_t quantity) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     auto inventory = inv.getInventory();
     RoseCommon::Entity item = inventory[pos];
+    auto& i = entitySystem.get_component<Component::Item>(item);
+    const auto& it = entitySystem.get_component<ItemDef>(item);
+    if (i.count < quantity) {
+        return entt::null;
+    }
+    if (i.count > quantity) {
+        const auto type = it.type;
+        const auto id = it.id;
+        i.count -= quantity;
+        RoseCommon::Entity newItem = entitySystem.create_item(type, id, quantity);
+        RoseCommon::Packet::SrvSetItem::IndexAndItem index;
+        index.set_index(pos);
+        index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(item));
+        auto packet = RoseCommon::Packet::SrvSetItem::create();
+        packet.add_items(index);
+        entitySystem.send_to(entity, packet);
+        return newItem;
+    }
+    if (is_spot_equipped(pos)) {
+        const auto& lua = entitySystem.get_component<Component::ItemLua>(item);
+        if (const auto tmp = lua.api.lock(); tmp) {
+            if (!tmp->on_unequip(item)) {
+                return entt::null;
+            }
+        }
+    }
     inventory[pos] = entt::null;
+    RoseCommon::Packet::SrvSetItem::IndexAndItem index;
+    index.set_index(pos);
+    auto packet = RoseCommon::Packet::SrvSetItem::create();
+    packet.add_items(index);
+    entitySystem.send_to(entity, packet);
     return item;
 }
 
@@ -95,7 +143,18 @@ void Items::swap_item(EntitySystem& entitySystem, RoseCommon::Entity entity, siz
 ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t from, size_t to) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
 
+    if (from < decltype(inv.getInventory())::offset() || from >= decltype(inv.getInventory())::size()) {
+        return ReturnValue::WRONG_INDEX;
+    }
+    if (to < decltype(inv.getEquipped())::offset() || to >= decltype(inv.getEquipped())::size()) {
+        return ReturnValue::WRONG_INDEX;
+    }
+
     const RoseCommon::Entity equipped = inv.getEquipped()[to];
+    const RoseCommon::Entity to_equip = inv.getInventory()[from];
+    if (!is_spot_correct(entitySystem, to_equip, to)) {
+        return ReturnValue::REQUIREMENTS_NOT_MET;
+    }
     if (equipped != entt::null) {
         const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
         if (const auto tmp = lua.api.lock(); tmp) {
@@ -104,11 +163,10 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
             }
         }
     }
-    const RoseCommon::Entity to_equip = inv.getInventory()[from];
     if (from != entt::null) {
         const auto& lua = entitySystem.get_component<Component::ItemLua>(to_equip);
         if (const auto tmp = lua.api.lock(); tmp) {
-            if (!tmp->on_unequip(entity)) {
+            if (!tmp->on_equip(entity)) {
                 return ReturnValue::REQUIREMENTS_NOT_MET;
             }
         }
@@ -128,6 +186,9 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
     }
 
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    if (from < decltype(inv.getEquipped())::offset() || from >= decltype(inv.getEquipped())::size()) {
+        return ReturnValue::WRONG_INDEX;
+    }
 
     const RoseCommon::Entity equipped = inv.getEquipped()[from];
     if (equipped != entt::null) {
@@ -146,6 +207,22 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
     return ReturnValue::OK;
 }
 
+void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float x, float y, RoseCommon::Entity owner) {
+    Component::BasicInfo bi;
+    bi.id = entitySystem.get_free_id();
+    if (owner != entt::null) {
+        const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(owner);
+        bi.teamId = basicInfo.teamId;
+        auto& Cowner = entitySystem.add_component<Component::Owner>(item);
+        Cowner.owner = owner;
+    } else {
+        bi.teamId = bi.id;
+    }
+    entitySystem.add_component(item, std::move(bi));
+
+    entitySystem.update_position(item, x, y);
+}
+
 void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipItem& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("equip_item_packet()");
@@ -157,4 +234,22 @@ void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity ent
     } else {
         equip_item(entitySystem, entity, from, to);
     }
+}
+
+void Items::drop_item_packet(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliDropItem& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("equip_item_packet()");
+    logger->trace("drop {}x{}", packet.get_index(), packet.get_quantity());
+    const auto index = packet.get_index();
+    const auto quantity = packet.get_quantity();
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+
+    if (index < 1 || index > inv.items.size()) {
+        logger->warn("wrong index {} for item drop, client {}", index, entity);
+        return;
+    }
+    const auto item = remove_item(entitySystem, entity, index, quantity);
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    const auto [x, y] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, DROP_RANGE);
+    drop_item(entitySystem, item, x, y, entity);
 }

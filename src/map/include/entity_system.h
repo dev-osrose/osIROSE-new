@@ -32,6 +32,8 @@ class EntitySystem {
         void run();
         void stop();
     
+        uint16_t get_free_id();
+
         bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet);
 
         template <typename T>
@@ -45,7 +47,7 @@ class EntitySystem {
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
-        RoseCommon::Entity create_item(uint8_t type, uint16_t id);
+        RoseCommon::Entity create_item(uint8_t type, uint16_t id, uint32_t count = 1);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
         RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
@@ -64,6 +66,8 @@ class EntitySystem {
         void remove_component(RoseCommon::Entity entity);
         template <typename T>
         T& add_component(RoseCommon::Entity entity);
+        template <typename T>
+        void add_component(RoseCommon::Entity entity, T&& comp);
         template <typename T>
         T& add_or_replace_component(RoseCommon::Entity entity);
         template <typename T>
@@ -169,6 +173,11 @@ void EntitySystem::remove_component(RoseCommon::Entity entity) {
 template <typename T>
 T& EntitySystem::add_component(RoseCommon::Entity entity) {
     return registry.assign<T>(entity);
+}
+
+template <typename T>
+void EntitySystem::add_component(RoseCommon::Entity entity, T&& comp) {
+    registry.assign<T>(entity, std::forward<T>(comp));
 }
 
 template <typename T>
