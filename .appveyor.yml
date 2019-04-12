@@ -61,7 +61,7 @@ build:
 
 build_script:
 - cmd: cd build
-- cmd: C:\msys64\1.0\bin\bash.exe -c "%PROJECT_PATH%/cmake/scripts/msys_build.bat"
+- cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }

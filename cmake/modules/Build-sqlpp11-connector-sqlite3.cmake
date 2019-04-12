@@ -1,7 +1,7 @@
 set(SQLPP11_SQLITE3_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
 set(_byproducts
-    ${SQLPP11_SQLITE3_INSTALL_DIR}/lib/libsqlpp11-connector-sqlite3.lib
+    ${SQLPP11_SQLITE3_INSTALL_DIR}/lib/sqlpp11-connector-sqlite3.lib
     ${SQLPP11_SQLITE3_INSTALL_DIR}/lib/libsqlpp11-connector-sqlite3.a
   )
 
