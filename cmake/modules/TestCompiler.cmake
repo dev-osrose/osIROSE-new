@@ -17,7 +17,7 @@ try_compile(HAVE_SQLPP11_TEMPLATE_SUPPORT ${CMAKE_BINARY_DIR} SOURCES ${CMAKE_TE
 )
 
 if(NOT ${HAVE_SQLPP11_TEMPLATE_SUPPORT})
-  message(WARNING "Compiler is not compatible with default sqlpp11 trying patched version.")
+  message(STATUS "Compiler is not compatible with default sqlpp11 trying patched version.")
   try_compile(HAVE_SQLPP11_TEMPLATE_SUPPORT_PATCHED ${CMAKE_BINARY_DIR} SOURCES ${CMAKE_TESTS_PATH}/sqlpp11_template_input_test_patched.cpp
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED true

@@ -8,18 +8,32 @@ set(_byproducts
   ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.a
 )
 
-if(MINGW)
-  ExternalProject_Add(
-    sqlite3
-    URL https://sqlite.org/2018/sqlite-autoconf-3260000.tar.gz
-    URL_HASH SHA1=9af2df1a6da5db6e2ecf3f463625f16740e036e9
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND gcc -shared sqlite3.c -o ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.a
-    BUILD_IN_SOURCE true
-    BUILD_BYPRODUCTS ${_byproducts}
-    INSTALL_COMMAND ""
-    INSTALL_DIR ${SQLITE3_INSTALL_DIR}
-  )
+if(WIN32 OR MINGW)
+  if(MINGW)
+    ExternalProject_Add(
+      sqlite3
+      URL https://sqlite.org/2019/sqlite-autoconf-3270200.tar.gz
+      URL_HASH SHA1=5f5750e3f39b7b60394a2fb6ddb2371f848670e6
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND gcc -shared sqlite3.c -o ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.a
+      BUILD_IN_SOURCE true
+      BUILD_BYPRODUCTS ${_byproducts}
+      INSTALL_COMMAND ""
+      INSTALL_DIR ${SQLITE3_INSTALL_DIR}
+    )
+  else()
+    ExternalProject_Add(
+      sqlite3
+      URL https://sqlite.org/2019/sqlite-amalgamation-3270200.zip
+      URL_HASH SHA1=0bafa4f52c19b8a917ad31048d22787d2e25be68
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND cl sqlite3.c -link -out:sqlite3.lib
+      BUILD_IN_SOURCE true
+      BUILD_BYPRODUCTS ${_byproducts}
+      INSTALL_COMMAND ""
+      INSTALL_DIR ${SQLITE3_INSTALL_DIR}
+    )
+  endif()
   
   ExternalProject_Add_Step(
     sqlite3
@@ -30,8 +44,8 @@ if(MINGW)
 else()
   ExternalProject_Add(
     sqlite3
-    URL https://sqlite.org/2018/sqlite-autoconf-3260000.tar.gz
-    URL_HASH SHA1=9af2df1a6da5db6e2ecf3f463625f16740e036e9
+    URL https://sqlite.org/2019/sqlite-autoconf-3270200.tar.gz
+    URL_HASH SHA1=5f5750e3f39b7b60394a2fb6ddb2371f848670e6
     CONFIGURE_COMMAND ./configure --prefix ${SQLITE3_INSTALL_DIR}
     BUILD_COMMAND make
     BUILD_IN_SOURCE true
