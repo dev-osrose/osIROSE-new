@@ -18,7 +18,7 @@ if(WIN32 OR MINGW)
       BUILD_COMMAND gcc -shared sqlite3.c -o ${SQLITE3_INSTALL_DIR}/lib/libsqlite3.a
       BUILD_IN_SOURCE true
       BUILD_BYPRODUCTS ${_byproducts}
-      INSTALL_COMMAND ""
+      INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
       INSTALL_DIR ${SQLITE3_INSTALL_DIR}
     )
   else()
@@ -30,17 +30,10 @@ if(WIN32 OR MINGW)
       BUILD_COMMAND cl sqlite3.c -link -dll -out:${SQLITE3_INSTALL_DIR}/lib/libsqlite3.lib
       BUILD_IN_SOURCE true
       BUILD_BYPRODUCTS ${_byproducts}
-      INSTALL_COMMAND ""
+      INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>/include/" "*.h"
       INSTALL_DIR ${SQLITE3_INSTALL_DIR}
     )
   endif()
-  
-  ExternalProject_Add_Step(
-    sqlite3
-    copy-sqlite3
-    DEPENDEES download
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src" "<INSTALL_DIR>/include/" "*.h"
-  )
 else()
   ExternalProject_Add(
     sqlite3
