@@ -257,6 +257,28 @@ index include/sqlpp11/verbatim_table.h
      };
  
      verbatim_table_t(std::string representation) : _representation(std::move(representation))
+
+index scripts/ddl2cpp
+--- scripts/ddl2cpp
++++ scripts/ddl2cpp
+@@ -339,7 +339,7 @@ for create in tableCreations:
+         print('      struct _alias_t', file=header)
+         print('      {', file=header)
+         print('        static constexpr const char _literal[] =  "' + escape_if_reserved(sqlColumnName) + '";', file=header)
+-        print('        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;', file=header)
++        print('        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;', file=header)
+         print('        template<typename T>', file=header)
+         print('        struct _member_t', file=header)
+         print('          {', file=header)
+@@ -376,7 +376,7 @@ for create in tableCreations:
+     print('    struct _alias_t', file=header)
+     print('    {', file=header)
+     print('      static constexpr const char _literal[] =  "' + sqlTableName + '";', file=header)
+-    print('      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;', file=header)
++    print('      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;', file=header)
+     print('      template<typename T>', file=header)
+     print('      struct _member_t', file=header)
+     print('      {', file=header)
 -- 
 2.17.1
 
