@@ -4,6 +4,9 @@
 
 namespace Core {
 namespace {
+using std::begin;
+using std::end;
+
 template <typename TIter>
 struct iterator
 {
