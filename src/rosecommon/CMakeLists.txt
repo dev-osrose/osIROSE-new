@@ -84,6 +84,7 @@ set(IDL_FILES
   packets/cli_mouse_cmd.xml
   packets/cli_normal_chat.xml
   packets/cli_select_char_req.xml
+  packets/cli_shout_chat.xml
   packets/cli_srv_select_req.xml
   packets/cli_stop_moving.xml
   packets/cli_whisper_chat.xml
@@ -111,6 +112,7 @@ set(IDL_FILES
   packets/srv_remove_object.xml
   packets/srv_screen_shot_time_reply.xml
   packets/srv_select_char_reply.xml
+  packets/srv_shout_chat.xml
   packets/srv_srv_select_reply.xml
   packets/srv_switch_server.xml
   packets/srv_teleport_reply.xml
