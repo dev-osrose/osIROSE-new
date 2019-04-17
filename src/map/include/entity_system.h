@@ -94,7 +94,7 @@ class EntitySystem {
         void teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id);
     
         // returns a sorted vector
-        std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity);
+        std::vector<RoseCommon::Entity> get_nearby(RoseCommon::Entity entity) const;
     
         RoseCommon::Entity get_entity_from_name(const std::string& name) const;
         RoseCommon::Entity get_entity_from_id(uint16_t id) const;
