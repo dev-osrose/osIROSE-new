@@ -48,6 +48,21 @@
 #include <algorithm>
 #include <cmath>
 
+void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    if (!entitySystem.has_component<Component::ComputedValues>(entity)) {
+        return;
+    }
+    using RoseCommon::Command;
+    auto& computed = entitySystem.get_component<Component::ComputedValues>(entity);
+    if (entitySystem.has_component<Component::Destination>(entity)) {
+        computed.command = Command::MOVE;
+    } else if (entitySystem.has_component<Component::Target>(entity)) {// && entitySystem.has_component<Component::Damage>(entity)) {
+        computed.command = Command::ATTACK;
+    } else {
+        computed.command = Command::STOP;
+    }
+}
+
 void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     {
         auto* lua = registry.try_get<Component::ItemLua>(entity);
@@ -413,7 +428,11 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
 }
 
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
-    return nearby.get_nearby(*this, entity);
+    const auto nearby = nearby.get_nearby(*this, entity);
+    for (auto en : nearby) {
+        update_command(*this, en);
+    }
+    return nearby;
 }
 
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
