@@ -27,7 +27,7 @@ if(WIN32 OR MINGW)
       URL https://sqlite.org/2019/sqlite-amalgamation-3270200.zip
       URL_HASH SHA1=0bafa4f52c19b8a917ad31048d22787d2e25be68
       CONFIGURE_COMMAND ""
-      BUILD_COMMAND cl sqlite3.c -link -dll -out:${SQLITE3_INSTALL_DIR}/lib/libsqlite3.lib
+      BUILD_COMMAND cl /c /EHsc sqlite3.c && lib sqlite3.obj /OUT:${SQLITE3_INSTALL_DIR}/lib/libsqlite3.lib
       BUILD_IN_SOURCE true
       BUILD_BYPRODUCTS ${_byproducts}
       INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>/include/" "*.h"
