@@ -27,8 +27,6 @@ ReturnValue equip_item(EntitySystem&, RoseCommon::Entity, size_t from, size_t to
 ReturnValue unequip_item(EntitySystem&, RoseCommon::Entity, size_t from);
 void drop_item(EntitySystem&, RoseCommon::Entity, float x, float y, RoseCommon::Entity owner = entt::null);
 
-
-// TODO: drop, pickup
 void equip_item_packet(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliEquipItem&);
 void drop_item_packet(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliDropItem&);
 }
