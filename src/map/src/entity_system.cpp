@@ -449,7 +449,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
     }
 }
 
-std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
+std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) {
     const auto res = nearby.get_nearby(*this, entity);
     for (auto en : res) {
         update_command(*this, en);
