@@ -18,6 +18,7 @@ SET( SOURCES_HEADER
   include/nearby.h
   include/gm_commands.h
   include/chat/normal_chat.h
+  include/chat/shout_chat.h
   include/chat/whisper_chat.h
   include/combat/combat.h
   include/map/change_map.h
@@ -41,6 +42,7 @@ SET( SOURCES_MAIN
   src/nearby.cpp
   src/gm_commands.cpp
   src/chat/normal_chat.cpp
+  src/chat/shout_chat.cpp
   src/chat/whisper_chat.cpp
   src/combat/combat.cpp
   src/map/change_map.cpp
