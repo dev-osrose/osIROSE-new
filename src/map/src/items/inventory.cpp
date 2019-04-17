@@ -33,7 +33,7 @@ inline bool is_spot_equipped(size_t spot) {
 
 size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    size_t res = 0;
+    size_t res = decltype(inv.getInventory())::offset();
     bool stackable = false;
     uint8_t type = 0;
     uint16_t id = 0;
