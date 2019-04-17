@@ -117,6 +117,8 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
         });
     });
 
+    // callback for removing objects
+    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
@@ -125,9 +127,6 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     // callback for updating the name_to_entity mapping
     registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
-
-    // callback for removing objects
-    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
     // callback for destroying lua
     registry.destruction<Component::ItemLua>().connect<&destroy_lua>();
