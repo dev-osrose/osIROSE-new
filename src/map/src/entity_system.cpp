@@ -450,11 +450,11 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
 }
 
 std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
-    const auto nearby = nearby.get_nearby(*this, entity);
-    for (auto en : nearby) {
+    const auto res = nearby.get_nearby(*this, entity);
+    for (auto en : res) {
         update_command(*this, en);
     }
-    return nearby;
+    return res;
 }
 
 RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
