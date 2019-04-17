@@ -65,11 +65,11 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
         return ReturnValue::NO_SPACE;
     }
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    if (inv.getInventory()[pos] == entt::null) {
-        inv.getInventory()[pos] = item;
+    if (inv.items[pos] == entt::null) {
+        inv.items[pos] = item;
     } else {
         // add the stack
-        auto& i = entitySystem.get_component<Component::Item>(inv.getInventory()[pos]);
+        auto& i = entitySystem.get_component<Component::Item>(inv.items[pos]);
         auto& it = entitySystem.get_component<Component::Item>(item);
         if (i.count + it.count < RoseCommon::MAX_STACK) {
             // below max stack
@@ -98,8 +98,7 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
 
 RoseCommon::Entity Items::remove_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t pos, uint32_t quantity) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    auto inventory = inv.getInventory();
-    RoseCommon::Entity item = inventory[pos];
+    RoseCommon::Entity item = inv.items[pos];
     auto& i = entitySystem.get_component<Component::Item>(item);
     const auto& it = entitySystem.get_component<ItemDef>(item);
     if (i.count < quantity) {
@@ -126,7 +125,7 @@ RoseCommon::Entity Items::remove_item(EntitySystem& entitySystem, RoseCommon::En
             }
         }
     }
-    inventory[pos] = entt::null;
+    inv.items[pos] = entt::null;
     RoseCommon::Packet::SrvSetItem::IndexAndItem index;
     index.set_index(pos);
     auto packet = RoseCommon::Packet::SrvSetItem::create();
@@ -150,8 +149,8 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
         return ReturnValue::WRONG_INDEX;
     }
 
-    const RoseCommon::Entity equipped = inv.getEquipped()[to];
-    const RoseCommon::Entity to_equip = inv.getInventory()[from];
+    const RoseCommon::Entity equipped = inv.items[to];
+    const RoseCommon::Entity to_equip = inv.items[from];
     if (!is_spot_correct(entitySystem, to_equip, to)) {
         return ReturnValue::REQUIREMENTS_NOT_MET;
     }
@@ -174,7 +173,7 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
-            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.getInventory()[to]));
+            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[to]));
     entitySystem.send_nearby(entity, packet);
     return ReturnValue::OK;
 }
@@ -190,7 +189,7 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
         return ReturnValue::WRONG_INDEX;
     }
 
-    const RoseCommon::Entity equipped = inv.getEquipped()[from];
+    const RoseCommon::Entity equipped = inv.items[from];
     if (equipped != entt::null) {
         const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
         if (const auto tmp = lua.api.lock(); tmp) {
@@ -202,7 +201,7 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
-            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.getInventory()[from]));
+            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[from]));
     entitySystem.send_nearby(entity, packet);
     return ReturnValue::OK;
 }
