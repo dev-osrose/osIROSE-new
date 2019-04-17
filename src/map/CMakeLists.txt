@@ -20,6 +20,7 @@ SET( SOURCES_HEADER
   include/chat/normal_chat.h
   include/chat/shout_chat.h
   include/chat/whisper_chat.h
+  include/combat/combat.h
   include/map/change_map.h
   include/mouse/mouse_cmd.h
   include/lua_api.h
@@ -43,6 +44,7 @@ SET( SOURCES_MAIN
   src/chat/normal_chat.cpp
   src/chat/shout_chat.cpp
   src/chat/whisper_chat.cpp
+  src/combat/combat.cpp
   src/map/change_map.cpp
   src/mouse/mouse_cmd.cpp
   src/lua_db.cpp

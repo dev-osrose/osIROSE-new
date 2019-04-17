@@ -34,5 +34,6 @@ class LuaLoader {
         LuaStorage spawners;
         LuaStorage warps;
         LuaStorage points;
+        LuaStorage player_spawns;
         LuaItem items;
 };

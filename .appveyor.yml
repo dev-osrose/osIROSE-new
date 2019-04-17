@@ -61,7 +61,7 @@ build:
 
 build_script:
 - cmd: cd build
-- cmd: C:\msys64\1.0\bin\bash.exe -c "%PROJECT_PATH%/cmake/scripts/msys_build.bat"
+- cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }
@@ -131,5 +131,5 @@ notifications:
 #  on:
 #    branch: master                 # release from master branch only
 #    appveyor_repo_tag: true        # deploy on tag push only
-#on_finish:
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

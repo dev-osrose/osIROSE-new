@@ -88,8 +88,8 @@ void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
 void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
 
 static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
+    {"/help", {1, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
-    {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };

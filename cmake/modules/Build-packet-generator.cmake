@@ -11,8 +11,10 @@ set(_byproducts
 
 if(WIN32 OR MINGW)
   set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/win64-packet_generator.zip)
+  set(EXEC_POSTFIX .exe)
 else()
   set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/linux-packet_generator.tar.gz)
+  set(EXEC_POSTFIX )
 endif()
 
 ExternalProject_Add(
@@ -20,7 +22,7 @@ ExternalProject_Add(
   URL ${DOWNLOAD_URL}
   UPDATE_DISCONNECTED true
   CONFIGURE_COMMAND ""
-  BUILD_COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/packet_generator <INSTALL_DIR>/bin
+  BUILD_COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/packet_generator${EXEC_POSTFIX} <INSTALL_DIR>/bin
   INSTALL_COMMAND ""
   BUILD_BYPRODUCTS ${_byproducts}
   INSTALL_DIR ${IDL_INSTALL_DIR}
