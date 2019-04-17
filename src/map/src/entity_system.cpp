@@ -122,7 +122,6 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
 
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
-    registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
 
     // callback for updating the name_to_entity mapping
     registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
@@ -153,7 +152,7 @@ void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity enti
     spawner.callback.cancel();
 }
 
-void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
+void EntitySystem::remove_object(RoseCommon::Registry& r, RoseCommon::Entity entity) {
     logger->trace("EntitySystem::remove_object");
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
@@ -161,6 +160,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
         id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
     }
+	nearby.remove_entity(r, entity);
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -206,7 +206,7 @@ RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
 void EntitySystem::stop() {
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
-    registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
+	registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
     registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
