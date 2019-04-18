@@ -58,7 +58,7 @@ void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& computed = entitySystem.get_component<Component::ComputedValues>(entity);
     if (entitySystem.has_component<Component::Destination>(entity)) {
         computed.command = Command::MOVE;
-    } else if (entitySystem.has_component<Component::Target>(entity)) {// && entitySystem.has_component<Component::Damage>(entity)) {
+    } else if (entitySystem.has_component<Component::Target>(entity) && entitySystem.has_component<Component::Damage>(entity)) {
         computed.command = Command::ATTACK;
     } else {
         computed.command = Command::STOP;
