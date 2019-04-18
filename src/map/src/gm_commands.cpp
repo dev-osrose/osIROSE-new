@@ -79,7 +79,7 @@ void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int
             Chat::send_whisper(entitySystem, entity, "Not enough space left in your inventory.");
             break;
         default:
-            Chat::send_whisper(entitySystem, entity, "Item added.");
+            Chat::send_whisper(entitySystem, entity, fmt::format("Item ({}, {}) added.", parser.get_arg<0>(), parser.get_arg<1>()));
             break;
     }
 }
