@@ -13,6 +13,7 @@
 
 #include "srv_equip_item.h"
 #include "srv_set_item.h"
+#include "srv_set_money.h"
 
 #include <limits>
 
@@ -228,6 +229,8 @@ void add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zul
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     inv.zuly = static_cast<int64_t>(std::min(static_cast<uint64_t>(inv.zuly) + static_cast<uint64_t>(zuly),
                                     static_cast<uint64_t>(std::numeric_limits<int64_t>::max())));
+    entitySystem.send_to(entity,
+                         RoseCommon::Packet::SrvSetMoney::create(inv.zuly));
 }
 
 bool remove_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
@@ -236,6 +239,7 @@ bool remove_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t 
         return false;
     }
     inv.zuly -= zuly;
+    entitySystem.send_to(entity, RoseCommon::Packet::SrvSetMoney::create(inv.zuly));
     return true;
 }
 
