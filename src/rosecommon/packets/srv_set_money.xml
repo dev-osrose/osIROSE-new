@@ -1,0 +1,3 @@
+<packet ePacketType = "PAKWC_SET_MONEY">
+  <element name = "zuly" type = "int64_t" />
+</packet>
