@@ -73,8 +73,8 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
-- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
-- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
+- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
 - path: $(platform)-$(appveyor_build_version)-$(configuration).zip
