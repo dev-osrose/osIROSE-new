@@ -133,7 +133,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
         self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
-            const auto delta = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(100ms);
+            const std::chrono::duration<double, std::milli> delta{100.0};
             const float speed = values.runSpeed;
             const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.dist / speed)};
             const float dx = dest.x - pos.x;
