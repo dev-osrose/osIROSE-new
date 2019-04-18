@@ -523,7 +523,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-     .where(inventoryTable.charId == charId and inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist"));
+     .where(inventoryTable.charId == charId and (inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist")));
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
@@ -704,7 +704,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
     return entity;
 }
 
-void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
+void EntitySystem::save_item([[maybe_unused]] RoseCommon::Entity item, [[maybe_unused]] RoseCommon::Entity owner) const {
     // TODO: should be done as a task??? no
 }
 
@@ -742,7 +742,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
+RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
   int dest_map_id, float dest_x, float dest_y, float dest_z,
   float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
@@ -769,7 +769,10 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
+                                                int mob_id, int mob_count, int limit,
+                                                int interval, int range, int map_id,
+                                                float x, float y, float z) {
     logger->trace("EntitySystem::create_spawner");
     using namespace Component;
     entt::prototype prototype(registry);
@@ -793,7 +796,7 @@ RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, i
     spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
         if(self.is_loading()) return;
         auto& spawner = self.get_component<Spawner>(entity);
-        if (spawner.mobs.size() < spawner.max_mobs) {
+        if (spawner.mobs.size() < static_cast<size_t>(spawner.max_mobs)) {
             int number = Core::Random::getInstance().get_uniform(0, std::min(static_cast<size_t>(spawner.max_once), spawner.max_mobs - spawner.mobs.size()));
             for (int i = 0; i < number; ++i) {
                 const auto mob = self.create_mob(entity);
@@ -813,7 +816,7 @@ RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Typ
     using namespace Component;
     entt::prototype prototype(registry);
 
-    auto& spawn = prototype.set<PlayerSpawn>(type);
+    prototype.set<PlayerSpawn>(type);
     auto& pos = prototype.set<Position>();
     pos.x = x * 100;
     pos.y = y * 100;
