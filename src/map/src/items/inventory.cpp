@@ -14,6 +14,8 @@
 #include "srv_equip_item.h"
 #include "srv_set_item.h"
 
+#include <limits>
+
 using namespace RoseCommon;
 using namespace Items;
 
@@ -220,6 +222,21 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.add_component(item, std::move(bi));
 
     entitySystem.update_position(item, x, y);
+}
+
+void add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
+    auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    inv.zuly = static_cast<int64_t>(std::min(static_cast<uint64_t>(inv.zuly) + static_cast<uint64_t>(zuly),
+                                    static_cast<uint64_t>(std::numeric_limits<int64_t>::max())));
+}
+
+bool remove_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
+    auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    if (inv.zuly < zuly) {
+        return false;
+    }
+    inv.zuly -= zuly;
+    return true;
 }
 
 void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipItem& packet) {
