@@ -82,7 +82,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
 
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
-  const auto& stats = entitySystem.get_component<Component::Stats>(entity);
+  //const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   
   if (packet.get_targetId()) {
     Entity t = entitySystem.get_entity_from_id(packet.get_targetId());
@@ -128,7 +128,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
 void Combat::update(EntitySystem& entitySystem, Entity entity) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-  const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  //const auto& pos = entitySystem.get_component<Component::Position>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
   auto& magic = entitySystem.get_component<Component::Magic>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
@@ -231,7 +231,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
-    const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
+    //const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
     const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
     if((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
