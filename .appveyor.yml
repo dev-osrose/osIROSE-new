@@ -13,9 +13,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> cmake/modules/Build*.cmake
-  - 3rdparty\lib -> cmake/modules/Build*.cmake
-  - 3rdparty\include -> cmake/modules/Build*.cmake
+  - 3rdparty\bin -> clear_cache.txt
+  - 3rdparty\lib -> clear_cache.txt
+  - 3rdparty\include -> clear_cache.txt
 
 branches:
   except:
@@ -77,9 +77,9 @@ after_build:
 - 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
-- path: $(platform)-$(appveyor_build_version)-$(configuration).zip
+- path: %APPVEYOR_BUILD_FOLDER%/$(platform)-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+- path: %APPVEYOR_BUILD_FOLDER%/$(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
   name: osirose-debug-symbols
 
 on_success:
