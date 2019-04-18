@@ -225,21 +225,18 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.update_position(item, x, y);
 }
 
-void add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
+bool add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    inv.zuly = static_cast<int64_t>(std::min(static_cast<uint64_t>(inv.zuly) + static_cast<uint64_t>(zuly),
-                                    static_cast<uint64_t>(std::numeric_limits<int64_t>::max())));
+    if (zuly < 0 && inv.zuly + zuly < 0) {
+        return false;
+    } else if (zuly < 0) {
+        inv.zuly += zuly;
+    } else {
+        inv.zuly = static_cast<int64_t>(std::min(static_cast<uint64_t>(inv.zuly) + static_cast<uint64_t>(zuly),
+                                        static_cast<uint64_t>(std::numeric_limits<int64_t>::max())));
+    }
     entitySystem.send_to(entity,
                          RoseCommon::Packet::SrvSetMoney::create(inv.zuly));
-}
-
-bool remove_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
-    auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    if (inv.zuly < zuly) {
-        return false;
-    }
-    inv.zuly -= zuly;
-    entitySystem.send_to(entity, RoseCommon::Packet::SrvSetMoney::create(inv.zuly));
     return true;
 }
 
