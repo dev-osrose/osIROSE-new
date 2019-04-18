@@ -7,12 +7,12 @@ set(_byproducts
     ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/lib/exception_handler.lib
     ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/lib/crash_generation_client.lib
     
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib/common.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib/exception_handler.lib
-    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib/crash_generation_client.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${CMAKE_BUILD_TYPE}/lib/exception_handler.lib
+    ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib
   )
 
-if(WIN32)  
+if(WIN32) 
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
@@ -24,7 +24,7 @@ if(WIN32)
 
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
-    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
+    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${CMAKE_BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/lib/breakpad" "*.lib"
     COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/bin" "*.dll"
     INSTALL_COMMAND ""
@@ -34,14 +34,14 @@ if(WIN32)
     breakpad
     build-crash-generation-client
     DEPENDERS build
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${CMAKE_BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
   )
 
   ExternalProject_Add_Step(
     breakpad
     build-common
     DEPENDERS build
-    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
+    COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=${CMAKE_BUILD_TYPE} /p:Platform=${BUILD_PLATFORM}
   )
 
   ExternalProject_Add_Step(
@@ -107,9 +107,9 @@ if(WIN32 AND NOT MINGW)
   set(BREAKPAD_DUMP_SYMS_EXEC ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/bin/dump_syms.exe)
   set(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/include/breakpad)
 
-  set(BREAKPAD_COMMON_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${BUILD_TYPE}/lib")
-  set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${BUILD_TYPE}/lib")
-  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${BUILD_TYPE}/lib")
+  set(BREAKPAD_COMMON_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/${CMAKE_BUILD_TYPE}/lib")
+  set(BREAKPAD_CRASH_CLIENT_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${CMAKE_BUILD_TYPE}/lib")
+  set(BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR "${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/handler/${CMAKE_BUILD_TYPE}/lib")
   set(BREAKPAD_EXCEPTION_HANDLER_LIBRARIES
     "${BREAKPAD_COMMON_LIBRARY_DIR}/common.lib"
     "${BREAKPAD_EXCEPTION_HANDLER_LIBRARY_DIR}/exception_handler.lib"
