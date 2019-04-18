@@ -77,9 +77,9 @@ after_build:
 - 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
-- path: %APPVEYOR_BUILD_FOLDER%/$(platform)-$(appveyor_build_version)-$(configuration).zip
+- path: $(appveyor_build_folder)/$(platform)-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-- path: %APPVEYOR_BUILD_FOLDER%/$(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+- path: $(appveyor_build_folder)/$(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
   name: osirose-debug-symbols
 
 on_success:
