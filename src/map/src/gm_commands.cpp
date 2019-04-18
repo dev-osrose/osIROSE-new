@@ -92,7 +92,12 @@ void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int,
     entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
 }
 
-void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
+void zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int64_t> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /zuly <amount>");
+        return;
+    }
+    Items::add_zuly(entitySystem, entity, parser.get_arg<0>());
 }
 }
 
@@ -103,7 +108,7 @@ void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>)
 static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
     {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
-    //{"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
+    {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory. Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
 };
 
