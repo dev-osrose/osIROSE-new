@@ -68,7 +68,7 @@ class Parser<> {
 };
 
 
-void item(EntitySystem&, RoseCommon::Entity, Parser<int, int>) {
+[[maybe_unused]] void item(EntitySystem&, RoseCommon::Entity, Parser<int, int>) {
 }
 
 void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, std::optional<uint16_t>> parser) {
@@ -79,7 +79,7 @@ void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int,
     entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
 }
 
-void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
+[[maybe_unused]] void zuly(EntitySystem&, RoseCommon::Entity, Parser<int>) {
 }
 }
 
