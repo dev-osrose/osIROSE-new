@@ -225,7 +225,7 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.update_position(item, x, y);
 }
 
-bool add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
+bool Items::add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     if (zuly < 0 && inv.zuly + zuly < 0) {
         return false;

@@ -72,6 +72,7 @@ class Parser<> {
 void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /item <type> <id>");
+        return;
     }
     const auto item = entitySystem.create_item(parser.get_arg<0>(), parser.get_arg<1>());
     switch (Items::add_item(entitySystem, entity, item)) {
