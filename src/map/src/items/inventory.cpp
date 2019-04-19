@@ -26,6 +26,9 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
     if (spot > 9 && spot != 14) { // non equip items TODO: put that magic value somewhere else
         return false;
     }
+    if (spot == 7 && (item.type == 8 || item.type == 9)) {
+        return true;
+    }
     return item.type == spot;
 }
 
@@ -214,7 +217,7 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     {
-        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to, {});
+        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, from, {});
         entitySystem.send_nearby(entity, packet);
     }
 
@@ -267,11 +270,10 @@ void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity ent
     logger->trace("from {} to {}", packet.get_slotFrom(), packet.get_slotTo());
     const auto from = packet.get_slotFrom();
     const auto to = packet.get_slotTo();
-    if (from == 0) { // we want to unequip something, 0 being a "fake" no-item flag
-        unequip_item(entitySystem, entity, to);
-    } else {
+    const auto res = from == 0 ? // we want to unequip something, 0 being a "fake" no-item flag
+        unequip_item(entitySystem, entity, to):
         equip_item(entitySystem, entity, from, to);
-    }
+    (void) res;
 }
 
 void Items::drop_item_packet(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliDropItem& packet) {
