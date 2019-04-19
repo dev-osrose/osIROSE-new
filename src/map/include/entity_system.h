@@ -4,6 +4,7 @@
 #include <chrono>
 #include <queue>
 #include <unordered_map>
+#include <mutex>
 #include <string>
 
 #include "dataconsts.h"
@@ -122,7 +123,7 @@ class EntitySystem {
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
-        std::mutex access;
+        std::recursive_mutex access;
         IdManager idManager;
         TimedCallbacks timers;
         PacketDispatcher dispatcher;

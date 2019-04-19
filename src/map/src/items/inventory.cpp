@@ -90,8 +90,7 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
             }
         }
     }
-    RoseCommon::Packet::SrvSetItem::IndexAndItem index;
-    index.set_index(pos);
+    RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(pos);
     index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(item));
     auto packet = RoseCommon::Packet::SrvSetItem::create();
     packet.add_items(index);
@@ -161,7 +160,7 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
         const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
         if (const auto tmp = lua.api.lock(); tmp) {
             if (!tmp->on_unequip(entity)) {
-                return ReturnValue::REQUIREMENTS_NOT_MET;
+                //return ReturnValue::REQUIREMENTS_NOT_MET;
             }
         }
     }
@@ -169,15 +168,26 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
         const auto& lua = entitySystem.get_component<Component::ItemLua>(to_equip);
         if (const auto tmp = lua.api.lock(); tmp) {
             if (!tmp->on_equip(entity)) {
-                return ReturnValue::REQUIREMENTS_NOT_MET;
+                //return ReturnValue::REQUIREMENTS_NOT_MET;
             }
         }
     }
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-    const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
-            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[to]));
-    entitySystem.send_nearby(entity, packet);
+    {
+        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
+                entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[to]));
+        entitySystem.send_nearby(entity, packet);
+    }
+
+    RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(to);
+    index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(to_equip));
+    auto packet = RoseCommon::Packet::SrvSetItem::create();
+    packet.add_items(index);
+    index.set_index(from);
+    index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(equipped));
+    packet.add_items(index);
+    entitySystem.send_to(entity, packet);
     return ReturnValue::OK;
 }
 
@@ -197,15 +207,26 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
         const auto& lua = entitySystem.get_component<Component::ItemLua>(equipped);
         if (const auto tmp = lua.api.lock(); tmp) {
             if (!tmp->on_unequip(entity)) {
-                return ReturnValue::REQUIREMENTS_NOT_MET;
+                //return ReturnValue::REQUIREMENTS_NOT_MET;
             }
         }
     }
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
-    const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
-            entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[from]));
-    entitySystem.send_nearby(entity, packet);
+    {
+        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to, {});
+        entitySystem.send_nearby(entity, packet);
+    }
+
+    RoseCommon::Packet::SrvSetItem::IndexAndItem index;
+    index.set_index(to);
+    index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(equipped));
+    auto packet = RoseCommon::Packet::SrvSetItem::create();
+    packet.add_items(index);
+    index.set_index(from);
+    index.set_item({});
+    packet.add_items(index);
+    entitySystem.send_to(entity, packet);
     return ReturnValue::OK;
 }
 
@@ -246,8 +267,8 @@ void Items::equip_item_packet(EntitySystem& entitySystem, RoseCommon::Entity ent
     logger->trace("from {} to {}", packet.get_slotFrom(), packet.get_slotTo());
     const auto from = packet.get_slotFrom();
     const auto to = packet.get_slotTo();
-    if (to == 0) { // we want to unequip something, 0 being a "fake" no-item flag
-        unequip_item(entitySystem, entity, from);
+    if (from == 0) { // we want to unequip something, 0 being a "fake" no-item flag
+        unequip_item(entitySystem, entity, to);
     } else {
         equip_item(entitySystem, entity, from, to);
     }

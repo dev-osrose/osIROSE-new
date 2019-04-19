@@ -242,7 +242,7 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
 void EntitySystem::run() {
     for (auto [res, task] = work_queue.pop_front(); res;) {
         {
-            std::lock_guard<std::mutex> lock(access);
+            std::lock_guard<std::recursive_mutex> lock(access);
             std::invoke(std::move(task), *this);
         }
         auto [tmp_res, tmp_task] = work_queue.pop_front();
@@ -572,7 +572,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     prototype.set<StatusEffects>();
 
-    std::lock_guard<std::mutex> lock(access);
+    std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
 
@@ -589,6 +589,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
         const auto& guild = self.get_component<Guild>(character);
         // TODO: save hotbar
         // TODO: save inventory
+        const auto& inv = self.get_component<Inventory>(character);
         const auto& level = self.get_component<Level>(character);
         const auto& life = self.get_component<Life>(character);
         const auto& magic = self.get_component<Magic>(character);
@@ -620,6 +621,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
             characters.clanContribution = guild.contribution,
             characters.clanRank = guild.rank,
             characters.exp = level.xp,
+            characters.zuly = inv.zuly,
             characters.level = level.level,
             characters.penaltyExp = level.penaltyXp,
             characters.maxHp = life.maxHp,
@@ -669,7 +671,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
         tmp->on_init();
     }
 	
-    std::lock_guard<std::mutex> lock(access);
+    std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
 

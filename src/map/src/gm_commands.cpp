@@ -10,6 +10,7 @@
 #include "entity_system.h"
 #include "chat/whisper_chat.h"
 #include "components/client.h"
+#include "components/item.h"
 #include "items/inventory.h"
 
 namespace {
@@ -75,6 +76,12 @@ void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int
         return;
     }
     const auto item = entitySystem.create_item(parser.get_arg<0>(), parser.get_arg<1>());
+    if (item == entt::null) {
+        Chat::send_whisper(entitySystem, entity, fmt::format("No existing item ({}, {})", parser.get_arg<0>(), parser.get_arg<1>()));
+        return;
+    }
+    auto& i = entitySystem.get_component<Component::Item>(item);
+    i.isAppraised = true;
     switch (Items::add_item(entitySystem, entity, item)) {
         case Items::ReturnValue::NO_SPACE:
             Chat::send_whisper(entitySystem, entity, "Not enough space left in your inventory.");
