@@ -290,7 +290,7 @@ void Items::drop_item_packet(EntitySystem& entitySystem, RoseCommon::Entity enti
     }
     RoseCommon::Entity item = entt::null;
     if (index == 0) { // we drop zulies
-        if (add_zuly(entitySystem, entity, -packet.get_quantity())) {
+        if (add_zuly(entitySystem, entity, -static_cast<int64_t>(packet.get_quantity()))) {
             item = entitySystem.create_zuly(packet.get_quantity());
         } else {
             return; // we don't have enough zuly to remove

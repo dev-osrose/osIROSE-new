@@ -47,6 +47,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <set>
 
 void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     if (!entitySystem.has_component<Component::ComputedValues>(entity)) {
@@ -501,7 +502,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-	   .where(inventoryTable.charId == charId and inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist"));
+	   .where(inventoryTable.charId == charId and 
+           (inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist")));
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
@@ -580,6 +582,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     add_task([character](EntitySystem& self) {
         auto conn = Core::connectionPool.getConnection<Core::Osirose>();
         Core::CharacterTable characters{};
+        Core::InventoryTable inventory{};
         using sqlpp::parameter;
         using namespace Component;
         
@@ -638,6 +641,65 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
             characters.charm = stats.charm,
             characters.sense = stats.sense
         ));
+
+        auto invRes = conn(sqlpp::select(sqlpp::all_of(inventory)).from(inventory)
+                .where(inventory.charId == basicInfo.charId));
+        std::vector<size_t> to_delete;
+        std::vector<size_t> to_add;
+        std::set<size_t> modified;
+        std::vector<size_t> to_update;
+
+        for (const auto& row : invRes) {
+            if (row.slot >= RoseCommon::MAX_ITEMS) {
+                to_delete.push_back(row.slot);
+            } else if (inv.items[row.slot] == entt::null) {
+                to_delete.push_back(row.slot);
+            } else {
+                const auto& item = self.get_component<Component::Item>(inv.items[row.slot]);
+                const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[row.slot]);
+                if (itemDef.type != row.itemtype || itemDef.id != row.itemid || item.count != row.amount
+                    || item.refine != row.refine || item.gemOpt != row.gemOpt || item.hasSocket != row.socket) {
+                    to_update.push_back(row.slot);
+                }
+            }
+            modified.insert(row.slot);
+        }
+ 
+        for (const auto [i, it] : Core::enumerate(inv.items)) {
+            if (it != entt::null && modified.find(i) == modified.end()) {
+                to_add.push_back(i);
+            }
+        }
+
+        for (const auto it : to_delete) {
+            conn(sqlpp::remove_from(inventory).where(inventory.charId == basicInfo.charId and inventory.slot == it));
+        }
+        for (const auto it : to_update) {
+            const auto& item = self.get_component<Component::Item>(inv.items[it]);
+            const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[it]);
+            conn(sqlpp::update(inventory).set(
+                inventory.itemid = itemDef.id,
+                inventory.itemtype = static_cast<int>(itemDef.type),
+                inventory.amount = item.count,
+                inventory.refine = item.refine,
+                inventory.gemOpt = item.gemOpt,
+                inventory.socket = static_cast<int>(item.hasSocket)
+            ).where(inventory.charId == basicInfo.charId and inventory.slot == it));
+        }
+        for (const auto it : to_add) {
+            const auto& item = self.get_component<Component::Item>(inv.items[it]);
+            const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[it]);
+            conn(sqlpp::insert_into(inventory).set(
+                inventory.itemid = itemDef.id,
+                inventory.itemtype = static_cast<int>(itemDef.type),
+                inventory.amount = item.count,
+                inventory.refine = item.refine,
+                inventory.gemOpt = item.gemOpt,
+                inventory.socket = static_cast<int>(item.hasSocket),
+                inventory.slot = it,
+                inventory.charId = basicInfo.charId
+            ));
+        }
     });
 }
 
@@ -697,7 +759,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
     return entity;
 }
 
-void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
+void EntitySystem::save_item([[maybe_unused]] RoseCommon::Entity item, [[maybe_unused]] RoseCommon::Entity owner) const {
 }
 
 RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
@@ -734,7 +796,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
+RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
 	int dest_map_id, float dest_x, float dest_y, float dest_z,
 	float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
@@ -761,7 +823,8 @@ RoseCommon::Entity EntitySystem::create_warpgate(std::string alias,
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
+RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
+        int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
     logger->trace("EntitySystem::create_spawner");
     using namespace Component;
     entt::prototype prototype(registry);
@@ -784,7 +847,7 @@ RoseCommon::Entity EntitySystem::create_spawner(std::string alias, int mob_id, i
 
     spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
         auto& spawner = self.get_component<Spawner>(entity);
-        if (spawner.mobs.size() < spawner.max_mobs) {
+        if (spawner.mobs.size() < static_cast<size_t>(spawner.max_mobs)) {
             int number = Core::Random::getInstance().get_uniform(0, std::min(static_cast<size_t>(spawner.max_once), spawner.max_mobs - spawner.mobs.size()));
             for (int i = 0; i < number; ++i) {
                 const auto mob = self.create_mob(entity);
