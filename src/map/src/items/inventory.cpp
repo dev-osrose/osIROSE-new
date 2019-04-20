@@ -23,7 +23,7 @@ using namespace Items;
 namespace {
 inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity entity, size_t spot) {
     const auto& item = entitySystem.get_component<ItemDef>(entity);
-    if (spot > 9 && spot != 14) { // non equip items TODO: put that magic value somewhere else
+    if (spot > 9) { // non equip items TODO: put that magic value somewhere else
         return false;
     }
     if (spot == 7 && (item.type == 8 || item.type == 9)) {
@@ -33,7 +33,7 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
 }
 
 inline bool is_spot_equipped(size_t spot) {
-    return spot > 9 && spot != 14;
+    return spot < 9;
 }
 }
 
@@ -284,12 +284,15 @@ void Items::drop_item_packet(EntitySystem& entitySystem, RoseCommon::Entity enti
     const auto quantity = packet.get_quantity();
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
 
-    if (index < 1 || index > inv.items.size()) {
+    if (index > inv.items.size()) {
         logger->warn("wrong index {} for item drop, client {}", index, entity);
         return;
     }
-    const auto item = remove_item(entitySystem, entity, index, quantity);
-    const auto& pos = entitySystem.get_component<Component::Position>(entity);
-    const auto [x, y] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, DROP_RANGE);
-    drop_item(entitySystem, item, x, y, entity);
+    if (index == 0) { // we drop zulies
+    } else {
+        const auto item = remove_item(entitySystem, entity, index, quantity);
+        const auto& pos = entitySystem.get_component<Component::Position>(entity);
+        const auto [x, y] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, DROP_RANGE);
+        drop_item(entitySystem, item, x, y, entity);
+    }
 }
