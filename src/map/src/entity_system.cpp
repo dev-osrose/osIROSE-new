@@ -662,6 +662,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     item.count = count;
     item.gemOpt = 0;
     item.price = 0;
+    item.is_zuly = false;
 
     prototype.set<RoseCommon::ItemDef>(def);
 
@@ -671,6 +672,18 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
         tmp->on_init();
     }
 	
+    std::lock_guard<std::recursive_mutex> lock(access);
+    return prototype();
+}
+
+RoseCommon::Entity EntitySystem::create_zuly(int64_t zuly) {
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    auto& item = prototype.set<Item>();
+    item.is_zuly = true;
+    item.count = zuly;
+
     std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
@@ -685,7 +698,6 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 }
 
 void EntitySystem::save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const {
-    // TODO: should be done as a task??? no
 }
 
 RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {

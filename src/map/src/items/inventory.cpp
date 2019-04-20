@@ -288,11 +288,17 @@ void Items::drop_item_packet(EntitySystem& entitySystem, RoseCommon::Entity enti
         logger->warn("wrong index {} for item drop, client {}", index, entity);
         return;
     }
+    RoseCommon::Entity item = entt::null;
     if (index == 0) { // we drop zulies
+        if (add_zuly(entitySystem, entity, -packet.get_quantity())) {
+            item = entitySystem.create_zuly(packet.get_quantity());
+        } else {
+            return; // we don't have enough zuly to remove
+        }
     } else {
-        const auto item = remove_item(entitySystem, entity, index, quantity);
-        const auto& pos = entitySystem.get_component<Component::Position>(entity);
-        const auto [x, y] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, DROP_RANGE);
-        drop_item(entitySystem, item, x, y, entity);
+        item = remove_item(entitySystem, entity, index, quantity);
     }
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    const auto [x, y] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, DROP_RANGE);
+    drop_item(entitySystem, item, x, y, entity);
 }
