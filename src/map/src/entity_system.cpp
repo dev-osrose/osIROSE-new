@@ -310,7 +310,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
             return;
         }
         // if it's an item but it has been picked up, we cancel the delete
-        if (entitySystem.has_component<Component::Item>(entity) && !has_component<Component::Position>(entity)) {
+        if (entitySystem.has_component<Component::Item>(entity) && !entitySystem.has_component<Component::Position>(entity)) {
             return;
         }
         if (auto* basicInfo = entitySystem.try_get_component<Component::BasicInfo>(entity)) {
