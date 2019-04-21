@@ -344,7 +344,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
             }
         });
         if (auto* inv = entitySystem.try_get_component<Component::Inventory>(entity)) {
-            for (auto & item : inv.items) {
+            for (auto & item : inv->items) {
                 entitySystem.delete_entity(item);
             }
         }
