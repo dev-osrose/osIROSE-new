@@ -306,6 +306,9 @@ void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
+        if (entity == entt::null) {
+            return;
+        }
         if (auto* basicInfo = entitySystem.try_get_component<Component::BasicInfo>(entity)) {
             entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
             entitySystem.idManager.release_id(basicInfo->id);
@@ -336,6 +339,11 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                 entitySystem.remove_component<Component::Target>(en);
             }
         });
+        if (auto* inv = entitySystem.try_get_component<Component::Inventory>(entity)) {
+            for (auto & item : inv.items) {
+                entitySystem.delete_entity(item);
+            }
+        }
         entitySystem.registry.destroy(entity);
     });
 }

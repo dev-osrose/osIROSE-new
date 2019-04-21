@@ -247,6 +247,10 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.add_component(item, std::move(bi));
 
     entitySystem.update_position(item, x, y);
+    
+    entitySystem.add_timer(5min, [item](EntitySystem& entitySystem) {
+        entitySystem.delete_entity(item);
+    });
 }
 
 bool Items::add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
