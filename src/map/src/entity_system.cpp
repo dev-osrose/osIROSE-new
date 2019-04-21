@@ -318,10 +318,16 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                 spawner->mobs.erase(std::remove(spawner->mobs.begin(), spawner->mobs.end(), entity), spawner->mobs.end());
             }
         }
-        // we delete all entities owned by this entity
+        // we delete all entities owned by this entity except if it's an item, then we allow it for everybody
         entitySystem.registry.view<Component::Owner>().each([&entitySystem, entity](auto en, auto& owner) {
             if (owner.owner == entity) {
-                entitySystem.delete_entity(en);
+                if (!entitySystem.has_component<Component::Item>(en)) {
+                    entitySystem.delete_entity(en);
+                } else {
+                    entitySystem.remove_component<Component::Owner>(en);
+                    auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(en);
+                    basicInfo.teamId = basicInfo.id;
+                }
             }
         });
         // we remove the target from others as it is deleted
