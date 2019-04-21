@@ -306,7 +306,7 @@ void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
-        if (entity == entt::null || entitySystem.registry.valid(entity)) {
+        if (entity == entt::null || !entitySystem.registry.valid(entity)) {
             return;
         }
         // if it's an item but it has been picked up, we cancel the delete
