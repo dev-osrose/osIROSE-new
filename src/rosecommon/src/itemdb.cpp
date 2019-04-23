@@ -5,9 +5,10 @@
 
 using namespace RoseCommon;
 
-ItemDef::ItemDef(): type( ItemType::WEARABLE ),
+ItemDef::ItemDef(): type( 0 ),
                     subtype( 0 ),
                     id( 0 ),
+                    item_type( ItemType::WEARABLE ),
                     buy_price( 0 ),
                     sell_price( 0 ),
                     weight( 0 ),
@@ -28,13 +29,22 @@ void ItemDatabase::initialize() {
   try {
     ItemDef newItem;
     for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).where(itemdb.type != 0).order_by(itemdb.id.asc()) ) ) {
-      newItem.type = static_cast<ItemType>(static_cast<uint8_t>(row.type));
+      newItem.type = static_cast<uint8_t>(row.type);
       newItem.subtype = static_cast<uint8_t>(row.subtype);
       newItem.id = static_cast<uint16_t>(row.id);
+      if (newItem.type == 14) {
+          newItem.item_type = ItemType::RIDING;
+      } else if (newItem.type < EquippedPosition::MAX_EQUIP_ITEMS) {
+          newItem.item_type = ItemType::WEARABLE;
+      } else if (newItem.type == 10) {
+        newItem.item_type = ItemType::CONSUMABLE;
+      } else {
+        newItem.item_type = ItemType::ETC;
+      }
       newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
       newItem.sell_price = static_cast<uint32_t>(row.priceSell);
       newItem.weight = static_cast<uint16_t>(row.weight);
-      newItem.is_stackable = newItem.type >= 10 && newItem.type <= 13;
+      newItem.is_stackable = newItem.item_type == ItemType::CONSUMABLE || newItem.item_type == ItemType::ETC;
       newItem.atk = static_cast<uint16_t>(row.attack);
       newItem.def = static_cast<uint16_t>(row.defense);
       newItem.slots = static_cast<uint8_t>(row.slots);
