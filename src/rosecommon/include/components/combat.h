@@ -14,7 +14,7 @@ namespace Component {
     bool apply_;
   };
   
-  struct Damage {
+  struct Combat {
     static const uint16_t maxConcurentDamage = 300;
     
     bool addDamage(uint32_t attacker, uint8_t action, int32_t damage = 0) {

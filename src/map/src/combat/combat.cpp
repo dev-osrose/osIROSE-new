@@ -22,7 +22,7 @@
 #include "components/player_spawn.h"
 #include "components/position.h"
 #include "components/target.h"
-#include "components/damage.h"
+#include "components/combat.h"
 #include "components/skills.h"
 #include "components/stamina.h"
 #include "components/stats.h"
@@ -171,9 +171,9 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   }
   
   // Check if there is damage queued
-  if(entitySystem.has_component<Component::Damage>(entity) == true)
+  if(entitySystem.has_component<Component::Combat>(entity) == true)
   {
-    auto& queuedDamage = entitySystem.get_component<Component::Damage>(entity);
+    auto& queuedDamage = entitySystem.get_component<Component::Combat>(entity);
     int32_t adjusted_hp = life.hp;
     uint32_t total_applied_damage = 0;
     
@@ -221,7 +221,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
         entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
       
       // remove components that we can't have if we are dead!
-      entitySystem.remove_component<Component::Damage>(entity);
+      entitySystem.remove_component<Component::Combat>(entity);
       entitySystem.remove_component<Component::Target>(entity);
       entitySystem.remove_component<Component::Destination>(entity);
     }
@@ -240,12 +240,12 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       // Are we in attack range?
       if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
       {
-        if(entitySystem.has_component<Component::Damage>(target.target) == false) {
-          entitySystem.add_component<Component::Damage>(target.target);
+        if(entitySystem.has_component<Component::Combat>(target.target) == false) {
+          entitySystem.add_component<Component::Combat>(target.target);
         }
         
         logger->debug("queuing damage to target entity");
-        auto& damage = entitySystem.get_component<Component::Damage>(target.target);
+        auto& damage = entitySystem.get_component<Component::Combat>(target.target);
         damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 30);
       }
     }

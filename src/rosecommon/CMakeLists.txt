@@ -25,8 +25,8 @@ set( SOURCES_HEADER
   include/itemdb.h
   include/crosewriter.h
   include/components/basic_info.h
+  include/components/combat.h
   include/components/computed_values.h
-  include/components/damage.h
   include/components/destination.h
   include/components/faction.h
   include/components/character_graphics.h

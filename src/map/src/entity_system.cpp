@@ -8,7 +8,7 @@
 #include "components/basic_info.h"
 #include "components/client.h"
 #include "components/computed_values.h"
-#include "components/damage.h"
+#include "components/combat.h"
 #include "components/destination.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
@@ -58,7 +58,7 @@ void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& computed = entitySystem.get_component<Component::ComputedValues>(entity);
     if (entitySystem.has_component<Component::Destination>(entity)) {
         computed.command = Command::MOVE;
-    } else if (entitySystem.has_component<Component::Target>(entity) && entitySystem.has_component<Component::Damage>(entity)) {
+    } else if (entitySystem.has_component<Component::Target>(entity) && entitySystem.has_component<Component::Combat>(entity)) {
         computed.command = Command::ATTACK;
     } else {
         computed.command = Command::STOP;
