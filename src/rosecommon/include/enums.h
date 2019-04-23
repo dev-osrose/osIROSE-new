@@ -54,7 +54,7 @@ enum Command : uint16_t {
 
 enum ItemType : uint8_t {
     NONE = 0,
-    GOGGLE = 1,
+    GOGGLES = 1,
     HELMET = 2,
     ARMOR = 3,
     GLAUNTLET = 4,
