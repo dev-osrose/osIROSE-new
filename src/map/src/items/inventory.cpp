@@ -23,7 +23,7 @@ using namespace Items;
 namespace {
 inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity entity, size_t spot) {
     const auto& item = entitySystem.get_component<ItemDef>(entity);
-    if (spot > 9) { // non equip items TODO: put that magic value somewhere else
+    if (spot >= EquippedPosition::MAX_EQUIP_ITEMS && spot != 14) { // TODO: 14 is cart/castle gear
         return false;
     }
     if (spot == 7 && (item.type == 8 || item.type == 9)) {
@@ -33,7 +33,7 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
 }
 
 inline bool is_spot_equipped(size_t spot) {
-    return spot < 9;
+    return spot < EquippedPosition::MAX_EQUIP_ITEMS;
 }
 }
 
