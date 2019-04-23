@@ -52,21 +52,21 @@ enum Command : uint16_t {
     SIT = 10
 };
 
-enum class ItemType : uint8_t {
+enum ItemType : uint8_t {
     NONE = 0,
-    GOGGLES = 1,
-    HELMET = 2,
-    ARMOR = 3,
-    GLAUNTLET = 4,
-    BOOTS = 5,
-    BACKPACK = 6,
-    RING = 7,
-    WEAPON_R = 8,
-    WEAPON_l = 9,
-    CONSOMABLE = 10,
-    ETC = 12,
-    ETC2 = 13,
-    RIDING = 14,
+    ITEM_GOGGLES = 1,
+    ITEM_HELMET = 2,
+    ITEM_ARMOR = 3,
+    ITEM_GLAUNTLET = 4,
+    ITEM_BOOTS = 5,
+    ITEM_BACKPACK = 6,
+    ITEM_RING = 7,
+    ITEM_WEAPON_R = 8,
+    ITEM_WEAPON_l = 9,
+    ITEM_CONSOMABLE = 10,
+    ITEM_ETC = 12,
+    ITEM_ETC2 = 13,
+    ITEM_RIDING = 14,
     ZULY = 0x1F
 };
 
