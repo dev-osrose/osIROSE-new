@@ -53,10 +53,21 @@ enum Command : uint16_t {
 };
 
 enum ItemType : uint8_t {
-    WEARABLE = 0,
-    CONSUMABLE = 1,
-    ETC = 2,
-    RIDING = 3
+    NONE = 0,
+    ITEM_GOGGLES = 1,
+    ITEM_HELMET = 2,
+    ITEM_ARMOR = 3,
+    ITEM_GAUNTLET = 4,
+    ITEM_BOOTS = 5,
+    ITEM_BACKPACK = 6,
+    ITEM_RING = 7,
+    ITEM_WEAPON_R = 8,
+    ITEM_WEAPON_L = 9,
+    ITEM_CONSUMABLE = 10,
+    ITEM_ETC = 12,
+    ITEM_ETC2 = 13,
+    ITEM_RIDING = 14,
+    ZULY = 0x1F
 };
 
 }

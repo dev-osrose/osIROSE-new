@@ -47,6 +47,7 @@ namespace RoseCommon
     uint32_t buy_price;
     uint32_t sell_price;
     uint16_t weight;
+    bool is_stackable;
 
     /// Damage
     uint16_t atk;

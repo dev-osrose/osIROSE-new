@@ -34,6 +34,10 @@ struct Inventory {
         return { items };
     }
 
+    constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() {
+        return { items };
+    }
+
     constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() {
         return { items };
     }
@@ -43,6 +47,10 @@ struct Inventory {
     }
 
     constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
+        return { items };
+    }
+
+    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() const {
         return { items };
     }
 

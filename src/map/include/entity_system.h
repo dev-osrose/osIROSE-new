@@ -4,6 +4,7 @@
 #include <chrono>
 #include <queue>
 #include <unordered_map>
+#include <mutex>
 #include <string>
 
 #include "dataconsts.h"
@@ -33,6 +34,8 @@ class EntitySystem {
         void run();
         void stop();
     
+        uint16_t get_free_id();
+
         bool dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet);
 
         template <typename T>
@@ -46,7 +49,8 @@ class EntitySystem {
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
-        RoseCommon::Entity create_item(uint8_t type, uint16_t id);
+        RoseCommon::Entity create_item(uint8_t type, uint16_t id, uint32_t count = 1);
+        RoseCommon::Entity create_zuly(int64_t zuly);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
         RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
@@ -67,6 +71,8 @@ class EntitySystem {
         void remove_component(RoseCommon::Entity entity);
         template <typename T>
         T& add_component(RoseCommon::Entity entity);
+        template <typename T>
+        void add_component(RoseCommon::Entity entity, T&& comp);
         template <typename T>
         T& add_or_replace_component(RoseCommon::Entity entity);
         template <typename T>
@@ -124,7 +130,7 @@ class EntitySystem {
         RoseCommon::Registry registry;
         std::shared_ptr<spdlog::logger> logger;
         std::chrono::milliseconds maxTimePerUpdate;
-        std::mutex access;
+        std::recursive_mutex access;
         IdManager idManager;
         TimedCallbacks timers;
         PacketDispatcher dispatcher;
@@ -178,6 +184,11 @@ T& EntitySystem::add_component(RoseCommon::Entity entity) {
 }
 
 template <typename T>
+void EntitySystem::add_component(RoseCommon::Entity entity, T&& comp) {
+    registry.assign<T>(entity, std::forward<T>(comp));
+}
+
+template <typename T>
 T& EntitySystem::add_or_replace_component(RoseCommon::Entity entity) {
     return registry.assign_or_replace<T>(entity);
 }
@@ -209,12 +220,17 @@ auto EntitySystem::item_to_header(RoseCommon::Entity entity) const {
         return typename T::Header{};
     }
     const auto& item = get_component<Component::Item>(entity);
-    const auto& data = get_component<RoseCommon::ItemDef>(entity);
+    const auto* data = try_get_component<RoseCommon::ItemDef>(entity);
         
     typename T::Header header;
     header.set_isCreated(item.isCreated);
-    header.set_id(data.id);
-    header.set_type(data.type);
+    if (data) {
+        header.set_id(data->id);
+        header.set_type(RoseCommon::to_underlying(data->type));
+    } else {
+        header.set_id(0);
+        header.set_type(RoseCommon::to_underlying(RoseCommon::ItemType::ZULY));
+    }
         
     return header;
 }
@@ -225,10 +241,10 @@ auto EntitySystem::item_to_data(RoseCommon::Entity entity) const {
         return typename T::Data{};
     }
     const auto& item = get_component<Component::Item>(entity);
-    const auto& itemDef = get_component<RoseCommon::ItemDef>(entity);
+    const auto* itemDef = try_get_component<RoseCommon::ItemDef>(entity);
         
     typename T::Data data;
-    if (itemDef.type == RoseCommon::ItemType::CONSUMABLE) {
+    if (!itemDef || itemDef->is_stackable) {
         data.set_count(item.count);
     } else {
         data.set_refine(item.refine);

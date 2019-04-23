@@ -10,7 +10,12 @@
 #include "cli_char_list_req.h"
 #include "cli_create_char_req.h"
 #include "cli_delete_char_req.h"
+<<<<<<< HEAD
 #include "cli_hp_req.h"
+=======
+#include "cli_drop_item.h"
+#include "cli_equip_item.h"
+>>>>>>> origin/trunk
 #include "cli_join_server_req.h"
 #include "cli_login_req.h"
 #include "cli_mouse_cmd.h"
@@ -46,6 +51,7 @@
 #include "srv_remove_object.h"
 #include "srv_screen_shot_time_reply.h"
 #include "srv_select_char_reply.h"
+#include "srv_set_item.h"
 #include "srv_shout_chat.h"
 #include "srv_set_hp_and_mp.h"
 #include "srv_srv_select_reply.h"
@@ -70,6 +76,8 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_CREATE_CHAR_REQ, CliCreateCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_DELETE_CHAR_REQ, CliDeleteCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_HP_REQ, CliHpReq);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_DROP_ITEM, CliDropItem);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_ITEM, CliEquipItem);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat);
@@ -109,6 +117,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject);
     REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTimeReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_ITEM, SrvSetItem);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SHOUT_CHAT, SrvShoutChat);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_HP_AND_MP, SrvSetHpAndMp);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply);

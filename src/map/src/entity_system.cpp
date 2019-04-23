@@ -40,6 +40,7 @@
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
 #include "combat/combat.h"
+#include "items/inventory.h"
 
 #include "random.h"
 
@@ -47,8 +48,25 @@
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
 
+
 #include <algorithm>
 #include <cmath>
+#include <set>
+
+void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    if (!entitySystem.has_component<Component::ComputedValues>(entity)) {
+        return;
+    }
+    using RoseCommon::Command;
+    auto& computed = entitySystem.get_component<Component::ComputedValues>(entity);
+    if (entitySystem.has_component<Component::Destination>(entity)) {
+        computed.command = Command::MOVE;
+    } else if (entitySystem.has_component<Component::Target>(entity)) {// && entitySystem.has_component<Component::Damage>(entity)) {
+        computed.command = Command::ATTACK;
+    } else {
+        computed.command = Command::STOP;
+    }
+}
 
 void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     if (!entitySystem.has_component<Component::ComputedValues>(entity)) {
@@ -157,17 +175,15 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
         });
     });
 
+    // callback for removing objects
+    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
     // callback for nearby calculations
     registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
-    registry.destruction<Component::Position>().connect<&Nearby::remove_entity>(&nearby);
 
     // callback for updating the name_to_entity mapping
     registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
-
-    // callback for removing objects
-    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
     // callback for destroying lua
     registry.destruction<Component::ItemLua>().connect<&destroy_lua>();
@@ -181,10 +197,16 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Combat::attack});
     register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});
+    register_dispatcher(std::function{Items::equip_item_packet});
+    register_dispatcher(std::function{Items::drop_item_packet});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
     loading = false;
+}
+
+uint16_t EntitySystem::get_free_id() {
+    return idManager.get_free_id();
 }
 
 void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
@@ -193,7 +215,7 @@ void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity enti
     spawner.callback.cancel();
 }
 
-void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entity) {
+void EntitySystem::remove_object(RoseCommon::Registry& r, RoseCommon::Entity entity) {
     logger->trace("EntitySystem::remove_object");
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
@@ -201,6 +223,7 @@ void EntitySystem::remove_object(RoseCommon::Registry&, RoseCommon::Entity entit
         id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
     }
+	nearby.remove_entity(r, entity);
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -246,7 +269,7 @@ RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
 void EntitySystem::stop() {
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
-    registry.destruction<Component::Position>().disconnect<&Nearby::remove_entity>(&nearby);
+	registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
     registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
@@ -267,7 +290,7 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
 void EntitySystem::run() {
     for (auto [res, task] = work_queue.pop_front(); res;) {
         {
-            std::lock_guard<std::mutex> lock(access);
+            std::lock_guard<std::recursive_mutex> lock(access);
             std::invoke(std::move(task), *this);
         }
         auto [tmp_res, tmp_task] = work_queue.pop_front();
@@ -320,12 +343,21 @@ void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity 
         send_to(entity, CMapClient::create_srv_mob_char(*this, other));
     } else if (try_get_component<Component::Client>(other)) {
         send_to(entity, CMapClient::create_srv_player_char(*this, other));
+    } else if (try_get_component<Component::Item>(other)) {
+        send_to(entity, CMapClient::create_srv_drop_item(*this, other));
     }
 }
 
 void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
+        if (entity == entt::null || !entitySystem.registry.valid(entity)) {
+            return;
+        }
+        // if it's an item but it has been picked up, we cancel the delete
+        if (entitySystem.has_component<Component::Item>(entity) && !entitySystem.has_component<Component::Position>(entity)) {
+            return;
+        }
         if (auto* basicInfo = entitySystem.try_get_component<Component::BasicInfo>(entity)) {
             entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
             entitySystem.idManager.release_id(basicInfo->id);
@@ -338,10 +370,16 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                 spawner->mobs.erase(std::remove(spawner->mobs.begin(), spawner->mobs.end(), entity), spawner->mobs.end());
             }
         }
-        // we delete all entities owned by this entity
+        // we delete all entities owned by this entity except if it's an item, then we allow it for everybody
         entitySystem.registry.view<Component::Owner>().each([&entitySystem, entity](auto en, auto& owner) {
             if (owner.owner == entity) {
-                entitySystem.delete_entity(en);
+                if (!entitySystem.has_component<Component::Item>(en)) {
+                    entitySystem.delete_entity(en);
+                } else {
+                    entitySystem.remove_component<Component::Owner>(en);
+                    auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(en);
+                    basicInfo.teamId = basicInfo.id;
+                }
             }
         });
         // we remove the target from others as it is deleted
@@ -350,6 +388,11 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                 entitySystem.remove_component<Component::Target>(en);
             }
         });
+        if (auto* inv = entitySystem.try_get_component<Component::Inventory>(entity)) {
+            for (auto & item : inv->items) {
+                entitySystem.delete_entity(item);
+            }
+        }
         entitySystem.registry.destroy(entity);
     });
 }
@@ -373,33 +416,34 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     pos->y = y;
     nearby.update_position(entity, old_x, old_y, x, y);
 
-    // check for warpgates
-    registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
-        if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
-            return;
-        }
-        float x = destination.x;
-        float y = destination.y;
-        uint16_t map = warpgate.dest_map;
-        add_task([entity, x, y, map](EntitySystem& self) {
-            self.teleport_entity(entity, x, y, map);
+    // check for warpgates if entity can be teleported
+    if (has_component<Component::BasicInfo>(entity)) {
+        registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
+            if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
+                return;
+            }
+            float x = destination.x;
+            float y = destination.y;
+            uint16_t map = warpgate.dest_map;
+            add_task([entity, x, y, map](EntitySystem& self) {
+                self.teleport_entity(entity, x, y, map);
+            });
         });
-    });
-
-    if (is_added) {
-        return;
     }
+
     const auto new_nearby = get_nearby(entity);
     std::vector<RoseCommon::Entity> to_remove;
     std::vector<RoseCommon::Entity> to_add;
     std::set_difference(old_nearby.begin(), old_nearby.end(), new_nearby.begin(), new_nearby.end(), std::back_inserter(to_remove));
     std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
 
-    const auto& basicInfo = get_component<Component::BasicInfo>(entity);
-    for (const auto other : to_remove) {
-        send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
-        if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
-            send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
+    if (!is_added) {
+        const auto& basicInfo = get_component<Component::BasicInfo>(entity);
+        for (const auto other : to_remove) {
+            send_to(other, RoseCommon::Packet::SrvRemoveObject::create(basicInfo.id));
+            if (const auto* basic = try_get_component<Component::BasicInfo>(other)) {
+                send_to(entity, RoseCommon::Packet::SrvRemoveObject::create(basic->id));
+            }
         }
     }
     for (const auto other : to_add) {
@@ -523,7 +567,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-     .where(inventoryTable.charId == charId and (inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist")));
+	   .where(inventoryTable.charId == charId and 
+           (inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist")));
 
     auto& wishlist = prototype.set<Wishlist>();
     auto& inventory = prototype.set<Inventory>();
@@ -569,7 +614,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     pos.y = charRow.y;
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
-  pos.map = charRow.map;
+    pos.map = charRow.map;
 
     auto skillRes =
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
@@ -594,7 +639,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     prototype.set<StatusEffects>();
 
-    std::lock_guard<std::mutex> lock(access);
+    std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
 
@@ -602,6 +647,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     add_task([character](EntitySystem& self) {
         auto conn = Core::connectionPool.getConnection<Core::Osirose>();
         Core::CharacterTable characters{};
+        Core::InventoryTable inventory{};
         using sqlpp::parameter;
         using namespace Component;
         
@@ -611,6 +657,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
         const auto& guild = self.get_component<Guild>(character);
         // TODO: save hotbar
         // TODO: save inventory
+        const auto& inv = self.get_component<Inventory>(character);
         const auto& level = self.get_component<Level>(character);
         const auto& life = self.get_component<Life>(character);
         const auto& magic = self.get_component<Magic>(character);
@@ -642,6 +689,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
             characters.clanContribution = guild.contribution,
             characters.clanRank = guild.rank,
             characters.exp = level.xp,
+            characters.zuly = inv.zuly,
             characters.level = level.level,
             characters.penaltyExp = level.penaltyXp,
             characters.maxHp = life.maxHp,
@@ -658,10 +706,69 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
             characters.charm = stats.charm,
             characters.sense = stats.sense
         ));
+
+        auto invRes = conn(sqlpp::select(sqlpp::all_of(inventory)).from(inventory)
+                .where(inventory.charId == basicInfo.charId));
+        std::vector<size_t> to_delete;
+        std::vector<size_t> to_add;
+        std::set<size_t> modified;
+        std::vector<size_t> to_update;
+
+        for (const auto& row : invRes) {
+            if (row.slot >= RoseCommon::MAX_ITEMS) {
+                to_delete.push_back(row.slot);
+            } else if (inv.items[row.slot] == entt::null) {
+                to_delete.push_back(row.slot);
+            } else {
+                const auto& item = self.get_component<Component::Item>(inv.items[row.slot]);
+                const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[row.slot]);
+                if (itemDef.type != row.itemtype || itemDef.id != row.itemid || item.count != row.amount
+                    || item.refine != row.refine || item.gemOpt != row.gemOpt || item.hasSocket != row.socket) {
+                    to_update.push_back(row.slot);
+                }
+            }
+            modified.insert(row.slot);
+        }
+ 
+        for (const auto [i, it] : Core::enumerate(inv.items)) {
+            if (it != entt::null && modified.find(i) == modified.end()) {
+                to_add.push_back(i);
+            }
+        }
+
+        for (const auto it : to_delete) {
+            conn(sqlpp::remove_from(inventory).where(inventory.charId == basicInfo.charId and inventory.slot == it));
+        }
+        for (const auto it : to_update) {
+            const auto& item = self.get_component<Component::Item>(inv.items[it]);
+            const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[it]);
+            conn(sqlpp::update(inventory).set(
+                inventory.itemid = itemDef.id,
+                inventory.itemtype = static_cast<int>(itemDef.type),
+                inventory.amount = item.count,
+                inventory.refine = item.refine,
+                inventory.gemOpt = item.gemOpt,
+                inventory.socket = static_cast<int>(item.hasSocket)
+            ).where(inventory.charId == basicInfo.charId and inventory.slot == it));
+        }
+        for (const auto it : to_add) {
+            const auto& item = self.get_component<Component::Item>(inv.items[it]);
+            const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[it]);
+            conn(sqlpp::insert_into(inventory).set(
+                inventory.itemid = itemDef.id,
+                inventory.itemtype = static_cast<int>(itemDef.type),
+                inventory.amount = item.count,
+                inventory.refine = item.refine,
+                inventory.gemOpt = item.gemOpt,
+                inventory.socket = static_cast<int>(item.hasSocket),
+                inventory.slot = it,
+                inventory.charId = basicInfo.charId
+            ));
+        }
     });
 }
 
-RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
+RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count) {
     using namespace Component;
     entt::prototype prototype(registry);
     
@@ -679,9 +786,10 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     item.hasSocket = false;
     item.isAppraised = false;
     item.refine = 0;
-    item.count = 0;
+    item.count = count;
     item.gemOpt = 0;
     item.price = 0;
+    item.is_zuly = false;
 
     prototype.set<RoseCommon::ItemDef>(def);
 
@@ -690,8 +798,20 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id) {
     if (const auto tmp = lua.api.lock(); tmp) {
         tmp->on_init();
     }
-  
-    std::lock_guard<std::mutex> lock(access);
+	
+    std::lock_guard<std::recursive_mutex> lock(access);
+    return prototype();
+}
+
+RoseCommon::Entity EntitySystem::create_zuly(int64_t zuly) {
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    auto& item = prototype.set<Item>();
+    item.is_zuly = true;
+    item.count = zuly;
+
+    std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
 
@@ -705,7 +825,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 }
 
 void EntitySystem::save_item([[maybe_unused]] RoseCommon::Entity item, [[maybe_unused]] RoseCommon::Entity owner) const {
-    // TODO: should be done as a task??? no
+
 }
 
 RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
@@ -743,8 +863,8 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 }
 
 RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
-  int dest_map_id, float dest_x, float dest_y, float dest_z,
-  float min_x, float min_y, float min_z,
+	int dest_map_id, float dest_x, float dest_y, float dest_z,
+	float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
     using namespace Component;
@@ -770,9 +890,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
 }
 
 RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
-                                                int mob_id, int mob_count, int limit,
-                                                int interval, int range, int map_id,
-                                                float x, float y, float z) {
+        int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
     logger->trace("EntitySystem::create_spawner");
     using namespace Component;
     entt::prototype prototype(registry);

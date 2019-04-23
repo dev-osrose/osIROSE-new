@@ -81,6 +81,8 @@ set(IDL_FILES
   packets/cli_create_char_req.xml
   packets/cli_delete_char_req.xml
   packets/cli_hp_req.xml
+  packets/cli_drop_item.xml
+  packets/cli_equip_item.xml
   packets/cli_join_server_req.xml
   packets/cli_login_req.xml
   packets/cli_logout_req.xml
@@ -106,6 +108,8 @@ set(IDL_FILES
   packets/srv_damage.xml
   packets/srv_delete_char_reply.xml
   packets/srv_hp_reply.xml
+  packets/srv_drop_item.xml
+  packets/srv_equip_item.xml
   packets/srv_inventory_data.xml
   packets/srv_join_server_reply.xml
   packets/srv_login_reply.xml
@@ -119,6 +123,8 @@ set(IDL_FILES
   packets/srv_remove_object.xml
   packets/srv_screen_shot_time_reply.xml
   packets/srv_select_char_reply.xml
+  packets/srv_set_item.xml
+  packets/srv_set_money.xml
   packets/srv_shout_chat.xml
   packets/srv_set_hp_and_mp.xml
   packets/srv_srv_select_reply.xml
