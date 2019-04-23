@@ -63,7 +63,7 @@ enum ItemType : uint8_t {
     ITEM_RING = 7,
     ITEM_WEAPON_R = 8,
     ITEM_WEAPON_l = 9,
-    ITEM_CONSOMABLE = 10,
+    ITEM_CONSUMABLE = 10,
     ITEM_ETC = 12,
     ITEM_ETC2 = 13,
     ITEM_RIDING = 14,
