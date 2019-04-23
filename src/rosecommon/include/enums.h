@@ -53,6 +53,7 @@ enum Command : uint16_t {
 };
 
 enum ItemType : uint8_t {
+    NONE = 0,
     GOGGLE = 1,
     HELMET = 2,
     ARMOR = 3,
@@ -66,7 +67,8 @@ enum ItemType : uint8_t {
     LAST_WEARABLE = CONSO,
     ETC = 12,
     ETC2 = 13,
-    RIDING = 14
+    RIDING = 14,
+    ZULY = 0x1F
 };
 
 }
