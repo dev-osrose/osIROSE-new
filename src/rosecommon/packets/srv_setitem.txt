@@ -1,4 +1,0 @@
-PAKWC_SET_ITEM
-include dataconsts.h
-include vector
-std::vector<SetItem::Item> items & I s(uint8_t) ==

@@ -1,3 +1,0 @@
-PAKCS_EQUIP_ITEM
-int16_t slotTo
-int16_t slotFrom
