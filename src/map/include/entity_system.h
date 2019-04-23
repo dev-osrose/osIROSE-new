@@ -220,10 +220,10 @@ auto EntitySystem::item_to_header(RoseCommon::Entity entity) const {
     header.set_isCreated(item.isCreated);
     if (data) {
         header.set_id(data->id);
-        header.set_type(data->type);
+        header.set_type(RoseCommon::to_underlying(data->type));
     } else {
         header.set_id(0);
-        header.set_type(ItemType::ZULY);
+        header.set_type(RoseCommon::to_underlying(ItemType::ZULY));
     }
         
     return header;
