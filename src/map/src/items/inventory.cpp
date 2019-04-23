@@ -62,7 +62,7 @@ size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCom
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     size_t res = decltype(inv.getInventory())::offset();
     bool stackable = false;
-    uint8_t type = 0;
+    ItemType type = 0;
     uint16_t id = 0;
     if (item != entt::null) {
         const auto& i = entitySystem.get_component<RoseCommon::ItemDef>(item);
