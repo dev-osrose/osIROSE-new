@@ -30,23 +30,23 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
     }
     const EquippedPosition
     switch (item.type) {
-        case ItemType::GOGGLES:
+        case ItemType::ITEM_GOGGLES:
             return pos == EquippedPosition::GOGGLES;
-        case ItemType::HELMET:
+        case ItemType::ITEM_HELMET:
             return pos == EquippedPosition::HELMET;
-        case ItemType::ARMOR:
+        case ItemType::ITEM_ARMOR:
             return pos == EquippedPosition::ARMOR;
-        case ItemType::GAUNTLET:
+        case ItemType::ITEM_GAUNTLET:
             return pos == EquippedPosition::GAUNTLET;
-        case ItemType::BOOTS:
+        case ItemType::ITEM_BOOTS:
             return pos == EquippedPosition::BOOTS;
-        case ItemType::BACKPACK:
+        case ItemType::ITEM_BACKPACK:
             return pos == EquippedPosition::BACKPACK;
-        case ItemType::RING:
+        case ItemType::ITEM_RING:
             return pos == EquippedPosition::RING;
-        case ItemType::WEAPON_R:
+        case ItemType::ITEM_WEAPON_R:
             return pos == EquippedPosition::WEAPON_R;
-        case ItemType::WEAPON_L:
+        case ItemType::ITEM_WEAPON_L:
             return pos == EquippedPosition::WEAPON_L;
         default:
             return false;
