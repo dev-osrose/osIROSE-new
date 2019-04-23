@@ -223,7 +223,7 @@ auto EntitySystem::item_to_header(RoseCommon::Entity entity) const {
         header.set_type(RoseCommon::to_underlying(data->type));
     } else {
         header.set_id(0);
-        header.set_type(RoseCommon::to_underlying(ItemType::ZULY));
+        header.set_type(RoseCommon::to_underlying(RoseCommon::ItemType::ZULY));
     }
         
     return header;
