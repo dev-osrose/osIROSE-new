@@ -28,7 +28,6 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
     if (pos >= EquippedPosition::MAX_EQUIP_ITEMS) {
         return true; // we don't care of the spot if we are not equipping anything
     }
-    const EquippedPosition
     switch (item.type) {
         case ItemType::ITEM_GOGGLES:
             return pos == EquippedPosition::GOGGLES;
@@ -62,7 +61,7 @@ size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCom
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     size_t res = decltype(inv.getInventory())::offset();
     bool stackable = false;
-    ItemType type = 0;
+    ItemType type = ItemType::NONE;
     uint16_t id = 0;
     if (item != entt::null) {
         const auto& i = entitySystem.get_component<RoseCommon::ItemDef>(item);
