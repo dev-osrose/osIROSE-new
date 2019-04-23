@@ -52,7 +52,7 @@ enum Command : uint16_t {
     SIT = 10
 };
 
-enum ItemType : uint8_t {
+enum class ItemType : uint8_t {
     NONE = 0,
     GOGGLES = 1,
     HELMET = 2,
