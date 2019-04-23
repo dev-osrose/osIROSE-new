@@ -24,13 +24,33 @@ namespace {
 // only for items, not cart/castle gear
 inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity entity, size_t spot) {
     const auto& item = entitySystem.get_component<ItemDef>(entity);
-    if (spot >= EquippedPosition::MAX_EQUIP_ITEMS) {
-        return false;
+    const EquippedPosition pos = static_cast<EquippedPosition>(spot);
+    if (pos >= EquippedPosition::MAX_EQUIP_ITEMS) {
+        return true; // we don't care of the spot if we are not equipping anything
     }
-    if (spot == 7 && (item.type == 8 || item.type == 9)) {
-        return true;
+    const EquippedPosition
+    switch (item.type) {
+        case ItemType::GOGGLES:
+            return pos == EquippedPosition::GOGGLES;
+        case ItemType::HELMET:
+            return pos == EquippedPosition::HELMET;
+        case ItemType::ARMOR:
+            return pos == EquippedPosition::ARMOR;
+        case ItemType::GAUNTLET:
+            return pos == EquippedPosition::GAUNTLET;
+        case ItemType::BOOTS:
+            return pos == EquippedPosition::BOOTS;
+        case ItemType::BACKPACK:
+            return pos == EquippedPosition::BACKPACK;
+        case ItemType::RING:
+            return pos == EquippedPosition::RING;
+        case ItemType::WEAPON_R:
+            return pos == EquippedPosition::WEAPON_R;
+        case ItemType::WEAPON_L:
+            return pos == EquippedPosition::WEAPON_L;
+        default:
+            return false;
     }
-    return item.type == spot;
 }
 
 inline bool is_spot_equipped(size_t spot) {
