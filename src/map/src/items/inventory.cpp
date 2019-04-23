@@ -21,9 +21,10 @@ using namespace RoseCommon;
 using namespace Items;
 
 namespace {
+// only for items, not cart/castle gear
 inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity entity, size_t spot) {
     const auto& item = entitySystem.get_component<ItemDef>(entity);
-    if (spot >= EquippedPosition::MAX_EQUIP_ITEMS && spot != 14) { // TODO: 14 is cart/castle gear
+    if (spot >= EquippedPosition::MAX_EQUIP_ITEMS) {
         return false;
     }
     if (spot == 7 && (item.type == 8 || item.type == 9)) {
