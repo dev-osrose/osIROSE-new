@@ -64,7 +64,6 @@ enum ItemType : uint8_t {
     WEAPON_R = 8,
     WEAPON_l = 9,
     CONSOMABLE = 10,
-    LAST_WEARABLE = CONSOMABLE,
     ETC = 12,
     ETC2 = 13,
     RIDING = 14,
