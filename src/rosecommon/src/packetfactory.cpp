@@ -10,12 +10,9 @@
 #include "cli_char_list_req.h"
 #include "cli_create_char_req.h"
 #include "cli_delete_char_req.h"
-<<<<<<< HEAD
-#include "cli_hp_req.h"
-=======
 #include "cli_drop_item.h"
 #include "cli_equip_item.h"
->>>>>>> origin/trunk
+#include "cli_hp_req.h"
 #include "cli_join_server_req.h"
 #include "cli_login_req.h"
 #include "cli_mouse_cmd.h"
