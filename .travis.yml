@@ -313,7 +313,7 @@ jobs:
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_success:
-        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
+        #- cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
       after_failure:
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
