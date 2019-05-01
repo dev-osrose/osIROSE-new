@@ -23,7 +23,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "true" ]; then
   exit 0
 fi
 
-if [ "${COVERITY_SCAN_SCRIPT_TEST_MODE}" = false ]; then
+if [ "${coverity_scan_script_test_mode}" = false ]; then
   # Verify upload is permitted
   AUTH_RES=`curl -s --form project="$COVERITY_SCAN_PROJECT_NAME" --form token="$COVERITY_SCAN_TOKEN" $SCAN_URL/api/upload_permitted`
   if [ "$AUTH_RES" = "Access denied" ]; then
@@ -67,8 +67,10 @@ RESULTS_DIR="cov-int"
 eval "${COVERITY_SCAN_BUILD_COMMAND_PREPEND}"
 
 if [ -e $COV_CONFIG ]; then
+  echo -e "\033[33;1m  Using generated config file...\033[0m"
   COVERITY_UNSUPPORTED=1 cov-build --config $COV_CONFIG --dir $RESULTS_DIR $COV_BUILD_OPTIONS $COVERITY_SCAN_BUILD_COMMAND
 else
+  echo -e "\033[33;1m  Not using generated config file...\033[0m"
   COVERITY_UNSUPPORTED=1 cov-build --dir $RESULTS_DIR $COV_BUILD_OPTIONS $COVERITY_SCAN_BUILD_COMMAND
 fi
 
@@ -80,7 +82,7 @@ SHA=`git rev-parse --short HEAD`
 #VERSION_SHA=$(cat VERSION)#$SHA
 
 # Verify Coverity Scan script test mode
-if [ "${COVERITY_SCAN_SCRIPT_TEST_MODE}" = true ]; then
+if [ "${coverity_scan_script_test_mode}" = true ]; then
   echo -e "\033[33;1mCoverity Scan configured in script test mode. Exit.\033[0m"
   exit 1
 fi

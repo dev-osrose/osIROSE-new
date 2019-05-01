@@ -290,7 +290,7 @@ jobs:
           fi
         - cmake --version
         - bash $CI_DIRECTORY/install-lcov.sh
-        - bash $CI_DIRECTORY/install-ninja.sh
+        #- bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
         - export CC=gcc-8 CXX=g++-8
         - export GCOV_EXEC=gcov-8
@@ -310,11 +310,11 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --delete-compiler-config template-gcc-config-0 && cov-configure --delete-compiler-config template-g++-config-0 && cov-configure --config ${COV_CONFIG} --comptype gcc --compiler gcc-8 --template --xml-option=skip_file:.*/3rdparty/.* --xml-option=skip_file:.*/src/tests/.* --xml-option=skip_file:.*/lua-prefix/.* && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --delete-compiler-config template-gcc-config-0 && cov-configure --delete-compiler-config template-g++-config-0 && cov-configure --config ${COV_CONFIG} --comptype gcc --compiler g++-8 --template --xml-option=skip_file:.*/3rdparty/.* --xml-option=skip_file:.*/src/tests/.* --xml-option=skip_file:.*/lua-prefix/.* && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
           build_command: "make"
           branch_pattern: coverity_scan
       after_success:
-        #- cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
       after_failure:
         #- cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
