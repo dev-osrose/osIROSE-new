@@ -4,7 +4,7 @@ language: cpp
 
 env:
   global:
-  - coverity_scan_script_test_mode=false
+  - coverity_scan_script_test_mode=true
   - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
   #Cov scan email
   - secure: "s3nV+bCZyiJFhubZgq1SjP+6DUQgT0fzeTTvaPytYTvFuyYWrTzMPdqdhLXc5MZ3mQ/3PMvn3ZjU0AlT7YypLjyGY0LM8tFD4HD608DWR3qRDnlPKsB4nTCQVCp30FhlFSzlVt4E6ZZCtbbu3X92Q+B4UGjGBnX0T4ePsJMk+CfFKGxbF6Hyo6rThXTfRvGWQtu3pI5pmHksyDyCTtX/m5ljslVy84WTLWREX6m7GSeVu3MB+D9hWR+SGkxbjzxtwSfGmUp2893/xxac+BJNTXqJfKDJA7y98/jB65VASfos3T3Bkdq4nl1e5D4jAmcWE6ZsPpjvem4iZGUZwYbdUNhCk2iGDUjnJYU18z+3R+A4LChmXJlSmtG9AcLU+MT1rJeTQCUqq9pBXAG+keOdBu4J+CvBS5KrhmbG6pXHfUMY0UAqcAHdkgZo26JNnm9kIGcz+IrFOPERUe/naFM+27QGDZ0RfYkbWGbiqaTQ2SptMIOn7/zEqkWWOoT4CImtbSjjOETStIPzIWzR/I+bWFuNL/RL7K1UimqrfQFYG/W1WWXi8ZYqSE+DJX/ejWAytvvq6FWNhXOLe7+0fc/ZzhFTQqusdg0G3wNXKLSNVzuC1MyYXwoJEw33397GsPaK2E5tKlwi12txun5uWAzagHuYVTuHNHKt4qV8+e3AIjw="
