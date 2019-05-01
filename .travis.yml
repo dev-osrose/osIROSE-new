@@ -305,6 +305,7 @@ jobs:
           - g++-8
           - libcurl4-openssl-dev
         coverity_scan:
+          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
@@ -327,6 +328,7 @@ jobs:
       if: (type = cron AND branch = trunk)
       addons:
         coverity_scan:
+          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
