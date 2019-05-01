@@ -276,6 +276,7 @@ jobs:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
         - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
       install:
         ############################################################################
         # Install a recent CMake
@@ -308,7 +309,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command_prepend: "mkdir build && cd build && cov-configure --config ${COV_CONFIG} --comptype gcc --compiler g++-8 --template --xml-option=skip_file:\".*/3rdparty/.*\" --xml-option=skip_file:\".*/src/tests/.*\" --xml-option=skip_file:\".*/build/.*\" && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_failure:
