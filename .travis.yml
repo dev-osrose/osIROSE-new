@@ -312,6 +312,9 @@ jobs:
           build_command_prepend: "mkdir build && cd build && cov-configure --config ${COV_CONFIG} --comptype gcc --compiler g++-8 --template --xml-option=skip_file:\".*/3rdparty/.*\" --xml-option=skip_file:\".*/src/tests/.*\" --xml-option=skip_file:\".*/lua-prefix/.*\" --xml-option=skip_file:\".*/curl-prefix/.*\" && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
+      after_success:
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
       after_failure:
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
