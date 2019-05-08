@@ -84,6 +84,18 @@ void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     }
 }
 
+void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
+    const auto* target = self.try_get_component<Component::Target>(entity);
+    if (target && self.is_valid(target->target) && self.has_component<Component::Item>(target->target)) {
+        // it's an item, we are at it's location, pick it up
+        Items::pickup_item(self, entity, target->target);
+        self.remove_component<Component::Target>(entity);
+    } else if (target && !self.registry.valid(target->target)) {
+        // the target is not valid anymore, removing
+        self.remove_component<Component::Target>(entity);
+    }
+}
+
 EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
@@ -127,6 +139,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
             if (ntime <= delta || distance == 0) {
                 self.remove_component<Component::Destination>(entity);
                 self.update_position(entity, dest.x, dest.y);
+                check_for_target(self, entity);
             } else {
                 const auto tmp = delta / ntime;
                 self.update_position(entity, pos.x + dx * tmp, pos.y + dy * tmp);
@@ -183,6 +196,10 @@ void EntitySystem::remove_object(RoseCommon::Registry& r, RoseCommon::Entity ent
 
 uint16_t EntitySystem::get_world_time() const {
     return 0; //TODO: return a correct time
+}
+
+bool EntitySystem::is_valid(RoseCommon::Entity entity) const {
+    return registry.valid(entity);
 }
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
