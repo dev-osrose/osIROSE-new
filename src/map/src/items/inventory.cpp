@@ -278,6 +278,7 @@ void Items::pickup_item(EntitySystem& entitySystem, RoseCommon::Entity entity, R
     const float y = entitySystem.get_component<Component::Position>(item).y;
     const auto* owner = entitySystem.try_get_component<Component::Owner>(item);
     entitySystem.remove_component<Component::Position>(item);
+    entitySystem.remove_component<Component::BasicInfo>(item);
     if (Items::add_item(entitySystem, entity, item) != ReturnValue::OK) {
         const RoseCommon::Entity owner = owner ? owner->owner : entt::null;
         Items::drop_item(entitySystem, item, x, y, owner);
