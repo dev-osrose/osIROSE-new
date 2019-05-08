@@ -8,9 +8,9 @@
 #include <type_traits>
 
 namespace Component {
-struct Inventory {
+  struct Inventory {
     Inventory() {
-        items.fill(entt::null);
+      items.fill(entt::null);
     }
     int64_t zuly;
     std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS> items;
@@ -23,43 +23,43 @@ struct Inventory {
     using const_wrapper = base_wrapper<std::add_const_t<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>, N, L>;
 
     constexpr wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() {
-        return { items };
+      return { items };
     }
 
     constexpr wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() {
-        return { items };
+      return { items };
     }
 
     constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() {
-        return { items };
+      return { items };
     }
 
     constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() {
-        return { items };
+      return { items };
     }
 
     constexpr wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() {
-        return { items };
+      return { items };
     }
 
     constexpr const_wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
-        return { items };
+      return { items };
     }
 
     constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
-        return { items };
+      return { items };
     }
 
     constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() const {
-        return { items };
+      return { items };
     }
 
     constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() const {
-        return { items };
+      return { items };
     }
 
     constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() const {
-        return { items };
+      return { items };
     }
-};
+  };
 }
