@@ -13,7 +13,7 @@ namespace Combat {
   void hp_request(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliHpReq&);
   void revive(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliReviveReq&);
   
-  void update(EntitySystem&, RoseCommon::Entity);
+  void update(EntitySystem&, RoseCommon::Entity, uint32_t dt);
   
   std::pair<float, float> get_range_position(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target, float range = 100);
   float get_range_to(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target);

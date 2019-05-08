@@ -154,10 +154,13 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     });
     
     add_recurrent_timer(50ms, [](EntitySystem& self) {
-        // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Life, Component::ComputedValues>().each([&self](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
-            Combat::update(self, entity);
-        });
+      static auto prevTime = Core::Time::GetTickCount();
+      auto dt = Core::Time::GetTickCount() - prevTime;
+      // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
+      self.registry.view<Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
+        Combat::update(self, entity, dt.count());
+      });
+      prevTime = Core::Time::GetTickCount();
     });
 
     // callback for removing objects

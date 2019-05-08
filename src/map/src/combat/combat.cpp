@@ -125,18 +125,19 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
   }
 }
 
-void Combat::update(EntitySystem& entitySystem, Entity entity) {
+void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   //const auto& pos = entitySystem.get_component<Component::Position>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
-  auto& magic = entitySystem.get_component<Component::Magic>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   
   //TODO:: Update buffs
   //TODO:: Update HP
-  if(false) // Regen happens every 4 seconds
+  values.regenDt += dt;
+  if(values.regenDt >= 4000) // Regen happens every 4 seconds
   {
+    values.regenDt = 0;
     uint32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
     if(life.hp > 0 && life.hp != life.maxHp)
@@ -153,18 +154,22 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       hp = life.hp;
     }
     
-    if(entitySystem.has_component<Component::Magic>(entity) == true && magic.mp != magic.maxMp)
+    if(entitySystem.has_component<Component::Magic>(entity) == true)
     {
-      int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
-      amount = amount * stanceModifier;
-      //TODO: update amount based on equipment values
-      //TODO: Take into account MP regen buffs
-      magic.mp += amount;
-  
-      if(magic.mp > magic.maxMp)
-        magic.mp = magic.maxMp;
-        
-      mp = magic.mp;
+      auto& magic = entitySystem.get_component<Component::Magic>(entity);
+      if(magic.mp != magic.maxMp)
+      {
+        int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
+        amount = amount * stanceModifier;
+        //TODO: update amount based on equipment values
+        //TODO: Take into account MP regen buffs
+        magic.mp += amount;
+    
+        if(magic.mp > magic.maxMp)
+          magic.mp = magic.maxMp;
+          
+        mp = magic.mp;
+      }
     }
     auto p = SrvSetHpAndMp::create(basicInfo.id, hp, mp);
     entitySystem.send_nearby(entity, p);
@@ -238,7 +243,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       (false) ) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
     {
       // Are we in attack range?
-      if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
+      if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= values.attackRange)
       {
         if(entitySystem.has_component<Component::Combat>(target.target) == false) {
           entitySystem.add_component<Component::Combat>(target.target);
@@ -372,7 +377,7 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
     }
     default:
     {
-        logger->warn("Combat::revive player {} sent a revive type that doesn't exist...", basicInfo.name);
+      logger->warn("Combat::revive player {} sent a revive type that doesn't exist...", basicInfo.name);
       break;
     }
   }
