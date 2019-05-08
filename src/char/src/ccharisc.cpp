@@ -114,6 +114,7 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   
   state_ = eSTATE::REGISTERED;
 
+  set_name(name);
   logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n",
                 get_id(),
                 RoseCommon::Isc::serverTypeName(P.get_serverType()),

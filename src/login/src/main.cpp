@@ -190,10 +190,10 @@ int main(int argc, char* argv[]) {
     Core::CrashReport crash_reporter(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-    if(auto log = console.lock())
-      log->info( "Starting up server..." );
-
     Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
+    if(auto log = console.lock()) {
+      log->info( "Starting up server..." );
+    }
     DisplayTitle();
     CheckUser();
 

@@ -17,6 +17,13 @@
 #include <sstream>
 #include "logconsole.h"
 
+#ifdef _WIN32
+  #include <spdlog/sinks/msvc_sink.h>
+#else
+  #include <spdlog/sinks/syslog_sink.h>
+  //#include <spdlog/sinks/systemd_sink.h>
+#endif
+
 namespace Core {
 
 spdlog::level::level_enum CLog::level_ = spdlog::level::info;
@@ -59,10 +66,6 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       if (level_ <= spdlog::level::debug) format << " [thread %t]";
       format << " [%n]" << " %v ";
 
-      size_t q_size = 1048576;
-      spdlog::set_async_mode(q_size, spdlog::async_overflow_policy::discard_log_msg,
-                             nullptr, std::chrono::seconds(30));
-
       std::string path, name;
 
       switch (_type) {
@@ -84,27 +87,31 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
         }
       }
 
-      std::vector<spdlog::sink_ptr> net_sink;
-#ifdef _WIN32
-      auto console_sink = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
-      net_sink.push_back(console_sink);
-#else
-      auto console_sink = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
+      if(spdlog::thread_pool() == nullptr)
+        spdlog::init_thread_pool(8192, 1);
+        
+      std::vector<spdlog::sink_ptr> sinks;
       
+      auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+      //console_sink->set_level(level_);
+      std::cout << "should_color = " << console_sink->should_color() << std::endl;
+      sinks.push_back(console_sink);
+#ifdef _WIN32
+      sinks.push_back(std::make_shared<spdlog::sinks::msvc_sink_mt>());
+#else
       #ifdef SPDLOG_ENABLE_SYSLOG
-        auto syslog_sink = std::make_shared<spdlog::sinks::syslog_sink>(name.c_str());
-        net_sink.push_back(syslog_sink);
+        auto syslog_sink = std::make_shared<spdlog::sinks::syslog_sink_mt>(name.c_str());
+        syslog_sink->set_level(spdlog::level::warn);
+        sinks.push_back(syslog_sink);
       #endif
-      net_sink.push_back(console_sink);
 #endif
 
-      auto net_logger = std::make_shared<spdlog::logger>(
-          name.c_str(), begin(net_sink), end(net_sink));
-      net_logger->set_level(level_);
-      net_logger->set_pattern(format.str());
-      spdlog::register_logger(net_logger);
+      auto combined_logger = std::make_shared<spdlog::async_logger>(name.c_str(), sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+      combined_logger->set_level(level_);
+      combined_logger->set_pattern(format.str());
+      spdlog::register_logger(combined_logger);
 
-      return net_logger;
+      return combined_logger;
     }
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;
