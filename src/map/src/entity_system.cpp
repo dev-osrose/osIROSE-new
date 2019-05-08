@@ -90,7 +90,7 @@ void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
         // it's an item, we are at it's location, pick it up
         Items::pickup_item(self, entity, target->target);
         self.remove_component<Component::Target>(entity);
-    } else if (target && !self.registry.valid(target->target)) {
+    } else if (target && !self.is_valid(target->target)) {
         // the target is not valid anymore, removing
         self.remove_component<Component::Target>(entity);
     }
