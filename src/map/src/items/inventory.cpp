@@ -273,6 +273,17 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     });
 }
 
+void Items::pickup_item(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
+    const float x = entitySystem.get_component<Component::Position>(item).x;
+    const float y = entitySystem.get_component<Component::Position>(item).y;
+    const auto* owner = entitySystem.try_get_component<Component::Owner>(item);
+    entitySystem.remove_component<Component::Position>(item);
+    if (Items::add_item(entitySystem, entity, item) != ReturnValue::OK) {
+        const RoseCommon::Entity owner = owner ? owner->owner : entt::null;
+        Items::drop_item(entitySystem, item, x, y, owner);
+    }
+}
+
 bool Items::add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     if (zuly < 0 && inv.zuly + zuly < 0) {
