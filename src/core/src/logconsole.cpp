@@ -93,8 +93,6 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
       std::vector<spdlog::sink_ptr> sinks;
       
       auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-      //console_sink->set_level(level_);
-      std::cout << "should_color = " << console_sink->should_color() << std::endl;
       sinks.push_back(console_sink);
 #ifdef _WIN32
       sinks.push_back(std::make_shared<spdlog::sinks::msvc_sink_mt>());
