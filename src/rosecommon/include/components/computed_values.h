@@ -12,10 +12,10 @@ namespace Component {
     uint32_t statusFlag;
     uint32_t subFlag;
     
-    int16_t attackRange = 1;
+    int16_t attackRange = 2;
     
     // Update time deltaTime values for combat system
-    uint32_t combatDt = 0; // Used for combat calcualations
+    int32_t combatDt = 0; // Used for combat calcualations
     uint32_t regenDt = 0; // Used for hp/mp regen
   };
 }

@@ -153,14 +153,14 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
         });
     });
     
+    prevTime = Core::Time::GetTickCount();
     add_recurrent_timer(50ms, [](EntitySystem& self) {
-      static auto prevTime = Core::Time::GetTickCount();
-      auto dt = Core::Time::GetTickCount() - prevTime;
+      auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
       // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
       self.registry.view<Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
-        Combat::update(self, entity, dt.count());
+        Combat::update(self, entity, dt);
       });
-      prevTime = Core::Time::GetTickCount();
+      self.prevTime = Core::Time::GetTickCount();
     });
 
     // callback for removing objects
@@ -973,8 +973,9 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    life.hp = data ? data.value().get_hp() : 1;
-    life.maxHp = life.hp * level.level;
+    auto temp_hp = data ? data.value().get_hp() : 1;
+    life.maxHp = temp_hp * level.level;
+    life.hp = life.maxHp;
     
     auto& magic = prototype.set<Magic>();
     magic.mp = 0;

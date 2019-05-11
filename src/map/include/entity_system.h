@@ -124,6 +124,7 @@ class EntitySystem {
         void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         bool loading;
+        std::chrono::steady_clock::time_point prevTime;
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
         std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
