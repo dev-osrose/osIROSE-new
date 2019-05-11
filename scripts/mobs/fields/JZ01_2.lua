@@ -1,7 +1,7 @@
 
 
 --[[ MOB SPAWN LIST
-mob(<mob_spawner_alias>, <mob_id>, <mob_count>, <spawner_limit>, <spawn_interval>, <spawner_range>, <map_id>, <x_pos>, <y_pos>, <z_pos>,);
+mob(<mob_spawner_alias>, <mob_id>, <mob_count>, <spawner_limit>, <spawn_interval>, <spawner_range>, <map_id>, <x_pos>, <y_pos>, <z_pos>);
 --]]
 mob("", 276, 1, 1, 25, 5, 32, 5053.38, 5511.8, -2.06);
 mob("", 276, 1, 1, 25, 5, 32, 5057.36, 5470.59, 0.05);
