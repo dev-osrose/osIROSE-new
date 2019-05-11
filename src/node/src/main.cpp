@@ -102,12 +102,19 @@ std::string get_current_net_address()
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "osirose-node-server/1.0");
+    auto cookie = fmt::format("port={};",config.loginServer().clientPort);
+    curl_easy_setopt(curl, CURLOPT_COOKIE, cookie.c_str());
     
     res = curl_easy_perform(curl);
     
     // Check for errors
     if(res == CURLE_OK)
       address = chunk.memory;
+    else
+    {
+      if(auto log = Core::CLog::GetLogger(Core::log_type::GENERAL).lock())
+        log->info( "curl_easy_perform() failed: {}", curl_easy_strerror(res));
+    }
  
     // always cleanup
     curl_easy_cleanup(curl);
@@ -246,7 +253,6 @@ int main(int argc, char* argv[]) {
     if( true == config.serverData().autoConfigureAddress )
     {
       std::string ip_addr = get_current_net_address();
-      ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
       if(auto log = console.lock()) {
         log->info( "Overriding external ip address to \"{}\"", ip_addr );
       }
