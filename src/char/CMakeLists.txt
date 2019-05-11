@@ -6,6 +6,7 @@ project(${PROJECT})
 
 if (GCC)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
+  add_linker_flags(-Wl,-rpath -Wl,./)
 endif()
 
 set( SOURCES_MAIN

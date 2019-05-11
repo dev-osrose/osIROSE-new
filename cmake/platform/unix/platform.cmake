@@ -1,3 +1,6 @@
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+set(CMAKE_INSTALL_RPATH "./")
+
 add_compiler_flags(-DASIO_STANDALONE)
 add_compiler_flags(-Wall -Wextra)
 
