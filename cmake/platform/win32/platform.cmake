@@ -1,4 +1,11 @@
 
+set(CPACK_GENERATOR "NSIS64" "ZIP" "7Z")
+set(CPACK_PACKAGE_VENDOR "osrose")
+set(CPACK_PACKAGE_VERSION_MAJOR 0)
+set(CPACK_PACKAGE_VERSION_MINOR 3)
+set(CPACK_PACKAGE_VERSION_PATCH 1)
+
+
 add_compiler_flags(-DASIO_STANDALONE)
 
 add_compiler_flags(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS) # Remove all of the really annoying c++17 deprection warnings

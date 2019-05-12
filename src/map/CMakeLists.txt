@@ -89,6 +89,11 @@ if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
 endif()
 
+install(TARGETS ${PROJECT}
+        RUNTIME 
+          DESTINATION bin
+          COMPONENT Runtime)
+
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()

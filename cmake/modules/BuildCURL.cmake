@@ -54,4 +54,8 @@ if(NOT TARGET CURL::libcurl)
     add_dependencies(CURL::libcurl curl)
     set_target_properties(CURL::libcurl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIR}")
     set_target_properties(CURL::libcurl PROPERTIES INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}")
+    
+    install(TARGETS CURL::libcurl
+        LIBRARY 
+          COMPONENT Runtime)
 endif()

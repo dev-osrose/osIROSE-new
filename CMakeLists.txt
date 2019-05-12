@@ -12,6 +12,7 @@ endif()
 # some global variables
 #------------------------------------------------------------------------------
 
+set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/dev-osrose/osIROSE-new")
 set(CMAKE_OUTPUT "${CMAKE_SOURCE_DIR}/build_out")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_PLATFORM_PATH "${CMAKE_SOURCE_DIR}/cmake/platform")
@@ -67,6 +68,7 @@ endif()
 include(macros)
 include(CheckPlatform)
 include(SetInstallPaths)
+include(CPack)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -208,3 +210,15 @@ file(COPY "${CMAKE_SOURCE_DIR}/scripts"
 
 add_subdirectory(src)
 add_subdirectory(tools)
+
+install(DIRECTORY Database/ DESTINATION Database/
+        COMPONENT Runtime
+        PATTERN "Database/*"
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                    GROUP_EXECUTE GROUP_READ)
+
+install(DIRECTORY scripts/ DESTINATION scripts/
+        COMPONENT Runtime
+        FILES_MATCHING PATTERN "*.lua"
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                    GROUP_EXECUTE GROUP_READ)

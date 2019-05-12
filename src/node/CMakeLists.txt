@@ -63,6 +63,11 @@ if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
 endif()
 
+install(TARGETS ${PROJECT}
+        RUNTIME 
+          DESTINATION bin
+          COMPONENT Runtime)
+
 set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
 if (COMMAND cotire)
