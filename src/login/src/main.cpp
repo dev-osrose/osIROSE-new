@@ -65,7 +65,7 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("3"), "LEVEL")
     ("c,core_path", "Path to place minidumps when the app crashes", cxxopts::value<std::string>()
 #ifndef _WIN32
-      ->default_value("/tmp/dumps"), "CORE")
+      ->default_value("./"), "CORE")
 #else
       ->default_value("."), "CORE")
 #endif
@@ -86,7 +86,7 @@ void ParseCommandLine(int argc, char** argv)
     ("t,max_threads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
     ("url", "Auto configure url", cxxopts::value<std::string>()
-      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
+      ->default_value("http://myexternalip.com/raw"), "URL")
     ;
     
     options.add_options("Database")
