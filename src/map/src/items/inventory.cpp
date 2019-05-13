@@ -269,6 +269,9 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.update_position(item, x, y);
  
     entitySystem.add_timer(2min, [item](EntitySystem& entitySystem) {
+        if (!entitySystem.is_valid(item)) {
+            return;
+        }
         if (entitySystem.has_component<Component::Owner>(item)) {
             entitySystem.remove_component<Component::Owner>(item);
             auto& basic = entitySystem.get_component<Component::BasicInfo>(item);
@@ -277,6 +280,9 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     });
 
     entitySystem.add_timer(5min, [item](EntitySystem& entitySystem) {
+        if (!entitySystem.is_valid(item)) {
+            return;
+        }
         if (entitySystem.has_component<Component::Position>(item)) {
             entitySystem.delete_entity(item);
         }

@@ -326,10 +326,6 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
         if (entity == entt::null || !entitySystem.registry.valid(entity)) {
             return;
         }
-        // if it's an item but it has been picked up, we cancel the delete
-        if (entitySystem.has_component<Component::Item>(entity) && !entitySystem.has_component<Component::Position>(entity)) {
-            return;
-        }
         if (auto* basicInfo = entitySystem.try_get_component<Component::BasicInfo>(entity)) {
             entitySystem.send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
             entitySystem.idManager.release_id(basicInfo->id);
