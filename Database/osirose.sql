@@ -413,6 +413,22 @@ BEGIN
 	end if;
 	
 	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, hatuid, 2, 1, 12);
+	
+	insert into skill(char_id, id, level) values(charid, 11, 1);
+	insert into skill(char_id, id, level) values(charid, 12, 1);
+	insert into skill(char_id, id, level) values(charid, 16, 1);
+	insert into skill(char_id, id, level) values(charid, 19, 1);
+	insert into skill(char_id, id, level) values(charid, 20, 1);
+	insert into skill(char_id, id, level) values(charid, 21, 1);
+	insert into skill(char_id, id, level) values(charid, 26, 1);
+	insert into skill(char_id, id, level) values(charid, 41, 1);
+	insert into skill(char_id, id, level) values(charid, 42, 1);
+	insert into skill(char_id, id, level) values(charid, 43, 1);
+	insert into skill(char_id, id, level) values(charid, 46, 1);
+	insert into skill(char_id, id, level) values(charid, 47, 1);
+	insert into skill(char_id, id, level) values(charid, 48, 1);
+	insert into skill(char_id, id, level) values(charid, 49, 1);
+	insert into skill(char_id, id, level) values(charid, 50, 1);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
