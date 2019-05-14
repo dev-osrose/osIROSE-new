@@ -47,10 +47,6 @@ CNetwork_Asio::~CNetwork_Asio() {
 
   if (process_thread_.joinable()) process_thread_.join();
 
-  do {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  } while (!discard_queue_.empty());
-
   send_mutex_.lock();
   while (send_queue_.empty() == false) send_queue_.pop();
   send_mutex_.unlock();
