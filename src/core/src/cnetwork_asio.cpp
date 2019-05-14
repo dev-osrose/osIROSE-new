@@ -46,12 +46,6 @@ CNetwork_Asio::~CNetwork_Asio() {
   CNetwork_Asio::shutdown(true);
 
   if (process_thread_.joinable()) process_thread_.join();
-
-  send_mutex_.lock();
-  while (send_queue_.empty() == false) send_queue_.pop();
-  send_mutex_.unlock();
-
-  logger_.reset();
 }
 
 bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
@@ -146,7 +140,7 @@ bool CNetwork_Asio::disconnect() {
 void CNetwork_Asio::ProcessSend() {
   if (this->is_active()) {
     send_mutex_.lock();
-    const uint8_t* raw_ptr = send_queue_.front().get();
+    uint8_t* raw_ptr = send_queue_.front().get();
     send_mutex_.unlock();
 
     const uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
@@ -195,7 +189,7 @@ void CNetwork_Asio::ProcessSend() {
             }
           });
       }
-      else
+      else {
         logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
                        _size, _command, get_id());
     }
