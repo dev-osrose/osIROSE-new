@@ -113,7 +113,7 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      auto nClient = std::make_unique<CRoseClient>(std::move(_sock));
+      auto nClient = std::make_shared<CRoseClient>(std::move(_sock));
       nClient->set_id(
           std::distance(std::begin(client_list_), std::end(client_list_)));
       nClient->start_recv();
@@ -122,7 +122,7 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      auto nClient = std::make_unique<CRoseISC>(std::move(_sock));
+      auto nClient = std::make_shared<CRoseISC>(std::move(_sock));
       nClient->set_id(std::distance(std::begin(isc_list_), std::end(isc_list_)));
       nClient->start_recv();
       logger_->info("[{}] Server connected from: {}", nClient->get_id(),
