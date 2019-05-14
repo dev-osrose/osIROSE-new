@@ -385,7 +385,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     nearby.update_position(entity, old_x, old_y, x, y);
 
     // check for warpgates if entity can be teleported
-    if (has_component<Component::BasicInfo>(entity)) {
+    if (has_component<Component::BasicInfo>(entity) && has_component<Component::Client>(entity)) {
         registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
             if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
                 return;
