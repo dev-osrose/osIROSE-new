@@ -37,7 +37,7 @@ if(NOT TARGET mysql::mysql)
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_LINK_LIBRARIES "${MYSQL_LIBRARIES}")
   
-  install(TARGETS mysql::mysql
+  install(TARGETS mysql
     LIBRARY 
       COMPONENT Runtime)
 endif()
