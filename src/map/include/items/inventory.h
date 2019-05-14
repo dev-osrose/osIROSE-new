@@ -26,6 +26,7 @@ ReturnValue equip_item(EntitySystem&, RoseCommon::Entity, size_t from, size_t to
 // the unequipped item will be put in the first available spot
 ReturnValue unequip_item(EntitySystem&, RoseCommon::Entity, size_t from);
 void drop_item(EntitySystem&, RoseCommon::Entity, float x, float y, RoseCommon::Entity owner = entt::null);
+void pickup_item(EntitySystem&, RoseCommon::Entity entity, RoseCommon::Entity item);
 
 // you can add a negative amount (effectively removing zulies). Returns false if there isn't enough zuly in the inventory to remove
 bool add_zuly(EntitySystem&, RoseCommon::Entity, int64_t zuly);

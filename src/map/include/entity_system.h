@@ -42,6 +42,8 @@ class EntitySystem {
 
         template <typename Func>
         void add_task(Func&& task);
+    
+        bool is_valid(RoseCommon::Entity entity) const;
 
         RoseCommon::Entity load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client);
         void save_character(RoseCommon::Entity);
