@@ -267,10 +267,42 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.add_component(item, std::move(bi));
 
     entitySystem.update_position(item, x, y);
-    
-    entitySystem.add_timer(5min, [item](EntitySystem& entitySystem) {
-        entitySystem.delete_entity(item);
+ 
+    entitySystem.add_timer(2min, [item](EntitySystem& entitySystem) {
+        if (!entitySystem.is_valid(item)) {
+            return;
+        }
+        if (entitySystem.has_component<Component::Owner>(item)) {
+            entitySystem.remove_component<Component::Owner>(item);
+            auto& basic = entitySystem.get_component<Component::BasicInfo>(item);
+            basic.teamId = basic.id;
+        }
     });
+
+    entitySystem.add_timer(5min, [item](EntitySystem& entitySystem) {
+        if (!entitySystem.is_valid(item)) {
+            return;
+        }
+        if (entitySystem.has_component<Component::Position>(item)) {
+            entitySystem.delete_entity(item);
+        }
+    });
+}
+
+void Items::pickup_item(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
+    const float x = entitySystem.get_component<Component::Position>(item).x;
+    const float y = entitySystem.get_component<Component::Position>(item).y;
+    const auto* owner = entitySystem.try_get_component<Component::Owner>(item);
+    if (owner && owner->owner != entity) {
+        return;
+    }
+    entitySystem.remove_component<Component::Position>(item);
+    entitySystem.remove_component<Component::BasicInfo>(item);
+    entitySystem.remove_component<Component::Owner>(item);
+    if (Items::add_item(entitySystem, entity, item) != ReturnValue::OK) {
+        const RoseCommon::Entity o = owner ? owner->owner : entt::null;
+        Items::drop_item(entitySystem, item, x, y, o);
+    }
 }
 
 bool Items::add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
