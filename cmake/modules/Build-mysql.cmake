@@ -36,10 +36,6 @@ if(NOT TARGET mysql::mysql)
   add_dependencies(mysql::mysql mysql)
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
   set_target_properties(mysql::mysql PROPERTIES INTERFACE_LINK_LIBRARIES "${MYSQL_LIBRARIES}")
-  
-  install(TARGETS mysql
-    LIBRARY 
-      COMPONENT Runtime)
 endif()
 
-mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARIES MYSQL_LIBRARY MYSQL_LIBRARY_PATH )
+mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARIES MYSQL_LIBRARY )
