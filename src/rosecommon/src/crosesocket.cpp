@@ -62,7 +62,11 @@ CRoseSocket::CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server, 
 }
 
 CRoseSocket::~CRoseSocket() {
-  CRoseSocket::shutdown(true);
+  for(unsigned int idx = 0; idx < SocketType::MaxSockets; ++idx)
+  {
+    if(socket_[idx])
+      socket_[idx]->shutdown(true);
+  }
   logger_.reset();
 }
 
