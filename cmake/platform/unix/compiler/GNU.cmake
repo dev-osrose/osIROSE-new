@@ -7,14 +7,19 @@ add_compiler_flags(-Wno-packed-bitfield-compat)
 
 add_compiler_flags(-pipe)
 
-if(DEBUG)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
   add_compiler_flags(-O0)
   
-  IF( ENABLE_ASAN )
+  if( ENABLE_ASAN )
     add_compiler_flags(-fsanitize=address -fno-omit-frame-pointer)
-    add_linker_flags(-fsanitize=address)
-  ENDIF()
-  add_linker_flags(-rdynamic)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+  elseif( ENABLE_LSAN )
+    add_compiler_flags(-fsanitize=leak -fno-omit-frame-pointer)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=leak")
+  endif()
+  
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 endif()
 
 if (WITH_COVERAGE_REPORTS)
