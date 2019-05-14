@@ -169,9 +169,6 @@ void CNetwork_Asio::ProcessSend() {
           socket_, asio::buffer(raw_ptr, _size),
           [this](const asio::error_code& error,
                  [[maybe_unused]] std::size_t bytes_transferred) {
-            send_mutex_.lock();
-            send_queue_.pop_front();
-            send_mutex_.unlock();
             if (!error) {
               OnSent();
               update_time_ = (Core::Time::GetTickCount());
@@ -194,6 +191,7 @@ void CNetwork_Asio::ProcessSend() {
               }
             }
             send_mutex_.lock();
+            send_queue_.pop_front();
             const bool is_empty = send_queue_.empty();
             send_mutex_.unlock();
             if (!is_empty) {
