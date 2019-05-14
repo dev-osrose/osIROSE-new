@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <csignal>
 #include <chrono>
 #include <cxxopts.hpp>
 #include "config.h"
@@ -180,10 +181,13 @@ void deleteStaleSessions() {
   conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
 }
 
+volatile std::sig_atomic_t gSignalStatus;
 } // end namespace
 
 int main(int argc, char* argv[]) {
   try {
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     ParseCommandLine(argc, argv);
     
     Core::Config& config = Core::Config::getInstance();
@@ -234,6 +238,11 @@ int main(int argc, char* argv[]) {
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       deleteStaleSessions();
+      
+      if(gSignalStatus != 0) {
+        clientServer.shutdown(true);
+        iscServer.shutdown(true);
+      }
     }
 
     if(auto log = console.lock())

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <csignal>
 #include <cxxopts.hpp>
 #include "cnetwork_asio.h"
 #include "config.h"
@@ -151,10 +152,13 @@ void ParseCommandLine(int argc, char** argv) {
     exit(1);
   }
 }
+volatile std::sig_atomic_t gSignalStatus;
 }  // namespace
 
 int main(int argc, char* argv[]) {
   try {
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     RoseCommon::register_recv_packets();
     ParseCommandLine(argc, argv);
 
@@ -190,8 +194,13 @@ int main(int argc, char* argv[]) {
 
     MapManager app(config.mapServer().mapId);
 
-    while (1)
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while (1) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      
+      if(gSignalStatus != 0) {
+        //TODO:: Shutdown server
+      }
+    }
 
     if (auto log = console.lock()) log->info("Server shutting down...");
     Core::NetworkThreadPool::DeleteInstance();
