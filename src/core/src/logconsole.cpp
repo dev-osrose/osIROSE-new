@@ -86,10 +86,10 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
           break;
         }
       }
-
+#ifndef DISABLE_ASYNC_LOGGING
       if(spdlog::thread_pool() == nullptr)
         spdlog::init_thread_pool(8192, 1);
-        
+#endif
       std::vector<spdlog::sink_ptr> sinks;
       
       auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -103,8 +103,11 @@ std::weak_ptr<spdlog::logger> CLog::GetLogger(
         sinks.push_back(syslog_sink);
       #endif
 #endif
-
+#ifndef DISABLE_ASYNC_LOGGING
       auto combined_logger = std::make_shared<spdlog::async_logger>(name.c_str(), sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+#else
+      auto combined_logger = std::make_shared<spdlog::logger>(name.c_str(), sinks.begin(), sinks.end());
+#endif
       combined_logger->set_level(level_);
       combined_logger->set_pattern(format.str());
       spdlog::register_logger(combined_logger);
