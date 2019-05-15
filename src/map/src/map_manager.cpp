@@ -35,10 +35,17 @@ MapManager::MapManager(std::vector<uint16_t> maps):
 }
 
 MapManager::~MapManager() {
+    if (maps_.size()) {
+        stop();
+    }
+}
+
+void MapManager::stop() {
     cv.notify_all();
     std::lock_guard<std::mutex> lock(mutex);
     for (auto& map : maps_) {
         map.second.join();
         map.first.join();
     }
+    maps_.clear();
 }

@@ -11,6 +11,8 @@
 class MapManager {
     public:
         MapManager(std::vector<uint16_t> maps);
+    
+        void stop();
 
         ~MapManager();
 
