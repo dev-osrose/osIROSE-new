@@ -418,7 +418,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     nearby.update_position(entity, old_x, old_y, x, y);
 
     // check for warpgates if entity can be teleported
-    if (has_component<Component::BasicInfo>(entity)) {
+    if (has_component<Component::BasicInfo>(entity) && has_component<Component::Client>(entity)) {
         registry.view<Component::Warpgate, Component::Destination>().each([this, pos, entity](auto, auto& warpgate, auto& destination) {
             if (!warpgate.is_point_in(pos->x, pos->y, pos->z)) {
                 return;
@@ -426,6 +426,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
             float x = destination.x;
             float y = destination.y;
             uint16_t map = warpgate.dest_map;
+            remove_component<Component::Destination>(entity); // stop moving
             add_task([entity, x, y, map](EntitySystem& self) {
                 self.teleport_entity(entity, x, y, map);
             });
