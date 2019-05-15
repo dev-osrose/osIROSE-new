@@ -393,6 +393,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
             float x = destination.x;
             float y = destination.y;
             uint16_t map = warpgate.dest_map;
+            remove_component<Component::Destination>(entity); // stop moving
             add_task([entity, x, y, map](EntitySystem& self) {
                 self.teleport_entity(entity, x, y, map);
             });
