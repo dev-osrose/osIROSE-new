@@ -202,7 +202,7 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest --output-on-failure
+        #- ctest --output-on-failure
 
     - <<: *clanginit
       stage: compile
@@ -223,7 +223,7 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest --output-on-failure
+        #- ctest --output-on-failure
 
 #    - <<: *gccinit
 #      stage: testing
