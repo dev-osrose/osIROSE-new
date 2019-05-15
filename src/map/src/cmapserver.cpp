@@ -18,7 +18,6 @@
 #include "cmapisc.h"
 #include "epackettype.h"
 #include "platform_defines.h"
-#include "config.h"
 
 using namespace RoseCommon;
 
