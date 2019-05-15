@@ -31,7 +31,7 @@
 #endif
 
 #include <asio.hpp>
-#include <queue>
+#include <deque>
 #include <mutex>
 #include <spdlog/spdlog.h>
 
@@ -107,10 +107,8 @@ class CNetwork_Asio : public INetwork {
   tcp::socket socket_;
   tcp::acceptor listener_;
 
-  std::queue<std::unique_ptr<uint8_t[]>> send_queue_;
-  std::queue<std::unique_ptr<uint8_t[]>> discard_queue_;
+  std::deque<std::unique_ptr<uint8_t[]>> send_queue_;
   std::mutex send_mutex_;
-  std::mutex discard_mutex_;
   std::condition_variable recv_condition_;
 
   uint8_t buffer_[MAX_PACKET_SIZE];
