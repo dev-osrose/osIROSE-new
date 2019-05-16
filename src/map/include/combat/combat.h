@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <utility>
 #include "dataconsts.h"
 #include "cli_attack.h"
@@ -21,4 +22,6 @@ namespace Combat {
   RoseCommon::Entity get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
   RoseCommon::Entity get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
   RoseCommon::Entity get_start_spawn(EntitySystem& entitySystem);
+  
+  std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, RoseCommon::Entity entity, int type = 1);
 }

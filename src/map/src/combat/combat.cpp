@@ -332,19 +332,15 @@ RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   return {};
 }
 
-void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliReviveReq& packet) {
+std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entitySystem, Entity entity, int type) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  logger->trace("Combat::revive");
-  
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
-  auto& life = entitySystem.get_component<Component::Life>(entity);
-  auto& magic = entitySystem.get_component<Component::Magic>(entity);
   
   uint16_t map_id = pos.map;
   float x = 0.f, y = 0.f;
   
-  switch(packet.get_reviveType())
+  switch(type)
   {
     case CliReviveReq::ReviveRequest::REVIVE_POSITION: 
     {
@@ -394,13 +390,27 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
     }
     default:
     {
-      logger->warn("Combat::revive player {} sent a revive type that doesn't exist...", basicInfo.name);
+      //logger->warn("Combat::get_spawn_point player {} sent a revive type that doesn't exist...", basicInfo.name);
       break;
     }
   }
   
-  life.hp = (life.maxHp * 0.3f);
-  magic.mp = 0;
+  return {map_id, x, y};
+}
 
-  entitySystem.teleport_entity(entity, x, y, map_id);
+void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliReviveReq& packet) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  logger->trace("Combat::revive");
+  
+  auto& life = entitySystem.get_component<Component::Life>(entity);
+  auto& magic = entitySystem.get_component<Component::Magic>(entity);
+  
+  auto dest = get_spawn_point(entitySystem, entity, packet.get_reviveType());
+  if(life.hp <= 0)
+  {
+    life.hp = (life.maxHp * 0.3f);
+    magic.mp = 0;
+  }
+
+  entitySystem.teleport_entity(entity, std::get<1>(dest), std::get<2>(dest), std::get<0>(dest));
 }
