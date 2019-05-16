@@ -443,7 +443,8 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         ));
         update_position(entity, x, y);
     } else {
-        // we update the position to save it
+        // we update the position to save it, we remove it first from the nearby list
+        nearby.remove_entity(registry, entity);
         pos.x = x;
         pos.y = y;
         pos.map = map_id;
