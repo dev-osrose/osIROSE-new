@@ -10,7 +10,7 @@ struct Warpgate {
     float max_x;
     float max_y;
     float max_z;
-    static constexpr float character_size = 2500.f;
+    static constexpr float character_size = 2000.f;
 
     uint16_t dest_map;
 

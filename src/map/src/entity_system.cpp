@@ -224,7 +224,7 @@ void EntitySystem::remove_object(RoseCommon::Registry& r, RoseCommon::Entity ent
         id_to_entity.erase(basicInfo->id);
         basicInfo->id = 0;
     }
-	nearby.remove_entity(r, entity);
+    nearby.remove_entity(r, entity);
 }
 
 uint16_t EntitySystem::get_world_time() const {
@@ -274,7 +274,7 @@ RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
 void EntitySystem::stop() {
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
-	registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
+    registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
     registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
@@ -391,7 +391,9 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
         });
         if (auto* inv = entitySystem.try_get_component<Component::Inventory>(entity)) {
             for (auto & item : inv->items) {
-                entitySystem.delete_entity(item);
+                if (item != entt::null) {
+                    entitySystem.delete_entity(item);
+                }
             }
         }
         entitySystem.registry.destroy(entity);
@@ -474,7 +476,8 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         ));
         update_position(entity, x, y);
     } else {
-        // we update the position to save it
+        // we update the position to save it, we remove it first from the nearby list
+        nearby.remove_entity(registry, entity);
         pos.x = x;
         pos.y = y;
         pos.map = map_id;
@@ -531,7 +534,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     basicInfo.pkFlag = charRow.pkFlag;
     basicInfo.stone = charRow.stone;
     basicInfo.charId = charId;
-    
+
     auto& component_client = prototype.set<Client>();
     component_client.client = client;
     component_client.access_level = access_level;
@@ -544,7 +547,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     computedValues.weightRate = 0;
     computedValues.statusFlag = 0;
     computedValues.subFlag = 0;
-    
+
     auto& faction = prototype.set<Faction>();
     faction.id = charRow.factionid;
     faction.rank = charRow.factionRank;
@@ -559,7 +562,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     characterGraphics.face = charRow.face;
     characterGraphics.hair = charRow.hair;
     characterGraphics.race = charRow.race;
-    
+
     auto& guild = prototype.set<Guild>();
     guild.id = charRow.clanid;
     guild.contribution = charRow.clanContribution;
@@ -569,7 +572,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     auto invRes =
       conn(sqlpp::select(sqlpp::all_of(inventoryTable)).from(inventoryTable)
-	   .where(inventoryTable.charId == charId and 
+        .where(inventoryTable.charId == charId and
            (inventoryTable.storageType == "inventory" or inventoryTable.storageType == "wishlist")));
 
     auto& wishlist = prototype.set<Wishlist>();
@@ -580,7 +583,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
         const auto maxItems = is_inventory ? RoseCommon::MAX_ITEMS : RoseCommon::MAX_WISHLIST;
         if (row.slot >= maxItems) {
             continue;
-        }        
+        }
         Item item;
         item.isCreated = false;
         item.life = 1000;
@@ -652,7 +655,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
         Core::InventoryTable inventory{};
         using sqlpp::parameter;
         using namespace Component;
-        
+
         const auto& basicInfo = self.get_component<BasicInfo>(character);
         const auto& faction = self.get_component<Faction>(character);
         const auto& characterGraphics = self.get_component<CharacterGraphics>(character);
@@ -731,7 +734,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
             }
             modified.insert(row.slot);
         }
- 
+
         for (const auto [i, it] : Core::enumerate(inv.items)) {
             if (it != entt::null && modified.find(i) == modified.end()) {
                 to_add.push_back(i);
@@ -773,14 +776,14 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
 RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count) {
     using namespace Component;
     entt::prototype prototype(registry);
-    
+
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     if (!itemDb.itemExists(type, id)) {
         logger->warn("No item {} {} in db", type, id);
         return entt::null;
     }
     const auto& def = itemDb.getItemDef(type, id);
-    
+
     auto& item = prototype.set<Item>();
     item.isCreated = false;
     item.life = 1000;
@@ -800,7 +803,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     if (const auto tmp = lua.api.lock(); tmp) {
         tmp->on_init();
     }
-	
+
     std::lock_guard<std::recursive_mutex> lock(access);
     return prototype();
 }
@@ -865,8 +868,8 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 }
 
 RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
-	int dest_map_id, float dest_x, float dest_y, float dest_z,
-	float min_x, float min_y, float min_z,
+    int dest_map_id, float dest_x, float dest_y, float dest_z,
+    float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
     using namespace Component;
@@ -880,7 +883,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
     warpgate.max_x = max_x * 100.f;
     warpgate.max_y = max_y * 100.f;
     warpgate.max_z = max_z;
-    
+
     auto& dest = prototype.set<Destination>();
     dest.x = dest_x * 100;
     dest.y = dest_y * 100;
