@@ -842,6 +842,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
     entt::prototype prototype(registry);
 
     auto& warpgate = prototype.set<Warpgate>();
+    warpgate.id = 0; // FIXME: update the lua to get this info
     warpgate.dest_map = dest_map_id;
     warpgate.min_x = min_x * 100.f;
     warpgate.min_y = min_y * 100.f;
