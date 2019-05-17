@@ -9,9 +9,12 @@
 
 #include "components/basic_info.h"
 #include "components/client.h"
+#include "components/destination.h"
 #include "components/level.h"
 #include "components/life.h"
 #include "components/magic.h"
+#include "components/position.h"
+#include "components/warpgate.h"
 
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
@@ -39,6 +42,22 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     for (auto other : nearby_entities) {
         if (other != entity) {
             entitySystem.send_to_entity(entity, other);
+        }
+    }
+}
+
+void Map::teleport_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliTeleportReq& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("Map::teleport_request");
+    logger->trace("entity {}", entity);
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    for (const auto w : entitySystem.get_entities_with_components<Component::Warpgate>()) {
+        // TODO: check for hack, do something with the warpgate center and the current position?
+        const auto& warpgate = entitySystem.get_component<Component::Warpgate>(w);
+        if (warpgate.id == packet.get_id()) {
+            const auto& dest = entitySytem.get_component<Component::Destination>(w);
+            entitySystem.teleport_entity(entity, dest.x, dest.y, warpgate.dest_map);
+            break;
         }
     }
 }
