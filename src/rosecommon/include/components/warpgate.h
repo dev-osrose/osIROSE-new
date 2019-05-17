@@ -4,7 +4,7 @@
 
 namespace Component {
 struct Warpgate {
-    int16_t warp_id;
+    int16_t id;
 
     float min_x;
     float min_y;
