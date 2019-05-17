@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <tuple>
 
 namespace Component {
 struct Warpgate {
@@ -17,6 +18,10 @@ struct Warpgate {
     uint16_t dest_map;
 
     static constexpr inline float squared(float x) { return x * x; }
+    
+    std::tuple<float, float, float> get_center() const {
+        return {(max_x + min_x) / 2.f, (max_y + min_y) / 2.f, (max_z + min_z) / 2.f};
+    }
     
     bool is_point_in(float x, float y, [[maybe_unused]] float z) {
         float dist_squared = squared(character_size);
