@@ -834,7 +834,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 }
 
 RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
-    int dest_map_id, float dest_x, float dest_y, float dest_z,
+    int id, int dest_map_id, float dest_x, float dest_y, float dest_z,
     float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
@@ -842,7 +842,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
     entt::prototype prototype(registry);
 
     auto& warpgate = prototype.set<Warpgate>();
-    warpgate.id = 0; // FIXME: update the lua to get this info
+    warpgate.id = id;
     warpgate.dest_map = dest_map_id;
     warpgate.min_x = min_x * 100.f;
     warpgate.min_y = min_y * 100.f;
