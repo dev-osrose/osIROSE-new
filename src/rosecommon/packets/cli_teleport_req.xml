@@ -1,0 +1,5 @@
+<packet ePacketType = "CLI_TELEPORT_REQ">
+    <element name = "warpId" type = "int16_t" />
+    <element name = "x" type = "float" />
+    <element name = "y" type = "float" />
+</packet>
