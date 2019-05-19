@@ -165,6 +165,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Chat::shout_chat});
     register_dispatcher(std::function{Map::change_map_request});
+    register_dispatcher(std::function{Map::teleport_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});

@@ -89,6 +89,7 @@ set(IDL_FILES
   packets/cli_shout_chat.xml
   packets/cli_srv_select_req.xml
   packets/cli_stop_moving.xml
+  packets/cli_teleport_req.xml
   packets/cli_whisper_chat.xml
   packets/isc_alive.xml
   packets/isc_server_register.xml

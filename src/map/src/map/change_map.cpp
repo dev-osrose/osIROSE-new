@@ -16,6 +16,8 @@
 #include "components/position.h"
 #include "components/warpgate.h"
 
+#include <limits>
+
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
 
@@ -51,13 +53,26 @@ void Map::teleport_request(EntitySystem& entitySystem, RoseCommon::Entity entity
     logger->trace("Map::teleport_request");
     logger->trace("entity {}", entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    logger->trace("packet position ({},{}), server position ({},{})", packet.get_x(), packet.get_y(), pos.x, pos.y);
+    float closest = std::numeric_limits<float>::max();
+    Component::Warpgate warp;
+    Component::Destination dest;
     for (const auto w : entitySystem.get_entities_with_components<Component::Warpgate>()) {
-        // TODO: check for hack, do something with the warpgate center and the current position?
+        const auto [cx, cy, _] = entitySystem.get_component<Component::Warpgate>(w).get_center();
+        float dist = (cx - pos.x) * (cx - pos.x) + (cy - pos.y) * (cy - pos.y);
+        if (dist < closest) {
+            closest = dist;
+            warp = entitySystem.get_component<Component::Warpgate>(w);
+            dest = entitySystem.get_component<Component::Destination>(w);
+        }
+        /*// TODO: check for hack, do something with the warpgate center and the current position?
         const auto& warpgate = entitySystem.get_component<Component::Warpgate>(w);
         if (warpgate.id == packet.get_id()) {
-            const auto& dest = entitySytem.get_component<Component::Destination>(w);
+            const auto& dest = entitySystem.get_component<Component::Destination>(w);
             entitySystem.teleport_entity(entity, dest.x, dest.y, warpgate.dest_map);
             break;
-        }
+        }*/
     }
+    logger->trace("closest warpgate ({},{}), ({},{})", warp.min_x, warp.min_y, warp.max_x, warp.max_y);
+    entitySystem.teleport_entity(entity, dest.x, dest.y, warp.dest_map);
 }

@@ -1,4 +1,4 @@
-<packet ePacketType = "CLI_TELEPORT_REQ">
+<packet ePacketType = "PAKCS_TELEPORT_REQ">
     <element name = "id" type = "int16_t" />
     <element name = "x" type = "float" />
     <element name = "y" type = "float" />
