@@ -209,5 +209,9 @@ int main(int argc, char* argv[]) {
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;
   }
+  catch (const sqlpp::exception& ex) {
+    std::cout << "Error while trying to access the database: "
+              << ex.what() << std::endl;
+  }
   return 0;
 }

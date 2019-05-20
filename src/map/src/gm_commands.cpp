@@ -11,6 +11,7 @@
 #include "chat/whisper_chat.h"
 #include "components/client.h"
 #include "components/item.h"
+#include "components/position.h"
 #include "items/inventory.h"
 
 namespace {
@@ -109,6 +110,12 @@ void zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int64_t>
         Chat::send_whisper(entitySystem, entity, "Error, not enough zulies to remove!");
     }
 }
+
+void position(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<> parser) {
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    Chat::send_whisper(entitySystem, entity, fmt::format("Position: ({},{})", pos.x, pos.y));
+}
+
 }
 
 #define REGISTER_FUNCTION(f) [](EntitySystem& en, RoseCommon::Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
@@ -119,7 +126,8 @@ static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<
     {"/help", {1, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
     {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
-    {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}}
+    {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}},
+    {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}}
 };
 
 static const std::unordered_map<std::string, std::string> aliases = {

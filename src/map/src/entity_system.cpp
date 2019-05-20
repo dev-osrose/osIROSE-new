@@ -194,6 +194,7 @@ EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePer
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Chat::shout_chat});
     register_dispatcher(std::function{Map::change_map_request});
+    register_dispatcher(std::function{Map::teleport_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
     register_dispatcher(std::function{Combat::attack});
     register_dispatcher(std::function{Combat::hp_request});
@@ -428,7 +429,6 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
             float x = destination.x;
             float y = destination.y;
             uint16_t map = warpgate.dest_map;
-            remove_component<Component::Destination>(entity); // stop moving
             add_task([entity, x, y, map](EntitySystem& self) {
                 self.teleport_entity(entity, x, y, map);
             });
@@ -868,7 +868,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
 }
 
 RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
-    int dest_map_id, float dest_x, float dest_y, float dest_z,
+    int id, int dest_map_id, float dest_x, float dest_y, float dest_z,
     float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
     logger->trace("EntitySystem::create_warpgate");
@@ -876,6 +876,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
     entt::prototype prototype(registry);
 
     auto& warpgate = prototype.set<Warpgate>();
+    warpgate.id = id;
     warpgate.dest_map = dest_map_id;
     warpgate.min_x = min_x * 100.f;
     warpgate.min_y = min_y * 100.f;
