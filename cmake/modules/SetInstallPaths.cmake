@@ -18,7 +18,7 @@ else()
   set(SYSTEM_ROOT_DIR "/")
 endif()
 
-if(WIN32)
+if(NOT WIN32)
   set(BINDIR "bin")
   set(RUNTIME_LIBDIR "${BINDIR}\\${CMAKE_BUILD_TYPE}")
   set(DATADIR "${BINDIR}\\data")
