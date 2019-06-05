@@ -51,3 +51,37 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
     }
   //}
 }
+
+void CCharServer::register_maps(CCharISC* isc, const std::vector<uint16_t>& maps) {
+    std::shared_ptr<RoseCommon::CRoseClient> ptr;
+    for (const auto& p : isc_list_) {
+        if (p.get() == isc) {
+            ptr = p;
+            break;
+        }
+    }
+    if (!ptr) {
+        logger_->error("ISC server not found when registering maps!");
+        return;
+    }
+    for (const auto& m : maps) {
+        this->maps[m] = ptr;
+    }
+}
+
+void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
+    const auto& m = P.get_maps();
+    if (m.empty()) {
+        for (const auto& [m, p] : maps) {
+            if (auto ptr = p.lock()) {
+                ptr->send(P);
+            }
+        }
+    } else {
+        for (const auto& mm : m) {
+            if (auto ptr = maps[mm].lock()) {
+                ptr->send(P);
+            }
+        }
+    }
+}

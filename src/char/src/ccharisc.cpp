@@ -24,6 +24,8 @@
 
 #include "platform_defines.h"
 
+#include <sstream>
+
 using namespace RoseCommon;
 
 CCharISC::CCharISC() : CRoseISC(), state_(eSTATE::DEFAULT), server_(nullptr) {}
@@ -43,7 +45,7 @@ bool CCharISC::handlePacket(uint8_t* _buffer) {
       return serverRegister(
           Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
-      return true;
+      return transferPacket(Packet::IscTransfer::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
@@ -108,6 +110,7 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
     socket_[SocketType::Client]->set_port(P.get_port());
     type = P.get_serverType();
     right = P.get_right();
+    server_->register_maps(this, P.get_maps());
 
     socket_[SocketType::Client]->set_type(to_underlying(type));
   }
@@ -119,6 +122,13 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
                 RoseCommon::Isc::serverTypeName(P.get_serverType()),
                   P.get_name(), P.get_addr(),
                   P.get_port());
+  if (P.get_serverType() == RoseCommon::Isc::ServerType::MAP_MASTER) {
+    std::ostringstream oss;
+    for (auto m : P.get_maps()) {
+        oss << m << ", ";
+    }
+    logger_->info("ISC Server {} serves maps: [{}]", get_id(), oss.str());
+  }
 
   auto packet = Packet::IscServerRegister::create(type, name, socket_[SocketType::Client]->get_address(),
                                                              socket_[SocketType::Client]->get_port(), right, get_id());
@@ -213,6 +223,16 @@ bool CCharISC::onShutdown() {
     }
   }
   return result;
+}
+
+bool CCharISC::transferPacket(RoseCommon::Packet::IscTransfer&& P) {
+    logger_->trace("CCharISC::transferPacket()");
+    if(state_ == eSTATE::DEFAULT) {
+      logger_->warn("ISC {} is attempting to register before auth.", get_id());
+      return false;
+    }
+    server_->transfer(std::move(P));
+    return true;
 }
 
 bool CCharISC::isLogin() const {

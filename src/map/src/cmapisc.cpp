@@ -33,6 +33,10 @@ CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CR
   socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::onShutdown, this));
 }
 
+void CMapISC::add_maps(const std::vector<uint16_t>& maps) {
+    this->maps = maps;
+}
+
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::handlePacket(uint8_t* _buffer) {
@@ -108,6 +112,8 @@ void CMapISC::onConnected() {
     auto packet = Packet::IscServerRegister::create(
         RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().externalIp,
         config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
+
+    packet.set_maps(maps);
   
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
                    static_cast<uint16_t>(packet.get_type()));

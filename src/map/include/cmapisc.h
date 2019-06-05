@@ -17,6 +17,7 @@
 
 #include "croseisc.h"
 #include "isc_server_register.h"
+#include <vector>
 
 class CMapServer;
 
@@ -27,6 +28,8 @@ class CMapISC : public RoseCommon::CRoseISC {
 
   bool isChar() const;
 
+  void add_maps(const std::vector<uint16_t>& maps);
+
  protected:
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
   bool handlePacket(uint8_t* _buffer) override;
@@ -36,6 +39,7 @@ class CMapISC : public RoseCommon::CRoseISC {
 
  private:
   CMapServer *server_;
+  std::vector<uint16_t> maps;
 };
 
 #endif

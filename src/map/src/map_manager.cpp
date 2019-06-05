@@ -11,9 +11,10 @@ MapManager::MapManager(std::vector<uint16_t> maps):
     isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()},
     maps_{maps.size()} {
     Core::Config& config = Core::Config::getInstance();
-    isc_server_.init(config.serverData().iscListenIp, config.mapServer().iscPort);
-    isc_server_.listen();
+    //isc_server_.init(config.serverData().iscListenIp, config.mapServer().iscPort);
+    //isc_server_.listen();
 
+    isc_client_.add_maps(maps);
     isc_client_.init(config.mapServer().charIp, config.charServer().iscPort);
     isc_client_.set_type(RoseCommon::to_underlying(RoseCommon::Isc::ServerType::CHAR));
     isc_client_.connect();
