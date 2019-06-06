@@ -44,6 +44,17 @@ void CMapISC::register_map(uint16_t map, std::weak_ptr<EntitySystem> system) {
     maps[map] = system;
 }
 
+bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
+    for (auto map : P.get_maps()) {
+        if (auto it = maps.find(map); it != maps.end()) {
+            if (auto ptr = it->second.lock()) {
+                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket(P.get_blob());
+            }
+        }
+    }
+    return true;
+}
+
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::handlePacket(uint8_t* _buffer) {
@@ -55,7 +66,7 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
-      return true;
+      return transfer(Packer::IscTransfer::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
