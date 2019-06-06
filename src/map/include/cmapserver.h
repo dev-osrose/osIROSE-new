@@ -28,6 +28,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   virtual ~CMapServer();
 
   int16_t GetMapIDX() const { return map_idx_; }
+  std::shared_ptr<EntitySystem> get_entity_system() { return entitySystem; }
 
   void stop();
   void run();
