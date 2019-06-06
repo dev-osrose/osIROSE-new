@@ -17,9 +17,10 @@
 
 #include "croseisc.h"
 #include "isc_server_register.h"
-#include <vector>
+#include <unordered_map>
 
 class CMapServer;
+class EntitySystem;
 
 class CMapISC : public RoseCommon::CRoseISC {
  public:
@@ -29,6 +30,7 @@ class CMapISC : public RoseCommon::CRoseISC {
   bool isChar() const;
 
   void add_maps(const std::vector<uint16_t>& maps);
+  void register_map(uint16_t, std::weak_ptr<EntitySystem>);
 
  protected:
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
@@ -39,7 +41,7 @@ class CMapISC : public RoseCommon::CRoseISC {
 
  private:
   CMapServer *server_;
-  std::vector<uint16_t> maps;
+  std::unordered_map<uint16_t, std::weak_ptr<EntitySystem>> maps;
 };
 
 #endif
