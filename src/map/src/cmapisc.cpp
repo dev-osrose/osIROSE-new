@@ -20,6 +20,7 @@
 #include "isc_shutdown.h"
 #include "isc_alive.h"
 #include "platform_defines.h"
+#include "entity_system.h"
 
 using namespace RoseCommon;
 
@@ -34,7 +35,13 @@ CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CR
 }
 
 void CMapISC::add_maps(const std::vector<uint16_t>& maps) {
-    this->maps = maps;
+    for (auto m : maps) {
+        this->maps.insert({m, {}});
+    }
+}
+
+void CMapISC::register_map(uint16_t map, std::weak_ptr<EntitySystem> system) {
+    maps[map] = system;
 }
 
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
@@ -113,7 +120,12 @@ void CMapISC::onConnected() {
         RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().externalIp,
         config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
 
-    packet.set_maps(maps);
+    std::vector<uint16_t> m;
+    m.reserve(maps.size());
+    for (const auto& it : maps) {
+        m.push_back(it.first);
+    }
+    packet.set_maps(m);
   
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
                    static_cast<uint16_t>(packet.get_type()));
