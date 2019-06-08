@@ -48,7 +48,7 @@ bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
     for (auto map : P.get_maps()) {
         if (auto it = maps.find(map); it != maps.end()) {
             if (auto ptr = it->second.lock()) {
-                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket(P.get_blob());
+                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket(P.get_blob().data()));
             }
         }
     }
@@ -66,7 +66,7 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
-      return transfer(Packer::IscTransfer::create(_buffer));
+      return transfer(Packet::IscTransfer::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
