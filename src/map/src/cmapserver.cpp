@@ -19,19 +19,21 @@
 #include "epackettype.h"
 #include "platform_defines.h"
 #include "config.h"
+#include "isc_transfer.h"
 
 using namespace RoseCommon;
 
-CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server)
+CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server, CMapISC *client)
     : CRoseServer(_isc),
       map_idx_(mapidx),
       client_count_(0),
       server_count_(0),
-      iscServer_(server) {
+      iscServer_(server),
+      isc_client_(client) {
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
-    entitySystem = std::make_shared<EntitySystem>(map_idx_);
+    entitySystem = std::make_shared<EntitySystem>(map_idx_, this);
   } else {
     // We are a master/node process
     // We accept player connections and redirect their packet data to the
@@ -69,3 +71,11 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 
 void CMapServer::stop() { entitySystem->stop(); }
 void CMapServer::run() { entitySystem->run(); }
+
+void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps) {
+    auto packet = RoseCommon::Packet::IscTransfer::create(maps);
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+    isc_client_->send(packet);
+}

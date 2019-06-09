@@ -45,7 +45,7 @@ inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
  * \author L3nn0x
  * \date october 2016
  */
-inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
+inline std::unique_ptr<CRosePacket> fetchPacket(const uint8_t *buffer) {
   return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
 }
 

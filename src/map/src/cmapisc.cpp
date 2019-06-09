@@ -48,7 +48,7 @@ bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
     for (auto map : P.get_maps()) {
         if (auto it = maps.find(map); it != maps.end()) {
             if (auto ptr = it->second.lock()) {
-                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket(P.get_blob().data()));
+                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket(static_cast<const uint8_t*>(P.get_blob().data())));
             }
         }
     }

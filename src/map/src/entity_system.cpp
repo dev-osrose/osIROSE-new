@@ -1,6 +1,7 @@
 #include "entity_system.h"
 #include "connection.h"
 #include "cmapclient.h"
+#include "cmapserver.h"
 #include "enumerate.h"
 #include "itemdb.h"
 #include "config.h"
@@ -96,8 +97,10 @@ void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
     }
 }
 
-EntitySystem::EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate) : maxTimePerUpdate(maxTimePerUpdate),
-    lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript) {
+EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::milliseconds maxTimePerUpdate) :
+    maxTimePerUpdate(maxTimePerUpdate),
+    lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript),
+    server(server) {
     logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
     // load item lua
@@ -944,4 +947,8 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     // TODO: add lua
 
     return prototype();
+}
+
+void EntitySystem::send_to_map(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const {
+    server->send_to_maps(packet, maps);
 }
