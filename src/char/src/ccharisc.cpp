@@ -45,7 +45,9 @@ bool CCharISC::handlePacket(uint8_t* _buffer) {
       return serverRegister(
           Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
-      return transferPacket(Packet::IscTransfer::create(_buffer));
+      return transfer_packet(Packet::IscTransfer::create(_buffer));
+    case ePacketType::ISC_TRANSFER_CHAR:
+      return transfer_char_packet(Packet::IscTransferChar::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
@@ -225,13 +227,23 @@ bool CCharISC::onShutdown() {
   return result;
 }
 
-bool CCharISC::transferPacket(RoseCommon::Packet::IscTransfer&& P) {
+bool CCharISC::transfer_packet(RoseCommon::Packet::IscTransfer&& P) {
     logger_->trace("CCharISC::transferPacket()");
     if(state_ == eSTATE::DEFAULT) {
-      logger_->warn("ISC {} is attempting to register before auth.", get_id());
+      logger_->warn("ISC {} is attempting to transfer before auth.", get_id());
       return false;
     }
     server_->transfer(std::move(P));
+    return true;
+}
+
+bool CCharISC::transfer_char_packet(RoseCommon::Packet::IscTransferChar&& P) {
+    logger_->trace("CCharISC::transferCharPacket()");
+    if(state_ == eSTATE::DEFAULT) {
+      logger_->warn("ISC {} is attempting to transfer before auth.", get_id());
+      return false;
+    }
+    server_->transfer_char(std::move(P));
     return true;
 }
 

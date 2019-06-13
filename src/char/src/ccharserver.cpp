@@ -17,6 +17,7 @@
 #include "ccharisc.h"
 #include "epackettype.h"
 #include "platform_defines.h"
+#include "connection.h"
 
 using namespace RoseCommon;
 
@@ -82,6 +83,31 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
             if (auto ptr = maps[mm].lock()) {
                 ptr->send(P);
             }
+        }
+    }
+}
+
+void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
+    Core::SessionTable sessions{};
+    Core::CharacterTable characters{};
+
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+    std::vector<uint16_t> maps;
+    for (auto session : P.get_sessions()) {
+        const auto res = conn(
+                sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
+                    .where(sessions.id == session)
+            );
+        if (res.empty()) {
+            continue;
+        }
+        maps.push_back(res.front().map);
+        P.add_names(res.front().name);
+    }
+    for (auto map : maps) {
+        if (auto ptr = this->maps[map].lock()) {
+            ptr->send(P);
         }
     }
 }

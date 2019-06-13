@@ -19,6 +19,7 @@
 #include <vector>
 #include <unordered_map>
 #include "isc_transfer.h"
+#include "isc_transfer_char.h"
 
 class CCharISC;
 
@@ -40,6 +41,7 @@ class CCharServer : public RoseCommon::CRoseServer {
 
   void register_maps(CCharISC*, const std::vector<uint16_t>&);
   void transfer(RoseCommon::Packet::IscTransfer&& P);
+  void transfer_char(RoseCommon::Packet::IscTransferChar&& P);
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;

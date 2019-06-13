@@ -94,7 +94,8 @@ class EntitySystem {
 
         void send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const;
 
-        void send_to_map(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const;
+        void send_to_maps(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const;
+        void send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<uint32_t>& sessionIds) const;
 
         void delete_entity(RoseCommon::Entity entity);
 

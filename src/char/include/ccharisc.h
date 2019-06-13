@@ -19,6 +19,7 @@
 #include "cli_login_req.h"
 #include "isc_server_register.h"
 #include "isc_transfer.h"
+#include "isc_transfer_char.h"
 
 class CCharServer;
 
@@ -34,7 +35,8 @@ class CCharISC : public RoseCommon::CRoseISC {
   bool serverAuth(RoseCommon::Packet::CliLoginReq&& P);
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
   bool handlePacket(uint8_t* _buffer) override;
-  bool transferPacket(RoseCommon::Packet::IscTransfer&& P);
+  bool transfer_packet(RoseCommon::Packet::IscTransfer&& P);
+  bool transfer_char_packet(RoseCommon::Packet::IscTransferChar&& P);
 
   virtual void onConnected() override;
   virtual bool onShutdown() override;

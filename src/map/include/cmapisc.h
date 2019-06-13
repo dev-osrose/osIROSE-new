@@ -18,6 +18,7 @@
 #include "croseisc.h"
 #include "isc_server_register.h"
 #include "isc_transfer.h"
+#include "isc_transfer_char.h"
 #include <unordered_map>
 
 class CMapServer;
@@ -36,6 +37,7 @@ class CMapISC : public RoseCommon::CRoseISC {
  protected:
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
   bool transfer(RoseCommon::Packet::IscTransfer&& P);
+  bool transfer_char(RoseCommon::Packet::IscTransferChar&& P);
   bool handlePacket(uint8_t* _buffer) override;
 
   virtual void onConnected() override;

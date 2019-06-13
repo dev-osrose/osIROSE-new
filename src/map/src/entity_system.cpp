@@ -40,6 +40,8 @@
 #include "mouse/mouse_cmd.h"
 #include "items/inventory.h"
 
+#include "utils/name_to_session.h"
+
 #include "random.h"
 
 #include "srv_remove_object.h"
@@ -949,6 +951,10 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     return prototype();
 }
 
-void EntitySystem::send_to_map(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const {
+void EntitySystem::send_to_maps(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const {
     server->send_to_maps(packet, maps);
+}
+
+void EntitySystem::send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<uint32_t>& sessionIds) const {
+    server->send_to_chars(packet, sessionIds);
 }

@@ -55,6 +55,19 @@ bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
     return true;
 }
 
+bool CMapISC::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
+    for (const auto name : P.get_names()) {
+        for (auto& [_, map] : maps) {
+            if (auto ptr = map.lock()) {
+                auto entity = ptr->get_entity_from_name(name);
+                if (entity != entt::null) {
+                    ptr->dispatch_packet(entity, RoseCommon::fetchPacket(static_cast<const uint8_t*>(P.get_blob().data())));
+                }
+            }
+        }
+    }
+}
+
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::handlePacket(uint8_t* _buffer) {
@@ -67,6 +80,8 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
       return transfer(Packet::IscTransfer::create(_buffer));
+    case ePacketType::ISC_TRANSFER_CHAR:
+      return transfer_char(Packet::IscTransferChar::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {

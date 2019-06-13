@@ -20,6 +20,7 @@
 #include "platform_defines.h"
 #include "config.h"
 #include "isc_transfer.h"
+#include "isc_transfer_char.h"
 
 using namespace RoseCommon;
 
@@ -74,6 +75,14 @@ void CMapServer::run() { entitySystem->run(); }
 
 void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps) {
     auto packet = RoseCommon::Packet::IscTransfer::create(maps);
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+    isc_client_->send(packet);
+}
+
+void CMapServer::send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<uint32_t>& sessionIds) {
+    auto packet = RoseCommon::Packet::IscTransferChar::create(sessionIds);
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
