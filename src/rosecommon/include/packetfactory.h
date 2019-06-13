@@ -45,8 +45,13 @@ inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
  * \author L3nn0x
  * \date october 2016
  */
+template <bool isServer = false>
 inline std::unique_ptr<CRosePacket> fetchPacket(const uint8_t *buffer) {
-  return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+  if constexpr (isServer) {
+     return SendvPacketFactory::create(CRosePacket::type(buffer), buffer);
+  } else {
+    return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+  }
 }
 
 void register_recv_packets();
