@@ -66,6 +66,7 @@ bool CMapISC::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
             }
         }
     }
+    return true;
 }
 
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
