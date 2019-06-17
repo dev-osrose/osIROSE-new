@@ -12,6 +12,8 @@
 #include "srv_login_reply.h"
 #include "cli_channel_list_req.h"
 #include "srv_channel_list_reply.h"
+#include "cli_create_char_req.h"
+#include "srv_create_char_reply.h"
 #include "cli_srv_select_req.h"
 #include "srv_srv_select_reply.h"
 #include "cli_join_server_req.h"
@@ -274,10 +276,19 @@ class CharClient : public Client {
                   }
                 }
                 if (reply.get_characters().size() == 0) {
-                    logger_->info("No character!");
-                    return false;
+                    logger_->info("No character! Creating one");
+                    auto packet = CliCreateCharReq::create(0, 0, 0, 0, 0, 0, "bot_name");
+                    send(packet);
+                    break;
                 }
                 auto packet = CliSelectCharReq::create(0, 0, 0, reply.get_characters()[0].get_name());
+                send(packet);
+              }
+              break;
+            case ePacketType::PAKCC_CREATE_CHAR_REPLY:
+              logger_->info("Character created");
+              {
+                auto packet = CliCharListReq();
                 send(packet);
               }
               break;
@@ -344,12 +355,9 @@ private:
       break;
     case ePacketType::PAKWC_CHANGE_MAP_REPLY:
       logger_->info("Got change map reply");
-      logger_->info("Moving to warpgate");
+      logger_->info("sending broadcast message");
       {
-          auto x = 527000;
-          auto y = 554000;
-          auto z = 2000;
-          auto packet = CliMouseCmd::create(0, x, y, z);
+          auto packet = CliNormalChat::create("/broadcast this is a test");
           send(packet);
       }
       break;

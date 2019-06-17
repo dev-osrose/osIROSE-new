@@ -156,6 +156,7 @@ void ParseCommandLine(int argc, char** argv) {
 int main(int argc, char* argv[]) {
   try {
     RoseCommon::register_recv_packets();
+    RoseCommon::register_send_packets();
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();

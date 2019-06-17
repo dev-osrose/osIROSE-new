@@ -169,6 +169,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
     register_dispatcher(std::function{Chat::shout_chat});
+    register_dispatcher(std::function{Chat::shout_chat_srv});
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Map::teleport_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});

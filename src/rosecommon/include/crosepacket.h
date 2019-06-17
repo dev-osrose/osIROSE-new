@@ -103,12 +103,14 @@ class CRosePacket {
 
         bool write_to_vector(std::vector<uint8_t>& vec) const {
             const uint16_t size = get_size();
-            vec.reserve(size);
-            CRoseWriter writer(vec.data(), size);
+            auto tmp = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
+            CRoseWriter writer(tmp.get(), size);
             writer.set_uint16_t(size);
             writer.set_uint16_t(to_underlying(get_type()));
             writer.set_uint16_t(get_CRC());
-            return pack(writer);
+            const bool res = pack(writer);
+            vec = {tmp.get(), tmp.get() + size};
+            return res;
         }
 
         /*!
