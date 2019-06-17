@@ -18,6 +18,7 @@
 #include "epackettype.h"
 #include "platform_defines.h"
 #include "connection.h"
+#include <unordered_set>
 
 using namespace RoseCommon;
 
@@ -72,18 +73,22 @@ void CCharServer::register_maps(CCharISC* isc, const std::vector<uint16_t>& maps
 
 void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
     const auto& m = P.get_maps();
+    std::unordered_set<std::shared_ptr<CRoseClient>> set;
     if (m.empty()) {
         for (const auto& [m, p] : maps) {
             if (auto ptr = p.lock()) {
-                ptr->send(P);
+                set.insert(ptr);
             }
         }
     } else {
         for (const auto& mm : m) {
             if (auto ptr = maps[mm].lock()) {
-                ptr->send(P);
+                set.insert(ptr);
             }
         }
+    }
+    for (auto ptr : set) {
+        ptr->send(P);
     }
 }
 
@@ -105,9 +110,13 @@ void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
         maps.push_back(res.front().map);
         P.add_names(res.front().name);
     }
+    std::unordered_set<std::shared_ptr<CRoseClient>> set;
     for (auto map : maps) {
         if (auto ptr = this->maps[map].lock()) {
-            ptr->send(P);
+            set.insert(ptr);
         }
+    }
+    for (auto ptr : set) {
+        ptr->send(P);
     }
 }
