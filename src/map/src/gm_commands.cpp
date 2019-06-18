@@ -14,8 +14,10 @@
 #include "components/item.h"
 #include "components/position.h"
 #include "items/inventory.h"
+#include "utils/name_to_session.h"
 
 #include "srv_shout_chat.h"
+#include "srv_whisper_chat.h"
 
 namespace {
 struct all_of {
@@ -65,8 +67,7 @@ class Parser {
         }
 
         static bool parse(std::stringstream& ss, all_of& h) {
-            h = ss.str();
-            ss.clear();
+            std::getline(ss, h.data);
             return true;
         }
 
@@ -139,12 +140,29 @@ void position(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<>) {
 
 void broadcast(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<all_of> parser) {
     if (!parser.is_good()) {
-        Chat::send_whisper(entitySystem, entity, "Error while parsing the commond. Usage /broadcast <message>");
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /broadcast <message>");
         return;
     }
     const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto packet = RoseCommon::Packet::SrvShoutChat::create(basic.name, parser.get_arg<0>());
     entitySystem.send_to_maps(packet, {});
+}
+
+void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::string, all_of> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /whisper <to> <message>");
+        return;
+    }
+    uint32_t session;
+    if (const auto res = Utils::name_to_session(parser.get_arg<0>()); res) {
+        session = res.value();
+    } else {
+        Chat::send_whisper(entitySystem, entity, "Error, this character isn't online");
+        return;
+    }
+    const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto packet = RoseCommon::Packet::SrvWhisperChat::create(basic.name, parser.get_arg<1>());
+    entitySystem.send_to_chars(packet, {session});
 }
 
 }
@@ -160,6 +178,7 @@ static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}},
     {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}},
     {"/broadcast", {100, REGISTER_FUNCTION(broadcast), "Broadcast a message to all maps. Usage /broadcast <message>"}},
+    {"/whisper", {100, REGISTER_FUNCTION(whisper), "Whisper a message to any char currently logged in. Usage /whisper <to> <message>"}},
 };
 
 static const std::unordered_map<std::string, std::string> aliases = {

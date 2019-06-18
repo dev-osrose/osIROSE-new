@@ -40,8 +40,6 @@
 #include "mouse/mouse_cmd.h"
 #include "items/inventory.h"
 
-#include "utils/name_to_session.h"
-
 #include "random.h"
 
 #include "srv_remove_object.h"
@@ -168,6 +166,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
     register_dispatcher(std::function{Chat::whisper_chat});
+    register_dispatcher(std::function{Chat::whisper_chat_srv});
     register_dispatcher(std::function{Chat::shout_chat});
     register_dispatcher(std::function{Chat::shout_chat_srv});
     register_dispatcher(std::function{Map::change_map_request});

@@ -23,6 +23,7 @@
 #include "srv_switch_server.h"
 #include "cli_join_server_req.h"
 #include "cli_normal_chat.h"
+#include "srv_whisper_chat.h"
 #include "cli_change_map_req.h"
 #include "cli_mouse_cmd.h"
 
@@ -277,7 +278,7 @@ class CharClient : public Client {
                 }
                 if (reply.get_characters().size() == 0) {
                     logger_->info("No character! Creating one");
-                    auto packet = CliCreateCharReq::create(0, 0, 0, 0, 0, 0, "bot_name");
+                    auto packet = CliCreateCharReq::create(0, 0, 0, 0, 0, 0, "botName");
                     send(packet);
                     break;
                 }
@@ -357,8 +358,15 @@ private:
       logger_->info("Got change map reply");
       logger_->info("sending broadcast message");
       {
-          auto packet = CliNormalChat::create("/broadcast this is a test");
+          auto packet = CliNormalChat::create("/whisper botName this is a test message");
           send(packet);
+      }
+      break;
+    case ePacketType::PAKWC_WHISPER_CHAT:
+      logger_->info("Got whisper chat");
+      {
+          auto packet = SrvWhisperChat::create(buffer);
+          logger_->info("From {}, message {}", packet.get_sender(), packet.get_message());
       }
       break;
     default:
