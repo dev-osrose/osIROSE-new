@@ -99,16 +99,15 @@ void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
 
     std::vector<uint16_t> maps;
-    for (auto session : P.get_sessions()) {
+    for (auto name : P.get_names()) {
         const auto res = conn(
                 sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
-                    .where(sessions.id == session)
+                    .where(characters.name == name)
             );
         if (res.empty()) {
             continue;
         }
         maps.push_back(res.front().map);
-        P.add_names(res.front().name);
     }
     std::unordered_set<std::shared_ptr<CRoseClient>> set;
     for (auto map : maps) {
