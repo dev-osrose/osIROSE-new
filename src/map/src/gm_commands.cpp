@@ -153,16 +153,13 @@ void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /whisper <to> <message>");
         return;
     }
-    uint32_t session;
-    if (const auto res = Utils::name_to_session(parser.get_arg<0>()); res) {
-        session = res.value();
-    } else {
+    if (!Utils::name_to_session(parser.get_arg<0>())) {
         Chat::send_whisper(entitySystem, entity, "Error, this character isn't online");
         return;
     }
     const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto packet = RoseCommon::Packet::SrvWhisperChat::create(basic.name, parser.get_arg<1>());
-    entitySystem.send_to_chars(packet, {session});
+    entitySystem.send_to_chars(packet, {parser.get_arg<0>()});
 }
 
 }
