@@ -137,7 +137,7 @@ class CRosePacket {
 
     protected:
         virtual bool pack(CRoseBasePolicy& writer) const = 0;
-        void reset_size() { size_ = 0; }
+        void reset_size() { }
     
     private:
         uint16_t size_;
