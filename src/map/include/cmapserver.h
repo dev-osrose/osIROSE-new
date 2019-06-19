@@ -48,7 +48,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   }
 
   void send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps);
-  void send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<uint32_t>& sessionIds);
+  void send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<std::string>& chars);
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
