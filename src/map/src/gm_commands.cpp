@@ -154,7 +154,7 @@ void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::
         return;
     }
     if (!Utils::name_to_session(parser.get_arg<0>())) {
-        Chat::send_whisper(entitySystem, entity, "Error, this character isn't online");
+        Chat::send_whisper(entitySystem, entity, "Error, this character isn't online or doesn't exist");
         return;
     }
     const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
