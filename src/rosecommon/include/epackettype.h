@@ -51,7 +51,8 @@ enum class ePacketType : uint16_t {
   ISCSTART = 0x300,
   ISC_ALIVE,
   ISC_SERVER_REGISTER,
-  ISC_TRANSFER,
+  ISC_TRANSFER, // transfer to specific map(s)
+  ISC_TRANSFER_CHAR, // transfer to specific character(s) (map(s) is/are determined automatically for you)
   ISC_SHUTDOWN,
   ISCEND,
 

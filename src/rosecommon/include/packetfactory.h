@@ -31,6 +31,12 @@ using RecvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket
 using SendvPacketFactory = Core::Factory<ePacketType, std::unique_ptr<CRosePacket>, EPacketTypeHash>;
 
 template <typename T>
+inline std::unique_ptr<CRosePacket> createPacket_const(const uint8_t *buffer)
+{
+    return T::allocate(buffer);
+}
+
+template <typename T>
 inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
 {
     return T::allocate(buffer);
@@ -45,8 +51,13 @@ inline std::unique_ptr<CRosePacket> createPacket(uint8_t *buffer)
  * \author L3nn0x
  * \date october 2016
  */
-inline std::unique_ptr<CRosePacket> fetchPacket(uint8_t *buffer) {
-  return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+template <bool isServer = false>
+inline std::unique_ptr<CRosePacket> fetchPacket(const uint8_t *buffer) {
+  if constexpr (isServer) {
+     return SendvPacketFactory::create(CRosePacket::type(buffer), const_cast<uint8_t*>(buffer));
+  } else {
+     return RecvPacketFactory::create(CRosePacket::type(buffer), buffer);
+  }
 }
 
 void register_recv_packets();

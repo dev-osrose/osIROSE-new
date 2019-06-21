@@ -93,6 +93,8 @@ set(IDL_FILES
   packets/cli_whisper_chat.xml
   packets/isc_alive.xml
   packets/isc_server_register.xml
+  packets/isc_transfer.xml
+  packets/isc_transfer_char.xml
   packets/isc_shutdown.xml
   packets/srv_accept_reply.xml
   packets/srv_billing_message.xml

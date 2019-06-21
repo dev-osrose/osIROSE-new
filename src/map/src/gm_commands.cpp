@@ -9,12 +9,29 @@
 #include "dataconsts.h"
 #include "entity_system.h"
 #include "chat/whisper_chat.h"
+#include "components/basic_info.h"
 #include "components/client.h"
 #include "components/item.h"
 #include "components/position.h"
 #include "items/inventory.h"
+#include "utils/name_to_session.h"
+
+#include "srv_shout_chat.h"
+#include "srv_whisper_chat.h"
 
 namespace {
+struct all_of {
+    std::string data;
+    std::string operator=(const std::string& p) {
+        data = p;
+        return data;
+    }
+
+    operator std::string() const {
+        return data;
+    }
+};
+
 template <typename... Args>
 class Parser {
     public:
@@ -47,6 +64,11 @@ class Parser {
         template <typename T>
         static bool parse(std::stringstream& ss, T& h) {
             return static_cast<bool>(ss >> h);
+        }
+
+        static bool parse(std::stringstream& ss, all_of& h) {
+            std::getline(ss, h.data);
+            return true;
         }
 
         template <typename T>
@@ -111,9 +133,33 @@ void zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int64_t>
     }
 }
 
-void position(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<> parser) {
+void position(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<>) {
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     Chat::send_whisper(entitySystem, entity, fmt::format("Position: ({},{})", pos.x, pos.y));
+}
+
+void broadcast(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<all_of> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /broadcast <message>");
+        return;
+    }
+    const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto packet = RoseCommon::Packet::SrvShoutChat::create(basic.name, parser.get_arg<0>());
+    entitySystem.send_to_maps(packet, {});
+}
+
+void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::string, all_of> parser) {
+    if (!parser.is_good()) {
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /whisper <to> <message>");
+        return;
+    }
+    if (!Utils::name_to_session(parser.get_arg<0>())) {
+        Chat::send_whisper(entitySystem, entity, "Error, this character isn't online or doesn't exist");
+        return;
+    }
+    const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto packet = RoseCommon::Packet::SrvWhisperChat::create(basic.name, parser.get_arg<1>());
+    entitySystem.send_to_chars(packet, {parser.get_arg<0>()});
 }
 
 }
@@ -127,7 +173,9 @@ static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<
     {"/help", {100, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}},
-    {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}}
+    {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}},
+    {"/broadcast", {100, REGISTER_FUNCTION(broadcast), "Broadcast a message to all maps. Usage /broadcast <message>"}},
+    {"/whisper", {100, REGISTER_FUNCTION(whisper), "Whisper a message to any char currently logged in. Usage /whisper <to> <message>"}},
 };
 
 static const std::unordered_map<std::string, std::string> aliases = {

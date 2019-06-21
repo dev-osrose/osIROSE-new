@@ -12,7 +12,7 @@ class EntitySystem;
 class PacketDispatcher {
     public:
     
-        bool is_supported(const RoseCommon::CRosePacket& packet) {
+        bool is_supported(const RoseCommon::CRosePacket& packet) const {
             const RoseCommon::ePacketType type = packet.get_type();
             auto res = dispatcher.equal_range(type);
             return std::distance(res.first, res.second) > 0;
@@ -41,5 +41,5 @@ class PacketDispatcher {
         }
     
     private:
-        std::unordered_map<RoseCommon::ePacketType, std::function<void(EntitySystem&, RoseCommon::Entity, const RoseCommon::CRosePacket*)>> dispatcher;
+        std::unordered_multimap<RoseCommon::ePacketType, std::function<void(EntitySystem&, RoseCommon::Entity, const RoseCommon::CRosePacket*)>> dispatcher;
 };

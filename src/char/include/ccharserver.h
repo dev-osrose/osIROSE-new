@@ -16,6 +16,12 @@
 #define __CCHARSERVER_H__
 
 #include "croseserver.h"
+#include <vector>
+#include <unordered_map>
+#include "isc_transfer.h"
+#include "isc_transfer_char.h"
+
+class CCharISC;
 
 class CCharServer : public RoseCommon::CRoseServer {
  public:
@@ -33,6 +39,10 @@ class CCharServer : public RoseCommon::CRoseServer {
       return RoseCommon::CRoseServer::GetISCListMutex();
   }
 
+  void register_maps(CCharISC*, const std::vector<uint16_t>&);
+  void transfer(RoseCommon::Packet::IscTransfer&& P);
+  void transfer_char(RoseCommon::Packet::IscTransferChar&& P);
+
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
   uint32_t client_count_;
@@ -40,6 +50,7 @@ class CCharServer : public RoseCommon::CRoseServer {
 
  private:
   CCharServer *iscServer_;
+  std::unordered_map<uint16_t, std::weak_ptr<RoseCommon::CRoseClient>> maps;
 };
 
 #endif
