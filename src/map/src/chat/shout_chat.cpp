@@ -20,9 +20,9 @@ void Chat::shout_chat(EntitySystem& entity_system, Entity entity, const CliShout
     entity_system.send_map(p);
 }
 
-void Chat::shout_chat_srv(EntitySystem& entity_system, RoseCommon::Entity, const RoseCommon::Packet::SrvShoutChat& packet) {
+void Chat::announce_chat_srv(EntitySystem& entity_system, RoseCommon::Entity, const RoseCommon::Packet::SrvAnnounceChat& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->trace("Chat::shout_chat_srv()");
-    logger->debug("name {}, message {}", packet.get_sender(), packet.get_message());
+    logger->trace("Chat::announce_chat_srv()");
+    logger->debug("name {}, message {}", packet.get_name(), packet.get_message());
     entity_system.send_map(packet);
 }

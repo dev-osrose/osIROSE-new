@@ -16,7 +16,7 @@
 #include "items/inventory.h"
 #include "utils/name_to_session.h"
 
-#include "srv_shout_chat.h"
+#include "srv_announce_chat.h"
 #include "srv_whisper_chat.h"
 
 namespace {
@@ -144,7 +144,7 @@ void broadcast(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<all
         return;
     }
     const auto& basic = entitySystem.get_component<Component::BasicInfo>(entity);
-    const auto packet = RoseCommon::Packet::SrvShoutChat::create(basic.name, parser.get_arg<0>());
+    const auto packet = RoseCommon::Packet::SrvAnnounceChat::create(parser.get_arg<0>(), basic.name);
     entitySystem.send_to_maps(packet, {});
 }
 
