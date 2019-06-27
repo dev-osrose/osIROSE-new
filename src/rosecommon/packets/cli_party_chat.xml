@@ -1,0 +1,4 @@
+<packet ePacketType = "PAKCS_PARTY_CHAT">
+    <include path = "string" system = "true" />
+    <element name = "message" type = "std::string" ref = "true" />
+</packet>

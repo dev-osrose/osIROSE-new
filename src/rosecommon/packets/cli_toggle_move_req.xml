@@ -1,0 +1,4 @@
+<packet ePacketType = "PAKCS_TOGGLE_MOVE">
+    <include path = "dataconsts.h" />
+    <element name = "type" type = "ToggleMoveReq::ToggleMoveReq" />
+</packet>

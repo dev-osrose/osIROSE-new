@@ -1,2 +1,0 @@
-PAKCS_SCREEN_SHOT_TIME_REQ
-uint16_t count
