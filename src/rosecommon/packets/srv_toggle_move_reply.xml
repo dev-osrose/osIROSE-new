@@ -1,0 +1,6 @@
+<packet ePacketType = "PAKWC_TOGGLE_MOVE">
+    <include path = "dataconsts.h" />
+    <element name = "objectId" type = "uint16_t" default = "0">
+    <element name = "type" type = "ToggleMoveReq::ToggleMoveReq" />
+    <element name = "runSpeed" type = "uint16_t" default = "0">
+</packet>
