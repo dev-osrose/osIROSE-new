@@ -181,7 +181,7 @@ void deleteStaleSessions() {
   conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
 }
 
-volatile std::sig_atomic_t gSignalStatus;
+volatile std::sig_atomic_t gSignalStatus = 0;
 } // end namespace
 
 int main(int argc, char* argv[]) {

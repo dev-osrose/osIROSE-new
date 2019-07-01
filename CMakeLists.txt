@@ -95,7 +95,7 @@ if(WITH_COTIRE)
 endif()
 
 IF(WITH_MYSQL)
-  find_package(MySQL REQUIRED)
+  find_package(MySQL 6.1 REQUIRED)
 ENDIF()
 
 find_package(PythonInterp 2.7 REQUIRED)
