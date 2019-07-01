@@ -46,6 +46,12 @@ cache:
   - ${TRAVIS_BUILD_DIR}/3rdparty/lib
   - ${TRAVIS_BUILD_DIR}/3rdparty/include
   - ${TRAVIS_BUILD_DIR}/ninja
+  
+stages:
+  - prepare cache
+  - compile
+  - test
+  - notify
 
 jobs:
   include:
@@ -79,7 +85,6 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -119,7 +124,6 @@ jobs:
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -226,7 +230,7 @@ jobs:
         #- ctest --output-on-failure
 
 #    - <<: *gccinit
-#      stage: testing
+#      stage: test
 #      if: branch != coverity_scan
 #      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
 #      cache: false
@@ -267,14 +271,6 @@ jobs:
 #        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
 #        - chmod +x send.sh
 #        - ./send.sh success $WEBHOOK_URL
-
-    - &notify
-      stage: notify
-      script: true
-      after_success:
-        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
-        - chmod +x send.sh
-        - ./send.sh success $WEBHOOK_URL
 
     - &covinit
       stage: compile
@@ -338,6 +334,16 @@ jobs:
           build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: trunk
+
+    - &notify
+      stage: notify
+      script: true
+      git: 
+        clone: false
+      after_success:
+        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
 
 notifications:
   webhooks:
