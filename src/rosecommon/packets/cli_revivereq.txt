@@ -1,3 +1,0 @@
-PAKCS_REVIVE_REQ
-include dataconsts.h
-ReviveReq::ReviveReq reviveType e(uint8_t)

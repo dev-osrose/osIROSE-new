@@ -104,9 +104,9 @@ else()
 			  "/usr/mysql/lib64/mysql" )
 endif()
 
-#MESSAGE(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
-#MESSAGE(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
-#MESSAGE(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+message(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+message(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+message(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
 
 if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
 	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"

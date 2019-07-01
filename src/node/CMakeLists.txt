@@ -7,6 +7,7 @@ project(${PROJECT})
 
 if (GCC)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
+  add_linker_flags(-Wl,-rpath -Wl,./)
 endif()
 
 set( SOURCES_MAIN
@@ -61,6 +62,11 @@ target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
 endif()
+
+install(TARGETS ${PROJECT}
+        RUNTIME 
+          DESTINATION bin
+          COMPONENT Runtime)
 
 set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 

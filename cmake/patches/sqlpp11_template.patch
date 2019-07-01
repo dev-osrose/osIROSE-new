@@ -1,0 +1,284 @@
+index include/sqlpp11/char_sequence.h
+--- include/sqlpp11/char_sequence.h
++++ include/sqlpp11/char_sequence.h
+@@ -54,16 +54,16 @@ namespace sqlpp
+     }
+   };
+ 
+-  template <std::size_t N, const char (&s)[N], typename T>
++  template <std::size_t N, const char (*s)[N], typename T>
+   struct make_char_sequence_impl;
+ 
+-  template <std::size_t N, const char (&s)[N], std::size_t... i>
++  template <std::size_t N, const char (*s)[N], std::size_t... i>
+   struct make_char_sequence_impl<N, s, sqlpp::detail::index_sequence<i...>>
+   {
+-    using type = char_sequence<s[i]...>;
++    using type = char_sequence<(*s)[i]...>;
+   };
+ 
+-  template <std::size_t N, const char (&Input)[N]>
++  template <std::size_t N, const char (*Input)[N]>
+   using make_char_sequence =
+       typename make_char_sequence_impl<N, Input, sqlpp::detail::make_index_sequence<N - 1>>::type;
+ }  // namespace sqlpp
+
+index include/sqlpp11/aggregate_functions/avg.h
+--- include/sqlpp11/aggregate_functions/avg.h
++++ include/sqlpp11/aggregate_functions/avg.h
+@@ -37,7 +37,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "avg_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/aggregate_functions/count.h
+--- include/sqlpp11/aggregate_functions/count.h
++++ include/sqlpp11/aggregate_functions/count.h
+@@ -38,7 +38,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "count_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/aggregate_functions/max.h
+--- include/sqlpp11/aggregate_functions/max.h
++++ include/sqlpp11/aggregate_functions/max.h
+@@ -37,7 +37,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "max_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/aggregate_functions/min.h
+--- include/sqlpp11/aggregate_functions/min.h
++++ include/sqlpp11/aggregate_functions/min.h
+@@ -37,7 +37,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "min_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/aggregate_functions/sum.h
+--- include/sqlpp11/aggregate_functions/sum.h
++++ include/sqlpp11/aggregate_functions/sum.h
+@@ -37,7 +37,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "sum_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/alias_provider.h
+--- include/sqlpp11/alias_provider.h
++++ include/sqlpp11/alias_provider.h
+@@ -36,7 +36,7 @@
+     struct _alias_t                                                          \
+     {                                                                        \
+       static constexpr const char _literal[] = #name;                        \
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>; \
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>; \
+       template <typename T>                                                  \
+       struct _member_t                                                       \
+       {                                                                      \
+@@ -60,7 +60,7 @@
+     struct _alias_t                                                          \
+     {                                                                        \
+       static constexpr const char _literal[] = "!" #name;                    \
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>; \
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>; \
+       template <typename T>                                                  \
+       struct _member_t                                                       \
+       {                                                                      \
+
+index include/sqlpp11/data_types/text/concat.h
+--- include/sqlpp11/data_types/text/concat.h
++++ include/sqlpp11/data_types/text/concat.h
+@@ -44,7 +44,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "concat_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/data_types/text/like.h
+--- include/sqlpp11/data_types/text/like.h
++++ include/sqlpp11/data_types/text/like.h
+@@ -48,7 +48,7 @@ namespace sqlpp
+       // workaround for msvc bug https://connect.microsoft.com/VisualStudio/Feedback/Details/2100550
+       //      static constexpr const char _literal[] = "like_";
+       static constexpr const char _literal[6] = "like_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/exists.h
+--- include/sqlpp11/exists.h
++++ include/sqlpp11/exists.h
+@@ -37,7 +37,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "exists_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/in.h
+--- include/sqlpp11/in.h
++++ include/sqlpp11/in.h
+@@ -40,7 +40,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "in_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/is_not_null.h
+--- include/sqlpp11/is_not_null.h
++++ include/sqlpp11/is_not_null.h
+@@ -39,7 +39,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "is_not_null_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/is_null.h
+--- include/sqlpp11/is_null.h
++++ include/sqlpp11/is_null.h
+@@ -39,7 +39,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "is_null_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/not_in.h
+--- include/sqlpp11/not_in.h
++++ include/sqlpp11/not_in.h
+@@ -40,7 +40,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "not_in_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/ppgen.h
+--- include/sqlpp11/ppgen.h
++++ include/sqlpp11/ppgen.h
+@@ -114,7 +114,7 @@
+     {                                                                        \
+       static constexpr const char _literal[] =                               \
+         BOOST_PP_STRINGIZE(SQLPP_DECLARE_COLUMN_GET_COLUMN_NAME(elem));      \
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>; \
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>; \
+                                                                              \
+       template <typename T>                                                  \
+       struct _member_t                                                       \
+@@ -188,7 +188,7 @@
+       {                                                                          \
+         static constexpr const char _literal[] =                                 \
+           BOOST_PP_STRINGIZE(SQLPP_DECLARE_TABLE_GET_TABLE_NAME(table));         \
+-        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;   \
++        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;   \
+                                                                                  \
+         template <typename T>                                                    \
+         struct _member_t                                                         \
+
+index include/sqlpp11/trim.h
+--- include/sqlpp11/trim.h
++++ include/sqlpp11/trim.h
+@@ -39,7 +39,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "trim_";
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+       template <typename T>
+       struct _member_t
+       {
+
+index include/sqlpp11/verbatim_table.h
+--- include/sqlpp11/verbatim_table.h
++++ include/sqlpp11/verbatim_table.h
+@@ -42,7 +42,7 @@ namespace sqlpp
+       struct _alias_t
+       {
+         static constexpr const char _literal[] = "pseudo_column";
+-        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+         template <typename T>
+         struct _member_t
+         {
+@@ -59,7 +59,7 @@ namespace sqlpp
+     struct _alias_t
+     {
+       static constexpr const char _literal[] = "verbatim_table";  // FIXME need to use alias for verbatim table
+-      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;
++      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;
+     };
+ 
+     verbatim_table_t(std::string representation) : _representation(std::move(representation))
+
+index scripts/ddl2cpp
+--- scripts/ddl2cpp
++++ scripts/ddl2cpp
+@@ -339,7 +339,7 @@ for create in tableCreations:
+         print('      struct _alias_t', file=header)
+         print('      {', file=header)
+         print('        static constexpr const char _literal[] =  "' + escape_if_reserved(sqlColumnName) + '";', file=header)
+-        print('        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;', file=header)
++        print('        using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;', file=header)
+         print('        template<typename T>', file=header)
+         print('        struct _member_t', file=header)
+         print('          {', file=header)
+@@ -376,7 +376,7 @@ for create in tableCreations:
+     print('    struct _alias_t', file=header)
+     print('    {', file=header)
+     print('      static constexpr const char _literal[] =  "' + sqlTableName + '";', file=header)
+-    print('      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), _literal>;', file=header)
++    print('      using _name_t = sqlpp::make_char_sequence<sizeof(_literal), &_literal>;', file=header)
+     print('      template<typename T>', file=header)
+     print('      struct _member_t', file=header)
+     print('      {', file=header)
+-- 
+2.17.1
+

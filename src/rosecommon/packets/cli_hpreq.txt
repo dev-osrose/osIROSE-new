@@ -1,2 +1,0 @@
-PAKCS_HP_REQ
-uint16_t targetId

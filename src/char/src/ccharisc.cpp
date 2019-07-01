@@ -119,6 +119,7 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
   
   state_ = eSTATE::REGISTERED;
 
+  set_name(name);
   logger_->info("ISC Server {} Connected: [{}, {}, {}:{}]\n",
                 get_id(),
                 RoseCommon::Isc::serverTypeName(P.get_serverType()),
@@ -186,7 +187,7 @@ void CCharISC::onConnected() {
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
           update - get_update_time())
           .count();
-        if (dt > (1000 * 60) * 1)  // wait 1 minutes before pinging
+        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
           auto packet = Packet::IscAlive::create();

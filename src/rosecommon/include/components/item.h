@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Component {
-struct Item {
+  struct Item {
     bool isCreated;
     bool is_zuly;
     uint16_t life;
@@ -12,5 +12,5 @@ struct Item {
     uint32_t count;
     uint16_t gemOpt;
     uint32_t price;
-};
+  };
 }

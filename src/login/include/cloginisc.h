@@ -22,7 +22,7 @@
 #include "isc_shutdown.h"
 
 namespace Core {
-class INetwork;
+ class INetwork;
 }
 
 class CLoginISC : public RoseCommon::CRoseISC {

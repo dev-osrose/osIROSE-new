@@ -1,2 +1,0 @@
-PAKWC_LOGOUT_REPLY
-uint16_t waitTime

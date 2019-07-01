@@ -72,15 +72,6 @@ enum ItemType : uint8_t {
 
 }
 
-namespace ReviveReq {
-    enum ReviveReq : uint8_t {
-        REVIVE_POS = 1,
-        SAVE_POS,
-        START_POST,
-        CURRENT_POS
-    };
-}
-
 namespace PartyReq {
 enum Request : uint8_t {
     MAKE = 0,

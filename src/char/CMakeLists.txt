@@ -6,6 +6,7 @@ project(${PROJECT})
 
 if (GCC)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
+  add_linker_flags(-Wl,-rpath -Wl,./)
 endif()
 
 set( SOURCES_MAIN
@@ -53,6 +54,11 @@ target_link_libraries(${PROJECT} RoseCommon)
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
 endif()
+
+install(TARGETS ${PROJECT}
+        RUNTIME 
+          DESTINATION bin
+          COMPONENT Runtime)
 
 if (COMMAND cotire)
   cotire(${PROJECT})

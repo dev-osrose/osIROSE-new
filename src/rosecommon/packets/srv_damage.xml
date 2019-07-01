@@ -1,0 +1,6 @@
+<packet ePacketType = "PAKWC_DAMAGE">
+    <element name = "attackerId" type = "uint16_t" />
+    <element name = "defenderId" type = "uint16_t" />
+    <element name = "damage" type = "uint32_t" />
+    <element name = "action" type = "uint32_t" />
+</packet>

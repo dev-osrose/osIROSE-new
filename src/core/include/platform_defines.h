@@ -14,19 +14,14 @@
 
 #ifndef _PLATFORM_DEFINES_H_
 #define _PLATFORM_DEFINES_H_
+#include <chrono>
 
 namespace Core {
-
-//#if !defined( WIN32 ) && !defined( _WIN32 )
-//  #include <sys/time.h>
-  #include <chrono>
-
   namespace Time {
     inline auto GetTickCount()
     {
       return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());
     }
   } // end namespace Time
-//  #endif
 } // end namespace Core
 #endif

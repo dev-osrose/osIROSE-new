@@ -172,7 +172,7 @@ void CMapISC::onConnected() {
       while (is_active() == true && isChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
-        if (dt > (1000 * 60) * 1)  // wait 1 minute before pinging
+        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
           send(Packet::IscAlive());

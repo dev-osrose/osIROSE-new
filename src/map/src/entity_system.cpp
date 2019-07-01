@@ -9,6 +9,7 @@
 #include "components/basic_info.h"
 #include "components/client.h"
 #include "components/computed_values.h"
+#include "components/combat.h"
 #include "components/destination.h"
 #include "components/faction.h"
 #include "components/character_graphics.h"
@@ -23,6 +24,7 @@
 #include "components/mob.h"
 #include "components/npc.h"
 #include "components/owner.h"
+#include "components/player_spawn.h"
 #include "components/position.h"
 #include "components/spawner.h"
 #include "components/skills.h"
@@ -38,6 +40,7 @@
 #include "chat/shout_chat.h"
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
+#include "combat/combat.h"
 #include "items/inventory.h"
 
 #include "random.h"
@@ -59,7 +62,7 @@ void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& computed = entitySystem.get_component<Component::ComputedValues>(entity);
     if (entitySystem.has_component<Component::Destination>(entity)) {
         computed.command = Command::MOVE;
-    } else if (entitySystem.has_component<Component::Target>(entity)) {// && entitySystem.has_component<Component::Damage>(entity)) {
+    } else if (entitySystem.has_component<Component::Target>(entity) && entitySystem.has_component<Component::Combat>(entity)) {
         computed.command = Command::ATTACK;
     } else {
         computed.command = Command::STOP;
@@ -98,6 +101,7 @@ void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
 }
 
 EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::milliseconds maxTimePerUpdate) :
+    loading(true), 
     maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript),
     server(server) {
@@ -121,18 +125,34 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, auto& inv, auto& computed) {
-            (void)inv;
+        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
             computed.runSpeed = 433;
-            if (computed.moveMode == RoseCommon::MoveMode::WALK) {
+            switch(computed.moveMode) {
+              case RoseCommon::MoveMode::WALK:
+              {
+                // This is a fixed speed
                 computed.runSpeed = 200;
-            }
-            if (computed.moveMode == RoseCommon::MoveMode::RUN) {
+                break;
+              }
+              case RoseCommon::MoveMode::RUN:
+              {
+                // (get original speed + any move speed increase from items (stat 6) - any movement decrease from items (stat 7)) + Fairy additonal movement speed
                 computed.runSpeed += stats.dex * 0.8500001;
+                break;
+              }
+              default:
+              {
+                computed.runSpeed = 200;
+                break;
+              }
             }
+            if(computed.runSpeed < 200) computed.runSpeed = 200;
+            
+            computed.atkSpeed = 30; // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
+            if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
         self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
-            const auto delta = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(100ms);
+            const std::chrono::duration<double, std::milli> delta{100.0};
             const float speed = values.runSpeed;
             const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.dist / speed)};
             const float dx = dest.x - pos.x;
@@ -148,6 +168,16 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 self.update_position(entity, pos.x + dx * tmp, pos.y + dy * tmp);
             }
         });
+    });
+    
+    prevTime = Core::Time::GetTickCount();
+    add_recurrent_timer(50ms, [](EntitySystem& self) {
+      auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
+      // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
+      self.registry.view<Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
+        Combat::update(self, entity, dt);
+      });
+      self.prevTime = Core::Time::GetTickCount();
     });
 
     // callback for removing objects
@@ -172,11 +202,15 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Map::teleport_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+    register_dispatcher(std::function{Combat::attack});
+    register_dispatcher(std::function{Combat::hp_request});
+    register_dispatcher(std::function{Combat::revive});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
+    loading = false;
 }
 
 uint16_t EntitySystem::get_free_id() {
@@ -514,8 +548,8 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     auto& computedValues = prototype.set<ComputedValues>();
     computedValues.command = RoseCommon::Command::STOP;
     computedValues.moveMode = RoseCommon::MoveMode::RUN;
-    computedValues.runSpeed = 0;
-    computedValues.atkSpeed = 0;
+    computedValues.runSpeed = 200; // 200 is walk speed. min this value can be is 200
+    computedValues.atkSpeed = 30;
     computedValues.weightRate = 0;
     computedValues.statusFlag = 0;
     computedValues.subFlag = 0;
@@ -802,6 +836,7 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
 }
 
 void EntitySystem::save_item([[maybe_unused]] RoseCommon::Entity item, [[maybe_unused]] RoseCommon::Entity owner) const {
+
 }
 
 RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
@@ -889,6 +924,7 @@ RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string ali
     auto entity = prototype();
 
     spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
+        if(self.is_loading()) return;
         auto& spawner = self.get_component<Spawner>(entity);
         if (spawner.mobs.size() < static_cast<size_t>(spawner.max_mobs)) {
             int number = Core::Random::getInstance().get_uniform(0, std::min(static_cast<size_t>(spawner.max_once), spawner.max_mobs - spawner.mobs.size()));
@@ -905,6 +941,21 @@ RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string ali
     return entity;
 }
 
+RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y) {
+    logger->trace("EntitySystem::create_player_spawn");
+    using namespace Component;
+    entt::prototype prototype(registry);
+
+    prototype.set<PlayerSpawn>(type);
+    auto& pos = prototype.set<Position>();
+    pos.x = x * 100;
+    pos.y = y * 100;
+    pos.z = 0; // we don't care about Z for now
+    pos.map = map_id;
+
+    return prototype();
+}
+
 RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     logger->trace("EntitySystem::create_mob");
     using namespace Component;
@@ -913,11 +964,21 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     const auto& spos = get_component<Position>(spawner);
 
     auto data = lua_loader.get_data(spawn.mob_id);
+    if(!data)
+        logger->warn("EntitySystem::create_mob unable to get mob data for {}", spawn.mob_id);
 
     auto& basic_info = prototype.set<BasicInfo>();
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
     basic_info.teamId = -1;
+    
+    auto& level = prototype.set<Level>();
+    level.level = data ? data.value().get_level() : 1;
+    
+    if(level.level <= 0)
+        level.level = 1;
+    
+    level.xp = data ? data.value().get_give_exp() : 0; // This is the reward xp for when this mob dies
 
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
@@ -936,8 +997,13 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    life.hp = data ? data.value().get_hp() : 1;
-    life.maxHp = life.hp;
+    auto temp_hp = data ? data.value().get_hp() : 1;
+    life.maxHp = temp_hp * level.level;
+    life.hp = life.maxHp;
+    
+    auto& magic = prototype.set<Magic>();
+    magic.mp = 0;
+    magic.maxMp = 0;
 
     auto& mob = prototype.set<Mob>();
     mob.id = spawn.mob_id;

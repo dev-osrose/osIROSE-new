@@ -25,6 +25,7 @@ set( SOURCES_HEADER
   include/itemdb.h
   include/crosewriter.h
   include/components/basic_info.h
+  include/components/combat.h
   include/components/computed_values.h
   include/components/destination.h
   include/components/faction.h
@@ -72,12 +73,14 @@ set(IDL_TYPE_FILES
 set(IDL_FILES
   packets/cli_accept_req.xml
   packets/cli_alive.xml
+  packets/cli_attack.xml
   packets/cli_change_char_req.xml
   packets/cli_change_map_req.xml
   packets/cli_channel_list_req.xml
   packets/cli_char_list_req.xml
   packets/cli_create_char_req.xml
   packets/cli_delete_char_req.xml
+  packets/cli_hp_req.xml
   packets/cli_drop_item.xml
   packets/cli_equip_item.xml
   packets/cli_join_server_req.xml
@@ -85,6 +88,7 @@ set(IDL_FILES
   packets/cli_logout_req.xml
   packets/cli_mouse_cmd.xml
   packets/cli_normal_chat.xml
+  packets/cli_revive_req.xml
   packets/cli_select_char_req.xml
   packets/cli_shout_chat.xml
   packets/cli_srv_select_req.xml
@@ -98,13 +102,16 @@ set(IDL_FILES
   packets/isc_shutdown.xml
   packets/srv_accept_reply.xml
   packets/srv_announce_chat.xml
+  packets/srv_attack.xml
   packets/srv_billing_message.xml
   packets/srv_chan_char_reply.xml
   packets/srv_change_map_reply.xml
   packets/srv_channel_list_reply.xml
   packets/srv_char_list_reply.xml
   packets/srv_create_char_reply.xml
+  packets/srv_damage.xml
   packets/srv_delete_char_reply.xml
+  packets/srv_hp_reply.xml
   packets/srv_drop_item.xml
   packets/srv_equip_item.xml
   packets/srv_inventory_data.xml
@@ -123,6 +130,7 @@ set(IDL_FILES
   packets/srv_set_item.xml
   packets/srv_set_money.xml
   packets/srv_shout_chat.xml
+  packets/srv_set_hp_and_mp.xml
   packets/srv_srv_select_reply.xml
   packets/srv_switch_server.xml
   packets/srv_teleport_reply.xml

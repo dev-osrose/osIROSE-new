@@ -13,9 +13,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> cmake/modules/Build*.cmake
-  - 3rdparty\lib -> cmake/modules/Build*.cmake
-  - 3rdparty\include -> cmake/modules/Build*.cmake
+  - 3rdparty\bin -> clear_cache.txt
+  - 3rdparty\lib -> clear_cache.txt
+  - 3rdparty\include -> clear_cache.txt
 
 branches:
   except:
@@ -61,7 +61,7 @@ build:
 
 build_script:
 - cmd: cd build
-- cmd: C:\msys64\1.0\bin\bash.exe -c "%PROJECT_PATH%/cmake/scripts/msys_build.bat"
+- cmd: "%PROJECT_PATH%/cmake/scripts/msvc_build.bat"
 
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }
@@ -73,8 +73,8 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
-- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
-- 7z a %APPVEYOR_BUILD_FOLDER%/$PLATFORM-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
+- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
 - path: $(platform)-$(appveyor_build_version)-$(configuration).zip

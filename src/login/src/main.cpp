@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <csignal>
 #include <chrono>
 #include <cxxopts.hpp>
 #include "config.h"
@@ -65,7 +66,7 @@ void ParseCommandLine(int argc, char** argv)
       ->default_value("3"), "LEVEL")
     ("c,core_path", "Path to place minidumps when the app crashes", cxxopts::value<std::string>()
 #ifndef _WIN32
-      ->default_value("/tmp/dumps"), "CORE")
+      ->default_value("./"), "CORE")
 #else
       ->default_value("."), "CORE")
 #endif
@@ -86,7 +87,7 @@ void ParseCommandLine(int argc, char** argv)
     ("t,max_threads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
     ("url", "Auto configure url", cxxopts::value<std::string>()
-      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
+      ->default_value("http://myexternalip.com/raw"), "URL")
     ;
     
     options.add_options("Database")
@@ -180,20 +181,23 @@ void deleteStaleSessions() {
   conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
 }
 
+volatile std::sig_atomic_t gSignalStatus = 0;
 } // end namespace
 
 int main(int argc, char* argv[]) {
   try {
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     ParseCommandLine(argc, argv);
     
     Core::Config& config = Core::Config::getInstance();
     Core::CrashReport crash_reporter(config.serverData().core_dump_path);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-    if(auto log = console.lock())
-      log->info( "Starting up server..." );
-
     Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
+    if(auto log = console.lock()) {
+      log->info( "Starting up server..." );
+    }
     DisplayTitle();
     CheckUser();
 
@@ -234,6 +238,11 @@ int main(int argc, char* argv[]) {
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       deleteStaleSessions();
+      
+      if(gSignalStatus != 0) {
+        clientServer.shutdown(true);
+        iscServer.shutdown(true);
+      }
     }
 
     if(auto log = console.lock())
