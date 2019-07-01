@@ -97,6 +97,7 @@ set(IDL_FILES
   packets/isc_transfer_char.xml
   packets/isc_shutdown.xml
   packets/srv_accept_reply.xml
+  packets/srv_announce_chat.xml
   packets/srv_billing_message.xml
   packets/srv_chan_char_reply.xml
   packets/srv_change_map_reply.xml
