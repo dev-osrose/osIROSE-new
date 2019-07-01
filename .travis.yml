@@ -337,7 +337,9 @@ jobs:
 
     - &notify
       stage: notify
+      cache: false
       script: true
+      services: false
       git: 
         clone: false
       after_success:
