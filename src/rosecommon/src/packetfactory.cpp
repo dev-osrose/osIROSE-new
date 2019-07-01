@@ -62,7 +62,7 @@ using namespace RoseCommon::Packet;
 
 #define REGISTER_SEND_PACKET(Type, Class) SendvPacketFactory::registerPacket<uint8_t*>(Type, std::function{&createPacket<Class>});
 
-#define REGISTER_RECV_PACKET(Type, Class) RecvPacketFactory::registerPacket<uint8_t*>(Type, std::function{&createPacket<Class>});
+#define REGISTER_RECV_PACKET(Type, Class) RecvPacketFactory::registerPacket<const uint8_t*>(Type, std::function{&createPacket_const<Class>});
 
 void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq);

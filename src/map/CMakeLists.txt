@@ -31,6 +31,7 @@ SET( SOURCES_HEADER
   include/lua_storage.h
   include/components/spawner.h
   include/items/inventory.h
+  include/utils/name_to_session.h
   )
 
 SET( SOURCES_MAIN
@@ -54,6 +55,7 @@ SET( SOURCES_MAIN
   src/lua_loader.cpp
   src/lua_storage.cpp
   src/items/inventory.cpp
+  src/utils/name_to_session.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})

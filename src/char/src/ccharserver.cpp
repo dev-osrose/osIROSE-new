@@ -17,6 +17,8 @@
 #include "ccharisc.h"
 #include "epackettype.h"
 #include "platform_defines.h"
+#include "connection.h"
+#include <unordered_set>
 
 using namespace RoseCommon;
 
@@ -50,4 +52,70 @@ void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       isc_list_.push_front(std::move(nClient));
     }
   //}
+}
+
+void CCharServer::register_maps(CCharISC* isc, const std::vector<uint16_t>& maps) {
+    std::shared_ptr<RoseCommon::CRoseClient> ptr;
+    for (const auto& p : isc_list_) {
+        if (p.get() == isc) {
+            ptr = p;
+            break;
+        }
+    }
+    if (!ptr) {
+        logger_->error("ISC server not found when registering maps!");
+        return;
+    }
+    for (const auto& m : maps) {
+        this->maps[m] = ptr;
+    }
+}
+
+void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
+    const auto& m = P.get_maps();
+    std::unordered_set<std::shared_ptr<CRoseClient>> set;
+    if (m.empty()) {
+        for (const auto& [m, p] : maps) {
+            if (auto ptr = p.lock()) {
+                set.insert(ptr);
+            }
+        }
+    } else {
+        for (const auto& mm : m) {
+            if (auto ptr = maps[mm].lock()) {
+                set.insert(ptr);
+            }
+        }
+    }
+    for (auto ptr : set) {
+        ptr->send(P);
+    }
+}
+
+void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
+    Core::SessionTable sessions{};
+    Core::CharacterTable characters{};
+
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+    std::vector<uint16_t> maps;
+    for (auto name : P.get_names()) {
+        const auto res = conn(
+                sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
+                    .where(characters.name == name)
+            );
+        if (res.empty()) {
+            continue;
+        }
+        maps.push_back(res.front().map);
+    }
+    std::unordered_set<std::shared_ptr<CRoseClient>> set;
+    for (auto map : maps) {
+        if (auto ptr = this->maps[map].lock()) {
+            set.insert(ptr);
+        }
+    }
+    for (auto ptr : set) {
+        ptr->send(P);
+    }
 }

@@ -23,10 +23,11 @@
 using namespace std::chrono_literals;
 
 class CMapClient;
+class CMapServer;
 
 class EntitySystem {
     public:
-        EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(uint16_t map_id, CMapServer* server, std::chrono::milliseconds maxTimePerUpdate = 50ms);
         EntitySystem(const EntitySystem&) = delete;
         EntitySystem(EntitySystem&&) = default;
         ~EntitySystem() = default;
@@ -96,6 +97,9 @@ class EntitySystem {
 
         void send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const;
 
+        void send_to_maps(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const;
+        void send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<std::string>& chars) const;
+
         void delete_entity(RoseCommon::Entity entity);
 
         void update_position(RoseCommon::Entity entity, float x, float y);
@@ -139,6 +143,7 @@ class EntitySystem {
         PacketDispatcher dispatcher;
         Nearby nearby;
         LuaLoader lua_loader;
+        CMapServer *server;
 };
 
 

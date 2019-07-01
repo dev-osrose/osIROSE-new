@@ -18,16 +18,20 @@
 #include <optional>
 
 #include "croseserver.h"
+#include "crosepacket.h"
 #include <chrono>
 
 #include "entity_system.h"
 
+class CMapISC;
+
 class CMapServer : public RoseCommon::CRoseServer {
  public:
-  CMapServer(bool _isc = false, int16_t mapidx = -1, CMapServer* iscServer = nullptr);
+  CMapServer(bool _isc = false, int16_t mapidx = -1, CMapServer* iscServer = nullptr, CMapISC* isc_client_ = nullptr);
   virtual ~CMapServer();
 
   int16_t GetMapIDX() const { return map_idx_; }
+  std::shared_ptr<EntitySystem> get_entity_system() { return entitySystem; }
 
   void stop();
   void run();
@@ -43,6 +47,9 @@ class CMapServer : public RoseCommon::CRoseServer {
       return RoseCommon::CRoseServer::GetISCListMutex();
   }
 
+  void send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps);
+  void send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<std::string>& chars);
+
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock);
 
@@ -53,6 +60,7 @@ class CMapServer : public RoseCommon::CRoseServer {
 
  private:
   CMapServer *iscServer_;
+  CMapISC    *isc_client_;
   std::shared_ptr<EntitySystem> entitySystem;
 };
 

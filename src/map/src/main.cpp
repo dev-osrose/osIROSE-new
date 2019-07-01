@@ -160,6 +160,7 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
     std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     RoseCommon::register_recv_packets();
+    RoseCommon::register_send_packets();
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
