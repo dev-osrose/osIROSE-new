@@ -37,27 +37,18 @@ add_executable(${PROJECT} ${SESSIONS_HEADER} ${SOURCES_MAIN} ${SOURCES_BASE} ${S
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-add_dependencies(${PROJECT} RosePackets_generated)
-
-target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} CURL::libcurl)
-
-
-if (MINGW)
-  target_link_libraries(${PROJECT} wsock32 ws2_32)
-elseif (MSVC)
-  target_link_libraries(${PROJECT} wsock32.lib)
-endif()
-
-if(WITH_CRASH_REPORTS)
-  target_link_libraries(${PROJECT} Breakpad::Breakpad)
-endif()
+add_dependencies(${PROJECT} sqlite3::sqlite3 SQLPP11::sqlpp11_sqlite3)
+target_link_libraries(${PROJECT} 
+  PUBLIC 
+    sqlite3::sqlite3
+    SQLPP11::sqlpp11_sqlite3
+)
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} RoseCommon)
-
-target_link_libraries(${PROJECT} sqlite3::sqlite3)
-target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
+target_link_libraries(${PROJECT} 
+  PRIVATE 
+    RoseCommon
+)
 
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
