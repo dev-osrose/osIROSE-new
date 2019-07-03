@@ -427,6 +427,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
                     entitySystem.delete_entity(item);
                 }
             }
+        }
         if (entitySystem.has_component<Component::Party>(entity)) {
             // there is a party, let's be removed from it
             Party::remove_member(entitySystem, entity);
@@ -546,7 +547,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     Core::CharacterTable characters{};
     Core::InventoryTable inventoryTable{};
     Core::SkillTable skillsTable{};
-    Core::Partytable partyTable{};
+    Core::PartyTable partyTable{};
     Core::PartyMembersTable partyMembersTable{};
 
     auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
