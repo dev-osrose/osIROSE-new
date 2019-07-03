@@ -146,7 +146,7 @@ update accounts set account_type="system" where username="login";
 update accounts set account_type="system" where username="char";
 ```
 
-The value `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08` is an MD5 hash of the default server passwords created
+The value `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08` is an SHA256 hash of the default server passwords created
 in the default `server.json` file. It should match the following sections:
 
 ```
@@ -166,7 +166,7 @@ in the default `server.json` file. It should match the following sections:
     ...
 ```
 
-To use your own password, generate an [MD5 hash](https://www.md5hashgenerator.com) of your password 
+To use your own password, generate an [SHA256 hash](https://emn178.github.io/online-tools/sha256.html) of your password 
 and update the accounts database and the `server.json` file.
 
 Finally, we need to create an account to join the game with. Run the `create_account` procedure
