@@ -140,13 +140,13 @@ After setting up the database, two special users need to be created for the logi
 servers. They can be created by executing the following SQL commands:
 
 ```
-call create_account("login", "098f6bcd4621d373cade4e832627b4f6");
-call create_account("char", "098f6bcd4621d373cade4e832627b4f6");
+call create_account("login", "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08");
+call create_account("char", "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08");
 update accounts set account_type="system" where username="login";
 update accounts set account_type="system" where username="char";
 ```
 
-The value `098f6bcd4621d373cade4e832627b4f6` is an MD5 hash of the default server passwords created
+The value `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08` is an MD5 hash of the default server passwords created
 in the default `server.json` file. It should match the following sections:
 
 ```
@@ -154,13 +154,13 @@ in the default `server.json` file. It should match the following sections:
     "charServer":  {
         ...
         "loginUser":         "login",
-        "loginPassword":     "098f6bcd4621d373cade4e832627b4f6",
+        "loginPassword":     "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
         ...
     },
     "mapServer":   {
         ...
         "charUser":     "char",
-        "charPassword": "098f6bcd4621d373cade4e832627b4f6",
+        "charPassword": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
         ...
     },
     ...
@@ -173,7 +173,7 @@ Finally, we need to create an account to join the game with. Run the `create_acc
 again to create a user account, for example:
 
 ```
-call create_account("admin", "21232f297a57a5a743894a0e4a801fc3" # Password is admin
+call create_account("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") # Password is admin
 ```
 
 Alternatively, automatic account creation can be enabled in the server config. This will automatically
