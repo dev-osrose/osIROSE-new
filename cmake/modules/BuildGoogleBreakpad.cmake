@@ -12,7 +12,7 @@ set(_byproducts
     ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}/lib/breakpad/client/windows/crash_generation/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib
   )
 
-if(WIN32) 
+if(WIN32)
   ExternalProject_Add(
     breakpad
     GIT_REPOSITORY https://chromium.googlesource.com/breakpad/breakpad
@@ -81,7 +81,7 @@ else()
     GIT_TAG origin/chrome_64
     GIT_SHALLOW true
     INSTALL_DIR ${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR}
-    STEP_TARGETS build
+    STEP_TARGETS build install
     
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR} --quiet --config-cache
@@ -94,7 +94,7 @@ else()
     COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/third_party/lss
     COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support <SOURCE_DIR>/src/third_party/lss
     DEPENDEES download
-    DEPENDERS configure
+    DEPENDERS configure build
   )
 endif()
 
@@ -131,7 +131,7 @@ file(MAKE_DIRECTORY ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR})
 
 if(NOT TARGET Breakpad::Breakpad)
   add_library(Breakpad::Breakpad INTERFACE IMPORTED)
-  add_dependencies(Breakpad::Breakpad breakpad-build)
+  add_dependencies(Breakpad::Breakpad breakpad-build breakpad-install)
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(Breakpad::Breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()

@@ -4,7 +4,7 @@ language: cpp
 
 env:
   global:
-  - coverity_scan_script_test_mode=false
+  - coverity_scan_script_test_mode=true
   - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
   #Cov scan email
   - secure: "s3nV+bCZyiJFhubZgq1SjP+6DUQgT0fzeTTvaPytYTvFuyYWrTzMPdqdhLXc5MZ3mQ/3PMvn3ZjU0AlT7YypLjyGY0LM8tFD4HD608DWR3qRDnlPKsB4nTCQVCp30FhlFSzlVt4E6ZZCtbbu3X92Q+B4UGjGBnX0T4ePsJMk+CfFKGxbF6Hyo6rThXTfRvGWQtu3pI5pmHksyDyCTtX/m5ljslVy84WTLWREX6m7GSeVu3MB+D9hWR+SGkxbjzxtwSfGmUp2893/xxac+BJNTXqJfKDJA7y98/jB65VASfos3T3Bkdq4nl1e5D4jAmcWE6ZsPpjvem4iZGUZwYbdUNhCk2iGDUjnJYU18z+3R+A4LChmXJlSmtG9AcLU+MT1rJeTQCUqq9pBXAG+keOdBu4J+CvBS5KrhmbG6pXHfUMY0UAqcAHdkgZo26JNnm9kIGcz+IrFOPERUe/naFM+27QGDZ0RfYkbWGbiqaTQ2SptMIOn7/zEqkWWOoT4CImtbSjjOETStIPzIWzR/I+bWFuNL/RL7K1UimqrfQFYG/W1WWXi8ZYqSE+DJX/ejWAytvvq6FWNhXOLe7+0fc/ZzhFTQqusdg0G3wNXKLSNVzuC1MyYXwoJEw33397GsPaK2E5tKlwi12txun5uWAzagHuYVTuHNHKt4qV8+e3AIjw="
@@ -79,7 +79,7 @@ jobs:
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
@@ -118,7 +118,7 @@ jobs:
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
@@ -280,20 +280,21 @@ jobs:
         - eval "${MATRIX_EVAL}"
         - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
         - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
       install:
         ############################################################################
         # Install a recent CMake
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
         - bash $CI_DIRECTORY/install-lcov.sh
-        - bash $CI_DIRECTORY/install-ninja.sh
+        #- bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
         - export CC=gcc-8 CXX=g++-8
         - export GCOV_EXEC=gcov-8
@@ -308,15 +309,19 @@ jobs:
           - g++-8
           - libcurl4-openssl-dev
         coverity_scan:
+          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
-      after_failure:
+      after_success:
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
+        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
+      after_failure:
+        #- cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
         - chmod +x send.sh
@@ -327,11 +332,12 @@ jobs:
       if: (type = cron AND branch = trunk)
       addons:
         coverity_scan:
+          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
           project:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
+          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: trunk
 
@@ -340,8 +346,8 @@ jobs:
       cache: false
       script: true
       services: false
-      git: 
-        clone: false
+      git:
+        submodules: false
       after_success:
         - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
         - chmod +x send.sh
