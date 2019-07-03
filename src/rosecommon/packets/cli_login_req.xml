@@ -5,7 +5,7 @@
 
     <simpleType name = "Password">
         <restriction base = "std::string">
-            <length value = "32" />
+            <length value = "64" />
         </restriction>
     </simpleType>
 </packet>

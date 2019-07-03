@@ -376,7 +376,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_account`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(32))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_account`(IN `_user` VARCHAR(24), IN `_pass` VARCHAR(64))
     MODIFIES SQL DATA
 BEGIN
 SET @salt = create_salt();
