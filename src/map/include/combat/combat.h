@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <utility>
 #include "dataconsts.h"
 #include "cli_attack.h"
@@ -13,7 +14,7 @@ namespace Combat {
   void hp_request(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliHpReq&);
   void revive(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliReviveReq&);
   
-  void update(EntitySystem&, RoseCommon::Entity);
+  void update(EntitySystem&, RoseCommon::Entity, uint32_t dt);
   
   std::pair<float, float> get_range_position(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target, float range = 100);
   float get_range_to(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target);
@@ -21,4 +22,6 @@ namespace Combat {
   RoseCommon::Entity get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
   RoseCommon::Entity get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
   RoseCommon::Entity get_start_spawn(EntitySystem& entitySystem);
+  
+  std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, RoseCommon::Entity entity, int type = 1);
 }

@@ -17,8 +17,12 @@
 
 #include "croseisc.h"
 #include "isc_server_register.h"
+#include "isc_transfer.h"
+#include "isc_transfer_char.h"
+#include <unordered_map>
 
 class CMapServer;
+class EntitySystem;
 
 class CMapISC : public RoseCommon::CRoseISC {
  public:
@@ -27,8 +31,13 @@ class CMapISC : public RoseCommon::CRoseISC {
 
   bool isChar() const;
 
+  void add_maps(const std::vector<uint16_t>& maps);
+  void register_map(uint16_t, std::weak_ptr<EntitySystem>);
+
  protected:
   bool serverRegister(RoseCommon::Packet::IscServerRegister&& P);
+  bool transfer(RoseCommon::Packet::IscTransfer&& P);
+  bool transfer_char(RoseCommon::Packet::IscTransferChar&& P);
   bool handlePacket(uint8_t* _buffer) override;
 
   virtual void onConnected() override;
@@ -36,6 +45,7 @@ class CMapISC : public RoseCommon::CRoseISC {
 
  private:
   CMapServer *server_;
+  std::unordered_map<uint16_t, std::weak_ptr<EntitySystem>> maps;
 };
 
 #endif

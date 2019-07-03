@@ -18,18 +18,12 @@ else()
   set(SYSTEM_ROOT_DIR "/")
 endif()
 
-if(WIN32)
-  set(BINDIR "bin")
-  set(RUNTIME_LIBDIR "${BINDIR}\\${CMAKE_BUILD_TYPE}")
-  set(DATADIR "${BINDIR}\\data")
-else()
-  set(BINDIR ""
-      CACHE STRING "Bin Install Dir")
-  set(RUNTIME_LIBDIR "lib"
-      CACHE STRING "Lib Dir")
-  set(DATADIR ""
-      CACHE STRING "Data Install Dir")
-endif()
+set(BINDIR ""
+    CACHE STRING "Bin Install Dir")
+set(RUNTIME_LIBDIR "lib"
+    CACHE STRING "Lib Dir")
+set(DATADIR ""
+    CACHE STRING "Data Install Dir")
 
 # set variables used by cmake
 if(IS_ABSOLUTE ${BINDIR})

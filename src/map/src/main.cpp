@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <csignal>
 #include <cxxopts.hpp>
 #include "cnetwork_asio.h"
 #include "config.h"
@@ -62,7 +63,7 @@ void ParseCommandLine(int argc, char** argv) {
       ->default_value("3"), "LEVEL")
     ("c,core_path", "Path to place minidumps when the app crashes", cxxopts::value<std::string>()
 #ifndef _WIN32
-      ->default_value("/tmp/dumps"), "CORE")
+      ->default_value("./"), "CORE")
 #else
       ->default_value("."), "CORE")
 #endif
@@ -75,15 +76,15 @@ void ParseCommandLine(int argc, char** argv) {
     ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
       ->default_value("0.0.0.0"), "IP")
     ("client_port", "Client listen port", cxxopts::value<int>()
-      ->default_value("29000"), "PORT")
+      ->default_value("29200"), "PORT")
     ("isc_ip", "ISC listen IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
     ("isc_port", "ISC listen port", cxxopts::value<int>()
-      ->default_value("29010"), "PORT")
+      ->default_value("29210"), "PORT")
     ("t,max_threads", "Max thread count", cxxopts::value<int>()
       ->default_value("512"), "COUNT")
     ("url", "Auto configure url", cxxopts::value<std::string>()
-      ->default_value("http://ipv4.myexternalip.com/raw"), "URL")
+      ->default_value("http://myexternalip.com/raw"), "URL")
     ;
     
     options.add_options("Database")
@@ -151,11 +152,15 @@ void ParseCommandLine(int argc, char** argv) {
     exit(1);
   }
 }
+volatile std::sig_atomic_t gSignalStatus;
 }  // namespace
 
 int main(int argc, char* argv[]) {
   try {
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     RoseCommon::register_recv_packets();
+    RoseCommon::register_send_packets();
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
@@ -190,14 +195,24 @@ int main(int argc, char* argv[]) {
 
     MapManager app(config.mapServer().mapId);
 
-    while (1)
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while (1) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      
+      if(gSignalStatus != 0) {
+        app.stop();
+        break;
+      }
+    }
 
     if (auto log = console.lock()) log->info("Server shutting down...");
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::drop_all();
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;
+  }
+  catch (const sqlpp::exception& ex) {
+    std::cout << "Error while trying to access the database: "
+              << ex.what() << std::endl;
   }
   return 0;
 }

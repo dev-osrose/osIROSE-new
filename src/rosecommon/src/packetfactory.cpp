@@ -22,6 +22,7 @@
 #include "cli_shout_chat.h"
 #include "cli_srv_select_req.h"
 #include "cli_stop_moving.h"
+#include "cli_teleport_req.h"
 #include "cli_whisper_chat.h"
 #include "isc_alive.h"
 #include "isc_server_register.h"
@@ -61,7 +62,7 @@ using namespace RoseCommon::Packet;
 
 #define REGISTER_SEND_PACKET(Type, Class) SendvPacketFactory::registerPacket<uint8_t*>(Type, std::function{&createPacket<Class>});
 
-#define REGISTER_RECV_PACKET(Type, Class) RecvPacketFactory::registerPacket<uint8_t*>(Type, std::function{&createPacket<Class>});
+#define REGISTER_RECV_PACKET(Type, Class) RecvPacketFactory::registerPacket<const uint8_t*>(Type, std::function{&createPacket_const<Class>});
 
 void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_ACCEPT_REQ, CliAcceptReq);
@@ -83,6 +84,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SHOUT_CHAT, CliShoutChat);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_TELEPORT_REQ, CliTeleportReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat);
     REGISTER_RECV_PACKET(ePacketType::ISC_ALIVE, IscAlive);
     REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister);

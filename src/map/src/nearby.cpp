@@ -25,12 +25,12 @@ std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySyste
 }
 
 void Nearby::add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
-  if (entity == entt::null) return;
+  if (entity == entt::null || !registry.valid(entity)) return;
   grid[get_grid_position(registry, entity)].push_back(entity);
 }
 
 void Nearby::remove_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
-  if (entity == entt::null) return;
+  if (entity == entt::null || !registry.valid(entity)) return;
   auto& list = grid[get_grid_position(registry, entity)];
   list.erase(std::remove(list.begin(), list.end(), entity), list.end());
 }

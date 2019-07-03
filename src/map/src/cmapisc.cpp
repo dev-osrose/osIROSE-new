@@ -20,6 +20,7 @@
 #include "isc_shutdown.h"
 #include "isc_alive.h"
 #include "platform_defines.h"
+#include "entity_system.h"
 
 using namespace RoseCommon;
 
@@ -33,6 +34,49 @@ CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CR
   socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::onShutdown, this));
 }
 
+void CMapISC::add_maps(const std::vector<uint16_t>& maps) {
+    for (auto m : maps) {
+        this->maps.insert({m, {}});
+    }
+}
+
+void CMapISC::register_map(uint16_t map, std::weak_ptr<EntitySystem> system) {
+    maps[map] = system;
+}
+
+bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
+    if (P.get_maps().empty()) {
+        for (auto map : maps) {
+            if (auto ptr = map.second.lock()) {
+                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+            }
+        }
+    } else {
+        for (auto map : P.get_maps()) {
+            if (auto it = maps.find(map); it != maps.end()) {
+                if (auto ptr = it->second.lock()) {
+                    ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool CMapISC::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
+    for (const auto name : P.get_names()) {
+        for (auto& [_, map] : maps) {
+            if (auto ptr = map.lock()) {
+                auto entity = ptr->get_entity_from_name(name);
+                if (entity != entt::null) {
+                    ptr->dispatch_packet(entity, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                }
+            }
+        }
+    }
+    return true;
+}
+
 bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::handlePacket(uint8_t* _buffer) {
@@ -44,7 +88,9 @@ bool CMapISC::handlePacket(uint8_t* _buffer) {
     case ePacketType::ISC_SERVER_REGISTER:
       return serverRegister(Packet::IscServerRegister::create(_buffer));
     case ePacketType::ISC_TRANSFER:
-      return true;
+      return transfer(Packet::IscTransfer::create(_buffer));
+    case ePacketType::ISC_TRANSFER_CHAR:
+      return transfer_char(Packet::IscTransferChar::create(_buffer));
     case ePacketType::ISC_SHUTDOWN:
       return true;
     default: {
@@ -108,6 +154,13 @@ void CMapISC::onConnected() {
     auto packet = Packet::IscServerRegister::create(
         RoseCommon::Isc::ServerType::MAP_MASTER, config.mapServer().channelName, config.serverData().externalIp,
         config.mapServer().clientPort, config.mapServer().accessLevel, get_id());
+
+    std::vector<uint16_t> m;
+    m.reserve(maps.size());
+    for (const auto& it : maps) {
+        m.push_back(it.first);
+    }
+    packet.set_maps(m);
   
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
                    static_cast<uint16_t>(packet.get_type()));
@@ -119,7 +172,7 @@ void CMapISC::onConnected() {
       while (is_active() == true && isChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
-        if (dt > (1000 * 60) * 1)  // wait 1 minute before pinging
+        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
           send(Packet::IscAlive());

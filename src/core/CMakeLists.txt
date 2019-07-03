@@ -82,42 +82,60 @@ set(args
 generate_sql_header(LOGS_HEADER ${args})
 
 add_library(${PROJECT} STATIC ${OSIROSE_HEADER} ${LOGS_HEADER} ${SOURCES_BASE} ${SOURCES_HEADER})
-target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_include_directories(${PROJECT} 
+  PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_GEN_SRC_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
 # Make sure the SQL headers are created before core is created
 add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
 
-if(NOT LUA_FOUND)
-  add_dependencies(${PROJECT} lua::lua)
-endif()
+target_link_libraries(${PROJECT} 
+  INTERFACE 
+    ${CMAKE_THREAD_LIBS_INIT}
+)
 
 if(NOT CURL_FOUND)
   add_dependencies(${PROJECT} curl)
 endif()
+target_link_libraries(${PROJECT} 
+  INTERFACE 
+    CURL::libcurl
+)
 
 if(WITH_CRASH_REPORTS)
   if(NOT BREAKPAD_FOUND)
-    add_dependencies(${PROJECT} breakpad-build)
+    add_dependencies(${PROJECT} breakpad-build Breakpad::Breakpad)
   endif()
   
-  target_link_libraries(${PROJECT} Breakpad::Breakpad)
+  target_link_libraries(${PROJECT} 
+    PUBLIC 
+      Breakpad::Breakpad
+  )
 endif()
 
+# Since we use networking, we need to link the winsock libs for windows
 if (MINGW)
-  target_link_libraries(${PROJECT} wsock32 ws2_32)
+  target_link_libraries(${PROJECT} 
+    PUBLIC 
+      wsock32 ws2_32
+  )
 elseif (MSVC)
-  target_link_libraries(${PROJECT} wsock32.lib)
+  target_link_libraries(${PROJECT} 
+    PUBLIC 
+      wsock32.lib
+  )
 endif()
 
 if (WITH_MYSQL)
   add_dependencies(${PROJECT} SQLPP11::SQLPP11_MYSQL)
-  target_link_libraries(${PROJECT} SQLPP11::SQLPP11_MYSQL)
+  target_link_libraries(${PROJECT} 
+    PUBLIC 
+      mysql::mysql
+      SQLPP11::SQLPP11_MYSQL
+  )
 endif()
-
-add_dependencies(${PROJECT} sqlite3::sqlite3)
-target_link_libraries(${PROJECT} sqlite3::sqlite3)
-add_dependencies(${PROJECT} SQLPP11::sqlpp11_sqlite3)
-target_link_libraries(${PROJECT} SQLPP11::sqlpp11_sqlite3)
 
 set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
 if (COMMAND cotire)

@@ -29,7 +29,8 @@ void LuaLoader::load_file(const std::string& path) {
             int _map_id, float min_x, float min_y, float min_z,
             float max_x, float max_y, float max_z) {
             if (map_id != _map_id) return; // we skip anything that isn't needed
-            auto entity = entitySystem.create_warpgate(alias, dest_map_id, dest_x, dest_y, dest_z, min_x, min_y, min_z, max_x, max_y, max_z);
+            int id = 0; // FIXME: get that from the lua
+            auto entity = entitySystem.create_warpgate(alias, id, dest_map_id, dest_x, dest_y, dest_z, min_x, min_y, min_z, max_x, max_y, max_z);
             warps.register_lua(path, env, entity);
         });
 

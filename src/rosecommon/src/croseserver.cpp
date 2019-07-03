@@ -33,7 +33,10 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
   socket_[0]->registerOnAccepted(fnOnAccepted);
 
   socket_[0]->process_thread_ = std::thread([this]() {
-
+    while(is_active() == false) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    
     std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
     std::string inactive_log = "";
@@ -42,24 +45,23 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
     if (IsISCServer() == false) {
       list_ptr = &client_list_;
       mutex_ptr = &client_list_mutex_;
-      inactive_log = "Client {} is inactive, shutting down the socket.";
+      inactive_log = "Client {} is inactive, removing the socket.";
       timeout_log = "Client {} timed out.";
     } else {
       list_ptr = &isc_list_;
       mutex_ptr = &isc_list_mutex_;
-      inactive_log = "Server {} is inactive, shutting down the socket.";
+      inactive_log = "Server {} is inactive, removing the socket.";
       timeout_log = "Server {} timed out.";
     }
 
     do {
       (*mutex_ptr).lock();
         (*list_ptr).remove_if([this, inactive_log] (auto &i) {
-          std::chrono::steady_clock::time_point update =
+            std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
-          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                           update - i->get_update_time())
-                           .count();
-            if (i->is_active() == false && dt > (1000 * 60) * 3 ) {
+            auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+                           update - i->get_update_time());
+            if (i->is_active() == false && dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30))  ) {
               logger_->debug(inactive_log.c_str(), i->get_id());
               return true;
             }
@@ -69,10 +71,9 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
         for (auto& client : (*list_ptr)) {
           std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
-          int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-                           update - client->get_update_time())
-                           .count();
-          if (dt > (1000 * 60) * 2 && client->is_active() == true)  // wait 2 minutes before time out
+          auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+                           update - client->get_update_time());
+          if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(1)) && client->is_active() == true)  // wait some time before time out
           {
             logger_->info(timeout_log.c_str(), client->get_id());
             client->shutdown();
@@ -83,6 +84,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
     } while (is_active() == true);
 
+    logger_->debug("CRoseServer::process_thread_::is_active was false, returning...");
     return 0;
   });
 }
@@ -113,7 +115,7 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 
     if (IsISCServer() == false) {
       std::lock_guard<std::mutex> lock(client_list_mutex_);
-      auto nClient = std::make_unique<CRoseClient>(std::move(_sock));
+      auto nClient = std::make_shared<CRoseClient>(std::move(_sock));
       nClient->set_id(
           std::distance(std::begin(client_list_), std::end(client_list_)));
       nClient->start_recv();
@@ -122,7 +124,7 @@ void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
       client_list_.push_front(std::move(nClient));
     } else {
       std::lock_guard<std::mutex> lock(isc_list_mutex_);
-      auto nClient = std::make_unique<CRoseISC>(std::move(_sock));
+      auto nClient = std::make_shared<CRoseISC>(std::move(_sock));
       nClient->set_id(std::distance(std::begin(isc_list_), std::end(isc_list_)));
       nClient->start_recv();
       logger_->info("[{}] Server connected from: {}", nClient->get_id(),

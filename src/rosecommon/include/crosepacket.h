@@ -69,6 +69,7 @@ class CRosePacket {
         virtual ~CRosePacket() = default;
 
         ePacketType get_type() const {return type_;}
+
         uint16_t get_size() const {
             if (size_ != 0)
                 return size_;
@@ -81,6 +82,7 @@ class CRosePacket {
             const_cast<CRosePacket*>(this)->size_ = size;
             return size_;
         }
+
         uint16_t get_CRC() const {return CRC_;}
 
         /*!
@@ -89,13 +91,25 @@ class CRosePacket {
          * This function will call pack(), and return a copy of it's internal buffer
          */
         virtual std::unique_ptr<uint8_t[]> getPacked() const {
-            uint16_t size = get_size();
+            const uint16_t size = get_size();
             auto res = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
             CRoseWriter writer(res.get(), size);
             writer.set_uint16_t(size);
             writer.set_uint16_t(to_underlying(get_type()));
             writer.set_uint16_t(get_CRC());
             pack(writer); // TODO: what to do with half-written packets
+            return res;
+        }
+
+        bool write_to_vector(std::vector<uint8_t>& vec) const {
+            const uint16_t size = get_size();
+            auto tmp = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
+            CRoseWriter writer(tmp.get(), size);
+            writer.set_uint16_t(size);
+            writer.set_uint16_t(to_underlying(get_type()));
+            writer.set_uint16_t(get_CRC());
+            const bool res = pack(writer);
+            vec = {tmp.get(), tmp.get() + size};
             return res;
         }
 

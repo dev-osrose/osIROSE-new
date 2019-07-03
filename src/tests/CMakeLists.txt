@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 # Prepare testing infrastructure.
 link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
@@ -62,7 +62,7 @@ if (MSVC)
 endif()
 
 add_dependencies(${PROJECT_LIB} RoseCommon)
-target_link_libraries(${PROJECT_LIB} RoseCommon)
+target_link_libraries(${PROJECT_LIB} PUBLIC RoseCommon)
 if (COMMAND cotire)
   cotire(${PROJECT_LIB})
 endif()
@@ -83,28 +83,39 @@ macro (compile_test name path)
   )
 
   add_executable(${TEST_NAME} main ${path})
-  target_include_directories(${TEST_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  target_include_directories(${TEST_NAME} 
+    PUBLIC 
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  )
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
-  target_link_libraries(${TEST_NAME} ${COVERAGE_LIBRARIES})
+  target_link_libraries(${TEST_NAME} 
+    PRIVATE 
+      ${COVERAGE_LIBRARIES}
+  )
 
   if(WITH_MYSQL)
-      target_link_libraries(${TEST_NAME} mysql::mysql)
+      target_link_libraries(${TEST_NAME} 
+        PUBLIC 
+          mysql::mysql
+      )
   endif()
 
   add_dependencies(${TEST_NAME} ${PROJECT_LIB})
-  target_link_libraries(${TEST_NAME} ${PROJECT_LIB})
+  target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_LIB})
 
   add_dependencies(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} GTest::GTest)
+  target_link_libraries(${TEST_NAME} 
+    PRIVATE 
+      RoseCommon 
+      GTest::GTest
+  )
 
   if (MSVC)
     set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "/wd4503")
-    target_link_libraries(${TEST_NAME} wsock32.lib)
+    target_link_libraries(${TEST_NAME} PRIVATE wsock32.lib)
   else()
-    target_link_libraries(${TEST_NAME} mysqlclient)
+    target_link_libraries(${TEST_NAME} PRIVATE mysqlclient)
   endif()
 
   if (COMMAND cotire)
@@ -140,13 +151,13 @@ if(WITH_COVERAGE_REPORTS)
 endif() # WITH_COVERAGE_REPORTS
 
 compile_test(Config src/test_config.cpp)
-compile_test(Console src/test_logconsole.cpp)
-compile_test(MySQLDB src/test_mysql_database.cpp)
-compile_test(ASIONetwork src/test_network_asio.cpp)
-compile_test(RoseCrypt src/test_crosecrypt.cpp)
-compile_test(RoseNetwork src/test_crose_network.cpp)
-compile_test(LoginServer src/test_login.cpp)
-compile_test(CharServer src/test_char.cpp)
-compile_test(AllServers src/test_servers.cpp)
-compile_test(RosePackets src/test_crosepacket.cpp)
+#compile_test(Console src/test_logconsole.cpp)
+#compile_test(MySQLDB src/test_mysql_database.cpp)
+#compile_test(ASIONetwork src/test_network_asio.cpp)
+#compile_test(RoseCrypt src/test_crosecrypt.cpp)
+#compile_test(RoseNetwork src/test_crose_network.cpp)
+#compile_test(LoginServer src/test_login.cpp)
+#compile_test(CharServer src/test_char.cpp)
+#compile_test(AllServers src/test_servers.cpp)
+#compile_test(RosePackets src/test_crosepacket.cpp)
 #compile_test(Systems src/test_system.cpp)

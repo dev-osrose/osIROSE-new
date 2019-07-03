@@ -72,7 +72,7 @@ float Combat::get_range_to(const EntitySystem& entitySystem, Entity character, E
   const float dx = char_pos.x - target_pos.x;
   const float dy = char_pos.y - target_pos.y;
   
-  return std::sqrt(dx * dx + dy * dy) * 0.001f;
+  return std::sqrt(dx * dx + dy * dy) * 0.01f;
 }
 
 void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& packet) {
@@ -82,6 +82,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
 
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  const auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   //const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   
   if (packet.get_targetId()) {
@@ -93,10 +94,10 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
       logger->debug("distance to target is {}", get_range_to(entitySystem, entity, t));
       
       //TODO: Check distance to target, if not in attack range, move into max attack range
-      if(get_range_to(entitySystem, entity, t) > 1)
+      if(get_range_to(entitySystem, entity, t) > values.attackRange)
       {
         auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);
-        auto npos = get_range_position(entitySystem, entity, t, 500);
+        auto npos = get_range_position(entitySystem, entity, t, ((values.attackRange * 100) - 0.1f));
         dest.x = npos.first;
         dest.y = npos.second;
         dest.z = 0;
@@ -105,10 +106,12 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
         const float dy = pos.y - dest.y;
         dest.dist = std::sqrt(dx * dx + dy * dy);
         
-        auto p = SrvMouseCmd::create(basicInfo.id);
-        p.set_targetId(packet.get_targetId());
+        //auto p = SrvMouseCmd::create(basicInfo.id);
+        auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
+        //p.set_targetId(0);
         p.set_x(dest.x);
         p.set_y(dest.y);
+        p.set_z(0);
         entitySystem.send_nearby(entity, p);
       }
       else
@@ -125,18 +128,19 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
   }
 }
 
-void Combat::update(EntitySystem& entitySystem, Entity entity) {
+void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   //const auto& pos = entitySystem.get_component<Component::Position>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
-  auto& magic = entitySystem.get_component<Component::Magic>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   
   //TODO:: Update buffs
   //TODO:: Update HP
-  if(false) // Regen happens every 4 seconds
+  values.regenDt += dt;
+  if(values.regenDt >= 4000) // Regen happens every 4 seconds
   {
+    values.regenDt = 0;
     uint32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
     if(life.hp > 0 && life.hp != life.maxHp)
@@ -153,18 +157,22 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
       hp = life.hp;
     }
     
-    if(entitySystem.has_component<Component::Magic>(entity) == true && magic.mp != magic.maxMp)
+    if(entitySystem.has_component<Component::Magic>(entity) == true)
     {
-      int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
-      amount = amount * stanceModifier;
-      //TODO: update amount based on equipment values
-      //TODO: Take into account MP regen buffs
-      magic.mp += amount;
-  
-      if(magic.mp > magic.maxMp)
-        magic.mp = magic.maxMp;
-        
-      mp = magic.mp;
+      auto& magic = entitySystem.get_component<Component::Magic>(entity);
+      if(magic.mp != magic.maxMp)
+      {
+        int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
+        amount = amount * stanceModifier;
+        //TODO: update amount based on equipment values
+        //TODO: Take into account MP regen buffs
+        magic.mp += amount;
+    
+        if(magic.mp > magic.maxMp)
+          magic.mp = magic.maxMp;
+          
+        mp = magic.mp;
+      }
     }
     auto p = SrvSetHpAndMp::create(basicInfo.id, hp, mp);
     entitySystem.send_nearby(entity, p);
@@ -181,16 +189,16 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
     {
       // We waited at least one update before applying damage, apply it now
       Entity attacker = entitySystem.get_entity_from_id(attack.attacker_);
-      logger->debug("Applying damage to entity {} {}", basicInfo.name, basicInfo.id);
+      logger->debug("Applying damage to entity '{}' {}", basicInfo.name, basicInfo.id);
       
       if(adjusted_hp <= 0) {
-        logger->debug("Entity {} {} is dead already, not applying damage", basicInfo.name, basicInfo.id);
+        logger->debug("Entity '{}' {} is dead already, not applying damage", basicInfo.name, basicInfo.id);
         //attack.value_ = 0;
         continue;
       }
       
       if((adjusted_hp - attack.value_) <= 0) {
-        logger->debug("Entity {} {} will die from {} damage", basicInfo.name, basicInfo.id, attack.value_);
+        logger->debug("Entity '{}' {} will die from {} damage", basicInfo.name, basicInfo.id, attack.value_);
         total_applied_damage = attack.value_ + adjusted_hp;
         adjusted_hp = 0;
         //TODO: Credit this attacker as the one who killed this entity.
@@ -206,7 +214,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_nearby(entity, p);
       } else {
-        logger->debug("applied {} damage to entity {} {}.", attack.value_, basicInfo.name, basicInfo.id);
+        logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
         
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_to(entity, p);
@@ -228,25 +236,39 @@ void Combat::update(EntitySystem& entitySystem, Entity entity) {
   }
   
   // Check to see if we have a target component
+  if(values.combatDt > 0)
+    values.combatDt -= dt;
+
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
     //const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
     const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
-    if((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
-      (false) ) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
+    if(((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
+      (false))) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
     {
       // Are we in attack range?
-      if(targetLife.hp > 0 && get_range_to(entitySystem, entity, target.target) <= 1)
+      if(targetLife.hp > 0)
       {
-        if(entitySystem.has_component<Component::Combat>(target.target) == false) {
-          entitySystem.add_component<Component::Combat>(target.target);
+        if(get_range_to(entitySystem, entity, target.target) <= values.attackRange && values.combatDt <= 0)
+        {
+          values.combatDt = 1000; // TODO: Change this to the attack speed time value
+          if(entitySystem.has_component<Component::Combat>(target.target) == false) {
+            entitySystem.add_component<Component::Combat>(target.target);
+          }
+          
+          logger->debug("queuing damage to target entity");
+          auto& damage = entitySystem.get_component<Component::Combat>(target.target);
+          auto action = DAMAGE_ACTION_ATTACK;
+          auto dmg_value = 50;
+          if(dmg_value > 0) action |= DAMAGE_ACTION_HIT;
+          damage.addDamage(basicInfo.id, action, dmg_value);
         }
-        
-        logger->debug("queuing damage to target entity");
-        auto& damage = entitySystem.get_component<Component::Combat>(target.target);
-        damage.addDamage(basicInfo.id, DAMAGE_ACTION_ATTACK, 30);
+      }
+      else
+      {
+        entitySystem.remove_component<Component::Target>(entity);
       }
     }
   }
@@ -310,19 +332,15 @@ RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   return {};
 }
 
-void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliReviveReq& packet) {
+std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entitySystem, Entity entity, int type) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  logger->trace("Combat::revive");
-  
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
-  auto& life = entitySystem.get_component<Component::Life>(entity);
-  auto& magic = entitySystem.get_component<Component::Magic>(entity);
   
   uint16_t map_id = pos.map;
   float x = 0.f, y = 0.f;
   
-  switch(packet.get_reviveType())
+  switch(type)
   {
     case CliReviveReq::ReviveRequest::REVIVE_POSITION: 
     {
@@ -372,13 +390,27 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
     }
     default:
     {
-        logger->warn("Combat::revive player {} sent a revive type that doesn't exist...", basicInfo.name);
+      //logger->warn("Combat::get_spawn_point player {} sent a revive type that doesn't exist...", basicInfo.name);
       break;
     }
   }
   
-  life.hp = (life.maxHp * 0.3f);
-  magic.mp = 0;
+  return {map_id, x, y};
+}
 
-  entitySystem.teleport_entity(entity, x, y, map_id);
+void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliReviveReq& packet) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+  logger->trace("Combat::revive");
+  
+  auto& life = entitySystem.get_component<Component::Life>(entity);
+  auto& magic = entitySystem.get_component<Component::Magic>(entity);
+  
+  auto dest = get_spawn_point(entitySystem, entity, packet.get_reviveType());
+  if(life.hp <= 0)
+  {
+    life.hp = (life.maxHp * 0.3f);
+    magic.mp = 0;
+  }
+
+  entitySystem.teleport_entity(entity, std::get<1>(dest), std::get<2>(dest), std::get<0>(dest));
 }

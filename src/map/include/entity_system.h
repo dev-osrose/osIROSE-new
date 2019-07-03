@@ -23,10 +23,11 @@
 using namespace std::chrono_literals;
 
 class CMapClient;
+class CMapServer;
 
 class EntitySystem {
     public:
-        EntitySystem(uint16_t map_id, std::chrono::milliseconds maxTimePerUpdate = 50ms);
+        EntitySystem(uint16_t map_id, CMapServer* server, std::chrono::milliseconds maxTimePerUpdate = 50ms);
         EntitySystem(const EntitySystem&) = delete;
         EntitySystem(EntitySystem&&) = default;
         ~EntitySystem() = default;
@@ -43,6 +44,8 @@ class EntitySystem {
 
         template <typename Func>
         void add_task(Func&& task);
+    
+        bool is_valid(RoseCommon::Entity entity) const;
 
         RoseCommon::Entity load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client);
         void save_character(RoseCommon::Entity);
@@ -53,7 +56,7 @@ class EntitySystem {
         RoseCommon::Entity create_zuly(int64_t zuly);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
-        RoseCommon::Entity create_warpgate(std::string alias, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
+        RoseCommon::Entity create_warpgate(std::string alias, int id, int dest_map_id, float dest_x, float dest_y, float dest_z, float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
         RoseCommon::Entity create_spawner(std::string alias, int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z);
         RoseCommon::Entity create_mob(RoseCommon::Entity spawner);
         RoseCommon::Entity create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y);
@@ -94,6 +97,9 @@ class EntitySystem {
 
         void send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const;
 
+        void send_to_maps(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const;
+        void send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<std::string>& chars) const;
+
         void delete_entity(RoseCommon::Entity entity);
 
         void update_position(RoseCommon::Entity entity, float x, float y);
@@ -124,6 +130,7 @@ class EntitySystem {
         void remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity);
     
         bool loading;
+        std::chrono::steady_clock::time_point prevTime;
         Core::MWSRQueue<std::deque<Core::fire_once<void(EntitySystem&)>>> work_queue;
         std::unordered_map<std::string, RoseCommon::Entity> name_to_entity;
         std::unordered_map<uint16_t, RoseCommon::Entity> id_to_entity;
@@ -136,6 +143,7 @@ class EntitySystem {
         PacketDispatcher dispatcher;
         Nearby nearby;
         LuaLoader lua_loader;
+        CMapServer *server;
 };
 
 

@@ -27,13 +27,9 @@
 #include <iomanip>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <spdlog/async.h>
 #include <spdlog/fmt/ostr.h>
-
-#ifdef _WIN32
-  #include <spdlog/sinks/wincolor_sink.h>
-#else
-  #include <spdlog/sinks/ansicolor_sink.h>
-#endif
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Core {
 

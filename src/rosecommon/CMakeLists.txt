@@ -4,14 +4,9 @@ link_directories(${EXTERNAL_BINARY_DIR})
 set(PROJECT RoseCommon)
 project(${PROJECT})
 
-
 if (NOT MSVC)
   add_compiler_flags(-Werror)
 endif()
-
-#include_directories(
-#  ${CMAKE_CURRENT_SOURCE_DIR}/include/packets
-#)
 
 set( SOURCES_HEADER
   include/crosesocket.h
@@ -93,11 +88,15 @@ set(IDL_FILES
   packets/cli_shout_chat.xml
   packets/cli_srv_select_req.xml
   packets/cli_stop_moving.xml
+  packets/cli_teleport_req.xml
   packets/cli_whisper_chat.xml
   packets/isc_alive.xml
   packets/isc_server_register.xml
+  packets/isc_transfer.xml
+  packets/isc_transfer_char.xml
   packets/isc_shutdown.xml
   packets/srv_accept_reply.xml
+  packets/srv_announce_chat.xml
   packets/srv_attack.xml
   packets/srv_billing_message.xml
   packets/srv_chan_char_reply.xml
@@ -144,17 +143,19 @@ set(args
 generate_packets(PACKET_SOURCES PACKET_HEADERS ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${PACKET_SOURCES} ${PACKET_HEADERS} ${SOURCES_HEADER})
-target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>)
+target_include_directories(${PROJECT} 
+  PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_GEN_SRC_DIR}/packets>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>
+)
 
 add_dependencies(${PROJECT} Core)
 add_dependencies(${PROJECT} RosePackets_generated)
-target_link_libraries(${PROJECT} Core)
-
-if(NOT LUA_FOUND)
-  add_dependencies(${PROJECT} lua)
-endif()
-target_link_libraries(${PROJECT} lua::lua)
+target_link_libraries(${PROJECT} 
+  PUBLIC 
+    Core
+)
 
 if (COMMAND cotire)
   cotire(${PROJECT})

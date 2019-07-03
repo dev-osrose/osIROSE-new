@@ -46,16 +46,6 @@ CNetwork_Asio::~CNetwork_Asio() {
   CNetwork_Asio::shutdown(true);
 
   if (process_thread_.joinable()) process_thread_.join();
-
-  do {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  } while (!discard_queue_.empty());
-
-  send_mutex_.lock();
-  while (send_queue_.empty() == false) send_queue_.pop();
-  send_mutex_.unlock();
-
-  logger_.reset();
 }
 
 bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
@@ -149,95 +139,79 @@ bool CNetwork_Asio::disconnect() {
 
 void CNetwork_Asio::ProcessSend() {
   if (this->is_active()) {
-    discard_mutex_.lock();
-    bool discard_empty = discard_queue_.empty();
-    discard_mutex_.unlock();
-
     send_mutex_.lock();
-    bool send_empty = send_queue_.empty();
+    uint8_t* raw_ptr = send_queue_.front().get();
+    send_mutex_.unlock();
 
-    if (send_empty != true && discard_empty == true) {
-      auto _buffer = std::move(send_queue_.front());
-      send_queue_.pop();
-
-      uint8_t* raw_ptr = _buffer.get();
-      uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
-      uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
-      discard_mutex_.lock();
-      discard_queue_.push(std::move(_buffer));
-      raw_ptr = discard_queue_.back().get();
-      discard_mutex_.unlock();
+    const uint16_t _size = *reinterpret_cast<uint16_t*>( raw_ptr );
+    const uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
 
 #ifdef SPDLOG_TRACE_ON
-      fmt::MemoryWriter out;
-      logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
-      for (int i = 0; i < _size; i++)
-        out.write( "0x{0:02x} ", raw_ptr[i] );
-      logger_->trace( "{}", out.c_str() );
+    fmt::MemoryWriter out;
+    logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
+    for (int i = 0; i < _size; i++)
+      out.write( "0x{0:02x} ", raw_ptr[i] );
+    logger_->trace( "{}", out.c_str() );
 #endif
 
-      if (OnSend(socket_id_, raw_ptr)) {
-        asio::async_write(
-            socket_, asio::buffer(raw_ptr, _size),
-            [this](const asio::error_code& error,
-                   std::size_t bytes_transferred) {
-              (void)bytes_transferred;
-              if (!error) {
-                OnSent();
-                update_time_ = (Core::Time::GetTickCount());
-              } else {
-                logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
+    if (OnSend(socket_id_, raw_ptr)) {
+      asio::async_write(
+          socket_, asio::buffer(raw_ptr, _size),
+          [this](const asio::error_code& error,
+                 [[maybe_unused]] std::size_t bytes_transferred) {
+            if (!error) {
+              OnSent();
+              update_time_ = (Core::Time::GetTickCount());
+            } else {
+              logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
 
-                switch(error.value()) {
-                  case asio::error::basic_errors::connection_aborted:
-                  case asio::error::basic_errors::connection_reset:
-                  case asio::error::basic_errors::network_reset:
-                  case asio::error::basic_errors::network_down:
-                  case asio::error::basic_errors::broken_pipe:
-                  case asio::error::basic_errors::shut_down:
-                  case asio::error::basic_errors::timed_out:
-                    shutdown();
-                    break;
-                  default:
-                    logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
-                    break;
-                }
+              switch(error.value()) {
+                case asio::error::basic_errors::connection_aborted:
+                case asio::error::basic_errors::connection_reset:
+                case asio::error::basic_errors::network_reset:
+                case asio::error::basic_errors::network_down:
+                case asio::error::basic_errors::broken_pipe:
+                case asio::error::basic_errors::shut_down:
+                case asio::error::basic_errors::timed_out:
+                  shutdown();
+                  break;
+                default:
+                  logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
+                  break;
               }
-
-              discard_mutex_.lock();
-              {
-                std::unique_ptr<uint8_t[]> _buffer =
-                    std::move(discard_queue_.front());
-                discard_queue_.pop();
-                _buffer.reset(nullptr);
-              }
-              discard_mutex_.unlock();
-
+            }
+            send_mutex_.lock();
+            send_queue_.pop_front();
+            const bool is_empty = send_queue_.empty();
+            send_mutex_.unlock();
+            if (!is_empty) {
               ProcessSend();
-
-            });
+            }
+          });
       }
-      else
+      else {
         logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
                        _size, _command, get_id());
     }
-    send_mutex_.unlock();
   }
 }
 
 bool CNetwork_Asio::send_data(std::unique_ptr<uint8_t[]> _buffer) {
   send_mutex_.lock();
-  send_queue_.push(std::move(_buffer));
+  send_queue_.push_back(std::move(_buffer));
+  const auto size = send_queue_.size();
   send_mutex_.unlock();
-
+  
+  if (size > 1) { // send in progress
+    return true;
+  }
+  
   ProcessSend();
   return true;
 }
 
-bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
+bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
   if (OnReceive() == true) {
-    (void)_size;
-
     int16_t BytesToRead = packet_size_ - packet_offset_;
     asio::async_read(
         socket_, asio::buffer(&buffer_[packet_offset_], BytesToRead),
@@ -267,6 +241,12 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
                     recv_data();
                 }
                 break;
+              case asio::error::basic_errors::not_connected:
+                if ( shutdown() ) {
+                  logger_->info( "Socket {} is not connected, shutting down.", get_id() );
+                  OnDisconnected();
+                }
+                break;
 
               case asio::error::basic_errors::connection_aborted:
               case asio::error::basic_errors::connection_reset:
@@ -277,14 +257,14 @@ bool CNetwork_Asio::recv_data(uint16_t _size /*= 6*/) {
               case asio::error::basic_errors::timed_out:
               case asio::error::misc_errors::eof:
                 if ( shutdown() ) {
-                  logger_->info( "Socket {} disconnected.", get_id() );
+                  logger_->info( "Socket {} ({}) disconnected.", get_id(), get_name() );
                   OnDisconnected();
                 }
                 break;
 
               default:
                 {
-                  logger_->debug( "Socket {}: Error {}: {}", get_id(), errorCode.value(),
+                  logger_->debug( "Socket {}({}): Error {}: {}", get_id(), get_name(), errorCode.value(),
                                   errorCode.message() );
                   shutdown( true );
                   OnDisconnected();

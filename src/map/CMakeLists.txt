@@ -6,6 +6,7 @@ project(${PROJECT})
 
 if (GCC)
   add_compiler_flags(-Wl,-Map=${PROJECT}.map)
+  add_linker_flags(-Wl,-rpath -Wl,./)
 endif()
 
 SET( SOURCES_HEADER
@@ -30,6 +31,7 @@ SET( SOURCES_HEADER
   include/lua_storage.h
   include/components/spawner.h
   include/items/inventory.h
+  include/utils/name_to_session.h
   )
 
 SET( SOURCES_MAIN
@@ -53,6 +55,7 @@ SET( SOURCES_MAIN
   src/lua_loader.cpp
   src/lua_storage.cpp
   src/items/inventory.cpp
+  src/utils/name_to_session.cpp
   )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
@@ -62,31 +65,31 @@ set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_I
 
 add_dependencies(${PROJECT} RosePackets_generated)
 
-target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} CURL::libcurl)
-
-if(WITH_MYSQL)
-  target_link_libraries(${PROJECT} mysql::mysql)
+target_link_libraries(${PROJECT} PUBLIC CURL::libcurl)
+if(NOT LUA_FOUND)
+  add_dependencies(${PROJECT} lua::lua)
 endif()
-
-if (MINGW)
-  target_link_libraries(${PROJECT} wsock32 ws2_32)
-elseif (MSVC)
-  target_link_libraries(${PROJECT} wsock32.lib)
-endif()
-
-if(WITH_CRASH_REPORTS)
-  target_link_libraries(${PROJECT} Breakpad::Breakpad)
-endif()
+target_link_libraries(${PROJECT} 
+  PUBLIC 
+    lua::lua
+)
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} RoseCommon)
+target_link_libraries(${PROJECT} 
+  PRIVATE
+    RoseCommon
+)
 
 set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
 endif()
+
+install(TARGETS ${PROJECT}
+        RUNTIME 
+          DESTINATION bin
+          COMPONENT Runtime)
 
 if (COMMAND cotire)
   cotire(${PROJECT})

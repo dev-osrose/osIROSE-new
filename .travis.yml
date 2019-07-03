@@ -46,6 +46,12 @@ cache:
   - ${TRAVIS_BUILD_DIR}/3rdparty/lib
   - ${TRAVIS_BUILD_DIR}/3rdparty/include
   - ${TRAVIS_BUILD_DIR}/ninja
+  
+stages:
+  - prepare cache
+  - compile
+  - test
+  - notify
 
 jobs:
   include:
@@ -73,13 +79,12 @@ jobs:
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -113,13 +118,12 @@ jobs:
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
         - cmake --version
-        #- bash $CI_DIRECTORY/install-ccache.sh
         - ccache --version
         - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
@@ -202,7 +206,7 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest --output-on-failure
+        #- ctest --output-on-failure
 
     - <<: *clanginit
       stage: compile
@@ -223,10 +227,10 @@ jobs:
       after_script:
         - ccache --version
         - ccache --show-stats
-        - ctest --output-on-failure
+        #- ctest --output-on-failure
 
 #    - <<: *gccinit
-#      stage: testing
+#      stage: test
 #      if: branch != coverity_scan
 #      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
 #      cache: false
@@ -283,7 +287,7 @@ jobs:
         ############################################################################
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
             mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
@@ -310,8 +314,13 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
+<<<<<<< HEAD
           build_command_prepend: "mkdir build && cd build && cov-configure --config ${COV_CONFIG} --comptype gcc --compiler g++-8 --template --xml-option=skip_file:.*/3rdparty/.* --xml-option=skip_file:.*/src/tests/.* --xml-option=skip_file:.*/lua-prefix/.* && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make lua && make sqlpp11-connector-mysql && make sqlpp11-connector-sqlite3"
           build_command: "make"
+=======
+          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
+>>>>>>> origin/build-updates
           branch_pattern: coverity_scan
       after_success:
         - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
@@ -333,9 +342,26 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
+<<<<<<< HEAD
           build_command_prepend: "mkdir build && cd build && cov-configure --comptype gcc --compiler g++-8 --template && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .."
           build_command: "make"
+=======
+          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
+>>>>>>> origin/build-updates
           branch_pattern: trunk
+
+    - &notify
+      stage: notify
+      cache: false
+      script: true
+      services: false
+      git:
+        submodules: false
+      after_success:
+        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
 
 notifications:
   webhooks:
