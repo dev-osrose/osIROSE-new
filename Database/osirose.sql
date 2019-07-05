@@ -662,7 +662,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(IN `_user` VARCHAR(16) CHARSET utf8, IN `_pass` VARCHAR(32) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(IN `_user` VARCHAR(16) CHARSET utf8, IN `_pass` VARCHAR(64) CHARSET utf8)
     READS SQL DATA
 BEGIN
   SELECT id, password, access, active, `online` FROM accounts WHERE username = _user COLLATE utf8_unicode_ci AND password = SHA2( CONCAT(_pass,salt), 256) COLLATE utf8_unicode_ci;
