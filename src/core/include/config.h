@@ -100,7 +100,7 @@ class Config {
     std::string worldName = "osIROSE";
     std::string loginIp = "127.0.0.1";
     std::string loginUser = "login";
-    std::string loginPassword = "098f6bcd4621d373cade4e832627b4f6";
+    std::string loginPassword = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     uint16_t clientPort = 29100;
     uint16_t iscPort = 29110;
     bool instantCharDelete = true;
@@ -111,7 +111,7 @@ class Config {
     std::string channelName = "Athena";
     std::string charIp = "127.0.0.1";
     std::string charUser = "char";
-    std::string charPassword = "098f6bcd4621d373cade4e832627b4f6";
+    std::string charPassword = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
     uint8_t accessLevel = 1;

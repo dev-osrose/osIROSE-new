@@ -194,6 +194,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
         break;
       }
       default:
+        logger_->debug("Some how we have an invalid state in the db? state: {}", row.state);
         return false;
     }
     disconnect(RoseCommon::SocketType::CurrentMap);
