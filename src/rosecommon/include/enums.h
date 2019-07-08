@@ -69,15 +69,6 @@ enum ItemType : uint8_t {
     ITEM_RIDING = 14,
     ZULY = 0x1F
 };
-
-enum DamageFlag: uint32_t {
-    DAMAGE_RESERVED = 0,
-    DAMAGE_ATTACKED = 2,
-    DAMAGE_HIT = 4,
-    DAMAGE_CRITICAL = 8,
-    DAMAGE_TARGET_DEAD = 16
-};
-
 }
 
 namespace PartyReq {
@@ -88,12 +79,4 @@ namespace PartyReq {
         CHANGE_OWNER,
         KICK = 0x81
     };
-}
-
-namespace ToggleMoveReq {
-    enum ToggleMoveReq: uint8_t {
-        RUN = 0,
-        SIT = 1,
-        DRIVE = 2,
-    }
 }
