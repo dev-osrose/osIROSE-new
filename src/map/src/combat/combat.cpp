@@ -15,7 +15,9 @@
 #include "components/basic_info.h"
 #include "components/computed_values.h"
 #include "components/destination.h"
+#include "components/level.h"
 #include "components/life.h"
+#include "components/lua.h"
 #include "components/magic.h"
 #include "components/mob.h"
 #include "components/npc.h"
@@ -132,6 +134,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   //const auto& pos = entitySystem.get_component<Component::Position>(entity);
+  const auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   
@@ -213,6 +216,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         attack.action_ |= DAMAGE_ACTION_DEAD;
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_nearby(entity, p);
+        break;
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
         
@@ -220,13 +224,74 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         entitySystem.send_to(entity, p);
         entitySystem.send_to(attacker, p);
       }
+      
+      // Add this damage to the combat log
+      bool found_log = false;
+      for(auto& attack_log : queuedDamage.damage_log_)
+      {
+        if(attack_log.attacker_ == attack.attacker_)
+        {
+          attack_log.value_ += attack.value_;
+          found_log = true;
+          break;
+        }
+      }
+      
+      if(found_log == false)
+      {
+        queuedDamage.damage_log_.push_back(attack);
+      }
     }
     life.hp = adjusted_hp;
     queuedDamage.damage_.clear();
     
     if(life.hp <= 0) {
       if(entitySystem.has_component<Component::Mob>(entity) == true)
+      {
+        int32_t xp_out = 1;
+        int32_t level_difference = 0;
+        int32_t rate = 100; // this is the default for a 1x server
+        for(auto& attack_log : queuedDamage.damage_log_)
+        {
+          Entity attacker = entitySystem.get_entity_from_id(attack_log.attacker_);
+          auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
+          level_difference = attackerLevel.level - level.level;
+          if(attack_log.value_ > (life.maxHp * 1.15f))
+            attack_log.value_ = (life.maxHp * 1.15f);
+
+          float dmgModifier = (attack_log.value_ + life.maxHp / 15.0f + 30);
+          
+          if(level_difference <= 3)
+            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / 370.0f;
+          else if(level_difference < 9)
+            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / (level_difference + 3) / 60.0f;
+          else
+            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / (level_difference + 3) / 180.0f;
+          
+          if(xp_out < 1)
+            xp_out = 1;
+            
+          attackerLevel.xp += xp_out;
+          //TODO: check if we leveled up
+          
+          xp_out = 1;
+        }
+        //TODO: Give out XP to each player here
+        // forumla in CCal::Get_EXP
+        //foreach attacker, get the level difference
+        // if the damage given is > 15% of the map HP cap damage given to max hp *1.15f
+        // if level dif <= 3
+        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / 370.0f;
+        // if level dif >= 4 && < 9
+        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / (levelDiff + 3) / 60.0f;
+        // if level dif <= 3
+        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / (levelDiff + 3) / 180.0f;
+        // if xp < 1
+        //   xp = 1
+        // return xp
+      
         entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
+      }
       
       // remove components that we can't have if we are dead!
       entitySystem.remove_component<Component::Combat>(entity);

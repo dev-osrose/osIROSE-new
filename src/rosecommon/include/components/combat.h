@@ -24,5 +24,6 @@ namespace Component {
     }
     
     std::vector<tDamage> damage_;
+    std::vector<tDamage> damage_log_;
   };
 }
