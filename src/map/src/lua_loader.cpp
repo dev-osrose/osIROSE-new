@@ -104,8 +104,8 @@ std::weak_ptr<ItemLuaApi> LuaLoader::get_lua_item(uint8_t type, uint16_t id) {
     return items.get_lua_api(type, id);
 }
 
-std::weak_ptr<NpcLuaApi> LuaLoader::get_lua_npc(int npc_id) const {
-    return lua_db.get_lua_api(noc_id);
+std::weak_ptr<NpcLuaApi> LuaLoader::get_lua_npc(int npc_id) {
+    return lua_db.get_lua_api(npc_id);
 }
 
 std::weak_ptr<LuaData> LuaLoader::get_data(int npc_id) const {
