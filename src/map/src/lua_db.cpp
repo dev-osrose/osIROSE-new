@@ -5,7 +5,7 @@ void LuaDb::store_lua(const std::string& filename, sol::environment env, int npc
     Data d;
     d.filename = filename;
     d.env = env;
-    d.data = std::make_shared<LuaData>({npc_data});
+    d.data = std::make_shared<LuaData>(npc_data);
     d.api = std::make_shared<NpcLuaApi>(env);
     data.emplace(npc_id, d);
 }
