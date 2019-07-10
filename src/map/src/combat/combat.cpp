@@ -275,6 +275,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           //TODO: check if we leveled up
           
           xp_out = 1;
+          level_difference = 0;
         }
         //TODO: Give out XP to each player here
         // forumla in CCal::Get_EXP
