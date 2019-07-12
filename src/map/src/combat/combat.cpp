@@ -248,9 +248,12 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     if(life.hp <= 0) {
       if(entitySystem.has_component<Component::Mob>(entity) == true)
       {
+        auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
+        auto data = npcLua.data.lock();
+        int32_t give_exp = data->get_give_exp();
         int32_t xp_out = 1;
         int32_t level_difference = 0;
-        int32_t rate = 100; // this is the default for a 1x server
+        int32_t server_rate = 100; // this is the default for a 1x server
         for(auto& attack_log : queuedDamage.damage_log_)
         {
           Entity attacker = entitySystem.get_entity_from_id(attack_log.attacker_);
@@ -260,13 +263,14 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             attack_log.value_ = (life.maxHp * 1.15f);
 
           float dmgModifier = (attack_log.value_ + life.maxHp / 15.0f + 30);
+          auto expCalc = ((level.level + 3) * give_exp * dmgModifier);
           
           if(level_difference <= 3)
-            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / 370.0f;
+            xp_out = expCalc * server_rate / life.maxHp / 370.0f;
           else if(level_difference < 9)
-            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / (level_difference + 3) / 60.0f;
+            xp_out = expCalc * server_rate / life.maxHp / (level_difference + 3) / 60.0f;
           else
-            xp_out = ((level.level + 3) * 1 * dmgModifier) * rate / life.maxHp / (level_difference + 3) / 180.0f;
+            xp_out = expCalc * server_rate / life.maxHp / (level_difference + 3) / 180.0f;
           
           if(xp_out < 1)
             xp_out = 1;
@@ -277,19 +281,6 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           xp_out = 1;
           level_difference = 0;
         }
-        //TODO: Give out XP to each player here
-        // forumla in CCal::Get_EXP
-        //foreach attacker, get the level difference
-        // if the damage given is > 15% of the map HP cap damage given to max hp *1.15f
-        // if level dif <= 3
-        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / 370.0f;
-        // if level dif >= 4 && < 9
-        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / (levelDiff + 3) / 60.0f;
-        // if level dif <= 3
-        //   xp = ((defenderLevel + 3) * defenderXPOut * (dmgGiven + defenderMaxHP / 15.0f + 30)) * ServerRate / maxHP / (levelDiff + 3) / 180.0f;
-        // if xp < 1
-        //   xp = 1
-        // return xp
       
         entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
       }
