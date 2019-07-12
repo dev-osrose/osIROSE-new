@@ -18,7 +18,8 @@ class LuaLoader {
         void load_lua_item(uint8_t type, uint16_t id, const std::string& lua);
         std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id);
 
-        std::optional<LuaDb::LuaData> get_data(int npc_id) const;
+        std::weak_ptr<NpcLuaApi> get_lua_npc(int npc_id);
+        std::weak_ptr<LuaData> get_data(int npc_id) const;
     
         void load_file(const std::string& path); // relative path
 

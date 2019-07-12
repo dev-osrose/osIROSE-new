@@ -4,6 +4,7 @@
 
 class ItemLuaApi;
 class NpcLuaApi;
+class LuaData;
 
 namespace Component {
 struct ItemLua {
@@ -12,5 +13,6 @@ struct ItemLua {
 
 struct NpcLua {
     std::weak_ptr<NpcLuaApi> api;
+    std::weak_ptr<LuaData> data;
 };
 }
