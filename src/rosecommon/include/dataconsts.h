@@ -32,7 +32,7 @@ constexpr unsigned int MAX_HOTBAR_ITEMS = 32;
 
 constexpr unsigned int MAX_DAMAGE = 99999999;
 
-constexpr unsigned int DAMAGE_ACTION_ATTACK = 0x02;
+constexpr unsigned int DAMAGE_ACTION_IMMEDIATE = 0x02;
 constexpr unsigned int DAMAGE_ACTION_HIT = 0x4;
 constexpr unsigned int DAMAGE_ACTION_CRITICAL = 0x8;
 constexpr unsigned int DAMAGE_ACTION_DEAD = 0x10;

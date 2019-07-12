@@ -317,7 +317,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           
           logger->debug("queuing damage to target entity");
           auto& damage = entitySystem.get_component<Component::Combat>(target.target);
-          auto action = DAMAGE_ACTION_ATTACK;
+          auto action = 0;
           auto dmg_value = 50;
           if(dmg_value > 0) action |= DAMAGE_ACTION_HIT;
           damage.addDamage(basicInfo.id, action, dmg_value);
