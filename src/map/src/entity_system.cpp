@@ -957,13 +957,14 @@ RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Typ
 }
 
 RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
-    logger->trace("EntitySystem::create_mob");
+    //logger->trace("EntitySystem::create_mob");
     using namespace Component;
     entt::prototype prototype(registry);
     const auto& spawn = get_component<Spawner>(spawner);
     const auto& spos = get_component<Position>(spawner);
 
-    auto data = lua_loader.get_data(spawn.mob_id);
+    auto ptr = lua_loader.get_data(spawn.mob_id);
+    auto data = ptr.lock();
     if(!data)
         logger->warn("EntitySystem::create_mob unable to get mob data for {}", spawn.mob_id);
 
@@ -973,13 +974,11 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     basic_info.teamId = -1;
     
     auto& level = prototype.set<Level>();
-    level.level = data ? data.value().get_level() : 1;
+    level.level = data ? data->get_level() : 1;
     
     if(level.level <= 0)
         level.level = 1;
     
-    level.xp = data ? data.value().get_give_exp() : 0; // This is the reward xp for when this mob dies
-
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
     position.x = std::get<0>(pos);
@@ -990,14 +989,14 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto& computed_values = prototype.set<ComputedValues>();
     computed_values.command = RoseCommon::Command::STOP;
     computed_values.moveMode = RoseCommon::MoveMode::WALK;
-    computed_values.runSpeed = data ? data.value().get_run_speed() : 0;
-    computed_values.atkSpeed = data ? data.value().get_attack_spd() : 0;
+    computed_values.runSpeed = data ? data->get_run_speed() : 0;
+    computed_values.atkSpeed = data ? data->get_attack_spd() : 0;
     computed_values.weightRate = 0;
     computed_values.statusFlag = 0;
     computed_values.subFlag = 0;
 
     auto& life = prototype.set<Life>();
-    auto temp_hp = data ? data.value().get_hp() : 1;
+    auto temp_hp = data ? data->get_hp() : 1;
     life.maxHp = temp_hp * level.level;
     life.hp = life.maxHp;
     
@@ -1012,7 +1011,9 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto& owner = prototype.set<Owner>();
     owner.owner = spawner;
 
-    // TODO: add lua
+    auto& lua = prototype.set<NpcLua>();
+    lua.api = lua_loader.get_lua_npc(mob.id);
+    lua.data = ptr;
 
     return prototype();
 }
