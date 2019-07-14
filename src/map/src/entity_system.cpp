@@ -243,7 +243,7 @@ bool EntitySystem::is_valid(RoseCommon::Entity entity) const {
 }
 
 void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
-    logger->trace("EntitySystem::register_name");
+    //logger->trace("EntitySystem::register_name");
     const auto& basic = get_component<Component::BasicInfo>(entity);
     if (basic.name.size()) {
         name_to_entity.insert({basic.name, entity});
