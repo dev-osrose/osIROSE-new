@@ -1,0 +1,5 @@
+<packet ePacketType = "PAKWC_PARTY_CHAT">
+    <include path = "string" system = "true" />
+    <element name = "charId" type = "uint16_t" />
+    <element name = "message" type = "std::string" ref = "true" />
+</packet>

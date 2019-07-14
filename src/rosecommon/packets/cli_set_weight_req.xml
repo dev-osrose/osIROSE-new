@@ -1,0 +1,3 @@
+<packet ePacketType = "PAKCS_SET_WEIGHT_REQ">
+  <element name = "weight" type = "uint8_t" />
+</packet>

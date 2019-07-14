@@ -69,15 +69,14 @@ enum ItemType : uint8_t {
     ITEM_RIDING = 14,
     ZULY = 0x1F
 };
-
 }
 
 namespace PartyReq {
-enum Request : uint8_t {
-    MAKE = 0,
-    JOIN = 1,
-    LEFT,
-    CHANGE_OWNER,
-    KICK = 0x81
-};
+    enum Request : uint8_t {
+        MAKE = 0,
+        JOIN = 1,
+        LEFT,
+        CHANGE_OWNER,
+        KICK = 0x81
+    };
 }
