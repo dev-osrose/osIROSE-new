@@ -1,6 +1,6 @@
 <packet ePacketType = "PAKWC_PARTY_REQ">
     <element name = "request" type = "Request" />
-    <element name = "tag" type = "uint32_t" />
+    <element name = "id" type = "uint16_t" />
     <include path = "string" system = "true" />
     <element name = "name" type = "std::string" ref = "true" />
 

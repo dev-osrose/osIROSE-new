@@ -41,7 +41,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
     const auto& stats = entitySystem.get_component<Component::Stats>(member);
     const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(member);
     const auto& stamina = entitySystem.get_component<Component::Stamina>(member);
-    m.set_tag(basicInfo.id); // FIXME: the client doesn't handle tags well
+    m.set_tag(basicInfo.tag);
     m.set_id(basicInfo.id);
     m.set_maxHp(life.maxHp);
     m.set_hp(life.hp);
@@ -63,7 +63,7 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
         const auto& stats = entitySystem.get_component<Component::Stats>(it);
         const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(it);
         const auto& stamina = entitySystem.get_component<Component::Stamina>(it);
-        m.set_tag(basicInfo.id);
+        m.set_tag(basicInfo.tag);
         m.set_id(basicInfo.id);
         m.set_maxHp(life.maxHp);
         m.set_hp(life.hp);
@@ -99,8 +99,8 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
         entitySystem.remove_component<Component::Party>(party->members[0]);
         return;
     }
-    const uint32_t leaver = entitySystem.get_component<Component::BasicInfo>(member).id;
-    const uint32_t leader = entitySystem.get_component<Component::BasicInfo>(party->leader).id;
+    const uint32_t leaver = entitySystem.get_component<Component::BasicInfo>(member).tag;
+    const uint32_t leader = entitySystem.get_component<Component::BasicInfo>(party->leader).tag;
     RoseCommon::PartyData data;
     data.set_tagLeaver(leaver);
     data.set_tagLeader(leader);
@@ -121,9 +121,9 @@ void change_leader(EntitySystem& entitySystem, RoseCommon::Entity current_leader
     if (!party->change_leader(new_leader)) {
         return;
     }
-    const uint32_t id = entitySystem.get_component<Component::BasicInfo>(new_leader).id;
+    const uint32_t tag = entitySystem.get_component<Component::BasicInfo>(new_leader).tag;
     for (const auto& it : party->members) {
-        entitySystem.send_to(it, SrvPartyReply::create(SrvPartyReply::CHANGE_OWNER, id));
+        entitySystem.send_to(it, SrvPartyReply::create(SrvPartyReply::CHANGE_OWNER, tag));
     }
 }
 
