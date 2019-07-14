@@ -173,75 +173,76 @@ volatile std::sig_atomic_t gSignalStatus;
 
 int main(int argc, char* argv[]) {
   try {
-  std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
-  std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
-  ParseCommandLine(argc, argv);
-  
-  Core::Config& config = Core::Config::getInstance();
-  Core::CrashReport crash_reporter(config.serverData().core_dump_path);
-  
-  auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-
-  if(auto log = console.lock())
-    log->info("Starting up server...");
-
-  Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
-  DisplayTitle();
-  CheckUser();
-
-  if(auto log = console.lock()) {
-    log->set_level(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
-    log->trace("Trace logs are enabled.");
-    log->debug("Debug logs are enabled.");
-  }
-  Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
-  // if( true == config.serverData().autoConfigureAddress )
-  // {
-  //   std::string ip_addr = get_current_net_address();
-  //   ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
-  //   if(auto log = console.lock()) {
-  //     log->info( "Overriding external ip address to \"{}\"", ip_addr );
-  //   }
-  //   config.serverData().externalIp = ip_addr;
-  // }
-
-  Core::connectionPool.addConnector<Core::Osirose>(std::bind(
-            Core::mysqlFactory,
-            config.database().user,
-            config.database().password,
-            config.database().database,
-            config.database().host,
-            config.database().port));
-
-  CCharServer iscServer(true);
-  CCharServer clientServer(false, &iscServer);
-  CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
-  iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
-  iscClient->setLogin(true);
-  iscClient->connect();
-  iscClient->start_recv();
-
-  clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
-  clientServer.listen();
-  clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
-
-  iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
-  iscServer.listen();
-
-  while (clientServer.is_active()) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    //updateSessions();
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
+    ParseCommandLine(argc, argv);
     
-    if(gSignalStatus != 0) {
-      iscClient->shutdown(true);
-      clientServer.shutdown(true);
-      iscServer.shutdown(true);
+    Core::Config& config = Core::Config::getInstance();
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
+    
+    auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
+  
+    if(auto log = console.lock())
+      log->info("Starting up server...");
+  
+    Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
+    DisplayTitle();
+    CheckUser();
+  
+    if(auto log = console.lock()) {
+      log->set_level(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
+      log->trace("Trace logs are enabled.");
+      log->debug("Debug logs are enabled.");
     }
-  }
-  if(auto log = console.lock())
-    log->info( "Server shutting down..." );
-  Core::NetworkThreadPool::DeleteInstance();
-  spdlog::drop_all();
+    Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
+    // if( true == config.serverData().autoConfigureAddress )
+    // {
+    //   std::string ip_addr = get_current_net_address();
+    //   ip_addr.replace(ip_addr.begin(), ip_addr.end(), '\n', '\0');
+    //   if(auto log = console.lock()) {
+    //     log->info( "Overriding external ip address to \"{}\"", ip_addr );
+    //   }
+    //   config.serverData().externalIp = ip_addr;
+    // }
+  
+    Core::connectionPool.addConnector<Core::Osirose>(std::bind(
+              Core::mysqlFactory,
+              config.database().user,
+              config.database().password,
+              config.database().database,
+              config.database().host,
+              config.database().port));
+  
+    CCharServer iscServer(true);
+    CCharServer clientServer(false, &iscServer);
+    CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
+    iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
+    iscClient->setLogin(true);
+    iscClient->connect();
+    iscClient->start_recv();
+  
+    clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
+    clientServer.listen();
+    clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
+  
+    iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
+    iscServer.listen();
+  
+    while (clientServer.is_active()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      //updateSessions();
+      
+      if(gSignalStatus != 0) {
+        iscClient->shutdown(true);
+        clientServer.shutdown(true);
+        iscServer.shutdown(true);
+      }
+    }
+    if(auto log = console.lock())
+      log->info( "Server shutting down..." );
+    Core::NetworkThreadPool::DeleteInstance();
+    spdlog::shutdown();
+    spdlog::drop_all();
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;

@@ -305,8 +305,8 @@ int main(int argc, char* argv[]) {
     if(auto log = console.lock())
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();
+    spdlog::shutdown();
     spdlog::drop_all();
-
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;
