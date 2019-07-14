@@ -8,9 +8,11 @@
 
 #include "srv_attack.h"
 #include "srv_damage.h"
+#include "srv_levelup.h"
 #include "srv_hp_reply.h"
 #include "srv_mouse_cmd.h"
 #include "srv_set_hp_and_mp.h"
+#include "srv_setexp.h"
 
 #include "components/basic_info.h"
 #include "components/computed_values.h"
@@ -214,13 +216,13 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
-        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, (SrvDamage::DamageAction)attack.action_);
         entitySystem.send_nearby(entity, p);
         break;
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
         
-        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, (SrvDamage::DamageAction)attack.action_);
         entitySystem.send_to(entity, p);
         entitySystem.send_to(attacker, p);
       }
@@ -276,7 +278,31 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             xp_out = 1;
             
           attackerLevel.xp += xp_out;
-          //TODO: check if we leveled up
+          
+          auto exp_required = get_exp_to_level(attackerLevel.level+1);
+          while (attackerLevel.xp >= exp_required) {
+            int64_t new_exp = attackerLevel.xp - exp_required;
+            attackerLevel.xp = new_exp;
+            ++attackerLevel.level;
+            exp_required = get_exp_to_level(attackerLevel.level+1);
+            
+            //TODO:: adjust our hp and mp based on our level here
+            
+            auto p = SrvLevelup::create(attack_log.attacker_, attackerLevel.level, attackerLevel.xp);
+            p.set_statPoints(0);
+            p.set_skillPoints(0);
+            entitySystem.send_to(attacker, p);
+          }
+          
+          int16_t current_stamina = 0;
+          if(entitySystem.has_component<Component::Stamina>(attacker) == true) {
+            auto& attackerStamina = entitySystem.get_component<Component::Stamina>(attacker);
+            current_stamina = attackerStamina.stamina;
+          }
+          
+          auto p = SrvSetexp::create(attackerLevel.xp, current_stamina);
+          p.set_sourceId(basicInfo.id);
+          entitySystem.send_to(attacker, p);
           
           xp_out = 1;
           level_difference = 0;
@@ -292,19 +318,19 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     }
   }
   
-  // Check to see if we have a target component
   if(values.combatDt > 0)
     values.combatDt -= dt;
 
+  // Check to see if we have a target component
   if(entitySystem.has_component<Component::Target>(entity) == true)
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
     //const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
-    const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
     
     if(((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
       (false))) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
     {
+      const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
       // Are we in attack range?
       if(targetLife.hp > 0)
       {
@@ -317,6 +343,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           
           logger->debug("queuing damage to target entity");
           auto& damage = entitySystem.get_component<Component::Combat>(target.target);
+          
+          //TODO: do damage calcualtions here for basic attack
           auto action = 0;
           auto dmg_value = 50;
           if(dmg_value > 0) action |= DAMAGE_ACTION_HIT;
@@ -470,4 +498,23 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   }
 
   entitySystem.teleport_entity(entity, std::get<1>(dest), std::get<2>(dest), std::get<0>(dest));
+}
+
+int64_t Combat::get_exp_to_level(int level) {
+  if ( level > 210 )
+    level = 210;
+    
+  if ( level <= 15 )
+      return (int64_t)((level + 3) * (level) * (level + 10) * 0.7);
+
+  if ( level <= 50 )
+    return (int64_t)((level - 5) * (level + 2) * (level + 2) * 2.2);
+
+  if ( level <= 100 )
+    return (int64_t)((level - 5) * (level + 2) * (level - 38) * 9);
+
+  if ( level <= 139 )
+    return (int64_t)((level + 27) * (level + 34) * (level + 220));
+
+  return (int64_t)((level - 15) * (level + 7) * (level - 126) * 41);
 }

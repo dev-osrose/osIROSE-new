@@ -23,5 +23,7 @@ namespace Combat {
   RoseCommon::Entity get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
   RoseCommon::Entity get_start_spawn(EntitySystem& entitySystem);
   
+  int64_t get_exp_to_level(int level);
+  
   std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, RoseCommon::Entity entity, int type = 1);
 }
