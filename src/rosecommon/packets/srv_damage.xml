@@ -2,9 +2,10 @@
     <element name = "attackerId" type = "uint16_t" />
     <element name = "defenderId" type = "uint16_t" />
     <element name = "damage" type = "uint32_t" />
-    <element name = "action" type = "DamageAction" default = "0" />
+    <element name = "action" type = "DamageAction" />
 
     <!-- Drop info -->
+    <includeXml path = "item.xml" />
     <element name = "x" type = "float" default = "0.f" />
     <element name = "y" type = "float" default = "0.f" />
     <element name = "item" type = "Item" default = "{}" />
@@ -15,7 +16,7 @@
         <restriction base = "uint32_t">
             <enumeration value = "NONE" id = "0" />
             <enumeration value = "RESERVED" id = "1" />
-            <enumeration value = "ATTACK" id = "2" />
+            <enumeration value = "IMMEDIATE" id = "2" />
             <enumeration value = "HIT" id = "4" />
             <enumeration value = "CRITICAL" id = "8" />
             <enumeration value = "TARGET_DEAD" id = "16" />

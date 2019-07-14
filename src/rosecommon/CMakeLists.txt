@@ -111,6 +111,7 @@ set(IDL_FILES
   packets/srv_equip_item.xml
   packets/srv_inventory_data.xml
   packets/srv_join_server_reply.xml
+  packets/srv_levelup.xml
   packets/srv_login_reply.xml
   packets/srv_logout_reply.xml
   packets/srv_mob_char.xml
@@ -122,10 +123,11 @@ set(IDL_FILES
   packets/srv_remove_object.xml
   packets/srv_screen_shot_time_reply.xml
   packets/srv_select_char_reply.xml
+  packets/srv_set_hp_and_mp.xml
   packets/srv_set_item.xml
   packets/srv_set_money.xml
+  packets/srv_setexp.xml
   packets/srv_shout_chat.xml
-  packets/srv_set_hp_and_mp.xml
   packets/srv_srv_select_reply.xml
   packets/srv_switch_server.xml
   packets/srv_teleport_reply.xml
