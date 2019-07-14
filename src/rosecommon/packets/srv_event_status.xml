@@ -1,4 +1,4 @@
 <packet ePacketType = "PAKWC_EVENT_STATUS">
-    <element name = "objectId" type = "uint16_t" default = "0" />
+    <element name = "object_id" type = "uint16_t" default = "0" />
     <element name = "status" type = "int16_t" default = "0" />
 </packet>

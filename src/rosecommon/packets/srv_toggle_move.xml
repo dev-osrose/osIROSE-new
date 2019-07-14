@@ -1,7 +1,7 @@
 <packet ePacketType = "PAKWC_TOGGLE_MOVE">
-    <element name = "objectId" type = "uint16_t" default = "0">
+    <element name = "object_id" type = "uint16_t" default = "0" />
     <element name = "type" type = "ToggleMove" />
-    <element name = "runSpeed" type = "uint16_t" default = "0">
+    <element name = "run_speed" type = "uint16_t" default = "0" />
 
     <simpleType name = "ToggleMove">
         <restriction base = "uint8_t">

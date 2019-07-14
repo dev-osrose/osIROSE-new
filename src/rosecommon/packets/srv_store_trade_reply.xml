@@ -1,4 +1,4 @@
-<packet ePacketType = "PAKCS_STORE_TRADE_REQ">
+<packet ePacketType = "PAKWC_STORE_TRADE_REPLY">
     <element name = "result" type = "StoreTradeResult" />
 
     <simpleType name = "StoreTradeResult">

@@ -1,4 +1,4 @@
 <packet ePacketType = "PAKWC_SET_WEIGHT">
-  <element name = "charId" type = "uint16_t" />
+  <element name = "char_id" type = "uint16_t" />
   <element name = "weight" type = "uint8_t" />
 </packet>
