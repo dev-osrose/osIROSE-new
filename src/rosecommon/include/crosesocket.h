@@ -22,6 +22,7 @@
 #include "crosepacket.h"
 #include "isccommon.h"
 #include <queue>
+#include <array>
 
 namespace RoseCommon {
 
@@ -138,8 +139,8 @@ class CRoseSocket {
   virtual bool onServerSend(uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) ;
   virtual bool handleServerPacket([[maybe_unused]] uint8_t* _buffer) ;
 
-  PacketCodec crypt_[static_cast<int>(SocketType::MaxSockets)];
-  std::unique_ptr<Core::INetwork> socket_[static_cast<int>(SocketType::MaxSockets)];
+  std::array<PacketCodec, static_cast<int>(SocketType::MaxSockets)> crypt_;
+  std::array<std::unique_ptr<Core::INetwork>, static_cast<int>(SocketType::MaxSockets)> socket_;
 
   std::mutex recv_mutex_;
   std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;
