@@ -30,7 +30,6 @@ if( WIN32 )
 	find_path( MYSQL_INCLUDE_DIR
 		NAMES "mysql.h"
 		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
-				"${CMAKE_EXTERNAL_INCLUDE_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */include"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */include"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */include"
@@ -43,7 +42,6 @@ if( WIN32 )
 	find_path( MYSQL_LIBRARY_PATH
 		NAMES "libmysql.lib" "mysqlclient_r.lib"
 		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
@@ -56,7 +54,6 @@ if( WIN32 )
 	find_library( MYSQL_LIBRARY
 		NAMES "libmysql" "mysqlclient_r"
 		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
 			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
 			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
 			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"

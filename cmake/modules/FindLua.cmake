@@ -117,7 +117,7 @@ find_library(LUA_LIBRARY
     ENV LUA_DIR
   PATH_SUFFIXES lib
   PATHS
-  ${CMAKE_EXTERNAL_LIBRARY_DIR}
+  ${CMAKE_THIRD_PARTY_LIBRARY_DIR}
   ~/Library/Frameworks
   /Library/Frameworks
   /sw
