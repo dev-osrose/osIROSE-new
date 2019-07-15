@@ -1,4 +1,0 @@
-PAKCS_PARTY_REPLY
-include dataconsts.h
-PartyReply::Reply reply e(uint8_t)
-uint32_t idXorTag

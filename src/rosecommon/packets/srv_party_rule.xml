@@ -1,0 +1,4 @@
+<packet ePacketType = "PAKWC_PARTY_RULE">
+    <includeXml path = "party_rule.xml" />
+    <element name = "rule" type = "PartyRule" />
+</packet>

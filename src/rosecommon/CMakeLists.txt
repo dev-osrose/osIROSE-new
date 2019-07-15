@@ -95,6 +95,9 @@ set(IDL_FILES
   packets/cli_mouse_cmd.xml
   packets/cli_normal_chat.xml
   packets/cli_party_chat.xml
+  packets/cli_party_reply.xml
+  packets/cli_party_req.xml
+  packets/cli_party_rule.xml
   packets/cli_pickup_item_req.xml
   packets/cli_repair_npc.xml
   packets/cli_repair_use_item.xml
@@ -169,6 +172,13 @@ set(IDL_FILES
   packets/srv_normal_chat.xml
   packets/srv_npc_char.xml
   packets/srv_party_chat.xml
+  packets/srv_party_item.xml
+  packets/srv_party_levelexp.xml
+  packets/srv_party_member_update.xml
+  packets/srv_party_member.xml
+  packets/srv_party_reply.xml
+  packets/srv_party_req.xml
+  packets/srv_party_rule.xml
   packets/srv_pickup_item_reply.xml
   packets/srv_player_char.xml
   packets/srv_quest_data.xml

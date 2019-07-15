@@ -1,4 +1,0 @@
-PAKCS_PARTY_REQ
-include dataconsts.h
-PartyReq::Request request e(uint8_t)
-uint32_t idXorTag
