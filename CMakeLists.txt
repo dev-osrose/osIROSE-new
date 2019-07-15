@@ -13,7 +13,6 @@ endif()
 #------------------------------------------------------------------------------
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/dev-osrose/osIROSE-new")
-set(CMAKE_OUTPUT "${CMAKE_SOURCE_DIR}/build_out")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_PLATFORM_PATH "${CMAKE_SOURCE_DIR}/cmake/platform")
 set(CMAKE_THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/3rdparty")

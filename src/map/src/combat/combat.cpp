@@ -260,6 +260,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         {
           Entity attacker = entitySystem.get_entity_from_id(attack_log.attacker_);
           auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
+          
+          // Start exp out algo
           level_difference = attackerLevel.level - level.level;
           if(attack_log.value_ > (life.maxHp * 1.15f))
             attack_log.value_ = (life.maxHp * 1.15f);
@@ -278,10 +280,11 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             xp_out = 1;
             
           attackerLevel.xp += xp_out;
+          // End exp out algo
           
           auto exp_required = get_exp_to_level(attackerLevel.level+1);
           while (attackerLevel.xp >= exp_required) {
-            int64_t new_exp = attackerLevel.xp - exp_required;
+            int32_t new_exp = attackerLevel.xp - exp_required;
             attackerLevel.xp = new_exp;
             ++attackerLevel.level;
             exp_required = get_exp_to_level(attackerLevel.level+1);
@@ -500,7 +503,7 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   entitySystem.teleport_entity(entity, std::get<1>(dest), std::get<2>(dest), std::get<0>(dest));
 }
 
-int64_t Combat::get_exp_to_level(int level) {
+int32_t Combat::get_exp_to_level(int level) {
   if ( level > 210 )
     level = 210;
     
