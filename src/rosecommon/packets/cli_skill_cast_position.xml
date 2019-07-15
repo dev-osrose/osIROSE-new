@@ -1,0 +1,6 @@
+<packet ePacketType = "PAKCS_SKILL_CAST_POSITION">
+    <element name = "slot" type = "uint8_t" />
+    <element name = "x" type = "float" />
+    <element name = "y" type = "float" />
+</packet>
+

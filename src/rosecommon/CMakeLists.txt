@@ -85,6 +85,7 @@ set(IDL_FILES
   packets/cli_drop_item.xml
   packets/cli_equip_item_ride.xml
   packets/cli_equip_item.xml
+  packets/cli_equip_projectile.xml
   packets/cli_hotbar_set_icon_req.xml
   packets/cli_hp_req.xml
   packets/cli_join_server_req.xml
@@ -106,6 +107,10 @@ set(IDL_FILES
   packets/cli_set_server_var_req.xml
   packets/cli_set_weight_req.xml
   packets/cli_shout_chat.xml
+  packets/cli_skill_cast_position.xml
+  packets/cli_skill_cast_self.xml
+  packets/cli_skill_cast_target.xml
+  packets/cli_skill_level_req.xml
   packets/cli_srv_select_req.xml
   packets/cli_stop_moving.xml
   packets/cli_stop.xml
@@ -134,12 +139,14 @@ set(IDL_FILES
   packets/srv_channel_list_reply.xml
   packets/srv_char_list_reply.xml
   packets/srv_clan_chat.xml
+  packets/srv_clear_status.xml
   packets/srv_create_char_reply.xml
   packets/srv_damage.xml
   packets/srv_delete_char_reply.xml
   packets/srv_drop_item.xml
   packets/srv_equip_item_ride.xml
   packets/srv_equip_item.xml
+  packets/srv_equip_projectile.xml
   packets/srv_event_status.xml
   packets/srv_global_flags.xml
   packets/srv_global_vars.xml
@@ -176,6 +183,16 @@ set(IDL_FILES
   packets/srv_set_server_var_reply.xml
   packets/srv_set_weight.xml
   packets/srv_shout_chat.xml
+  packets/srv_skill_cancel.xml
+  packets/srv_skill_cast_self.xml
+  packets/srv_skill_cast_target.xml
+  packets/srv_skill_damage.xml
+  packets/srv_skill_effect.xml
+  packets/srv_skill_finish.xml
+  packets/srv_skill_learn.xml
+  packets/srv_skill_level_reply.xml
+  packets/srv_skill_start.xml
+  packets/srv_speed_changed.xml
   packets/srv_srv_select_reply.xml
   packets/srv_stat_add_reply.xml
   packets/srv_stop_moving.xml

@@ -2,8 +2,7 @@
     <includeXml path = "item.xml" />
 
     <element name = "reply" type = "BankListReply" />
-    <element name = "count" type = "uint8_t" />
-    <element name = "items" type = "BankListItem" occurs = "unbounded" default = "none" />
+    <element name = "items" type = "BankListItem" occurs = "unbounded" occursSize="uint8_t" default = "none" />
 
     <simpleType name = "BankListReply">
         <restriction base = "uint8_t">
