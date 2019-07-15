@@ -70,6 +70,7 @@ set(IDL_FILES
   packets/cli_alive.xml
   packets/cli_allied_chat.xml
   packets/cli_allied_shout_chat.xml
+  packets/cli_appraisal_req.xml
   packets/cli_attack.xml
   packets/cli_bank_list_req.xml
   packets/cli_bank_move_item.xml
@@ -106,6 +107,9 @@ set(IDL_FILES
   packets/cli_set_position.xml
   packets/cli_set_server_var_req.xml
   packets/cli_set_weight_req.xml
+  packets/cli_shop_close.xml
+  packets/cli_shop_list_req.xml
+  packets/cli_shop_open.xml
   packets/cli_shout_chat.xml
   packets/cli_skill_cast_position.xml
   packets/cli_skill_cast_self.xml
@@ -117,6 +121,8 @@ set(IDL_FILES
   packets/cli_store_trade_req.xml
   packets/cli_teleport_req.xml
   packets/cli_toggle_move.xml
+  packets/cli_trade_item.xml
+  packets/cli_trade.xml
   packets/cli_use_item.xml
   packets/cli_whisper_chat.xml
   packets/isc_alive.xml
@@ -128,6 +134,7 @@ set(IDL_FILES
   packets/srv_allied_chat.xml
   packets/srv_allied_shout_chat.xml
   packets/srv_announce_chat.xml
+  packets/srv_appraisal_reply.xml
   packets/srv_attack.xml
   packets/srv_bank_list_reply.xml
   packets/srv_bank_move_item.xml
@@ -182,6 +189,9 @@ set(IDL_FILES
   packets/srv_set_position.xml
   packets/srv_set_server_var_reply.xml
   packets/srv_set_weight.xml
+  packets/srv_shop_close.xml
+  packets/srv_shop_list_reply.xml
+  packets/srv_shop_open.xml
   packets/srv_shout_chat.xml
   packets/srv_skill_cancel.xml
   packets/srv_skill_cast_self.xml
@@ -201,6 +211,8 @@ set(IDL_FILES
   packets/srv_switch_server.xml
   packets/srv_teleport_reply.xml
   packets/srv_toggle_move.xml
+  packets/srv_trade_item.xml
+  packets/srv_trade.xml
   packets/srv_update_npc.xml
   packets/srv_use_item.xml
   packets/srv_whisper_chat.xml
