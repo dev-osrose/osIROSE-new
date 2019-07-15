@@ -1,9 +1,9 @@
 <packet ePacketType = "PAKCS_STORE_TRADE_REQ">
     <element name = "npc_id" type = "uint16_t" />
     <!-- Flags are either 0 or 1 to denote which data item is appended -->
-    <element name = "is_buy" type = "uint8_t" default = "0" />
-    <element name = "is_sell" type = "uint8_t" default = "0" />
-    <element name = "time" type = "uint32_t" default = "0" />
+    <element name = "is_buy" type = "uint8_t" />
+    <element name = "is_sell" type = "uint8_t" />
+    <element name = "time" type = "uint32_t" />
     <element name = "item" type = "BuySellItem" />
 
     <complexType name="BuySellItem">

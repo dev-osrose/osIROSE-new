@@ -5,5 +5,5 @@ Flags:
     - PVP Enabled: 0x00000001
 -->
 <packet ePacketType = "PAKWC_GLOBAL_FLAGS">
-  <element name = "flags" type = "int32_t" default = "0" />
+  <element name = "flags" type = "int32_t" />
 </packet>
