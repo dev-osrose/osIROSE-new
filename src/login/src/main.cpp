@@ -205,11 +205,14 @@ void delete_stale_parties() {
   std::vector<int> to_remove;
   std::vector<std::pair<int, int>> members_to_remove;
   for (const auto& row : party_count) {
+    if (row.id.is_null()) {
+      continue;
+    }
     if (row.total <= 1) {
       to_remove.push_back(row.id);
     }
     if (static_cast<long int>(row.total) == 1) {
-      members_to_remove.emplace_back(row.id, row.memberId);
+    //  members_to_remove.emplace_back(row.id, row.memberId);
     }
   }
   for (const auto& p : to_remove) {
