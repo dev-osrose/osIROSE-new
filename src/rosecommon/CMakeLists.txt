@@ -80,6 +80,10 @@ set(IDL_FILES
   packets/cli_channel_list_req.xml
   packets/cli_char_list_req.xml
   packets/cli_clan_chat.xml
+  packets/cli_clan_command.xml
+  packets/cli_clan_icon_req.xml
+  packets/cli_clan_icon_set.xml
+  packets/cli_clan_icon_timestamp.xml
   packets/cli_create_char_req.xml
   packets/cli_damage.xml
   packets/cli_delete_char_req.xml
@@ -149,6 +153,9 @@ set(IDL_FILES
   packets/srv_channel_list_reply.xml
   packets/srv_char_list_reply.xml
   packets/srv_clan_chat.xml
+  packets/srv_clan_command.xml
+  packets/srv_clan_icon_reply.xml
+  packets/srv_clan_icon_timestamp.xml
   packets/srv_clear_status.xml
   packets/srv_create_char_reply.xml
   packets/srv_damage.xml
@@ -157,6 +164,7 @@ set(IDL_FILES
   packets/srv_equip_item_ride.xml
   packets/srv_equip_item.xml
   packets/srv_equip_projectile.xml
+  packets/srv_event_add.xml
   packets/srv_event_status.xml
   packets/srv_global_flags.xml
   packets/srv_global_vars.xml
@@ -171,6 +179,7 @@ set(IDL_FILES
   packets/srv_move.xml
   packets/srv_normal_chat.xml
   packets/srv_npc_char.xml
+  packets/srv_npc_show.xml
   packets/srv_party_chat.xml
   packets/srv_party_item.xml
   packets/srv_party_levelexp.xml
