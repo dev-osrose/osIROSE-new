@@ -203,6 +203,9 @@ CREATE TABLE `party` (
   `leader_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Leader''s char ID',
   `options` int(11) NOT NULL DEFAULT '0',
   `level` int(11) NOT NULL DEFAULT '1',
+  `last_got_item_index` int(11) NOT NULL DEFAULT '0',
+  `last_got_etc_index` int(11) NOT NULL DEFAULT '0',
+  `last_got_zuly_index` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Parties persist until they are disbanded.';
 /*!40101 SET character_set_client = @saved_cs_client */;

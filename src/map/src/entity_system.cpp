@@ -541,7 +541,7 @@ std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity enti
     return res;
 }
 
-RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
+RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
     Core::CharacterTable characters{};
@@ -563,7 +563,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     auto& basicInfo = prototype.set<BasicInfo>();
     basicInfo.name = charRow.name;
     basicInfo.id = idManager.get_free_id();
-    basicInfo.tag = sessionId;
+    basicInfo.tag = charId;
     basicInfo.teamId = basicInfo.id;
     basicInfo.job = charRow.job;
     basicInfo.statPoints = charRow.statPoints;
