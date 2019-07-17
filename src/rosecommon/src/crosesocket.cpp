@@ -67,7 +67,6 @@ CRoseSocket::~CRoseSocket() {
     if(socket_[idx])
       socket_[idx]->shutdown(true);
   }
-  logger_.reset();
 }
 
 bool CRoseSocket::send(const CRosePacket& _buffer, int socket_id) {
