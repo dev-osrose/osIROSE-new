@@ -79,6 +79,8 @@ set(IDL_FILES
   packets/cli_change_map_req.xml
   packets/cli_channel_list_req.xml
   packets/cli_char_list_req.xml
+  packets/cli_chatroom_message.xml
+  packets/cli_chatroom.xml
   packets/cli_clan_chat.xml
   packets/cli_clan_command.xml
   packets/cli_clan_icon_req.xml
@@ -99,6 +101,9 @@ set(IDL_FILES
   packets/cli_join_server_req.xml
   packets/cli_login_req.xml
   packets/cli_logout_req.xml
+  packets/cli_memo.xml
+  packets/cli_messenger_chat.xml
+  packets/cli_messenger.xml
   packets/cli_mouse_cmd.xml
   packets/cli_normal_chat.xml
   packets/cli_party_chat.xml
@@ -106,6 +111,7 @@ set(IDL_FILES
   packets/cli_party_req.xml
   packets/cli_party_rule.xml
   packets/cli_pickup_item_req.xml
+  packets/cli_quest_data_req.xml
   packets/cli_repair_npc.xml
   packets/cli_repair_use_item.xml
   packets/cli_revive_req.xml
@@ -154,6 +160,8 @@ set(IDL_FILES
   packets/srv_change_map_reply.xml
   packets/srv_change_skin.xml
   packets/srv_channel_list_reply.xml
+  packets/srv_chatroom_message.xml
+  packets/srv_chatroom.xml
   packets/srv_char_list_reply.xml
   packets/srv_clan_chat.xml
   packets/srv_clan_command.xml
@@ -181,11 +189,14 @@ set(IDL_FILES
   packets/srv_levelup.xml
   packets/srv_login_reply.xml
   packets/srv_logout_reply.xml
+  packets/srv_memo.xml
+  packets/srv_messenger.xml
   packets/srv_mob_char.xml
   packets/srv_mouse_cmd.xml
   packets/srv_move.xml
   packets/srv_normal_chat.xml
   packets/srv_npc_char.xml
+  packets/srv_npc_event.xml
   packets/srv_npc_show.xml
   packets/srv_party_chat.xml
   packets/srv_party_item.xml
@@ -197,6 +208,7 @@ set(IDL_FILES
   packets/srv_party_rule.xml
   packets/srv_pickup_item_reply.xml
   packets/srv_player_char.xml
+  packets/srv_quest_data_reply.xml
   packets/srv_quest_data.xml
   packets/srv_quest_reward_add_value.xml
   packets/srv_quest_reward_set_value.xml
