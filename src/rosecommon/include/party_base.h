@@ -5,9 +5,9 @@
 
 namespace RoseCommon {
 struct PartyBase {
-    PartyBase(RoseCommon::Entity leader);
+    PartyBase(uint32_t leader);
 
-    bool add_member(RoseCommon::Entity);
+    bool add_member(uint32_t);
     bool remove_member(uint32_t tag);
 
     bool is_member(uint32_t tag) const;
