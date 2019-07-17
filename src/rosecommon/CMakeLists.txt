@@ -84,6 +84,9 @@ set(IDL_FILES
   packets/cli_clan_icon_req.xml
   packets/cli_clan_icon_set.xml
   packets/cli_clan_icon_timestamp.xml
+  packets/cli_craft_enhance_req.xml
+  packets/cli_craft_req.xml
+  packets/cli_craft_status.xml
   packets/cli_create_char_req.xml
   packets/cli_damage.xml
   packets/cli_delete_char_req.xml
@@ -157,6 +160,9 @@ set(IDL_FILES
   packets/srv_clan_icon_reply.xml
   packets/srv_clan_icon_timestamp.xml
   packets/srv_clear_status.xml
+  packets/srv_craft_enhance_reply.xml
+  packets/srv_craft_reply.xml
+  packets/srv_craft_status.xml
   packets/srv_create_char_reply.xml
   packets/srv_damage.xml
   packets/srv_delete_char_reply.xml
@@ -168,6 +174,7 @@ set(IDL_FILES
   packets/srv_event_status.xml
   packets/srv_global_flags.xml
   packets/srv_global_vars.xml
+  packets/srv_gm_command_code.xml
   packets/srv_hp_reply.xml
   packets/srv_inventory_data.xml
   packets/srv_join_server_reply.xml
