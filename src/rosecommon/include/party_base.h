@@ -19,9 +19,9 @@ struct PartyBase {
     uint8_t level = 1;
     uint8_t options = 0;
     uint32_t leader = 0;
-    RoseCommon::Entity last_item = entt::null;
-    RoseCommon::Entity last_etc = entt::null;
-    RoseCommon::Entity last_zuly = entt::null;
+    uint32_t last_got_item = 0;
+    uint32_t last_got_etc = 0;
+    uint32_t last_got_zuly = 0;
     uint8_t capacity = 5;
     std::vector<uint32_t> members;
 };
