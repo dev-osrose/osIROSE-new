@@ -105,6 +105,7 @@ CRoseServer::~CRoseServer() {
   }
   for (auto& s : socket_) {
       if (s && s->process_thread_.joinable()) {
+          s->set_active(false);
           s->process_thread_.join();
       }
   }
