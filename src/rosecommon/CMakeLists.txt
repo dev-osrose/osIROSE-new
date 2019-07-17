@@ -116,6 +116,7 @@ set(IDL_FILES
   packets/cli_repair_use_item.xml
   packets/cli_revive_req.xml
   packets/cli_revive_set_pos.xml
+  packets/cli_ride_request.xml
   packets/cli_stat_add_req.xml
   packets/cli_screen_shot_time_req.xml
   packets/cli_select_char_req.xml
@@ -163,6 +164,7 @@ set(IDL_FILES
   packets/srv_chatroom_message.xml
   packets/srv_chatroom.xml
   packets/srv_char_list_reply.xml
+  packets/srv_char_state_change.xml
   packets/srv_clan_chat.xml
   packets/srv_clan_command.xml
   packets/srv_clan_icon_reply.xml
@@ -180,6 +182,7 @@ set(IDL_FILES
   packets/srv_equip_projectile.xml
   packets/srv_event_add.xml
   packets/srv_event_status.xml
+  packets/srv_fairy.xml
   packets/srv_global_flags.xml
   packets/srv_global_vars.xml
   packets/srv_gm_command_code.xml
@@ -214,6 +217,8 @@ set(IDL_FILES
   packets/srv_quest_reward_set_value.xml
   packets/srv_remove_object.xml
   packets/srv_revive_reply.xml
+  packets/srv_ride_state_change.xml
+  packets/srv_ride_request.xml
   packets/srv_screen_shot_time_reply.xml
   packets/srv_select_char_reply.xml
   packets/srv_server_data.xml
@@ -251,6 +256,7 @@ set(IDL_FILES
   packets/srv_toggle_move.xml
   packets/srv_trade_item.xml
   packets/srv_trade.xml
+  packets/srv_update_name.xml
   packets/srv_update_npc.xml
   packets/srv_use_item.xml
   packets/srv_whisper_chat.xml
