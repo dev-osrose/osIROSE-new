@@ -7,7 +7,7 @@ namespace RoseCommon {
 struct PartyBase {
     PartyBase(uint32_t leader);
 
-    bool add_member(uint32_t);
+    bool add_member(uint32_t tag);
     bool remove_member(uint32_t tag);
 
     bool is_member(uint32_t tag) const;
