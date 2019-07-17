@@ -46,8 +46,12 @@ void MapManager::stop() {
     cv.notify_all();
     std::lock_guard<std::mutex> lock(mutex);
     for (auto& map : maps_) {
-        map.second.join();
-        map.first.join();
+        if (map.second.joinable()) {
+            map.second.join();
+        }
+        if (map.first.joinable()) {
+            map.first.join();
+        }
     }
     maps_.clear();
 }
