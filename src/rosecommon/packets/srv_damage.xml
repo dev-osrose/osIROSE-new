@@ -4,7 +4,7 @@
     <element name = "attackerId" type = "uint16_t" />
     <element name = "defenderId" type = "uint16_t" />
     <element name = "damage" type = "uint32_t" />
-    <element name = "action" type = "DamageAction" />
+    <element name = "action" type = "uint32_t" />
 
     <!-- Drop info -->
     <element name = "x" type = "float" default = "0.f" />
@@ -12,15 +12,4 @@
     <element name = "item" type = "Item" default = "{}" />
     <element name = "id" type = "uint16_t" default = "0" />
     <element name = "ownerId" type = "uint16_t" default = "0" />
-
-    <simpleType name = "DamageAction">
-        <restriction base = "uint32_t">
-            <enumeration value = "NONE" id = "0" />
-            <enumeration value = "RESERVED" id = "1" />
-            <enumeration value = "IMMEDIATE" id = "2" />
-            <enumeration value = "HIT" id = "4" />
-            <enumeration value = "CRITICAL" id = "8" />
-            <enumeration value = "TARGET_DEAD" id = "16" />
-        </restriction>
-    </simpleType>
 </packet>
