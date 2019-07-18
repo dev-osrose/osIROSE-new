@@ -19,4 +19,16 @@ std::optional<uint32_t> name_to_session(const std::string& name) {
     return {static_cast<uint32_t>(res.front().id)};
 }
 
+std::optional<std::string> id_to_name(const uint32_t charId) {
+    Core::CharaterTable characters{};
+    
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+    
+    const auto res = conn(sqlpp::select(characters.name).from(characters).where(characters.id == charId));
+    if (res.empty()) {
+        return {};
+    }
+    return {std::string{res.front().name}};
+}
+
 }
