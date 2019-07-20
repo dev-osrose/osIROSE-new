@@ -96,16 +96,6 @@ on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 failure $env:WEBHOOK_URL
 
-notifications:
-- provider: Slack
-  incoming_webhook: https://hooks.slack.com/services/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
-  auth_token:
-    secure: QRzsk64PSFoDEGoTiL44n9yIlkyCrY/cG2HW5hVDIlVNdkW/m47qgyjTeBR4ri5+PmYwVxelkdOipzJBeTVRSsciTo2aGnk4QHXyRyR4Nra6SAxaDuKFUC3Sbc8jXnmq
-  channel: osirose-commits
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: false
-
 #before_test:
 #  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
 #  - SET STATIC_DEPS=true
