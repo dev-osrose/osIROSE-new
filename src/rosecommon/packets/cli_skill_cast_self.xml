@@ -1,0 +1,3 @@
+<packet ePacketType = "PAKCS_SKILL_CAST_SELF">
+    <element name = "slot" type = "uint8_t" />
+</packet>

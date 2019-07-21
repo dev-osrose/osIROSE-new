@@ -1,0 +1,5 @@
+<packet ePacketType = "PAKWC_PARTY_ITEM">
+    <includeXml path = "item.xml" />
+    <element name = "target" type = "uint16_t" />
+    <element name = "item" type = "Item" />
+</packet>

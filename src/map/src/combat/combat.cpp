@@ -206,7 +206,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         total_applied_damage += attack.value_;
         adjusted_hp -= attack.value_;
       }
-      
+
       if(adjusted_hp <= 0) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
         attack.action_ &= ~DAMAGE_ACTION_HIT;
@@ -215,7 +215,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         entitySystem.send_nearby(entity, p);
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
-        
+
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_to(entity, p);
         entitySystem.send_to(attacker, p);

@@ -1,0 +1,6 @@
+<packet ePacketType = "PAKWC_STOP">
+  <element name = "char_id" type = "uint16_t" />
+  <element name = "x" type = "float" />
+  <element name = "y" type = "float" />
+  <element name = "z" type = "int16_t" />
+</packet>

@@ -1,4 +1,0 @@
-PAKWC_PARTY_MEMBER
-uint8_t rules
-include dataconsts.h
-PartyMember::Party party I
