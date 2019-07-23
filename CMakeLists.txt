@@ -122,6 +122,9 @@ endif()
 if(WITH_CRASH_REPORTS)
   find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
   include(BreakpadSymbolGeneration)
+  
+#  find_package(Crashpad ${REQUIRED_IF_OPTION})
+#  include(crashpad-symbol-generation)
 endif()
 
 if (WITH_TRACING)
@@ -164,6 +167,9 @@ endif()
 if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
   include(BuildGoogleBreakpad)
 endif()
+
+#include(Build-gn)
+#include(Build-crashpad)
 
 if(NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)

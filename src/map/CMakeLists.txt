@@ -84,6 +84,7 @@ set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${
 
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
+#  generate_crashpad_symbol_data(${PROJECT})
 endif()
 
 install(TARGETS ${PROJECT}

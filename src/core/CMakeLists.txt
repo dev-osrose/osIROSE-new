@@ -106,13 +106,22 @@ target_link_libraries(${PROJECT}
 
 if(WITH_CRASH_REPORTS)
   if(NOT BREAKPAD_FOUND)
-    add_dependencies(${PROJECT} breakpad-build Breakpad::Breakpad)
+    add_dependencies(${PROJECT} breakpad-build utils::breakpad)
   endif()
   
   target_link_libraries(${PROJECT} 
     PUBLIC 
-      Breakpad::Breakpad
+      utils::breakpad
   )
+  
+#  if(NOT CRASHPAD_FOUND)
+#    add_dependencies(${PROJECT} crashpad-build crashpad-install utils::crashpad)
+#  endif()
+#  
+#  target_link_libraries(${PROJECT} 
+#    PUBLIC 
+#      utils::crashpad
+#  )
 endif()
 
 # Since we use networking, we need to link the winsock libs for windows

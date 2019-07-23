@@ -12,7 +12,7 @@
 #include "srv_hp_reply.h"
 #include "srv_mouse_cmd.h"
 #include "srv_set_hp_and_mp.h"
-#include "srv_setexp.h"
+#include "srv_set_exp.h"
 
 #include "components/basic_info.h"
 #include "components/computed_values.h"
@@ -216,12 +216,12 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
-        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, (SrvDamage::DamageAction)attack.action_);
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_nearby(entity, p);
         break;
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
-        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, (SrvDamage::DamageAction)attack.action_);
+        auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_to(entity, p);
         entitySystem.send_to(attacker, p);
       }
@@ -290,9 +290,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             
             //TODO:: adjust our hp and mp based on our level here
             
-            auto p = SrvLevelup::create(attack_log.attacker_, attackerLevel.level, attackerLevel.xp);
-            p.set_statPoints(0);
-            p.set_skillPoints(0);
+            auto p = SrvLevelup::create(attack_log.attacker_, attackerLevel.level, attackerLevel.xp, 0, 0);
             entitySystem.send_to(attacker, p);
           }
           
@@ -302,8 +300,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             current_stamina = attackerStamina.stamina;
           }
           
-          auto p = SrvSetexp::create(attackerLevel.xp, current_stamina);
-          p.set_sourceId(basicInfo.id);
+          auto p = SrvSetExp::create(attackerLevel.xp, current_stamina);
+          p.set_source_id(basicInfo.id);
           entitySystem.send_to(attacker, p);
           
           xp_out = 1;
