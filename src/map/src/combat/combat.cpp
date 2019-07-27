@@ -423,7 +423,7 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
   
   uint16_t map_id = pos.map;
-  float x = 0.f, y = 0.f;
+  float x = 1337.f, y = 1337.f;
   
   switch(type)
   {
