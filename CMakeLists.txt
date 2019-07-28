@@ -91,11 +91,7 @@ IF(WITH_MYSQL)
   find_package(MySQL 6.1 REQUIRED)
 ENDIF()
 
-find_package(PythonInterp 2.7 REQUIRED)
-
-if(WIN32)
-  find_package(PythonLibs 2.7 REQUIRED)
-endif()
+find_package(Python2 COMPONENTS Interpreter Development REQUIRED)
 
 find_package(Patch REQUIRED)
 if(MSVC)
@@ -106,6 +102,7 @@ else()
 endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
+//find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(PacketGenerator)
 
@@ -138,6 +135,10 @@ endif()
 if(NOT LUA_FOUND)
   include(BuildLua)
 endif()
+
+//if(NOT ZLIB_FOUND)
+//  include(Build-zlib)
+//endif()
 
 if(NOT CURL_FOUND)
   include(BuildCURL)
