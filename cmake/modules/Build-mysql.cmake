@@ -8,14 +8,25 @@ set(_byproducts
   ${MYSQL_INSTALL_DIR}/lib/libmysqlclient.a
 )
 
-ExternalProject_Add(
-  mysql
-  URL https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.12.tar.gz
-  URL_HASH MD5=82ba7cc22755f77635768c6e6d184161
-  CMAKE_ARGS -G${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${MYSQL_INSTALL_DIR} -DWITHOUT_SERVER=ON -DWITH_UNIT_TESTS=OFF -DWITH_BOOST=<SOURCE_DIR>/boost/boost_1_67_0
-  BUILD_BYPRODUCTS ${_byproducts}
-  INSTALL_DIR ${MYSQL_INSTALL_DIR}
-)
+if(WIN32)
+  ExternalProject_Add(
+    mysql
+    URL https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.17.zip
+    URL_HASH MD5=12ffebf5a1a2b2047c6044b9b0e5860b
+    CMAKE_ARGS -G${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${MYSQL_INSTALL_DIR} -DWITHOUT_SERVER=ON -DWITH_UNIT_TESTS=OFF
+    BUILD_BYPRODUCTS ${_byproducts}
+    INSTALL_DIR ${MYSQL_INSTALL_DIR}
+  )
+else()
+  ExternalProject_Add(
+    mysql
+    URL https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.17.tar.gz
+    URL_HASH MD5=82ba7cc22755f77635768c6e6d184161
+    CMAKE_ARGS -G${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${MYSQL_INSTALL_DIR} -DWITHOUT_SERVER=ON -DWITH_UNIT_TESTS=OFF -DWITH_BOOST=<SOURCE_DIR>/boost/boost_1_67_0
+    BUILD_BYPRODUCTS ${_byproducts}
+    INSTALL_DIR ${MYSQL_INSTALL_DIR}
+  )
+endif()
 ExternalProject_Get_Property(
   mysql
   install_dir
