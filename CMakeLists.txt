@@ -102,7 +102,7 @@ else()
 endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
-//find_package(ZLIB ${REQUIRED_IF_OPTION})
+#find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(PacketGenerator)
 
@@ -136,9 +136,9 @@ if(NOT LUA_FOUND)
   include(BuildLua)
 endif()
 
-//if(NOT ZLIB_FOUND)
-//  include(Build-zlib)
-//endif()
+#if(NOT ZLIB_FOUND)
+#  include(Build-zlib)
+#endif()
 
 if(NOT CURL_FOUND)
   include(BuildCURL)
