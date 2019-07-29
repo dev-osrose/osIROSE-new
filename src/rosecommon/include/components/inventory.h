@@ -22,6 +22,50 @@ namespace Component {
     template <size_t N, size_t L>
     using const_wrapper = base_wrapper<std::add_const_t<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>, N, L>;
 
+    inline RoseCommon::Entity& goggles() {
+      return items[RoseCommon::EquippedPosition::GOGGLES];
+    }
+
+    inline RoseCommon::Entity& helmet() {
+      return items[RoseCommon::EquippedPosition::HELMET];
+    }
+
+    inline RoseCommon::Entity& armor() {
+      return items[RoseCommon::EquippedPosition::ARMOR];
+    }
+
+    inline RoseCommon::Entity& backpack() {
+      return items[RoseCommon::EquippedPosition::BACKPACK];
+    }
+
+    inline RoseCommon::Entity& gauntlet() {
+      return items[RoseCommon::EquippedPosition::GAUNTLET];
+    }
+
+    inline RoseCommon::Entity& boots() {
+      return items[RoseCommon::EquippedPosition::BOOTS];
+    }
+
+    inline RoseCommon::Entity& weapon_r() {
+      return items[RoseCommon::EquippedPosition::WEAPON_R];
+    }
+
+    inline RoseCommon::Entity& weapon_l() {
+      return items[RoseCommon::EquippedPosition::WEAPON_L];
+    }
+
+    inline RoseCommon::Entity& necklace() {
+      return items[RoseCommon::EquippedPosition::NECKLACE];
+    }
+
+    inline RoseCommon::Entity& ring() {
+      return items[RoseCommon::EquippedPosition::RING];
+    }
+
+    inline RoseCommon::Entity& earing() {
+      return items[RoseCommon::EquippedPosition::EARING];
+    }
+
     constexpr wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() {
       return { items };
     }
