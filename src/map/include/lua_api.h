@@ -2,6 +2,7 @@
 
 #include <sol.hpp>
 #include <string>
+#include <optional>
 #include "logconsole.h"
 #include "dataconsts.h"
 
@@ -53,7 +54,11 @@ class ItemLuaApi : public LuaApi {
         bool on_drop(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnDrop", entity); }
         bool on_pickup(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnPickup", entity); }
         bool on_use(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnUse", entity); }
-    
+        //int  get_use_restriction() { return safe_lua_call<int>("GetUseRestriction"); }
+        int  get_attack_speed() { return safe_lua_call<int>("GetAttakSpd"); }
+        int  get_move_speed() { return safe_lua_call<int>("GetMoveSpd"); }
+        int  get_magic() { return safe_lua_call<int>("GetMagic"); }
+
         void register_add_bonus_attr(std::function<void(RoseCommon::Entity, int, int)>&& func) {
             register_function("addBonusAttr", std::forward<decltype(func)>(func));
         }
