@@ -11,7 +11,9 @@
 // stores all item related lua
 class LuaItem {
     public:
-        void register_lua(sol::environment env, uint8_t type, uint16_t id);
+        void register_lua(sol::environment env, uint8_t type, uint16_t id,
+                          std::function<void(RoseCommon::Entity, int, int)>&& addBonusAttr,
+                          std::function<void(RoseCommon::Entity, int, int)>&& removeBonusAttr);
 
         void delete_item(uint8_t type, uint16_t id);
 
