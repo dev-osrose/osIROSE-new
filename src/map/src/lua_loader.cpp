@@ -96,7 +96,7 @@ void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua,
 
     try {
         state.script(lua, env);
-        items.register_lua(env, type, id, std::forward<decltype(addBonusAttr)>(addBonusAttr), std::foward<decltype(removeBonusAttr)>(removeBonusAttr));
+        items.register_lua(env, type, id, std::forward<decltype(addBonusAttr)>(addBonusAttr), std::forward<decltype(removeBonusAttr)>(removeBonusAttr));
     } catch (const sol::error& e) {
         logger->error("Error (re)loading item lua script: {}", e.what());
     }
