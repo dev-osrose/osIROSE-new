@@ -287,6 +287,11 @@ target_link_libraries(${PROJECT}
     Core
 )
 
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${SOURCES_BASE})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${SOURCES_HEADER})
+source_group(TREE ${CMAKE_GEN_SRC_DIR}/packets PREFIX "Packet Source Files" FILES ${PACKET_SOURCES})
+source_group(TREE ${CMAKE_GEN_SRC_DIR}/packets PREFIX "Packet Header Files" FILES ${PACKET_HEADERS})
+
 if (COMMAND cotire)
   cotire(${PROJECT})
 endif()
