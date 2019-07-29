@@ -1,8 +1,12 @@
 #include "lua_item.h"
 
-void LuaItem::register_lua(sol::environment env, uint8_t type, uint16_t id) {
+void LuaItem::register_lua(sol::environment env, uint8_t type, uint16_t id,
+                           std::function<void(RoseCommon::Entity, int, int)>&& addBonusAttr,
+                           std::function<void(RoseCommon::Entity, int, int)>&& removeBonusAttr) {
     Data d;
     d.api = std::make_shared<ItemLuaApi>(env);
+    d.api->register_add_bonus_attr(std::forward<decltype(addBonusAttr)>(addBonusAttr));
+    d.api->register_remove_bonus_attr(std::foward<decltype(removeBonusAttr)>(removeBonusAttr));
     d.env = env;
     data.emplace(std::tuple{type, id}, d);
 }
