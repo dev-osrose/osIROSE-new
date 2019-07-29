@@ -110,7 +110,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     // load item lua
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     itemDb.store_lua([this](uint8_t type, uint16_t id, const std::string& lua) {
-        lua_loader.load_lua_item(type, id, lua);
+        lua_loader.load_lua_item(type, id, lua, [](RoseCommon::Entity, int, int) {}, [](RoseCommon::Entity, int, int) {});
     });
 
     // register recurrent stoof (like saving every 5min)
@@ -808,9 +808,6 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     lua.api = lua_loader.get_lua_item(type, id);
     if (const auto tmp = lua.api.lock(); tmp) {
         tmp->on_init();
-        // TODO: This is temporary, they should be added on lua loading instead of item creation (so it is only done once)
-        tmp->register_add_bonus_attr([](RoseCommon::Entity, int, int) {});
-        tmp->register_remove_bonus_attr([](RoseCommon::Entity, int, int) {});
     }
 
     std::lock_guard<std::recursive_mutex> lock(access);
