@@ -110,7 +110,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     // load item lua
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     itemDb.store_lua([this](uint8_t type, uint16_t id, const std::string& lua) {
-        lua_loader.load_lua_item(type, id, lua);
+        lua_loader.load_lua_item(type, id, lua, [](RoseCommon::Entity, int, int) {}, [](RoseCommon::Entity, int, int) {});
     });
 
     // register recurrent stoof (like saving every 5min)

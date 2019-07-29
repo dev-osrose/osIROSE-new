@@ -89,12 +89,14 @@ void LuaLoader::load_file(const std::string& path) {
     }
 }
 
-void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua) {
+void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua,
+                              std::function<void(RoseCommon::Entity, int, int)>&& addBonusAttr,
+                              std::function<void(RoseCommon::Entity, int, int)>&& removeBonusAttr) {
     sol::environment env{state, sol::create, state.globals()};
 
     try {
         state.script(lua, env);
-        items.register_lua(env, type, id);
+        items.register_lua(env, type, id, std::forward<decltype(addBonusAttr)>(addBonusAttr), std::forward<decltype(removeBonusAttr)>(removeBonusAttr));
     } catch (const sol::error& e) {
         logger->error("Error (re)loading item lua script: {}", e.what());
     }
