@@ -13,6 +13,11 @@ class LuaApi {
         bool on_create() { return safe_lua_call<bool>("OnCreate"); }
         bool on_delete() { return safe_lua_call<bool>("OnDelete"); }
     
+        template <typename T, typename... Args>
+        void register_function(const std::string& name, std::function<T(Args...)>&& func) {
+            env.set_function(name, std::forward<std::function<T(Args...)>>(func));
+        }
+    
     protected:
         template <typename T, typename... Args>
         T safe_lua_call(const std::string& name, Args&&... args) {
@@ -48,6 +53,14 @@ class ItemLuaApi : public LuaApi {
         bool on_drop(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnDrop", entity); }
         bool on_pickup(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnPickup", entity); }
         bool on_use(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnUse", entity); }
+    
+        void register_add_bonus_attr(std::function<void(RoseCommon::Entity, int, int)>&& func) {
+            register_function("addBonusAttr", std::forward<decltype(func)>(func));
+        }
+
+        void register_remove_bonus_attr(std::function<void(RoseCommon::Entity, int, int)>&& func) {
+            register_function("removeBonusAttr", std::forward<decltype(func)>(func));
+        }
 };
 
 class NpcLuaApi : public LuaApi {
