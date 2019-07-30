@@ -17,24 +17,39 @@ using namespace RoseCommon;
 
 namespace Calculations {
   float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
-    const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    //const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& stats = entitySystem.get_component<Component::Stats>(entity);
     auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
     float moveSpeed = 0;
 
     if (values.moveMode <= MoveMode::RUN) {
-      int itemSpeed = 0, itemNumber = 0;
+      int itemSpeed = 65, itemNumber = 0;
 
-      auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
-      for (auto item : inventory.getEquipped()) {
-        auto& lua = entitySystem.get_component<Component::ItemLua>(item);
-
-        // Look at boots and backpack move speed value
+      if(entitySystem.has_component<Component::Inventory>(entity) == true) {
+        auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
+        const auto& boots = inventory.boots();
+        if(boots) {
+          if(entitySystem.has_component<Component::ItemLua>(boots) == true) {
+            auto& lua = entitySystem.get_component<Component::ItemLua>(boots);
+            if(auto api = lua.api.lock(); api)
+              itemSpeed = api->get_move_speed(); // Override the default item speed
+          }
+        }
+        
+        const auto& backpack = inventory.backpack();
+        if(backpack) {
+          if(entitySystem.has_component<Component::ItemLua>(backpack) == true) {
+            auto& lua = entitySystem.get_component<Component::ItemLua>(backpack);
+            if(auto api = lua.api.lock(); api)
+              itemSpeed += api->get_move_speed();
+          }
+        }
       }
       itemSpeed += 20;
 
-      moveSpeed = itemSpeed * (stats.dex + 500.f) / 100.f + 0; // TODO: Change 0 to buff value for movement speed
-      float passiveSpeed = 100 + moveSpeed * 1 / 100.f;
+      moveSpeed = itemSpeed * (stats.dex + 500.f) / 100.f + 0; // TODO: Change 0 to value calcd from buffs for movement speed
+      //passiveSpeed = passiveSkillValueMoveSpeed + moveSpeed * passiveSkillRateMoveSpeed / 100.f
+      float passiveSpeed = 0 + moveSpeed * 0 / 100.f;
       moveSpeed += passiveSpeed;
     } else {
       // We are riding a cart/gear
@@ -43,7 +58,7 @@ namespace Calculations {
 
       moveSpeed += 0;  // Get buffs value for movement speed
 
-      if (get_weight(entitySystem, entity) >= 100 && moveSpeed > 300) moveSpeed = 300;
+      //if (get_weight(entitySystem, entity) >= 100 && moveSpeed > 300) moveSpeed = 300;
     }
     values.runSpeed = moveSpeed;
     return moveSpeed;

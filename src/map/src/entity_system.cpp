@@ -43,6 +43,8 @@
 #include "combat/combat.h"
 #include "items/inventory.h"
 
+#include "utils/calculation.h"
+
 #include "random.h"
 
 #include "srv_remove_object.h"
@@ -125,8 +127,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
-            computed.runSpeed = 433;
+        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto entity, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
             switch(computed.moveMode) {
               case RoseCommon::MoveMode::WALK:
               {
@@ -134,15 +135,9 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 computed.runSpeed = 200;
                 break;
               }
-              case RoseCommon::MoveMode::RUN:
-              {
-                // (get original speed + any move speed increase from items (stat 6) - any movement decrease from items (stat 7)) + Fairy additonal movement speed
-                computed.runSpeed += stats.dex * 0.8500001;
-                break;
-              }
               default:
               {
-                computed.runSpeed = 200;
+                computed.runSpeed = Calculations::get_runspeed(self, entity);
                 break;
               }
             }
