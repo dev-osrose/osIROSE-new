@@ -209,6 +209,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
 
       if(adjusted_hp <= 0) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
+        Combat::drop_loot(entitySystem, entity, attacker);
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
@@ -225,8 +226,9 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     queuedDamage.damage_.clear();
     
     if(life.hp <= 0) {
-      if(entitySystem.has_component<Component::Mob>(entity) == true)
+      if(entitySystem.has_component<Component::Mob>(entity) == true) {
         entitySystem.add_timer(5s, [entity](EntitySystem& entitySystem) { entitySystem.delete_entity(entity); });
+      }
       
       // remove components that we can't have if we are dead!
       entitySystem.remove_component<Component::Combat>(entity);
@@ -413,4 +415,19 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
   }
 
   entitySystem.teleport_entity(entity, std::get<1>(dest), std::get<2>(dest), std::get<0>(dest));
+}
+
+void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner) {
+  // TODO: compute drop
+  const auto& lua_component = entitySystem.get_component<Component::NpcLua>(entity);
+  const auto& lua_data = lua_component.data.lock();
+  if (!lua_data) {
+    // TODO: log?
+    return; // no data, no drop!
+  }
+  if (Core::Random::getInstance().get_uniform(0, 100) <= lua_data->get_drop_money()) {
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    auto [posX, posY] = Core::Random::getInstance().get_random_in_circle(pos.x, pos.y, 200); //TODO: change that value??
+    Item::drop_item(entitySystem, entitySystem.create_zuly(amount), posX, posY, owner);
+  }
 }
