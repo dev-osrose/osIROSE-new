@@ -5,6 +5,7 @@
 #include "logconsole.h"
 #include "dataconsts.h"
 #include "entity_system.h"
+#include "items/inventory.h"
 
 #include "srv_attack.h"
 #include "srv_damage.h"
@@ -427,7 +428,7 @@ void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, Ro
   }
   if (Core::Random::getInstance().get_uniform(0, 100) <= lua_data->get_drop_money()) {
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
-    auto [posX, posY] = Core::Random::getInstance().get_random_in_circle(pos.x, pos.y, 200); //TODO: change that value??
+    auto [posX, posY] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, 200); //TODO: change that value??
     const int64_t amount = 100; // TODO change that value
     const float deviation = 0.05f;
     Item::drop_item(entitySystem, entitySystem.create_zuly(Core::Random::getInstance().get_normal(amount, deviation)), posX, posY, owner);
