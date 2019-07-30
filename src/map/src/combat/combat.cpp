@@ -5,6 +5,7 @@
 #include "logconsole.h"
 #include "dataconsts.h"
 #include "entity_system.h"
+#include "items/inventory.h"
 
 #include "srv_attack.h"
 #include "srv_damage.h"
@@ -214,6 +215,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
 
       if(adjusted_hp <= 0) {
         //TODO: Get dropped item data here and send it with the DAMAGE packet
+        Combat::drop_loot(entitySystem, entity, attacker);
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
@@ -517,4 +519,21 @@ int32_t Combat::get_exp_to_level(int level) {
     return (int64_t)((level + 27) * (level + 34) * (level + 220));
 
   return (int64_t)((level - 15) * (level + 7) * (level - 126) * 41);
+}
+
+void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner) {
+  // TODO: compute drop
+  const auto& lua_component = entitySystem.get_component<Component::NpcLua>(entity);
+  const auto& lua_data = lua_component.data.lock();
+  if (!lua_data) {
+    // TODO: log?
+    return; // no data, no drop!
+  }
+  if (Core::Random::getInstance().get_uniform(0, 100) <= lua_data->get_drop_money()) {
+    const auto& pos = entitySystem.get_component<Component::Position>(entity);
+    auto [posX, posY] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, 200.f); //TODO: change that value??
+    const int64_t amount = 100; // TODO change that value
+    const float deviation = 0.05f;
+    Items::drop_item(entitySystem, entitySystem.create_zuly(Core::Random::getInstance().get_normal(amount, deviation)), posX, posY, owner);
+  }
 }

@@ -26,4 +26,6 @@ namespace Combat {
   int32_t get_exp_to_level(int level);
   
   std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, RoseCommon::Entity entity, int type = 1);
+  
+  void drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner);
 }
