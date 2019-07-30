@@ -431,6 +431,6 @@ void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, Ro
     auto [posX, posY] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, 200.f); //TODO: change that value??
     const int64_t amount = 100; // TODO change that value
     const float deviation = 0.05f;
-    Item::drop_item(entitySystem, entitySystem.create_zuly(Core::Random::getInstance().get_normal(amount, deviation)), posX, posY, owner);
+    Items::drop_item(entitySystem, entitySystem.create_zuly(Core::Random::getInstance().get_normal(amount, deviation)), posX, posY, owner);
   }
 }
