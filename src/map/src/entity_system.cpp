@@ -127,7 +127,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto entity, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
+        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto entity, [[maybe_unused]] auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
             switch(computed.moveMode) {
               case RoseCommon::MoveMode::WALK:
               {
@@ -143,7 +143,8 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
             }
             if(computed.runSpeed < 200) computed.runSpeed = 200;
             
-            computed.atkSpeed = 30; // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
+            computed.atkSpeed = Calculations::get_attackspeed(self, entity);
+            // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
         self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {

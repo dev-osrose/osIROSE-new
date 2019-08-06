@@ -291,7 +291,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
             exp_required = get_exp_to_level(attackerLevel.level+1);
             
             //TODO:: adjust our hp and mp based on our level here
-            
+            //TODO:: give the player attr and skill points
             auto p = SrvLevelup::create(attack_log.attacker_, attackerLevel.level, attackerLevel.xp, 0, 0);
             entitySystem.send_to(attacker, p);
           }

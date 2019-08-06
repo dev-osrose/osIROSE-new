@@ -8,6 +8,8 @@ class EntitySystem;
 
 namespace Calculations {
   float get_runspeed(EntitySystem&, RoseCommon::Entity);
+  float get_attackspeed(EntitySystem&, RoseCommon::Entity);
+  
   int get_weight(EntitySystem&, RoseCommon::Entity);
   
   int get_maxhp(EntitySystem&, RoseCommon::Entity);

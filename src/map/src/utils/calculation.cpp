@@ -64,8 +64,34 @@ namespace Calculations {
     return moveSpeed;
   }
   
+  float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    const auto& stats = entitySystem.get_component<Component::Stats>(entity);
+    auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
+    float weaponAtkSpd = 0, passiveAtkSpeed = 0;
+    
+    if(entitySystem.has_component<Component::Inventory>(entity) == true) {
+      auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
+      const auto& weapon_r = inventory.weapon_r();
+      if(weapon_r) {
+        if(entitySystem.has_component<Component::ItemLua>(weapon_r) == true) {
+          auto& lua = entitySystem.get_component<Component::ItemLua>(weapon_r);
+          if(auto api = lua.api.lock(); api)
+            weaponAtkSpd = api->get_attack_speed();
+        }
+      }
+    }
+    //Note: passiveAtkSpeed is only set depending on your job?
+    float attackSpeed = (passiveAtkSpeed + 1500.f / (weaponAtkSpd + 5));
+    //TODO: Do buff processing here
+    //attackSpeed + attack speed buff - attack speed debuff
+    if(attackSpeed < 30)
+      attackSpeed = 30;
+
+    values.atkSpeed = attackSpeed;
+    return attackSpeed;
+  }
+  
   int get_weight(EntitySystem& entitySystem, RoseCommon::Entity entity) {
-    auto& life = entitySystem.get_component<Component::Life>(entity);
     return 0;
   }
   
