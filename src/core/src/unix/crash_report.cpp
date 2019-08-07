@@ -35,7 +35,10 @@ namespace Core {
       // Add any attributes to the parameters map.
       // Note that several attributes are automatically extracted.
       parameters["product_name"] = crash_report_app_name;
-      parameters["version"] = GIT_LATEST_TAG;
+      parameters["version"] = PROJECT_VERSION;
+      parameters["branch"] = GIT_BRANCH;
+      parameters["commit_hash"] = GIT_COMMIT_HASH;
+      parameters["last_tag"] = GIT_LATEST_TAG;
       files["upload_file_minidump"] = descriptor.path();
 
       std::string response, error;
