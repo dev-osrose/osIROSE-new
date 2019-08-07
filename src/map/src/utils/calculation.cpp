@@ -35,7 +35,7 @@ namespace Calculations {
               itemSpeed = api->get_move_speed(); // Override the default item speed
           }
         }
-        
+
         const auto& backpack = inventory.backpack();
         if(backpack) {
           if(entitySystem.has_component<Component::ItemLua>(backpack) == true) {
@@ -63,12 +63,12 @@ namespace Calculations {
     values.runSpeed = moveSpeed;
     return moveSpeed;
   }
-  
+
   float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     const auto& stats = entitySystem.get_component<Component::Stats>(entity);
     auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
-    float weaponAtkSpd = 0, passiveAtkSpeed = 0;
-    
+    float weaponAtkSpd = 8, passiveAtkSpeed = 0;
+
     if(entitySystem.has_component<Component::Inventory>(entity) == true) {
       auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
       const auto& weapon_r = inventory.weapon_r();
@@ -90,16 +90,16 @@ namespace Calculations {
     values.atkSpeed = attackSpeed;
     return attackSpeed;
   }
-  
+
   int get_weight(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     return 0;
   }
-  
+
   int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& life = entitySystem.get_component<Component::Life>(entity);
     return 0;
   }
-  
+
   int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& magic = entitySystem.get_component<Component::Magic>(entity);
     return 0;
