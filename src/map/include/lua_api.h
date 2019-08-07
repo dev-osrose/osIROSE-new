@@ -55,7 +55,7 @@ class ItemLuaApi : public LuaApi {
         bool on_pickup(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnPickup", entity); }
         bool on_use(RoseCommon::Entity entity) { return safe_lua_call<bool>("OnUse", entity); }
         //int  get_use_restriction() { return safe_lua_call<int>("GetUseRestriction"); }
-        int  get_attack_speed() { return safe_lua_call<int>("GetAttakSpd"); }
+        int  get_attack_speed() { return safe_lua_call<int>("GetAttackSpd"); }
         int  get_move_speed() { return safe_lua_call<int>("GetMoveSpd"); }
         int  get_magic() { return safe_lua_call<int>("GetMagic"); }
 
