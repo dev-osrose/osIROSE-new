@@ -267,7 +267,7 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
     entitySystem.add_component(item, std::move(bi));
 
     entitySystem.update_position(item, x, y);
- 
+
     entitySystem.add_timer(2min, [item](EntitySystem& entitySystem) {
         if (!entitySystem.is_valid(item)) {
             return;
@@ -290,19 +290,26 @@ void Items::drop_item(EntitySystem& entitySystem, RoseCommon::Entity item, float
 }
 
 void Items::pickup_item(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
-    const float x = entitySystem.get_component<Component::Position>(item).x;
-    const float y = entitySystem.get_component<Component::Position>(item).y;
-    const auto* owner = entitySystem.try_get_component<Component::Owner>(item);
-    if (owner && owner->owner != entity) {
-        return;
+  const float x = entitySystem.get_component<Component::Position>(item).x;
+  const float y = entitySystem.get_component<Component::Position>(item).y;
+  const auto* owner = entitySystem.try_get_component<Component::Owner>(item);
+  if (owner && owner->owner != entity) {
+    return;
+  }
+  entitySystem.remove_component<Component::Position>(item);
+  entitySystem.remove_component<Component::BasicInfo>(item);
+  entitySystem.remove_component<Component::Owner>(item);
+  if(entitySystem.has_component<Component::Item>(item)) {
+    const auto& i = entitySystem.get_component<Component::Item>(item);
+    if(i.is_zuly == true) {
+      Items::add_zuly(entitySystem, entity, i.count);
+      entitySystem.delete_entity(item);
     }
-    entitySystem.remove_component<Component::Position>(item);
-    entitySystem.remove_component<Component::BasicInfo>(item);
-    entitySystem.remove_component<Component::Owner>(item);
-    if (Items::add_item(entitySystem, entity, item) != ReturnValue::OK) {
-        const RoseCommon::Entity o = owner ? owner->owner : entt::null;
-        Items::drop_item(entitySystem, item, x, y, o);
+    else if (Items::add_item(entitySystem, entity, item) != ReturnValue::OK) {
+      const RoseCommon::Entity o = owner ? owner->owner : entt::null;
+      Items::drop_item(entitySystem, item, x, y, o);
     }
+  }
 }
 
 bool Items::add_zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, int64_t zuly) {
