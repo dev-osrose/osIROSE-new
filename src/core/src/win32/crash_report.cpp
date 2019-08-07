@@ -15,16 +15,21 @@
 #include "crash_report.h"
 
 namespace Core {
-  
+
 #ifdef ENABLE_CRASH_REPORTS
+  static std::string crash_report_app_name = "";
+  static std::string crash_report_upload_url = "";
 static bool dumpCallback(const wchar_t* dump_path, const wchar_t* minidump_id,
                          void* context, EXCEPTION_POINTERS* exinfo,
                          MDRawAssertionInfo* assertion, bool succeeded) {
     printf("Dump path: %ws\n", dump_path);
+
+
+
     return succeeded;
   }
-  
-  CrashReport::CrashReport(std::string path, [[maybe_unused]] std::string pipe /*= ""*/) : 
+
+  CrashReport::CrashReport(std::string path, std::string app_name, [[maybe_unused]] std::string pipe /*= ""*/) :
     _exception_handler(
             std::wstring(path.begin(), path.end()).c_str(), nullptr,
             dumpCallback,
@@ -32,9 +37,19 @@ static bool dumpCallback(const wchar_t* dump_path, const wchar_t* minidump_id,
             google_breakpad::ExceptionHandler::ExceptionHandler::HANDLER_ALL,
             MiniDumpNormal, L"", nullptr)
   {
+    crash_report_app_name = app_name;
+  }
+
+  void CrashReport::set_url([[maybe_unused]] std::string url)
+  {
+    crash_report_upload_url = url;
   }
 #else
-  CrashReport::CrashReport([[maybe_unused]] std::string path, [[maybe_unused]] std::string pipe /*= ""*/)
+  CrashReport::CrashReport([[maybe_unused]] std::string path, [[maybe_unused]] std::string app_name, [[maybe_unused]] std::string pipe /*= ""*/)
+  {
+  }
+
+  CrashReport::set_url([[maybe_unused]] std::string url)
   {
   }
 #endif

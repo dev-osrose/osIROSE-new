@@ -14,9 +14,9 @@ using ::testing::UnitTest;
 int main(int argc, char *argv[]) {
   InitGoogleTest(&argc, argv);
 #ifndef _WIN32
-  Core::CrashReport crash_reporter("./tmp/dumps");
+  Core::CrashReport crash_reporter("./tmp/dumps", "unit test");
 #else
-  Core::CrashReport crash_reporter(".");
+  Core::CrashReport crash_reporter(".", "unit test");
 #endif
 
   UnitTest &unit_test = *UnitTest::GetInstance();

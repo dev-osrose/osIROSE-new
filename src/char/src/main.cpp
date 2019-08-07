@@ -73,7 +73,7 @@ void ParseCommandLine(int argc, char** argv)
 #endif
     ("h,help",  "Print this help text")
     ;
-    
+
     options.add_options("Networking")
     ("external_ip", "external IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
@@ -90,7 +90,7 @@ void ParseCommandLine(int argc, char** argv)
     ("url", "Auto configure url", cxxopts::value<std::string>()
       ->default_value("http://myexternalip.com/raw"), "URL")
     ;
-    
+
     options.add_options("Database")
     ("db_host", "", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "DB_HOST")
@@ -119,7 +119,7 @@ void ParseCommandLine(int argc, char** argv)
     // Since this is a login server startup function we can get away with a little bit of overhead
     if( options.count("log_level") )
       config.loginServer().logLevel = options["log_level"].as<int>();
-      
+
     if( options.count("external_ip") )
       config.serverData().externalIp = options["external_ip"].as<std::string>();
 
@@ -134,22 +134,22 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("isc_port") )
       config.loginServer().iscPort = options["isc_port"].as<int>();
-      
+
     if( options.count("url") )
     {
       config.serverData().autoConfigureAddress = true;
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
-    
-    if( options.count("max_threads") ) 
+
+    if( options.count("max_threads") )
     {
       config.serverData().maxThreads = options["max_threads"].as<int>();
       Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
     }
-    
+
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();
-      
+
     if( options.count("db_host") )
       config.database().host = options["db_host"].as<std::string>();
     if( options.count("db_port") )
@@ -176,19 +176,20 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
     std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     ParseCommandLine(argc, argv);
-    
+
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
-    
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "CharServer");
+    crash_reporter.set_url(config.serverData().crash_report_url);
+
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
-  
+
     if(auto log = console.lock())
       log->info("Starting up server...");
-  
+
     Core::CLog::SetLevel(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
     DisplayTitle();
     CheckUser();
-  
+
     if(auto log = console.lock()) {
       log->set_level(static_cast<spdlog::level::level_enum>(config.charServer().logLevel));
       log->trace("Trace logs are enabled.");
@@ -204,7 +205,7 @@ int main(int argc, char* argv[]) {
     //   }
     //   config.serverData().externalIp = ip_addr;
     // }
-  
+
     Core::connectionPool.addConnector<Core::Osirose>(std::bind(
               Core::mysqlFactory,
               config.database().user,
@@ -212,7 +213,7 @@ int main(int argc, char* argv[]) {
               config.database().database,
               config.database().host,
               config.database().port));
-  
+
     CCharServer iscServer(true);
     CCharServer clientServer(false, &iscServer);
     CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
@@ -220,18 +221,18 @@ int main(int argc, char* argv[]) {
     iscClient->setLogin(true);
     iscClient->connect();
     iscClient->start_recv();
-  
+
     clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
     clientServer.listen();
     clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
-  
+
     iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
     iscServer.listen();
-  
+
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       //updateSessions();
-      
+
       if(gSignalStatus != 0) {
         iscClient->shutdown(true);
         clientServer.shutdown(true);
