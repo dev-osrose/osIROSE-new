@@ -16,6 +16,8 @@ osIROSE - Open Source International R.O.S.E Online Server
 [ccov-link]: https://codecov.io/gh/dev-osrose/osIROSE-new/branch/trunk
 [coverity-scan]: https://scan.coverity.com/projects/7232/badge.svg
 [coverity-scan-link]: https://scan.coverity.com/projects/dev-osrose-osirose-new
+[backtrace-badge]: https://img.shields.io/badge/Crash%20Report%20Analysis-backtrace.io-informational
+[backtrace-link]: https://backtrace.io
 
 
 ##### Development and Community:
@@ -29,6 +31,13 @@ osIROSE - Open Source International R.O.S.E Online Server
 ##### Project Info:
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/dev-osrose/osIROSE-new/master/LICENSE.txt)
+
+Software Services Used
+-----------------------
+Thanks to the following services that make our development easier:
+
+- Crash reporting analysis provided by [![backtrace-badge]][backtrace-link]
+
 
 C++ Installation - Unix
 -----------------------
