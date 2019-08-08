@@ -33,8 +33,6 @@ environment:
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
   INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
-  BREAKPAD_SERVER: 
-    secure: bBamT/tFSX89djwel0YeWZZWAmu+kULX8NCKBHZ6M+Q=
   WEBHOOK_URL:
     secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubbSHS0vamu/iQXzSX1OQjyXD4FpHUwXc4+buQcjjzRbluSLW2T+99xxfqNHUTTj4pPRYqcUxIFED5E7j/vvR+TMefSuKS2RUUkxifaUAujs39Z/Ual/2kBLBabMHboK8eE=
 
@@ -87,10 +85,10 @@ on_success:
   - ps: ./send.ps1 success $env:WEBHOOK_URL
   - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
   - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-  #- curl --connect-timeout 30 -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
+  - curl --connect-timeout 30 -F symfile=@LoginServer.sym %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
+  - curl --connect-timeout 30 -F symfile=@CharServer.sym %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
+  - curl --connect-timeout 30 -F symfile=@MapServer.sym %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
+  - curl --connect-timeout 30 -F symfile=@NodeServer.sym %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
 
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
