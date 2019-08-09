@@ -3,7 +3,7 @@ init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
 
 image:
-- Visual Studio 2017
+- Visual Studio 2019
 
 configuration:
 - Debug
@@ -85,10 +85,10 @@ on_success:
   - ps: ./send.ps1 success $env:WEBHOOK_URL
   - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin
   - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-  - curl --connect-timeout 30 -F symfile=@LoginServer.pdb %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
-  - curl --connect-timeout 30 -F symfile=@CharServer.pdb %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
-  - curl --connect-timeout 30 -F symfile=@MapServer.pdb %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
-  - curl --connect-timeout 30 -F symfile=@NodeServer.pdb %BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%
+  - curl --connect-timeout 30 -F symfile=@LoginServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+  - curl --connect-timeout 30 -F symfile=@CharServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+  - curl --connect-timeout 30 -F symfile=@MapServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+  - curl --connect-timeout 30 -F symfile=@NodeServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
 
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
