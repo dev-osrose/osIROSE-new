@@ -42,13 +42,31 @@ Thanks to the following services that make our development easier:
 C++ Installation - Unix
 -----------------------
 
+##### Programs required:
+![gpp]
+![libmysql]
+[![cmake]][cmake-link]
+[![python]][python-link]
+
+[gpp]: https://img.shields.io/badge/g++-v7%20or%20higher-blue.svg "G++ 7 or higher"
+[libmysql]: https://img.shields.io/badge/libmysql-v5.7%20or%20higher-blue.svg "libmysql 5.7 or higher"
+
 If you get the source from github, you need to setup the build environment:
 
-    $ ./unix_env_setup.sh
+    $ git submodule update --init --recursive
+    $ pip install --user pyparsing
+    $ mkdir build
+    $ cd build
+    $ cmake ..
 
-This will install all of the tools and sources required to build the project.
+Note, you may need to install the following packages depending on your OS:
 
-"./unix_env_setup.sh" will require superuser privileges, as it calls apt-get install.
+    unzip
+    autoconf
+    libtool
+    libssl-dev
+    libncurses5-dev
+    libreadline-dev
 
 To build the servers, execute the following:
 
@@ -72,7 +90,7 @@ If you opted to keep them in place, the server binaries are located in the bin f
     $ ./bin/CharServer&
     $ ./bin/MapServer&
 
-After running for the first time, the servers will create a config file in the current directory.
+After running for the first time, the servers will create a config file in the current directory that you need to edit.
 
 C++ Installation - Windows
 -----------------------
