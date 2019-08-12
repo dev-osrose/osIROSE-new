@@ -5,7 +5,7 @@ We are also working on a 4th executable: the node server. This executable will b
 
 The project is separated in 10 parts:
 * [Database (Database/)](Database/database.md) That's the database schema and basic item information
-* [Scripts (scripts/)](Scripts/scripts.md) That's the lua code for gameplay scripting
+* [Scripts (scripts/)](scripts/scripts.md) That's the lua code for gameplay scripting
 * [Integration testing (src/bot/)](src/bot/bot.md) That's the code for a pseudo client that does integration testing against the server
 * [Core (src/core/)](src/core/core.md) The core code that contains all of the shared code (database, factories, threading, networking and so on)
 * [RoseCommon (src/rosecommon/)](src/rosecommon/rosecommon.md) All the code common to all three servers that is rose-specific
