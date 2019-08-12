@@ -86,7 +86,8 @@ C++ Installation - Windows
 After downloading and installing the above applications, to compile the servers run the following commands:
 
     git submodule update --init --recursive
-    ./ci/msvc_install.bat
+    pip install pyparsing
+    mkdir build
     cd build
     cmake ..
     cmake --build . --config Release
@@ -127,7 +128,7 @@ The server requires a [MySQL](https://mysql.com/) (or [MariaDB](https://mariadb.
 
 To setup the database, first create a new database (e.g. `osirose`). You will then need to execute the
 `Database/osirose.sql` script to generate the database schema and the `Database/item_db.sql` to
-populate the item database. This can be done using a database tool or from the command line like so: 
+populate the item database. This can be done using a database tool or from the command line like so:
 ```
 mysql -u<user> -p<password> <database_name> < Database/osirose.sql
 mysql -u<user> -p<password> <database_name> < Database/item_db.sql
@@ -166,7 +167,7 @@ in the default `server.json` file. It should match the following sections:
     ...
 ```
 
-To use your own password, generate an [SHA256 hash](https://emn178.github.io/online-tools/sha256.html) of your password 
+To use your own password, generate an [SHA256 hash](https://emn178.github.io/online-tools/sha256.html) of your password
 and update the accounts database and the `server.json` file.
 
 Finally, we need to create an account to join the game with. Run the `create_account` procedure
@@ -178,7 +179,7 @@ call create_account("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a8
 
 Alternatively, automatic account creation can be enabled in the server config. This will automatically
 create an account if a user attempts to login to an account that exist. This is recommended as it is
-much more convenient than having to create password hashes and running sql commands. Simply, try to 
+much more convenient than having to create password hashes and running sql commands. Simply, try to
 log in, fail, then try to login again with the same credentials!
 
 To enable it modify `server.json` to enable `createAccountOnFail`:
