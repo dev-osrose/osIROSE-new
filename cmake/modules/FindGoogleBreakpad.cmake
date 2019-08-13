@@ -76,7 +76,7 @@ include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BREAKPAD_FOUND to TRUE if
 # all listed variables are TRUE
 find_package_handle_standard_args(breakpad
-                                  REQUIRED_VARS BREAKPAD_EXCEPTION_HANDLER_LIBRARIES BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR)
+                                  REQUIRED_VARS BREAKPAD_EXCEPTION_HANDLER_FOUND BREAKPAD_EXCEPTION_HANDLER_LIBRARIES BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR)
 
 mark_as_advanced(
   BREAKPAD_EXCEPTION_HANDLER_LIBRARY
@@ -84,8 +84,8 @@ mark_as_advanced(
   BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR
   )
 
-if(BREAKPAD_EXCEPTION_HANDLER_FOUND AND NOT TARGET utils::breakpad)
-  add_library(utils::breakpad UNKNOWN IMPORTED)
+if(BREAKPAD_FOUND AND NOT TARGET utils::breakpad)
+  add_library(utils::breakpad INTERFACE IMPORTED)
   set_target_properties(utils::breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(utils::breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()
