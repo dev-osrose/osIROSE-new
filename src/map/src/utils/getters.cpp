@@ -1,4 +1,4 @@
-#include "getters.h"
+#include "utils/getters.h"
 
 int  Utils::get_attack_speed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
