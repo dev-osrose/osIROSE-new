@@ -1,4 +1,4 @@
-<packet ePacketType = "PAKCS_CLAN_COMMAND">
+<packet ePacketType = "PAKCC_CLAN_COMMAND">
     <!-- TODO: Pending IDL union enhancements 7/16/2019 
     <include path = "string" system = "true" />
 

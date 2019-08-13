@@ -32,6 +32,7 @@ SET( SOURCES_HEADER
   include/components/spawner.h
   include/items/inventory.h
   include/utils/name_to_session.h
+  include/utils/getters.h
   include/utils/calculation.h
 )
 
@@ -58,6 +59,7 @@ SET( SOURCES_MAIN
   src/items/inventory.cpp
   src/utils/name_to_session.cpp
   src/utils/calculation.cpp
+  src/utils/getters.cpp
 )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
@@ -71,13 +73,13 @@ target_link_libraries(${PROJECT} PUBLIC CURL::libcurl)
 if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua::lua)
 endif()
-target_link_libraries(${PROJECT} 
-  PUBLIC 
+target_link_libraries(${PROJECT}
+  PUBLIC
     lua::lua
 )
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} 
+target_link_libraries(${PROJECT}
   PRIVATE
     RoseCommon
 )
@@ -90,7 +92,7 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 install(TARGETS ${PROJECT}
-        RUNTIME 
+        RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
 
