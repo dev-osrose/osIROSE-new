@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -119,7 +119,7 @@ endif()
 if(WITH_CRASH_REPORTS)
   find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
   include(BreakpadSymbolGeneration)
-  
+
 #  find_package(Crashpad ${REQUIRED_IF_OPTION})
 #  include(crashpad-symbol-generation)
 endif()
