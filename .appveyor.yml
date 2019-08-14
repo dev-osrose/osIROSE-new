@@ -41,7 +41,6 @@ matrix:
 
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
-services: mysql
 
 install:
 - cmd: cd %PROJECT_PATH%
