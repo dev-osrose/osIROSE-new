@@ -27,7 +27,6 @@ set( SOURCES_BASE
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT}
@@ -41,7 +40,7 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 install(TARGETS ${PROJECT}
-        RUNTIME 
+        RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
 

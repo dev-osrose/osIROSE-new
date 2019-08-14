@@ -11,13 +11,13 @@ set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RavenX8#3180")
 
-add_compiler_flags(-DASIO_STANDALONE)
-add_compiler_flags(-Wall -Wextra)
+add_compile_definitions(ASIO_STANDALONE)
+add_compile_options(-Wall -Wextra)
 
 if(DEBUG)
-  add_definitions(-D_DEBUG -DDEBUG)
+  add_compile_definitions(_DEBUG DEBUG)
 else()
-  add_definitions(-DNDEBUG)
+  add_compile_definitions(NDEBUG)
 endif()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)

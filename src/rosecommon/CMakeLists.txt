@@ -4,10 +4,6 @@ link_directories(${EXTERNAL_BINARY_DIR})
 set(PROJECT RoseCommon)
 project(${PROJECT})
 
-if (NOT MSVC)
-  add_compiler_flags(-Werror)
-endif()
-
 set( SOURCES_HEADER
   include/crosesocket.h
   include/crosecrypt.h
@@ -273,17 +269,21 @@ set(args
 generate_packets(PACKET_SOURCES PACKET_HEADERS ${args})
 
 add_library(${PROJECT} STATIC ${SOURCES_BASE} ${PACKET_SOURCES} ${PACKET_HEADERS} ${SOURCES_HEADER})
-target_include_directories(${PROJECT} 
-  PUBLIC 
+target_include_directories(${PROJECT}
+  PUBLIC
     $<BUILD_INTERFACE:${CMAKE_GEN_SRC_DIR}/packets>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/components>
 )
 
+if (NOT MSVC)
+  target_compile_options(${PROJECT} PRIVATE -Werror)
+endif()
+
 add_dependencies(${PROJECT} Core)
 add_dependencies(${PROJECT} RosePackets_generated)
-target_link_libraries(${PROJECT} 
-  PUBLIC 
+target_link_libraries(${PROJECT}
+  PUBLIC
     Core
 )
 
