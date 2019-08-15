@@ -148,11 +148,10 @@ void CNetwork_Asio::ProcessSend() {
     const uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
 
 #ifdef SPDLOG_TRACE_ON
-    fmt::MemoryWriter out;
+    fmt::memory_buffer out;
     logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
-    for (int i = 0; i < _size; i++)
-      out.write( "0x{0:02x} ", raw_ptr[i] );
-    logger_->trace( "{}", out.c_str() );
+    for (int i = 0; i < _size; i++) format_to(out, "0x{0:02x} ", raw_ptr[i]);
+    logger_->trace( "{}", fmt::to_string(out) );
 #endif
 
     if (OnSend(socket_id_, raw_ptr)) {
