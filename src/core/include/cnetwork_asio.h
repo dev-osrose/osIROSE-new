@@ -22,7 +22,7 @@
 #ifndef _CNETWORK_ASIO_H_
 #define _CNETWORK_ASIO_H_
 
-#ifdef _WIN32 
+#ifdef _WIN32
   #ifndef __MINGW32__
     #pragma warning(push)
     #pragma warning(disable : 6011 6031 6102 6255 6258 6326 6387)
@@ -107,6 +107,7 @@ class CNetwork_Asio : public INetwork {
   tcp::socket socket_;
   tcp::acceptor listener_;
 
+  std::atomic_bool async_write_active_ = false;
   std::deque<std::unique_ptr<uint8_t[]>> send_queue_;
   std::mutex send_mutex_;
   std::condition_variable recv_condition_;
