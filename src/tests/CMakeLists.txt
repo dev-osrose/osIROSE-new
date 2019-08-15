@@ -52,7 +52,6 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
 target_compile_definitions(${PROJECT_LIB} PUBLIC SERVER_TESTING)
-target_compile_options(${PROJECT_LIB} PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wl,-Map=$<TARGET_NAME:${PROJECT_LIB}>.map>)
 
 if (MSVC)
 #  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
