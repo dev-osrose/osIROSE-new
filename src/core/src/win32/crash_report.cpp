@@ -49,7 +49,7 @@ static bool dumpCallback(const wchar_t* dump_path, const wchar_t* minidump_id,
   {
   }
 
-  CrashReport::set_url([[maybe_unused]] std::string url)
+  void CrashReport::set_url([[maybe_unused]] std::string url)
   {
   }
 #endif
