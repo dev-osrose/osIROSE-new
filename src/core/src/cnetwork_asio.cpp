@@ -162,7 +162,7 @@ void CNetwork_Asio::ProcessSend() {
       {
         if (!error) {
           OnSent();
-          update_time_ = (Core::Time::GetTickCount());
+          //update_time_ = (Core::Time::GetTickCount());
         } else {
           logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
 
