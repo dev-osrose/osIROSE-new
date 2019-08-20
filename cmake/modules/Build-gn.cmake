@@ -1,12 +1,26 @@
+if(WIN32 OR MINGW)
 ExternalProject_Add(
   gn
   GIT_REPOSITORY https://gn.googlesource.com/gn
   BUILD_IN_SOURCE TRUE
+  DEPENDS utils::ninja
   
-  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} python build/gen.py
-  BUILD_COMMAND ninja -C out
+  CONFIGURE_COMMAND Python2::Interpreter build/gen.py
+  BUILD_COMMAND utils::ninja -C out
   INSTALL_COMMAND ""
 )
+else()
+ExternalProject_Add(
+  gn
+  GIT_REPOSITORY https://gn.googlesource.com/gn
+  BUILD_IN_SOURCE TRUE
+  DEPENDS utils::ninja
+  
+  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} Python2::Interpreter build/gen.py
+  BUILD_COMMAND utils::ninja -C out
+  INSTALL_COMMAND ""
+)
+endif()
 ExternalProject_Get_Property(
   gn
   source_dir

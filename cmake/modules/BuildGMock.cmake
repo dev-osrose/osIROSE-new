@@ -7,7 +7,7 @@ if(WIN32)
     gmock
     GIT_SUBMODULES googletest...
   	SOURCE_DIR ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock
-    CMAKE_ARGS -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -Dgmock_force_shared_crt=ON -Dgtest_force_shared_crt=ON
+    CMAKE_ARGS -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=$<CONFIG> -Dgmock_force_shared_crt=ON -Dgtest_force_shared_crt=ON
     #BUILD_IN_SOURCE 1
     INSTALL_COMMAND ""
   )

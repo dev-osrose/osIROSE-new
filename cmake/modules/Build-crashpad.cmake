@@ -13,82 +13,42 @@ set(_byproducts
   ${CRASHPAD_INSTALL_DIR}/lib/libminidump.lib
 )
 
+if(WIN32)
 ExternalProject_Add(
   crashpad
-  GIT_REPOSITORY https://chromium.googlesource.com/crashpad/crashpad
   BUILD_BYPRODUCTS ${_byproducts}
   BUILD_IN_SOURCE TRUE
-  DEPENDS utils::gn
+  DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
+  STEP_TARGETS build install
+  
+  DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
+  CONFIGURE_COMMAND utils::gn gen out/Default
+  BUILD_COMMAND utils::ninja -C out/Default
+  INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/out/Default/obj" "<INSTALL_DIR>/crashpad" "*.lib"
+  INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
+)
+else()
+ExternalProject_Add(
+  crashpad
+  BUILD_BYPRODUCTS ${_byproducts}
+  BUILD_IN_SOURCE TRUE
+  DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
   STEP_TARGETS build install
 
+  DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
   CONFIGURE_COMMAND utils::gn gen out/Default
-  BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ninja -C out/Default
+  BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} utils::ninja -C out/Default
   INSTALL_COMMAND ""
   INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
 )
 
-#ExternalProject_Add_Step(
-#  crashpad
-#  download-clang
-#  COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/third_party/linux/clang
-#  COMMAND git clone -q https://chromium.googlesource.com/chromium/mini_chromium <SOURCE_DIR>/third_party/linux/clang
-#  DEPENDEES download
-#  DEPENDERS configure build
-#)
-
 ExternalProject_Add_Step(
   crashpad
-  download-mini_chromium
-  COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/third_party/mini_chromium/mini_chromium
-  COMMAND git clone -q https://chromium.googlesource.com/chromium/mini_chromium <SOURCE_DIR>/third_party/mini_chromium/mini_chromium
-  DEPENDEES download
-  DEPENDERS configure build
+  install-crashpad
+  COMMAND find <SOURCE_DIR> -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>
+  DEPENDEES build
+  DEPENDERS install
 )
-
-ExternalProject_Add_Step(
-  crashpad
-  download-gtest
-  COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/third_party/gtest/gtest
-  COMMAND git clone -q https://github.com/google/googletest.git <SOURCE_DIR>/third_party/gtest/gtest
-  DEPENDEES download
-  DEPENDERS configure build
-)
-
-ExternalProject_Add_Step(
-  crashpad
-  download-gyp
-  COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/third_party/gyp/gyp
-  COMMAND git clone -q https://github.com/bnoordhuis/gyp.git <SOURCE_DIR>/third_party/gyp/gyp
-  DEPENDEES download
-  DEPENDERS configure build
-)
-
-if(NOT WIN32)
-  ExternalProject_Add_Step(
-    crashpad
-    download-lss
-    COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/third_party/lss/lss
-    COMMAND git clone -q https://chromium.googlesource.com/linux-syscall-support <SOURCE_DIR>/third_party/lss/lss
-    DEPENDEES download
-    DEPENDERS configure build
-  )
-  
-  ExternalProject_Add_Step(
-    crashpad
-    install-crashpad
-    COMMAND find <SOURCE_DIR> -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>
-    DEPENDEES build
-    DEPENDERS install
-  )
-else()
-  ExternalProject_Add_Step(
-    crashpad
-    install-crashpad
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>" "*.dll"
-    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>" "*.lib"
-    DEPENDEES build
-    DEPENDERS install
-  )
 endif()
 
 ExternalProject_Get_Property(
@@ -98,7 +58,7 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(CRASHPAD_LIBRARIES "base.lib" "client.lib" "util.lib")
+  set(CRASHPAD_LIBRARIES "${install_dir}/crashpad/third_party/mini_chromium/mini_chromium/base/base.lib" "${install_dir}/crashpad/client/client.lib" "${install_dir}/crashpad/util/util.lib")
 else()
   set(CRASHPAD_LIBRARIES "libbase.a" "libclient.a" "libutil.a")
 endif()

@@ -23,11 +23,16 @@ if(WIN32)
     BUILD_BYPRODUCTS ${_byproducts}
 
     UPDATE_COMMAND ""
-    #CONFIGURE_COMMAND <SOURCE_DIR>/src/tools/gyp/gyp.bat --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
-    CONFIGURE_COMMAND Python2::Interpreter <SOURCE_DIR>/src/tools/gyp/gyp_main.py --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
-    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
-      COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
-      COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+#    CONFIGURE_COMMAND Python2::Interpreter <SOURCE_DIR>/src/tools/gyp/gyp_main.py --no-circular-check <SOURCE_DIR>/src/client/windows/breakpad_client.gyp
+#      COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/common.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
+#      COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
+#      COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
+#
+#    BUILD_COMMAND msbuild <SOURCE_DIR>/src/client/windows/common.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
+#      COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
+#      COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
 
     INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/lib/breakpad" "*.lib"
       COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/bin" "*.dll"
@@ -43,18 +48,6 @@ if(WIN32)
     DEPENDERS configure
     COMMAND ${CMAKE_COMMAND} -E remove_directory <SOURCE_DIR>/src/tools/gyp
     COMMAND git clone https://github.com/bnoordhuis/gyp.git <SOURCE_DIR>/src/tools/gyp
-  )
-
-  # Breakpad builds with /MT by default but we need /MD. This patch makes it build with /MD
-  ExternalProject_Add_Step(
-    breakpad
-    patch_project_files
-    DEPENDEES configure
-    DEPENDERS build
-    WORKING_DIRECTORY <SOURCE_DIR>
-    COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/common.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
-    COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
-    COMMAND cmake -DVCXPROJ_PATH=<SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj -P ${CMAKE_SCRIPT_PATH}/breakpad_VS_patch.cmake
   )
 else()
   ExternalProject_Add(
@@ -115,5 +108,12 @@ if(NOT TARGET utils::breakpad)
   add_library(utils::breakpad INTERFACE IMPORTED)
   add_dependencies(utils::breakpad breakpad-build breakpad-install)
   set_target_properties(utils::breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
-  set_target_properties(utils::breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
+#  set_target_properties(utils::breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
 endif()
+
+if(NOT TARGET utils::dump_syms)
+  add_executable(utils::dump_syms IMPORTED IMPORTED)
+  add_dependencies(utils::dump_syms breakpad-install)
+  set_target_properties(utils::dump_syms PROPERTIES IMPORTED_LOCATION ${BREAKPAD_DUMP_SYMS_EXEC})
+endif()
+
