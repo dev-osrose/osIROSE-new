@@ -4,7 +4,7 @@ ExternalProject_Add(
   GIT_REPOSITORY https://gn.googlesource.com/gn
   BUILD_IN_SOURCE TRUE
   DEPENDS utils::ninja
-  
+
   CONFIGURE_COMMAND Python2::Interpreter build/gen.py
   BUILD_COMMAND utils::ninja -C out
   INSTALL_COMMAND ""
@@ -14,9 +14,9 @@ ExternalProject_Add(
   gn
   GIT_REPOSITORY https://gn.googlesource.com/gn
   BUILD_IN_SOURCE TRUE
-  DEPENDS utils::ninja
-  
-  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} Python2::Interpreter build/gen.py
+  DEPENDS utils::ninja Python2::Interpreter
+
+  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${Python2_EXECUTABLE} build/gen.py
   BUILD_COMMAND utils::ninja -C out
   INSTALL_COMMAND ""
 )

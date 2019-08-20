@@ -15,7 +15,7 @@ ExternalProject_Add(
   #GIT_REPOSITORY https://chromium.googlesource.com/chromium/tools/depot_tools.git
   BUILD_IN_SOURCE TRUE
   BUILD_BYPRODUCTS ${_byproducts}
-  
+
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND <SOURCE_DIR>/gclient.bat
@@ -26,7 +26,7 @@ ExternalProject_Add(
   GIT_REPOSITORY https://chromium.googlesource.com/chromium/tools/depot_tools.git
   BUILD_IN_SOURCE TRUE
   BUILD_BYPRODUCTS ${_byproducts}
-  
+
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
@@ -37,7 +37,7 @@ ExternalProject_Get_Property(
   source_dir
 )
 
-set(ENV{PATH} "${source_dir};$ENV{PATH}")
+set(ENV{PATH} "${source_dir}:$ENV{PATH}")
 
 set(DEPOT_TOOLS_PATH ${source_dir})
 if(WIN32 OR MINGW)

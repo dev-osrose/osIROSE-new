@@ -19,6 +19,11 @@ if(WIN32)
     set(BREAKPAD_COMMON_LIB_NAMES common)
     set(BREAKPAD_EXCEPTION_HANDLER_NAMES exception_handler)
     set(BREAKPAD_CRASH_GENERATION_CLIENT_NAMES crash_generation_client)
+
+    find_program(BREAKPAD_DUMP_SYMS_PATH
+        dump_syms
+        HINTS
+            ${CMAKE_THIRD_PARTY_DIR}/bin)
 else()
     find_path(BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR
         google_breakpad/common/breakpad_types.h
@@ -88,4 +93,9 @@ if(BREAKPAD_FOUND AND NOT TARGET utils::breakpad)
   add_library(utils::breakpad INTERFACE IMPORTED)
   set_target_properties(utils::breakpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}")
   set_target_properties(utils::breakpad PROPERTIES INTERFACE_LINK_LIBRARIES "${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}")
+endif()
+
+if(BREAKPAD_FOUND AND NOT TARGET utils::dump_syms)
+  add_executable(utils::dump_syms IMPORTED IMPORTED)
+  set_target_properties(utils::dump_syms PROPERTIES IMPORTED_LOCATION ${BREAKPAD_DUMP_SYMS_PATH})
 endif()

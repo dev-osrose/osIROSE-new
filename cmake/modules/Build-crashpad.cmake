@@ -20,7 +20,7 @@ ExternalProject_Add(
   BUILD_IN_SOURCE TRUE
   DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
   STEP_TARGETS build install
-  
+
   DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
   CONFIGURE_COMMAND utils::gn gen out/Default
   BUILD_COMMAND utils::ninja -C out/Default
@@ -28,6 +28,20 @@ ExternalProject_Add(
   INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
 )
 else()
+
+set(SPEC "solutions = [\
+  {\
+    \"url\": \"https://chromium.googlesource.com/crashpad/crashpad.git\",\
+    \"managed\": False,\
+    \"name\": \"crashpad\",\
+    \"custom_vars\": { \"pull_linux_clang\": True },\
+  },\
+]\
+")
+
+set(ARGS "clang_path=\"//third_party/linux/clang/linux-amd64\"\
+  target_sysroot=\"//third_party/linux/sysroot\"")
+
 ExternalProject_Add(
   crashpad
   BUILD_BYPRODUCTS ${_byproducts}
@@ -35,9 +49,11 @@ ExternalProject_Add(
   DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
   STEP_TARGETS build install
 
-  DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
-  CONFIGURE_COMMAND utils::gn gen out/Default
-  BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} utils::ninja -C out/Default
+  DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E env PATH=${DEPOT_TOOLS_PATH}:$ENV{PATH} fetch --no-history --force crashpad
+    COMMAND ${CMAKE_COMMAND} -E env PATH=${DEPOT_TOOLS_PATH}:$ENV{PATH} gclient config --spec ${SPEC}
+    COMMAND ${CMAKE_COMMAND} -E env PATH=${DEPOT_TOOLS_PATH}:$ENV{PATH} gclient sync
+  CONFIGURE_COMMAND utils::gn gen out/Default --args=${ARGS}
+  BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH=${DEPOT_TOOLS_PATH}:$ENV{PATH} CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ninja -C out/Default
   INSTALL_COMMAND ""
   INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
 )
@@ -45,7 +61,7 @@ ExternalProject_Add(
 ExternalProject_Add_Step(
   crashpad
   install-crashpad
-  COMMAND find <SOURCE_DIR> -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>
+  COMMAND find <SOURCE_DIR>/out -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>
   DEPENDEES build
   DEPENDERS install
 )
