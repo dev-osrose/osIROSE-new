@@ -338,7 +338,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
       {
         if(get_range_to(entitySystem, entity, target.target) <= values.attackRange && values.combatDt <= 0)
         {
-          values.combatDt = 1000; // TODO: Change this to the attack speed time value
+          values.combatDt = 1000 - (250 * (values.atkSpeed * 0.01f));
           if(entitySystem.has_component<Component::Combat>(target.target) == false) {
             entitySystem.add_component<Component::Combat>(target.target);
           }
