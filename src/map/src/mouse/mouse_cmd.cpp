@@ -9,6 +9,7 @@
 #include "components/destination.h"
 #include "components/position.h"
 #include "components/target.h"
+#include "components/client.h"
 
 #include <cmath>
 
@@ -18,7 +19,7 @@ using namespace RoseCommon::Packet;
 void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseCmd& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Mouse::mouse_cmd");
-    logger->trace("entity {}, target {} x {} y {}", entity, packet.get_targetId(), packet.get_x(), packet.get_y());
+    logger->debug("entity {}, target {} x {} y {}", entity, packet.get_targetId(), packet.get_x(), packet.get_y());
 
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);

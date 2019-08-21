@@ -14,6 +14,8 @@ set(_byproducts
 )
 
 if(WIN32)
+set(PATH $ENV{PATH})
+
 ExternalProject_Add(
   crashpad
   BUILD_BYPRODUCTS ${_byproducts}
@@ -21,10 +23,12 @@ ExternalProject_Add(
   DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
   STEP_TARGETS build install
 
-  DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
+  #DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
+  DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E env PATH="${DEPOT_TOOLS_PATH}" ${DEPOT_TOOLS_PATH}/fetch.bat --no-history --force crashpad
+    COMMAND ${CMAKE_COMMAND} -E env PATH="${PATH}" gclient sync
   CONFIGURE_COMMAND utils::gn gen out/Default
-  BUILD_COMMAND utils::ninja -C out/Default
-  INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>/out/Default/obj" "<INSTALL_DIR>/crashpad" "*.lib"
+  BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH="${PATH}" ${DEPOT_TOOLS_PATH}/ninja.exe -C out/Default
+  INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/out/Default/obj" "<INSTALL_DIR>/crashpad" "*.lib"
   INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
 )
 else()
@@ -74,9 +78,9 @@ ExternalProject_Get_Property(
 )
 
 if(WIN32)
-  set(CRASHPAD_LIBRARIES "${install_dir}/crashpad/third_party/mini_chromium/mini_chromium/base/base.lib" "${install_dir}/crashpad/client/client.lib" "${install_dir}/crashpad/util/util.lib")
+  set(CRASHPAD_LIBRARIES "${install_dir}/base.lib" "${install_dir}/client.lib" "${install_dir}/util.lib")
 else()
-  set(CRASHPAD_LIBRARIES "libbase.a" "libclient.a" "libutil.a")
+  set(CRASHPAD_LIBRARIES "${install_dir}/libbase.a" "${install_dir}/libclient.a" "${install_dir}/libutil.a")
 endif()
 
 if(NOT TARGET utils::crashpad)
@@ -86,3 +90,5 @@ if(NOT TARGET utils::crashpad)
   set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_DIRECTORIES "${install_dir}")
   set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_LIBRARIES "${CRASHPAD_LIBRARIES}")
 endif()
+
+mark_as_advanced( CRASHPAD_LIBRARIES )

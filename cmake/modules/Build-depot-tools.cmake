@@ -18,7 +18,8 @@ ExternalProject_Add(
 
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
-  INSTALL_COMMAND <SOURCE_DIR>/gclient.bat
+  INSTALL_COMMAND ""
+  #INSTALL_COMMAND <SOURCE_DIR>/gclient.bat
 )
 else()
 ExternalProject_Add(
@@ -37,14 +38,14 @@ ExternalProject_Get_Property(
   source_dir
 )
 
-set(ENV{PATH} "${source_dir}:$ENV{PATH}")
-
 set(DEPOT_TOOLS_PATH ${source_dir})
 if(WIN32 OR MINGW)
+  #set(ENV{PATH} "${source_dir};$ENV{PATH}")
   set(GCLIENT_EXE_PATH ${source_dir}/gclient.bat)
   set(NINJA_EXE_PATH ${source_dir}/ninja.exe)
   set(FETCH_EXE_PATH ${source_dir}/fetch.bat)
 else()
+  set(ENV{PATH} "${source_dir}:$ENV{PATH}")
   set(GCLIENT_EXE_PATH ${source_dir}/gclient)
   set(NINJA_EXE_PATH ${source_dir}/ninja)
   set(FETCH_EXE_PATH ${source_dir}/fetch)
