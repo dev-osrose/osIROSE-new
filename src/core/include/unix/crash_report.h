@@ -1,7 +1,9 @@
 #pragma once
 
 #ifdef ENABLE_CRASH_REPORTS
+#ifdef BREAKPAD
   #include <client/linux/handler/exception_handler.h>
+#endif
 #endif
 
 namespace Core {
@@ -12,7 +14,9 @@ namespace Core {
 
   private:
 #ifdef ENABLE_CRASH_REPORTS
+  #ifdef BREAKPAD
     google_breakpad::ExceptionHandler _exception_handler;
+  #endif
 #endif
   };
 }

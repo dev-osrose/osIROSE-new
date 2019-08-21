@@ -15,14 +15,26 @@ find_path(CRASHPAD_INCLUDE_DIR
             ${CMAKE_BINARY_DIR}/crashpad-prefix/src/crashpad
             ${CMAKE_THIRD_PARTY_DIR}/include/crashpad)
 
+find_path(CRASHPAD_MINI_CHROMIUM_INCLUDE_DIR
+        base/files/file_path.h
+        HINTS
+            ${CMAKE_BINARY_DIR}/crashpad-prefix/src/crashpad
+            ${CMAKE_BINARY_DIR}/crashpad-prefix/src/crashpad/third_party
+            ${CMAKE_BINARY_DIR}/crashpad-prefix/src/crashpad/third_party/mini_chromium
+            ${CMAKE_BINARY_DIR}/crashpad-prefix/src/crashpad/third_party/mini_chromium/mini_chromium
+            ${CMAKE_THIRD_PARTY_DIR}/include/crashpad
+            ${CMAKE_THIRD_PARTY_DIR}/include/crashpad/third_party
+            ${CMAKE_THIRD_PARTY_DIR}/include/crashpad/third_party/mini_chromium
+            ${CMAKE_THIRD_PARTY_DIR}/include/crashpad/third_party/mini_chromium/mini_chromium)
+
 if(WIN32)
     set(CRASHPAD_BASE_LIB_NAMES base)
     set(CRASHPAD_CLIENT_NAMES client)
     set(CRASHPAD_UTILS_NAMES util)
 else()
-    set(CRASHPAD_BASE_LIB_NAMES base)
-    set(CRASHPAD_CLIENT_NAMES client)
-    set(CRASHPAD_UTILS_NAMES util)
+    set(CRASHPAD_BASE_LIB_NAMES libbase.a)
+    set(CRASHPAD_CLIENT_NAMES libclient.a)
+    set(CRASHPAD_UTILS_NAMES libutil.a)
 endif()
 
 find_library(CRASHPAD_CLIENT_LIBRARY
@@ -52,20 +64,22 @@ include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set CRASHPAD_FOUND to TRUE if
 # all listed variables are TRUE
 find_package_handle_standard_args(crashpad
-                                  REQUIRED_VARS CRASHPAD_BASE_LIBRARY CRASHPAD_CLIENT_LIBRARY CRASHPAD_UTILS_LIBRARY CRASHPAD_INCLUDE_DIR)
+                                  REQUIRED_VARS CRASHPAD_BASE_LIBRARY CRASHPAD_CLIENT_LIBRARY CRASHPAD_UTILS_LIBRARY CRASHPAD_INCLUDE_DIR CRASHPAD_MINI_CHROMIUM_INCLUDE_DIR)
 
 mark_as_advanced(
   CRASHPAD_BASE_LIBRARY
   CRASHPAD_CLIENT_LIBRARY
   CRASHPAD_UTILS_LIBRARY
   CRASHPAD_INCLUDE_DIR
+  CRASHPAD_MINI_CHROMIUM_INCLUDE_DIR
 )
 
-set(CRASHPAD_LIBRARIES ${CRASHPAD_BASE_LIBRARY} ${CRASHPAD_CLIENT_LIBRARY} ${CRASHPAD_UTILS_LIBRARY})
-
 if(CRASHPAD_FOUND AND NOT TARGET utils::crashpad)
+  set(CRASHPAD_LIBRARIES ${CRASHPAD_CLIENT_LIBRARY} ${CRASHPAD_UTILS_LIBRARY} ${CRASHPAD_BASE_LIBRARY})
+
   add_library(utils::crashpad INTERFACE IMPORTED)
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CRASHPAD_INCLUDE_DIR}")
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_DIRECTORIES "${CRASHPAD_LIB_DIR}")
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_LIBRARIES "${CRASHPAD_LIBRARIES}")
+  target_include_directories(utils::crashpad SYSTEM INTERFACE "${CRASHPAD_INCLUDE_DIR}")
+  target_include_directories(utils::crashpad SYSTEM INTERFACE "${CRASHPAD_MINI_CHROMIUM_INCLUDE_DIR}")
+  target_link_directories(utils::crashpad INTERFACE "${CRASHPAD_LIB_DIR}")
+  target_link_libraries(utils::crashpad INTERFACE "${CRASHPAD_LIBRARIES}")
 endif()

@@ -13,52 +13,108 @@
 // limitations under the License.
 
 #include "crash_report.h"
-#include "common/linux/http_upload.h"
+#ifdef BREAKPAD
+  #include <common/linux/http_upload.h>
+#else
+  #include <client/crash_report_database.h>
+  #include <client/settings.h>
+  #include <client/crashpad_client.h>
+#endif
 #include "version.h"
 
 namespace Core {
 
 #ifdef ENABLE_CRASH_REPORTS
+  static std::string crash_report_db_path = "";
   static std::string crash_report_app_name = "";
   static std::string crash_report_upload_url = "";
-  static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
-    [[maybe_unused]] void* context, bool succeeded) {
-    printf("Dump path: %s\n", descriptor.path());
+  #ifdef BREAKPAD
+    static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor,
+      [[maybe_unused]] void* context, bool succeeded) {
+      printf("Dump path: %s\n", descriptor.path());
 
-    if (succeeded == true && crash_report_upload_url.size()) {
-      std::map<string, string> parameters;
-      std::map<string, string> files;
-      std::string proxy_host;
-      std::string proxy_userpasswd;
-      std::string url(crash_report_upload_url);
+      if (succeeded == true && crash_report_upload_url.size()) {
+        std::map<string, string> parameters;
+        std::map<string, string> files;
+        std::string proxy_host;
+        std::string proxy_userpasswd;
+        std::string url(crash_report_upload_url);
 
-      // Add any attributes to the parameters map.
-      // Note that several attributes are automatically extracted.
-      parameters["product_name"] = crash_report_app_name;
-      parameters["version"] = PROJECT_VERSION;
-      parameters["branch"] = GIT_BRANCH;
-      parameters["commit_hash"] = GIT_COMMIT_HASH;
-      parameters["last_tag"] = GIT_LATEST_TAG;
-      files["upload_file_minidump"] = descriptor.path();
+        // Add any attributes to the parameters map.
+        // Note that several attributes are automatically extracted.
+        parameters["product_name"] = crash_report_app_name;
+        parameters["version"] = PROJECT_VERSION;
+        parameters["branch"] = GIT_BRANCH;
+        parameters["commit_hash"] = GIT_COMMIT_HASH;
+        parameters["last_tag"] = GIT_LATEST_TAG;
+        files["upload_file_minidump"] = descriptor.path();
 
-      std::string response, error;
-    //   google_breakpad::HTTPUpload::SendRequest(url,
-    //                                         parameters,
-    //                                         files,
-    //                                         proxy_host,
-    //                                         proxy_userpasswd,
-    //                                         "",
-    //                                         &response,
-    //                                         NULL,
-    //                                         &error);
+        std::string response, error;
+      //   google_breakpad::HTTPUpload::SendRequest(url,
+      //                                         parameters,
+      //                                         files,
+      //                                         proxy_host,
+      //                                         proxy_userpasswd,
+      //                                         "",
+      //                                         &response,
+      //                                         NULL,
+      //                                         &error);
+      }
+      return succeeded;
     }
-    return succeeded;
-  }
 
-  CrashReport::CrashReport(std::string path, std::string app_name, [[maybe_unused]] std::string pipe /*= ""*/) : _exception_handler(google_breakpad::MinidumpDescriptor(path), NULL, dumpCallback, NULL, true, -1)
-  {
-    crash_report_app_name = app_name;
-  }
+    CrashReport::CrashReport(std::string path, std::string app_name, [[maybe_unused]] std::string pipe /*= ""*/) : _exception_handler(google_breakpad::MinidumpDescriptor(path), NULL, dumpCallback, NULL, true, -1)
+    {
+      crash_report_app_name = app_name;
+    }
+  #else
+
+    static bool startCrashHandler() {
+      std::map<std::string, std::string> annotations;
+      std::vector<std::string> arguments;
+      crashpad::CrashpadClient client;
+
+      std::string handler_path("crashpad_handler.exe");
+      arguments.push_back("--no-rate-limit");
+
+      base::FilePath db(crash_report_db_path);
+      base::FilePath handler(handler_path);
+      std::unique_ptr<crashpad::CrashReportDatabase> database =
+        crashpad::CrashReportDatabase::Initialize(db);
+
+      if (database == nullptr || database->GetSettings() == NULL)
+        return false;
+
+      /* Enable automated uploads. */
+      database->GetSettings()->SetUploadsEnabled(true);
+
+      bool rc = client.StartHandler(handler,
+        db,
+        db,
+        crash_report_upload_url,
+        annotations,
+        arguments,
+        true,
+        true);
+
+      if (rc == false)
+        return false;
+
+      /* Optional, wait for Crashpad to initialize. */
+      // rc = client.WaitForHandlerStart(INFINITE);
+      // if (rc == false)
+      //     return false;
+
+      return true;
+    }
+    CrashReport::CrashReport(std::string path, std::string app_name, [[maybe_unused]] std::string pipe /*= ""*/)
+    {
+      crash_report_app_name = app_name;
+      crash_report_db_path = path;
+
+      startCrashHandler();
+    }
+  #endif
 
   void CrashReport::set_url(std::string url)
   {

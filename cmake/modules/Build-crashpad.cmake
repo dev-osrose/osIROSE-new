@@ -6,15 +6,16 @@ set(_byproducts
   ${CRASHPAD_INSTALL_DIR}/lib/libclient.a
   ${CRASHPAD_INSTALL_DIR}/lib/libhandler.a
   ${CRASHPAD_INSTALL_DIR}/lib/libminidump.a
-  ${CRASHPAD_INSTALL_DIR}/lib/libbase.lib
-  ${CRASHPAD_INSTALL_DIR}/lib/libutil.lib
-  ${CRASHPAD_INSTALL_DIR}/lib/libclient.lib
-  ${CRASHPAD_INSTALL_DIR}/lib/libhandler.lib
-  ${CRASHPAD_INSTALL_DIR}/lib/libminidump.lib
+  ${CRASHPAD_INSTALL_DIR}/lib/base.lib
+  ${CRASHPAD_INSTALL_DIR}/lib/util.lib
+  ${CRASHPAD_INSTALL_DIR}/lib/client.lib
+  ${CRASHPAD_INSTALL_DIR}/lib/handler.lib
+  ${CRASHPAD_INSTALL_DIR}/lib/minidump.lib
 )
 
 if(WIN32)
-set(PATH $ENV{PATH})
+file(TO_CMAKE_PATH "$ENV{PATH}" ENV_PATH_VAR)
+message(STATUS ${ENV_PATH_VAR})
 
 ExternalProject_Add(
   crashpad
@@ -23,13 +24,14 @@ ExternalProject_Add(
   DEPENDS utils::gn utils::fetch utils::gclient utils::ninja
   STEP_TARGETS build install
 
-  #DOWNLOAD_COMMAND Python2::Interpreter ${DEPOT_TOOLS_PATH}/fetch.py --no-history --force crashpad
-  DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E env PATH="${DEPOT_TOOLS_PATH}" ${DEPOT_TOOLS_PATH}/fetch.bat --no-history --force crashpad
-    COMMAND ${CMAKE_COMMAND} -E env PATH="${PATH}" gclient sync
+  DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E env PATH="${ENV_PATH_VAR}" ${DEPOT_TOOLS_PATH}/fetch.bat --no-history --force crashpad
+    COMMAND ${CMAKE_COMMAND} -E env PATH="${ENV_PATH_VAR}" gclient sync
   CONFIGURE_COMMAND utils::gn gen out/Default
-  BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH="${PATH}" ${DEPOT_TOOLS_PATH}/ninja.exe -C out/Default
-  INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/out/Default/obj" "<INSTALL_DIR>/crashpad" "*.lib"
-  INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
+  BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH="${ENV_PATH_VAR}" ${DEPOT_TOOLS_PATH}/ninja.exe -C out/Default
+  INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/out/Default/obj" "<INSTALL_DIR>/lib/crashpad" "*.lib"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "${CRASHPAD_INSTALL_DIR}/include" "*.h"
+    COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/out/Default" "<INSTALL_DIR>/bin" "*.exe"
+  INSTALL_DIR ${CRASHPAD_INSTALL_DIR}
 )
 else()
 
@@ -59,13 +61,15 @@ ExternalProject_Add(
   CONFIGURE_COMMAND utils::gn gen out/Default --args=${ARGS}
   BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH=${DEPOT_TOOLS_PATH}:$ENV{PATH} CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ninja -C out/Default
   INSTALL_COMMAND ""
-  INSTALL_DIR ${CRASHPAD_INSTALL_DIR}/lib
+  INSTALL_DIR ${CRASHPAD_INSTALL_DIR}
 )
 
 ExternalProject_Add_Step(
   crashpad
   install-crashpad
-  COMMAND find <SOURCE_DIR>/out -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>
+  WORKING_DIRECTORY <SOURCE_DIR>
+  COMMAND find <SOURCE_DIR>/out -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>/lib
+  COMMAND find . -type f -name "*.h" -print0 | xargs -0 -I{} cp --parents {} <INSTALL_DIR>/include/crashpad
   DEPENDEES build
   DEPENDERS install
 )
@@ -77,18 +81,21 @@ ExternalProject_Get_Property(
   install_dir
 )
 
+file(MAKE_DIRECTORY ${install_dir}/include/crashpad/third_party/mini_chromium/mini_chromium)
+
 if(WIN32)
-  set(CRASHPAD_LIBRARIES "${install_dir}/base.lib" "${install_dir}/client.lib" "${install_dir}/util.lib")
+  set(CRASHPAD_LIBRARIES "${install_dir}/lib/client.lib" "${install_dir}/lib/util.lib" "${install_dir}/lib/base.lib")
 else()
-  set(CRASHPAD_LIBRARIES "${install_dir}/libbase.a" "${install_dir}/libclient.a" "${install_dir}/libutil.a")
+  set(CRASHPAD_LIBRARIES "${install_dir}/lib/libclient.a" "${install_dir}/lib/libutil.a" "${install_dir}/lib/libbase.a")
 endif()
 
 if(NOT TARGET utils::crashpad)
   add_library(utils::crashpad INTERFACE IMPORTED)
   add_dependencies(utils::crashpad crashpad-build crashpad-install)
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${source_dir}")
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_DIRECTORIES "${install_dir}")
-  set_target_properties(utils::crashpad PROPERTIES INTERFACE_LINK_LIBRARIES "${CRASHPAD_LIBRARIES}")
+  target_include_directories(utils::crashpad SYSTEM INTERFACE "${install_dir}/include/crashpad")
+  target_include_directories(utils::crashpad SYSTEM INTERFACE "${install_dir}/include/crashpad/third_party/mini_chromium/mini_chromium")
+  target_link_directories(utils::crashpad INTERFACE "${install_dir}/lib")
+  target_link_libraries(utils::crashpad INTERFACE "${CRASHPAD_LIBRARIES}")
 endif()
 
 mark_as_advanced( CRASHPAD_LIBRARIES )
