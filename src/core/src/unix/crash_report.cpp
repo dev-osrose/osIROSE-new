@@ -74,7 +74,7 @@ namespace Core {
       std::vector<std::string> arguments;
       crashpad::CrashpadClient client;
 
-      std::string handler_path("crashpad_handler.exe");
+      std::string handler_path("crashpad_handler");
       arguments.push_back("--no-rate-limit");
 
       base::FilePath db(crash_report_db_path);

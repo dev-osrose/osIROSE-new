@@ -70,6 +70,10 @@ ExternalProject_Add_Step(
   WORKING_DIRECTORY <SOURCE_DIR>
   COMMAND find <SOURCE_DIR>/out -type f -name "*.a" -print0 | xargs -0 -I{} cp {} <INSTALL_DIR>/lib
   COMMAND find . -type f -name "*.h" -print0 | xargs -0 -I{} cp --parents {} <INSTALL_DIR>/include/crashpad
+  COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/out/Default/crashpad_handler <INSTALL_DIR>/bin/crashpad_handler
+  COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/out/Default/crashpad_http_upload <INSTALL_DIR>/bin/crashpad_http_upload
+  COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/out/Default/crashpad_handler ${CMAKE_BINARY_DIR}/bin/crashpad_handler
+  COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/out/Default/crashpad_http_upload ${CMAKE_BINARY_DIR}/bin/crashpad_http_upload
   DEPENDEES build
   DEPENDERS install
 )
