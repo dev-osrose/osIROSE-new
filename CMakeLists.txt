@@ -171,10 +171,9 @@ if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
   include(BuildGoogleBreakpad)
 endif()
 
-include(Build-depot-tools)
-include(Build-gn)
-
 if(NOT CRASHPAD_FOUND AND WITH_CRASH_REPORTS)
+  include(Build-depot-tools)
+  include(Build-gn)
   include(Build-crashpad)
 endif()
 
