@@ -205,6 +205,9 @@ void delete_stale_parties() {
   std::vector<int> to_remove;
   std::vector<std::pair<int, int>> members_to_remove;
   for (const auto& row : party_count) {
+    if (row.id.is_null()) {
+      continue;
+    }
     if (row.total <= 1) {
       to_remove.push_back(row.id);
     }

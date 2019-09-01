@@ -193,7 +193,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       charid_ = row.charid;
       sessionId_ = sessionID;
 
-      entity = entitySystem->load_character(charid_, row.access, sessionID, weak_from_this());
+      entity = entitySystem->load_character(charid_, row.access, weak_from_this());
       logger_->debug("character loaded");
 
       if (entity != entt::null) {
