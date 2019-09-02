@@ -19,6 +19,7 @@
 using namespace RoseCommon::Packet;
 
 namespace Party {
+// this function will always be executed on the leader's map, the leader of the party among all of the maps
 void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommon::Entity member) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::add_member");
@@ -53,10 +54,19 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
     m.set_stamina(stamina.stamina);
     m.set_name(basicInfo_member.name);
     data.add_member(m);
+
+    std::vector<uint32_t> chars;
     for (const auto& it : party->members) {
-        // TODO: check that all entities are on the same map, otherwise send the packet to the correct map for each member
-        entitySystem.send_to(entitySystem.get_entity_from_tag(it), SrvPartyMember::create(party->options, data));
+        if (auto entity = entitySystem.get_entity_from_tag(it); entity != entt::null) {
+            entitySystem.send_to(entitySystem.get_entity_from_tag(it), SrvPartyMember::create(party->options, data));
+        } else {
+            chars.push_back(it);
+        }
     }
+    if (!chars.empty()) {
+        entitySystem.send_to_chars(SrvPartyMember::create(party->options, data), chars);
+    }
+
     data = RoseCommon::PartyData{};
     for (const auto& i : party->members) {
         const auto it = entitySystem.get_entity_from_tag(i);
@@ -83,6 +93,10 @@ void add_member(EntitySystem& entitySystem, RoseCommon::Entity leader, RoseCommo
     party->add_member(basicInfo_member.tag);
 }
 
+// this function can be executed from either the leader's map or the member's map
+// if it is on the member's map, we send the request to the leader's map
+// otherwise, we do everything as planned
+// /!\ member is an entity, we need a second function that accepts uint32_t as well
 void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Party::remove_member");
@@ -92,17 +106,37 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
     }
     const auto& basicInfo_member = entitySystem.get_component<Component::BasicInfo>(member);
     auto party = p.party;
+    if (!p.isKicked) {
+        // member has initiated, we send it to the leader for processing
+        // if the leader is us, we process it immediately
+        if (auto leader = entitySystem.get_entity_from_tag(party->leader); leader == entt::null) {
+            RoseCommon::PartyData data;
+            data.set_tagLeaver(basicInfo_member.tag);
+            const auto options = party-options;
+            const auto leader = party->leader;
+            party.reset();
+            entitySystem.remove_component<Component::Party>(member);
+            entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, basicInfo_member.tag));
+            entitySystem.send_to_chars(SrvPartyMember::create(options, data), {leader});
+            return;
+        }
+    }
     if (!party->remove_member(basicInfo_member.tag)) {
         return;
     }
-    const RoseCommon::Entity initiator = p.isKicked ? party->leader : member;
-    const uint32_t tag = entitySystem.get_component<Component::BasicInfo>(initiator).tag;
-    entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, tag));
+    const uint32_t initiator = p.isKicked ? party->leader : member;
+    entitySystem.send_to(member, SrvPartyReply::create(SrvPartyReply::DESTROY, initiator));
     if (party->members.size() == 0) {
         return;
     } else if (party->members.size() == 1) {
-        // TODO: check if on different map
-        entitySystem.remove_component<Component::Party>(entitySystem.get_entity_from_tag(party->members[0]));
+        if (auto entity = entitySystem.get_entity_from_tag(party->members[0]); entity != entt::null) {
+            entitySystem.remove_component<Component::Party>(entity);
+        } else {
+            RoseCommon::PartyData data;
+            data.set_tagLeaver(leaver);
+            data.set_tagLeader(party->leader);
+            entitySystem.send_to_chars(SrvPartyMember::create(party->options, data), {party->members[0]});
+      
         return;
     }
     const uint32_t leaver = entitySystem.get_component<Component::BasicInfo>(member).tag;
@@ -110,9 +144,18 @@ void remove_member(EntitySystem& entitySystem, RoseCommon::Entity member) {
     RoseCommon::PartyData data;
     data.set_tagLeaver(leaver);
     data.set_tagLeader(leader);
+    std::vector<uint32_t> chars;
     for (const auto& it : party->members) {
         // TODO: check if on same map
         entitySystem.send_to(entitySystem.get_entity_from_tag(it), SrvPartyMember::create(party->options, data));
+        if (auto entity = entitySystem.get_entity_from_tag(it); entity != entt::null) {
+            entitySystem.send_to(entity, SrvPartyMember::create(party->options, data));
+        } else {
+            chars.push_back(it);
+        }
+    }
+    if (!chars.empty()) {
+        entitySystem.send_to_chars(SrvPartyMember::create(party->options, data), chars);
     }
 }
 
@@ -265,4 +308,43 @@ void party_reply(EntitySystem& entitySystem, RoseCommon::Entity entity, const Ro
             logger->warn("Client {} sent a party reply with reply {}", entity, (int)packet.get_reply());
     }
 }
+
+void party_member(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::SrvPartyMember& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("Party::party_member");
+    if (!entitySystem.has_component<Component::Party>(entity)) {
+        logger->error("No party for entity {}", entity);
+        return; // error
+    }
+    auto& party = entitySystem.get_component<Component::Party>(entity);
+    if (!party.party) {
+        logger->error("Empty party for entity {}", entity);
+        return; // error
+    }
+    if (packet.get_data().is_delete()) {
+        auto leaver = packet.get_data().get_tagLeaver();
+        auto leader = packet.get_data().get_tagLeader();
+        if (leader != 0) { // leader sent a change, we update the internal data and we send it to the client
+            party.party->remove_member(leaver);
+            party.party->leader = leader;
+            if (party.party->members.empty()) {
+                party.party.reset();
+                entitySystem.remove_component<Component::Party>(entity);
+            }
+            entitySystem.send_to(entity, packet);
+            return;
+        } else {
+            // we are the master and we got something from the member, we call remove_member with it
+            d
+        }
+    } else if (packet.get_data().get_members().empty()) {
+        return; // empty packet??
+    } else {
+        for (const auto& member : packet.get_data().getMembers()) {
+            party.party->add_member(member.get_tag());
+        }
+    }
+    entitySystem.send_to(entity, packet);
+}
+
 }

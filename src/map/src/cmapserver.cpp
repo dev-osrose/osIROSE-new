@@ -82,7 +82,15 @@ void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vecto
 }
 
 void CMapServer::send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<std::string>& chars) {
-    auto packet = RoseCommon::Packet::IscTransferChar::create(chars);
+    auto packet = RoseCommon::Packet::IscTransferChar::create(chars, {});
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+    isc_client_->send(packet);
+}
+
+void CMapServer::send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<uint32_t>& chars) {
+    auto packet = RoseCommon::Packet::IscTransferChar::create({}, chars);
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);

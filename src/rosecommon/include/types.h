@@ -127,6 +127,7 @@ struct PartyData : public ISerialize {
         int8_t size = 0;
         if (!reader.get_int8_t(size)) return false;
         if (size == -1) { // it's a leaver
+            is_delete = true;
             if (!reader.get_uint32_t(tag_leaver)) return false;
             if (!reader.get_uint32_t(tag_leader)) return false;
         } else { // it's an add
@@ -163,6 +164,18 @@ struct PartyData : public ISerialize {
     void set_tagLeader(uint32_t leader) {
         is_delete = true;
         tag_leader = leader;
+    }
+
+    bool is_delete() const {
+        return is_delete;
+    }
+
+    uint32_t get_tagLeaver() const {
+        return tag_leaver;
+    }
+
+    uint32_t get_tagLeader() const {
+        return tag_leader;
     }
 
     struct MemberData : public ISerialize {
@@ -233,10 +246,12 @@ struct PartyData : public ISerialize {
         members.push_back(member);
     }
 
+    const std::vector<MemberData>& get_members() const { return members; }
+
     private:
         bool is_delete = false;
-        uint32_t tag_leaver;
-        uint32_t tag_leader;
+        uint32_t tag_leaver = 0;
+        uint32_t tag_leader = 0;
         std::vector<MemberData> members;
 };
 

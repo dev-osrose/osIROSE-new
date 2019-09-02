@@ -216,6 +216,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Items::drop_item_packet});
     register_dispatcher(std::function{Party::party_request});
     register_dispatcher(std::function{Party::party_reply});
+    register_dispatcher(std::function{Party::party_member});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
@@ -684,7 +685,17 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     // set party stoof
     auto party_id = conn(sqlpp::select(partyMembersTable.id).from(partyMembersTable).where(partyMembersTable.memberId == charId));
     if (!party_id.empty()) {
-        
+        auto party_db = conn(sqlpp::select(sqlpp::all_of(partyTable)).from(partyTable).where(partyTable.id == party_id.front().id));
+        auto party_base = std::make_shared<RoseCommon::PartyBase>(party_db.front().leaderId);
+        party_base->options = party_db.front().options;
+        party_base->level = party_db.front().level;
+        party_base->last_got_item_index =party_db.front().last_got_item_index;
+        party_base->last_got_etc_index = party_db.front().last_got_etc_index;
+        party_base->last_got_zuly_index = party_db.front().last_got_zuly_index;
+        auto& party = prototype.set<RoseCommon::Component::Party>();
+        party.party = party_base;
+        party.isKicked = false;
+        party.isRequested = false;
     }
 
     std::lock_guard<std::recursive_mutex> lock(access);
@@ -1060,5 +1071,9 @@ void EntitySystem::send_to_maps(const RoseCommon::CRosePacket& packet, const std
 }
 
 void EntitySystem::send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<std::string>& chars) const {
+    server->send_to_chars(packet, chars);
+}
+
+void EntitySystem::send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<uint32_t>& chars) const {
     server->send_to_chars(packet, chars);
 }

@@ -12,4 +12,5 @@ void remove_member(EntitySystem&, RoseCommon::Entity);
 void change_leader(EntitySystem&, RoseCommon::Entity current_leader, RoseCommon::Entity new_leader);
 void party_request(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliPartyReq& packet);
 void party_reply(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliPartyReply& packet);
+void party_member(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::SrvPartyMember& packet);
 }
