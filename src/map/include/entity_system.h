@@ -140,7 +140,7 @@ class EntitySystem {
         std::recursive_mutex access;
         IdManager idManager;
         TimedCallbacks timers;
-        PacketDispatcher dispatcher;
+        PacketDispatcher<EntitySystem&, RoseCommon::Entity> dispatcher;
         Nearby nearby;
         LuaLoader lua_loader;
         CMapServer *server;
@@ -150,7 +150,9 @@ class EntitySystem {
 // ----------------------------- template implementations ----------------------------------
 template <typename T>
 void EntitySystem::register_dispatcher(std::function<void(EntitySystem&, RoseCommon::Entity, const T&)>&& func) {
-    dispatcher.add_dispatcher(T::PACKET_ID, std::move(func));
+    dispatcher.add_dispatcher(T::PACKET_ID, [func = std::move(func)](const T& packet, EntitySystem& es, RoseCommon::Entity en) mutable {
+        func(es, en, packet);
+    });
 }
 
 template <typename Func>
