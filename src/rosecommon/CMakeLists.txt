@@ -16,6 +16,7 @@ set( SOURCES_HEADER
   include/croseisc.h
   include/crosepacket.h
   include/epackettype.h
+  include/packet_dispatcher.h
   include/isccommon.h
   include/itemdb.h
   include/crosewriter.h
