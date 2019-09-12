@@ -294,7 +294,7 @@ bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<Ro
         return false;
     }
     add_task([this, entity, packet = std::move(packet)](EntitySystem& entitySystem) mutable {
-        dispatcher.dispatch(entitySystem, entity, std::move(packet));
+        dispatcher.dispatch(std::move(packet), entitySystem, entity);
     });
     return true;
 }
