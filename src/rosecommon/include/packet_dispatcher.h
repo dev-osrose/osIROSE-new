@@ -23,7 +23,7 @@ class PacketDispatcher {
             const RoseCommon::ePacketType type = packet->get_type();
             auto res = dispatcher.equal_range(type);
             for (auto it = res.first; it != res.second; ++it) {
-                it->second(packet.get(), std::forward<Args...>(args...));
+                it->second(packet.get(), std::forward<Args>(args)...);
             }
         }
 
@@ -34,7 +34,7 @@ class PacketDispatcher {
                 if (p == nullptr) {
                     return;
                 }
-                func(*p, std::forward<Args...>(args...));
+                func(*p, std::forward<Args>(args)...);
             });
         }
 
