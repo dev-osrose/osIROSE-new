@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <chrono>
 
+namespace RoseCommon {
+
 template <typename... Args>
 class PacketDispatcher {
     public:
@@ -41,3 +43,5 @@ class PacketDispatcher {
     private:
         std::unordered_multimap<RoseCommon::ePacketType, std::function<void(const RoseCommon::CRosePacket*, Args&&...)>> dispatcher;
 };
+
+}

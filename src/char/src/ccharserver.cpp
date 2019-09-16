@@ -22,10 +22,25 @@
 
 using namespace RoseCommon;
 
-CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
+CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server), exit_condition(false) {
+    reactor_thread = std::thread([this]() {
+        for (auto [res, task] = work_queue.pop_front(); res && !exit_condition.load();) {
+            {
+                std::lock_guard<std::recursive_mutex> lock(access);
+                std::invoke(std::move(task), *this);
+            }
+            auto [tmp_res, tmp_task] = work_queue.pop_front();
+            res = tmp_res;
+            task = std::move(tmp_task);
+        }
+    });
 }
 
-CCharServer::~CCharServer() { socket_[SocketType::Client]->shutdown(); }
+CCharServer::~CCharServer() {
+    socket_[SocketType::Client]->shutdown();
+    exit_condition.store(true);
+    reactor_thread.join();
+}
 
 void CCharServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //if (_sock->is_active()) {
@@ -80,6 +95,8 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
                 set.insert(ptr);
             }
         }
+    } else if (m.size() == 1 && m[0] == 0) {
+        // that's ours
     } else {
         for (const auto& mm : m) {
             if (auto ptr = maps[mm].lock()) {
@@ -117,5 +134,61 @@ void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
     }
     for (auto ptr : set) {
         ptr->send(P);
+    }
+}
+
+void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
+    auto packet = RoseCommon::Packet::IscTransfer::create({map});
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+    if (auto ptr = maps[map].lock()) {
+        ptr->send(packet);
+    }
+}
+
+void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& p) {
+    Core::CharacterTable characters{};
+
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+    const auto res = conn(
+            sqlpp::select(characters.name, characters.map).from(characters).where(characters.id == character)
+        );
+    if (res.empty()) {
+        return; // logged out
+    }
+
+    auto packet = RoseCommon::Packet::IscTransferChar::create({res.front().name});
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+
+    if (auto ptr = maps[res.front().map].lock()) {
+        ptr->send(packet);
+    }
+}
+
+void CCharServer::send_char(const std::string& character, const RoseCommon::CRosePacket& p) {
+    Core::SessionTable sessions{};
+    Core::CharacterTable characters{};
+
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+    const auto res = conn(
+            sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
+                .where(characters.name == character)
+        );
+    if (res.empty()) {
+        return; // logged out
+    }
+
+    auto packet = RoseCommon::Packet::IscTransferChar::create({character});
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+
+    if (auto ptr = maps[res.front().map].lock()) {
+        ptr->send(packet);
     }
 }

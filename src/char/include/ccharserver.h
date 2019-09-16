@@ -18,8 +18,17 @@
 #include "croseserver.h"
 #include <vector>
 #include <unordered_map>
+#include <deque>
+#include <string_view>
+#include <mutex>
+#include <thread>
+#include <atomic>
 #include "isc_transfer.h"
 #include "isc_transfer_char.h"
+#include "mwsrqueue.h"
+#include "fire_once.h"
+#include "crosepacket.h"
+#include "packet_dispatcher.h"
 
 class CCharISC;
 
@@ -42,6 +51,9 @@ class CCharServer : public RoseCommon::CRoseServer {
   void register_maps(CCharISC*, const std::vector<uint16_t>&);
   void transfer(RoseCommon::Packet::IscTransfer&& P);
   void transfer_char(RoseCommon::Packet::IscTransferChar&& P);
+  void send_map(uint16_t map, const RoseCommon::CRosePacket& packet);
+  void send_char(uint32_t character, const RoseCommon::CRosePacket& packet);
+  void send_char(const std::string& character, const RoseCommon::CRosePacket& packet);
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
@@ -51,6 +63,11 @@ class CCharServer : public RoseCommon::CRoseServer {
  private:
   CCharServer *iscServer_;
   std::unordered_map<uint16_t, std::weak_ptr<RoseCommon::CRoseClient>> maps;
+  RoseCommon::PacketDispatcher<CCharServer&> dispatcher;
+  Core::MWSRQueue<std::deque<Core::fire_once<void(CCharServer&)>>> work_queue;
+  std::thread reactor_thread;
+  std::recursive_mutex access;
+  std::atomic<bool> exit_condition;
 };
 
 #endif

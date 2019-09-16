@@ -140,7 +140,7 @@ class EntitySystem {
         std::recursive_mutex access;
         IdManager idManager;
         TimedCallbacks timers;
-        PacketDispatcher<EntitySystem&, RoseCommon::Entity> dispatcher;
+        RoseCommon::PacketDispatcher<EntitySystem&, RoseCommon::Entity> dispatcher;
         Nearby nearby;
         LuaLoader lua_loader;
         CMapServer *server;
