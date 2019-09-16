@@ -96,7 +96,8 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
             }
         }
     } else if (m.size() == 1 && m[0] == 0) {
-        // that's ours
+        dispatch_packet(RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+        return;
     } else {
         for (const auto& mm : m) {
             if (auto ptr = maps[mm].lock()) {
@@ -191,4 +192,17 @@ void CCharServer::send_char(const std::string& character, const RoseCommon::CRos
     if (auto ptr = maps[res.front().map].lock()) {
         ptr->send(packet);
     }
+}
+
+bool CCharServer::dispatch_packet(std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
+    if (!packet) {
+        return false;
+    }
+    if (!dispatcher.is_supported(*packet.get())) {
+        return false;
+    }
+    work_queue.push_back([packet = std::move(packet)](CCharServer& server) mutable {
+        server.dispatcher.dispatch(std::move(packet), server);
+    });
+    return true;
 }

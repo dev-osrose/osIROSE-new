@@ -60,6 +60,8 @@ class CCharServer : public RoseCommon::CRoseServer {
   uint32_t client_count_;
   uint32_t server_count_;
 
+  bool dispatch_packet(std::unique_ptr<RoseCommon::CRosePacket>&& packet);
+
  private:
   CCharServer *iscServer_;
   std::unordered_map<uint16_t, std::weak_ptr<RoseCommon::CRoseClient>> maps;
