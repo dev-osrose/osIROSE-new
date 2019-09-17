@@ -1,0 +1,31 @@
+component:core:
+- src/core/*
+
+component:core:rosecommon: 
+- src/rosecommon/*
+
+component:server:character:
+- src/char/*
+
+component:server:login:
+- src/login/*
+
+component:server:map:
+- src/map/*
+
+component:server:node:
+- src/node/*
+
+component:databases:SQL:
+- Database/*.sql
+
+component:scripting:
+- scripts/*.lua
+
+component:buildsystem:
+- cmake/*
+- *.cmake
+
+component:other:
+- src/tests/*
+- src/bot/*
