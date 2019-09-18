@@ -30,43 +30,46 @@ class PartyCache {
       if (cache.contains(charId)) {
         return cache.at(charId);
       }
-      auto [it, inserted] = cache.insert({charId, cache_fetch_party(charId)});
-      
-      if (!inserted) {
-        return *it;
-      } else if (!*it) { // no party, let's create one!
-        auto party = std::make_shared<Party>();
-        party->members.push_back(charId);
-        party->leader = charId;
-        cache_create_party(party);
-        cache_write_party_members(party);
-        cache[charId] = party;
-        return party;
+      auto party = cache_fetch_party(charId);
+      if (!party) { // no party!
+        return {};
       }
-      const auto& party = *it;
+      auto [it, inserted] = cache.insert({charId, party});
+
       for (auto m : party->members) {
         cache.insert({m, party});
       }
       return party;
     }
   
-  void add_member_to_party(std::shared_ptr<Party> party, uint32_t member) {
-    party->members.push_back(member);
-    cache.insert({member, party});
-    
-    cache_write_party_members(party);
-  }
+    void create_party(uint32_t charId) {
+      auto party = std::make_shared<Party>();
+      party->members.push_back(charId);
+      party->leader = charId;
+      cache_create_party(party);
+      cache_write_party_members(party);
+      party = cache_fetch_party(charId);
+      cache[charId] = party;
+      return party;
+    }
   
-  void remove_member_from_party(std::shared_ptr<Party>, uint32_t member) {
-    party->members.erase(std::remove(party->members.begin(), party->members.end(), member), party->members.end());
-    cache.erase(member);
+    void add_member_to_party(std::shared_ptr<Party> party, uint32_t member) {
+      party->members.push_back(member);
+      cache.insert({member, party});
     
-    if (party->members.empty()) {
-      cache_remove_party(party);
-    } else {
       cache_write_party_members(party);
     }
-  }
+  
+    void remove_member_from_party(std::shared_ptr<Party>, uint32_t member) {
+      party->members.erase(std::remove(party->members.begin(), party->members.end(), member), party->members.end());
+      cache.erase(member);
+    
+      if (party->members.empty()) {
+        cache_remove_party(party);
+      } else {
+        cache_write_party_members(party);
+      }
+    }
   
   private:
     std::unordered_map<uint32_t, std::shared_ptr<Party>> cache;
