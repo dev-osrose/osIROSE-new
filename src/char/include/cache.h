@@ -5,17 +5,18 @@
 
 #include <unordered_map>
 #include <functional>
+#include <pair>
 
 template <typename K, typename V>
 class Cache {
   public:
     Cache(std::function<V(const K&)> callback) : callback(callback) {}
     
-    const V& get_value(const K& k) {
+    std::pair<bool, const V&> get_value(const K& k) {
       if (cache.contains(k)) {
-        return cache.at(k);
+        return {false, cache.at(k)};
       }
-      return *cache.insert({k, callback(k)}).first;
+      return {true, *cache.insert({k, callback(k)}).first};
     }
   
     const V& insert_value(const K& k, V&& v) {
