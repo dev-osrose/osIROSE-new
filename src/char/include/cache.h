@@ -17,6 +17,16 @@ class Cache {
       }
       return *cache.insert({k, callback(k)}).first;
     }
+  
+    const V& insert_value(const K& k, V&& v) {
+      return *cache.insert({k, std::move(v)}).first;
+    }
+  
+    void insert_value(const std::vector<K>& ks, V&& v) {
+      for (auto& k: ks) {
+        cache.insert({k, v});
+      }
+    }
     
     void delete_value(const K& k) {
       cache.erase(k);
