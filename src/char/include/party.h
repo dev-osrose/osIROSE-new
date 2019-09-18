@@ -6,19 +6,20 @@
 #include "connection.h"
 
 struct Party {
-  uint32_t id;
+  uint32_t id = 0;
   uint32_t xp = 0;
   std::string name;
-  uint32_t leader;
-  uint8_t options;
-  uint8_t level;
-  uint32_t last_got_item_index;
-  uint32_t last_got_zuly_index;
-  uint32_t last_got_etc_index;
+  uint32_t leader = 0;
+  uint8_t options = 0;
+  uint8_t level = 1;
+  uint32_t last_got_item_index = 0;
+  uint32_t last_got_zuly_index = 0;
+  uint32_t last_got_etc_index = 0;
   std::vector<uint32_t> members;
 };
 
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId);
+void cache_create_party(std::shared_ptr<Party> party);
 void cache_write_party(std::shared_ptr<Party> party);
 void cache_write_party_members(std::shared_ptr<Party> party);
 void cache_remove_party(std::shared_ptr<Party> party);
@@ -33,6 +34,14 @@ class PartyCache {
       
       if (!inserted) {
         return *it;
+      } else if (!*it) { // no party, let's create one!
+        auto party = std::make_shared<Party>();
+        party->members.push_back(charId);
+        party->leader = charId;
+        cache_create_party(party);
+        cache_write_party_members(party);
+        cache[charId] = party;
+        return party;
       }
       const auto& party = *it;
       for (auto m : party->members) {
