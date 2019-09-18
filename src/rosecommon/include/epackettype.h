@@ -53,6 +53,7 @@ enum class ePacketType : uint16_t {
   ISC_SERVER_REGISTER,
   ISC_TRANSFER, // transfer to specific map(s)
   ISC_TRANSFER_CHAR, // transfer to specific character(s) (map(s) is/are determined automatically for you)
+  ISC_CLIENT_STATUS, // maps send this packet to the char server every time the status of a client changes
   ISC_SHUTDOWN,
   ISCEND,
 
