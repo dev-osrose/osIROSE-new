@@ -38,3 +38,12 @@ auto conn = Core::connectionPool.getConnection<Core::Osirose>();
 
   return std::make_shared<Party>(party);
 }
+
+void cache_write_party(std::shared_ptr<Party> party) {
+}
+
+void cache_write_party_members(std::shared_ptr<Party> party) {
+}
+
+void cache_remove_party(std::shared_ptr<Party> party) {
+}
