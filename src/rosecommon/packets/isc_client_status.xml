@@ -1,0 +1,13 @@
+<packet ePacketType = "ISC_CLIENT_STATUS">
+  <element type = "Status" name = "status" />
+  <element type = "uint32_t" name = "charId" />
+  
+  <simpleType name = "Status">
+    <restriction base = "uint8_t">
+      <enumeration value = "CONNECTED" />
+      <enumeration value = "DISCONNECTED" />
+      <enumeration value = "SWITCH_MAPS" />
+      <enumeration value = "AFK" />
+    </restriction>
+  </simpleType>
+</packet>
