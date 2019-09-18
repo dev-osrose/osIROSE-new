@@ -8,6 +8,7 @@
       <enumeration value = "DISCONNECTED" />
       <enumeration value = "SWITCHING" />
       <enumeration value = "AFK" />
+      <enumeration value = "INVISIBLE" />
     </restriction>
   </simpleType>
 </packet>
