@@ -33,7 +33,6 @@ set( SOURCES_HEADER
   include/components/mob.h
   include/components/npc.h
   include/components/owner.h
-  include/components/party.h
   include/components/pat.h
   include/components/position.h
   include/components/skills.h
@@ -140,6 +139,7 @@ set(IDL_FILES
   packets/cli_use_item.xml
   packets/cli_whisper_chat.xml
   packets/isc_alive.xml
+  packets/isc_client_status.xml
   packets/isc_server_register.xml
   packets/isc_transfer.xml
   packets/isc_transfer_char.xml
