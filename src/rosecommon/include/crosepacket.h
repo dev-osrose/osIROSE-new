@@ -27,6 +27,7 @@
 #include <memory>
 #include <cstring>
 #include <cassert>
+#include <vector>
 #include <type_traits>
 #include "epackettype.h"
 #include "crosewriter.h"

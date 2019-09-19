@@ -27,7 +27,7 @@ void cache_remove_party(std::shared_ptr<Party> party);
 class PartyCache {
   public:
     std::shared_ptr<Party> get_party(uint32_t charId) {
-      if (cache.contains(charId)) {
+      if (cache.count(charId) != 0) {
         return cache.at(charId);
       }
       auto party = cache_fetch_party(charId);
@@ -42,7 +42,7 @@ class PartyCache {
       return party;
     }
   
-    void create_party(uint32_t charId) {
+    std::shared_ptr<Party> create_party(uint32_t charId) {
       auto party = std::make_shared<Party>();
       party->members.push_back(charId);
       party->leader = charId;
@@ -60,7 +60,7 @@ class PartyCache {
       cache_write_party_members(party);
     }
   
-    void remove_member_from_party(std::shared_ptr<Party>, uint32_t member) {
+    void remove_member_from_party(std::shared_ptr<Party> party, uint32_t member) {
       party->members.erase(std::remove(party->members.begin(), party->members.end(), member), party->members.end());
       cache.erase(member);
     

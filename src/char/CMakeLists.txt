@@ -16,12 +16,16 @@ set( SOURCES_MAIN
 set( SOURCES_HEADER
   include/ccharserver.h
   include/ccharclient.h
-  include/ccharisc.h )
+  include/ccharisc.h
+  include/party.h
+  include/user.h
+)
 
 set( SOURCES_BASE
   src/ccharserver.cpp
   src/ccharclient.cpp
   src/ccharisc.cpp
+  src/party.cpp
 )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
