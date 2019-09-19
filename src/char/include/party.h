@@ -34,7 +34,7 @@ class PartyCache {
       if (!party) { // no party!
         return {};
       }
-      auto [it, inserted] = cache.insert({charId, party});
+      cache.insert({charId, party});
 
       for (auto m : party->members) {
         cache.insert({m, party});

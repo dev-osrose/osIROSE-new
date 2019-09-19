@@ -2,8 +2,8 @@
 
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  Core::Party partyTable{};
-  Core::PartyMembers partyMembersTable{};
+  Core::PartyTable partyTable{};
+  Core::PartyMembersTable partyMembersTable{};
   
   auto res = conn(sqlpp::select(sqlpp::all_of(partyTable)).from(
     partyMembersTable.join(partyTable).on(partyMembersTable.id == partyTable.id))
@@ -12,7 +12,7 @@ std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   if (res.empty()) {
     return {};
   }
-  auto result = res.front();
+  auto& result = res.front();
   
   Party party;
   party.id = result.id;
@@ -36,50 +36,50 @@ std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
     party.members.push_back(r.memberId);
   }
 
-  return {party};
+  return std::make_shared<Party>(party);
 }
 
 void cache_create_party(std::shared_ptr<Party> party) {
   if (!party) return;
   
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  Core::Party partyTable{};
+  Core::PartyTable partyTable{};
   
   conn(sqlpp::insert_into(partyTable)
-       .set(partyTable.name = party->name)
-       .set(partyTable.leaderId = party->leader)
-       .set(partyTable.options = party->options)
-       .set(partyTable.level = party->level)
-       .set(partyTable.lastGotItemIndex = party->last_got_item_index)
-       .set(partyTable.lastGotEtcIndex = party->last_got_etc_index)
-       .set(partyTable.lastGotZulyIndex = party->last_got_zuly_index));
+       .set(partyTable.name = party->name,
+       partyTable.leaderId = party->leader,
+       partyTable.options = party->options,
+       partyTable.level = party->level,
+       partyTable.lastGotItemIndex = party->last_got_item_index,
+       partyTable.lastGotEtcIndex = party->last_got_etc_index,
+       partyTable.lastGotZulyIndex = party->last_got_zuly_index));
 }
 
 void cache_write_party(std::shared_ptr<Party> party) {
   if (!party) return;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  Core::Party partyTable{};
+  Core::PartyTable partyTable{};
   
   conn(sqlpp::update(partyTable)
-       .set(partyTable.name = party->name)
-       .set(partyTable.leaderId = party->leader)
-       .set(partyTable.options = party->options)
-       .set(partyTable.level = party->level)
-       .set(partyTable.lastGotItemIndex = party->last_got_item_index)
-       .set(partyTable.lastGotEtcIndex = party->last_got_etc_index)
-       .set(partyTable.lastGotZulyIndex = party->last_got_zuly_index)
+       .set(partyTable.name = party->name,
+       partyTable.leaderId = party->leader,
+       partyTable.options = party->options,
+       partyTable.level = party->level,
+       partyTable.lastGotItemIndex = party->last_got_item_index,
+       partyTable.lastGotEtcIndex = party->last_got_etc_index,
+       partyTable.lastGotZulyIndex = party->last_got_zuly_index)
        .where(partyTable.id == party->id));
 }
 
 void cache_write_party_members(std::shared_ptr<Party> party) {
   if (!party) return;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  Core::PartyMembers partyMembersTable{};
+  Core::PartyMembersTable partyMembersTable{};
 
   conn(sqlpp::remove_from(partyMembersTable).where(partyMembersTable.id == party->id));
   auto insert = sqlpp::insert_into(partyMembersTable).columns(partyMembersTable.id, partyMembersTable.memberId);
   for (auto m : party-> members) {
-    multi_insert.values.add(partyMembersTable.id = party->id, partyMembersTable.memberId = m);
+    insert.values.add(partyMembersTable.id = party->id, partyMembersTable.memberId = static_cast<int>(m));
   }
   conn(insert);
 }
@@ -87,7 +87,7 @@ void cache_write_party_members(std::shared_ptr<Party> party) {
 void cache_remove_party(std::shared_ptr<Party> party) {
   if (!party) return;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  Core::Party partyTable{};
+  Core::PartyTable partyTable{};
   
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
