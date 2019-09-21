@@ -22,7 +22,6 @@
 #include <string_view>
 #include <mutex>
 #include <thread>
-#include <atomic>
 #include "isc_transfer.h"
 #include "isc_transfer_char.h"
 #include "mwsrqueue.h"
@@ -69,7 +68,6 @@ class CCharServer : public RoseCommon::CRoseServer {
   Core::MWSRQueue<std::deque<Core::fire_once<void(CCharServer&)>>> work_queue;
   std::thread reactor_thread;
   std::recursive_mutex access;
-  std::atomic<bool> exit_condition;
 };
 
 #endif

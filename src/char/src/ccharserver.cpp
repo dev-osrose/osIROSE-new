@@ -22,9 +22,9 @@
 
 using namespace RoseCommon;
 
-CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server), exit_condition(false) {
+CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
     reactor_thread = std::thread([this]() {
-        for (auto [res, task] = work_queue.pop_front(); res && !exit_condition.load();) {
+        for (auto [res, task] = work_queue.pop_front(); res;) {
             {
                 std::lock_guard<std::recursive_mutex> lock(access);
                 std::invoke(std::move(task), *this);
@@ -38,7 +38,7 @@ CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), cl
 
 CCharServer::~CCharServer() {
     socket_[SocketType::Client]->shutdown();
-    exit_condition.store(true);
+    work_queue.kill();
     reactor_thread.join();
 }
 
