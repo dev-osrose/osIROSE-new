@@ -70,6 +70,13 @@ class PartyCache {
         cache_write_party_members(party);
       }
     }
+
+    void remove_party(std::shared_ptr<Party> party) {
+        for (auto member : party->members) {
+            cache.erase(member);
+        }
+        cache_remove_party(party);
+    }
   
   private:
     std::unordered_map<uint32_t, std::shared_ptr<Party>> cache;

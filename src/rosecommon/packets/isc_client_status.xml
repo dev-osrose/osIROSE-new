@@ -1,6 +1,6 @@
 <packet ePacketType = "ISC_CLIENT_STATUS">
-  <element type = "Status" name = "status" />
   <element type = "uint32_t" name = "charId" />
+  <element type = "Status" name = "status" />
   
   <simpleType name = "Status">
     <restriction base = "uint8_t">

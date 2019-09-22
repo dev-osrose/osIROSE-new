@@ -1,12 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include "party.h"
 #include "isc_client_status.h"
 
 class User {
   public:
-    User(uint32_t charId) : charId(charId) {}
+    User(const std::string& name, uint32_t charId, uint16_t mapId) : name(name), charId(charId), mapId(mapId) {}
     
     enum class Status {
       CONNECTING,
@@ -18,11 +19,16 @@ class User {
     };
   
   uint32_t get_charId() const noexcept { return charId; }
+  uint16_t get_mapId() const noexcept { return mapId; }
+
+  void set_mapId(uint16_t mapId) { this->mapId = mapId; }
   
   Status get_status() const noexcept { return status; }
+
   void set_status(Status status) noexcept {
     this->status = status;
   }
+
   void set_status(RoseCommon::Packet::IscClientStatus::Status status) noexcept {
     switch (status) {
       case RoseCommon::Packet::IscClientStatus::Status::CONNECTED:
@@ -42,12 +48,16 @@ class User {
         break;
     }
   }
+
+  const std::string& get_name() const noexcept { return name; }
   
-  std::shared_ptr<RoseCommon::PartyBase> get_party() const noexcept { return party; }
+  std::shared_ptr<Party> get_party() const noexcept { return party; }
   void set_party(std::shared_ptr<Party> party) noexcept { this->party = party; }
 
   private:
+    std::string name;
     uint32_t charId;
+    uint16_t mapId;
     Status status = Status::CONNECTING;
     std::shared_ptr<Party> party;
     // std::shared_ptr<Guild>

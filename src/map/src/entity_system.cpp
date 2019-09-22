@@ -50,6 +50,7 @@
 #include "srv_remove_object.h"
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
+#include "isc_client_status.h"
 
 
 #include <algorithm>
@@ -479,6 +480,9 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         update_position(entity, x, y);
     } else {
         // we update the position to save it, we remove it first from the nearby list
+        const auto& basic = get_component<Component::BasicInfo>(entity);
+        send_to_maps(RoseCommon::Packet::IscClientStatus::create(basic.charId,
+                    RoseCommon::Packet::IscClientStatus::Status::SWITCHING), {0});
         nearby.remove_entity(registry, entity);
         pos.x = x;
         pos.y = y;

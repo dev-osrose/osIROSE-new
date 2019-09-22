@@ -53,6 +53,8 @@
 #include "components/wishlist.h"
 #include "itemdb.h"
 
+#include "isc_client_status.h"
+
 using namespace RoseCommon;
 
 CMapClient::CMapClient()
@@ -139,10 +141,13 @@ void CMapClient::onDisconnected() {
   if (login_state_ == eSTATE::DEFAULT) return;
   auto tmp_state = login_state_;
   login_state_ = eSTATE::DEFAULT;
+  const auto& basic = entitySystem->get_component<Component::BasicInfo>(entity);
+  const auto charId = basic.charId;
   entitySystem->save_character(entity);
   entitySystem->delete_entity(entity);
 
   if (tmp_state != eSTATE::SWITCHING) {
+      entitySystem->send_to_maps(RoseCommon::Packet::IscClientStatus::create(charId, RoseCommon::Packet::IscClientStatus::DISCONNECTED), {0});
       Core::AccountTable table{};
       auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));

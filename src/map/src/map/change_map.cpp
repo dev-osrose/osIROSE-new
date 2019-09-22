@@ -15,6 +15,7 @@
 #include "components/magic.h"
 #include "components/position.h"
 #include "components/warpgate.h"
+#include "isc_client_status.h"
 
 #include <limits>
 
@@ -46,6 +47,7 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
             entitySystem.send_to_entity(entity, other);
         }
     }
+    entitySystem.send_to_maps(IscClientStatus::create(basicInfo.charId, IscClientStatus::CONNECTED), {0});
 }
 
 void Map::teleport_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliTeleportReq& packet) {

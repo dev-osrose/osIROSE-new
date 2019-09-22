@@ -28,6 +28,8 @@
 #include "fire_once.h"
 #include "crosepacket.h"
 #include "packet_dispatcher.h"
+#include "user.h"
+#include "party.h"
 
 class CCharISC;
 
@@ -54,6 +56,13 @@ class CCharServer : public RoseCommon::CRoseServer {
   void send_char(uint32_t character, const RoseCommon::CRosePacket& packet);
   void send_char(const std::string& character, const RoseCommon::CRosePacket& packet);
 
+  std::optional<const User*const> get_user(const std::string& name) const;
+  std::optional<const User*const> get_user(uint32_t id) const;
+  std::optional<User*const> get_user(const std::string& name);
+  std::optional<User*const> get_user(uint32_t id);
+  void load_user(uint32_t id);
+  void unload_user(uint32_t id);
+
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
   uint32_t client_count_;
@@ -68,6 +77,14 @@ class CCharServer : public RoseCommon::CRoseServer {
   Core::MWSRQueue<std::deque<Core::fire_once<void(CCharServer&)>>> work_queue;
   std::thread reactor_thread;
   std::recursive_mutex access;
+
+  std::unordered_map<uint32_t, User> users;
+  PartyCache partys;
+
+  template <typename T>
+  void register_dispatcher(std::function<void(const T&, CCharServer&)>&& func) {
+      dispatcher.add_dispatcher(T::PACKET_ID, std::move(func));
+  }
 };
 
 #endif

@@ -19,10 +19,39 @@
 #include "platform_defines.h"
 #include "connection.h"
 #include <unordered_set>
+#include "isc_client_status.h"
+#include "logconsole.h"
 
 using namespace RoseCommon;
 
+void update_status(const Packet::IscClientStatus& packet, CCharServer& server) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    if (auto user = server.get_user(packet.get_charId()); user) {
+        logger->debug("Char {} now has status {}", packet.get_charId(), packet.get_status());
+        const bool isSwitching = user.value()->get_status() == User::Status::SWITCHING ? true : false;
+        user.value()->set_status(packet.get_status());
+        if (user.value()->get_status() == User::Status::CONNECTED && isSwitching) {
+            // reload the map
+            Core::CharacterTable characterTable{};
+            auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+            auto charRes = conn(sqlpp::select(characterTable.map)
+                                  .from(characterTable).where(characterTable.id == user.value()->get_charId()));
+
+            if (charRes.empty()) {
+                logger->error("Error while trying to access the updated map of {}", user.value()->get_charId());
+                return;
+            }
+            user.value()->set_mapId(charRes.front().map);
+        }
+    } else {
+        logger->error("Error, got status packet for un-loaded {} client", packet.get_charId());
+    }
+}
+
 CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
+    register_dispatcher(std::function{update_status});
+
     reactor_thread = std::thread([this]() {
         for (auto [res, task] = work_queue.pop_front(); res;) {
             {
@@ -111,21 +140,11 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
 }
 
 void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
-    Core::SessionTable sessions{};
-    Core::CharacterTable characters{};
-
-    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-
     std::vector<uint16_t> maps;
     for (auto name : P.get_names()) {
-        const auto res = conn(
-                sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
-                    .where(characters.name == name)
-            );
-        if (res.empty()) {
-            continue;
+        if (const auto user = get_user(name); user) {
+            maps.push_back(user.value()->get_mapId());
         }
-        maps.push_back(res.front().map);
     }
     std::unordered_set<std::shared_ptr<CRoseClient>> set;
     for (auto map : maps) {
@@ -149,47 +168,31 @@ void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
 }
 
 void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& p) {
-    Core::CharacterTable characters{};
-
-    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-
-    const auto res = conn(
-            sqlpp::select(characters.name, characters.map).from(characters).where(characters.id == character)
-        );
-    if (res.empty()) {
-        return; // logged out
+    const auto user = get_user(character);
+    if (!user) {
+        return;
     }
-
-    auto packet = RoseCommon::Packet::IscTransferChar::create({res.front().name});
+    auto packet = RoseCommon::Packet::IscTransferChar::create({user.value()->get_name()});
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
 
-    if (auto ptr = maps[res.front().map].lock()) {
+    if (auto ptr = maps[user.value()->get_mapId()].lock()) {
         ptr->send(packet);
     }
 }
 
 void CCharServer::send_char(const std::string& character, const RoseCommon::CRosePacket& p) {
-    Core::SessionTable sessions{};
-    Core::CharacterTable characters{};
-
-    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-
-    const auto res = conn(
-            sqlpp::select(characters.name, characters.map).from(characters.join(sessions).on(sessions.charid == characters.id))
-                .where(characters.name == character)
-        );
-    if (res.empty()) {
-        return; // logged out
+    const auto user = get_user(character);
+    if (!user) {
+        return;
     }
-
     auto packet = RoseCommon::Packet::IscTransferChar::create({character});
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
 
-    if (auto ptr = maps[res.front().map].lock()) {
+    if (auto ptr = maps[user.value()->get_mapId()].lock()) {
         ptr->send(packet);
     }
 }
@@ -205,4 +208,55 @@ bool CCharServer::dispatch_packet(std::unique_ptr<RoseCommon::CRosePacket>&& pac
         server.dispatcher.dispatch(std::move(packet), server);
     });
     return true;
+}
+
+std::optional<const User*const> CCharServer::get_user(const std::string& name) const {
+    for (auto [k, v] : users) {
+        if (v.get_name() == name) {
+            return {&v};
+        }
+    }
+    return {};
+}
+
+std::optional<const User*const> CCharServer::get_user(uint32_t id) const {
+    if (auto it = users.find(id); it != users.end()) {
+        return {&it->second};
+    }
+    return {};
+}
+
+std::optional<User*const> CCharServer::get_user(const std::string& name) {
+    for (auto [k, v] : users) {
+        if (v.get_name() == name) {
+            return {&v};
+        }
+    }
+    return {};
+}
+
+std::optional<User*const> CCharServer::get_user(uint32_t id) {
+    if (auto it = users.find(id); it != users.end()) {
+        return {&it->second};
+    }
+    return {};
+}
+
+void CCharServer::load_user(uint32_t id) {
+    Core::CharacterTable characterTable{};
+
+    auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+
+    auto charRes = conn(sqlpp::select(characterTable.name, characterTable.map)
+                          .from(characterTable).where(characterTable.id == id));
+
+    if (charRes.empty()) {
+        return;
+    }
+    User user(charRes.front().name, id, charRes.front().map);
+    user.set_party(partys.get_party(id)); // we load the party if there is one for that character
+}
+
+void CCharServer::unload_user(uint32_t id) {
+    users.erase(id);
 }
