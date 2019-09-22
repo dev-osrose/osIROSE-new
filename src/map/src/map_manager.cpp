@@ -43,8 +43,8 @@ MapManager::~MapManager() {
 }
 
 void MapManager::stop() {
+    std::unique_lock<std::mutex> lock(mutex);
     cv.notify_all();
-    std::lock_guard<std::mutex> lock(mutex);
     for (auto& map : maps_) {
         map.second.join();
         map.first.join();
