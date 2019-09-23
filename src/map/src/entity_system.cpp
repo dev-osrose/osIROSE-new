@@ -1034,6 +1034,10 @@ void EntitySystem::send_to_maps(const RoseCommon::CRosePacket& packet, const std
     server->send_to_maps(packet, maps);
 }
 
+void EntitySystem::send_to_char_server(const RoseCommon::CRosePacket& packet) const {
+    server->send_to_maps(packet, {0});
+}
+
 void EntitySystem::send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<std::string>& chars) const {
     server->send_to_chars(packet, chars);
 }
