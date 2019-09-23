@@ -242,7 +242,7 @@ std::optional<User*const> CCharServer::get_user(uint32_t id) {
     return {};
 }
 
-void CCharServer::load_user(uint32_t id) {
+void CCharServer::load_user(std::weak_ptr<CCharClient> client, uint32_t id) {
     Core::CharacterTable characterTable{};
 
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
@@ -253,7 +253,7 @@ void CCharServer::load_user(uint32_t id) {
     if (charRes.empty()) {
         return;
     }
-    User user(charRes.front().name, id, charRes.front().map);
+    User user(client, charRes.front().name, id, charRes.front().map);
     user.set_party(partys.get_party(id)); // we load the party if there is one for that character
 }
 
