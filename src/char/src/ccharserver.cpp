@@ -24,10 +24,10 @@
 
 using namespace RoseCommon;
 
-void update_status(const Packet::IscClientStatus& packet, CCharServer& server) {
+void update_status(const Packet::IscClientStatus& packet, CCharServer& server, uint32_t charId) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    if (auto user = server.get_user(packet.get_charId()); user) {
-        logger->debug("Char {} now has status {}", packet.get_charId(), packet.get_status());
+    if (auto user = server.get_user(charId); user) {
+        logger->debug("Char {} now has status {}", charId, packet.get_status());
         const bool isSwitching = user.value()->get_status() == User::Status::SWITCHING ? true : false;
         user.value()->set_status(packet.get_status());
         // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
@@ -127,7 +127,8 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
             }
         }
     } else if (m.size() == 1 && m[0] == 0) {
-        dispatch_packet(RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+        dispatch_packet(P.get_originatorId(),
+                        RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
         return;
     } else {
         for (const auto& mm : m) {
