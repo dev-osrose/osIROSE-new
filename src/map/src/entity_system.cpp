@@ -482,7 +482,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
         // we update the position to save it, we remove it first from the nearby list
         const auto& basic = get_component<Component::BasicInfo>(entity);
         send_to_maps(RoseCommon::Packet::IscClientStatus::create(basic.charId,
-                    RoseCommon::Packet::IscClientStatus::Status::SWITCHING), {0});
+                    RoseCommon::Packet::IscClientStatus::Status::SWITCHING), CHARSERVER);
         nearby.remove_entity(registry, entity);
         pos.x = x;
         pos.y = y;
