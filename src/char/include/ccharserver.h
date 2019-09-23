@@ -60,7 +60,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   std::optional<const User*const> get_user(uint32_t id) const;
   std::optional<User*const> get_user(const std::string& name);
   std::optional<User*const> get_user(uint32_t id);
-  void load_user(uint32_t id);
+  void load_user(std::weak_ptr<CCharClient> socket, uint32_t id);
   void unload_user(uint32_t id);
 
  protected:
