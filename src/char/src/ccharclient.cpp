@@ -297,7 +297,7 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
   auto charRes = conn(sqlpp::select(table.map).from(table).where(table.id == characterRealId_[selected_id]));
   uint16_t map_id = charRes.front().map;
 
-  server_->load_user(characterRealId_[selected_id]);
+  server_->load_user(weak_from_this(), characterRealId_[selected_id]);
 
   std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
   for (auto &server : server_->GetISCList()) {
