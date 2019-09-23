@@ -9,8 +9,8 @@ class CCharClient;
 
 class User {
   public:
-    User(std::weak_ptr<CCharClient> client, const std::string& name, uint32_t charId, uint16_t mapId, uint16_t entityId) :
-        client(client), name(name), charId(charId), mapId(mapId), entityId(entityId) {}
+    User(std::weak_ptr<CCharClient> client, const std::string& name, uint32_t charId, uint16_t mapId) :
+        client(client), name(name), charId(charId), mapId(mapId) {}
     
     enum class Status {
       CONNECTING,
@@ -67,7 +67,7 @@ class User {
     std::string name;
     uint32_t charId;
     uint16_t mapId;
-    uint16_t entityId;
+    uint16_t entityId = 0;
     Status status = Status::CONNECTING;
     std::shared_ptr<Party> party;
     // std::shared_ptr<Guild>
