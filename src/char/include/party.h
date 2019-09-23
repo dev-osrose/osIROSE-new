@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "connection.h"
+#include "cli_party_req.h"
 
 struct Party {
   uint32_t id = 0;
@@ -81,3 +82,6 @@ class PartyCache {
   private:
     std::unordered_map<uint32_t, std::shared_ptr<Party>> cache;
 };
+
+class CCharServer;
+void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, uint32_t charId);
