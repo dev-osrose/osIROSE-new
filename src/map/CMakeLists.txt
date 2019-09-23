@@ -34,7 +34,8 @@ SET( SOURCES_HEADER
   include/utils/name_to_session.h
   include/utils/getters.h
   include/utils/calculation.h
-)
+  include/utils/transfer_to_char_server.h
+  )
 
 SET( SOURCES_MAIN
   src/main
