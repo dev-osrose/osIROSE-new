@@ -30,6 +30,8 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server) {
         logger->debug("Char {} now has status {}", packet.get_charId(), packet.get_status());
         const bool isSwitching = user.value()->get_status() == User::Status::SWITCHING ? true : false;
         user.value()->set_status(packet.get_status());
+        // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
+        user.value()->set_entityId(packet.get_entityMapId());
         if (user.value()->get_status() == User::Status::CONNECTED && isSwitching) {
             // reload the map
             Core::CharacterTable characterTable{};
