@@ -47,6 +47,8 @@
 
 #include "random.h"
 
+#include "cli_party_req.h"
+
 #include "srv_remove_object.h"
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
@@ -204,6 +206,8 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::revive});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
+    
+    register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReq>});
 
     // load npc/mob/warpgates/spawn points lua
     lua_loader.load_file(Core::Config::getInstance().mapServer().luaScript);
