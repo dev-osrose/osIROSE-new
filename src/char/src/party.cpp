@@ -93,5 +93,5 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
 
-void party_request(const RoseCommon::Party::CliPartyReq& packet, CCharServer& server, uint32_t charId) {
+void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, uint32_t charId) {
 }

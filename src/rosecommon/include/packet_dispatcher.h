@@ -30,7 +30,7 @@ class PacketDispatcher {
         }
 
         template <typename PacketType>
-        void add_dispatcher(RoseCommon::ePacketType type, std::function<void(const PacketType&, Args&&...)>&& func) {
+        void add_dispatcher(RoseCommon::ePacketType type, std::function<void(const PacketType&, Args...)>&& func) {
             dispatcher.emplace(type, [func = std::move(func)](const RoseCommon::CRosePacket* packet, Args&&... args) mutable {
                 const PacketType *p = dynamic_cast<const PacketType*>(packet);
                 if (p == nullptr) {

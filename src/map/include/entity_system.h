@@ -152,7 +152,7 @@ class EntitySystem {
 template <typename T>
 void EntitySystem::register_dispatcher(std::function<void(EntitySystem&, RoseCommon::Entity, const T&)>&& func) {
     dispatcher.add_dispatcher(T::PACKET_ID, std::function{
-        [func = std::move(func)](const T& packet, EntitySystem& es, RoseCommon::Entity&& en) mutable {
+        [func = std::move(func)](const T& packet, EntitySystem& es, RoseCommon::Entity en) mutable {
             func(es, en, packet);
     }});
 }

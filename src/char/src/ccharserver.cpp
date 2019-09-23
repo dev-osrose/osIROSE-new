@@ -47,7 +47,7 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, u
             user.value()->set_mapId(charRes.front().map);
         }
     } else {
-        logger->error("Error, got status packet for un-loaded {} client", packet.get_charId());
+        logger->error("Error, got status packet for un-loaded {} client", charId);
     }
 }
 
@@ -162,7 +162,7 @@ void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
 }
 
 void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
-    auto packet = RoseCommon::Packet::IscTransfer::create({map});
+    auto packet = RoseCommon::Packet::IscTransfer::create(0, {map});
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
@@ -209,7 +209,7 @@ bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::C
         return false;
     }
     work_queue.push_back([charId, packet = std::move(packet)](CCharServer& server) mutable {
-        server.dispatcher.dispatch(std::move(packet), server, charId);
+        server.dispatcher.dispatch(std::move(packet), server, std::forward<uint32_t>(charId));
     });
     return true;
 }
