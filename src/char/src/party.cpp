@@ -1,4 +1,5 @@
 #include "party.h"
+#include "ccharserver.h"
 
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
@@ -90,4 +91,7 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   Core::PartyTable partyTable{};
   
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
+}
+
+void party_request(const RoseCommon::Party::CliPartyReq& packet, CCharServer& server, uint32_t charId) {
 }
