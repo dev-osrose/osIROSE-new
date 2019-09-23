@@ -200,15 +200,15 @@ void CCharServer::send_char(const std::string& character, const RoseCommon::CRos
     }
 }
 
-bool CCharServer::dispatch_packet(std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
+bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
     if (!packet) {
         return false;
     }
     if (!dispatcher.is_supported(*packet.get())) {
         return false;
     }
-    work_queue.push_back([packet = std::move(packet)](CCharServer& server) mutable {
-        server.dispatcher.dispatch(std::move(packet), server);
+    work_queue.push_back([charId, packet = std::move(packet)](CCharServer& server) mutable {
+        server.dispatcher.dispatch(std::move(packet), server, charId);
     });
     return true;
 }
