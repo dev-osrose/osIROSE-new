@@ -1,5 +1,6 @@
 #include "party.h"
 #include "ccharserver.h"
+#include "logconsole.h"
 
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
@@ -94,4 +95,22 @@ void cache_remove_party(std::shared_ptr<Party> party) {
 }
 
 void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, uint32_t charId) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("party_request({})", charId);
+
+    using namespace RoseCommon::Packet;
+    switch (packet.get_request()) {
+        case CliPartyReq::MAKE:
+            break;
+        case CliPartyReq::JOIN:
+            break;
+        case CliPartyReq::LEFT:
+            break;
+        case CliPartyReq::CHANGE_OWNER:
+            break;
+        case CliPartyReq::KICK:
+            break;
+        default:
+            logger->warn("Client {} sent a non valid request code {}", charId, packet.get_request());
+    }
 }
