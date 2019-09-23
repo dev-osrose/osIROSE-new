@@ -1,4 +1,5 @@
 <packet ePacketType = "ISC_TRANSFER">
+    <element name = "originatorId" type = "uint32_t" />
     <element name = "maps" type = "uint16_t" occurs = "unbounded" occursSize = "uint8_t" ref = "true" />
     <element name = "blob" type = "uint8_t" occurs = "unbounded" occursSize = "uint16_t" default = "none" ref = "true" />
 </packet>
