@@ -143,12 +143,13 @@ void CMapClient::onDisconnected() {
   login_state_ = eSTATE::DEFAULT;
   const auto& basic = entitySystem->get_component<Component::BasicInfo>(entity);
   const auto charId = basic.charId;
+  const auto entityId = basic.id;
   entitySystem->save_character(entity);
   entitySystem->delete_entity(entity);
 
   if (tmp_state != eSTATE::SWITCHING) {
       entitySystem->send_to_char_server(
-          RoseCommon::Packet::IscClientStatus::create(charId, RoseCommon::Packet::IscClientStatus::DISCONNECTED));
+          RoseCommon::Packet::IscClientStatus::create(charId, entityId, RoseCommon::Packet::IscClientStatus::DISCONNECTED));
       Core::AccountTable table{};
       auto conn = Core::connectionPool.getConnection<Core::Osirose>();
       conn(sqlpp::update(table).set(table.online = 0).where(table.id == get_id()));
