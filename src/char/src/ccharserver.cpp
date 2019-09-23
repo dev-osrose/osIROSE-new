@@ -53,6 +53,7 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, u
 
 CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
     register_dispatcher(std::function{update_status});
+    register_dispatcher(std::function{party_request});
 
     reactor_thread = std::thread([this]() {
         for (auto [res, task] = work_queue.pop_front(); res;) {
