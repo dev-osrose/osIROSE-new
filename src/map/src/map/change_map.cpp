@@ -47,7 +47,7 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
             entitySystem.send_to_entity(entity, other);
         }
     }
-    entitySystem.send_to_maps(IscClientStatus::create(basicInfo.charId, IscClientStatus::CONNECTED), CHARSERVER);
+    entitySystem.send_to_char_server(IscClientStatus::create(basicInfo.charId, IscClientStatus::CONNECTED));
 }
 
 void Map::teleport_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliTeleportReq& packet) {
