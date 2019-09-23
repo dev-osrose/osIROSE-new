@@ -20,6 +20,8 @@
 #include "nearby.h"
 #include "lua_loader.h"
 
+#define CHARSERVER {0}
+
 using namespace std::chrono_literals;
 
 class CMapClient;
