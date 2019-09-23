@@ -1,5 +1,4 @@
 <packet ePacketType = "ISC_CLIENT_STATUS">
-  <element type = "uint32_t" name = "charId" />
   <element type = "uint16_t" name = "entityMapId" />
   <element type = "Status" name = "status" />
   
