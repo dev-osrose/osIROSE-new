@@ -5,9 +5,12 @@
 #include "party.h"
 #include "isc_client_status.h"
 
+class CCharClient;
+
 class User {
   public:
-    User(const std::string& name, uint32_t charId, uint16_t mapId) : name(name), charId(charId), mapId(mapId) {}
+    User(std::weak_ptr<CCharClient> client, const std::string& name, uint32_t charId, uint16_t mapId) :
+        client(client), name(name), charId(charId), mapId(mapId) {}
     
     enum class Status {
       CONNECTING,
@@ -49,12 +52,15 @@ class User {
     }
   }
 
+  const std::weak_ptr<CCharClient> get_client() const noexcept { return client; }
+
   const std::string& get_name() const noexcept { return name; }
   
   std::shared_ptr<Party> get_party() const noexcept { return party; }
   void set_party(std::shared_ptr<Party> party) noexcept { this->party = party; }
 
   private:
+    std::weak_ptr<CCharClient> client;
     std::string name;
     uint32_t charId;
     uint16_t mapId;
