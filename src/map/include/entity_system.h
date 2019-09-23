@@ -20,8 +20,6 @@
 #include "nearby.h"
 #include "lua_loader.h"
 
-#define CHARSERVER {0}
-
 using namespace std::chrono_literals;
 
 class CMapClient;
@@ -100,6 +98,7 @@ class EntitySystem {
         void send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const;
 
         void send_to_maps(const RoseCommon::CRosePacket& packet, const std::vector<uint16_t>& maps) const;
+        void send_to_char_server(const RoseCommon::CRosePacket& packet) const;
         void send_to_chars(const RoseCommon::CRosePacket& packet, const std::vector<std::string>& chars) const;
 
         void delete_entity(RoseCommon::Entity entity);
