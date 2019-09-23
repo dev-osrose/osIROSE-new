@@ -73,8 +73,8 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
 void CMapServer::stop() { entitySystem->stop(); }
 void CMapServer::run() { entitySystem->run(); }
 
-void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps) {
-    auto packet = RoseCommon::Packet::IscTransfer::create(maps);
+void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps, uint32_t originatorId) {
+    auto packet = RoseCommon::Packet::IscTransfer::create(originatorId, maps);
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
