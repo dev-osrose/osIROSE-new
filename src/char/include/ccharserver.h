@@ -68,7 +68,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   uint32_t client_count_;
   uint32_t server_count_;
 
-  bool dispatch_packet(std::unique_ptr<RoseCommon::CRosePacket>&& packet);
+  bool dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::CRosePacket>&& packet);
 
  private:
   CCharServer *iscServer_;
