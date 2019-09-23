@@ -73,7 +73,7 @@ class CCharServer : public RoseCommon::CRoseServer {
  private:
   CCharServer *iscServer_;
   std::unordered_map<uint16_t, std::weak_ptr<RoseCommon::CRoseClient>> maps;
-  RoseCommon::PacketDispatcher<CCharServer&> dispatcher;
+  RoseCommon::PacketDispatcher<CCharServer&, uint32_t> dispatcher;
   Core::MWSRQueue<std::deque<Core::fire_once<void(CCharServer&)>>> work_queue;
   std::thread reactor_thread;
   std::recursive_mutex access;
@@ -82,7 +82,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   PartyCache partys;
 
   template <typename T>
-  void register_dispatcher(std::function<void(const T&, CCharServer&)>&& func) {
+  void register_dispatcher(std::function<void(const T&, CCharServer&, uint32_t)>&& func) {
       dispatcher.add_dispatcher(T::PACKET_ID, std::move(func));
   }
 };
