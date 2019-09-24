@@ -121,7 +121,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
             logger->debug("{} wants to join {}'s party", user.get_name(), other.value()->get_name());
             break;
         }
-        case CliPartyReq::LEFT: // idXorTag == tag
+        case CliPartyReq::LEAVE: // idXorTag == tag
         {
             logger->debug("{} left the party", user.get_name());
             break;
@@ -136,7 +136,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
             logger->debug("{} wants to make {} the owner", user.get_name(), other.value()->get_name());
             break;
         }
-        case CliPartyReq::KICK: // idXorTag == tag
+        case CliPartyReq::BAN: // idXorTag == tag
         {
             auto other = server.get_user(packet.get_target());
             if (!other) {
