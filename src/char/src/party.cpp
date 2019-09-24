@@ -151,7 +151,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
     }
 }
 
-void party_reply(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {
+void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("party_reply({})", user.get_name());
     
