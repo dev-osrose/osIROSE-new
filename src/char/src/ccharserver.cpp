@@ -22,6 +22,8 @@
 #include "isc_client_status.h"
 #include "logconsole.h"
 
+#include <algorithm>
+
 using namespace RoseCommon;
 
 void update_status(const Packet::IscClientStatus& packet, CCharServer& server, User& user) {
@@ -215,10 +217,10 @@ bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::C
 }
 
 std::optional<const User*const> CCharServer::get_user(const std::string& name) const {
-    for (auto [k, v] : users) {
-        if (v.get_name() == name) {
-            return {&v};
-        }
+    if (const auto result = std::find_if(users.begin(), users.end(), 
+                                         [&name](const auto& user) { return user.get_name() == name; });
+        result != users.end()) {
+        return {&result->second};
     }
     return {};
 }
@@ -230,11 +232,20 @@ std::optional<const User*const> CCharServer::get_user(uint32_t id) const {
     return {};
 }
 
+std::optional<const User*const> CCharServer::get_user(uint16_t id, uint16_t mapId) const {
+    if (const auto result = std::find_if(users.begin(), users.end(), [id, mapId](const auto& user) {
+            return user.get_mapId() == mapId && user.get_entityId() == id;
+        }); result != users.end()) {
+        return {&result->second};
+    }
+    return {};
+}
+
 std::optional<User*const> CCharServer::get_user(const std::string& name) {
-    for (auto [k, v] : users) {
-        if (v.get_name() == name) {
-            return {&v};
-        }
+    if (auto result = std::find_if(users.begin(), users.end(), 
+                                   [&name](const auto& user) { return user.get_name() == name; });
+        result != users.end()) {
+        return {&result->second};
     }
     return {};
 }
@@ -242,6 +253,15 @@ std::optional<User*const> CCharServer::get_user(const std::string& name) {
 std::optional<User*const> CCharServer::get_user(uint32_t id) {
     if (auto it = users.find(id); it != users.end()) {
         return {&it->second};
+    }
+    return {};
+}
+    
+std::optional<User*const> CCharServer::get_user(uint16_t id, uint16_t mapId) {
+    if (auto result = std::find_if(users.begin(), users.end(), [id, mapId](const auto& user) {
+            return user.get_mapId() == mapId && user.get_entityId() == id;
+        }); result != users.end()) {
+        return {&result->second};
     }
     return {};
 }
