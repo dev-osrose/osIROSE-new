@@ -219,7 +219,7 @@ DROP TABLE IF EXISTS `party_members`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `party_members` (
   `id` int(10) unsigned NOT NULL,
-  `member_id` int(11) NOT NULL,
+  `member_id` int(11) unsigned NOT NULL,
   `rank` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Sort by oldest first',
   PRIMARY KEY (`id`, `member_id`),
   CONSTRAINT `party_id` FOREIGN KEY (`id`) REFERENCES `party` (`id`) ON DELETE CASCADE,
