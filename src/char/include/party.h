@@ -84,4 +84,5 @@ class PartyCache {
 };
 
 class CCharServer;
-void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, uint32_t charId);
+class User;
+void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user);
