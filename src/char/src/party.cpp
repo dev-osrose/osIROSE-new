@@ -104,26 +104,46 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
         case CliPartyReq::MAKE: // idXorTag == id
         {
             auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
+            if (!other) {
+              logger->warn("User ({}, {}) doesn't exist", packet.get_idXorTag(), user.get_mapId());
+              return;
+            }
+            logger->debug("{} wants to make a party with {}", user.get_name(), other.value()->get_name());
             break;
         }
         case CliPartyReq::JOIN: // idXorTag == id
         {
             auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
+            if (!other) {
+              logger->warn("User ({}, {}) doesn't exist", packet.get_idXorTag(), user.get_mapId());
+              return;
+            }
+            logger->debug("{} wants to join {}'s party", user.get_name(), other.value()->get_name());
             break;
         }
         case CliPartyReq::LEFT: // idXorTag == tag
         {
-            auto other = server.get_user(packet.get_idXorTag());
+            logger->debug("{} left the party", user.get_name());
             break;
         }
         case CliPartyReq::CHANGE_OWNER: // idXorTag == tag
         {
             auto other = server.get_user(packet.get_idXorTag());
+            if (!other) {
+              logger->warn("User {} doesn't exist", packet.get_idXorTag());
+              return;
+            }
+            logger->debug("{} wants to make {} the owner", user.get_name(), other.value()->get_name());
             break;
         }
         case CliPartyReq::KICK: // idXorTag == tag
         {
             auto other = server.get_user(packet.get_idXorTag());
+            if (!other) {
+              logger->warn("User {} doesn't exist", packet.get_idXorTag());
+              return;
+            }
+            logger->debug("{} wants kick {}", user.get_name(), other.value()->get_name());
             break;
         }
         default:
