@@ -22,6 +22,7 @@
 #include <string_view>
 #include <mutex>
 #include <thread>
+#include <optional>
 #include "isc_transfer.h"
 #include "isc_transfer_char.h"
 #include "mwsrqueue.h"
