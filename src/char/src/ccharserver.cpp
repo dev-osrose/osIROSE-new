@@ -28,7 +28,7 @@ using namespace RoseCommon;
 
 void update_status(const Packet::IscClientStatus& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->debug("Char {} now has status {}", charId, packet.get_status());
+    logger->debug("Char {} now has status {}", user.get_name(), packet.get_status());
     const bool isSwitching = user.get_status() == User::Status::SWITCHING ? true : false;
     user.set_status(packet.get_status());
     // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
@@ -40,7 +40,7 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, U
         auto charRes = conn(sqlpp::select(characterTable.map)
                             .from(characterTable).where(characterTable.id == user.get_charId()));
         if (charRes.empty()) {
-            logger->error("Error while trying to access the updated map of {}", user.get_charId());
+            logger->error("Error while trying to access the updated map of {}", user.get_name());
             return;
         }
         user.set_mapId(charRes.front().map);
