@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "connection.h"
 #include "cli_party_req.h"
+#include "cli_party_reply.h"
 
 struct Party {
   uint32_t id = 0;
@@ -86,3 +87,4 @@ class PartyCache {
 class CCharServer;
 class User;
 void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user);
+void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& server, User& user);
