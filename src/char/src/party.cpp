@@ -100,12 +100,12 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
     logger->trace("party_request({})", user.get_name());
   
     using namespace RoseCommon::Packet;
-    switch (packet.get_request()) {
-        case CliPartyReq::MAKE: // idXorTag == id
+    switch (packet.get_type()) {
+        case CliPartyReq::CREATE: // idXorTag == id
         {
-            auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
+            auto other = server.get_user(packet.get_target(), user.get_mapId());
             if (!other) {
-              logger->warn("User ({}, {}) doesn't exist", packet.get_idXorTag(), user.get_mapId());
+              logger->warn("User ({}, {}) doesn't exist", packet.get_target(), user.get_mapId());
               return;
             }
             logger->debug("{} wants to make a party with {}", user.get_name(), other.value()->get_name());
@@ -113,9 +113,9 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
         }
         case CliPartyReq::JOIN: // idXorTag == id
         {
-            auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
+            auto other = server.get_user(packet.get_target(), user.get_mapId());
             if (!other) {
-              logger->warn("User ({}, {}) doesn't exist", packet.get_idXorTag(), user.get_mapId());
+              logger->warn("User ({}, {}) doesn't exist", packet.get_target(), user.get_mapId());
               return;
             }
             logger->debug("{} wants to join {}'s party", user.get_name(), other.value()->get_name());
@@ -128,9 +128,9 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
         }
         case CliPartyReq::CHANGE_OWNER: // idXorTag == tag
         {
-            auto other = server.get_user(packet.get_idXorTag());
+            auto other = server.get_user(packet.get_target());
             if (!other) {
-              logger->warn("User {} doesn't exist", packet.get_idXorTag());
+              logger->warn("User {} doesn't exist", packet.get_target());
               return;
             }
             logger->debug("{} wants to make {} the owner", user.get_name(), other.value()->get_name());
@@ -138,9 +138,9 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
         }
         case CliPartyReq::KICK: // idXorTag == tag
         {
-            auto other = server.get_user(packet.get_idXorTag());
+            auto other = server.get_user(packet.get_target());
             if (!other) {
-              logger->warn("User {} doesn't exist", packet.get_idXorTag());
+              logger->warn("User {} doesn't exist", packet.get_target());
               return;
             }
             logger->debug("{} wants to kick {}", user.get_name(), other.value()->get_name());
@@ -156,20 +156,23 @@ void party_reply(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& ser
     logger->trace("party_reply({})", user.get_name());
     
     auto* other;
-    if (auto tmp = server.get_user(packet.get_idXorTag(), user.get_mapId()); !tmp) {
+    if (auto tmp = server.get_user(packet.get_target(), user.get_mapId()); !tmp) {
         logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_idXorTag());
         return;
     }
     
     using namespace RoseCommon::Packet;
-    switch (packet.get_reply()) {
+    switch (packet.get_type()) {
         case CliPartyReply::BUSY:
-        case CliPartyReply::REJECT:
+        case CliPartyReply::REJECT_JOIN:
             logger->debug("{} refused {}'s party", other.value()->get_name(), user.get_name());
             break;
-        case CliPartyReply::ACCEPT_MAKE:
-        case CluPartyReply::ACCEPT_JOIN:
+        case CliPartyReply::ACCEPT_CREATE:
+        case CliPartyReply::ACCEPT_JOIN:
             logger->debug("{} accepted {}'s party", other.value()->get_name(), user.get_name());
+            break;
+        default:
+            logger->debug("{} replied {}", user.get_name(), packet.get_type());
             break;
     }
 }
