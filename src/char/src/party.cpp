@@ -155,23 +155,22 @@ void party_reply(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& ser
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("party_reply({})", user.get_name());
     
-    User*const other;
-    if (auto tmp = server.get_user(packet.get_target(), user.get_mapId()); tmp) {
-        other = tmp.value();
-    } else {
+    auto tmp = server.get_user(packet.get_target(), user.get_mapId());
+    if (!tmp) {
         logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_target());
         return;
     }
+    User*const other = tmp.value();
     
     using namespace RoseCommon::Packet;
     switch (packet.get_type()) {
         case CliPartyReply::BUSY:
         case CliPartyReply::REJECT_JOIN:
-            logger->debug("{} refused {}'s party", other.value()->get_name(), user.get_name());
+            logger->debug("{} refused {}'s party", other->get_name(), user.get_name());
             break;
         case CliPartyReply::ACCEPT_CREATE:
         case CliPartyReply::ACCEPT_JOIN:
-            logger->debug("{} accepted {}'s party", other.value()->get_name(), user.get_name());
+            logger->debug("{} accepted {}'s party", other->get_name(), user.get_name());
             break;
         default:
             logger->debug("{} replied {}", user.get_name(), packet.get_type());
