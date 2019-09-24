@@ -222,7 +222,7 @@ CREATE TABLE `party_members` (
   `member_id` int(11) NOT NULL,
   `rank` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Sort by oldest first',
   PRIMARY KEY (`id`, `member_id`),
-  CONSTRAINT `party_id` FOREIGN KEY (`id`) REFERENCES `party` (`id`) ON DELETE CASCADE
+  CONSTRAINT `party_id` FOREIGN KEY (`id`) REFERENCES `party` (`id`) ON DELETE CASCADE,
   CONSTRAINT `member_id` FOREIGN KEY (`member_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
