@@ -1,4 +1,5 @@
 #include "party.h"
+#include "user.h"
 #include "ccharserver.h"
 #include "logconsole.h"
 
@@ -94,22 +95,37 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
 
-void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, uint32_t charId) {
+void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->trace("party_request({})", charId);
-
+    logger->trace("party_request({})", user.get_charId());
+  
     using namespace RoseCommon::Packet;
     switch (packet.get_request()) {
-        case CliPartyReq::MAKE:
+        case CliPartyReq::MAKE: // idXorTag == id
+        {
+            auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
             break;
-        case CliPartyReq::JOIN:
+        }
+        case CliPartyReq::JOIN: // idXorTag == id
+        {
+            auto other = server.get_user(packet.get_idXorTag(), user.get_mapId());
             break;
-        case CliPartyReq::LEFT:
+        }
+        case CliPartyReq::LEFT: // idXorTag == tag
+        {
+            auto other = server.get_user(packet.get_idXorTag());
             break;
-        case CliPartyReq::CHANGE_OWNER:
+        }
+        case CliPartyReq::CHANGE_OWNER: // idXorTag == tag
+        {
+            auto other = server.get_user(packet.get_idXorTag());
             break;
-        case CliPartyReq::KICK:
+        }
+        case CliPartyReq::KICK: // idXorTag == tag
+        {
+            auto other = server.get_user(packet.get_idXorTag());
             break;
+        }
         default:
             logger->warn("Client {} sent a non valid request code {}", charId, packet.get_request());
     }
