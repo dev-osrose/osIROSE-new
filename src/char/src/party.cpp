@@ -97,7 +97,7 @@ void cache_remove_party(std::shared_ptr<Party> party) {
 
 void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->trace("party_request({})", user.get_charId());
+    logger->trace("party_request({})", user.get_name());
   
     using namespace RoseCommon::Packet;
     switch (packet.get_request()) {
@@ -143,10 +143,33 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
               logger->warn("User {} doesn't exist", packet.get_idXorTag());
               return;
             }
-            logger->debug("{} wants kick {}", user.get_name(), other.value()->get_name());
+            logger->debug("{} wants to kick {}", user.get_name(), other.value()->get_name());
             break;
         }
         default:
             logger->warn("Client {} sent a non valid request code {}", charId, packet.get_request());
+    }
+}
+
+void party_reply(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("party_reply({})", user.get_name());
+    
+    auto* other;
+    if (auto tmp = server.get_user(packet.get_idXorTag(), user.get_mapId()); !tmp) {
+        logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_idXorTag());
+        return;
+    }
+    
+    using namespace RoseCommon::Packet;
+    switch (packet.get_reply()) {
+        case CliPartyReply::BUSY:
+        case CliPartyReply::REJECT:
+            logger->debug("{} refused {}'s party", other.value()->get_name(), user.get_name());
+            break;
+        case CliPartyReply::ACCEPT_MAKE:
+        case CluPartyReply::ACCEPT_JOIN:
+            logger->debug("{} accepted {}'s party", other.value()->get_name(), user.get_name());
+            break;
     }
 }
