@@ -57,9 +57,11 @@ class CCharServer : public RoseCommon::CRoseServer {
   void send_char(const std::string& character, const RoseCommon::CRosePacket& packet);
 
   std::optional<const User*const> get_user(const std::string& name) const;
-  std::optional<const User*const> get_user(uint32_t id) const;
+  std::optional<const User*const> get_user(uint32_t charId) const;
+  std::optional<const User*const> get_user(uint16_t id, uint16_t mapId) const;
   std::optional<User*const> get_user(const std::string& name);
-  std::optional<User*const> get_user(uint32_t id);
+  std::optional<User*const> get_user(uint32_t charId);
+  std::optional<User*const> get_user(uint16_t id, uint16_t mapId);
   void load_user(std::weak_ptr<CCharClient> socket, uint32_t id);
   void unload_user(uint32_t id);
 
