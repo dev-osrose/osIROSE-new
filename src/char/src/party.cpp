@@ -147,7 +147,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
             break;
         }
         default:
-            logger->warn("Client {} sent a non valid request code {}", charId, packet.get_request());
+            logger->warn("Client {} sent a non valid request code {}", user.get_name(), packet.get_target());
     }
 }
 
@@ -155,9 +155,11 @@ void party_reply(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& ser
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("party_reply({})", user.get_name());
     
-    auto* other;
-    if (auto tmp = server.get_user(packet.get_target(), user.get_mapId()); !tmp) {
-        logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_idXorTag());
+    User*const other;
+    if (auto tmp = server.get_user(packet.get_target(), user.get_mapId()); tmp) {
+        other = tmp.value();
+    } else {
+        logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_target());
         return;
     }
     
