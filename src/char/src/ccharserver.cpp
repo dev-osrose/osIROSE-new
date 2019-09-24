@@ -24,31 +24,24 @@
 
 using namespace RoseCommon;
 
-void update_status(const Packet::IscClientStatus& packet, CCharServer& server, uint32_t charId) {
+void update_status(const Packet::IscClientStatus& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    if (auto user = server.get_user(charId); user) {
-        logger->debug("Char {} now has status {}", charId, packet.get_status());
-        const bool isSwitching = user.value()->get_status() == User::Status::SWITCHING ? true : false;
-        user.value()->set_status(packet.get_status());
-        // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
-        user.value()->set_entityId(packet.get_entityMapId());
-        if (user.value()->get_status() == User::Status::CONNECTED && isSwitching) {
-            // reload the map
-            Core::CharacterTable characterTable{};
-            auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-
-            auto charRes = conn(sqlpp::select(characterTable.map)
-                                  .from(characterTable).where(characterTable.id == user.value()->get_charId()));
-
-            if (charRes.empty()) {
-                logger->error("Error while trying to access the updated map of {}", user.value()->get_charId());
-                return;
-            }
-            user.value()->set_mapId(charRes.front().map);
+    logger->debug("Char {} now has status {}", charId, packet.get_status());
+    const bool isSwitching = user.get_status() == User::Status::SWITCHING ? true : false;
+    user.set_status(packet.get_status());
+    // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
+    user.set_entityId(packet.get_entityMapId());
+    if (user.get_status() == User::Status::CONNECTED && isSwitching) {
+        // reload the map
+        Core::CharacterTable characterTable{};
+        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+        auto charRes = conn(sqlpp::select(characterTable.map)
+                            .from(characterTable).where(characterTable.id == user.get_charId()));
+        if (charRes.empty()) {
+            logger->error("Error while trying to access the updated map of {}", user.get_charId());
+            return;
         }
-    } else {
-        logger->error("Error, got status packet for un-loaded {} client", charId);
-    }
+        user.set_mapId(charRes.front().map);
 }
 
 CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
@@ -203,13 +196,20 @@ void CCharServer::send_char(const std::string& character, const RoseCommon::CRos
 
 bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
     if (!packet) {
+        logger_->error("Empty packet");
         return false;
     }
     if (!dispatcher.is_supported(*packet.get())) {
+        logger_->error("Packet not supported!");
         return false;
     }
-    work_queue.push_back([charId, packet = std::move(packet)](CCharServer& server) mutable {
-        server.dispatcher.dispatch(std::move(packet), server, std::forward<uint32_t>(charId));
+    auto user = get_user(charId);
+    if (!user) {
+        logger_->error("User {} not loaded!", charId);
+        return false;
+    }
+    work_queue.push_back([&user = *user.value(), packet = std::move(packet)](CCharServer& server) mutable {
+        server.dispatcher.dispatch(std::move(packet), server, std::forward<User&>(user));
     });
     return true;
 }
