@@ -82,7 +82,7 @@ void cache_write_party_members(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyMembersTable).where(partyMembersTable.id == party->id));
   auto insert = sqlpp::insert_into(partyMembersTable).columns(partyMembersTable.id, partyMembersTable.memberId);
   for (auto m : party-> members) {
-    insert.values.add(partyMembersTable.id = party->id, partyMembersTable.memberId = static_cast<int>(m));
+    insert.values.add(partyMembersTable.id = party->id, partyMembersTable.memberId = m);
   }
   conn(insert);
 }
