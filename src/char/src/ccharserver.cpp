@@ -44,6 +44,7 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, U
             return;
         }
         user.set_mapId(charRes.front().map);
+    }
 }
 
 CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
