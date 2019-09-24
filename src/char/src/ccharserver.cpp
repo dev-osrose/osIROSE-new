@@ -219,7 +219,7 @@ bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::C
 
 std::optional<const User*const> CCharServer::get_user(const std::string& name) const {
     if (const auto result = std::find_if(users.begin(), users.end(), 
-                                         [&name](const auto& user) { return user.get_name() == name; });
+                                         [&name](const auto& user) { return user.second.get_name() == name; });
         result != users.end()) {
         return {&result->second};
     }
@@ -235,7 +235,7 @@ std::optional<const User*const> CCharServer::get_user(uint32_t id) const {
 
 std::optional<const User*const> CCharServer::get_user(uint16_t id, uint16_t mapId) const {
     if (const auto result = std::find_if(users.begin(), users.end(), [id, mapId](const auto& user) {
-            return user.get_mapId() == mapId && user.get_entityId() == id;
+            return user.second.get_mapId() == mapId && user.second.get_entityId() == id;
         }); result != users.end()) {
         return {&result->second};
     }
@@ -244,7 +244,7 @@ std::optional<const User*const> CCharServer::get_user(uint16_t id, uint16_t mapI
 
 std::optional<User*const> CCharServer::get_user(const std::string& name) {
     if (auto result = std::find_if(users.begin(), users.end(), 
-                                   [&name](const auto& user) { return user.get_name() == name; });
+                                   [&name](const auto& user) { return user.second.get_name() == name; });
         result != users.end()) {
         return {&result->second};
     }
@@ -260,7 +260,7 @@ std::optional<User*const> CCharServer::get_user(uint32_t id) {
     
 std::optional<User*const> CCharServer::get_user(uint16_t id, uint16_t mapId) {
     if (auto result = std::find_if(users.begin(), users.end(), [id, mapId](const auto& user) {
-            return user.get_mapId() == mapId && user.get_entityId() == id;
+            return user.second.get_mapId() == mapId && user.second.get_entityId() == id;
         }); result != users.end()) {
         return {&result->second};
     }
