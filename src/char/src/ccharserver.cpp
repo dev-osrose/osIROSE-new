@@ -167,18 +167,13 @@ void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
     }
 }
 
-void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& p) {
+void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& packet) {
     const auto user = get_user(character);
     if (!user) {
         return;
     }
-    auto packet = RoseCommon::Packet::IscTransferChar::create({user.value()->get_name()});
-    std::vector<uint8_t> blob;
-    p.write_to_vector(blob);
-    packet.set_blob(blob);
-
-    if (auto ptr = maps[user.value()->get_mapId()].lock()) {
-        ptr->send(packet);
+    if (auto client = user.value()->get_client().lock(); client) {
+        client->send_packet(packet);
     }
 }
 
@@ -187,13 +182,8 @@ void CCharServer::send_char(const std::string& character, const RoseCommon::CRos
     if (!user) {
         return;
     }
-    auto packet = RoseCommon::Packet::IscTransferChar::create({character});
-    std::vector<uint8_t> blob;
-    p.write_to_vector(blob);
-    packet.set_blob(blob);
-
-    if (auto ptr = maps[user.value()->get_mapId()].lock()) {
-        ptr->send(packet);
+    if (auto client = user.value()->get_client().lock(); client) {
+        client->send_packet(packet);
     }
 }
 
