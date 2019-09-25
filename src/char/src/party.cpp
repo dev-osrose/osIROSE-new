@@ -165,17 +165,28 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
               return;
             }
             logger->debug("{} wants to make a party with {}", user.get_name(), other.value()->get_name());
-            if (!user.get_party().expired()) {
+            if (user.get_party()) {
                 logger->error("{} wants to make a party but is already in a party", user.get_name());
                 server.send_packet(user.get_id(), SrvPartyReply::create(SrvPartyReply::REJECT_JOIN, user.get_entityId()));
                 return;
             }
-            if (!other.value()->get_party().expired()) {
+            if (user.get_requested_party()) {
+                logger->warn("user {} got another pending party request", user.get_name());
+                server.send_packet(user.get_id(), SrvPartyReply::create(SrvPartyReply::BUSY, user.get_entityId()));
+                return;
+            }
+            if (other.value()->get_requested_party()) {
+                logger->warn("user {} got another pending party request", other.value()->get_name());
+                server.send_packet(user.get_id(), SrvPartyReply::create(SrvPartyReply::BUSY, other.value()->get_entityId()));
+                return;
+            }
+            if (other.value()->get_party()) {
                 logger->debug("{} wants to make a party with {} which is already in a party", user.get_name(), other.value()->get_name());
                 server.send_packet(user.get_id(), SrvPartyReply::create(SrvPartyReply::REJECT_JOIN, other.value()->get_entityId()));  
                 return;
             }
-            // check for level difference
+            // TODO: check for level difference
+            other.value()->set_party(server.create_party(user), true); // we create a party and we set it as requested for the second user
             server.send_char(other.value()->get_charId(), SrvPartyReq::create(Srv::PartyReq::CREATE, user.get_entityId()));
             break;
         }
@@ -233,19 +244,31 @@ void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& s
         return;
     }
     User*const other = tmp.value();
+    if (!other->get_party()) {
+        logger->warn("no party found for character {}", other->get_name());
+        return;
+    }
     
     using namespace RoseCommon::Packet;
     switch (packet.get_type()) {
         case CliPartyReply::BUSY:
             logger->debug("{} is too busy to accept {}'s party", user.get_name(), other->get_name());
-            server.send_packet(other->get_name(), SrvPartyReply::create(SrvPartyReply::BUSY, user.get_entityId()));
+            server.send_packet(other->get_id(), SrvPartyReply::create(SrvPartyReply::BUSY, user.get_entityId()));
+            break;
         case CliPartyReply::REJECT_JOIN:
             logger->debug("{} refused {}'s party", user.get_name(), other->get_name());
-            server.send_packet(other->get_name(), SrvPartyReply::create(SrvPartyReply::REJECT_JOIN, user.get_entityId());
+            server.send_packet(other->get_id(), SrvPartyReply::create(SrvPartyReply::REJECT_JOIN, user.get_entityId()));
             break;
         case CliPartyReply::ACCEPT_CREATE:
         case CliPartyReply::ACCEPT_JOIN:
             logger->debug("{} accepted {}'s party", user.get_name(), other->get_name());
+            if (user.get_requested_party() != other->get_party()) {
+                logger->warn("{} tried to answer to a different party request from {}", user.get_name(), other->get_name());
+                user.set_party({}, true); // we reset the party request
+                return;
+            }
+            server.add_user_to_party(user, other->get_party());
+            server.send_packet(other->get_id(), SrvPartyReply::create(SrvPartyReply::ACCEPT_JOIN, user.get_entityId()));
             break;
         default:
             logger->debug("{} replied {} to {}", user.get_name(), packet.get_type(), other->get_name());
