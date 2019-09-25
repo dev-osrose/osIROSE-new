@@ -95,6 +95,58 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
 
+std::shared_ptr<Party> Partycache::get_party(uint32_t charId) {
+    if (cache.count(charId) != 0) {
+        return cache.at(charId);
+    }
+    auto party = cache_fetch_party(charId);
+    if (!party) { // no party!
+        return {};
+    }
+    cache.insert({charId, party});
+
+    for (auto m : party->members) {
+        cache.insert({m, party});
+    }
+    return party;
+}
+
+std::shared_ptr<Party> PartyCache::create_party(uint32_t charId) {
+    auto party = std::make_shared<Party>();
+    party->members.push_back(charId);
+    party->leader = charId;
+    cache_create_party(party);
+    cache_write_party_members(party);
+    party = cache_fetch_party(charId);
+    cache[charId] = party;
+    return party;
+}
+
+void PartyCache::add_member_to_party(std::shared_ptr<Party> party, uint32_t member) {
+    party->members.push_back(member);
+    cache.insert({member, party});
+    
+    cache_write_party_members(party);
+}
+
+void PartyCache::remove_member_from_party(std::shared_ptr<Party> party, uint32_t member) {
+    party->members.erase(std::remove(party->members.begin(), party->members.end(), member), party->members.end());
+    cache.erase(member);
+    
+    if (party->members.empty()) {
+        cache_remove_party(party);
+    } else {
+        cache_write_party_members(party);
+    }
+}
+
+void PartyCache::remove_party(std::shared_ptr<Party> party) {
+    for (auto member : party->members) {
+        cache.erase(member);
+    }
+    cache_remove_party(party);
+}
+
 void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("party_request({})", user.get_name());
