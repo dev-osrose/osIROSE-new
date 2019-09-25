@@ -186,7 +186,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
                 return;
             }
             // TODO: check for level difference
-            other.value()->set_party(server.create_party(user), true); // we create a party and we set it as requested for the second user
+            other.value()->set_requested_party(server.create_party(user));
             server.send_char(other.value()->get_charId(), SrvPartyReq::create(Srv::PartyReq::CREATE, user.get_entityId()));
             break;
         }
