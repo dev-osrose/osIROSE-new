@@ -57,7 +57,16 @@ class User {
   const std::string& get_name() const noexcept { return name; }
   
   std::shared_ptr<Party> get_party() const noexcept { return party; }
-  void set_party(std::shared_ptr<Party> party) noexcept { this->party = party; }
+  void set_party(std::shared_ptr<Party> party, bool is_requested) noexcept {
+    if (is_requested) {
+      this->requested_party = party;
+      this->party.reset();
+    } else {
+      this->requested_party.reset();
+      this->party = party;
+    }
+  }
+  std::shared_ptr<Party> get_requested_party() const noexcept { return requested_party; }
   
   uint16_t get_entityId() const noexcept { return entityId; }
   void set_entityId(uint16_t entityId) { this->entityId = entityId; }
@@ -69,6 +78,7 @@ class User {
     uint16_t mapId;
     uint16_t entityId = 0;
     Status status = Status::CONNECTING;
+    std::shared_ptr<Party> requested_party;
     std::shared_ptr<Party> party;
     // std::shared_ptr<Guild>
     // std::vector<Chatroom>
