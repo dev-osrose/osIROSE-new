@@ -41,6 +41,8 @@ class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_fr
   bool sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P);
   bool sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P);
   bool sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P);
+ 
+  void send_packet(const RoseCommon::CRosePacket& packet) { CRoseClient::send(packet); } 
 
   virtual void onDisconnected() override;
 
