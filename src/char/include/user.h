@@ -57,14 +57,13 @@ class User {
   const std::string& get_name() const noexcept { return name; }
   
   std::shared_ptr<Party> get_party() const noexcept { return party; }
-  void set_party(std::shared_ptr<Party> party, bool is_requested) noexcept {
-    if (is_requested) {
-      this->requested_party = party;
-      this->party.reset();
-    } else {
-      this->requested_party.reset();
-      this->party = party;
-    }
+  void set_party(std::shared_ptr<Party> party) noexcept {
+    this->requested_party.reset();
+    this->party = party;
+  }
+  void set_requested_party(std::shared_ptr<Party> party) noexcept {
+    this->requested_party = party;
+    this->party.reset();
   }
   std::shared_ptr<Party> get_requested_party() const noexcept { return requested_party; }
   
