@@ -1,6 +1,6 @@
 <simpleType name = "PartyRule">
     <restriction base = "uint8_t">
-        <enumeration value = "EXP_PER_PLAYER" />
-        <enumeration value = "ITEM_IN_ORDER" />
+        <enumeration value = "EXP_PER_PLAYER" id = "0x1"/>
+        <enumeration value = "ITEM_IN_ORDER" id = "0x80" />
     </restriction>
 </simpleType>  
