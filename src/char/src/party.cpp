@@ -267,8 +267,8 @@ void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& s
                 user.set_party_request({}); // we reset the party request
                 return;
             }
-            server.add_user_to_party(user, other->get_party());
             server.send_packet(*other, SrvPartyReply::create(SrvPartyReply::ACCEPT_JOIN, user.get_entityId()));
+            server.add_user_to_party(user, other->get_party());
             break;
         default:
             logger->debug("{} replied {} to {}", user.get_name(), packet.get_type(), other->get_name());
