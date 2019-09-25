@@ -55,6 +55,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   void transfer_char(RoseCommon::Packet::IscTransferChar&& P);
   void send_map(uint16_t map, const RoseCommon::CRosePacket& packet);
   void send_char(uint32_t character, const RoseCommon::CRosePacket& packet);
+  void send_char(const User& user, const RoseCommon::CRosePacket& packet);
   void send_char(const std::string& character, const RoseCommon::CRosePacket& packet);
 
   std::optional<const User*const> get_user(const std::string& name) const;
@@ -65,6 +66,9 @@ class CCharServer : public RoseCommon::CRoseServer {
   std::optional<User*const> get_user(uint16_t id, uint16_t mapId);
   void load_user(std::weak_ptr<CCharClient> socket, uint32_t id);
   void unload_user(uint32_t id);
+ 
+  std::shared_ptr<Party> create_party(User& user);
+  void add_user_to_party(User& user, std::shared_ptr<Party> party);
 
  protected:
   virtual void OnAccepted(std::unique_ptr<Core::INetwork> _sock) override;
