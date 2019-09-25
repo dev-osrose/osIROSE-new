@@ -269,7 +269,7 @@ void CCharServer::load_user(std::weak_ptr<CCharClient> client, uint32_t id) {
         return;
     }
     User user(client, charRes.front().name, id, charRes.front().map);
-    user.set_party(partys.get_party(id), false); // we load the party if there is one for that character
+    user.set_party(partys.get_party(id)); // we load the party if there is one for that character
 }
 
 void CCharServer::unload_user(uint32_t id) {
