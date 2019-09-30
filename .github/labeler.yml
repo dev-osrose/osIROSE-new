@@ -1,7 +1,7 @@
 component:core:
 - src/core/*
 
-component:core:rosecommon: 
+component:core:rosecommon:
 - src/rosecommon/*
 
 component:server:character:
@@ -24,7 +24,6 @@ component:scripting:
 
 component:buildsystem:
 - cmake/*
-- *.cmake
 
 component:other:
 - src/tests/*
