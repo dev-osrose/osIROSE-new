@@ -100,15 +100,18 @@ C++ Installation - Windows
 [![cmake]][cmake-link]
 [![mysql]][mysql-link]
 [![python]][python-link]
+[![openSSL]][openSSL-link]
 
 [vis-studio]: https://img.shields.io/badge/Visual%20Studio-Download-blue.svg "Download Visual Stuido"
 [vis-studio-link]: https://visualstudio.microsoft.com/downloads/ "Download Visual Stuido"
 [cmake]: https://img.shields.io/badge/CMake-Download-blue.svg "Download CMake"
 [cmake-link]: https://cmake.org/download/ "Download CMake"
-[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%2064--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
+[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20x64--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
 [mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 64-bit"
-[python]: https://img.shields.io/badge/Python-Download-blue.svg "Download Python 2.7"
-[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python"
+[python]: https://img.shields.io/badge/Python%202.7-Download-blue.svg "Download Python 2.7"
+[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python 2.7"
+[openSSL]: https://img.shields.io/badge/OpenSSL%201.0.2t%20x64-Download-blue.svg "Download OpenSSL 1.0.2t x64"
+[openSSL-link]: https://slproweb.com/products/Win32OpenSSL.html "Download OpenSSL x64"
 
 After downloading and installing the above applications, to compile the servers run the following commands:
 
