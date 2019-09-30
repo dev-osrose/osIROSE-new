@@ -1,14 +1,12 @@
 #pragma once
 
 #include "packetfactory.h"
-#include "dataconsts.h"
 #include <unordered_map>
 #include <functional>
 #include <type_traits>
 #include <chrono>
 
-class EntitySystem;
-
+template <typename... Args>
 class PacketDispatcher {
     public:
     
@@ -17,29 +15,29 @@ class PacketDispatcher {
             auto res = dispatcher.equal_range(type);
             return std::distance(res.first, res.second) > 0;
         }
-    
-        void dispatch(EntitySystem& entitySystem, RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket> packet) {
+
+        void dispatch(std::unique_ptr<RoseCommon::CRosePacket>&& packet, Args&&... args) {
             if (!packet) {
                 return;
             }
             const RoseCommon::ePacketType type = packet->get_type();
             auto res = dispatcher.equal_range(type);
             for (auto it = res.first; it != res.second; ++it) {
-                it->second(entitySystem, entity, packet.get());
+                it->second(packet.get(), std::forward<Args>(args)...);
             }
         }
-    
+
         template <typename PacketType>
-        void add_dispatcher(RoseCommon::ePacketType type, std::function<void(EntitySystem&, RoseCommon::Entity, const PacketType&)>&& func) {
-            dispatcher.emplace(type, [func = std::move(func)](EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::CRosePacket* packet) mutable {
+        void add_dispatcher(RoseCommon::ePacketType type, std::function<void(const PacketType&, Args&&...)>&& func) {
+            dispatcher.emplace(type, [func = std::move(func)](const RoseCommon::CRosePacket* packet, Args&&... args) mutable {
                 const PacketType *p = dynamic_cast<const PacketType*>(packet);
                 if (p == nullptr) {
                     return;
                 }
-                func(entitySystem, entity, *p);
+                func(*p, std::forward<Args>(args)...);
             });
         }
-    
+
     private:
-        std::unordered_multimap<RoseCommon::ePacketType, std::function<void(EntitySystem&, RoseCommon::Entity, const RoseCommon::CRosePacket*)>> dispatcher;
+        std::unordered_multimap<RoseCommon::ePacketType, std::function<void(const RoseCommon::CRosePacket*, Args&&...)>> dispatcher;
 };

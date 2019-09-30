@@ -104,7 +104,7 @@ CRoseServer::~CRoseServer() {
     isc_list_.clear();
   }
   for (auto& s : socket_) {
-      if (s->process_thread_.joinable()) {
+      if (s && s->process_thread_.joinable()) {
           s->process_thread_.join();
       }
   }
