@@ -18,4 +18,6 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
     - name: Make
-      run: cmake --build . -- -j
+      run: |
+        cd build
+        cmake --build . -- -j
