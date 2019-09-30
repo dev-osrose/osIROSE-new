@@ -20,4 +20,4 @@ jobs:
     - name: Make
       run: |
         cd build
-        cmake --build . -- -j
+        cmake --build .
