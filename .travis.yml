@@ -24,14 +24,14 @@ env:
   #discord webhook
   - secure: "MXG3LzmYr0KLqEw3WZo1qY3/iGVaAQuAcE/V9ad3FlpBz89BoNpNP+frf6Yrvamy/UGiR14hgcPbzmTI5DvdBkdFpf9K0xuLRAOsxOMPfTU2d6ip42uifDJ8koXg8INzOk8iab9TftzY2Zg/u4/L3JEo2HWbKFndQMCke7IZqpNOCcrJWdXtpb0/QKpcCxbovS4toAAkmi1P/2S21CdTnZLF4ee06h5yChkrHjXNPiDfBpM5uhuIkH/KS0ruv9WyUTd7gGtgQ7KzKcyRCWv3G9jXZNbP5nXGVsPFnRz1o3ZBBgBX2ZYQsYoMqQdbfFTe8hi6xuabSACAxlhQh3+f8l05a43d1zP7uWh7on0z4CAVIbM7MVBjfJYT1lzQNujpyjPO1DhiT4+2wGzdCNLqu2KFxhgj8nsafYs/Esj7Ie1zn7IcquruqJg24QTFgTxvuACidQcuTnc9f5NBM+hLqWTsvnD0tvFzkk5tEzc3XJwmTzXWk348DTO+SmXZvs5EiMORue7igCa8QGnWT6R4WtCrNBSDWza17VV9uGUJhgakI8bSvTOlUhUpsBmPR5rPaRZKkKTvpm6KLsqEj1dqEyyE69aTZ+ow+mRX16PiZT6feW9nyFvshkA4UzBHwN9Y9/kz/xSwz6Tg7WDG69Ru3XGY7FuxKAmTjJm4DspOdZ4="
   - SUITE=tests
-  - PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
+  - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
   - WITH_CRASH_REPORTS=ON
   - BUILD_JOB_COUNT=4
   - CCACHE_SLOPPINESS="pch_defines,time_macros"
   - PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
-  - LCOV_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/lcov
+  - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
-  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/3rdparty/usr/local/bin/genhtml
+  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
   
 services:
   mysql
@@ -41,10 +41,10 @@ cache:
   ccache: true
   bundler: true
   directories:
-  - ${TRAVIS_BUILD_DIR}/3rdparty/bin
-  - ${TRAVIS_BUILD_DIR}/3rdparty/usr
-  - ${TRAVIS_BUILD_DIR}/3rdparty/lib
-  - ${TRAVIS_BUILD_DIR}/3rdparty/include
+  - ${TRAVIS_BUILD_DIR}/build/3rdparty/bin
+  - ${TRAVIS_BUILD_DIR}/build/3rdparty/usr
+  - ${TRAVIS_BUILD_DIR}/build/3rdparty/lib
+  - ${TRAVIS_BUILD_DIR}/build/3rdparty/include
   - ${TRAVIS_BUILD_DIR}/ninja
   
 stages:

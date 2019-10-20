@@ -4,6 +4,8 @@
 
 option(PROJECT_DEBUG "Enable debugging messages support" ON)
 
+set(CMAKE_THIRD_PARTY_DIR "${CMAKE_BINARY_DIR}/3rdparty" CACHE PATH "Directory where 3rdparty libs will be installed during build time")
+
 option(WITH_COTIRE "Enable cotire pch and unity build targets" ON)
 option(OFFICIAL_BUILD "do you want to compile an official build?" OFF)
 option(BUILD_LUA "Build Lua" ON)

@@ -13,9 +13,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> clear_cache.txt
-  - 3rdparty\lib -> clear_cache.txt
-  - 3rdparty\include -> clear_cache.txt
+  - build\3rdparty\bin -> clear_cache.txt
+  - build\3rdparty\lib -> clear_cache.txt
+  - build\3rdparty\include -> clear_cache.txt
 
 branches:
   except:

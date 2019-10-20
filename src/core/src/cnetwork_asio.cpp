@@ -55,7 +55,6 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 
   network_address_ = _ip;
   network_port_ = _port;
-  active_ = true;
   return true;
 }
 
