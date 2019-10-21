@@ -7,10 +7,10 @@ fi
 echo 'Building and installing lcov.';
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-  if [ ! -f "$TRAVIS_BUILD_DIR/3rdparty/usr/local/bin/lcov" ]; then
+  if [ ! -f "$TRAVIS_BUILD_DIR/build/3rdparty/usr/local/bin/lcov" ]; then
     echo 'Setting up lcov...';
-    
-    export DESTDIR=$TRAVIS_BUILD_DIR/3rdparty
+
+    export DESTDIR=$TRAVIS_BUILD_DIR/build/3rdparty
     wget https://downloads.sourceforge.net/ltp/lcov-1.13.tar.gz
     tar -xf lcov-1.13.tar.gz
     rm lcov-1.13.tar.gz
@@ -18,7 +18,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     make install
     cd ..
     rm -r lcov-1.13
-    
+
     echo 'Finished installing lcov.';
   else
     echo 'Using cached lcov directory.';
