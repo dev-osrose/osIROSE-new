@@ -49,6 +49,7 @@ install:
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-winx64.msi -FileName C:\projects\osIROSE\mysql-connector-c.msi
 - ps: Start-FileDownload https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName C:\projects\osIROSE\ninja-win.zip
 - ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\build\3rdparty\bin -Force
+- cmd: pip install pyparsing
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/build/bin/scripts *.lua"
@@ -80,8 +81,8 @@ artifacts:
   name: osirose-debug-symbols
 
 on_success:
-  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
-  - ps: ./send.ps1 success $env:WEBHOOK_URL
+#  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+#  - ps: ./send.ps1 success $env:WEBHOOK_URL
   - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin
   - SET PATH=%PROJECT_PATH%\build\3rdparty\bin;C:\msys64\usr\bin;%PATH%
   - curl --connect-timeout 30 -F symfile=@LoginServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
@@ -89,9 +90,9 @@ on_success:
   - curl --connect-timeout 30 -F symfile=@MapServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
   - curl --connect-timeout 30 -F symfile=@NodeServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
 
-on_failure:
-  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
-  - ps: ./send.ps1 failure $env:WEBHOOK_URL
+#on_failure:
+#  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+#  - ps: ./send.ps1 failure $env:WEBHOOK_URL
 
 #before_test:
 #  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%
