@@ -1,103 +1,137 @@
-#[==[
-Provides the following variables:
+# - Try to find MySQL.
+# Once done this will define:
+# MYSQL_FOUND			- If false, do not try to use MySQL.
+# MYSQL_INCLUDE_DIRS	- Where to find mysql.h, etc.
+# MYSQL_LIBRARIES		- The libraries to link against.
+# MYSQL_VERSION_STRING	- Version in a string of MySQL.
+#
+# Created by RenatoUtsch based on eAthena implementation.
+#
+# Please note that this module only supports Windows and Linux officially, but
+# should work on all UNIX-like operational systems too.
+#
 
-  * `MYSQL_INCLUDE_DIRS`: Include directories necessary to use MySQL.
-  * `MYSQL_LIBRARIES`: Libraries necessary to use MySQL.
-  * A `mysql::mysql` imported target.
-#]==]
+#=============================================================================
+# Copyright 2012 RenatoUtsch
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file Copyright.txt for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of CMake, substitute the full
+#  License text for the above reference.)
 
-# No .pc files are shipped with MySQL on Windows.
-set(_MySQL_use_pkgconfig 0)
-if (NOT WIN32)
-  find_package(PkgConfig)
-  if (PkgConfig_FOUND)
-    set(_MySQL_use_pkgconfig 1)
-  endif ()
-endif ()
+if( WIN32 )
 
-if (_MySQL_use_pkgconfig)
-  pkg_check_modules(_mariadb "mariadb" QUIET IMPORTED_TARGET)
-  unset(_mysql_target)
-  if (NOT _mariadb_FOUND)
-    pkg_check_modules(_mysql "mysql" QUIET IMPORTED_TARGET)
-    if (_mysql_FOUND)
-      set(_mysql_target "_mysql")
-    endif ()
-  else ()
-    set(_mysql_target "_mariadb")
-    if (_mariadb_VERSION VERSION_LESS 10.4)
-      get_property(_include_dirs
-        TARGET    "PkgConfig::_mariadb"
-        PROPERTY  "INTERFACE_INCLUDE_DIRECTORIES")
-      # Remove "${prefix}/mariadb/.." from the interface since it breaks other
-      # projects.
-      list(FILTER _include_dirs EXCLUDE REGEX "\\.\\.")
-      set_property(TARGET "PkgConfig::_mariadb"
-        PROPERTY
-          "INTERFACE_INCLUDE_DIRECTORIES" "${_include_dirs}")
-      unset(_include_dirs)
-    endif ()
-  endif ()
+	SET(BINDIR32_ENV_NAME "Program Files")
+	find_path( MYSQL_INCLUDE_DIR
+		NAMES "mysql.h"
+		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
+				"${CMAKE_EXTERNAL_INCLUDE_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */include"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */include"
+			  "$ENV{PROGRAMFILES}/MySQL/*/include"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/include"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/include"
+			  "C:/Program Files/MySQL/*/include"
+			  )
 
-  set(MySQL_FOUND 0)
-  if (_mysql_target)
-    set(MySQL_FOUND 1)
-    add_library(MySQL::MySQL INTERFACE IMPORTED)
-    target_link_libraries(MySQL::MySQL
-      INTERFACE "PkgConfig::${_mysql_target}")
-    set(MYSQL_INCLUDE_DIRS ${${_mysql_target}_INCLUDE_DIRS})
-    set(MYSQL_LIBRARIES ${${_mysql_target}_LINK_LIBRARIES})
-  endif ()
-  unset(_mysql_target)
-else ()
-  set(_MySQL_mariadb_versions 10.2 10.3 10.4)
-  set(_MySQL_versions 5.0 8.0)
-  set(_MySQL_paths)
-  foreach (_MySQL_version IN LISTS _MySQL_mariadb_versions)
-    list(APPEND _MySQL_paths
-      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MariaDB ${_MySQL_version};INSTALLDIR]"
-      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MariaDB ${_MySQL_version} (x64);INSTALLDIR]")
-  endforeach ()
-  foreach (_MySQL_version IN LISTS _MySQL_versions)
-    list(APPEND _MySQL_paths
-      "C:/Program Files/MySQL/MySQL Server ${_MySQL_version}/lib/opt"
-      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server ${_MySQL_version};Location]"
-      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server ${_MySQL_version};Location]")
-  endforeach ()
-  unset(_MySQL_version)
-  unset(_MySQL_versions)
-  unset(_MySQL_mariadb_versions)
+	find_path( MYSQL_LIBRARY_PATH
+		NAMES "libmysql.lib" "mysqlclient_r.lib"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
+			  "C:/Program Files/MySQL/*/lib"
+			  )
 
-  find_path(MySQL_INCLUDE_DIR
-    NAMES mysql.h
-    PATHS
-      "C:/Program Files/MySQL/include"
-      "C:/MySQL/include"
-      ${_MySQL_paths}
-    PATH_SUFFIXES include include/mysql
-    DOC "Location of mysql.h")
-  mark_as_advanced(MySQL_INCLUDE_DIR)
-  find_library(MySQL_LIBRARY
-    NAMES libmariadb mysql libmysql mysqlclient
-    PATHS
-      "C:/Program Files/MySQL/lib"
-      "C:/MySQL/lib/debug"
-      ${_MySQL_paths}
-    PATH_SUFFIXES lib lib/opt
-    DOC "Location of the mysql library")
-  mark_as_advanced(MySQL_LIBRARY)
+	find_library( MYSQL_LIBRARY
+		NAMES "libmysql" "mysqlclient_r"
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
+			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
+			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
+			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
+			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
+			  "C:/Program Files/MySQL/*/lib"
+			  )
+else()
+	find_path( MYSQL_INCLUDE_DIR
+		NAMES "mysql.h"
+		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
+			  "$ENV{HOME}/mysql/include"
+			  "/usr/include/mysql"
+			  "/usr/local/include/mysql"
+			  "/usr/mysql/include/mysql" )
 
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(MySQL
-    REQUIRED_VARS MySQL_INCLUDE_DIR MySQL_LIBRARY)
+	find_path( MYSQL_LIBRARY_PATH
+		NAMES libmysqlclient.a libmysqlclient.so libmysqlclient_r.a libmysqlclient_r.so
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+			  "$ENV{HOME}/mysql/lib"
+			  "/lib/mysql"
+			  "/lib64/mysql"
+        "/usr/lib"
+			  "/usr/lib/mysql"
+			  "/usr/lib64/mysql"
+			  "/usr/local/lib/mysql"
+			  "/usr/local/lib64/mysql"
+			  "/usr/mysql/lib/mysql"
+			  "/usr/mysql/lib64/mysql"
+        "/usr/lib/x86_64-linux-gnu" )
 
-  if (MySQL_FOUND)
+	find_library( MYSQL_LIBRARY
+		NAMES mysqlclient mysqlclient_r
+		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+			  "$ENV{HOME}/mysql/lib"
+			  "/lib/mysql"
+			  "/lib64/mysql"
+        "/usr/lib"
+			  "/usr/lib/mysql"
+			  "/usr/lib64/mysql"
+			  "/usr/local/lib/mysql"
+			  "/usr/local/lib64/mysql"
+			  "/usr/mysql/lib/mysql"
+			  "/usr/mysql/lib64/mysql" )
+endif()
+
+message(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+message(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+message(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+
+if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
+	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"
+		MYSQL_VERSION_H REGEX "^#define[ \t]+MYSQL_SERVER_VERSION[ \t]+\"[^\"]+\".*$" )
+	string( REGEX REPLACE
+		"^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
+		"${MYSQL_VERSION_H}" )
+endif()
+
+# handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
+# all listed variables are TRUE
+include( FindPackageHandleStandardArgs )
+find_package_handle_standard_args( MYSQL
+	REQUIRED_VARS MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
+	VERSION_VAR MYSQL_VERSION_STRING
+	)
+
+set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
+set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
+
+if(MYSQL_FOUND AND NOT TARGET mysql::mysql)
     add_library(mysql::mysql UNKNOWN IMPORTED)
-    set_target_properties(mysql::mysql PROPERTIES
-      IMPORTED_LOCATION "${MySQL_LIBRARY}"
-      INTERFACE_INCLUDE_DIRECTORIES "${MySQL_INCLUDE_DIR}")
-    set(MYSQL_INCLUDE_DIRS "${MySQL_INCLUDE_DIR}")
-    set(MYSQL_LIBRARIES "${MySQL_LIBRARY}")
-  endif ()
-endif ()
-unset(_MySQL_use_pkgconfig)
+    set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
+    set_property(TARGET mysql::mysql APPEND PROPERTY IMPORTED_LOCATION "${MYSQL_LIBRARY}")
+endif()
+
+mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY MYSQL_LIBRARY_PATH )
+
