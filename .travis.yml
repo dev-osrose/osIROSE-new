@@ -54,7 +54,6 @@ stages:
 jobs:
   include:
     - &gccinit
-      os: linux
       arch: amd64
       stage: prepare cache
       name: "AMD64 Ubuntu Bionic/GCC"
@@ -72,6 +71,7 @@ jobs:
           - lcov
           - g++-8
           - libcurl4-openssl-dev
+
       install:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
@@ -89,7 +89,6 @@ jobs:
       script: true
 
     - &gccarminit
-      os: linux
       arch: arm64
       stage: prepare cache
       if: branch != coverity_scan
@@ -104,17 +103,14 @@ jobs:
           - lcov
           - g++-8
           - libcurl4-openssl-dev
+
       install:
         - |
-          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
-            mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
-            cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
-            cd ..
-          fi
+          CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
+          mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
+          cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
+          cd ..
         - cmake --version
-        - ccache --version
-        - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
