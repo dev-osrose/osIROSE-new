@@ -31,9 +31,6 @@ env:
   - BUILD_JOB_COUNT=4
   - SUITE=tests
 
-#services:
-#  mysql
-
 cache:
   pip: true
   ccache: true
@@ -54,7 +51,6 @@ stages:
 jobs:
   include:
     - &gccinit
-      arch: amd64
       stage: prepare cache
       name: "AMD64 Ubuntu Bionic/GCC"
       arch: amd64
@@ -89,11 +85,13 @@ jobs:
       script: true
 
     - &gccarminit
-      arch: arm64
       stage: prepare cache
+      name: "ARM64 Ubuntu Bionic/GCC"
+      arch: arm64
+      os: linux
+      compiler: g++
       if: branch != coverity_scan
       env: CC=gcc-8 CXX=g++-8
-      compiler: g++
       addons:
         apt:
           sources:
@@ -131,16 +129,10 @@ jobs:
       name: "AMD64 G++-8 Release"
       if: branch != coverity_scan
       env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=tests BUILD_TYPE=Release
-      before_script:
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
-      after_script:
-        - ctest --output-on-failure
 
 #Notify discord and everyone else
     - &notify
