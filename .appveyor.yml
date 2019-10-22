@@ -72,13 +72,13 @@ after_build:
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
 - 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
-- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+#- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
 - path: $(platform)-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
-  name: osirose-debug-symbols
+#- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+#  name: osirose-debug-symbols
 
 on_success:
 #  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
