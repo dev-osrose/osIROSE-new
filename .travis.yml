@@ -32,7 +32,7 @@ env:
   - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
   - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
-  
+
 services:
   mysql
 
@@ -46,7 +46,7 @@ cache:
   - ${TRAVIS_BUILD_DIR}/build/3rdparty/lib
   - ${TRAVIS_BUILD_DIR}/build/3rdparty/include
   - ${TRAVIS_BUILD_DIR}/ninja
-  
+
 stages:
   - prepare cache
   - compile
@@ -56,6 +56,8 @@ stages:
 jobs:
   include:
     - &gccinit
+      os: linux
+      arch: amd64
       stage: prepare cache
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
@@ -92,7 +94,48 @@ jobs:
         - pip install --user pyparsing
       script: true
 
+    - &gccarminit
+      os: linux
+      arch: arm64
+      stage: prepare cache
+      if: branch != coverity_scan
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+      compiler: g++
+      addons:
+        apt:
+          sources:
+          - deadsnakes
+          - ubuntu-toolchain-r-test
+          packages:
+          - lcov
+          - g++-8
+          - libcurl4-openssl-dev
+      before_install:
+        - eval "${MATRIX_EVAL}"
+        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+      install:
+        ############################################################################
+        # Install a recent CMake
+        ############################################################################
+        - |
+          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
+            mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
+            cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
+            cd ..
+          fi
+        - cmake --version
+        - ccache --version
+        - ccache --show-stats
+        - bash $CI_DIRECTORY/install-lcov.sh
+        - bash $CI_DIRECTORY/install-ninja.sh
+        - pip install --user pyparsing
+      script: true
+
     - &clanginit
+      os: linux
+      arch: amd64
       stage: prepare cache
       if: branch != coverity_scan
       env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7"
@@ -143,7 +186,7 @@ jobs:
         - mysql --user="root" -e 'create database osirose;'
         - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
         - bash $CI_DIRECTORY/before_script.sh
-      script: 
+      script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
@@ -229,6 +272,20 @@ jobs:
         - ccache --show-stats
         #- ctest --output-on-failure
 
+    - <<: *gccarminit
+      stage: compile
+      if: branch != coverity_scan
+      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=tests BUILD_TYPE=Release
+      before_install:
+        - eval "${MATRIX_EVAL}"
+      before_script:
+        - export CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8
+        - bash $CI_DIRECTORY/before_script.sh
+      script:
+        - cd build
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+        - cmake --build . -- -j ${BUILD_JOB_COUNT}
+
 #    - <<: *gccinit
 #      stage: test
 #      if: branch != coverity_scan
@@ -236,7 +293,7 @@ jobs:
 #      cache: false
 #      before_install:
 #        - eval "${MATRIX_EVAL}"
-#      install: 
+#      install:
 #        - bash $CI_DIRECTORY/install-lcov.sh
 #      before_script:
 #        - export GCOV_EXEC=gcov-8
@@ -362,7 +419,7 @@ notifications:
     on_start: never
   slack:
     secure: KHU2ZMzBGGtsaWF7wylutlLPAxCEZD2/NQQbmbaEpsaWSitXnO9XOLRLsLJP6QGLOgiDHHmGcRiO7wgmbsvP79zRaChs/LLfUY2F5laXgpZdL9OI/z8zygeY1iSZSNMMr0MCYf7TilRvOqTSFpB7RcuQ65G1ZGow8h6MunU5WaSyjC7REOJcSmL3IQ08Zcf8oZgdd6EqogSW1Eubcp4IhlsiQQTLdzeAQWwkfJ8DDO1gPC8bWdJCBg9hMUub5K/UQHEOY8KmH1KTOk/FedjI8wTWD+0m8SjFJq8wUs9ieQyGikZbK6F8WmjZdG0GLRWb7POxIOQjqxi2/ZRUMTHvDr5s+0BUQmKYUwkc/oUf/Bg/eYnU/LjM7prnQU08ZPGDwoh5L/alZM4eGKez3KFb4Co3e7HSI+FN9mQFKcgjnMOJIE1kaw1V+9Uj1DJemWi6voKmApJ3s8U44FduI30fpAD0FQQw8dEfF2Iug3O093KdPy0aEySOZ44a0VYD5iB7Dc129xumwOd5EAvGXHc+3/Wf0TLsskct2IlNVv6DaKkstk0YXjz7PkhkMJEAvYYi/ANQ8h/Ixh7Xnj7bcX+boBazIM6V+U6sxysQUsvWihXpxtqs+N7Z0eiRbC7s4TAMX1hVVvoERlLRVOTCl+QsRemTgt1QXV0rMl78h8xg8lg=
-  
+
 after_failure:
   - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
