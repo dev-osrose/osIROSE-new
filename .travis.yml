@@ -31,8 +31,8 @@ env:
   - BUILD_JOB_COUNT=4
   - SUITE=tests
 
-services:
-  mysql
+#services:
+#  mysql
 
 cache:
   pip: true
