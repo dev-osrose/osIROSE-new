@@ -56,7 +56,6 @@ stages:
 jobs:
   include:
     - &gccinit
-      os: linux
       arch: amd64
       stage: prepare cache
       if: branch != coverity_scan
@@ -73,8 +72,8 @@ jobs:
           - libcurl4-openssl-dev
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:$PATH
       install:
         ############################################################################
         # Install a recent CMake
@@ -95,7 +94,6 @@ jobs:
       script: true
 
     - &gccarminit
-      os: linux
       arch: arm64
       stage: prepare cache
       if: branch != coverity_scan
@@ -112,29 +110,24 @@ jobs:
           - libcurl4-openssl-dev
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:$PATH
       install:
         ############################################################################
         # Install a recent CMake
         ############################################################################
         - |
-          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
-            mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
-            cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
-            cd ..
-          fi
+          CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
+          mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
+          cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
+          cd ..
         - cmake --version
-        - ccache --version
-        - ccache --show-stats
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
       script: true
 
     - &clanginit
-      os: linux
       arch: amd64
       stage: prepare cache
       if: branch != coverity_scan
@@ -153,8 +146,8 @@ jobs:
           - libcurl4-openssl-dev
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:$PATH
       install:
         ############################################################################
         # Install a recent CMake
@@ -286,57 +279,14 @@ jobs:
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
 
-#    - <<: *gccinit
-#      stage: test
-#      if: branch != coverity_scan
-#      env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" SUITE=coverage BUILD_TYPE=Debug
-#      cache: false
-#      before_install:
-#        - eval "${MATRIX_EVAL}"
-#      install:
-#        - bash $CI_DIRECTORY/install-lcov.sh
-#      before_script:
-#        - export GCOV_EXEC=gcov-8
-#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-#        - mysql --user="root" -e 'create database osirose;'
-#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-#        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --remote-name ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
-#        - tar -zxvf ${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
-#      script:
-#        - cd build
-#        - ${LCOV_PATH} --directory . --zerocounters
-#        - ${LCOV_PATH} -q -c -i -d . -o coverage.base
-#        - ./bin/TestConfig
-#        - ./bin/TestConsole
-#        - ./bin/TestMySQLDB
-#        - ./bin/TestASIONetwork
-#        - ./bin/TestRoseCrypt
-#        - ./bin/TestRoseNetwork
-#        - ./bin/TestLoginServer
-#        - ./bin/TestCharServer
-#        - ./bin/TestAllServers
-#        - ./bin/TestRosePackets
-#        #- ./bin/TestSystems
-#        - ${LCOV_PATH} -q --directory . --capture --output-file coverage.info
-#        - ${LCOV_PATH} -q -a coverage.base -a coverage.info --output-file coverage.total
-#        - ${LCOV_PATH} -q --remove coverage.total "/usr/*" "${TRAVIS_BUILD_DIR}/tools/*" "${TRAVIS_BUILD_DIR}/3rdparty/*" "${TRAVIS_BUILD_DIR}/src/tests/*" "${TRAVIS_BUILD_DIR}/src/rosecommon/*/packets/*" --output-file coverage.info.cleaned
-#        - ${GENHTML_PATH} -o coverage coverage.info.cleaned
-#        - coveralls-lcov coverage.info.cleaned
-#        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-#      after_success:
-#        - curl --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} ${AZG_HOST} --quote '-DELE success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz' > /dev/null
-#        - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
-#        - chmod +x send.sh
-#        - ./send.sh success $WEBHOOK_URL
-
     - &covinit
       stage: compile
       if: branch = coverity_scan
       env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8" BUILD_TYPE=Release
       before_install:
         - eval "${MATRIX_EVAL}"
-        - export PREFIX=${TRAVIS_BUILD_DIR}/3rdparty
-        - export PATH=${TRAVIS_BUILD_DIR}/3rdparty/bin:$PATH
+        - export PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+        - export PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:$PATH
         - export COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
       install:
         ############################################################################
@@ -356,6 +306,7 @@ jobs:
         - export CC=gcc-8 CXX=g++-8
         - export GCOV_EXEC=gcov-8
       script: true
+
       addons:
         apt:
           sources:
