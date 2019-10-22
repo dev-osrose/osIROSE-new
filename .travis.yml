@@ -137,8 +137,9 @@ jobs:
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_success:
+        - cd ${TRAVIS_BUILD_DIR}/build
         - mkdir ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
+        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - cd ${TRAVIS_BUILD_DIR}
         - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts > /dev/null
@@ -161,8 +162,9 @@ jobs:
       after_script:
         - ctest --output-on-failure
       after_success:
+        - cd ${TRAVIS_BUILD_DIR}/build
         - mkdir ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/3rdparty/lib/*.so bin
+        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
         - curl --data-binary @LoginServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
