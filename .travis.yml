@@ -1,5 +1,5 @@
 sudo: false
-dist: xenial
+#dist: xenial
 language: cpp
 
 env:
@@ -16,8 +16,8 @@ env:
   - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
   - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
 
-services:
-  mysql
+#services:
+#  mysql
 
 cache:
   pip: true
@@ -113,9 +113,9 @@ jobs:
         - eval "${MATRIX_EVAL}"
       before_script:
         - export CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+#        - mysql --user="root" -e 'create database osirose;'
+#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
         - bash $CI_DIRECTORY/before_script.sh
       script:
         - cd build
