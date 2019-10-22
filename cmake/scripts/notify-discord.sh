@@ -37,11 +37,13 @@ if [ "$TRAVIS_COMMIT" ]; then
   BUILD_DESC="Job #$TRAVIS_JOB_NUMBER (Build #$TRAVIS_BUILD_NUMBER)"
   BUILD_URL="https://travis-ci.com/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
   BRANCH=$TRAVIS_BRANCH
+  REPO_SLUG=$TRAVIS_REPO_SLUG
 elif [ "$BUILD_SOURCEVERSION" ]; then
   COMMIT_ID=$BUILD_SOURCEVERSION
   BUILD_DESC="Build #$BUILD_BUILDID"
   BUILD_URL=""
   BRANCH=$BUILD_SOURCEBRANCH
+  REPO_SLUG=""
 else
   echo -e "Couldn't detect build information from environment!"
   exit 1
@@ -89,7 +91,7 @@ WEBHOOK_DATA='{
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
-      "name": "'"$BUILD_DESC"' '"$STATUS_MESSAGE"' - WAVM/WAVM",
+      "name": "'"$BUILD_DESC"' '"$STATUS_MESSAGE"' - '"$REPO_SLUG"'",
       "url": "'$BUILD_URL'",
       "icon_url": "'$AVATAR'"
     },
@@ -99,12 +101,12 @@ WEBHOOK_DATA='{
     "fields": [
       {
         "name": "Commit",
-        "value": "'"[\`${COMMIT_ID:0:7}\`](https://github.com/WAVM/WAVM/commit/$COMMIT_ID)"'",
+        "value": "'"[\`${COMMIT_ID:0:7}\`](https://github.com/$REPO_SLUG/commit/$COMMIT_ID)"'",
         "inline": true
       },
       {
         "name": "Branch/Tag",
-        "value": "'"[\`$BRANCH\`](https://github.com/WAVM/WAVM/tree/$BRANCH)"'",
+        "value": "'"[\`$BRANCH\`](https://github.com/$REPO_SLUG/tree/$BRANCH)"'",
         "inline": true
       }
     ],
