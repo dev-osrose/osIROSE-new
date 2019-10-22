@@ -54,6 +54,8 @@ stages:
 jobs:
   include:
     - &gccinit
+      os: linux
+      arch: amd64
       stage: prepare cache
       name: "AMD64 Ubuntu Bionic/GCC"
       arch: amd64
@@ -86,32 +88,29 @@ jobs:
         - pip install --user pyparsing
       script: true
 
-    - &clanginit
-      stage: prepare cache
-      name: "AMD64 Ubuntu Bionic/Clang"
-      arch: amd64
+    - &gccarminit
       os: linux
-      compiler: clang++
+      arch: arm64
+      stage: prepare cache
       if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7
+      env: CC=gcc-8 CXX=g++-8
+      compiler: g++
       addons:
         apt:
           sources:
           - deadsnakes
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-xenial-7
           packages:
           - lcov
-          - g++-7
-          - clang++-7
+          - g++-8
           - libcurl4-openssl-dev
       install:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
-          else
-            brew upgrade cmake || brew install cmake
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
+            mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
+            cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make && make install
+            cd ..
           fi
         - cmake --version
         - ccache --version
@@ -120,29 +119,18 @@ jobs:
         - bash $CI_DIRECTORY/install-ninja.sh
         - pip install --user pyparsing
       script: true
+
 #----------------------------
 #GCC Compile step
-    - <<: *gccinit
+    - <<: *gccarminit
       stage: compile
-      name: "AMD64 G++-8 Debug - Coverage Tests"
+      name: "ARM64 G++-8 Release"
       if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=coverage BUILD_TYPE=Debug
-      before_script:
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+      env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=tests BUILD_TYPE=Release
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
-        - cp lib/*.so bin
-        - cd ${TRAVIS_BUILD_DIR}
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts > /dev/null
-        - curl --ftp-create-dirs --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --upload-file ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz --url ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz
 
     - <<: *gccinit
       stage: compile
@@ -159,96 +147,6 @@ jobs:
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_script:
         - ctest --output-on-failure
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
-        - cp lib/*.so bin
-        - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
-        - curl --data-binary @LoginServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @CharServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @MapServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @NodeServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - rm *.sym
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts > /dev/null
-#----------------------------
-#Clang compile step
-    - <<: *clanginit
-      stage: compile
-      name: "AMD64 Clang++-7 Debug"
-      if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7 GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh SUITE=tests BUILD_TYPE=Debug
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-
-    - <<: *clanginit
-      stage: compile
-      name: "AMD64 Clang++-7 Release"
-      if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7 GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh SUITE=tests BUILD_TYPE=Release
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-#----------------------------
-#Coverity scan stoof
-    - &covinit
-      stage: compile
-      name: "AMD64 G++-8 Coverity Scan Release"
-      if: branch = coverity_scan
-      env: CC=gcc-8 CXX=g++-8 BUILD_TYPE=Release COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
-      install:
-        - |
-          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
-          else
-            brew upgrade cmake || brew install cmake
-          fi
-        - cmake --version
-        - bash $CI_DIRECTORY/install-lcov.sh
-        - pip install --user pyparsing
-        - export CC=gcc-8 CXX=g++-8
-        - export GCOV_EXEC=gcov-8
-      script: true
-      addons:
-        apt:
-          sources:
-          - deadsnakes
-          - ubuntu-toolchain-r-test
-          packages:
-          - lcov
-          - g++-8
-          - libcurl4-openssl-dev
-        coverity_scan:
-          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
-          project:
-            name: "$TRAVIS_REPO_SLUG"
-            version: 0.3
-          notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
-          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
-          branch_pattern: coverity_scan
-      after_failure:
-        #- cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/build-log.txt
-        - cat /home/travis/build/dev-osrose/osIROSE-new/build/cov-int/scm_log.txt
-        - $CI_DIRECTORY/notify-discord.sh failure $WEBHOOK_URL
-
-    - <<: *covinit
-      stage: compile
-      if: (type = cron AND branch = trunk)
-      addons:
-        coverity_scan:
-          build_script_url: https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.travis-coverity-scan-build.sh
-          project:
-            name: "$TRAVIS_REPO_SLUG"
-            version: 0.3
-          notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
-          build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
-          branch_pattern: trunk
 
 #Notify discord and everyone else
     - &notify
