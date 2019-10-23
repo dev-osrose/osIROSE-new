@@ -1,4 +1,5 @@
 #include "utils/calculation.h"
+#include "utils/getters.h"
 #include "entity_system.h"
 
 #include "random.h"
@@ -29,22 +30,10 @@ namespace Calculations {
       if(entitySystem.has_component<Component::Inventory>(entity) == true) {
         auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
         const auto& boots = inventory.boots();
-        if(boots) {
-          if(entitySystem.has_component<Component::ItemLua>(boots) == true) {
-            auto& lua = entitySystem.get_component<Component::ItemLua>(boots);
-            if(auto api = lua.api.lock(); api)
-              itemSpeed = api->get_move_speed(); // Override the default item speed
-          }
-        }
+        if(boots) itemSpeed = Utils::get_move_speed(entitySystem, boots);
 
         const auto& backpack = inventory.backpack();
-        if(backpack) {
-          if(entitySystem.has_component<Component::ItemLua>(backpack) == true) {
-            auto& lua = entitySystem.get_component<Component::ItemLua>(backpack);
-            if(auto api = lua.api.lock(); api)
-              itemSpeed += api->get_move_speed();
-          }
-        }
+        itemSpeed += Utils::get_move_speed(entitySystem, backpack);
       }
       itemSpeed += 20;
 
@@ -73,13 +62,7 @@ namespace Calculations {
     if(entitySystem.has_component<Component::Inventory>(entity) == true) {
       auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
       const auto& weapon_r = inventory.weapon_r();
-      if(weapon_r) {
-        if(entitySystem.has_component<Component::ItemLua>(weapon_r) == true) {
-          auto& lua = entitySystem.get_component<Component::ItemLua>(weapon_r);
-          if(auto api = lua.api.lock(); api)
-            weaponAtkSpd = api->get_attack_speed();
-        }
-      }
+      if(weapon_r) weaponAtkSpd = Utils::get_attack_speed(entitySystem, weapon_r);
     }
     //Note: passiveAtkSpeed is only set depending on your job?
     float attackSpeed = (passiveAtkSpeed + 1500.f / (weaponAtkSpd + 5));
@@ -116,6 +99,14 @@ namespace Calculations {
 
   int64_t get_magicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender, int hit_count, int success_rate) {
     //TODO
+    int magic_value = 0;
+    if(entitySystem.has_component<Component::Inventory>(attacker) == true) {
+      auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
+      const auto& weapon_r = inventory.weapon_r();
+      if(weapon_r)
+        magic_value = Utils::get_magic(entitySystem, weapon_r);
+    }
+
     return 50;
   }
 
@@ -140,9 +131,16 @@ namespace Calculations {
         return 0;
     }
 
+    int magicStat = 0;
+    if(entitySystem.has_component<Component::Inventory>(attacker) == true) {
+      auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
+      const auto& weapon_r = inventory.weapon_r();
+      if(weapon_r) magicStat = Utils::get_magic(entitySystem, weapon_r);
+    }
+
     const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);
-    // if(values.magicDamage)
-    //   return get_magicdamage(entitySystem, attacker, defender, hit_count, successRate);
+    if(magicStat > 0)
+      return get_magicdamage(entitySystem, attacker, defender, hit_count, successRate);
 
     return get_basicdamage(entitySystem, attacker, defender, hit_count, successRate);
   }
