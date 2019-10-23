@@ -1,6 +1,7 @@
 #include "utils/calculation.h"
 #include "entity_system.h"
 
+#include "random.h"
 #include "components/basic_info.h"
 #include "components/computed_values.h"
 #include "components/level.h"
@@ -97,11 +98,52 @@ namespace Calculations {
 
   int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& life = entitySystem.get_component<Component::Life>(entity);
+    //TODO do calc here
     return 0;
   }
 
   int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     auto& magic = entitySystem.get_component<Component::Magic>(entity);
+    //TODO do calc here
     return 0;
+  }
+
+  int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender) {
+    int success_rate = 0;
+    //TODO do calc here
+    return success_rate;
+  }
+
+  int64_t get_magicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender, int hit_count, int success_rate) {
+    //TODO
+    return 50;
+  }
+
+  int64_t get_basicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender, int hit_count, int success_rate) {
+    int64_t damage = 0, critChance = 0;
+    const auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
+    const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);
+
+    //critChance = (int)(28 - ((values.critChance / 2.0f + attackerLevel.level) / (attackerLevel.level + 8)) * 20) + 1 + Core::Random::getInstance().get_uniform(0, 100);
+
+    return 50;
+  }
+
+  int64_t get_damage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender, int hit_count) {
+    auto successRate = get_successrate(entitySystem, attacker, defender);
+
+    if(successRate < 20) {
+      const auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
+      const auto& defenderLevel = entitySystem.get_component<Component::Level>(defender);
+
+      if ( (int)(1 + Core::Random::getInstance().get_uniform(0, 100) + (attackerLevel.level - defenderLevel.level) * 0.6f) < 94 )
+        return 0;
+    }
+
+    const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);
+    // if(values.magicDamage)
+    //   return get_magicdamage(entitySystem, attacker, defender, hit_count, successRate);
+
+    return get_basicdamage(entitySystem, attacker, defender, hit_count, successRate);
   }
 }

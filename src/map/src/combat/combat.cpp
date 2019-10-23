@@ -32,6 +32,8 @@
 #include "components/stamina.h"
 #include "components/stats.h"
 
+#include "utils/calculation.h"
+
 #include <cmath>
 
 using namespace RoseCommon;
@@ -347,9 +349,8 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           logger->debug("queuing damage to target entity");
           auto& damage = entitySystem.get_component<Component::Combat>(target.target);
 
-          //TODO: do damage calcualtions here for basic attack
           auto action = 0;
-          auto dmg_value = 50;
+          auto dmg_value = Calculations::get_damage(entitySystem, entity, target.target, 1);
           if(dmg_value > 0) action |= DAMAGE_ACTION_HIT;
           damage.addDamage(basicInfo.id, action, dmg_value);
         }
