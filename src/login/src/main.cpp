@@ -72,7 +72,7 @@ void ParseCommandLine(int argc, char** argv)
 #endif
     ("h,help",  "Print this help text")
     ;
-    
+
     options.add_options("Networking")
     ("external_ip", "external IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
@@ -89,7 +89,7 @@ void ParseCommandLine(int argc, char** argv)
     ("url", "Auto configure url", cxxopts::value<std::string>()
       ->default_value("http://myexternalip.com/raw"), "URL")
     ;
-    
+
     options.add_options("Database")
     ("db_host", "", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "DB_HOST")
@@ -121,7 +121,7 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("external_ip") )
       config.serverData().externalIp = options["external_ip"].as<std::string>();
-      
+
     if( options.count("client_ip") )
       config.serverData().listenIp = options["client_ip"].as<std::string>();
 
@@ -133,22 +133,22 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("isc_port") )
       config.loginServer().iscPort = options["isc_port"].as<int>();
-      
+
     if( options.count("url") )
     {
       config.serverData().autoConfigureAddress = true;
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
-    
-    if( options.count("max_threads") ) 
+
+    if( options.count("max_threads") )
     {
       config.serverData().maxThreads = options["max_threads"].as<int>();
       Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
     }
-    
+
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();
-      
+
     if( options.count("db_host") )
       config.database().host = options["db_host"].as<std::string>();
     if( options.count("db_port") )
@@ -189,9 +189,10 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
     std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     ParseCommandLine(argc, argv);
-    
+
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "LoginServer");
+    crash_reporter.set_url(config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);
@@ -238,7 +239,7 @@ int main(int argc, char* argv[]) {
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       deleteStaleSessions();
-      
+
       if(gSignalStatus != 0) {
         clientServer.shutdown(true);
         iscServer.shutdown(true);
@@ -248,6 +249,7 @@ int main(int argc, char* argv[]) {
     if(auto log = console.lock())
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();
+    spdlog::shutdown();
     spdlog::drop_all();
 
   }

@@ -77,10 +77,11 @@ class Config {
     std::string iscListenIp = "127.0.0.1";
     std::string autoConfigureUrl = "http://ipv4.myexternalip.com/raw";
 #ifndef _WIN32
-    std::string core_dump_path = "/tmp/dumps";
+    std::string core_dump_path = "/tmp";
 #else
     std::string core_dump_path = ".";
 #endif
+    std::string crash_report_url = "";
     uint32_t parentId = 0;
     uint32_t maxConnections = 0;
     uint32_t maxThreads = 512;
@@ -149,7 +150,7 @@ class Config {
 }
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
-VISITABLE_STRUCT(Core::Config::ServerData, id, externalIp, listenIp, iscListenIp, autoConfigureUrl, core_dump_path, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
+VISITABLE_STRUCT(Core::Config::ServerData, id, externalIp, listenIp, iscListenIp, autoConfigureUrl, core_dump_path, crash_report_url, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
 VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, instantCharDelete, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);

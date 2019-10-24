@@ -32,9 +32,9 @@ constexpr unsigned int MAX_HOTBAR_ITEMS = 32;
 
 constexpr unsigned int MAX_DAMAGE = 99999999;
 
-constexpr unsigned int DAMAGE_ACTION_ATTACK = 0x02;
-constexpr unsigned int DAMAGE_ACTION_HIT = 0x4;
-constexpr unsigned int DAMAGE_ACTION_CRITICAL = 0x8;
+constexpr unsigned int DAMAGE_ACTION_IMMEDIATE = 0x02;
+constexpr unsigned int DAMAGE_ACTION_HIT = 0x04;
+constexpr unsigned int DAMAGE_ACTION_CRITICAL = 0x08;
 constexpr unsigned int DAMAGE_ACTION_DEAD = 0x10;
 
 constexpr unsigned int MAX_CONDITIONS_EPISODE = 5;
@@ -47,7 +47,7 @@ constexpr unsigned int MAX_SWITCHES = 16;
 constexpr unsigned int MAX_QUEST_SWITCHES = 32;
 constexpr unsigned int MAX_QUEST_VARS = 10;
 constexpr unsigned int MAX_QUEST_ITEMS = 6;
-    
+
 constexpr float        DROP_RANGE = 50.f;
 constexpr unsigned int MAX_VISIBLE_ITEMS = 8;
 constexpr unsigned int MAX_INVENTORY = 120;

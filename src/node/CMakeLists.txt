@@ -35,27 +35,27 @@ generate_sql_header(SESSIONS_HEADER ${args})
 add_executable(${PROJECT} ${SESSIONS_HEADER} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 add_dependencies(${PROJECT} sqlite3::sqlite3 SQLPP11::sqlpp11_sqlite3)
-target_link_libraries(${PROJECT} 
-  PUBLIC 
+target_link_libraries(${PROJECT}
+  PUBLIC
     sqlite3::sqlite3
     SQLPP11::sqlpp11_sqlite3
 )
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} 
-  PRIVATE 
+target_link_libraries(${PROJECT}
+  PRIVATE
     RoseCommon
 )
 
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
+#  generate_crashpad_symbol_data(${PROJECT})
 endif()
 
 install(TARGETS ${PROJECT}
-        RUNTIME 
+        RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
 

@@ -151,6 +151,7 @@ void CMapClient::onDisconnected() {
 
 bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliChangeCharReq&& P) {
   logger_->trace("CMapClient::changeCharacterReply()");
+  login_state_ = eSTATE::SWITCHING;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable sessions{};
   conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::tvin(""), sessions.worldport = sqlpp::tvin(0)).where(sessions.id == sessionId_));
@@ -210,7 +211,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
-          
+
           auto packet = Packet::SrvSelectCharReply::create();
           const auto& characterGraphics = entitySystem->get_component<Component::CharacterGraphics>(entity);
           auto& position = entitySystem->get_component<Component::Position>(entity);
@@ -225,7 +226,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           const auto& skills = entitySystem->get_component<Component::Skills>(entity);
           const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
           packet.set_race(characterGraphics.race);
-          
+
           if(position.map == 20)
           {
             auto spawn = Combat::get_spawn_point(*entitySystem, entity);
@@ -233,7 +234,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
             position.x = std::get<1>(spawn);
             position.y = std::get<2>(spawn);
           }
-          
+
           packet.set_map(position.map);
           packet.set_x(position.x);
           packet.set_y(position.y);
@@ -278,7 +279,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           packet.set_hotbar(hotbar.items);
           packet.set_tag(basicInfo.tag);
           packet.set_name(basicInfo.name);
-          
+
           CRoseClient::send(packet);
 
           auto packetInv = Packet::SrvInventoryData::create(inventory.zuly);
@@ -400,7 +401,7 @@ RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySyste
   packet.set_questId(npc.quest);
   packet.set_angle(npc.angle);
   packet.set_eventStatus(npc.event_status);
-  
+
   return packet;
 }
 
@@ -431,7 +432,7 @@ RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySyste
   packet.set_statusFlag(computedValues.statusFlag);
   packet.set_npcId(mob.id);
   packet.set_questId(mob.quest);
-  
+
   return packet;
 }
 

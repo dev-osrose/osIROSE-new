@@ -3,7 +3,7 @@ init:
 - ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch.$(Get-Date -format yyyy.MM.dd).$env:appveyor_build_number"
 
 image:
-- Visual Studio 2017
+- Visual Studio 2019
 
 configuration:
 - Debug
@@ -13,9 +13,9 @@ platform:
 - x64
 
 cache:
-  - 3rdparty\bin -> clear_cache.txt
-  - 3rdparty\lib -> clear_cache.txt
-  - 3rdparty\include -> clear_cache.txt
+  - build\3rdparty\bin -> clear_cache.txt
+  - build\3rdparty\lib -> clear_cache.txt
+  - build\3rdparty\include -> clear_cache.txt
 
 branches:
   except:
@@ -32,9 +32,7 @@ environment:
   PROJECT_PATH: C:\projects\osIROSE
   GTEST_OUTPUT: C:\projects\osIROSE\build\Test.xml
   PYTHON_PATH: C:\Python35
-  INCLUDE: C:\projects\osIROSE\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\3rdparty\googletest\googletest\include;C:\projects\osIROSE\3rdparty\spdlog\include;
-  BREAKPAD_SERVER: 
-    secure: bBamT/tFSX89djwel0YeWZZWAmu+kULX8NCKBHZ6M+Q=
+  INCLUDE: C:\projects\osIROSE\build\3rdparty\googletest\googlemock\include;C:\projects\osIROSE\build\3rdparty\googletest\googletest\include;C:\projects\osIROSE\build\3rdparty\spdlog\include;
   WEBHOOK_URL:
     secure: qW1+/etxvda5Tq14Tgk6+Z4V3uMO+5u614AocT+1ubbSHS0vamu/iQXzSX1OQjyXD4FpHUwXc4+buQcjjzRbluSLW2T+99xxfqNHUTTj4pPRYqcUxIFED5E7j/vvR+TMefSuKS2RUUkxifaUAujs39Z/Ual/2kBLBabMHboK8eE=
 
@@ -43,7 +41,6 @@ matrix:
 
 clone_depth: 50
 clone_folder: C:\projects\osIROSE
-services: mysql
 
 install:
 - cmd: cd %PROJECT_PATH%
@@ -51,7 +48,8 @@ install:
 - cmd: git submodule update --init --recursive
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-winx64.msi -FileName C:\projects\osIROSE\mysql-connector-c.msi
 - ps: Start-FileDownload https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName C:\projects\osIROSE\ninja-win.zip
-- ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\3rdparty\bin -Force
+- ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\build\3rdparty\bin -Force
+- cmd: C:\Python27-x64\Scripts\pip install pyparsing
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/build/bin/scripts *.lua"
@@ -66,45 +64,35 @@ build_script:
 after_build:
 - ps: If(!(test-path "C:\projects\osIROSE\package")) { New-Item -ItemType Directory -Force -Path "C:\projects\osIROSE\package" }
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/package/scripts *.lua"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/3rdparty/bin %PROJECT_PATH%/package *.dll"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/3rdparty/bin %PROJECT_PATH%/package *.exe"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.exe"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.dll"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
-- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/3rdparty/bin %PROJECT_PATH%/package *.dll"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/3rdparty/bin %PROJECT_PATH%/package *.exe"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.exe"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.dll"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.pdb"
+- cmd: "%PROJECT_PATH%/cmake/scripts/robocopy_flat.bat %APPVEYOR_BUILD_FOLDER%/build/bin %PROJECT_PATH%/package *.lib"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %APPVEYOR_BUILD_FOLDER%/Database %PROJECT_PATH%/package *.*"
 - 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/package/*
-- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
+#- 7z a %APPVEYOR_BUILD_FOLDER%/%PLATFORM%-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
 
 artifacts:
 - path: $(platform)-$(appveyor_build_version)-$(configuration).zip
   name: osirose-package
-- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
-  name: osirose-debug-symbols
+#- path: $(platform)-debug-symbols-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip
+#  name: osirose-debug-symbols
 
-on_success:
-  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
-  - ps: ./send.ps1 success $env:WEBHOOK_URL
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin/symbols
-  - SET PATH=%PROJECT_PATH%\3rdparty\bin;C:\msys64\usr\bin;%PATH%
-  #- curl --connect-timeout 30 -F symfile=@LoginServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@CharServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@MapServer.sym %BREAKPAD_SERVER%/symfiles
-  #- curl --connect-timeout 30 -F symfile=@NodeServer.sym %BREAKPAD_SERVER%/symfiles
+#on_success:
+#  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+#  - ps: ./send.ps1 success $env:WEBHOOK_URL
+#  - cmd: cd %APPVEYOR_BUILD_FOLDER%/build/bin
+#  - SET PATH=%PROJECT_PATH%\build\3rdparty\bin;C:\msys64\usr\bin;%PATH%
+#  - curl --connect-timeout 30 --retry 5 --retry-delay 0 -F symfile=@LoginServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+#  - curl --connect-timeout 30 --retry 5 --retry-delay 0 -F symfile=@CharServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+#  - curl --connect-timeout 30 --retry 5 --retry-delay 0 -F symfile=@MapServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
+#  - curl --connect-timeout 30 --retry 5 --retry-delay 0 -F symfile=@NodeServer.pdb "%BACKTRACE_URL%/post?format=symbols&token=%BACKTRACE_TOKEN%"
 
-on_failure:
-  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
-  - ps: ./send.ps1 failure $env:WEBHOOK_URL
-
-notifications:
-- provider: Slack
-  incoming_webhook: https://hooks.slack.com/services/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
-  auth_token:
-    secure: QRzsk64PSFoDEGoTiL44n9yIlkyCrY/cG2HW5hVDIlVNdkW/m47qgyjTeBR4ri5+PmYwVxelkdOipzJBeTVRSsciTo2aGnk4QHXyRyR4Nra6SAxaDuKFUC3Sbc8jXnmq
-  channel: osirose-commits
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: false
+#on_failure:
+#  - ps: Invoke-RestMethod https://raw.githubusercontent.com/k3rn31p4nic/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+#  - ps: ./send.ps1 failure $env:WEBHOOK_URL
 
 #before_test:
 #  - SET PATH=%MYSQL_CONNECTOR_PATH%\lib;%MYSQL_PATH%\bin;%PYTHON_PATH%\Scripts;%PATH%

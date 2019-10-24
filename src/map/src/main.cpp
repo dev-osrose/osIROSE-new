@@ -69,7 +69,7 @@ void ParseCommandLine(int argc, char** argv) {
 #endif
     ("h,help",  "Print this help text")
     ;
-    
+
     options.add_options("Networking")
     ("external_ip", "external IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
@@ -86,7 +86,7 @@ void ParseCommandLine(int argc, char** argv) {
     ("url", "Auto configure url", cxxopts::value<std::string>()
       ->default_value("http://myexternalip.com/raw"), "URL")
     ;
-    
+
     options.add_options("Database")
     ("db_host", "", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "DB_HOST")
@@ -116,7 +116,7 @@ void ParseCommandLine(int argc, char** argv) {
     // We are using if checks here because we only want to override the config file if the option was supplied
     // Since this is a login server startup function we can get away with a little bit of overhead
     if (options.count("log_level")) config.loginServer().logLevel = options["log_level"].as<int>();
-    
+
     if (options.count("external_ip")) config.serverData().externalIp = options["external_ip"].as<std::string>();
 
     if (options.count("client_ip")) config.serverData().listenIp = options["client_ip"].as<std::string>();
@@ -164,7 +164,8 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "MapServer");
+    crash_reporter.set_url(config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if (auto log = console.lock()) log->info("Starting up server...");
@@ -197,7 +198,7 @@ int main(int argc, char* argv[]) {
 
     while (1) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      
+
       if(gSignalStatus != 0) {
         app.stop();
         break;
@@ -206,6 +207,7 @@ int main(int argc, char* argv[]) {
 
     if (auto log = console.lock()) log->info("Server shutting down...");
     Core::NetworkThreadPool::DeleteInstance();
+    spdlog::shutdown();
     spdlog::drop_all();
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;

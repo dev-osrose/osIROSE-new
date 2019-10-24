@@ -55,7 +55,6 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
 
   network_address_ = _ip;
   network_port_ = _port;
-  active_ = true;
   return true;
 }
 
@@ -138,6 +137,7 @@ bool CNetwork_Asio::disconnect() {
 }
 
 void CNetwork_Asio::ProcessSend() {
+  logger_->trace("CNetwork_Asio::ProcessSend enter");
   if (this->is_active()) {
     send_mutex_.lock();
     uint8_t* raw_ptr = send_queue_.front().get();
@@ -147,65 +147,87 @@ void CNetwork_Asio::ProcessSend() {
     const uint16_t _command = *reinterpret_cast<uint16_t*>( raw_ptr + sizeof(uint16_t) );
 
 #ifdef SPDLOG_TRACE_ON
-    fmt::MemoryWriter out;
+    fmt::memory_buffer out;
     logger_->trace("ProcessSend: Header[{0}, 0x{1:04x}]: ", _size, (uint16_t)_command);
-    for (int i = 0; i < _size; i++)
-      out.write( "0x{0:02x} ", raw_ptr[i] );
-    logger_->trace( "{}", out.c_str() );
+    for (int i = 0; i < _size; i++) format_to(out, "0x{0:02x} ", raw_ptr[i]);
+    logger_->trace( "{}", fmt::to_string(out) );
 #endif
 
     if (OnSend(socket_id_, raw_ptr)) {
       asio::async_write(
-          socket_, asio::buffer(raw_ptr, _size),
-          [this](const asio::error_code& error,
-                 [[maybe_unused]] std::size_t bytes_transferred) {
-            if (!error) {
-              OnSent();
-              update_time_ = (Core::Time::GetTickCount());
-            } else {
-              logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
+        socket_, asio::buffer(raw_ptr, _size),
+        [this](const asio::error_code& error,
+               [[maybe_unused]] std::size_t bytes_transferred)
+      {
+        if (!error) {
+          OnSent();
+          //update_time_ = (Core::Time::GetTickCount());
+        } else {
+          logger_->debug("ProcessSend: error = {}: {}", error.value(), error.message());
 
-              switch(error.value()) {
-                case asio::error::basic_errors::connection_aborted:
-                case asio::error::basic_errors::connection_reset:
-                case asio::error::basic_errors::network_reset:
-                case asio::error::basic_errors::network_down:
-                case asio::error::basic_errors::broken_pipe:
-                case asio::error::basic_errors::shut_down:
-                case asio::error::basic_errors::timed_out:
-                  shutdown();
-                  break;
-                default:
-                  logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
-                  break;
-              }
-            }
-            send_mutex_.lock();
-            send_queue_.pop_front();
-            const bool is_empty = send_queue_.empty();
-            send_mutex_.unlock();
-            if (!is_empty) {
-              ProcessSend();
-            }
-          });
+          switch(error.value()) {
+            case asio::error::basic_errors::connection_aborted:
+            case asio::error::basic_errors::connection_reset:
+            case asio::error::basic_errors::network_reset:
+            case asio::error::basic_errors::network_down:
+            case asio::error::basic_errors::broken_pipe:
+            case asio::error::basic_errors::shut_down:
+            case asio::error::basic_errors::timed_out:
+              shutdown();
+              break;
+            default:
+              logger_->warn("ProcessSend: async_write returned an error sending the packet. {}: {}", error.value(), error.message());
+              break;
+          }
+        }
+        send_mutex_.lock();
+        send_queue_.pop_front();
+        const bool is_empty = send_queue_.empty();
+        send_mutex_.unlock();
+        if (!is_empty) {
+          ProcessSend();
+        } else {
+          async_write_active_ = false;
+        }
+      });
+    }
+    else
+    {
+      logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}. Removing from queue.",
+                     _size, _command, get_id());
+
+      send_mutex_.lock();
+      send_queue_.pop_front();
+      const bool is_empty = send_queue_.empty();
+      send_mutex_.unlock();
+      if (!is_empty) {
+        ProcessSend();
+      } else {
+        async_write_active_ = false;
       }
-      else {
-        logger_->debug("Not sending packet: [{0}, 0x{1:x}] to client {2}",
-                       _size, _command, get_id());
     }
   }
 }
 
 bool CNetwork_Asio::send_data(std::unique_ptr<uint8_t[]> _buffer) {
+  logger_->trace("CNetwork_Asio::send_data enter");
   send_mutex_.lock();
-  send_queue_.push_back(std::move(_buffer));
+
+  try {
+    send_queue_.push_back(std::move(_buffer));
+  } catch(...) {
+    send_mutex_.unlock();
+    return false;
+  }
+
   const auto size = send_queue_.size();
   send_mutex_.unlock();
-  
-  if (size > 1) { // send in progress
+
+  if (size > 1 && async_write_active_.load() == true) { // send in progress
     return true;
   }
-  
+
+  async_write_active_ = true;
   ProcessSend();
   return true;
 }

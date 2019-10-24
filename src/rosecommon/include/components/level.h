@@ -3,7 +3,7 @@
 namespace Component {
 struct Level {
     uint16_t level;
-    uint32_t xp;
-    uint32_t penaltyXp;
+    uint64_t xp;
+    uint64_t penaltyXp;
 };
 }

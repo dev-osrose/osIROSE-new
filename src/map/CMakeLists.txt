@@ -33,7 +33,8 @@ SET( SOURCES_HEADER
   include/items/inventory.h
   include/utils/name_to_session.h
   include/utils/getters.h
-  )
+  include/utils/calculation.h
+)
 
 SET( SOURCES_MAIN
   src/main
@@ -57,13 +58,13 @@ SET( SOURCES_MAIN
   src/lua_storage.cpp
   src/items/inventory.cpp
   src/utils/name_to_session.cpp
+  src/utils/calculation.cpp
   src/utils/getters.cpp
-  )
+)
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-set_target_properties(${PROJECT} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
 add_dependencies(${PROJECT} RosePackets_generated)
 
@@ -71,13 +72,13 @@ target_link_libraries(${PROJECT} PUBLIC CURL::libcurl)
 if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua::lua)
 endif()
-target_link_libraries(${PROJECT} 
-  PUBLIC 
+target_link_libraries(${PROJECT}
+  PUBLIC
     lua::lua
 )
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} 
+target_link_libraries(${PROJECT}
   PRIVATE
     RoseCommon
 )
@@ -86,10 +87,11 @@ set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${
 
 if(WITH_CRASH_REPORTS)
   generate_symbol_data(${PROJECT})
+#  generate_crashpad_symbol_data(${PROJECT})
 endif()
 
 install(TARGETS ${PROJECT}
-        RUNTIME 
+        RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
 

@@ -43,6 +43,8 @@
 #include "combat/combat.h"
 #include "items/inventory.h"
 
+#include "utils/calculation.h"
+
 #include "random.h"
 
 #include "srv_remove_object.h"
@@ -125,8 +127,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     add_recurrent_timer(100ms, [](EntitySystem& self) {
         // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto, auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
-            computed.runSpeed = 433;
+        self.registry.view<Component::Stats, Component::Inventory, Component::ComputedValues>().each([&self](auto entity, [[maybe_unused]] auto& stats, [[maybe_unused]] auto& inv, auto& computed) {
             switch(computed.moveMode) {
               case RoseCommon::MoveMode::WALK:
               {
@@ -134,21 +135,16 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 computed.runSpeed = 200;
                 break;
               }
-              case RoseCommon::MoveMode::RUN:
-              {
-                // (get original speed + any move speed increase from items (stat 6) - any movement decrease from items (stat 7)) + Fairy additonal movement speed
-                computed.runSpeed += stats.dex * 0.8500001;
-                break;
-              }
               default:
               {
-                computed.runSpeed = 200;
+                computed.runSpeed = Calculations::get_runspeed(self, entity);
                 break;
               }
             }
             if(computed.runSpeed < 200) computed.runSpeed = 200;
             
-            computed.atkSpeed = 30; // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
+            computed.atkSpeed = Calculations::get_attackspeed(self, entity);
+            // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
         self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
@@ -174,7 +170,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     add_recurrent_timer(50ms, [](EntitySystem& self) {
       auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
       // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
-      self.registry.view<Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
+      self.registry.view<Component::Level, Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& level, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
         Combat::update(self, entity, dt);
       });
       self.prevTime = Core::Time::GetTickCount();
@@ -846,15 +842,27 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& basic = prototype.set<BasicInfo>();
     basic.id = idManager.get_free_id();
     basic.teamId = basic.id;
+    
+    auto ptr = lua_loader.get_data(npc_id);
+    auto data = ptr.lock();
+    if(!data)
+        logger->warn("EntitySystem::create_mob unable to get npc data for {}", npc_id);
 
     auto& computed_values = prototype.set<ComputedValues>();
     computed_values.moveMode = RoseCommon::MoveMode::WALK;
     computed_values.command = RoseCommon::Command::STOP;
     computed_values.statusFlag = 0;
+    
+    auto& level = prototype.set<Level>();
+    level.level = data ? data->get_level() : 1;
+    
+    if(level.level <= 0)
+        level.level = 1;
 
     auto& life = prototype.set<Life>();
-    life.hp = 1;
-    life.maxHp = 1;
+    auto temp_hp = data ? data->get_hp() : 1;
+    life.maxHp = temp_hp * level.level;
+    life.hp = life.maxHp;
 
     auto& pos = prototype.set<Position>();
     pos.x = x * 100;

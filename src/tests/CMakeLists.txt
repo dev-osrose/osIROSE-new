@@ -6,12 +6,6 @@ link_directories(${GTEST_BINARY_DIR} ${GMOCK_BINARY_DIR} ${MYSQL_BINARY_DIR})
 # Configure some handy variables.
 set(PROJECT_LIB osirose-lib)
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  add_compiler_flags(-Wl,-Map=${PROJECT}.map)
-endif()
-
-add_compiler_flags(-DSERVER_TESTING)
-
 # Grab all other files that can be used in the tests
 file(GLOB_RECURSE LOGIN_HEADERS . ${CMAKE_SOURCE_DIR}/src/login/*.[h])
 file(GLOB_RECURSE CHAR_HEADERS . ${CMAKE_SOURCE_DIR}/src/char/*.[h])
@@ -57,6 +51,8 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURC
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/map/include>)
 target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLUDE_DIR}/../tests>)
 
+target_compile_definitions(${PROJECT_LIB} PUBLIC SERVER_TESTING)
+
 if (MSVC)
 #  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
 endif()
@@ -83,20 +79,19 @@ macro (compile_test name path)
   )
 
   add_executable(${TEST_NAME} main ${path})
-  target_include_directories(${TEST_NAME} 
-    PUBLIC 
+  target_include_directories(${TEST_NAME}
+    PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   )
-  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS "${${CMAKE_CXX_COMPILER_ID}_LINK_FLAGS}")
 
-  target_link_libraries(${TEST_NAME} 
-    PRIVATE 
+  target_link_libraries(${TEST_NAME}
+    PRIVATE
       ${COVERAGE_LIBRARIES}
   )
 
   if(WITH_MYSQL)
-      target_link_libraries(${TEST_NAME} 
-        PUBLIC 
+      target_link_libraries(${TEST_NAME}
+        PUBLIC
           mysql::mysql
       )
   endif()
@@ -105,9 +100,9 @@ macro (compile_test name path)
   target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_LIB})
 
   add_dependencies(${TEST_NAME} RoseCommon)
-  target_link_libraries(${TEST_NAME} 
-    PRIVATE 
-      RoseCommon 
+  target_link_libraries(${TEST_NAME}
+    PRIVATE
+      RoseCommon
       GTest::GTest
   )
 

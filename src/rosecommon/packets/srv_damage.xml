@@ -12,4 +12,5 @@
     <element name = "item" type = "Item" default = "{}" />
     <element name = "id" type = "uint16_t" default = "0" />
     <element name = "ownerId" type = "uint16_t" default = "0" />
+
 </packet>

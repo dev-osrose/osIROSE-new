@@ -6,7 +6,6 @@ endif()
 include_directories(
   SYSTEM ${ASIO_INCLUDE_DIR}
   SYSTEM ${CMAKE_THIRD_PARTY_INCLUDE_DIR}
-  SYSTEM ${CMAKE_EXTERNAL_INCLUDE_DIR}
   SYSTEM ${SPDLOG_ROOT}
   SYSTEM ${SOL2_ROOT}
   SYSTEM ${CXXOPT_ROOT}
@@ -18,7 +17,7 @@ include_directories(
 )
 
 link_directories(
-  ${CMAKE_EXTERNAL_LIBRARY_DIR}
+  ${CMAKE_THIRD_PARTY_LIBRARY_DIR}
 )
 
 if(WITH_MYSQL)
@@ -34,14 +33,14 @@ if(WITH_MYSQL)
   )
   
   if(MYSQL_FOUND AND WIN32)
-    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-       DESTINATION "${CMAKE_BINARY_DIR}/bin/")
-    if(MSBUILD)
-      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-       DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-       DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
-    endif()
+#    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+#       DESTINATION "${CMAKE_BINARY_DIR}/bin/")
+#    if(MSBUILD)
+#      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+#       DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
+#      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
+#       DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
+#    endif()
   endif()
 endif()
 

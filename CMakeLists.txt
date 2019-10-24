@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -13,31 +13,17 @@ endif()
 #------------------------------------------------------------------------------
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/dev-osrose/osIROSE-new")
-set(CMAKE_OUTPUT "${CMAKE_SOURCE_DIR}/build_out")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_PLATFORM_PATH "${CMAKE_SOURCE_DIR}/cmake/platform")
-set(CMAKE_THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/3rdparty")
-set(CMAKE_THIRD_PARTY_LIBRARY_DIR ${CMAKE_THIRD_PARTY_DIR}/lib)
-set(CMAKE_THIRD_PARTY_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/include)
-set(CMAKE_EXTERNAL_BINARY_DIR "${CMAKE_BINARY_DIR}/external")
-set(CMAKE_EXTERNAL_LIBRARY_DIR "${CMAKE_EXTERNAL_BINARY_DIR}/lib")
-set(CMAKE_EXTERNAL_INCLUDE_DIR "${CMAKE_EXTERNAL_BINARY_DIR}/include")
+set(CMAKE_SUBMODULE_DIR "${CMAKE_SOURCE_DIR}/3rdparty")
 set(CMAKE_SCRIPT_PATH "${CMAKE_SOURCE_DIR}/cmake/scripts")
 set(CMAKE_PATCH_DIR "${CMAKE_SOURCE_DIR}/cmake/patches")
 set(CMAKE_TESTS_PATH "${CMAKE_SOURCE_DIR}/cmake/tests")
 set(CMAKE_GEN_SRC_DIR "${CMAKE_BINARY_DIR}/gen")
 set(CMAKE_TEST_PROJECTS "${CMAKE_SOURCE_DIR}/src/tests")
 set(CMAKE_TEST_PROJECTS_BIN "${CMAKE_BINARY_DIR}/cmake_test")
-set(CMAKE_PREFIX_PATH "${CMAKE_THIRD_PARTY_DIR}")
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# Create folders
-file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/bin)
-file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR})
-file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/lib)
-file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/share)
-file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR}/breakpad)
 
 include(CMakeParseArguments)
 include(GNUInstallDirs)
@@ -65,6 +51,17 @@ if("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
   set(BUILD_TYPE "$<CONFIG>")
 endif()
 
+set(CMAKE_THIRD_PARTY_BINARY_DIR ${CMAKE_THIRD_PARTY_DIR}/bin)
+set(CMAKE_THIRD_PARTY_LIBRARY_DIR ${CMAKE_THIRD_PARTY_DIR}/lib)
+set(CMAKE_THIRD_PARTY_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/include)
+set(CMAKE_PREFIX_PATH "${CMAKE_THIRD_PARTY_DIR}")
+
+# Create folders
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_BINARY_DIR})
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_INCLUDE_DIR})
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_LIBRARY_DIR})
+file(MAKE_DIRECTORY ${CMAKE_THIRD_PARTY_DIR}/share)
+
 include(macros)
 include(CheckPlatform)
 include(SetInstallPaths)
@@ -74,17 +71,16 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(SOL2_ROOT ${CMAKE_THIRD_PARTY_DIR}/sol2)
-set(SPDLOG_ROOT ${CMAKE_THIRD_PARTY_DIR}/spdlog/include)
-set(CXXOPT_ROOT ${CMAKE_THIRD_PARTY_DIR}/cxxopts/include)
-set(GMOCK_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googlemock)
-set(GTEST_ROOT ${CMAKE_THIRD_PARTY_DIR}/googletest/googletest)
 
-set(CONFIGURU ${CMAKE_THIRD_PARTY_DIR}/Configuru)
-set(VISIT_STRUCT ${CMAKE_THIRD_PARTY_DIR}/visit_struct/include)
-set(ASIO_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/asio/asio/include)
-set(ENTT_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/entt/src/entt)
-set(EXTERNAL_INCLUDE_DIR ${CMAKE_THIRD_PARTY_DIR}/3rdparty/include)
+#TODO: move these to find/build modules
+set(SOL2_ROOT ${CMAKE_SUBMODULE_DIR}/sol2)
+set(SPDLOG_ROOT ${CMAKE_SUBMODULE_DIR}/spdlog/include)
+set(CXXOPT_ROOT ${CMAKE_SUBMODULE_DIR}/cxxopts/include)
+
+set(CONFIGURU ${CMAKE_SUBMODULE_DIR}/Configuru)
+set(VISIT_STRUCT ${CMAKE_SUBMODULE_DIR}/visit_struct/include)
+set(ASIO_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/asio/asio/include)
+set(ENTT_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/entt/src/entt)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed
@@ -98,11 +94,7 @@ IF(WITH_MYSQL)
   find_package(MySQL 6.1 REQUIRED)
 ENDIF()
 
-find_package(PythonInterp 2.7 REQUIRED)
-
-if(WIN32)
-  find_package(PythonLibs 2.7 REQUIRED)
-endif()
+find_package(Python2 COMPONENTS Interpreter Development REQUIRED)
 
 find_package(Patch REQUIRED)
 if(MSVC)
@@ -113,6 +105,7 @@ else()
 endif()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
+find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(PacketGenerator)
 
@@ -129,6 +122,9 @@ endif()
 if(WITH_CRASH_REPORTS)
   find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
   include(BreakpadSymbolGeneration)
+
+#  find_package(Crashpad ${REQUIRED_IF_OPTION})
+#  include(crashpad-symbol-generation)
 endif()
 
 if (WITH_TRACING)
@@ -141,6 +137,10 @@ endif()
 
 if(NOT LUA_FOUND)
   include(BuildLua)
+endif()
+
+if(NOT ZLIB_FOUND)
+  include(Build-zlib)
 endif()
 
 if(NOT CURL_FOUND)
@@ -161,7 +161,7 @@ endif()
 include(PacketGenerator)
 
 if(WITH_MYSQL)
-  if(BUILD_MYSQL AND NOT MYSQL_FOUND)
+  if(MSVC AND BUILD_MYSQL AND NOT MYSQL_FOUND)
     include(Build-mysql)
   endif()
 
@@ -172,11 +172,12 @@ if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
   include(BuildGoogleBreakpad)
 endif()
 
+#include(Build-gn)
+#include(Build-crashpad)
+
 if(NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
 endif()
-
-add_subdirectory(3rdparty)
 
 #--------------------------------
 # Build API Docs
@@ -192,7 +193,7 @@ endif (BUILD_API_DOC)
 # Setup version info
 #--------------------------------
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 2)
+set(VERSION_MINOR 3)
 set(VERSION_PATCH 0)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 

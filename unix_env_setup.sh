@@ -2,7 +2,7 @@
 
 sudo apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
 sudo apt-get update
-sudo apt-get install g++-8 unzip autoconf libtool libssl-dev python perl libncurses5-dev libreadline-dev
+sudo apt-get install g++-8 unzip autoconf libtool libssl-dev python libncurses5-dev libreadline-dev
 
 git submodule update --init --recursive
 

@@ -58,24 +58,24 @@ struct MemoryStruct {
   char *memory;
   size_t size;
 };
- 
+
 static size_t
 WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
   size_t realsize = size * nmemb;
   struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
+
   mem->memory = reinterpret_cast<char*>(realloc(mem->memory, mem->size + realsize + 1));
   if(mem->memory == NULL) {
     // out of memory!
     printf("not enough memory (realloc returned NULL)\n");
     return 0;
   }
- 
+
   memcpy(&(mem->memory[mem->size]), contents, realsize);
   mem->size += realsize;
   mem->memory[mem->size] = 0;
- 
+
   return realsize;
 }
 
@@ -84,29 +84,29 @@ std::string get_current_net_address()
   CURL* curl;
   CURLcode res;
   std::string address = "";
-  
+
   struct MemoryStruct chunk;
- 
+
   chunk.memory = reinterpret_cast<char*>(malloc(1));  // will be grown as needed by the realloc above
   chunk.size = 0;    // no data at this point
-  
+
   curl_global_init(CURL_GLOBAL_DEFAULT);
-  
+
   curl = curl_easy_init();
-  
-  if(curl) 
+
+  if(curl)
   {
     Core::Config& config = Core::Config::getInstance();
     curl_easy_setopt(curl, CURLOPT_URL, config.serverData().autoConfigureUrl.c_str());
-    
+
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "osirose-node-server/1.0");
     auto cookie = fmt::format("port={};",config.loginServer().clientPort);
     curl_easy_setopt(curl, CURLOPT_COOKIE, cookie.c_str());
-    
+
     res = curl_easy_perform(curl);
-    
+
     // Check for errors
     if(res == CURLE_OK)
       address = chunk.memory;
@@ -115,15 +115,15 @@ std::string get_current_net_address()
       if(auto log = Core::CLog::GetLogger(Core::log_type::GENERAL).lock())
         log->info( "curl_easy_perform() failed: {}", curl_easy_strerror(res));
     }
- 
+
     // always cleanup
     curl_easy_cleanup(curl);
   }
- 
+
   curl_global_cleanup();
-  
+
   free(chunk.memory);
-  
+
   return address;
 }
 
@@ -146,7 +146,7 @@ void ParseCommandLine(int argc, char** argv)
 #endif
     ("h,help",  "Print this help text")
     ;
-    
+
     options.add_options("Networking")
     ("external_ip", "external IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
@@ -183,7 +183,7 @@ void ParseCommandLine(int argc, char** argv)
     // Since this is a login server startup function we can get away with a little bit of overhead
     if( options.count("log_level") )
       config.nodeServer().logLevel = options["log_level"].as<int>();
-      
+
     if( options.count("external_ip") )
       config.serverData().externalIp = options["external_ip"].as<std::string>();
 
@@ -198,22 +198,22 @@ void ParseCommandLine(int argc, char** argv)
 
     if( options.count("isc_port") )
       config.loginServer().iscPort = options["isc_port"].as<int>();
-      
+
     if( options.count("url") )
     {
       config.serverData().autoConfigureAddress = true;
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
-    
-    if( options.count("max_threads") ) 
+
+    if( options.count("max_threads") )
     {
       config.serverData().maxThreads = options["max_threads"].as<int>();
       Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
     }
-    
+
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();
-      
+
     // Node server stoof
     if( options.count("login_ip") )
       config.nodeServer().loginIp = options["login_ip"].as<std::string>();
@@ -231,9 +231,10 @@ void ParseCommandLine(int argc, char** argv)
 int main(int argc, char* argv[]) {
   try {
     ParseCommandLine(argc, argv);
-    
+
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "NodeServer");
+    crash_reporter.set_url(config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
@@ -258,14 +259,14 @@ int main(int argc, char* argv[]) {
       }
       config.serverData().externalIp = ip_addr;
     }
-    
+
     sqlpp::sqlite3::connection_config db_config;
     db_config.path_to_database = ":memory:";
     db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
-    
+
     if(config.nodeServer().logLevel <= spdlog::level::level_enum::debug)
       db_config.debug = true;
-    
+
     connectionPoolMem.addConnector<NodeDB>([&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
     {
       auto conn = connectionPoolMem.getConnection<NodeDB>();
@@ -280,7 +281,7 @@ int main(int argc, char* argv[]) {
         worldport int(20) DEFAULT NULL,
         PRIMARY KEY (`id`)
   		))");
-  		
+
   		// Clear the table everything
   		conn(remove_from(table).unconditionally());
     }
@@ -305,8 +306,8 @@ int main(int argc, char* argv[]) {
     if(auto log = console.lock())
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();
+    spdlog::shutdown();
     spdlog::drop_all();
-
   }
   catch (const spdlog::spdlog_ex& ex) {
      std::cout << "Log failed: " << ex.what() << std::endl;

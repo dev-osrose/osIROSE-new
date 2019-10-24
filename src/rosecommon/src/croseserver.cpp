@@ -36,7 +36,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
     while(is_active() == false) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    
+
     std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
     std::string inactive_log = "";
@@ -73,7 +73,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
               Core::Time::GetTickCount();
           auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(
                            update - client->get_update_time());
-          if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(1)) && client->is_active() == true)  // wait some time before time out
+          if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(5)) && client->is_active() == true)  // wait some time before time out
           {
             logger_->info(timeout_log.c_str(), client->get_id());
             client->shutdown();
@@ -81,7 +81,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
           }
         }
       (*mutex_ptr).unlock();
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      std::this_thread::sleep_for(std::chrono::milliseconds(250));
     } while (is_active() == true);
 
     logger_->debug("CRoseServer::process_thread_::is_active was false, returning...");

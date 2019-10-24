@@ -78,14 +78,14 @@ function(GENERATE_PACKETS SRCS HDRS)
       OUTPUT "${H_FILE}" "${CXX_FILE}"
       COMMAND ${CMAKE_COMMAND} -E make_directory ${SRC_OUTPATH}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${HDR_OUTPATH}
-      COMMAND idl::packet_generator "${MATCH_PATH}" -h "${HDR_OUTPATH}" -c "${SRC_OUTPATH}"
-      DEPENDS ${ABS_FILE} idl::packet_generator
+      COMMAND utils::packet_generator "${MATCH_PATH}" -h "${HDR_OUTPATH}" -c "${SRC_OUTPATH}"
+      DEPENDS ${ABS_FILE} utils::packet_generator
       COMMENT "Running C++ packetGenerator compiler on ${MATCH_PATH} with root ${IDLROOT}, generating: ${CXX_FILE}, ${H_FILE}"
       VERBATIM)
   endforeach()
   
   add_custom_target(${TARGET}_generated
-    DEPENDS idl::packet_generator ${${SRCS}} ${${HDRS}}
+    DEPENDS utils::packet_generator ${${SRCS}} ${${HDRS}}
   )
   
   set_source_files_properties(${${SRCS}} PROPERTIES GENERATED TRUE)

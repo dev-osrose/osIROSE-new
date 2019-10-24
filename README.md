@@ -42,13 +42,31 @@ Thanks to the following services that make our development easier:
 C++ Installation - Unix
 -----------------------
 
+##### Programs required:
+![gpp]
+![libmysql]
+[![cmake]][cmake-link]
+[![python]][python-link]
+
+[gpp]: https://img.shields.io/badge/g++-v7%20or%20higher-blue.svg "G++ 7 or higher"
+[libmysql]: https://img.shields.io/badge/libmysql-v5.7%20or%20higher-blue.svg "libmysql 5.7 or higher"
+
 If you get the source from github, you need to setup the build environment:
 
-    $ ./unix_env_setup.sh
+    $ git submodule update --init --recursive
+    $ pip install --user pyparsing
+    $ mkdir build
+    $ cd build
+    $ cmake ..
 
-This will install all of the tools and sources required to build the project.
+Note, you may need to install the following packages depending on your OS:
 
-"./unix_env_setup.sh" will require superuser privileges, as it calls apt-get install.
+    unzip
+    autoconf
+    libtool
+    libssl-dev
+    libncurses5-dev
+    libreadline-dev
 
 To build the servers, execute the following:
 
@@ -72,7 +90,7 @@ If you opted to keep them in place, the server binaries are located in the bin f
     $ ./bin/CharServer&
     $ ./bin/MapServer&
 
-After running for the first time, the servers will create a config file in the current directory.
+After running for the first time, the servers will create a config file in the current directory that you need to edit.
 
 C++ Installation - Windows
 -----------------------
@@ -82,20 +100,24 @@ C++ Installation - Windows
 [![cmake]][cmake-link]
 [![mysql]][mysql-link]
 [![python]][python-link]
+[![openSSL]][openSSL-link]
 
 [vis-studio]: https://img.shields.io/badge/Visual%20Studio-Download-blue.svg "Download Visual Stuido"
 [vis-studio-link]: https://visualstudio.microsoft.com/downloads/ "Download Visual Stuido"
 [cmake]: https://img.shields.io/badge/CMake-Download-blue.svg "Download CMake"
 [cmake-link]: https://cmake.org/download/ "Download CMake"
-[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%2064--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
+[mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20x64--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
 [mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 64-bit"
-[python]: https://img.shields.io/badge/Python-Download-blue.svg "Download Python 2.7"
-[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python"
+[python]: https://img.shields.io/badge/Python%202.7-Download-blue.svg "Download Python 2.7"
+[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python 2.7"
+[openSSL]: https://img.shields.io/badge/OpenSSL%201.0.2t%20x64-Download-blue.svg "Download OpenSSL 1.0.2t x64"
+[openSSL-link]: https://slproweb.com/products/Win32OpenSSL.html "Download OpenSSL x64"
 
 After downloading and installing the above applications, to compile the servers run the following commands:
 
     git submodule update --init --recursive
-    ./ci/msvc_install.bat
+    pip install pyparsing
+    mkdir build
     cd build
     cmake ..
     cmake --build . --config Release
@@ -136,7 +158,7 @@ The server requires a [MySQL](https://mysql.com/) (or [MariaDB](https://mariadb.
 
 To setup the database, first create a new database (e.g. `osirose`). You will then need to execute the
 `Database/osirose.sql` script to generate the database schema and the `Database/item_db.sql` to
-populate the item database. This can be done using a database tool or from the command line like so: 
+populate the item database. This can be done using a database tool or from the command line like so:
 ```
 mysql -u<user> -p<password> <database_name> < Database/osirose.sql
 mysql -u<user> -p<password> <database_name> < Database/item_db.sql
@@ -175,7 +197,7 @@ in the default `server.json` file. It should match the following sections:
     ...
 ```
 
-To use your own password, generate an [SHA256 hash](https://emn178.github.io/online-tools/sha256.html) of your password 
+To use your own password, generate an [SHA256 hash](https://emn178.github.io/online-tools/sha256.html) of your password
 and update the accounts database and the `server.json` file.
 
 Finally, we need to create an account to join the game with. Run the `create_account` procedure
@@ -187,7 +209,7 @@ call create_account("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a8
 
 Alternatively, automatic account creation can be enabled in the server config. This will automatically
 create an account if a user attempts to login to an account that exist. This is recommended as it is
-much more convenient than having to create password hashes and running sql commands. Simply, try to 
+much more convenient than having to create password hashes and running sql commands. Simply, try to
 log in, fail, then try to login again with the same credentials!
 
 To enable it modify `server.json` to enable `createAccountOnFail`:
