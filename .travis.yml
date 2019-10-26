@@ -45,9 +45,6 @@ jobs:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
-          sources:
-          - deadsnakes
-          - ubuntu-toolchain-r-test
           packages:
           - lcov
           - g++-8
@@ -79,8 +76,6 @@ jobs:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
-          sources:
-          - ubuntu-toolchain-r-test
           packages:
           - g++-8
           - libcurl4-openssl-dev
