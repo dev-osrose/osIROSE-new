@@ -4,32 +4,17 @@ language: cpp
 
 env:
   global:
-  - coverity_scan_script_test_mode=true
-  - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
-  #Cov scan email
-  - secure: "s3nV+bCZyiJFhubZgq1SjP+6DUQgT0fzeTTvaPytYTvFuyYWrTzMPdqdhLXc5MZ3mQ/3PMvn3ZjU0AlT7YypLjyGY0LM8tFD4HD608DWR3qRDnlPKsB4nTCQVCp30FhlFSzlVt4E6ZZCtbbu3X92Q+B4UGjGBnX0T4ePsJMk+CfFKGxbF6Hyo6rThXTfRvGWQtu3pI5pmHksyDyCTtX/m5ljslVy84WTLWREX6m7GSeVu3MB+D9hWR+SGkxbjzxtwSfGmUp2893/xxac+BJNTXqJfKDJA7y98/jB65VASfos3T3Bkdq4nl1e5D4jAmcWE6ZsPpjvem4iZGUZwYbdUNhCk2iGDUjnJYU18z+3R+A4LChmXJlSmtG9AcLU+MT1rJeTQCUqq9pBXAG+keOdBu4J+CvBS5KrhmbG6pXHfUMY0UAqcAHdkgZo26JNnm9kIGcz+IrFOPERUe/naFM+27QGDZ0RfYkbWGbiqaTQ2SptMIOn7/zEqkWWOoT4CImtbSjjOETStIPzIWzR/I+bWFuNL/RL7K1UimqrfQFYG/W1WWXi8ZYqSE+DJX/ejWAytvvq6FWNhXOLe7+0fc/ZzhFTQqusdg0G3wNXKLSNVzuC1MyYXwoJEw33397GsPaK2E5tKlwi12txun5uWAzagHuYVTuHNHKt4qV8+e3AIjw="
-  #Cov scan token
-  - secure: "lCkzkfbDqElSZogmvXbG+KVQa2CZX9haWabUTfBjeATY53WHu+3sw8b5QQtRnk6tZSa/v+aOGP/sF6gu8jY9Jp3cMp7ubgjuNmDoiVsdhsym44HA2dgVjKmxJhSNLJDqS1s0OvbzjgiWXzW62f0l8LxR2rEpXQ1M2621KSdxx4jLA91IFp2kdg3rDqPBE4mJNw3yHXMacs7QFn9AW4D5MFxZcGG9jLzzGMlHE7j4vtGVbODrFCZ3iHVVkZ3T2cyp6Xo3LmXQkqRd2LM63B2A7EJhXOJvn2uHjL8ZL8oQnKqS0gpMZGYtV2EJraUegHiFBZDqqLR8+MqUaTNWi2tPLERdkYMUUuq64vpC+KxtlWLi/ipdtClaUPD9kiyzMIh5Wkw1LtWFejRm6KBcf7T++88mureC/G1iJjHBvXkubolK6pffQMLueuvTMM6f+7OGRS4GpHwG3iGL1hgcUlWtnmEuglb7Z/PMxmEhtdo4Ret2O+UKWh4AVlf1yqfbH3INSjuGFMcS085GZoFiTN0amDZigSVcMpWU82+tHIjI3KWqfJeCCjzBO5LDJ5yIdCo7A/4+pzROlWmy4Ed/De1JxCO1rujDyY26xeg12G3SO3qj4bxSjnnyykPWIfnj8pkJX9g9m3fTmQzVXEZOxQAb+2qf5igWvKVsSxgrcMLCYIY="
-  #coveralls
-  - secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="
-  #Cov scan token
-  - secure: "JuSus/BqBJ2RTj7oJ3tn6dfFqnNWmWdM6/+PBId8YT52fUJTQp0eLmYbqZhq04OFvCKLgzeiObggfFZk5VOXAB/bfhlQEKSprso6C0WxKzFnftr085rcr5mW2ux+RSWTeE9KT1bpsjtpSrQTOniQhPGD6u704DdIzKuOnSngU8TXRAHFujXtUA0SHU8Oft8OpysaTDVWbFehBemg6BeOssklw2LrScGT3AWm8+qNdyAV+ynko4s8CzdOJqueCNWnkYFQyNtWN67uasveg3j+zgOfstjgyYSEoYh6deCNy8BjmWzX2tUkpzxh7h4w/VlyVjvyMG524UdMDmFZNNo7CMn1/qla6zjli3xDV/kk2Dfzj1JCn2WsesOY8+p4bdYoUU4lR0PuYraEuBAOCiVb3V7VLzU5FyV3clY8+MwifVHvNLxUbyD2ygZfPrS8LQJ/7jJSPeEARUIngvNkY9L8Jr6olw3Xg7DoDHLWAFBMtBi/sZG3CvXDyeIUX8rkh4hY6QlnO/xrql5KxDupsAwqj+rMdhzYeCnyRY6HvqBIoIrpi47uPGutxiIFgjrzwr28eL+XrrkwHfbM+pFDUITdWjm79/EyEPgGsEMM8IxXcpSGNmMDDhpHu1oZE4L3gdKli6hdS5fo6CEDV3x1nvk/SsY52WhEWIT/RwQPl4qL3YQ="
-  #FTP STOOF
-  - secure: "xBpVz5i5Cr2E47irPh4tbe4ytOAxIEN3vz68h0xDjRrFg+ZhYNarZsjTAHOgZuGyzMhoDmI3Ld8VvI5Qqx00giK+zkJ2SSqDx2UvAvn6cE8+Td9GyQ9wM8yNysU96l+mHpxwhDUabin6DG0Ea9XO4Qzc2qtWURkZxvymmzH5mEpklp8LoBjrr42e3Mo3J0h4C94wO/y6TenjjP8r0y2spUakxTC84u1T11zysKm/C16w3GECDNqaTMVO7zi9ctVjsTBPSqTA9PwuecUfMnB0B4f906U6B45xlVT0fXu76gEed7EeB8/YUHXU68BaTxP9pM9ytxiWZ6Wb+WPIPHS5cp4JuB7JTv4vmBlznBZdFkijhiQmoSloVtWhF6lBh0ke6ecP3/Wp0xuR4Qf+BdkbH9m13JzkDXKIeYnDbIJZ2XSCgo/Z7DQ23Xa2KB3SEvXT1LCbaZOwtxVxEVLBwlcYtH34CTmdG8gSvso4ZM4q6hSjTWjcXRY7zmgkJLRjtdPA+yaWmyXfYKz50CJ5QTmJj65LglIO3GszaEVvRwdy35SDiiEhnF8XNKJ5lFYTNgaGzY+o0gL0ZE1fAHI6GahBiY5a+9r2vHvMQ9QIOei3Ny1w2dZ/8ATZyZbXXjBmBLIwf0iY36pXzbTpRgZQi2fe0nGl2lg11Il4rtfyBL5hQfs="
-  - secure: "HuHas8zjvhptDPYZtq8bq2Zp54iqlZ5vuVZx859fPr42nqn9UoGWUlAhBlT7MDb9zPPGTtkHPRgoH85jTqxEKt+XmC4IvPkTch64N45G8qE06Kp+wKjzDyrSWn9OiMkk/Dfx/ppALBKmOGWNYoAHVSs1uM/iW3lniCXGAjKawf6eTZ56rQu59dLki723hugVFnLHou2lv/aAqAjJF4BydnHPHGZWthegjo2NDSaTJs3jtxTAMvYoUTPFVXumfNfS8/NlCFY5//YPOtVpTlHdfI8xmr89CuRdy/tuti7Dhbll+GVeRmFfUwSIREFp9mUZDiaDk3df1KBdND1pmmDEdEGZ0O3sKNpXGfHKAGxcHfKAPgSowlcRRPuqnZVcOfVtwgJOR+0JhV/WuUqZMqkHArYhHnudvojZ5euTAKKNdxrn8hYHw+jpHkHvCHmt+4KA4TR/OhoW6fxSKQNkcpTc4eREt53FoKOWhF3zJNx+YM/8/E07mu3j7zxbZHDspNtD5HrfU36WfxprAj62uvujKaqfhYjKBjq/k0THAcUPpQ8KoH75zjUMtn0k2sVpUlumci/1JErLipBtAWyOWwhcbFgMzX7I0UqbMuZ3mOivvjjX+3m6tntR2FReh8CUoh8dfhOsoAp3Fgm8mskuJLQ0/ry+YXe4+tIKyAHYu6Qhibk="
-  - secure: "rhEt4Tgu1txNXU//wxmxZCTiIbFeZMZpCWUt5kmQDJN8pn1Phykr1cdoHG9uMQ0BYmo+aGyt/IdFlNiPP5LWNHYTMRj0SlQu2RsYQzQqAkQ6ZbKdWOcBddeDZehSwiDNllIx7qMcpjrqeKdsf6NyEzlhp+Zb9wkfS0ghpWa2OhXMMxLmVSZngWQByh+SzCdkuuDXNXJZdDUh9bKovowvngW+AyqMpn1lJzC671zX8o/f2reedHp/SbEvz0DIHNK6euWC7Qr1BhkOGxuaBtNvbtbtyCzpsc+NoWRbYFhlsEVvkA3jSD7bqOpda1/cqfbGRVTk/vUU+I5n02gpC5rqvX65aLtsGWeWYFvuxVHPqE5UAgMk0+6WdSEWotBhjnrGN3U8zNKG9TxrTIHn24EUVMDmGNcxujtoFpEeUrU8gp5TCKb4rwi0S722YhcnkKqZuPcQ8GMdr0sme+C5zWQev+6UuUpW1UJnrBDTMDgK/vScRU4l6WGB7Gkvxyd+yxwoCEe8l3WKBbNv0v1TcKqnoYIDiIhSkWMHtOQBC7b88bJI/uiKNZ2qEakiNlcuuVkCow1nC0jlJTSiOlzDRdS5sWYlTS7TaKqwSrnN7SR3SMWO10hw18ACY1wbwGk9BTwaLSX625Dm54OJI8AtWjrI0ASvrkd/B3INLww7UYO8xdQ="
-  # end FTP
   #discord webhook
   - secure: "MXG3LzmYr0KLqEw3WZo1qY3/iGVaAQuAcE/V9ad3FlpBz89BoNpNP+frf6Yrvamy/UGiR14hgcPbzmTI5DvdBkdFpf9K0xuLRAOsxOMPfTU2d6ip42uifDJ8koXg8INzOk8iab9TftzY2Zg/u4/L3JEo2HWbKFndQMCke7IZqpNOCcrJWdXtpb0/QKpcCxbovS4toAAkmi1P/2S21CdTnZLF4ee06h5yChkrHjXNPiDfBpM5uhuIkH/KS0ruv9WyUTd7gGtgQ7KzKcyRCWv3G9jXZNbP5nXGVsPFnRz1o3ZBBgBX2ZYQsYoMqQdbfFTe8hi6xuabSACAxlhQh3+f8l05a43d1zP7uWh7on0z4CAVIbM7MVBjfJYT1lzQNujpyjPO1DhiT4+2wGzdCNLqu2KFxhgj8nsafYs/Esj7Ie1zn7IcquruqJg24QTFgTxvuACidQcuTnc9f5NBM+hLqWTsvnD0tvFzkk5tEzc3XJwmTzXWk348DTO+SmXZvs5EiMORue7igCa8QGnWT6R4WtCrNBSDWza17VV9uGUJhgakI8bSvTOlUhUpsBmPR5rPaRZKkKTvpm6KLsqEj1dqEyyE69aTZ+ow+mRX16PiZT6feW9nyFvshkA4UzBHwN9Y9/kz/xSwz6Tg7WDG69Ru3XGY7FuxKAmTjJm4DspOdZ4="
   - PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:${TRAVIS_BUILD_DIR}/build/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
-  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
-  - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
   - CCACHE_SLOPPINESS="pch_defines,time_macros"
-  - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
   - WITH_CRASH_REPORTS=ON
   - BUILD_JOB_COUNT=4
   - SUITE=tests
+  - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+  - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
+  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
 
 cache:
   pip: true
@@ -131,7 +116,7 @@ jobs:
       env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=tests BUILD_TYPE=Release
       script:
         - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
 
 #Notify discord and everyone else
@@ -144,17 +129,3 @@ jobs:
         submodules: false
       after_success:
         - $CI_DIRECTORY/notify-discord.sh success $WEBHOOK_URL
-
-after_failure:
-  - $CI_DIRECTORY/notify-discord.sh failure $WEBHOOK_URL
-
-deploy:
-  provider: releases
-  api_key:
-    secure: u0DKBv0ZaE8+J/WxJTyEyY+PVgtk8ymuOfRN3IxglSEG+JFgGhiUQLD9lZ0S5n3lQZ5b8MPmtbnwuX1XY2PtnWKrb+5OVRR5yvAcR9P0pY1SxtMR4uATVxdFCXim347xn98trRuIomACrLHD/D75HN46hAfPc/gGektguuMr6b2hph2bgGZ2Hd3EPSZq4Q2gAVwHislJLyLf8tX6lvwlIqb3mpaZPRQNBma2AhTTRQOq8u1Fkz9sLV5VDI3AdhfE//+cVCzPX1I2piLKDqZ2MNQNwlWwLaKUy33SDFIUndu6QQhFsL1XDUIXsxhTqu8Y4Qbs1Ksx7iCh1oAPIot7wdI1hJna51vKtMh9tK6r64QNc8GkbEuH7aWbSS0o0w3vx8hzvuDRzj0+gNTDCkEadvPSLExpRGgg8jZSz0C70VQzi+obG6cR9CGkUETlvUmLMaqd6H+WAQwRPUof/cnZUZNW/NAYTR6GSvcTgJOyZy/P0Q5vzsat3LhvpshC9IUzOM3v3GDcQ1s6JL3PRz8dKTzz4et9FpVkn77YW8h7Dgv3Ygag/cAN0dsV4Ds77HImacDSE6BiNm5uenE4CEQeUbWq4PLJl/PDu5V9z9QbCTHKP2STNMg3vCPjg0Sl6RGG+8s5u2LfuZeRQue19UDjnYMsifkxRy+zKr+FYW29c10=
-  file: "${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${SUITE}-${BUILD_TYPE}.tar.gz"
-  on:
-    repo: dev-osrose/osIROSE-new
-    condition: $CXX = "g++-8" && $BUILD_TYPE = "Release"
-    branch: trunk
-    tags: true
