@@ -33,6 +33,8 @@ class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_fr
 
   uint32_t sessionId() const { return sessionId_; }
 
+  void send_packet(const RoseCommon::CRosePacket& packet) { CRoseClient::send(packet); } 
+
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
 
@@ -42,8 +44,6 @@ class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_fr
   bool sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P);
   bool sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P);
  
-  void send_packet(const RoseCommon::CRosePacket& packet) { CRoseClient::send(packet); } 
-
   virtual void onDisconnected() override;
 
  protected:

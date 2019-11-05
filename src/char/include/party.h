@@ -20,12 +20,12 @@ struct Party {
   uint32_t last_got_etc_index = 0;
   std::vector<uint32_t> members;
   
-  void set_xp_per_player() { options |= CliPartyRule::EXP_PER_PLAYER; }
-  void unset_xp_per_player() { options &= ~CliPartyRule::EXP_PER_PLAYER; }
-  bool is_xp_per_player() const noexcept { return options & CliPartyRule::EXP_PER_PLAYER; }
-  void set_item_in_order() { options |= CliPartyRule::ITEM_IN_ORDER; }
-  void unset_item_in_order() { options &= ~CliPartyRule::ITEM_IN_ORDER; }
-  bool is_item_in_order() const noexcept { return options & CliPartyRule::ITEM_IN_ORDER; }
+  void set_xp_per_player() { options |= RoseCommon::Packet::CliPartyRule::EXP_PER_PLAYER; }
+  void unset_xp_per_player() { options &= ~RoseCommon::Packet::CliPartyRule::EXP_PER_PLAYER; }
+  bool is_xp_per_player() const noexcept { return options & RoseCommon::Packet::CliPartyRule::EXP_PER_PLAYER; }
+  void set_item_in_order() { options |= RoseCommon::Packet::CliPartyRule::ITEM_IN_ORDER; }
+  void unset_item_in_order() { options &= ~RoseCommon::Packet::CliPartyRule::ITEM_IN_ORDER; }
+  bool is_item_in_order() const noexcept { return options & RoseCommon::Packet::CliPartyRule::ITEM_IN_ORDER; }
 };
 
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId);

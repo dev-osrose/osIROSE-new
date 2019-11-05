@@ -178,12 +178,12 @@ void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& p
 }
 
 void CCharServer::send_char(const User& user, const RoseCommon::CRosePacket& packet) {
-    if (auto client = user.value()->get_client().lock(); client) {
+    if (auto client = user.get_client().lock(); client) {
         client->send_packet(packet);
     }
 }
 
-void CCharServer::send_char(const std::string& character, const RoseCommon::CRosePacket& p) {
+void CCharServer::send_char(const std::string& character, const RoseCommon::CRosePacket& packet) {
     const auto user = get_user(character);
     if (!user) {
         return;
@@ -283,13 +283,13 @@ void CCharServer::unload_user(uint32_t id) {
 }
 
 std::shared_ptr<Party> CCharServer::create_party(User& user) {
-    auto party = partys.create_party(user.get_id());
+    auto party = partys.create_party(user.get_charId());
     user.set_party(party);
     return party;
 }
 
 void CCharServer::add_user_to_party(User& user, std::shared_ptr<Party> party) {
-    partys.add_member_to_party(party, user.get_id());
+    partys.add_member_to_party(party, user.get_charId());
     user.set_party(party);
     // TODO: send packet
 }

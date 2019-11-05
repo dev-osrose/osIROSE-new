@@ -98,7 +98,7 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
 
-std::shared_ptr<Party> Partycache::get_party(uint32_t charId) {
+std::shared_ptr<Party> PartyCache::get_party(uint32_t charId) {
     if (cache.count(charId) != 0) {
         return cache.at(charId);
     }
@@ -187,7 +187,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
             }
             // TODO: check for level difference
             other.value()->set_requested_party(server.create_party(user));
-            server.send_char(*other.value(), SrvPartyReq::create(Srv::PartyReq::CREATE, user.get_entityId()));
+            server.send_char(*other.value(), SrvPartyReq::create(SrvPartyReq::CREATE, user.get_entityId()));
             break;
         }
         case CliPartyReq::JOIN: // idXorTag == id
@@ -240,7 +240,7 @@ void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& s
     auto tmp = server.get_user(packet.get_target(), user.get_mapId());
     if (!tmp) {
         logger->warn("Client {} replied to a party request of the non existing char {}", user.get_name(), packet.get_target());
-        server.send_char(user, SrvPartyReply::create(SrvPartyReply::NOT_FOUND, packet.get_target()));
+        server.send_char(user, RoseCommon::Packet::SrvPartyReply::create(RoseCommon::Packet::SrvPartyReply::NOT_FOUND, packet.get_target()));
         return;
     }
     User*const other = tmp.value();
@@ -264,7 +264,7 @@ void party_reply(const RoseCommon::Packet::CliPartyReply& packet, CCharServer& s
             logger->debug("{} accepted {}'s party", user.get_name(), other->get_name());
             if (user.get_requested_party() != other->get_party()) {
                 logger->warn("{} tried to answer to a different party request from {}", user.get_name(), other->get_name());
-                user.set_party_request({}); // we reset the party request
+                user.set_requested_party({}); // we reset the party request
                 return;
             }
             server.send_char(*other, SrvPartyReply::create(SrvPartyReply::ACCEPT_JOIN, user.get_entityId()));
