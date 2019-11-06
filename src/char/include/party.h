@@ -34,7 +34,7 @@ void cache_write_party(std::shared_ptr<Party> party);
 void cache_write_party_members(std::shared_ptr<Party> party);
 void cache_remove_party(std::shared_ptr<Party> party);
 
-class PartyCache {
+class PartyManager {
   public:
     std::shared_ptr<Party> get_party(uint32_t charId);
     std::shared_ptr<Party> create_party(uint32_t charId);
@@ -43,7 +43,7 @@ class PartyCache {
     void remove_party(std::shared_ptr<Party> party);
   
   private:
-    std::unordered_map<uint32_t, std::shared_ptr<Party>> cache;
+    std::unordered_map<uint32_t, std::shared_ptr<Party>> partys;
 };
 
 class CCharServer;

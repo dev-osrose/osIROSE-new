@@ -281,6 +281,7 @@ RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
 }
 
 void EntitySystem::stop() {
+    std::lock_guard<std::recursive_mutex> lock(access);
     work_queue.kill();
     registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
     registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);

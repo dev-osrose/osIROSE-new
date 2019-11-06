@@ -98,43 +98,43 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
 }
 
-std::shared_ptr<Party> PartyCache::get_party(uint32_t charId) {
-    if (cache.count(charId) != 0) {
-        return cache.at(charId);
+std::shared_ptr<Party> PartyManager::get_party(uint32_t charId) {
+    if (partys.count(charId) != 0) {
+        return partys.at(charId);
     }
     auto party = cache_fetch_party(charId);
     if (!party) { // no party!
         return {};
     }
-    cache.insert({charId, party});
+    partys.insert({charId, party});
 
     for (auto m : party->members) {
-        cache.insert({m, party});
+        partys.insert({m, party});
     }
     return party;
 }
 
-std::shared_ptr<Party> PartyCache::create_party(uint32_t charId) {
+std::shared_ptr<Party> PartyManager::create_party(uint32_t charId) {
     auto party = std::make_shared<Party>();
     party->members.push_back(charId);
     party->leader = charId;
     cache_create_party(party);
     cache_write_party_members(party);
     party = cache_fetch_party(charId);
-    cache[charId] = party;
+    partys[charId] = party;
     return party;
 }
 
-void PartyCache::add_member_to_party(std::shared_ptr<Party> party, uint32_t member) {
+void PartyManager::add_member_to_party(std::shared_ptr<Party> party, uint32_t member) {
     party->members.push_back(member);
-    cache.insert({member, party});
+    partys.insert({member, party});
     
     cache_write_party_members(party);
 }
 
-void PartyCache::remove_member_from_party(std::shared_ptr<Party> party, uint32_t member) {
+void PartyManager::remove_member_from_party(std::shared_ptr<Party> party, uint32_t member) {
     party->members.erase(std::remove(party->members.begin(), party->members.end(), member), party->members.end());
-    cache.erase(member);
+    partys.erase(member);
     
     if (party->members.empty()) {
         cache_remove_party(party);
@@ -143,9 +143,9 @@ void PartyCache::remove_member_from_party(std::shared_ptr<Party> party, uint32_t
     }
 }
 
-void PartyCache::remove_party(std::shared_ptr<Party> party) {
+void PartyManager::remove_party(std::shared_ptr<Party> party) {
     for (auto member : party->members) {
-        cache.erase(member);
+        partys.erase(member);
     }
     cache_remove_party(party);
 }

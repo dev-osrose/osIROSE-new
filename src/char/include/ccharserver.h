@@ -86,7 +86,7 @@ class CCharServer : public RoseCommon::CRoseServer {
   std::recursive_mutex access;
 
   std::unordered_map<uint32_t, User> users;
-  PartyCache partys;
+  PartyManager partys;
 
   template <typename T>
   void register_dispatcher(std::function<void(const T&, CCharServer&, User&)>&& func) {

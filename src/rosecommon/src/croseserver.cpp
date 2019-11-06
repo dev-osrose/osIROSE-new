@@ -103,11 +103,11 @@ CRoseServer::~CRoseServer() {
     }
     isc_list_.clear();
   }
-  for (auto& s : socket_) {
+  /* for (auto& s : socket_) {
       if (s && s->process_thread_.joinable()) {
           s->process_thread_.join();
       }
-  }
+  } */
 }
 
 void CRoseServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
