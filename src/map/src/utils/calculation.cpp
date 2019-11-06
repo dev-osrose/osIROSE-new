@@ -92,7 +92,7 @@ namespace Calculations {
   }
 
   int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender) {
-    int success_rate = 0;
+    int success_rate = 100; //TODO: set this to 0 once the calc is finished
     //TODO do calc here
     return success_rate;
   }
