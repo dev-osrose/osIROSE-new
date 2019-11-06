@@ -2,7 +2,7 @@
 
 int  Utils::get_attack_speed(EntitySystem& entitySystem, RoseCommon::Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  if(item) {
+  if(item != entt::null) {
     if(auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
       if(auto api = lua->api.lock(); api) {
         return api->get_attack_speed();
@@ -18,7 +18,7 @@ int  Utils::get_attack_speed(EntitySystem& entitySystem, RoseCommon::Entity item
 
 int  Utils::get_move_speed(EntitySystem& entitySystem, RoseCommon::Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  if(item) {
+  if(item != entt::null) {
     if(auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
       if(auto api = lua->api.lock(); api) {
         return api->get_move_speed();
@@ -34,7 +34,7 @@ int  Utils::get_move_speed(EntitySystem& entitySystem, RoseCommon::Entity item) 
 
 int  Utils::get_magic(EntitySystem& entitySystem, RoseCommon::Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  if(item) {
+  if(item != entt::null) {
     if(auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
       if(auto api = lua->api.lock(); api) {
         return api->get_magic();
