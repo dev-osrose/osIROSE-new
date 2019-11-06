@@ -15,6 +15,7 @@ namespace Combat {
   void revive(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliReviveReq&);
 
   void update(EntitySystem&, RoseCommon::Entity, uint32_t dt);
+  void check_for_level_up(EntitySystem& entitySystem, RoseCommon::Entity entity, uint16_t sourceId);
 
   std::pair<float, float> get_range_position(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target, float range = 100);
   float get_range_to(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target);
