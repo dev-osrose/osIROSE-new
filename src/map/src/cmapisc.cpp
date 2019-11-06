@@ -175,7 +175,7 @@ void CMapISC::onConnected() {
         if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(4)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
-          send(Packet::IscAlive());
+          send(Packet::IscAlive::create());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }

@@ -182,19 +182,15 @@ void CCharISC::onConnected() {
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
-      while (this->is_active() == true && this->isLogin() == true) {
+      while (this->is_active() == true && isLogin() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-          update - get_update_time())
-          .count();
+        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
         if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(4)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
-          auto packet = Packet::IscAlive::create();
-          send(packet);
+          send(Packet::IscAlive::create());
         }
-        std::this_thread::sleep_for(
-          std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
       return 0;
     });
