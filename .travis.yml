@@ -84,6 +84,7 @@ jobs:
           - g++-8
           - libcurl4-openssl-dev
           - python2.7
+          - python-pip
 
       install:
         - |
@@ -112,7 +113,7 @@ jobs:
         - export SUITE=tests
         - export BUILD_TYPE=Release
       before_script:
-        - python2.7 -m ensurepip
+        #- python2.7 -m ensurepip
         - python2.7 -m pip install --user pyparsing
       script:
         - cd build
