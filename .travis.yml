@@ -121,9 +121,10 @@ jobs:
       stage: compile
       name: "AMD64 G++-8 Debug - Coverage Tests"
       if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 BUILD_TYPE=Debug
+      env: CC=gcc-8 CXX=g++-8
       before_install:
         - export SUITE=coverage
+        - export BUILD_TYPE=Debug
       before_script:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
@@ -174,9 +175,10 @@ jobs:
       stage: compile
       name: "AMD64 Clang++-7 Debug"
       if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7 BUILD_TYPE=Debug
+      env: CC=clang-7 CXX=clang++-7
       before_install:
         - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - export BUILD_TYPE=Debug
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
