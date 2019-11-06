@@ -161,7 +161,7 @@ endif()
 include(PacketGenerator)
 
 if(WITH_MYSQL)
-  if(MSVC AND BUILD_MYSQL AND NOT MYSQL_FOUND)
+  if(BUILD_MYSQL AND NOT MYSQL_FOUND)
     include(Build-mysql)
   endif()
 
