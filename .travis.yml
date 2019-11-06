@@ -98,7 +98,6 @@ jobs:
         - cmake --version
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
-        #- pip install --user pyparsing
       script: true
 
 #----------------------------
@@ -108,6 +107,8 @@ jobs:
       name: "ARM64 G++-8 Release"
       if: branch != coverity_scan
       env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=tests BUILD_TYPE=Release
+      before_script:
+        - python2.7 -m pip install --user pyparsing
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
