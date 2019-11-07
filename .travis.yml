@@ -137,3 +137,8 @@ jobs:
         submodules: false
       after_success:
         - $CI_DIRECTORY/notify-discord.sh success $WEBHOOK_URL
+
+
+  allow_failures:
+    - arch: arm64
+    - os: windows
