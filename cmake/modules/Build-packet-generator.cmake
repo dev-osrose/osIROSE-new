@@ -9,11 +9,14 @@ set(_byproducts
   ${IDL_INSTALL_DIR}/bin/packet_generator.exe
 )
 
+string(TOLOWER ${CMAKE_HOST_SYSTEM_NAME} HOST_SYSTEM_NAME_LOWER)
+string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} HOST_SYSTEM_PROCESSOR_LOWER)
+
 if(WIN32 OR MINGW)
-  set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/win64-packet_generator.zip)
+  set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/${HOST_SYSTEM_NAME_LOWER}-${HOST_SYSTEM_PROCESSOR_LOWER}-packet_generator.zip)
   set(EXEC_POSTFIX .exe)
 else()
-  set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/linux-packet_generator.tar.gz)
+  set(DOWNLOAD_URL https://github.com/dev-osrose/IDL/releases/download/idl-latest/${HOST_SYSTEM_NAME_LOWER}-${HOST_SYSTEM_PROCESSOR_LOWER}-packet_generator.tar.gz)
   set(EXEC_POSTFIX )
 endif()
 
