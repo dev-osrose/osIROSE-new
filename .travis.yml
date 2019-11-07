@@ -87,6 +87,7 @@ jobs:
           - libcurl4-openssl-dev
           - python2.7
           - python-pip
+          - ccache
 
       install:
         - |
