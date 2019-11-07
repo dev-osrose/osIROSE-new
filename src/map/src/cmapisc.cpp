@@ -145,7 +145,7 @@ void CMapISC::onConnected() {
     auto packet = Packet::CliLoginReq::create(
         config.mapServer().charPassword,
         config.mapServer().charUser);
-        
+
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]",
                    packet.get_size(), (uint16_t)packet.get_type());
     send(packet);
@@ -161,7 +161,7 @@ void CMapISC::onConnected() {
         m.push_back(it.first);
     }
     packet.set_maps(m);
-  
+
     logger_->trace("Sending a packet on CMapISC: Header[{0}, 0x{1:x}]", packet.get_size(),
                    static_cast<uint16_t>(packet.get_type()));
     send(packet);
@@ -172,10 +172,10 @@ void CMapISC::onConnected() {
       while (is_active() == true && isChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
-        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30)).count())
+        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(4)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
-          send(Packet::IscAlive());
+          send(Packet::IscAlive::create());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }

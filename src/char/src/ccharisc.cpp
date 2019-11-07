@@ -66,7 +66,7 @@ bool CCharISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   }
   std::string username_ = Core::escapeData(P.get_username());
   std::string clientpass = Core::escapeData(P.get_password());
-  
+
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable table{};
   try {
@@ -83,7 +83,7 @@ bool CCharISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   } catch (const sqlpp::exception &e) {
     logger_->error("Error while accessing the database: {}", e.what());
   }
-  
+
   return false;
 }
 
@@ -116,7 +116,7 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
 
     socket_[SocketType::Client]->set_type(to_underlying(type));
   }
-  
+
   state_ = eSTATE::REGISTERED;
 
   set_name(name);
@@ -160,12 +160,12 @@ void CCharISC::onConnected() {
     auto packet = Packet::CliLoginReq::create(
         config.charServer().loginPassword,
         config.charServer().loginUser);
-        
+
     logger_->trace("Sending a packet on CCharISC: Header[{0}, 0x{1:x}]",
                    packet.get_size(), (uint16_t)packet.get_type());
     send(packet);
   }
-  
+
   {
     auto packet = Packet::IscServerRegister::create(
         RoseCommon::Isc::ServerType::CHAR,
@@ -182,19 +182,15 @@ void CCharISC::onConnected() {
 
   if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
     socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
-      while (this->is_active() == true && this->isLogin() == true) {
+      while (this->is_active() == true && isLogin() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
-        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-          update - get_update_time())
-          .count();
-        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30)).count())
+        int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
+        if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(4)).count())
         {
           logger_->trace("Sending ISC_ALIVE");
-          auto packet = Packet::IscAlive::create();
-          send(packet);
+          send(Packet::IscAlive::create());
         }
-        std::this_thread::sleep_for(
-          std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
       return 0;
     });

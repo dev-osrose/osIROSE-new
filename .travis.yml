@@ -28,7 +28,9 @@ env:
   - CCACHE_SLOPPINESS="pch_defines,time_macros"
   - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
   - WITH_CRASH_REPORTS=ON
+  - BUILD_TYPE=Release
   - BUILD_JOB_COUNT=4
+  - GCOV_EXEC=gcov-8
   - SUITE=tests
 
 services:
@@ -63,9 +65,6 @@ jobs:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
-          sources:
-          - deadsnakes
-          - ubuntu-toolchain-r-test
           packages:
           - lcov
           - g++-8
@@ -96,13 +95,9 @@ jobs:
       env: CC=clang-7 CXX=clang++-7
       addons:
         apt:
-          sources:
-          - deadsnakes
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-xenial-7
           packages:
           - lcov
-          - g++-7
+          - g++-8
           - clang++-7
           - libcurl4-openssl-dev
       install:
@@ -126,7 +121,10 @@ jobs:
       stage: compile
       name: "AMD64 G++-8 Debug - Coverage Tests"
       if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=coverage BUILD_TYPE=Debug
+      env: CC=gcc-8 CXX=g++-8
+      before_install:
+        - export SUITE=coverage
+        - export BUILD_TYPE=Debug
       before_script:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
@@ -148,7 +146,7 @@ jobs:
       stage: compile
       name: "AMD64 G++-8 Release"
       if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 GCOV_EXEC=gcov-8 SUITE=tests BUILD_TYPE=Release
+      env: CC=gcc-8 CXX=g++-8
       before_script:
         - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
         - mysql --user="root" -e 'create database osirose;'
@@ -177,7 +175,10 @@ jobs:
       stage: compile
       name: "AMD64 Clang++-7 Debug"
       if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7 GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh SUITE=tests BUILD_TYPE=Debug
+      env: CC=clang-7 CXX=clang++-7
+      before_install:
+        - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
+        - export BUILD_TYPE=Debug
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
@@ -187,7 +188,9 @@ jobs:
       stage: compile
       name: "AMD64 Clang++-7 Release"
       if: branch != coverity_scan
-      env: CC=clang-7 CXX=clang++-7 GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh SUITE=tests BUILD_TYPE=Release
+      env: CC=clang-7 CXX=clang++-7
+      before_install:
+        - export GCOV_PATH=$CI_DIRECTORY/llvm-gcov.sh
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
@@ -198,7 +201,9 @@ jobs:
       stage: compile
       name: "AMD64 G++-8 Coverity Scan Release"
       if: branch = coverity_scan
-      env: CC=gcc-8 CXX=g++-8 BUILD_TYPE=Release COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
+      env: CC=gcc-8 CXX=g++-8
+      before_install:
+        - export COV_CONFIG=${TRAVIS_BUILD_DIR}/cov_compiler.xml
       install:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then

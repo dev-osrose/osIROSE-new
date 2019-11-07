@@ -92,7 +92,7 @@ bool CRoseISC::onReceived([[maybe_unused]] uint16_t socket_id_, uint16_t& packet
 
 bool CRoseISC::onSend([[maybe_unused]] uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) {
   // TODO: Encrypt the isc buffer.
-  (void)_buffer;
+  set_update_time(Core::Time::GetTickCount());
   return true;
 }
 
