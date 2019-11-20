@@ -13,7 +13,9 @@
 // limitations under the License.
 
 #include "crash_report.h"
+#ifdef ENABLE_CRASH_REPORTS
 #include "common/linux/http_upload.h"
+#endif
 #include "version.h"
 
 namespace Core {
