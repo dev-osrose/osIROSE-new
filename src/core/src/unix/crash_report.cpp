@@ -71,7 +71,7 @@ namespace Core {
   {
   }
 
-  CrashReport::set_url([[maybe_unused]] std::string url)
+  void CrashReport::set_url([[maybe_unused]] std::string url)
   {
   }
 #endif
