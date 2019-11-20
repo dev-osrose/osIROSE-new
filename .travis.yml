@@ -74,7 +74,7 @@ jobs:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
             CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
+            mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
@@ -105,7 +105,7 @@ jobs:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
             CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
+            mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
@@ -136,7 +136,7 @@ jobs:
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
       after_success:
         - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir ${TRAVIS_BUILD_DIR}/public
+        - mkdir -p ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - cd ${TRAVIS_BUILD_DIR}
@@ -160,7 +160,7 @@ jobs:
         - ctest --output-on-failure
       after_success:
         - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir ${TRAVIS_BUILD_DIR}/public
+        - mkdir -p ${TRAVIS_BUILD_DIR}/public
         - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
         - cp lib/*.so bin
         - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
@@ -209,7 +209,7 @@ jobs:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
             CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
+            mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
           fi
@@ -234,7 +234,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command_prepend: "mkdir -p build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_failure:
@@ -252,7 +252,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command_prepend: "mkdir -p build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make idl lua sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: trunk
 
