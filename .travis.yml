@@ -201,6 +201,7 @@ jobs:
     - &covinit
       stage: compile
       name: "AMD64 G++-8 Coverity Scan Release"
+      arch: amd64
       if: branch = coverity_scan
       env: CC=gcc-8 CXX=g++-8
       before_install:
@@ -231,7 +232,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir -p build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make lua -j ${BUILD_JOB_COUNT} && make sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command_prepend: "mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make lua -j ${BUILD_JOB_COUNT} && make sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: coverity_scan
       after_failure:
@@ -249,7 +250,7 @@ jobs:
             name: "$TRAVIS_REPO_SLUG"
             version: 0.3
           notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL
-          build_command_prepend: "mkdir -p build && cd build && cmake -DOFFICIAL_BUILD=ON -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make lua -j ${BUILD_JOB_COUNT} && make sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
+          build_command_prepend: "mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=OFF -DFORCE_SYS_DEPS=ON .. && make lua -j ${BUILD_JOB_COUNT} && make sqlite3 date sqlpp11 sqlpp11-connector-mysql sqlpp11-connector-sqlite3 -j ${BUILD_JOB_COUNT}"
           build_command: "cmake --build . -- -j ${BUILD_JOB_COUNT}"
           branch_pattern: trunk
 
