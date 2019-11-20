@@ -255,19 +255,37 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         adjusted_hp -= attack.value_;
       }
 
+      life.hp = adjusted_hp;
+
       if(adjusted_hp <= 0) {
-        //TODO: Get dropped item data here and send it with the DAMAGE packet
+        //TODO: call the lua ondead callback function for this entity if it's a mob/npc
+        logger->debug("killed entity '{}' {}.", basicInfo.name, basicInfo.id);
+
+        if(entitySystem.has_component<Component::Mob>(entity) == true)
+        {
+          auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
+          auto api = npcLua.api.lock();
+          api->on_dead(entity, attacker);
+        }
         Combat::drop_loot(entitySystem, entity, attacker);
+
         attack.action_ &= ~DAMAGE_ACTION_HIT;
         attack.action_ |= DAMAGE_ACTION_DEAD;
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
         entitySystem.send_nearby(entity, p);
-        break;
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
+
+        if(entitySystem.has_component<Component::Mob>(entity) == true)
+        {
+          auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
+          auto api = npcLua.api.lock();
+          api->on_damaged(entity, attacker);
+        }
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
-        entitySystem.send_to(entity, p);
-        entitySystem.send_to(attacker, p);
+        entitySystem.send_nearby(entity, p);
+        //entitySystem.send_to(entity, p);
+        //entitySystem.send_to(attacker, p);
       }
 
       // Add this damage to the combat log
@@ -286,8 +304,14 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
       {
         queuedDamage.damage_log_.push_back(attack);
       }
+
+      // End the loop if our HP is 0
+      if(adjusted_hp <= 0)
+        break;
+
+      attack.value_ = 0;
     }
-    life.hp = adjusted_hp;
+    //life.hp = adjusted_hp;
     queuedDamage.damage_.clear();
 
     if(life.hp <= 0) {
@@ -359,19 +383,23 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
       {
         if(get_range_to(entitySystem, entity, target.target) <= values.attackRange && values.combatDt <= 0)
         {
-          values.combatDt = 1000 - (250 * (values.atkSpeed * 0.01f));
+          // TODO: Correct the DT timing
+          //values.combatDt = 1000 - (250 * (values.atkSpeed * 0.01f));
+          values.combatDt = (100000) / values.atkSpeed;
+
+          // Put the target into combat
           if(entitySystem.has_component<Component::Combat>(target.target) == false) {
             entitySystem.add_component<Component::Combat>(target.target);
           }
 
-          logger->debug("Attack speed is {}.", values.atkSpeed);
           logger->debug("queuing damage to target entity");
           auto& damage = entitySystem.get_component<Component::Combat>(target.target);
 
-          auto action = 0;
+          uint32_t action = 0;
           auto dmg_value = Calculations::get_damage(entitySystem, entity, target.target, 1);
           if(dmg_value > 0) action |= DAMAGE_ACTION_HIT;
           damage.addDamage(basicInfo.id, action, dmg_value);
+          logger->debug("{} damage queued", damage.damage_.size());
         }
       }
       else
