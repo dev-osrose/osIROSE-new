@@ -44,10 +44,22 @@ else
   DB_USER_PASSWORD=""
 fi
 
+if [ -n $SERVER_ISC_PORT ]; then
+  SERVER_ISC_PORT="--isc_port $SERVER_ISC_PORT"
+else
+  SERVER_ISC_PORT=""
+fi
+
+if [ -n $AUTOCONFIG_URL ]; then
+  AUTOCONFIG_URL="--url $AUTOCONFIG_URL"
+else
+  AUTOCONFIG_URL=""
+fi
+
 # Check to see if we have a server set
 if [ -n $SERVER ]; then
   if [ -e $SERVER ]; then
-      ./$SERVER $CONFIG_FILE $AUTOCONFIG_URL $DB_HOST $DB_PORT $DB_NAME $DB_USER_NAME $DB_USER_PASSWORD
+      ./$SERVER $CONFIG_FILE $AUTOCONFIG_URL $SERVER_ISC_PORT $DB_HOST $DB_PORT $DB_NAME $DB_USER_NAME $DB_USER_PASSWORD
   else
     echo "$SERVER does not exist."
     exit 1
