@@ -9,7 +9,7 @@
 namespace RoseCommon {
 
 template <typename... Args>
-class PacketDispatcher {
+class PacketDispatcher final {
     public:
     
         bool is_supported(const RoseCommon::CRosePacket& packet) const {
