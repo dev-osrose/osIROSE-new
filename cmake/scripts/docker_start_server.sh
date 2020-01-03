@@ -56,10 +56,16 @@ else
   AUTOCONFIG_URL=""
 fi
 
+if [ -n $EXTERNAL_IP ]; then
+  EXTERNAL_IP="--external_ip $EXTERNAL_IP"
+else
+  EXTERNAL_IP=""
+fi
+
 # Check to see if we have a server set
 if [ -n $SERVER ]; then
   if [ -e $SERVER ]; then
-      ./$SERVER $CONFIG_FILE $AUTOCONFIG_URL $SERVER_ISC_PORT $DB_HOST $DB_PORT $DB_NAME $DB_USER_NAME $DB_USER_PASSWORD
+      ./$SERVER $CONFIG_FILE $EXTERNAL_IP $AUTOCONFIG_URL $SERVER_ISC_PORT $DB_HOST $DB_PORT $DB_NAME $DB_USER_NAME $DB_USER_PASSWORD
   else
     echo "$SERVER does not exist."
     exit 1
