@@ -40,7 +40,7 @@ if(WITH_CRASH_REPORTS)
   endif()
 endif()
 
-add_dependencies(${PROJECT} RoseCommon)
+add_dependencies(${PROJECT} RoseCommon BT::behavior_tree)
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
 

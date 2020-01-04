@@ -9,6 +9,8 @@
 #include "char_client.h"
 #include "map_client.h"
 
+#include <bt_factory.h>
+
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
 uint16_t charPort = 29100;

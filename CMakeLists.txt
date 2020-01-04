@@ -154,6 +154,7 @@ include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
+include(Build-BehaviorTree)
 
 if(NOT IDL_FOUND)
   include(Build-packet-generator)
