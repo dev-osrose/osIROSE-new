@@ -20,7 +20,6 @@ ExternalProject_Get_Property(
 )
 
 set(BEHAVIOR_TREE_INCLUDE_DIR "${install_dir}/include/behaviortree_cpp_v3")
-message("${BEHAVIOR_TREE_INCLUDE_DIR}")
 if(NOT MINGW AND WIN32)
     set(BEHAVIOR_TREE_LIBRARIES "${install_dir}/lib/behaviortree_cpp_v3.dll")
 else()

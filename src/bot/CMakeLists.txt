@@ -5,7 +5,7 @@ set(PROJECT Bot)
 
 project(${PROJECT})
 
-add_compiler_flags($<$<CXX_COMPILER_ID:Clang>:-Wno-keyword-compat>)
+#add_compiler_flags($<$<CXX_COMPILER_ID:Clang>:-Wno-keyword-compat>)
 
 SET( SOURCES_MAIN
   src/main.cpp
@@ -40,9 +40,11 @@ if(WITH_CRASH_REPORTS)
   endif()
 endif()
 
-add_dependencies(${PROJECT} RoseCommon BT::behavior_tree)
+add_dependencies(${PROJECT} RoseCommon)
+add_dependencies(${PROJECT} BT::behavior_tree)
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT} BT::behavior_tree)
 
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")
