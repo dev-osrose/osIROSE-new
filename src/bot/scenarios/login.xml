@@ -1,0 +1,15 @@
+<root main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <sequence>
+            <RetryUntilSuccessful num_attempts="1">
+                <login username="test" password="test" />
+            </RetryUntilSuccessful>
+            <SelectChannelAndWorld channel="Athena" world="0" />
+            <FallBack>
+                <SelectCharacter name="test" />
+                <CreateCharacter name="test" />
+            </FallBack>
+            <SendMessage message="hello" />
+        </sequence>
+    </BehaviorTree>
+</root>
