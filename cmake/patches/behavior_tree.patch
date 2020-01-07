@@ -1,0 +1,11 @@
+index src/basic_types.cpp
+--- src/basic_types.cpp
++++ src/basic_types.cpp
+@@ -1,6 +1,7 @@
+ #include "behaviortree_cpp_v3/basic_types.h"
+ #include <cstdlib>
+ #include <cstring>
++#include <clocale>
+
+ namespace BT
+ {
