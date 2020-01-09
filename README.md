@@ -142,6 +142,9 @@ Run the installer and install the game to a desired location. While this project
 from that client it does not use the binaries. For full compatibility you will need to download
 the latest client binaries from the project's [Releases Page](https://github.com/dev-osrose/osIROSE-new/releases)
 
+> **12/5/2019** Until a new client release is up on github you'll need to use the client from discord:
+[SHA256 Client](https://cdn.discordapp.com/attachments/454345032846016519/625869971284557824/sha256_client_release_fixed.zip)
+
 After downloading the client files, copy them to the `ROSE_112_112NA` installation directory (default:
 `C:\Program Files (x86)\TriggerSoft\Rose Online`) and overwrite the existing files.
 

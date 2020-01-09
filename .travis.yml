@@ -127,6 +127,7 @@ jobs:
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
         - cmake --build . -- -j ${BUILD_JOB_COUNT}
 
+
 #Notify discord and everyone else
     - &notify
       stage: notify
