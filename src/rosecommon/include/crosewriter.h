@@ -94,6 +94,11 @@ struct SizePolicy {
         *m_size += sizeof(T);
         return true;
     }
+    template <typename T>
+    static bool write(uint8_t**, uint8_t*, uint16_t* m_size, const T&, size_t bits) {
+        *m_size += bits;
+        return true;
+    }
 };
 
 using CRoseWriter = CRosePolicy<WritePolicy>;
