@@ -202,6 +202,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Map::change_map_request});
     register_dispatcher(std::function{Map::teleport_request});
     register_dispatcher(std::function{Mouse::mouse_cmd});
+    register_dispatcher(std::function{Mouse::stop_moving});
     register_dispatcher(std::function{Combat::attack});
     register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});

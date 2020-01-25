@@ -19,6 +19,7 @@ def parse(line):
         return None, None
     if len(line) < 2:
         if previousValue is None:
+            print("error parsing line", line)
             exit(-1)
         previousValue += 1
         line.append("%x" % previousValue)
@@ -31,8 +32,8 @@ def parse(line):
     return line[0], int(line[1], 16)
 
 with open("rosecommon/include/epackettype.h", "r") as f:
-    for i in range(46):
-        f.readline()
+    while "enum class ePacketType : uint16_t {" not in f.readline():
+        pass
     for line in f:
         if "};" in line:
             break
