@@ -107,7 +107,7 @@ void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
 }
 
 EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::milliseconds maxTimePerUpdate) :
-    loading(true), 
+    loading(true),
     maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript),
     server(server) {
@@ -146,7 +146,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
               }
             }
             if(computed.runSpeed < 200) computed.runSpeed = 200;
-            
+
             computed.atkSpeed = Calculations::get_attackspeed(self, entity);
             // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;
@@ -169,7 +169,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
             }
         });
     });
-    
+
     prevTime = Core::Time::GetTickCount();
     add_recurrent_timer(50ms, [](EntitySystem& self) {
       auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
@@ -208,7 +208,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::revive});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
-    
+
     register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReq>});
 
     // load npc/mob/warpgates/spawn points lua
@@ -853,7 +853,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& basic = prototype.set<BasicInfo>();
     basic.id = idManager.get_free_id();
     basic.teamId = basic.id;
-    
+
     auto ptr = lua_loader.get_data(npc_id);
     auto data = ptr.lock();
     if(!data)
@@ -863,10 +863,10 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     computed_values.moveMode = RoseCommon::MoveMode::WALK;
     computed_values.command = RoseCommon::Command::STOP;
     computed_values.statusFlag = 0;
-    
+
     auto& level = prototype.set<Level>();
     level.level = data ? data->get_level() : 1;
-    
+
     if(level.level <= 0)
         level.level = 1;
 
@@ -991,13 +991,13 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
     basic_info.teamId = -1;
-    
+
     auto& level = prototype.set<Level>();
     level.level = data ? data->get_level() : 1;
-    
+
     if(level.level <= 0)
         level.level = 1;
-    
+
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
     position.x = std::get<0>(pos);
@@ -1018,7 +1018,7 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto temp_hp = data ? data->get_hp() : 1;
     life.maxHp = temp_hp * level.level;
     life.hp = life.maxHp;
-    
+
     auto& magic = prototype.set<Magic>();
     magic.mp = 0;
     magic.maxMp = 0;
