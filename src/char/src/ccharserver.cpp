@@ -195,7 +195,7 @@ void CCharServer::send_char(const std::string& character, const RoseCommon::CRos
 
 bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
     if (!packet) {
-        logger_->error("Empty packet");
+        logger_->error("Empty/not parsable packet");
         return false;
     }
     if (!dispatcher.is_supported(*packet.get())) {
