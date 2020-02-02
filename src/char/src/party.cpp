@@ -6,6 +6,8 @@
 #include "srv_party_req.h"
 #include "srv_party_reply.h"
 
+#include <unordered_set>
+
 std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::PartyTable partyTable{};
@@ -160,8 +162,12 @@ void PartyManager::remove_party(std::shared_ptr<Party> party) {
 }
 
 PartyManager::~PartyManager() {
+    std::unordered_set<std::shared_ptr<Party>> tmp;
     for (const auto& [_, party] : partys) {
-        remove_party(party);
+        tmp.insert(party);
+    }
+    for (const auto& party : tmp) {
+        cache_remove_party(party);
     }
 }
 
