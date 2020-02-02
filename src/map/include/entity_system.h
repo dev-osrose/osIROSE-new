@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <mutex>
 #include <string>
+#include <future>
 
 #include "dataconsts.h"
 #include "logconsole.h"
@@ -47,7 +48,7 @@ class EntitySystem {
     
         bool is_valid(RoseCommon::Entity entity) const;
 
-        RoseCommon::Entity load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client);
+        std::future<RoseCommon::Entity> load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client);
         void save_character(RoseCommon::Entity);
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);

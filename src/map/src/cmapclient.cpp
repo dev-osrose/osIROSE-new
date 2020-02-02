@@ -201,7 +201,14 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
       charid_ = row.charid;
       sessionId_ = sessionID;
 
-      entity = entitySystem->load_character(charid_, row.access, sessionID, weak_from_this());
+      auto entity_future = entitySystem->load_character(charid_, row.access, sessionID, weak_from_this());
+      if (!entity_future.valid()) {
+          logger_->error("Error, future on character loading is not valid!");
+          CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
+          return true;
+      }
+      entity_future.wait();
+      entity = entity_future.get();
       logger_->debug("character loaded");
 
       if (entity != entt::null) {

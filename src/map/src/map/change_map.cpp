@@ -43,9 +43,14 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     entitySystem.send_nearby_except_me(entity, CMapClient::create_srv_player_char(entitySystem, entity));
     const auto& nearby_entities = entitySystem.get_nearby(entity);
     for (auto other : nearby_entities) {
-        if (other != entity) {
-            entitySystem.send_to_entity(entity, other);
+        if (const auto client_ptr = entitySystem.try_get_component<Component::Client>(other)) {
+            if (auto client = client_ptr->client.lock()) {
+                if (!client->is_on_map()) {
+                    continue;
+                }
+            }
         }
+        entitySystem.send_to_entity(entity, other);
     }
     entitySystem.send_to_char_server(IscClientStatus::create(basicInfo.id, IscClientStatus::CONNECTED), basicInfo.charId);
 }

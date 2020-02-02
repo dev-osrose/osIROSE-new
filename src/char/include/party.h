@@ -36,6 +36,8 @@ void cache_remove_party(std::shared_ptr<Party> party);
 
 class PartyManager {
   public:
+    ~PartyManager();
+
     std::shared_ptr<Party> get_party(uint32_t charId);
     std::shared_ptr<Party> create_party(uint32_t charId);
     void add_member_to_party(std::shared_ptr<Party> party, uint32_t member);

@@ -519,7 +519,7 @@ std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity enti
     return res;
 }
 
-RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
+std::future<RoseCommon::Entity> EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
     Core::CharacterTable characters{};
@@ -530,7 +530,10 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
                           .from(characters).where(characters.id == charId));
 
     if (static_cast<long>(charRes.front().count) != 1L) {
-        return entt::null;
+        std::promise<RoseCommon::Entity> promise;
+        std::future res = promise.get_future();
+        promise.set_value(entt::null);
+        return res;
     }
     const auto& charRow = charRes.front();
 
@@ -657,8 +660,12 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
 
     prototype.set<StatusEffects>();
 
-    std::lock_guard<std::recursive_mutex> lock(access);
-    return prototype();
+    std::promise<RoseCommon::Entity> promise;
+    std::future result = promise.get_future();
+    add_task([prototype = std::move(prototype), promise = std::move(promise)](EntitySystem&) mutable {
+        promise.set_value(prototype());
+    });
+    return result;
 }
 
 void EntitySystem::save_character(RoseCommon::Entity character) {

@@ -34,7 +34,7 @@ std::shared_ptr<Party> cache_fetch_party(uint32_t charId) {
   auto res2 = conn(sqlpp::select(partyMembersTable.memberId).from(partyMembersTable)
                    .where(partyMembersTable.id == party.id).order_by(partyMembersTable.rank.desc()));
   
-  if (res.empty()) {
+  if (res2.empty()) {
     return {};
   }
   
@@ -59,6 +59,15 @@ void cache_create_party(std::shared_ptr<Party> party) {
        partyTable.lastGotItemIndex = party->last_got_item_index,
        partyTable.lastGotEtcIndex = party->last_got_etc_index,
        partyTable.lastGotZulyIndex = party->last_got_zuly_index));
+
+  auto res = conn(sqlpp::select(partyTable.id).from(partyTable)
+          .where(partyTable.leaderId == party->leader));
+
+  if (res.empty()) {
+      return;
+  }
+
+  party->id = res.front().id;
 }
 
 void cache_write_party(std::shared_ptr<Party> party) {
@@ -120,7 +129,7 @@ std::shared_ptr<Party> PartyManager::create_party(uint32_t charId) {
     party->leader = charId;
     cache_create_party(party);
     cache_write_party_members(party);
-    party = cache_fetch_party(charId);
+    party->members.push_back(charId);
     partys[charId] = party;
     return party;
 }
@@ -148,6 +157,12 @@ void PartyManager::remove_party(std::shared_ptr<Party> party) {
         partys.erase(member);
     }
     cache_remove_party(party);
+}
+
+PartyManager::~PartyManager() {
+    for (const auto& [_, party] : partys) {
+        remove_party(party);
+    }
 }
 
 void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& server, User& user) {

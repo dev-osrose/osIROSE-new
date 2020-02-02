@@ -4,6 +4,7 @@
 #include "dataconsts.h"
 
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <tuple>
 
@@ -24,5 +25,5 @@ class Nearby {
   private:
     using key_t = std::tuple<uint16_t, uint16_t>;
     
-    std::unordered_map<key_t, std::vector<RoseCommon::Entity>, Core::tuple_hash> grid;
+    std::unordered_map<key_t, std::unordered_set<RoseCommon::Entity>, Core::tuple_hash> grid;
 };

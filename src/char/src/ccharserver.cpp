@@ -28,7 +28,14 @@ using namespace RoseCommon;
 
 void update_status(const Packet::IscClientStatus& packet, CCharServer& server, User& user) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->debug("Char {} now has status {}", user.get_name(), packet.get_status());
+    static const char* status[] = {
+        "CONNECTED",
+        "DISCONNECTED",
+        "SWITCHING",
+        "AFK",
+        "INVISIBLE"
+    };
+    logger->debug("Char {} now has status {}", user.get_name(), status[packet.get_status()]);
     const bool isSwitching = user.get_status() == User::Status::SWITCHING ? true : false;
     user.set_status(packet.get_status());
     // we update the id every client on the map refers to when talking about this character. (this is different from the charId)
@@ -125,7 +132,7 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
         }
     } else if (m.size() == 1 && m[0] == 0) {
         dispatch_packet(P.get_originatorId(),
-                        RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                        RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
         return;
     } else {
         for (const auto& mm : m) {
@@ -202,13 +209,17 @@ bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::C
         logger_->error("Packet not supported!");
         return false;
     }
-    auto user = get_user(charId);
-    if (!user) {
+    if (!get_user(charId)) {
         logger_->error("User {} not loaded!", charId);
         return false;
     }
-    work_queue.push_back([&user = *user.value(), packet = std::move(packet)](CCharServer& server) mutable {
-        server.dispatcher.dispatch(std::move(packet), server, std::forward<User&>(user));
+    work_queue.push_back([charId, packet = std::move(packet)](CCharServer& server) mutable {
+        auto user = server.get_user(charId);
+        if (!user) {
+            server.logger_->warn("cancelling action on disconnected user");
+            return;
+        }
+        server.dispatcher.dispatch(std::move(packet), server, std::forward<User&>(*user.value()));
     });
     return true;
 }

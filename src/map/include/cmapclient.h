@@ -39,6 +39,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   void send(const RoseCommon::CRosePacket& packet, bool force = false);
 
   void set_on_map();
+  bool is_on_map() const { return login_state_ == eSTATE::ONMAP; }
   void switch_server();
  
   static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
