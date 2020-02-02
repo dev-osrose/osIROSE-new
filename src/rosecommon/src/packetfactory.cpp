@@ -98,7 +98,7 @@ void RoseCommon::register_recv_packets() {
 
 void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::ISC_ALIVE, IscAlive);
-    REGISTER_RECV_PACKET(ePacketType::ISC_CLIENT_STATUS, IscClientStatus);
+    REGISTER_SEND_PACKET(ePacketType::ISC_CLIENT_STATUS, IscClientStatus);
     REGISTER_SEND_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister);
     REGISTER_SEND_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown);
     REGISTER_SEND_PACKET(ePacketType::PAKSS_ACCEPT_REPLY, SrvAcceptReply);
