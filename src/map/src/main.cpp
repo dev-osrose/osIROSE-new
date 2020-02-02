@@ -205,10 +205,9 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+
     if (auto log = console.lock()) log->info("Server shutting down...");
-    Core::NetworkThreadPool::DeleteInstance();
-    spdlog::shutdown();
-    spdlog::drop_all();
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;
   }

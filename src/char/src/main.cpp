@@ -242,6 +242,9 @@ int main(int argc, char* argv[]) {
         iscServer.shutdown(true);
       }
     }
+
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+
     if(auto log = console.lock())
       log->info( "Server shutting down..." );
     Core::NetworkThreadPool::DeleteInstance();

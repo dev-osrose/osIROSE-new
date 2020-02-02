@@ -84,12 +84,19 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
       std::this_thread::sleep_for(std::chrono::milliseconds(250));
     } while (is_active() == true);
 
-    logger_->debug("CRoseServer::process_thread_::is_active was false, returning...");
+    if (this && logger_) {
+        logger_->debug("CRoseServer::process_thread_::is_active was false, returning...");
+    }
     return 0;
   });
 }
 
 CRoseServer::~CRoseServer() {
+  if (is_active() == false) {
+      set_active(true);
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      set_active(false);
+  }
   if (IsISCServer() == false) {
     std::lock_guard<std::mutex> lock(client_list_mutex_);
     for (auto& client : client_list_) {
