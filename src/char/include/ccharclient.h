@@ -30,6 +30,7 @@ class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_fr
  public:
   CCharClient();
   CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock);
+  ~CCharClient();
 
   uint32_t sessionId() const { return sessionId_; }
 
@@ -60,6 +61,7 @@ class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_fr
   uint32_t sessionId_;
   uint32_t userId_;
   uint32_t channelId_;
+  uint32_t charId_;
 
   std::vector<uint32_t> characterRealId_;
   CCharServer *server_;

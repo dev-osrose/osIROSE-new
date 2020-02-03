@@ -54,9 +54,9 @@ class CCharServer : public RoseCommon::CRoseServer {
   void transfer(RoseCommon::Packet::IscTransfer&& P);
   void transfer_char(RoseCommon::Packet::IscTransferChar&& P);
   void send_map(uint16_t map, const RoseCommon::CRosePacket& packet);
-  void send_char(uint32_t character, const RoseCommon::CRosePacket& packet);
-  void send_char(const User& user, const RoseCommon::CRosePacket& packet);
-  void send_char(const std::string& character, const RoseCommon::CRosePacket& packet);
+  void send_char(uint32_t character, RoseCommon::CRosePacket&& packet);
+  void send_char(const User& user, RoseCommon::CRosePacket&& packet);
+  void send_char(const std::string& character, RoseCommon::CRosePacket&& packet);
 
   std::optional<const User*const> get_user(const std::string& name) const;
   std::optional<const User*const> get_user(uint32_t charId) const;

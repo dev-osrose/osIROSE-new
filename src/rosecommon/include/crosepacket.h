@@ -71,6 +71,8 @@ class CRosePacket {
 
         ePacketType get_type() const {return type_;}
 
+        bool get_server_packet() const { return is_server_packet; }
+
         uint16_t get_size() const {
             if (size_ != 0)
                 return size_;
@@ -138,11 +140,15 @@ class CRosePacket {
 
     protected:
         virtual bool pack(CRoseBasePolicy& writer) const = 0;
+
+        void set_server_packet() { is_server_packet = true; }
     
     private:
         uint16_t size_;
         ePacketType type_;
         uint16_t CRC_;
+
+        bool is_server_packet = false;
 };
 
 }

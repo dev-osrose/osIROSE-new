@@ -51,6 +51,8 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, U
             return;
         }
         user.set_mapId(charRes.front().map);
+    } else if (user.get_status() == User::Status::DISCONNECTED) {
+        server.unload_user(user.get_charId());
     }
 }
 
@@ -131,8 +133,13 @@ void CCharServer::transfer(RoseCommon::Packet::IscTransfer&& P) {
             }
         }
     } else if (m.size() == 1 && m[0] == 0) {
-        dispatch_packet(P.get_originatorId(),
-                        RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
+        if (P.get_serverPacket()) {
+            dispatch_packet(P.get_originatorId(),
+                            RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+        } else {
+            dispatch_packet(P.get_originatorId(),
+                            RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
+        }
         return;
     } else {
         for (const auto& mm : m) {
@@ -166,6 +173,7 @@ void CCharServer::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
 
 void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
     auto packet = RoseCommon::Packet::IscTransfer::create(0, {map});
+    packet.set_serverPacket(p.get_server_packet());
     std::vector<uint8_t> blob;
     p.write_to_vector(blob);
     packet.set_blob(blob);
@@ -174,30 +182,36 @@ void CCharServer::send_map(uint16_t map, const RoseCommon::CRosePacket& p) {
     }
 }
 
-void CCharServer::send_char(uint32_t character, const RoseCommon::CRosePacket& packet) {
+void CCharServer::send_char(uint32_t character, RoseCommon::CRosePacket&& packet) {
     const auto user = get_user(character);
     if (!user) {
+        logger_->error("User {} not found!", character);
         return;
     }
-    if (auto client = user.value()->get_client().lock(); client) {
+    send_char(*user.value(), std::move(packet));
+}
+
+void CCharServer::send_char(const User& user, RoseCommon::CRosePacket&& p) {
+    /*if (auto client = user.get_client().lock(); client) {
         client->send_packet(packet);
+    }*/
+    auto packet = RoseCommon::Packet::IscTransferChar::create({user.get_name()});
+    packet.set_serverPacket(p.get_server_packet());
+    std::vector<uint8_t> blob;
+    p.write_to_vector(blob);
+    packet.set_blob(blob);
+    if (auto ptr = maps[user.get_mapId()].lock()) {
+        ptr->send(packet);
     }
 }
 
-void CCharServer::send_char(const User& user, const RoseCommon::CRosePacket& packet) {
-    if (auto client = user.get_client().lock(); client) {
-        client->send_packet(packet);
-    }
-}
-
-void CCharServer::send_char(const std::string& character, const RoseCommon::CRosePacket& packet) {
+void CCharServer::send_char(const std::string& character, RoseCommon::CRosePacket&& packet) {
     const auto user = get_user(character);
     if (!user) {
+        logger_->error("User {} not found!", character);
         return;
     }
-    if (auto client = user.value()->get_client().lock(); client) {
-        client->send_packet(packet);
-    }
+    send_char(*user.value(), std::move(packet));
 }
 
 bool CCharServer::dispatch_packet(uint32_t charId, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
@@ -299,6 +313,18 @@ void CCharServer::unload_user(uint32_t id) {
     if (IsISCServer() == false) {
         iscServer_->unload_user(id);
     } else {
+        if (const auto user = get_user(id); user) {
+            if (user.value()->get_party()) {
+                for (const auto& member : user.value()->get_party()->members) {
+                    if (users.count(member) && users.at(member).get_requested_party()) {
+                        users.at(member).set_requested_party({});
+                    }
+                }
+                partys.remove_member_from_party(user.value()->get_party(), user.value()->get_charId());
+            } else if (user.value()->get_requested_party()) {
+                partys.remove_party(user.value()->get_requested_party());
+            }
+        }
         users.erase(id);
     }
 }

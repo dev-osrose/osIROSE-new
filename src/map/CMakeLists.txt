@@ -35,6 +35,7 @@ SET( SOURCES_HEADER
   include/utils/getters.h
   include/utils/calculation.h
   include/utils/transfer_to_char_server.h
+  include/utils/transfer_to_char.h
   )
 
 SET( SOURCES_MAIN
