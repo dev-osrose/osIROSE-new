@@ -208,7 +208,7 @@ void party_request(const RoseCommon::Packet::CliPartyReq& packet, CCharServer& s
             }
             // TODO: check for level difference
             other.value()->set_requested_party(server.create_party(user));
-            server.send_char(*other.value(), SrvPartyReq::create(SrvPartyReq::CREATE, user.get_entityId()));
+            server.send_char(*other.value(), SrvPartyReq::create(SrvPartyReq::CREATE, user.get_entityId(), user.get_name()));
             break;
         }
         case CliPartyReq::JOIN: // idXorTag == id
