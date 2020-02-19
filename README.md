@@ -21,7 +21,7 @@
 
 Thanks to the following services that make our development easier:
 
-- Crash reporting analysis provided by [![backtrace-badge]][backtrace-link]
+-   Crash reporting analysis provided by [![backtrace-badge]][backtrace-link]
 
 ## C++ Installation - Unix
 
