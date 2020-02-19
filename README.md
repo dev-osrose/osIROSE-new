@@ -21,11 +21,11 @@
 
 Thanks to the following services that make our development easier:
 
-  - Crash reporting analysis provided by [![backtrace-badge]][backtrace-link]
+- Crash reporting analysis provided by [![backtrace-badge]][backtrace-link]
 
 ## C++ Installation - Unix
 
-### Programs required
+### Unix software required
 ![gpp]
 ![libmysql]
 [![cmake]][cmake-link]
@@ -86,7 +86,7 @@ After running for the first time, the servers will create a config file in the c
 
 ## C++ Installation - Windows
 
-### Programs required
+### Windows 64bit software required
 [![vis-studio]][vis-studio-link]
 [![cmake]][cmake-link]
 [![mysql]][mysql-link]
