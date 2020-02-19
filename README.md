@@ -27,7 +27,7 @@ Thanks to the following services that make our development easier:
 C++ Installation - Unix
 -----------------------
 
-##### Programs required:
+##### Programs required
 ![gpp]
 ![libmysql]
 [![cmake]][cmake-link]
@@ -35,11 +35,13 @@ C++ Installation - Unix
 
 If you get the source from github, you need to setup the build environment:
 
-    $ git submodule update --init --recursive
-    $ pip install --user pyparsing
-    $ mkdir build
-    $ cd build
-    $ cmake ..
+```cmd
+    git submodule update --init --recursive
+    pip install --user pyparsing
+    mkdir build
+    cd build
+    cmake ..
+```
 
 Note, you may need to install the following packages depending on your OS:
 
@@ -52,32 +54,40 @@ Note, you may need to install the following packages depending on your OS:
 
 To build the servers, execute the following:
 
-    $ make
+```cmd
+    make
+```
 
 To install the servers to the system (not recommended), execute the following commands:
 
-    $ make install
+```cmd
+    make install
+```
 
 "make install" may require superuser privileges.
 
 If you installed the servers, to run the servers execute the following:
 
-    $ LoginServer&
-    $ CharServer&
-    $ MapServer&
+```cmd
+    LoginServer&
+    CharServer&
+    MapServer&
+```
 
 If you opted to keep them in place, the server binaries are located in the bin folder inside the build directory. So from where you ran the command make, you will want to run the following:
 
-    $ ./bin/LoginServer&
-    $ ./bin/CharServer&
-    $ ./bin/MapServer&
+```cmd
+    ./bin/LoginServer&
+    ./bin/CharServer&
+    ./bin/MapServer&
+```
 
 After running for the first time, the servers will create a config file in the current directory that you need to edit.
 
 C++ Installation - Windows
 -----------------------
 
-##### Programs required:
+##### Programs required
 [![vis-studio]][vis-studio-link]
 [![cmake]][cmake-link]
 [![mysql]][mysql-link]
@@ -86,12 +96,14 @@ C++ Installation - Windows
 
 After downloading and installing the above applications, to compile the servers run the following commands:
 
+```cmd
     git submodule update --init --recursive
     pip install pyparsing
     mkdir build
     cd build
     cmake ..
     cmake --build . --config Release
+```
 
 This will setup the build directories and compile. The compiled server will be in the bin folder created in the directory you ran cmake in (which should be the build folder).
 
@@ -113,8 +125,7 @@ Run the installer and install the game to a desired location. While this project
 from that client it does not use the binaries. For full compatibility you will need to download
 the latest client binaries from the project's [Releases Page](https://github.com/dev-osrose/osIROSE-new/releases)
 
-> 12/5/2019 - Until a new client release is up on github you'll need to use the client from discord:
-[SHA256 Client](https://cdn.discordapp.com/attachments/454345032846016519/625869971284557824/sha256_client_release_fixed.zip)
+> 12/5/2019 - Until a new client release is up on github you'll need to use the client from discord: [SHA256 Client](https://cdn.discordapp.com/attachments/454345032846016519/625869971284557824/sha256_client_release_fixed.zip)
 
 After downloading the client files, copy them to the `ROSE_112_112NA` installation directory (default:
 `C:\Program Files (x86)\TriggerSoft\Rose Online`) and overwrite the existing files.
@@ -133,7 +144,7 @@ The server requires a [MySQL](https://mysql.com/) (or [MariaDB](https://mariadb.
 To setup the database, first create a new database (e.g. `osirose`). You will then need to execute the
 `Database/osirose.sql` script to generate the database schema and the `Database/item_db.sql` to
 populate the item database. This can be done using a database tool or from the command line like so:
-```
+```cmd
   mysql -u<user> -p<password> <database_name> < Database/osirose.sql
   mysql -u<user> -p<password> <database_name> < Database/item_db.sql
 ```
@@ -144,7 +155,7 @@ please generate your own table to match the information you need.
 After setting up the database, two special users need to be created for the login and character
 servers. They can be created by executing the following SQL commands:
 
-```
+```sql
   call create_account("login", "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08");
   call create_account("char", "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08");
   update accounts set account_type="system" where username="login";
@@ -154,7 +165,7 @@ servers. They can be created by executing the following SQL commands:
 The value `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08` is an SHA256 hash of the default server passwords created
 in the default `server.json` file. It should match the following sections:
 
-```
+```json
     ...
     "charServer":  {
         ...
@@ -177,7 +188,7 @@ and update the accounts database and the `server.json` file.
 Finally, we need to create an account to join the game with. Run the `create_account` procedure
 again to create a user account, for example:
 
-```
+```sql
   call create_account("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") # Password is admin
 ```
 
@@ -187,7 +198,7 @@ much more convenient than having to create password hashes and running sql comma
 log in, fail, then try to login again with the same credentials!
 
 To enable it modify `server.json` to enable `createAccountOnFail`:
-```
+```json
   "loginServer": {
       "createAccountOnFail": true,
       ...
