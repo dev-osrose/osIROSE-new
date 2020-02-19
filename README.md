@@ -3,7 +3,7 @@
 ## Build status
 [![lin-badge]][lin-link] [![win-badge]][win-link]
 [![cov-badge]][cov-link] [![ccov-badge]][ccov-link]
-[![coverity-scan]][coverity-scan-link]
+[![coverity-scan]][coverity-scan-link] [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d344fcc15a1b4dd79df64c5198aaaa41)](https://www.codacy.com/gh/dev-osrose/osIROSE-new?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dev-osrose/osIROSE-new&amp;utm_campaign=Badge_Grade)
 
 ## Development and Community
 [![GitHub Repository](https://img.shields.io/badge/github-dev--osrose/osIROSE--new-green.svg)](https://github.com/dev-osrose/osIROSE-new)
