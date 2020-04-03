@@ -1,6 +1,6 @@
 <packet ePacketType = "PAKCS_PARTY_REPLY">
     <element name = "type" type = "PartyReplyType" />
-    <element name = "target" type = "uint16_t" />
+    <element name = "target" type = "uint32_t" />
     
     <simpleType name = "PartyReplyType">
         <restriction base = "uint8_t">

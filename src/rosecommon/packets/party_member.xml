@@ -9,5 +9,6 @@
         <element name = "hp_recovery" type = "uint16_t" />
         <element name = "mp_recovery" type = "uint16_t" />
         <element name = "stamina" type = "int16_t" />
+        <element name = "name" type = "std::string" ref = "true" />
     </sequence>
 </complexType>

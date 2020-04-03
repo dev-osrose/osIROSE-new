@@ -52,6 +52,7 @@
 #include "cli_party_req.h"
 #include "srv_party_req.h"
 #include "srv_party_reply.h"
+#include "cli_party_reply.h"
 
 #include "srv_remove_object.h"
 #include "srv_switch_server.h"
@@ -214,6 +215,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
 
     register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReq>});
     register_dispatcher(std::function{Utils::transfer_to_char<RoseCommon::Packet::SrvPartyReq>});
+    register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReply>});
     register_dispatcher(std::function{Utils::transfer_to_char<RoseCommon::Packet::SrvPartyReply>});
 
     // load npc/mob/warpgates/spawn points lua

@@ -22,6 +22,8 @@
 #include "isc_client_status.h"
 #include "logconsole.h"
 
+#include "srv_party_member.h"
+
 #include <algorithm>
 
 using namespace RoseCommon;
@@ -59,6 +61,7 @@ void update_status(const Packet::IscClientStatus& packet, CCharServer& server, U
 CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), client_count_(0), server_count_(0), iscServer_(server) {
     register_dispatcher(std::function{update_status});
     register_dispatcher(std::function{party_request});
+    register_dispatcher(std::function{party_reply});
 
     reactor_thread = std::thread([this]() {
         for (auto [res, task] = work_queue.pop_front(); res;) {
@@ -336,7 +339,27 @@ std::shared_ptr<Party> CCharServer::create_party(User& user) {
 }
 
 void CCharServer::add_user_to_party(User& user, std::shared_ptr<Party> party) {
-    partys.add_member_to_party(party, user.get_charId());
     user.set_party(party);
-    // TODO: send packet
+
+    RoseCommon::Packet::SrvPartyMember::PartyMember member;
+
+    member.set_tag(user.get_charId());
+    member.set_id(user.get_mapId());
+    member.set_max_hp(1);
+    member.set_hp(1);
+    member.set_status(0);
+    member.set_con(1);
+    member.set_hp_recovery(1);
+    member.set_mp_recovery(1);
+    member.set_stamina(1);
+    member.set_name(user.get_name());
+
+    for (const auto& user : party->members) {
+        const auto packet = RoseCommon::Packet::SrvPartyMember::create(
+                static_cast<RoseCommon::Packet::SrvPartyMember::PartyRule>(party->options),
+                RoseCommon::Packet::SrvPartyMember::ADD, member);
+        send_char(user, std::move(packet));
+    }
+
+    partys.add_member_to_party(party, user.get_charId());
 }

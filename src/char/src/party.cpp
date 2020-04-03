@@ -5,6 +5,7 @@
 
 #include "srv_party_req.h"
 #include "srv_party_reply.h"
+#include "cli_party_reply.h"
 
 #include <unordered_set>
 
