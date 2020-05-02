@@ -77,13 +77,13 @@ void Combat::check_for_level_up(EntitySystem& entitySystem, Entity entity, uint1
     exp_required = get_exp_to_level(attackerLevel.level+1);
   }
 
-  if(leveled == true) {
+  if(leveled) {
     auto pLevel = SrvLevelup::create(basicInfo.id, attackerLevel.level, attackerLevel.xp, addedStatPoints, addedSkillPoints);
     entitySystem.send_to(entity, pLevel);
   }
 
   int16_t current_stamina = 0;
-  if(entitySystem.has_component<Component::Stamina>(entity) == true) {
+  if(entitySystem.has_component<Component::Stamina>(entity)) {
     auto& attackerStamina = entitySystem.get_component<Component::Stamina>(entity);
     current_stamina = attackerStamina.stamina;
   }
@@ -99,7 +99,7 @@ std::pair<float, float> Combat::get_range_position(const EntitySystem& entitySys
   const auto& char_pos = entitySystem.get_component<Component::Position>(character);
   const auto& target_pos = entitySystem.get_component<Component::Position>(target);
   std::pair<float, float> vector{char_pos.x - target_pos.x, char_pos.y - target_pos.y};
-  const float length = sqrt(vector.first * vector.first + vector.second * vector.second);
+  const float length = std::sqrt(vector.first * vector.first + vector.second * vector.second);
 
   if(length <= range) {
     logger->debug("within range, returning x,y {},{}", char_pos.x, char_pos.y);
@@ -193,7 +193,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1); // This should be if sitting
     if(life.hp > 0 && life.hp != life.maxHp)
     {
-      int32_t amount = (int32_t)std::ceil(life.maxHp * 0.02);
+      auto amount = (int32_t)std::ceil(life.maxHp * 0.02);
       amount = amount * stanceModifier;
       //TODO: update amount based on equipment values
       //TODO: Take into account HP regen buffs
@@ -205,7 +205,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
       hp = life.hp;
     }
 
-    if(entitySystem.has_component<Component::Magic>(entity) == true)
+    if(entitySystem.has_component<Component::Magic>(entity))
     {
       auto& magic = entitySystem.get_component<Component::Magic>(entity);
       if(magic.mp != magic.maxMp)
@@ -227,7 +227,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   }
 
   // Check if there is damage queued
-  if(entitySystem.has_component<Component::Combat>(entity) == true)
+  if(entitySystem.has_component<Component::Combat>(entity))
   {
     auto& queuedDamage = entitySystem.get_component<Component::Combat>(entity);
     int32_t adjusted_hp = life.hp;
@@ -261,7 +261,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         //TODO: call the lua ondead callback function for this entity if it's a mob/npc
         logger->debug("killed entity '{}' {}.", basicInfo.name, basicInfo.id);
 
-        if(entitySystem.has_component<Component::Mob>(entity) == true)
+        if(entitySystem.has_component<Component::Mob>(entity))
         {
           auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
           auto api = npcLua.api.lock();
@@ -276,7 +276,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
       } else {
         logger->debug("applied {} damage to entity '{}' {}.", attack.value_, basicInfo.name, basicInfo.id);
 
-        if(entitySystem.has_component<Component::Mob>(entity) == true)
+        if(entitySystem.has_component<Component::Mob>(entity))
         {
           auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
           auto api = npcLua.api.lock();
@@ -300,7 +300,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
         }
       }
 
-      if(found_log == false)
+      if(!found_log)
       {
         queuedDamage.damage_log_.push_back(attack);
       }
@@ -315,7 +315,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     queuedDamage.damage_.clear();
 
     if(life.hp <= 0) {
-      if(entitySystem.has_component<Component::Mob>(entity) == true)
+      if(entitySystem.has_component<Component::Mob>(entity))
       {
         auto& npcLua = entitySystem.get_component<Component::NpcLua>(entity);
         auto data = npcLua.data.lock();
@@ -369,13 +369,14 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     values.combatDt -= dt;
 
   // Check to see if we have a target component
-  if(entitySystem.has_component<Component::Target>(entity) == true)
+  if(entitySystem.has_component<Component::Target>(entity))
   {
     auto& target = entitySystem.get_component<Component::Target>(entity);
-    //const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
+    const auto& targetBasicInfo = entitySystem.get_component<Component::BasicInfo>(target.target);
 
-    if(((entitySystem.has_component<Component::Npc>(target.target) == false && entitySystem.has_component<Component::Mob>(target.target) == true) ||
-      (false))) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
+    if(((!entitySystem.has_component<Component::Npc>(target.target) &&
+          entitySystem.has_component<Component::Mob>(target.target)) ||
+      (false && targetBasicInfo.teamId != basicInfo.teamId))) // TODO:: Check if this map has PVP turned on and the target player isn't on my team
     {
       const auto& targetLife = entitySystem.get_component<Component::Life>(target.target);
       // Are we in attack range?
@@ -388,7 +389,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           values.combatDt = (100000) / values.atkSpeed;
 
           // Put the target into combat
-          if(entitySystem.has_component<Component::Combat>(target.target) == false) {
+          if(!entitySystem.has_component<Component::Combat>(target.target)) {
             entitySystem.add_component<Component::Combat>(target.target);
           }
 
@@ -581,7 +582,7 @@ void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, Ro
   if (Core::Random::getInstance().get_uniform(0, 100) <= lua_data->get_drop_money()) {
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     auto [posX, posY] = Core::Random::getInstance().random_in_circle(pos.x, pos.y, 200.f); //TODO: change that value??
-    const int64_t amount = 100; // TODO change that value
+    const int64_t amount = 100; //TODO: change that value
     const float deviation = 0.05f;
     Items::drop_item(entitySystem, entitySystem.create_zuly(Core::Random::getInstance().get_normal(amount, deviation)), posX, posY, owner);
   }
