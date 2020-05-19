@@ -3,6 +3,7 @@
 #include "utils/getters.h"
 
 #include "components/basic_info.h"
+#include "components/client.h"
 #include "components/computed_values.h"
 #include "components/inventory.h"
 #include "components/level.h"
@@ -39,7 +40,7 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
 
     moveSpeed =
         itemSpeed * (stats.dex + 500.f) / 100.f + 0;  // TODO: Change 0 to value calcd from buffs for movement speed
-    // passiveSpeed = passiveSkillValueMoveSpeed + moveSpeed * passiveSkillRateMoveSpeed / 100.f
+    // passiveSpeed = passiveSkillValue[MoveSpeed] + moveSpeed * passiveSkillRate[MoveSpeed] / 100.f
     float passiveSpeed = 0 + moveSpeed * 0 / 100.f;
     moveSpeed += passiveSpeed;
   } else {
@@ -77,22 +78,50 @@ float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
 
 int get_weight(EntitySystem& entitySystem, RoseCommon::Entity entity) { return 0; }
 
+int get_maxweight(EntitySystem& entitySystem, RoseCommon::Entity entity) { return 0; }
+
 int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+  auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+  auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
   // TODO do calc here
   return 0;
 }
 
 int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+  auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+  auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& magic = entitySystem.get_component<Component::Magic>(entity);
   // TODO do calc here
   return 0;
 }
 
 int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender) {
-  int success_rate = 100;  // TODO: set this to 0 once the calc is finished
-  // TODO do calc here
-  return success_rate;
+  int success_rate = 0;
+  int final_success_rate = 100;  // TODO: set this to 0 once the calc is finished
+  auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
+  auto& defenderStats = entitySystem.get_component<Component::Stats>(defender);
+
+  if (entitySystem.has_component<Component::Client>(attacker)) {
+    if (entitySystem.has_component<Component::Client>(defender)) {
+      auto random = 1 + Core::Random::getInstance().get_uniform(0, 100);
+      // final_success_rate = (int)(90 - ((attacker_hit + defender_avoidance) / attacker_hit) * 40.f + random);
+    } else {
+      const auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
+      const auto& defenderLevel = entitySystem.get_component<Component::Level>(defender);
+      auto random1 = 1 + Core::Random::getInstance().get_uniform(0, 50);
+      auto random2 = 1 + Core::Random::getInstance().get_uniform(0, 60);
+      success_rate = (int)((attackerLevel.level + 10) - defenderLevel.level * 1.1f + random1);
+      if (success_rate <= 0) return 0;
+
+      // final_success_rate =  (int)(success_rate * (attacker_hit * 1.1f - defender_avoidance * 0.93f + random2
+      // + 5 + attackerLevel.level * 0.2f) / 80.f);
+    }
+  } else {
+    auto random = 1 + Core::Random::getInstance().get_uniform(0, 100);
+    // final_success_rate = 138 - ((float)(attacker_hit + defender_avoidance) / attacker_hit) * 75.0f + random;
+  }
+  return final_success_rate;
 }
 
 int64_t get_magicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender,
