@@ -53,7 +53,11 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
     // addresses. Ex. google.com
     return false;
 
-  network_address_ = _ip;
+  asio::error_code ec;
+  tcp::resolver resolver(*networkService_->Get_IO_Service());
+  auto endpoint_iterator = resolver.resolve(_ip, std::to_string(_port), ec);
+  if(!ec) network_address_ = endpoint_iterator->endpoint().address().to_string();
+  else network_address_ = _ip;
   network_port_ = _port;
   return true;
 }

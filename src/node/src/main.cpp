@@ -221,9 +221,6 @@ void ParseCommandLine(int argc, char** argv)
       config.nodeServer().loginPort = options["login_port"].as<int>();
   }
   catch (const cxxopts::OptionException& ex) {
-    for (auto i = 0; i < argc; ++i) std::cout << argv[i] << " ";
-    std::cout << std::endl;
-
     std::cout << ex.what() << std::endl;
     std::cout << options.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
