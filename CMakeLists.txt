@@ -4,9 +4,9 @@ project("osIROSE")
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
 
-if(CMAKE_CXX_COMPILER_LAUNCHER)
+if (CMAKE_CXX_COMPILER_LAUNCHER)
   set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
-endif()
+endif ()
 
 #------------------------------------------------------------------------------
 # some global variables
@@ -30,26 +30,26 @@ include(GNUInstallDirs)
 include(ExternalProject)
 include(CheckOptions)
 
-if(NOT CMAKE_BUILD_TYPE)
-  if(OFFICIAL_BUILD)
+if (NOT CMAKE_BUILD_TYPE)
+  if (OFFICIAL_BUILD)
     set(CMAKE_BUILD_TYPE RelWithDebInfo FORCE)
-  elseif(DEBUG)
+  elseif (DEBUG)
     set(CMAKE_BUILD_TYPE Debug FORCE)
     add_compiler_flag(-DSPDLOG_TRACE_ON)
-  else()
+  else ()
     set(CMAKE_BUILD_TYPE Release FORCE)
-  endif()
+  endif ()
 
-  if(OFFICIAL_DEBUG_BUILD)
+  if (OFFICIAL_DEBUG_BUILD)
     set(CMAKE_BUILD_TYPE Debug FORCE)
-  endif()
-endif()
+  endif ()
+endif ()
 
 set(BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 
-if("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
   set(BUILD_TYPE "$<CONFIG>")
-endif()
+endif ()
 
 set(CMAKE_THIRD_PARTY_BINARY_DIR ${CMAKE_THIRD_PARTY_DIR}/bin)
 set(CMAKE_THIRD_PARTY_LIBRARY_DIR ${CMAKE_THIRD_PARTY_DIR}/lib)
@@ -86,98 +86,102 @@ set(ENTT_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/entt/src/entt)
 # find all packages which are needed
 #------------------------------------------------------------------------------
 
-if(WITH_COTIRE)
+if (WITH_COTIRE)
   include(cotire OPTIONAL)
-endif()
+endif ()
 
-IF(WITH_MYSQL)
+IF (WITH_MYSQL)
   find_package(MySQL 6.1 REQUIRED)
-ENDIF()
+ENDIF ()
 
 find_package(Python2 COMPONENTS Interpreter Development REQUIRED)
 
 find_package(Patch REQUIRED)
-if(MSVC)
+if (MSVC)
   configure_file(${CMAKE_SCRIPT_PATH}/patch.bat ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat @ONLY)
   set(PATCH_SCRIPT_PATH ${CMAKE_GEN_SRC_DIR}/scripts/patch.bat)
-else()
+else ()
   set(PATCH_SCRIPT_PATH ${CMAKE_SCRIPT_PATH}/patch.sh)
-endif()
+endif ()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
 find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(PacketGenerator)
 
-if(WITH_GTEST)
-    find_package(GTest ${REQUIRED_IF_OPTION})
-    add_definitions(-DWITH_GTEST)
-endif()
+if (WITH_GTEST)
+  find_package(GTest ${REQUIRED_IF_OPTION})
+  add_definitions(-DWITH_GTEST)
+endif ()
 
-if(WITH_GTEST AND WITH_GMOCK)
+if (WITH_GTEST AND WITH_GMOCK)
   find_package(GMock ${REQUIRED_IF_OPTION})
   add_definitions(-DWITH_GMOCK)
-endif()
+endif ()
 
-if(WITH_CRASH_REPORTS)
-  find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
-  include(BreakpadSymbolGeneration)
-
-#  find_package(Crashpad ${REQUIRED_IF_OPTION})
-#  include(crashpad-symbol-generation)
-endif()
+if (WITH_CRASH_REPORTS)
+  if (NOT CRASHPAD)
+    find_package(GoogleBreakpad ${REQUIRED_IF_OPTION})
+    include(BreakpadSymbolGeneration)
+  else ()
+#    find_package(Crashpad ${REQUIRED_IF_OPTION})
+    include(crashpad-symbol-generation)
+  endif ()
+endif ()
 
 if (WITH_TRACING)
   add_definitions(-DWITH_TRACING)
-endif()
+endif ()
 
 #------------------------------------------------------------------------------
 # build some external projects
 #------------------------------------------------------------------------------
 
-if(NOT LUA_FOUND)
+if (NOT LUA_FOUND)
   include(BuildLua)
-endif()
+endif ()
 
-if(NOT ZLIB_FOUND)
+if (NOT ZLIB_FOUND)
   include(Build-zlib)
-endif()
+endif ()
 
-if(NOT CURL_FOUND)
+if (NOT CURL_FOUND)
   include(BuildCURL)
-endif()
+endif ()
 
-if(NOT SQLITE3_FOUND)
+if (NOT SQLITE3_FOUND)
   include(Build-sqlite3)
-endif()
+endif ()
 include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
 
-if(NOT IDL_FOUND)
+if (NOT IDL_FOUND)
   include(Build-packet-generator)
-endif()
+endif ()
 include(PacketGenerator)
 
-if(WITH_MYSQL)
-  if(MSVC AND BUILD_MYSQL AND NOT MYSQL_FOUND)
+if (WITH_MYSQL)
+  if (MSVC AND BUILD_MYSQL AND NOT MYSQL_FOUND)
     include(Build-mysql)
-  endif()
+  endif ()
 
   include(Build-sqlpp11-connector-mysql)
-endif()
+endif ()
 
-if(NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
-  include(BuildGoogleBreakpad)
-endif()
+if (NOT CRASHPAD)
+  if (NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
+    include(BuildGoogleBreakpad)
+  endif ()
+else ()
+  include(Build-gn)
+  include(Build-crashpad)
+endif ()
 
-#include(Build-gn)
-#include(Build-crashpad)
-
-if(NOT GTEST_FOUND AND WITH_GTEST)
+if (NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
-endif()
+endif ()
 
 #--------------------------------
 # Build API Docs
@@ -205,19 +209,19 @@ set(PROJECT_ABI_VERSION v${PROJECT_ABI_VERSION_SUFFIX})
 CREATE_VERSION_FILE()
 
 file(COPY "${CMAKE_SOURCE_DIR}/scripts"
-       DESTINATION "${CMAKE_BINARY_DIR}/bin")
+    DESTINATION "${CMAKE_BINARY_DIR}/bin")
 
 add_subdirectory(src)
 add_subdirectory(tools)
 
 install(DIRECTORY Database/ DESTINATION Database/
-        COMPONENT Runtime
-        PATTERN "Database/*"
-        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
-                    GROUP_EXECUTE GROUP_READ)
+    COMPONENT Runtime
+    PATTERN "Database/*"
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+    GROUP_EXECUTE GROUP_READ)
 
 install(DIRECTORY scripts/ DESTINATION scripts/
-        COMPONENT Runtime
-        FILES_MATCHING PATTERN "*.lua"
-        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
-                    GROUP_EXECUTE GROUP_READ)
+    COMPONENT Runtime
+    FILES_MATCHING PATTERN "*.lua"
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+    GROUP_EXECUTE GROUP_READ)
