@@ -84,16 +84,108 @@ int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
-  // TODO do calc here
-  return 0;
+  auto& stats = entitySystem.get_component<Component::Stats>(entity);
+
+  //TODO:: Move this calc to lua?
+  int levelAddition, levelModifier;
+  float clampValue;
+  switch (basicInfo.job) {
+    case CLASS_SOLDIER_111:
+      levelAddition = 5, levelModifier = 20, clampValue = 3.5f;
+      break;
+    case CLASS_SOLDIER_121:
+      levelAddition = 5, levelModifier = 28, clampValue = 3.5f;
+      break;
+    case CLASS_SOLDIER_122:
+      levelAddition = 5, levelModifier = 22, clampValue = 3.5f;
+      break;
+    case CLASS_MAGICIAN_211:
+      levelAddition = 4, levelModifier = 26, clampValue = 2.36f;
+      break;
+    case CLASS_MAGICIAN_221:
+      levelAddition = 5, levelModifier = 26, clampValue = 2.37f;
+      break;
+    case CLASS_MAGICIAN_222:
+      levelAddition = 7, levelModifier = 26, clampValue = 2.4f;
+      break;
+    case CLASS_MIXER_311:
+      levelAddition = 5, levelModifier = 20, clampValue = 2.7f;
+      break;
+    case CLASS_MIXER_321:
+      levelAddition = 5, levelModifier = 23, clampValue = 3.f;
+      break;
+    case CLASS_MIXER_322:
+      levelAddition = 5, levelModifier = 21, clampValue = 2.7f;
+      break;
+    case CLASS_MERCHANT_411:
+    case CLASS_MERCHANT_421:
+    case CLASS_MERCHANT_422:
+      levelAddition = 5, levelModifier = 20, clampValue = 2.7f;
+      break;
+
+    default:
+      levelAddition = 4, levelModifier = 26, clampValue = 2.36f;
+      break;
+  }
+
+  life.maxHp = (short)((level.level + levelAddition) * sqrtf(level.level + levelModifier) * clampValue + (stats.str * 2) +
+                       0); // AddValue[AT_MAX_HP]);
+  // levelAddition = passiveSkillValue[ maxHP ] + (short)(life.maxHp * passiveSkillRate[maxHp] / 100.f);
+  life.maxHp += levelAddition;
+  return life.maxHp;
 }
 
 int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& magic = entitySystem.get_component<Component::Magic>(entity);
-  // TODO do calc here
-  return 0;
+  auto& stats = entitySystem.get_component<Component::Stats>(entity);
+
+  //TODO:: Move this calc to lua?
+  int addValue, statModifier;
+  float levelModifier;
+  switch (basicInfo.job) {
+    case CLASS_SOLDIER_111:
+      addValue = 3, levelModifier = 4.0f, statModifier = 4;
+      break;
+    case CLASS_SOLDIER_121:
+      addValue = 0, levelModifier = 4.5f, statModifier = 4;
+      break;
+    case CLASS_SOLDIER_122:
+      addValue = -6, levelModifier = 5.0f, statModifier = 4;
+      break;
+    case CLASS_MAGICIAN_211:
+      addValue = 0, levelModifier = 6.0f, statModifier = 4;
+      break;
+    case CLASS_MAGICIAN_221:
+      addValue = -7, levelModifier = 7.0f, statModifier = 4;
+      break;
+    case CLASS_MAGICIAN_222:
+      addValue = -4, levelModifier = 6.5f, statModifier = 4;
+      break;
+    case CLASS_MIXER_311:
+    case CLASS_MIXER_321:
+      addValue = 4, levelModifier = 4.0f, statModifier = 4;
+      break;
+    case CLASS_MIXER_322:
+      addValue = 0, levelModifier = 4.5f, statModifier = 4;
+      break;
+    case CLASS_MERCHANT_411:
+    case CLASS_MERCHANT_421:
+      addValue = 3, levelModifier = 4.0f, statModifier = 4;
+      break;
+    case CLASS_MERCHANT_422:
+      addValue = 0, levelModifier = 4.5f, statModifier = 4;
+      break;
+    default:
+      addValue = 4, levelModifier = 3.0f, statModifier = 4;
+      break;
+  }
+
+  magic.maxMp = (short)((level.level + addValue) * levelModifier + (stats.int_ * statModifier)) + 0;  // AddValue[AT_MAX_MP];
+  // addValue = passiveSkillValue[ maxMP ] + (short)(magic.maxMp * passiveSkillRate[maxMp] / 100.f);
+  magic.maxMp += addValue;
+  return magic.maxMp;
 }
 
 int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender) {
