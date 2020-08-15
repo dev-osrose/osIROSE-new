@@ -229,7 +229,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           if(position.map == 20)
           {
-            auto spawn = Combat::get_spawn_point(*entitySystem, entity);
+            auto spawn = Combat::get_spawn_point(*entitySystem, entity, 3);
             position.map = std::get<0>(spawn);
             position.x = std::get<1>(spawn);
             position.y = std::get<2>(spawn);
