@@ -443,11 +443,10 @@ RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommo
 
 RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  logger->trace("Combat::get_start_spawn start");
+  logger->trace("Combat::get_start_spawn start {}");
   for (RoseCommon::Entity entity :
-       entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
+       entitySystem.get_entities_with_components<Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
-
     if (spawninfo.type == Component::PlayerSpawn::START_POINT) return entity;
   }
 
@@ -458,7 +457,6 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
-
   uint16_t map_id = pos.map;
   float x = 520000.f, y = 520000.f;
 
@@ -510,7 +508,6 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
       break;
     }
   }
-
   return {map_id, x, y};
 }
 

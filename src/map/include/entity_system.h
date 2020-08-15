@@ -52,7 +52,7 @@ class EntitySystem {
 
         RoseCommon::Entity load_item(uint8_t type, uint16_t id, Component::Item);
         void save_item(RoseCommon::Entity item, RoseCommon::Entity owner) const;
-        RoseCommon::Entity create_item(uint8_t type, uint16_t id, uint32_t count = 1);
+        RoseCommon::Entity create_item(uint8_t type, uint16_t id, uint32_t count = 1, uint8_t itemrefine = 0, uint8_t itemdura = 70, uint8_t itemsocket = 0);
         RoseCommon::Entity create_zuly(int64_t zuly);
 
         RoseCommon::Entity create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle);
