@@ -75,7 +75,7 @@ endif ()
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BREAKPAD_FOUND to TRUE if
 # all listed variables are TRUE
-find_package_handle_standard_args(breakpad
+find_package_handle_standard_args(Breakpad
                                   REQUIRED_VARS BREAKPAD_EXCEPTION_HANDLER_FOUND BREAKPAD_EXCEPTION_HANDLER_LIBRARIES BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR)
 
 mark_as_advanced(

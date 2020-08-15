@@ -1,137 +1,43 @@
 # - Try to find MySQL.
 # Once done this will define:
-# MYSQL_FOUND			- If false, do not try to use MySQL.
+# MySQL_FOUND			- If false, do not try to use MySQL.
 # MYSQL_INCLUDE_DIRS	- Where to find mysql.h, etc.
 # MYSQL_LIBRARIES		- The libraries to link against.
 # MYSQL_VERSION_STRING	- Version in a string of MySQL.
-#
-# Created by RenatoUtsch based on eAthena implementation.
-#
-# Please note that this module only supports Windows and Linux officially, but
-# should work on all UNIX-like operational systems too.
-#
 
-#=============================================================================
-# Copyright 2012 RenatoUtsch
-#
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
-#
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
-#=============================================================================
-# (To distribute this file outside of CMake, substitute the full
-#  License text for the above reference.)
+if (MySQL_FOUND)
+  # Already in cache, be silent
+  set(MYSQL_FIND_QUIETLY TRUE)
+endif ()
 
-if( WIN32 )
-
-	SET(BINDIR32_ENV_NAME "Program Files")
-	find_path( MYSQL_INCLUDE_DIR
-		NAMES "mysql.h"
-		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
-				"${CMAKE_EXTERNAL_INCLUDE_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C */include"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */include"
-			  "$ENV{PROGRAMFILES}/MySQL/*/include"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/include"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/include"
-			  "C:/Program Files/MySQL/*/include"
-			  )
-
-	find_path( MYSQL_LIBRARY_PATH
-		NAMES "libmysql.lib" "mysqlclient_r.lib"
-		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
-			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
-			  "C:/Program Files/MySQL/*/lib"
-			  )
-
-	find_library( MYSQL_LIBRARY
-		NAMES "libmysql" "mysqlclient_r"
-		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-				"${CMAKE_EXTERNAL_LIBRARY_DIR}"
-			  "C:/Program Files/MySQL/MySQL Connector.C */lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/MySQL Connector.C */lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
-			  "$ENV{PROGRAMFILES}/MySQL/*/lib"
-			  "C:/${BINDIR32_ENV_NAME}/MySQL/*/lib"
-			  "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
-			  "C:/Program Files/MySQL/*/lib"
-			  )
-else()
-	find_path( MYSQL_INCLUDE_DIR
-		NAMES "mysql.h"
-		PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
-			  "$ENV{HOME}/mysql/include"
-			  "/usr/include/mysql"
-			  "/usr/local/include/mysql"
-			  "/usr/mysql/include/mysql" )
-
-	find_path( MYSQL_LIBRARY_PATH
-		NAMES libmysqlclient.a libmysqlclient.so libmysqlclient_r.a libmysqlclient_r.so
-		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-			  "$ENV{HOME}/mysql/lib"
-			  "/lib/mysql"
-			  "/lib64/mysql"
-        "/usr/lib"
-			  "/usr/lib/mysql"
-			  "/usr/lib64/mysql"
-			  "/usr/local/lib/mysql"
-			  "/usr/local/lib64/mysql"
-			  "/usr/mysql/lib/mysql"
-			  "/usr/mysql/lib64/mysql"
-        "/usr/lib/x86_64-linux-gnu" )
-
-	find_library( MYSQL_LIBRARY
-		NAMES mysqlclient mysqlclient_r
-		PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-			  "$ENV{HOME}/mysql/lib"
-			  "/lib/mysql"
-			  "/lib64/mysql"
-        "/usr/lib"
-			  "/usr/lib/mysql"
-			  "/usr/lib64/mysql"
-			  "/usr/local/lib/mysql"
-			  "/usr/local/lib64/mysql"
-			  "/usr/mysql/lib/mysql"
-			  "/usr/mysql/lib64/mysql" )
+include(mariadb)
+if (NOT MYSQL_INCLUDE_DIR OR NOT MYSQL_LIBRARY OR NOT MYSQL_LIBRARY_PATH)
+  include(mysqldb)
 endif()
 
-message(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
-message(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
-message(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+if (NOT MYSQL_FIND_QUIETLY)
+  message(STATUS "MySQL Library: ${MYSQL_LIBRARY}")
+  message(STATUS "MySQL Library Path: ${MYSQL_LIBRARY_PATH}")
+  message(STATUS "MySQL Include Path: ${MYSQL_INCLUDE_DIR}")
+  message(STATUS "MySQL Version: ${MYSQL_VERSION_STRING}")
+endif ()
 
-if( MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h" )
-	file( STRINGS "${MYSQL_INCLUDE_DIR}/mysql_version.h"
-		MYSQL_VERSION_H REGEX "^#define[ \t]+MYSQL_SERVER_VERSION[ \t]+\"[^\"]+\".*$" )
-	string( REGEX REPLACE
-		"^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
-		"${MYSQL_VERSION_H}" )
-endif()
-
-# handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
+# handle the QUIETLY and REQUIRED arguments and set MySQL_FOUND to TRUE if
 # all listed variables are TRUE
-include( FindPackageHandleStandardArgs )
-find_package_handle_standard_args( MYSQL
-	REQUIRED_VARS MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
-	VERSION_VAR MYSQL_VERSION_STRING
-	)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(MySQL
+    REQUIRED_VARS MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_INCLUDE_DIR
+    VERSION_VAR MYSQL_VERSION_STRING
+    )
 
-set( MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR} )
-set( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
+set(MYSQL_INCLUDE_DIRS ${MYSQL_INCLUDE_DIR})
+set(MYSQL_LIBRARIES ${MYSQL_LIBRARY})
 
-if(MYSQL_FOUND AND NOT TARGET mysql::mysql)
-    add_library(mysql::mysql UNKNOWN IMPORTED)
-    set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
-    set_property(TARGET mysql::mysql APPEND PROPERTY IMPORTED_LOCATION "${MYSQL_LIBRARY}")
-endif()
+if (MySQL_FOUND AND NOT TARGET mysql::mysql)
+  add_library(mysql::mysql UNKNOWN IMPORTED)
+  set_target_properties(mysql::mysql PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MYSQL_INCLUDE_DIR}")
+  set_property(TARGET mysql::mysql APPEND PROPERTY IMPORTED_LOCATION "${MYSQL_LIBRARY}")
+endif ()
 
-mark_as_advanced( MYSQL_INCLUDE_DIR MYSQL_LIBRARY MYSQL_LIBRARY_PATH )
+mark_as_advanced(MYSQL_INCLUDE_DIR MYSQL_LIBRARY MYSQL_LIBRARY_PATH MYSQL_VERSION_STRING)
 
