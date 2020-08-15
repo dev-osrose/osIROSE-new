@@ -443,7 +443,7 @@ RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommo
 
 RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-  logger->trace("Combat::get_start_spawn start {}");
+  logger->trace("Combat::get_start_spawn start");
   for (RoseCommon::Entity entity :
        entitySystem.get_entities_with_components<Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
