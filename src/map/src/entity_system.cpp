@@ -778,7 +778,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     });
 }
 
-RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint8_t itemrefine, uint8_t itemdura, uint8_t itemsocket) {
+RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint8_t itemRefine, uint8_t itemDura, uint8_t itemSocket) {
     using namespace Component;
     entt::prototype prototype(registry);
 
@@ -792,12 +792,12 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     auto& item = prototype.set<Item>();
     item.isCreated = false;
     item.life = 1000;
-    item.durability = std::min(int(itemdura), 120);
+    item.durability = std::min(int(itemDura), 120);
     item.hasSocket = false;
-    if (itemsocket > 0)
+    if (itemSocket > 0)
         item.hasSocket = true;
     item.isAppraised = false;
-    item.refine = std::min(int(itemrefine), 9);
+    item.refine = std::min(int(itemRefine), 9);
     item.count = count;
     item.gemOpt = 0;
     item.price = 1000;

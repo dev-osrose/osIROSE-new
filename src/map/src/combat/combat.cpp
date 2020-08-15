@@ -446,7 +446,7 @@ RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   logger->trace("Combat::get_start_spawn start");
   for (RoseCommon::Entity entity :
        entitySystem.get_entities_with_components<Component::PlayerSpawn>()) {
-    const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
+    const auto& spawninfo = entitySystem.get_component<Component::Position, Component::PlayerSpawn>(entity);
     if (spawninfo.type == Component::PlayerSpawn::START_POINT) return entity;
   }
 
