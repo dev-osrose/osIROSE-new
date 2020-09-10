@@ -73,5 +73,5 @@ if (MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h")
       "^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
       "${MYSQL_VERSION_H}")
 else()
-  message(STATUS "Unable to find mysql...")
+  message(STATUS "mysql - not found")
 endif ()

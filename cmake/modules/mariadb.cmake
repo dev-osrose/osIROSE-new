@@ -37,5 +37,5 @@ if (MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mariadb_version.h")
       "^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
       "${MYSQL_VERSION_H}")
   else()
-  message(STATUS "Unable to find MariaDB...")
+  message(STATUS "mariadb - not found")
 endif ()
