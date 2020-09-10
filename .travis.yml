@@ -1,5 +1,5 @@
 sudo: false
-dist: bionic
+dist: focal
 language: cpp
 
 env:
@@ -24,8 +24,8 @@ env:
   - GCOV_EXEC=gcov-8
   - SUITE=tests
 
-services:
-  mysql
+#services:
+#  mysql
 
 cache:
   pip: true
