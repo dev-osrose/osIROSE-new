@@ -48,7 +48,7 @@ jobs:
   include:
     - &gccinit
       stage: prepare cache
-      name: "AMD64 Ubuntu Bionic/GCC"
+      name: "AMD64 Ubuntu/GCC"
       arch: amd64
       os: linux
       compiler: g++
@@ -78,7 +78,7 @@ jobs:
 
     - &clanginit
       stage: prepare cache
-      name: "AMD64 Ubuntu Bionic/Clang"
+      name: "AMD64 Ubuntu/Clang"
       arch: amd64
       os: linux
       compiler: clang++
@@ -116,10 +116,10 @@ jobs:
       before_install:
         - export SUITE=coverage
         - export BUILD_TYPE=Debug
-      before_script:
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+#      before_script:
+#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+#        - mysql --user="root" -e 'create database osirose;'
+#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
@@ -138,10 +138,10 @@ jobs:
       name: "AMD64 G++-8 Release"
       if: branch != coverity_scan
       env: CC=gcc-8 CXX=g++-8
-      before_script:
-        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-        - mysql --user="root" -e 'create database osirose;'
-        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+#      before_script:
+#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+#        - mysql --user="root" -e 'create database osirose;'
+#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
