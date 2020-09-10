@@ -94,7 +94,8 @@ IF (WITH_MYSQL)
   find_package(MySQL 6.1 REQUIRED)
 ENDIF ()
 
-find_package(Python2 COMPONENTS Interpreter Development REQUIRED)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_python_module(pyparsing REQUIRED)
 
 find_package(Patch REQUIRED)
 if (MSVC)
