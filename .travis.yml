@@ -1,6 +1,6 @@
-sudo: false
 dist: focal
 language: cpp
+os: linux
 
 env:
   global:
@@ -232,6 +232,7 @@ jobs:
 
     - <<: *covinit
       stage: compile
+      name: "AMD64 G++-8 Coverity Scan Release CRON"
       if: (type = cron AND branch = trunk)
       addons:
         coverity_scan:
@@ -249,7 +250,6 @@ jobs:
       stage: notify
       cache: false
       script: true
-      services: false
       git:
         submodules: false
       after_success:
@@ -260,7 +260,7 @@ after_failure:
 
 deploy:
   provider: releases
-  api_key:
+  token:
     secure: u0DKBv0ZaE8+J/WxJTyEyY+PVgtk8ymuOfRN3IxglSEG+JFgGhiUQLD9lZ0S5n3lQZ5b8MPmtbnwuX1XY2PtnWKrb+5OVRR5yvAcR9P0pY1SxtMR4uATVxdFCXim347xn98trRuIomACrLHD/D75HN46hAfPc/gGektguuMr6b2hph2bgGZ2Hd3EPSZq4Q2gAVwHislJLyLf8tX6lvwlIqb3mpaZPRQNBma2AhTTRQOq8u1Fkz9sLV5VDI3AdhfE//+cVCzPX1I2piLKDqZ2MNQNwlWwLaKUy33SDFIUndu6QQhFsL1XDUIXsxhTqu8Y4Qbs1Ksx7iCh1oAPIot7wdI1hJna51vKtMh9tK6r64QNc8GkbEuH7aWbSS0o0w3vx8hzvuDRzj0+gNTDCkEadvPSLExpRGgg8jZSz0C70VQzi+obG6cR9CGkUETlvUmLMaqd6H+WAQwRPUof/cnZUZNW/NAYTR6GSvcTgJOyZy/P0Q5vzsat3LhvpshC9IUzOM3v3GDcQ1s6JL3PRz8dKTzz4et9FpVkn77YW8h7Dgv3Ygag/cAN0dsV4Ds77HImacDSE6BiNm5uenE4CEQeUbWq4PLJl/PDu5V9z9QbCTHKP2STNMg3vCPjg0Sl6RGG+8s5u2LfuZeRQue19UDjnYMsifkxRy+zKr+FYW29c10=
   file: "${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz"
   on:
