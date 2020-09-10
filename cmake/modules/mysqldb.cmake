@@ -1,3 +1,4 @@
+message(STATUS "Looking for mysql...")
 if (WIN32)
   find_path(MYSQL_INCLUDE_DIR
       NAMES "mysql.h"
@@ -71,4 +72,6 @@ if (MYSQL_INCLUDE_DIR AND EXISTS "${MYSQL_INCLUDE_DIR}/mysql_version.h")
   string(REGEX REPLACE
       "^.*MYSQL_SERVER_VERSION[ \t]+\"([^\"]+)\".*$" "\\1" MYSQL_VERSION_STRING
       "${MYSQL_VERSION_H}")
+else()
+  message(STATUS "Unable to find mysql...")
 endif ()
