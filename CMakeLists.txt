@@ -172,7 +172,7 @@ if (WITH_MYSQL)
 endif ()
 
 if (NOT CRASHPAD)
-  if (NOT BREAKPAD_FOUND AND WITH_CRASH_REPORTS)
+  if (NOT Breakpad_FOUND AND WITH_CRASH_REPORTS)
     include(BuildGoogleBreakpad)
   endif ()
 else ()
