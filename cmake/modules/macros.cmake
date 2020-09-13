@@ -339,4 +339,38 @@ macro(link_with_gtest target)
   endif()
 endmacro()
 
+function(find_python_module module)
+  string(TOUPPER ${module} module_upper)
+  if(NOT PY_${module_upper})
+    if(ARGC GREATER 1 AND ARGV1 STREQUAL "REQUIRED")
+      set(${module}_FIND_REQUIRED TRUE)
+    endif()
+    # A module's location is usually a directory, but for binary modules
+    # it's a .so file.
+    execute_process(
+            COMMAND "${Python_EXECUTABLE}" "-c" "import sys, ${module}; sys.stdout.write(${module}.__version__.replace('.', ';'))"
+            RESULT_VARIABLE _${module}_status
+            OUTPUT_VARIABLE _${module}_location
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    string(REPLACE ";" "." _VERSION_STRING "${_version}")
+    list(GET _VERSION 0 _VERSION_MAJOR)
+    list(GET _VERSION 1 _VERSION_MINOR)
+    list(GET _VERSION 2 _VERSION_PATCH)
+
+    # Export variables to parent scope
+    set(${module}_VERSION_STRING ${_VERSION_STRING} PARENT_SCOPE)
+    set(${module}_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
+    set(${module}_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
+    set(${module}_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
+
+    if(NOT _${module}_status)
+      set(PY_${module_upper} ${_${module}_location} CACHE STRING
+              "Location of Python module ${module}")
+    endif(NOT _${module}_status)
+  endif(NOT PY_${module_upper})
+  find_package_handle_standard_args(PY_${module} DEFAULT_MSG PY_${module_upper})
+endfunction(find_python_module)
+
 message(STATUS "osIROSE cmake macros loaded.")

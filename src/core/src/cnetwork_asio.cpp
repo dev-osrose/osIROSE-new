@@ -44,7 +44,6 @@ CNetwork_Asio::CNetwork_Asio()
 
 CNetwork_Asio::~CNetwork_Asio() {
   CNetwork_Asio::shutdown(true);
-
   if (process_thread_.joinable()) process_thread_.join();
 }
 
@@ -53,7 +52,11 @@ bool CNetwork_Asio::init(std::string _ip, uint16_t _port) {
     // addresses. Ex. google.com
     return false;
 
-  network_address_ = _ip;
+  asio::error_code ec;
+  tcp::resolver resolver(*networkService_->Get_IO_Service());
+  auto endpoint_iterator = resolver.resolve(_ip, std::to_string(_port), ec);
+  if(!ec) network_address_ = endpoint_iterator->endpoint().address().to_string();
+  else network_address_ = _ip;
   network_port_ = _port;
   return true;
 }
@@ -63,8 +66,8 @@ bool CNetwork_Asio::shutdown(bool _final) {
   if ( !is_active() )
     return true;
 
-  if (_final == true ||
-    (OnShutdown() == true && disconnect() == true))
+  if (_final ||
+    (OnShutdown() && disconnect()))
   {
     rtnValue = true;
     if (listener_.is_open()) {
@@ -86,20 +89,21 @@ bool CNetwork_Asio::connect() {
   auto endpoint_iterator =
       resolver.resolve(network_address_, std::to_string(network_port_));
 
-  if (OnConnect()) {
-    send_mutex_.lock();
-    std::error_code errorCode;
-    asio::connect(socket_, endpoint_iterator, errorCode);
-    send_mutex_.unlock();
-    remote_connection_ = true;
-    if (!errorCode) {
-      OnConnected();
-      active_ = true;
-    }
-    else {
-      active_ = false;
-    }
+  if (!OnConnect()) return false;
+
+  send_mutex_.lock();
+  std::error_code errorCode;
+  asio::connect(socket_, endpoint_iterator, errorCode);
+  send_mutex_.unlock();
+  remote_connection_ = true;
+
+  if (errorCode) {
+    logger_->info("Connect failed - {}: {}", errorCode.value(), errorCode.message());
+    return false;
   }
+
+  OnConnected();
+  active_ = true;
   return active_;
 }
 
@@ -119,16 +123,14 @@ bool CNetwork_Asio::listen() {
 }
 
 bool CNetwork_Asio::reconnect() {
-  if (remote_connection_ == false)
-    return false;
+  if (!remote_connection_) return false;
 
   disconnect();
   return connect();
 }
 
 bool CNetwork_Asio::disconnect() {
-  if(OnDisconnect() == false)
-    return false; // Do not disconnect this client
+  if(!OnDisconnect()) return false; // Do not disconnect this client
 
   std::error_code ignored;
   socket_.shutdown(asio::socket_base::shutdown_both, ignored);
@@ -233,7 +235,7 @@ bool CNetwork_Asio::send_data(std::unique_ptr<uint8_t[]> _buffer) {
 }
 
 bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
-  if (OnReceive() == true) {
+  if (OnReceive()) {
     int16_t BytesToRead = packet_size_ - packet_offset_;
     asio::async_read(
         socket_, asio::buffer(&buffer_[packet_offset_], BytesToRead),
@@ -244,7 +246,7 @@ bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
           packet_offset_ += (uint16_t)length;
           update_time_ = (Core::Time::GetTickCount());
           if ( !errorCode ) {
-            if (OnReceived(this->socket_id_, packet_size_, buffer_) == false) {
+            if (!OnReceived(this->socket_id_, packet_size_, buffer_)) {
               logger_->debug(
                 "OnReceived aborted the connection, disconnecting...");
               shutdown();

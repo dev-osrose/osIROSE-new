@@ -113,10 +113,10 @@ class CNetwork_Asio : public INetwork {
   std::condition_variable recv_condition_;
 
   uint8_t buffer_[MAX_PACKET_SIZE];
-  uint16_t packet_offset_;
-  uint16_t packet_size_;
-  bool active_;
-  bool remote_connection_;
+  uint16_t packet_offset_ = 0;
+  uint16_t packet_size_ = 6;
+  bool active_ = false;
+  bool remote_connection_ = false;
 };
 }
 

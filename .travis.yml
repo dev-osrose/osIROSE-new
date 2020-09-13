@@ -1,21 +1,31 @@
-dist: bionic
+dist: focal
 language: cpp
+os: linux
 
 env:
   global:
   #discord webhook
   - secure: "MXG3LzmYr0KLqEw3WZo1qY3/iGVaAQuAcE/V9ad3FlpBz89BoNpNP+frf6Yrvamy/UGiR14hgcPbzmTI5DvdBkdFpf9K0xuLRAOsxOMPfTU2d6ip42uifDJ8koXg8INzOk8iab9TftzY2Zg/u4/L3JEo2HWbKFndQMCke7IZqpNOCcrJWdXtpb0/QKpcCxbovS4toAAkmi1P/2S21CdTnZLF4ee06h5yChkrHjXNPiDfBpM5uhuIkH/KS0ruv9WyUTd7gGtgQ7KzKcyRCWv3G9jXZNbP5nXGVsPFnRz1o3ZBBgBX2ZYQsYoMqQdbfFTe8hi6xuabSACAxlhQh3+f8l05a43d1zP7uWh7on0z4CAVIbM7MVBjfJYT1lzQNujpyjPO1DhiT4+2wGzdCNLqu2KFxhgj8nsafYs/Esj7Ie1zn7IcquruqJg24QTFgTxvuACidQcuTnc9f5NBM+hLqWTsvnD0tvFzkk5tEzc3XJwmTzXWk348DTO+SmXZvs5EiMORue7igCa8QGnWT6R4WtCrNBSDWza17VV9uGUJhgakI8bSvTOlUhUpsBmPR5rPaRZKkKTvpm6KLsqEj1dqEyyE69aTZ+ow+mRX16PiZT6feW9nyFvshkA4UzBHwN9Y9/kz/xSwz6Tg7WDG69Ru3XGY7FuxKAmTjJm4DspOdZ4="
+  - coverity_scan_script_test_mode=true
+  - coverity_scan_run_condition='"$TRAVIS_OS_NAME" != osx -a "$BUILD_TYPE" = Release'
+  #Cov scan email and token
+  - secure: "s3nV+bCZyiJFhubZgq1SjP+6DUQgT0fzeTTvaPytYTvFuyYWrTzMPdqdhLXc5MZ3mQ/3PMvn3ZjU0AlT7YypLjyGY0LM8tFD4HD608DWR3qRDnlPKsB4nTCQVCp30FhlFSzlVt4E6ZZCtbbu3X92Q+B4UGjGBnX0T4ePsJMk+CfFKGxbF6Hyo6rThXTfRvGWQtu3pI5pmHksyDyCTtX/m5ljslVy84WTLWREX6m7GSeVu3MB+D9hWR+SGkxbjzxtwSfGmUp2893/xxac+BJNTXqJfKDJA7y98/jB65VASfos3T3Bkdq4nl1e5D4jAmcWE6ZsPpjvem4iZGUZwYbdUNhCk2iGDUjnJYU18z+3R+A4LChmXJlSmtG9AcLU+MT1rJeTQCUqq9pBXAG+keOdBu4J+CvBS5KrhmbG6pXHfUMY0UAqcAHdkgZo26JNnm9kIGcz+IrFOPERUe/naFM+27QGDZ0RfYkbWGbiqaTQ2SptMIOn7/zEqkWWOoT4CImtbSjjOETStIPzIWzR/I+bWFuNL/RL7K1UimqrfQFYG/W1WWXi8ZYqSE+DJX/ejWAytvvq6FWNhXOLe7+0fc/ZzhFTQqusdg0G3wNXKLSNVzuC1MyYXwoJEw33397GsPaK2E5tKlwi12txun5uWAzagHuYVTuHNHKt4qV8+e3AIjw="
+  - secure: "JuSus/BqBJ2RTj7oJ3tn6dfFqnNWmWdM6/+PBId8YT52fUJTQp0eLmYbqZhq04OFvCKLgzeiObggfFZk5VOXAB/bfhlQEKSprso6C0WxKzFnftr085rcr5mW2ux+RSWTeE9KT1bpsjtpSrQTOniQhPGD6u704DdIzKuOnSngU8TXRAHFujXtUA0SHU8Oft8OpysaTDVWbFehBemg6BeOssklw2LrScGT3AWm8+qNdyAV+ynko4s8CzdOJqueCNWnkYFQyNtWN67uasveg3j+zgOfstjgyYSEoYh6deCNy8BjmWzX2tUkpzxh7h4w/VlyVjvyMG524UdMDmFZNNo7CMn1/qla6zjli3xDV/kk2Dfzj1JCn2WsesOY8+p4bdYoUU4lR0PuYraEuBAOCiVb3V7VLzU5FyV3clY8+MwifVHvNLxUbyD2ygZfPrS8LQJ/7jJSPeEARUIngvNkY9L8Jr6olw3Xg7DoDHLWAFBMtBi/sZG3CvXDyeIUX8rkh4hY6QlnO/xrql5KxDupsAwqj+rMdhzYeCnyRY6HvqBIoIrpi47uPGutxiIFgjrzwr28eL+XrrkwHfbM+pFDUITdWjm79/EyEPgGsEMM8IxXcpSGNmMDDhpHu1oZE4L3gdKli6hdS5fo6CEDV3x1nvk/SsY52WhEWIT/RwQPl4qL3YQ="
+  #coveralls repo token
+  - secure: "s8DdaxdWVR3qRBxfxO6UjugB1dWlEnv9KhF1ZUHDhWziPtoecKjCXnJYSB6EOddTPoJXtOdTVW9ThGGCvKQ+vYdGNce+PCWglruANO/lEz/82HWPZkTKbw4WyoDo5GqlFCu1C3gY9dA58ClpGDlX5BNQA81JCJrWKUdR2J0/WW9USPKHxDLGISYKt28nwVjywR8uDnysBJkmmS+53Ge2MSzmOLuEZeysq7iCD6xssPL5UDDb/itNOc4OkvRGtvTnLrMF4c7naFRfbhc7NR1MxKz+eu2DgM9SAnJrh1jnYXWu/1EG8VKQOYR23OwjxSurSRjJxInGZdrSGUB8R38Z35Ndq7RHKRAZvwIPkZqDFCUQ/hkAJlu/4cbz8KPHJMOV0SOFpCztnFCQY619KXn0S0Tos38KthVu2nNSMJu1e1GuQK1dhM+Uh3MCrSChyPmK75IKbM7Jj5OKRqKO4uSnsut3RK91RYF3oB3HdLkznTLYBLnyEWK6Zh56lhoZiJMd/WCL24/U5Pne6VwLDBjaeOH9lEjD6oaUSIDyowVAOte4qVg7WW7OXx2fkK9ySd4X0P5C5JLtWsZ8O+va9LkIxPPCdck3HV+k1EU0tHrLAAkpwO3D9StRdkc7cX+z13aFOZQyKef1wbKyNCYrq6E3SGvlI011+0vN2ZiGKKusGcs="
   - PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/bin:${TRAVIS_BUILD_DIR}/build/3rdparty/usr/bin:${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin:${TRAVIS_BUILD_DIR}/cmake_app/bin:${TRAVIS_BUILD_DIR}/ninja:$HOME/usr/bin:$HOME/usr/local/bin:$PATH
   - CI_DIRECTORY=${TRAVIS_BUILD_DIR}/cmake/scripts
   - CCACHE_SLOPPINESS="pch_defines,time_macros"
+  - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
+  - PROCESSOR_ARCH=`uname -p`
   - WITH_CRASH_REPORTS=ON
   - BUILD_TYPE=Release
   - BUILD_JOB_COUNT=4
   - GCOV_EXEC=gcov-8
   - SUITE=tests
-  - PREFIX=${TRAVIS_BUILD_DIR}/build/3rdparty
-  - LCOV_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/lcov
-  - GENHTML_PATH=${TRAVIS_BUILD_DIR}/build/3rdparty/usr/local/bin/genhtml
+
+#services:
+#  mysql
 
 cache:
   pip: true
@@ -39,7 +49,7 @@ jobs:
   include:
     - &gccinit
       stage: prepare cache
-      name: "AMD64 Ubuntu Bionic/GCC"
+      name: "AMD64 Ubuntu/GCC"
       arch: amd64
       os: linux
       compiler: g++
@@ -74,7 +84,7 @@ jobs:
 
     - &gccarminit
       stage: prepare cache
-      name: "ARM64 Ubuntu Bionic/GCC"
+      name: "ARM64 Ubuntu/GCC"
       arch: arm64
       os: linux
       compiler: g++
@@ -85,8 +95,8 @@ jobs:
           packages:
           - g++-8
           - libcurl4-openssl-dev
-          - python2.7
-          - python-pip
+          - python3
+          - python3-pip
           - ccache
 
       install:
@@ -102,16 +112,26 @@ jobs:
         - cmake --version
         - bash $CI_DIRECTORY/install-lcov.sh
         - bash $CI_DIRECTORY/install-ninja.sh
-        - python2.7 -m pip install --user pyparsing
+        - pip install --user pyparsing
       script: true
 
 #----------------------------
 #GCC Compile step
     - <<: *gccinit
       stage: compile
+      name: "AMD64 G++-8 Debug - Coverage Tests"
+      if: branch != coverity_scan
+      env: CC=gcc-8 CXX=g++-8
+      script:
+        - cd build
+        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+        - cmake --build . -- -j ${BUILD_JOB_COUNT}
+
+    - <<: *gccinit
+      stage: compile
       name: "AMD64 G++-8 Release"
       if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 CC_FOR_BUILD=gcc-8 CXX_FOR_BUILD=g++-8
+      env: CC=gcc-8 CXX=g++-8
       script:
         - cd build
         - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
@@ -133,11 +153,10 @@ jobs:
       stage: notify
       cache: false
       script: true
-      services: false
       git:
         submodules: false
       after_success:
-        - $CI_DIRECTORY/notify-discord.sh success $WEBHOOK_URL
+        - $CI_DIRECTORY/notify-discord.sh success $DISCORD_WEBHOOK_URL
 
 
   allow_failures:
