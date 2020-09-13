@@ -119,16 +119,6 @@ jobs:
 #GCC Compile step
     - <<: *gccinit
       stage: compile
-      name: "AMD64 G++-8 Debug - Coverage Tests"
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-
-    - <<: *gccinit
-      stage: compile
       name: "AMD64 G++-8 Release"
       if: branch != coverity_scan
       env: CC=gcc-8 CXX=g++-8
