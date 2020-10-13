@@ -9,8 +9,6 @@
 #include "char_client.h"
 #include "map_client.h"
 
-#include <bt_factory.h>
-
 std::string ip = "127.0.0.1";
 uint16_t loginPort = 29000;
 uint16_t charPort = 29100;
@@ -19,25 +17,25 @@ uint16_t mapPort = 29110;
 
 void ParseCommandLine(int argc, char** argv)
 {
-  cxxopts::Options options(argv[0], "osIROSE bot");
+  cxxopts::Options parser(argv[0], "osIROSE bot");
   try {
     std::string config_file_path = "";
-    options.add_options()
+    parser.add_options()
     ("ip", "server IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
     ("h,help",  "Print this help text")
     ;
-    options.parse(argc, argv);
+    auto options = parser.parse(argc, argv);
     if (options.count("help"))
     {
-      std::cout << options.help({"", "Group"}) << std::endl;
+      std::cout << parser.help({"", "Group"}) << std::endl;
       exit(0);
     }
     ip = options["ip"].as<std::string>();
   }
   catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
-    std::cout << options.help({"", "Group"}) << std::endl;
+    std::cout << parser.help({"", "Group"}) << std::endl;
     exit(1);
   }
 }

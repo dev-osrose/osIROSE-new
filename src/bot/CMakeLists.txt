@@ -41,10 +41,8 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 add_dependencies(${PROJECT} RoseCommon)
-add_dependencies(${PROJECT} BT::behavior_tree)
 target_link_libraries(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT} BT::behavior_tree)
 
 if (MSVC)
   set_target_properties(${PROJECT} PROPERTIES COMPILE_FLAGS "/wd4503")

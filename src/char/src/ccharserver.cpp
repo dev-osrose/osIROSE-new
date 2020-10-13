@@ -355,7 +355,7 @@ void CCharServer::add_user_to_party(User& user, std::shared_ptr<Party> party) {
     member.set_name(user.get_name());
 
     for (const auto& user : party->members) {
-        const auto packet = RoseCommon::Packet::SrvPartyMember::create(
+        auto packet = RoseCommon::Packet::SrvPartyMember::create(
                 static_cast<RoseCommon::Packet::SrvPartyMember::PartyRule>(party->options),
                 RoseCommon::Packet::SrvPartyMember::ADD, member);
         send_char(user, std::move(packet));
