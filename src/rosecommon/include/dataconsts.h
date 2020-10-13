@@ -58,6 +58,30 @@ constexpr unsigned int MAX_STATUS_EFFECTS = 40;
 
 constexpr unsigned int MAX_WISHLIST = 30;
 
+
+//TODO:: Move these class vars to scripting file
+constexpr unsigned int CLASS_VISITOR = 0;
+constexpr unsigned int CLASS_SOLDIER_111 = 111;
+constexpr unsigned int CLASS_SOLDIER_121 = 121;
+constexpr unsigned int CLASS_SOLDIER_122 = 122;
+constexpr unsigned int CLASS_SOLDIER_131 = 131;
+constexpr unsigned int CLASS_SOLDIER_132 = 132;
+constexpr unsigned int CLASS_MAGICIAN_211 = 211;
+constexpr unsigned int CLASS_MAGICIAN_221 = 221;
+constexpr unsigned int CLASS_MAGICIAN_222 = 222;
+constexpr unsigned int CLASS_MAGICIAN_231 = 231;
+constexpr unsigned int CLASS_MAGICIAN_232 = 232;
+constexpr unsigned int CLASS_MIXER_311 = 311;
+constexpr unsigned int CLASS_MIXER_321 = 321;
+constexpr unsigned int CLASS_MIXER_322 = 322;
+constexpr unsigned int CLASS_MIXER_331 = 331;
+constexpr unsigned int CLASS_MIXER_332 = 332;
+constexpr unsigned int CLASS_MERCHANT_411 = 411;
+constexpr unsigned int CLASS_MERCHANT_421 = 421;
+constexpr unsigned int CLASS_MERCHANT_422 = 422;
+constexpr unsigned int CLASS_MERCHANT_431 = 431;
+constexpr unsigned int CLASS_MERCHANT_432 = 432;
+
 using Entity = uint32_t;
 using Registry = entt::registry<Entity>;
 }

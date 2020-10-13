@@ -31,17 +31,6 @@ if(WITH_MYSQL)
   link_directories(
     ${MYSQL_LIBRARY_PATH}
   )
-  
-  if(MYSQL_FOUND AND WIN32)
-#    file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-#       DESTINATION "${CMAKE_BINARY_DIR}/bin/")
-#    if(MSBUILD)
-#      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-#       DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-#      file(COPY "${MYSQL_LIBRARY_PATH}/libmysql.dll"
-#       DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
-#    endif()
-  endif()
 endif()
 
 if(WITH_CRASH_REPORTS)

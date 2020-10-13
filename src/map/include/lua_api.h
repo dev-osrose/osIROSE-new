@@ -13,12 +13,12 @@ class LuaApi {
         bool on_init() { return safe_lua_call<bool>("OnInit"); }
         bool on_create() { return safe_lua_call<bool>("OnCreate"); }
         bool on_delete() { return safe_lua_call<bool>("OnDelete"); }
-    
+
         template <typename T, typename... Args>
         void register_function(const std::string& name, std::function<T(Args...)>&& func) {
             env.set_function(name, std::forward<std::function<T(Args...)>>(func));
         }
-    
+
     protected:
         template <typename T, typename... Args>
         T safe_lua_call(const std::string& name, Args&&... args) {
@@ -72,6 +72,6 @@ class NpcLuaApi : public LuaApi {
     public:
         NpcLuaApi(sol::environment env) : LuaApi(env) {}
 
-        void on_dead(RoseCommon::Entity entity) { safe_lua_call<void>("OnDead", entity); }
-        void on_damaged(RoseCommon::Entity entity) { safe_lua_call<void>("OnDamaged", entity); }
+        void on_dead(RoseCommon::Entity entity, [[maybe_unused]] RoseCommon::Entity attacker) { safe_lua_call<void>("OnDead", entity); }
+        void on_damaged(RoseCommon::Entity entity, [[maybe_unused]] RoseCommon::Entity attacker) { safe_lua_call<void>("OnDamaged", entity); }
 };

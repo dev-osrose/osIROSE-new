@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # check if we have given a patch file
 if [ ! -f "$1" ]; then

@@ -39,8 +39,11 @@ target_link_libraries(${PROJECT}
 )
 
 if(WITH_CRASH_REPORTS)
-  generate_symbol_data(${PROJECT})
-#  generate_crashpad_symbol_data(${PROJECT})
+  if (NOT CRASHPAD)
+    generate_symbol_data(${PROJECT})
+  else()
+    generate_crashpad_symbol_data(${PROJECT})
+  endif()
 endif()
 
 install(TARGETS ${PROJECT}
