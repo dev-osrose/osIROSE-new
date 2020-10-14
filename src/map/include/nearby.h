@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hash.h"
-#include "dataconsts.h"
 #include "entity.h"
 
 #include <unordered_map>

@@ -1,4 +1,5 @@
 #include "utils/getters.h"
+#include "components/lua.h"
 
 int Utils::get_attack_speed(EntitySystem& entitySystem, Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();

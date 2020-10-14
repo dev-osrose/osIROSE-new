@@ -15,6 +15,7 @@
 #include "components/stamina.h"
 #include "components/stats.h"
 #include "random.h"
+#include "dataconsts.h"
 
 using namespace RoseCommon;
 

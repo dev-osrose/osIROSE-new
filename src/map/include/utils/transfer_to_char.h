@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "entity_system.h"
 
 namespace Utils {

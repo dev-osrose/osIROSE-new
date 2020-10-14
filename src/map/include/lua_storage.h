@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "lua_api.h"
 
 // stores all entities that are loaded from lua

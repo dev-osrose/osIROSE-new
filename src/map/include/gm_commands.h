@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity_system.h"
-#include "dataconsts.h"
+#include "entity.h"
 
 #include <string>
 

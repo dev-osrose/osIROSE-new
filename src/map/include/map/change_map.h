@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_change_map_req.h"
 #include "cli_teleport_req.h"
 

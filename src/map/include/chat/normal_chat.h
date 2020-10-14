@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_normal_chat.h"
 
 class EntitySystem;

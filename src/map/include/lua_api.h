@@ -4,7 +4,7 @@
 #include <string>
 #include <optional>
 #include "logconsole.h"
-#include "dataconsts.h"
+#include "entity.h"
 
 class LuaApi {
     public:

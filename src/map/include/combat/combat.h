@@ -2,7 +2,7 @@
 
 #include <tuple>
 #include <utility>
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_attack.h"
 #include "cli_hp_req.h"
 #include "cli_revive_req.h"

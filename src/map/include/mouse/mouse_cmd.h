@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_mouse_cmd.h"
 #include "cli_stop_moving.h"
 

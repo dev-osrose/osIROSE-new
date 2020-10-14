@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include <optional>
 
 #include "cli_equip_item.h"

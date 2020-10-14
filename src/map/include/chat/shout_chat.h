@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_shout_chat.h"
 #include "srv_announce_chat.h"
 

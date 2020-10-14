@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include "tuple_iterate.h"
-#include "dataconsts.h"
 #include "entity_system.h"
 #include "chat/whisper_chat.h"
 #include "components/basic_info.h"

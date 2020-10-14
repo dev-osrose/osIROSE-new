@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_whisper_chat.h"
 #include "srv_whisper_chat.h"
 

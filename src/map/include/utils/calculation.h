@@ -2,7 +2,7 @@
 
 #include <optional>
 #include <string>
-#include "dataconsts.h"
+#include "entity.h"
 
 class EntitySystem;
 
