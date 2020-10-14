@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_BANK_MOVE_MONEY">
-    <!-- Total money in inventory -->
-    <element name = "inventory" type = "int64_t  " />
-    <!-- Total money in bank -->
-    <element name = "bank" type = "int64_t" />
-</packet>

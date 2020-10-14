@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKWC_SHOP_CLOSE">
-    <element name = "id" type = "uint16_t" />
-</packet>

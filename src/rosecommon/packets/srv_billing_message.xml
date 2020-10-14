@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_BILLING_MESSAGE">
-    <element name = "functionType" type = "uint16_t" default = "0x1001" />
-    <element name = "payFlag" type = "uint32_t" default = "2" />
-</packet>

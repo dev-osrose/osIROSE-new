@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKWC_USE_ITEM">
-    <element name = "char_id" type = "uint16_t" />
-    <element name = "item_id" type = "uint16_t" />
-    <element name = "index" type = "uint8_t" />
-</packet>

@@ -68,8 +68,6 @@ add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-add_dependencies(${PROJECT} RosePackets_generated)
-
 target_link_libraries(${PROJECT} PUBLIC CURL::libcurl)
 if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua::lua)
@@ -77,6 +75,7 @@ endif()
 target_link_libraries(${PROJECT}
   PUBLIC
     lua::lua
+    osirose_common::osirose_common
 )
 
 add_dependencies(${PROJECT} RoseCommon)

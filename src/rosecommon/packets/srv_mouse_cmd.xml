@@ -1,8 +1,0 @@
-<packet ePacketType = "PAKWC_MOUSE_CMD">
-    <element name = "id" type = "uint16_t" />
-    <element name = "targetId" type = "uint16_t" default = "0" />
-    <element name = "distance" type = "uint16_t" default = "0" />
-    <element name = "x" type = "float" default = "0" />
-    <element name = "y" type = "float" default = "0" />
-    <element name = "z" type = "uint16_t" default = "0" />
-</packet>

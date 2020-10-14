@@ -41,6 +41,7 @@ target_link_libraries(${PROJECT}
   PUBLIC
     sqlite3::sqlite3
     SQLPP11::sqlpp11_sqlite3
+    osirose_common::osirose_common
 )
 
 add_dependencies(${PROJECT} RoseCommon)

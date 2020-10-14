@@ -1,9 +1,0 @@
-<simpleType name = "EquippedPositionRide">
-    <restriction base = "uint16_t">
-        <enumeration value = "BODY" />
-        <enumeration value = "ENGINE" />
-        <enumeration value = "LEG" />
-        <enumeration value = "ABILITY" />
-        <enumeration value = "ARM" />
-    </restriction>
-</simpleType>

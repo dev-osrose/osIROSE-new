@@ -10,6 +10,11 @@
 
 class EntitySystem;
 
+namespace RoseCommon {
+class Entity;
+class Registry;
+}
+
 class Nearby {
   public:
     void add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity);

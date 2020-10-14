@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_HP_REQ">
-  <element name = "targetId" type = "uint16_t" />
-</packet>

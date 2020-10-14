@@ -1,8 +1,0 @@
-<packet ePacketType = "PAKWC_ATTACK">
-    <element name = "attackerId" type = "uint16_t" />
-    <element name = "defenderId" type = "uint16_t" />
-    <element name = "distance" type = "uint16_t" default = "0" />
-    <element name = "x" type = "float" default = "0" />
-    <element name = "y" type = "float" default = "0" />
-    <element name = "z" type = "uint16_t" default = "0" />
-</packet>

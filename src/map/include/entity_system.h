@@ -26,6 +26,11 @@ using namespace std::chrono_literals;
 class CMapClient;
 class CMapServer;
 
+namespace RoseCommon {
+using Entity = uint32_t;
+using Registry = entt::registry<Entity>;
+}
+
 class EntitySystem {
     public:
         EntitySystem(uint16_t map_id, CMapServer* server, std::chrono::milliseconds maxTimePerUpdate = 50ms);

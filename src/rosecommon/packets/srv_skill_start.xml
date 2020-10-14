@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_SKILL_START">
-    <element name = "target" type = "uint16_t" />
-</packet>
-

@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_SET_ITEM_LIFE">
-    <element name = "index" type = "uint16_t" />
-    <element name = "life" type = "uint16_t" />
-</packet>

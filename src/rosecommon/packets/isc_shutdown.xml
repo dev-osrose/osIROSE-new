@@ -1,5 +1,0 @@
-<packet ePacketType = "ISC_SHUTDOWN">
-    <include path = "isccommon.h" />
-    <element name = "serverType" type = "Isc::ServerType" enum = "uint8_t" />
-    <element name = "id" type = "int32_t" />
-</packet>

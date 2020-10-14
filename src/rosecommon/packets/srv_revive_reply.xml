@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKWC_REVIVE_REPLY">
-    <element name = "map_id" type = "uint16_t" default="0" />
-</packet>
