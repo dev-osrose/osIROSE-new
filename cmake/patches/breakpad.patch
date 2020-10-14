@@ -1,6 +1,6 @@
-index a3159ea..3da2292 100644
---- a/src/common/memory_allocator.h
-+++ b/src/common/memory_allocator.h
+index src/common/memory_allocator.h
+--- src/common/memory_allocator.h
++++ src/common/memory_allocator.h
 @@ -161,7 +161,7 @@ class PageAllocator {
  // Wrapper to use with STL containers
  template <typename T>
