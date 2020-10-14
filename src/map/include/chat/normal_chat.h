@@ -6,5 +6,5 @@
 class EntitySystem;
 
 namespace Chat {
-void normal_chat(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliNormalChat&);
+void normal_chat(EntitySystem&, Entity, const RoseCommon::Packet::CliNormalChat&);
 }

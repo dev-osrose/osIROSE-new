@@ -16,8 +16,8 @@ class LuaLoader {
         LuaLoader(EntitySystem&, uint16_t map_id, const std::string& path);
 
         void load_lua_item(uint8_t type, uint16_t id, const std::string& lua,
-                           std::function<void(RoseCommon::Entity, int, int)>&& addBonusAttr,
-                           std::function<void(RoseCommon::Entity, int, int)>&& removeBonusAttr);
+                           std::function<void(Entity, int, int)>&& addBonusAttr,
+                           std::function<void(Entity, int, int)>&& removeBonusAttr);
         std::weak_ptr<ItemLuaApi> get_lua_item(uint8_t type, uint16_t id);
 
         std::weak_ptr<NpcLuaApi> get_lua_npc(int npc_id);

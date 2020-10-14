@@ -5,7 +5,7 @@
 
 namespace Utils {
 template <typename T>
-void transfer_to_char(EntitySystem& entitySystem, RoseCommon::Entity entity, const T& packet) {
+void transfer_to_char(EntitySystem& entitySystem, Entity entity, const T& packet) {
     entitySystem.send_to(entity, packet);
 }
 }

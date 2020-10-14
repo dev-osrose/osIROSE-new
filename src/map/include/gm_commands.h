@@ -5,4 +5,4 @@
 
 #include <string>
 
-void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& message);
+void execute_gm(EntitySystem& entitySystem, Entity entity, const std::string& message);

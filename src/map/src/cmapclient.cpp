@@ -334,7 +334,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
   return true;
 }
 
-RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const EntitySystem& entitySystem, Entity entity) {
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& characterGraphics = entitySystem.get_component<Component::CharacterGraphics>(entity);
     const auto& position = entitySystem.get_component<Component::Position>(entity);
@@ -386,7 +386,7 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
   return packet;
 }
 
-RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySystem& entitySystem, Entity entity) {
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
   const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
@@ -419,7 +419,7 @@ RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySyste
   return packet;
 }
 
-RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySystem& entitySystem, Entity entity) {
   const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& pos = entitySystem.get_component<Component::Position>(entity);
   const auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
@@ -450,7 +450,7 @@ RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySyste
   return packet;
 }
 
-RoseCommon::Packet::SrvDropItem CMapClient::create_srv_drop_item(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+RoseCommon::Packet::SrvDropItem CMapClient::create_srv_drop_item(const EntitySystem& entitySystem, Entity entity) {
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
 

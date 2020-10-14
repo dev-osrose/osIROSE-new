@@ -42,10 +42,10 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   bool is_on_map() const { return login_state_ == eSTATE::ONMAP; }
   void switch_server();
  
-  static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, RoseCommon::Entity);
-  static RoseCommon::Packet::SrvNpcChar create_srv_npc_char(const EntitySystem&, RoseCommon::Entity);
-  static RoseCommon::Packet::SrvMobChar create_srv_mob_char(const EntitySystem&, RoseCommon::Entity entity);
-  static RoseCommon::Packet::SrvDropItem create_srv_drop_item(const EntitySystem&, RoseCommon::Entity entity);
+  static RoseCommon::Packet::SrvPlayerChar create_srv_player_char(const EntitySystem&, Entity);
+  static RoseCommon::Packet::SrvNpcChar create_srv_npc_char(const EntitySystem&, Entity);
+  static RoseCommon::Packet::SrvMobChar create_srv_mob_char(const EntitySystem&, Entity entity);
+  static RoseCommon::Packet::SrvDropItem create_srv_drop_item(const EntitySystem&, Entity entity);
 
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
@@ -71,7 +71,7 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   uint32_t charid_;
 
   std::shared_ptr<EntitySystem> entitySystem;
-  RoseCommon::Entity entity;
+  Entity entity;
 };
 
 #endif

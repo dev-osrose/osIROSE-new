@@ -55,7 +55,7 @@ void Map::change_map_request(EntitySystem& entitySystem, Entity entity, const Cl
     entitySystem.send_to_char_server(IscClientStatus::create(basicInfo.id, IscClientStatus::CONNECTED), basicInfo.charId);
 }
 
-void Map::teleport_request(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliTeleportReq& packet) {
+void Map::teleport_request(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliTeleportReq& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Map::teleport_request");
     logger->trace("entity {}", entity);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 
 namespace Component {
 struct Target {
-    RoseCommon::Entity target;
+    Entity target;
 };
 }

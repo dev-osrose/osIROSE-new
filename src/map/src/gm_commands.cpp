@@ -93,7 +93,7 @@ class Parser<> {
 };
 
 
-void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, int, int, int> parser) {
+void item(EntitySystem& entitySystem, Entity entity, Parser<int, int, int, int, int, int> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /item <id> <type> <amount> <refine> <durability> <socket>");
         return;
@@ -115,7 +115,7 @@ void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int
     }
 }
 
-void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, std::optional<uint16_t>> parser) {
+void teleport(EntitySystem& entitySystem, Entity entity, Parser<int, int, int, std::optional<uint16_t>> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /tp <map_id> <x> <y> [client_id]");
         return;
@@ -123,7 +123,7 @@ void teleport(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int,
     entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
 }
 
-void zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int64_t> parser) {
+void zuly(EntitySystem& entitySystem, Entity entity, Parser<int64_t> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /zuly <amount>");
         return;
@@ -133,12 +133,12 @@ void zuly(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int64_t>
     }
 }
 
-void position(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<>) {
+void position(EntitySystem& entitySystem, Entity entity, Parser<>) {
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     Chat::send_whisper(entitySystem, entity, fmt::format("Position: ({},{})", pos.x, pos.y));
 }
 
-void broadcast(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<all_of> parser) {
+void broadcast(EntitySystem& entitySystem, Entity entity, Parser<all_of> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /broadcast <message>");
         return;
@@ -148,7 +148,7 @@ void broadcast(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<all
     entitySystem.send_to_maps(packet, {});
 }
 
-void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::string, all_of> parser) {
+void whisper(EntitySystem& entitySystem, Entity entity, Parser<std::string, all_of> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /whisper <to> <message>");
         return;
@@ -164,11 +164,11 @@ void whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::
 
 }
 
-#define REGISTER_FUNCTION(f) [](EntitySystem& en, RoseCommon::Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
+#define REGISTER_FUNCTION(f) [](EntitySystem& en, Entity e, std::stringstream&& ss) { f(en, e, {std::move(ss)}); }
 
-void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>);
+void help(EntitySystem&, Entity, Parser<std::optional<std::string>>);
 
-static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
+static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, Entity, std::stringstream&&)>, std::string>> commands = {
     {"/help", {1, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
     {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <id> <type> <amount> <refine> <durability> <socket>"}},
     {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
@@ -183,7 +183,7 @@ static const std::unordered_map<std::string, std::string> aliases = {
     {"/teleport", "/tp"}
 };
 
-void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::optional<std::string>> parser) {
+void help(EntitySystem& entitySystem, Entity entity, Parser<std::optional<std::string>> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage: /help [command]");
         return;
@@ -202,7 +202,7 @@ void help(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<std::opt
     }
 }
 
-void execute_gm(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& message) {
+void execute_gm(EntitySystem& entitySystem, Entity entity, const std::string& message) {
     const uint16_t access_level = entitySystem.get_component<Component::Client>(entity).access_level;
     std::stringstream ss(message);
     std::string command;

@@ -90,8 +90,8 @@ void LuaLoader::load_file(const std::string& path) {
 }
 
 void LuaLoader::load_lua_item(uint8_t type, uint16_t id, const std::string& lua,
-                              std::function<void(RoseCommon::Entity, int, int)>&& addBonusAttr,
-                              std::function<void(RoseCommon::Entity, int, int)>&& removeBonusAttr) {
+                              std::function<void(Entity, int, int)>&& addBonusAttr,
+                              std::function<void(Entity, int, int)>&& removeBonusAttr) {
     sol::environment env{state, sol::create, state.globals()};
 
     try {

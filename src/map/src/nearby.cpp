@@ -12,31 +12,31 @@ constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
     return {gx, gy};
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const RoseCommon::Registry& registry, RoseCommon::Entity e) {
+std::tuple<uint16_t, uint16_t> get_grid_position(const Registry& registry, Entity e) {
     const auto* pos = registry.try_get<Component::Position>(e);
     if (!pos) return {0, 0};
     return get_grid_position(pos->x, pos->y);
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, RoseCommon::Entity e) {
+std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, Entity e) {
     const auto* pos = entitySystem.try_get_component<Component::Position>(e);
     if (!pos) return {0, 0};
     return get_grid_position(pos->x, pos->y);
 }
 }
 
-void Nearby::add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+void Nearby::add_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
   grid[get_grid_position(registry, entity)].insert(entity);
 }
 
-void Nearby::remove_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+void Nearby::remove_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
   auto& list = grid[get_grid_position(registry, entity)];
   list.erase(entity);
 }
     
-bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity first, RoseCommon::Entity second) const {
+bool Nearby::is_nearby(const EntitySystem& entitySystem, Entity first, Entity second) const {
   if (first == entt::null || second == entt::null) return false;
     auto pos_first = get_grid_position(entitySystem, first);
     auto pos_second = get_grid_position(entitySystem, second);
@@ -46,8 +46,8 @@ bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity firs
     return false;
 }
     
-std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySystem, RoseCommon::Entity entity) const {
-  std::set<RoseCommon::Entity> tmp;
+std::vector<Entity> Nearby::get_nearby(const EntitySystem& entitySystem, Entity entity) const {
+  std::set<Entity> tmp;
   auto pos = get_grid_position(entitySystem, entity);
   for (uint16_t x = std::max(0, std::get<0>(pos) - 10); x < std::get<0>(pos) + 10; ++x) {
       for (uint16_t y = std::max(0, std::get<1>(pos) - 10); y < std::get<1>(pos) + 10; ++y) {
@@ -60,7 +60,7 @@ std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySys
   return {tmp.cbegin(), tmp.cend()};
 }
     
-void Nearby::update_position(RoseCommon::Entity entity, float old_x, float old_y, float x, float y) {
+void Nearby::update_position(Entity entity, float old_x, float old_y, float x, float y) {
   if (old_x && old_y) {
     auto &list = grid[get_grid_position(old_x, old_y)];
     list.erase(entity);

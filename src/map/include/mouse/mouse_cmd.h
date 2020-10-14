@@ -7,6 +7,6 @@
 class EntitySystem;
 
 namespace Mouse {
-void mouse_cmd(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliMouseCmd&);
-void stop_moving(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliStopMoving&);
+void mouse_cmd(EntitySystem&, Entity, const RoseCommon::Packet::CliMouseCmd&);
+void stop_moving(EntitySystem&, Entity, const RoseCommon::Packet::CliStopMoving&);
 }

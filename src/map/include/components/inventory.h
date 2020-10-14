@@ -1,6 +1,7 @@
 #pragma once
 
 #include "array_wrapper.h"
+#include "entity.h"
 #include "dataconsts.h"
 #include <array>
 #include <entt.hpp>
@@ -13,56 +14,56 @@ namespace Component {
       items.fill(entt::null);
     }
     int64_t zuly;
-    std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS> items;
+    std::array<Entity, RoseCommon::MAX_ITEMS> items;
 
     template <typename T, size_t N, size_t L>
     using base_wrapper = Core::array_wrapper<T, N, L>;
     template <size_t N, size_t L>
-    using wrapper = base_wrapper<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>, N, L>;
+    using wrapper = base_wrapper<std::array<Entity, RoseCommon::MAX_ITEMS>, N, L>;
     template <size_t N, size_t L>
-    using const_wrapper = base_wrapper<std::add_const_t<std::array<RoseCommon::Entity, RoseCommon::MAX_ITEMS>>, N, L>;
+    using const_wrapper = base_wrapper<std::add_const_t<std::array<Entity, RoseCommon::MAX_ITEMS>>, N, L>;
 
-    inline RoseCommon::Entity& goggles() {
+    inline Entity& goggles() {
       return items[RoseCommon::EquippedPosition::GOGGLES];
     }
 
-    inline RoseCommon::Entity& helmet() {
+    inline Entity& helmet() {
       return items[RoseCommon::EquippedPosition::HELMET];
     }
 
-    inline RoseCommon::Entity& armor() {
+    inline Entity& armor() {
       return items[RoseCommon::EquippedPosition::ARMOR];
     }
 
-    inline RoseCommon::Entity& backpack() {
+    inline Entity& backpack() {
       return items[RoseCommon::EquippedPosition::BACKPACK];
     }
 
-    inline RoseCommon::Entity& gauntlet() {
+    inline Entity& gauntlet() {
       return items[RoseCommon::EquippedPosition::GAUNTLET];
     }
 
-    inline RoseCommon::Entity& boots() {
+    inline Entity& boots() {
       return items[RoseCommon::EquippedPosition::BOOTS];
     }
 
-    inline RoseCommon::Entity& weapon_r() {
+    inline Entity& weapon_r() {
       return items[RoseCommon::EquippedPosition::WEAPON_R];
     }
 
-    inline RoseCommon::Entity& weapon_l() {
+    inline Entity& weapon_l() {
       return items[RoseCommon::EquippedPosition::WEAPON_L];
     }
 
-    inline RoseCommon::Entity& necklace() {
+    inline Entity& necklace() {
       return items[RoseCommon::EquippedPosition::NECKLACE];
     }
 
-    inline RoseCommon::Entity& ring() {
+    inline Entity& ring() {
       return items[RoseCommon::EquippedPosition::RING];
     }
 
-    inline RoseCommon::Entity& earing() {
+    inline Entity& earing() {
       return items[RoseCommon::EquippedPosition::EARING];
     }
 

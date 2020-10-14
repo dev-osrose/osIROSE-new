@@ -64,7 +64,7 @@
 #include <cmath>
 #include <set>
 
-void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+void update_command(EntitySystem& entitySystem, Entity entity) {
     if (!entitySystem.has_component<Component::ComputedValues>(entity)) {
         return;
     }
@@ -79,7 +79,7 @@ void update_command(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     }
 }
 
-void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+void destroy_lua(Registry& registry, Entity entity) {
     {
         auto* lua = registry.try_get<Component::ItemLua>(entity);
         if (lua) {
@@ -98,7 +98,7 @@ void destroy_lua(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
     }
 }
 
-void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
+void check_for_target(EntitySystem& self, Entity entity) {
     const auto* target = self.try_get_component<Component::Target>(entity);
     if (target && self.is_valid(target->target) && self.has_component<Component::Item>(target->target)) {
         // it's an item, we are at it's location, pick it up
@@ -120,7 +120,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     // load item lua
     const auto &itemDb = RoseCommon::ItemDatabase::getInstance();
     itemDb.store_lua([this](uint8_t type, uint16_t id, const std::string& lua) {
-        lua_loader.load_lua_item(type, id, lua, [](RoseCommon::Entity, int, int) {}, [](RoseCommon::Entity, int, int) {});
+        lua_loader.load_lua_item(type, id, lua, [](Entity, int, int) {}, [](Entity, int, int) {});
     });
 
     // register recurrent stoof (like saving every 5min)
@@ -230,13 +230,13 @@ uint16_t EntitySystem::get_free_id() {
     return idManager.get_free_id();
 }
 
-void EntitySystem::remove_spawner(RoseCommon::Registry&, RoseCommon::Entity entity) {
+void EntitySystem::remove_spawner(Registry&, Entity entity) {
     logger->trace("EntitySystem::remove_spawner");
     auto& spawner = get_component<Component::Spawner>(entity);
     spawner.callback.cancel();
 }
 
-void EntitySystem::remove_object(RoseCommon::Registry& r, RoseCommon::Entity entity) {
+void EntitySystem::remove_object(Registry& r, Entity entity) {
     logger->trace("EntitySystem::remove_object");
     if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
@@ -251,11 +251,11 @@ uint16_t EntitySystem::get_world_time() const {
     return 0; //TODO: return a correct time
 }
 
-bool EntitySystem::is_valid(RoseCommon::Entity entity) const {
+bool EntitySystem::is_valid(Entity entity) const {
     return registry.valid(entity);
 }
 
-void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+void EntitySystem::register_name(Registry&, Entity entity) {
     //logger->trace("EntitySystem::register_name");
     const auto& basic = get_component<Component::BasicInfo>(entity);
     if (basic.name.size()) {
@@ -266,7 +266,7 @@ void EntitySystem::register_name(RoseCommon::Registry&, RoseCommon::Entity entit
     }
 }
 
-void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity entity) {
+void EntitySystem::unregister_name(Registry&, Entity entity) {
     logger->trace("EntitySystem::unregister_name");
     const auto& basic = get_component<Component::BasicInfo>(entity);
     if (basic.name.size()) {
@@ -277,14 +277,14 @@ void EntitySystem::unregister_name(RoseCommon::Registry&, RoseCommon::Entity ent
     }
 }
 
-RoseCommon::Entity EntitySystem::get_entity_from_name(const std::string& name) const {
+Entity EntitySystem::get_entity_from_name(const std::string& name) const {
     auto res = name_to_entity.find(name);
     if (res != name_to_entity.end())
         return res->second;
     return entt::null;
 }
 
-RoseCommon::Entity EntitySystem::get_entity_from_id(uint16_t id) const {
+Entity EntitySystem::get_entity_from_id(uint16_t id) const {
     auto res = id_to_entity.find(id);
     if (res != id_to_entity.end())
         return res->second;
@@ -300,7 +300,7 @@ void EntitySystem::stop() {
     registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
 
-bool EntitySystem::dispatch_packet(RoseCommon::Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
+bool EntitySystem::dispatch_packet(Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
     if (!packet) {
         return false;
     }
@@ -334,7 +334,7 @@ void EntitySystem::send_map(const RoseCommon::CRosePacket& packet) const {
     });
 }
 
-void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
+void EntitySystem::send_nearby(Entity entity, const RoseCommon::CRosePacket& packet) const {
     registry.view<const Component::Client>().each([entity, this, &packet](auto other, const auto &client_ptr) {
         if (!nearby.is_nearby(*this, entity, other)) return;
         if (auto client = client_ptr.client.lock()) {
@@ -343,7 +343,7 @@ void EntitySystem::send_nearby(RoseCommon::Entity entity, const RoseCommon::CRos
     });
 }
 
-void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet) const {
+void EntitySystem::send_nearby_except_me(Entity entity, const RoseCommon::CRosePacket& packet) const {
     registry.view<const Component::Client>().each([entity, this, &packet](auto other, const auto &client_ptr) {
         if (other != entity) {
             if (!nearby.is_nearby(*this, entity, other)) return;
@@ -354,7 +354,7 @@ void EntitySystem::send_nearby_except_me(RoseCommon::Entity entity, const RoseCo
     });
 }
 
-void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePacket& packet, bool force) const {
+void EntitySystem::send_to(Entity entity, const RoseCommon::CRosePacket& packet, bool force) const {
     if (const auto client_ptr = registry.try_get<const Component::Client>(entity)) {
         if (auto client = client_ptr->client.lock()) {
             client->send(packet, force);
@@ -362,7 +362,7 @@ void EntitySystem::send_to(RoseCommon::Entity entity, const RoseCommon::CRosePac
     }
 }
 
-void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity other) const {
+void EntitySystem::send_to_entity(Entity entity, Entity other) const {
     if (try_get_component<Component::Npc>(other)) {
         send_to(entity, CMapClient::create_srv_npc_char(*this, other));
     } else if (try_get_component<Component::Mob>(other)) {
@@ -374,7 +374,7 @@ void EntitySystem::send_to_entity(RoseCommon::Entity entity, RoseCommon::Entity 
     }
 }
 
-void EntitySystem::delete_entity(RoseCommon::Entity entity) {
+void EntitySystem::delete_entity(Entity entity) {
     add_task([entity](EntitySystem& entitySystem) {
         entitySystem.logger->debug("Deleting entity {}", entity);
         if (entity == entt::null || !entitySystem.registry.valid(entity)) {
@@ -421,7 +421,7 @@ void EntitySystem::delete_entity(RoseCommon::Entity entity) {
     });
 }
 
-void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) {
+void EntitySystem::update_position(Entity entity, float x, float y) {
     if (entity == entt::null) return;
     auto* pos = try_get_component<Component::Position>(entity);
     float old_x = 0, old_y = 0;
@@ -456,8 +456,8 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     }
 
     const auto new_nearby = get_nearby(entity);
-    std::vector<RoseCommon::Entity> to_remove;
-    std::vector<RoseCommon::Entity> to_add;
+    std::vector<Entity> to_remove;
+    std::vector<Entity> to_add;
     std::set_difference(old_nearby.begin(), old_nearby.end(), new_nearby.begin(), new_nearby.end(), std::back_inserter(to_remove));
     std::set_difference(new_nearby.begin(), new_nearby.end(), old_nearby.begin(), old_nearby.end(), std::back_inserter(to_add));
 
@@ -476,7 +476,7 @@ void EntitySystem::update_position(RoseCommon::Entity entity, float x, float y) 
     }
 }
 
-void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, uint16_t map_id) {
+void EntitySystem::teleport_entity(Entity entity, float x, float y, uint16_t map_id) {
     logger->trace("EntitySystem::teleport_entity");
     logger->debug("Teleporting {} to {}-{}-{}", entity, map_id, x, y);
     remove_component<Component::Target>(entity);
@@ -521,7 +521,7 @@ void EntitySystem::teleport_entity(RoseCommon::Entity entity, float x, float y, 
     }
 }
 
-std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity entity) const {
+std::vector<Entity> EntitySystem::get_nearby(Entity entity) const {
     const auto res = nearby.get_nearby(*this, entity);
     for (auto en : res) {
         update_command(*const_cast<EntitySystem*>(this), en);
@@ -529,7 +529,7 @@ std::vector<RoseCommon::Entity> EntitySystem::get_nearby(RoseCommon::Entity enti
     return res;
 }
 
-std::future<RoseCommon::Entity> EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
+std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t access_level, uint32_t sessionId, std::weak_ptr<CMapClient> client) {
     using namespace Component;
     auto conn = Core::connectionPool.getConnection<Core::Osirose>();
     Core::CharacterTable characters{};
@@ -540,7 +540,7 @@ std::future<RoseCommon::Entity> EntitySystem::load_character(uint32_t charId, ui
                           .from(characters).where(characters.id == charId));
 
     if (static_cast<long>(charRes.front().count) != 1L) {
-        std::promise<RoseCommon::Entity> promise;
+        std::promise<Entity> promise;
         std::future res = promise.get_future();
         promise.set_value(entt::null);
         return res;
@@ -670,7 +670,7 @@ std::future<RoseCommon::Entity> EntitySystem::load_character(uint32_t charId, ui
 
     prototype.set<StatusEffects>();
 
-    std::promise<RoseCommon::Entity> promise;
+    std::promise<Entity> promise;
     std::future result = promise.get_future();
     add_task([prototype = std::move(prototype), promise = std::move(promise)](EntitySystem&) mutable {
         promise.set_value(prototype());
@@ -678,7 +678,7 @@ std::future<RoseCommon::Entity> EntitySystem::load_character(uint32_t charId, ui
     return result;
 }
 
-void EntitySystem::save_character(RoseCommon::Entity character) {
+void EntitySystem::save_character(Entity character) {
     add_task([character](EntitySystem& self) {
         auto conn = Core::connectionPool.getConnection<Core::Osirose>();
         Core::CharacterTable characters{};
@@ -803,7 +803,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     });
 }
 
-RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint8_t itemRefine, uint8_t itemDura, uint8_t itemSocket) {
+Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint8_t itemRefine, uint8_t itemDura, uint8_t itemSocket) {
     using namespace Component;
     entt::prototype prototype(registry);
 
@@ -840,7 +840,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_zuly(int64_t zuly) {
+Entity EntitySystem::create_zuly(int64_t zuly) {
     using namespace Component;
     entt::prototype prototype(registry);
 
@@ -852,7 +852,7 @@ RoseCommon::Entity EntitySystem::create_zuly(int64_t zuly) {
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component::Item item) {
+Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component::Item item) {
     auto entity = create_item(type, id);
     if (entity == entt::null) {
         return entt::null;
@@ -861,11 +861,11 @@ RoseCommon::Entity EntitySystem::load_item(uint8_t type, uint16_t id, Component:
     return entity;
 }
 
-void EntitySystem::save_item([[maybe_unused]] RoseCommon::Entity item, [[maybe_unused]] RoseCommon::Entity owner) const {
+void EntitySystem::save_item([[maybe_unused]] Entity item, [[maybe_unused]] Entity owner) const {
 
 }
 
-RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
+Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, float y, float z, float angle) {
     logger->trace("EntitySystem::create_npc");
     using namespace Component;
     entt::prototype prototype(registry);
@@ -911,7 +911,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
+Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
     int id, int dest_map_id, float dest_x, float dest_y, float dest_z,
     float min_x, float min_y, float min_z,
     float max_x, float max_y, float max_z) {
@@ -939,7 +939,7 @@ RoseCommon::Entity EntitySystem::create_warpgate([[maybe_unused]] std::string al
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
+Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
         int mob_id, int mob_count, int limit, int interval, int range, int map_id, float x, float y, float z) {
     logger->trace("EntitySystem::create_spawner");
     using namespace Component;
@@ -979,7 +979,7 @@ RoseCommon::Entity EntitySystem::create_spawner([[maybe_unused]] std::string ali
     return entity;
 }
 
-RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y) {
+Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Type type, int map_id, float x, float y) {
     logger->trace("EntitySystem::create_player_spawn");
     using namespace Component;
     entt::prototype prototype(registry);
@@ -994,7 +994,7 @@ RoseCommon::Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Typ
     return prototype();
 }
 
-RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
+Entity EntitySystem::create_mob(Entity spawner) {
     //logger->trace("EntitySystem::create_mob");
     using namespace Component;
     entt::prototype prototype(registry);

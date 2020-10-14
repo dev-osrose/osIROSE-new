@@ -156,7 +156,7 @@ include(Build-HinnantDate)
 include(Build-sqlpp11)
 include(Build-sqlpp11-connector-sqlite3)
 include(SQLPPGenerator)
-include(Build-BehaviorTree)
+#include(Build-BehaviorTree)
 include(Build-osirose-common)
 
 if (WITH_MYSQL)

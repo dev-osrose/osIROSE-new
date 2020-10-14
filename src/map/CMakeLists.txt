@@ -10,6 +10,7 @@ if (GCC)
 endif()
 
 SET( SOURCES_HEADER
+  include/entity.h
   include/cmapserver.h
   include/cmapclient.h
   include/cmapisc.h
@@ -30,6 +31,32 @@ SET( SOURCES_HEADER
   include/lua_loader.h
   include/lua_storage.h
   include/components/spawner.h
+  include/components/basic_info.h
+  include/components/combat.h
+  include/components/computed_values.h
+  include/components/destination.h
+  include/components/faction.h
+  include/components/character_graphics.h
+  include/components/guild.h
+  include/components/hotbar.h
+  include/components/inventory.h
+  include/components/item.h
+  include/components/level.h
+  include/components/life.h
+  include/components/lua.h
+  include/components/magic.h
+  include/components/mob.h
+  include/components/npc.h
+  include/components/owner.h
+  include/components/pat.h
+  include/components/position.h
+  include/components/skills.h
+  include/components/stamina.h
+  include/components/stats.h
+  include/components/status_effects.h
+  include/components/target.h
+  include/components/warpgate.h
+  include/components/wishlist.h
   include/items/inventory.h
   include/utils/name_to_session.h
   include/utils/getters.h

@@ -395,15 +395,15 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   }
 }
 
-RoseCommon::Entity Combat::get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+Entity Combat::get_closest_spawn(EntitySystem& entitySystem, Entity player) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_closest_spawn start");
   const auto& position = entitySystem.get_component<Component::Position>(player);
 
-  RoseCommon::Entity closest = {};
+  Entity closest = {};
   float closestDist = 999999999999;
 
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
     const auto& spawnPosition = entitySystem.get_component<Component::Position>(entity);
 
@@ -422,12 +422,12 @@ RoseCommon::Entity Combat::get_closest_spawn(EntitySystem& entitySystem, RoseCom
   return closest;
 }
 
-RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+Entity Combat::get_saved_spawn(EntitySystem& entitySystem, Entity player) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_saved_spawn start");
   const auto& position = entitySystem.get_component<Component::Position>(player);
 
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
     if (spawninfo.type == Component::PlayerSpawn::RESPAWN_POINT) {
@@ -441,10 +441,10 @@ RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommo
   return {};
 }
 
-RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
+Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_start_spawn start");
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::Position, Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
     if (spawninfo.type == Component::PlayerSpawn::START_POINT) return entity;
@@ -541,7 +541,7 @@ int64_t Combat::get_exp_to_level(int level) {
   return (int64_t)((level - 15) * (level + 7) * (level - 126) * 41);
 }
 
-void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner) {
+void Combat::drop_loot(EntitySystem& entitySystem, Entity entity, Entity owner) {
   // TODO: compute drop
   const auto& lua_component = entitySystem.get_component<Component::NpcLua>(entity);
   const auto& lua_data = lua_component.data.lock();

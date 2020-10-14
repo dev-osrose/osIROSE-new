@@ -1,9 +1,9 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 
 namespace Component {
 struct Owner {
-    RoseCommon::Entity owner;
+    Entity owner;
 };
 }
