@@ -16,6 +16,7 @@
 #include "id_manager.h"
 #include "components/item.h"
 #include "components/player_spawn.h"
+#include "components/basic_info.h"
 #include "itemdb.h"
 #include "timed_callbacks.h"
 #include "packet_dispatcher.h"
@@ -127,7 +128,7 @@ class EntitySystem {
         bool is_loading() const { return loading; }
 
     private:
-        void register_name(Registry&, Entity entity);
+        void register_name(Registry&, Entity entity, const Component::BasicInfo&);
         void unregister_name(Registry&, Entity entity);
         void remove_object(Registry&, Entity entity);
         void remove_spawner(Registry&, Entity entity);

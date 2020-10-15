@@ -2,6 +2,7 @@
 
 #include "hash.h"
 #include "entity.h"
+#include "components/position.h"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -12,7 +13,8 @@ class EntitySystem;
 
 class Nearby {
   public:
-    void add_entity(Registry& registry, Entity entity);
+    void add_entity(Registry& registry, Entity entity, const Component::Position&);
+    void remove_entity(Registry& registry, Entity entity, const Component::Position&);
     void remove_entity(Registry& registry, Entity entity);
     
     bool is_nearby(const EntitySystem& entitySystem, Entity first, Entity second) const;

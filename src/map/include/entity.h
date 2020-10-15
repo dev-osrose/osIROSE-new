@@ -2,5 +2,5 @@
 
 #include <entt.hpp>
 
-using Entity = uint32_t;
-using Registry = entt::registry<Entity>;
+using Entity = entt::entity;
+using Registry = entt::registry;

@@ -188,17 +188,17 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     });
 
     // callback for removing objects
-    registry.destruction<Component::Position>().connect<&EntitySystem::remove_object>(this);
+    registry.on_destroy<Component::Position>().connect<&EntitySystem::remove_object>(this);
 
     // callback for nearby calculations
-    registry.construction<Component::Position>().connect<&Nearby::add_entity>(&nearby);
+    registry.on_construct<Component::Position>().connect<&Nearby::add_entity>(&nearby);
 
     // callback for updating the name_to_entity mapping
-    registry.construction<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
-    registry.destruction<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
+    registry.on_construct<Component::BasicInfo>().connect<&EntitySystem::register_name>(this);
+    registry.on_destroy<Component::BasicInfo>().connect<&EntitySystem::unregister_name>(this);
 
     // callback for destroying lua
-    registry.destruction<Component::ItemLua>().connect<&destroy_lua>();
+    registry.on_destroy<Component::ItemLua>().connect<&destroy_lua>();
 
     // dispatcher registration
     register_dispatcher(std::function{Chat::normal_chat});
@@ -255,14 +255,13 @@ bool EntitySystem::is_valid(Entity entity) const {
     return registry.valid(entity);
 }
 
-void EntitySystem::register_name(Registry&, Entity entity) {
+void EntitySystem::register_name(Registry&, Entity entity, const Component::BasicInfo& basicInfo) {
     //logger->trace("EntitySystem::register_name");
-    const auto& basic = get_component<Component::BasicInfo>(entity);
-    if (basic.name.size()) {
-        name_to_entity.insert({basic.name, entity});
+    if (basicInfo.name.size()) {
+        name_to_entity.insert({basicInfo.name, entity});
     }
-    if (basic.id) {
-        id_to_entity.insert({basic.id, entity});
+    if (basicInfo.id) {
+        id_to_entity.insert({basicInfo.id, entity});
     }
 }
 
@@ -294,10 +293,10 @@ Entity EntitySystem::get_entity_from_id(uint16_t id) const {
 void EntitySystem::stop() {
     std::lock_guard<std::recursive_mutex> lock(access);
     work_queue.kill();
-    registry.construction<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
-    registry.destruction<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
-    registry.construction<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
-    registry.destruction<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
+    registry.on_construct<Component::Position>().disconnect<&Nearby::add_entity>(&nearby);
+    registry.on_destroy<Component::Position>().disconnect<&EntitySystem::remove_object>(this);
+    registry.on_construct<Component::BasicInfo>().disconnect<&EntitySystem::register_name>(this);
+    registry.on_destroy<Component::BasicInfo>().disconnect<&EntitySystem::unregister_name>(this);
 }
 
 bool EntitySystem::dispatch_packet(Entity entity, std::unique_ptr<RoseCommon::CRosePacket>&& packet) {
@@ -757,8 +756,12 @@ void EntitySystem::save_character(Entity character) {
             } else {
                 const auto& item = self.get_component<Component::Item>(inv.items[row.slot]);
                 const auto& itemDef = self.get_component<RoseCommon::ItemDef>(inv.items[row.slot]);
-                if (itemDef.type != row.itemtype || itemDef.id != row.itemid || item.count != row.amount
-                    || item.refine != row.refine || item.gemOpt != row.gemOpt || item.hasSocket != row.socket) {
+                if (itemDef.type != row.itemtype
+                    || itemDef.id != row.itemid
+                    || item.count != row.amount
+                    || item.refine != row.refine
+                    || item.gemOpt != row.gemOpt
+                    || item.hasSocket != row.socket) {
                     to_update.push_back(row.slot);
                 }
             }

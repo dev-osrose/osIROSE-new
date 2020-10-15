@@ -1,5 +1,4 @@
 #include "nearby.h"
-#include "components/position.h"
 #include "entity_system.h"
 
 #include <algorithm>
@@ -12,10 +11,8 @@ constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
     return {gx, gy};
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const Registry& registry, Entity e) {
-    const auto* pos = registry.try_get<Component::Position>(e);
-    if (!pos) return {0, 0};
-    return get_grid_position(pos->x, pos->y);
+std::tuple<uint16_t, uint16_t> get_grid_position(const Component::Position& pos) {
+    return get_grid_position(pos.x, pos.y);
 }
 
 std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, Entity e) {
@@ -25,15 +22,23 @@ std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySyste
 }
 }
 
-void Nearby::add_entity(Registry& registry, Entity entity) {
+void Nearby::add_entity(Registry& registry, Entity entity, const Component::Position& position) {
   if (entity == entt::null || !registry.valid(entity)) return;
-  grid[get_grid_position(registry, entity)].insert(entity);
+  grid[get_grid_position(position)].insert(entity);
+}
+
+void Nearby::remove_entity(Registry& registry, Entity entity, const Component::Position& position) {
+  if (entity == entt::null || !registry.valid(entity)) return;
+  auto& list = grid[get_grid_position(position)];
+  list.erase(entity);
 }
 
 void Nearby::remove_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
-  auto& list = grid[get_grid_position(registry, entity)];
-  list.erase(entity);
+  if (const auto* pos = registry.try_get<Component::Position>(entity)) {
+      auto& list = grid[get_grid_position(*pos)];
+      list.erase(entity);
+  }
 }
     
 bool Nearby::is_nearby(const EntitySystem& entitySystem, Entity first, Entity second) const {
