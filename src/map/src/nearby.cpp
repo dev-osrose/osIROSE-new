@@ -22,15 +22,11 @@ std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySyste
 }
 }
 
-void Nearby::add_entity(Registry& registry, Entity entity, const Component::Position& position) {
+void Nearby::add_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
-  grid[get_grid_position(position)].insert(entity);
-}
-
-void Nearby::remove_entity(Registry& registry, Entity entity, const Component::Position& position) {
-  if (entity == entt::null || !registry.valid(entity)) return;
-  auto& list = grid[get_grid_position(position)];
-  list.erase(entity);
+  if (const auto* pos = registry.try_get<Component::Position>(entity)) {
+    grid[get_grid_position(*pos)].insert(entity);
+  }
 }
 
 void Nearby::remove_entity(Registry& registry, Entity entity) {

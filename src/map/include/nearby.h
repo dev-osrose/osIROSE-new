@@ -13,8 +13,7 @@ class EntitySystem;
 
 class Nearby {
   public:
-    void add_entity(Registry& registry, Entity entity, const Component::Position&);
-    void remove_entity(Registry& registry, Entity entity, const Component::Position&);
+    void add_entity(Registry& registry, Entity entity);
     void remove_entity(Registry& registry, Entity entity);
     
     bool is_nearby(const EntitySystem& entitySystem, Entity first, Entity second) const;

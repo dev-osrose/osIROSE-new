@@ -32,7 +32,7 @@ float get_runspeed(EntitySystem& entitySystem, Entity entity) {
     if (entitySystem.has_component<Component::Inventory>(entity)) {
       auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
       const auto& boots = inventory.boots();
-      if (boots) itemSpeed = Utils::get_move_speed(entitySystem, boots);
+      if (boots != entt::null) itemSpeed = Utils::get_move_speed(entitySystem, boots);
 
       const auto& backpack = inventory.backpack();
       itemSpeed += Utils::get_move_speed(entitySystem, backpack);
@@ -65,7 +65,7 @@ float get_attackspeed(EntitySystem& entitySystem, Entity entity) {
   if (entitySystem.has_component<Component::Inventory>(entity)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) weaponAtkSpd = Utils::get_attack_speed(entitySystem, weapon_r);
+    if (weapon_r != entt::null) weaponAtkSpd = Utils::get_attack_speed(entitySystem, weapon_r);
   }
   // Note: passiveAtkSpeed is only set depending on your job?
   float attackSpeed = (passiveAtkSpeed + 1500.f / (weaponAtkSpd + 5));
@@ -224,7 +224,7 @@ int64_t get_magicdamage(EntitySystem& entitySystem, Entity attacker, Entity defe
   if (entitySystem.has_component<Component::Inventory>(attacker)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) magic_value = Utils::get_magic(entitySystem, weapon_r);
+    if (weapon_r != entt::null) magic_value = Utils::get_magic(entitySystem, weapon_r);
   }
 
   return 50;
@@ -259,7 +259,7 @@ int64_t get_damage(EntitySystem& entitySystem, Entity attacker, Entity defender,
   if (entitySystem.has_component<Component::Inventory>(attacker)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) magicStat = Utils::get_magic(entitySystem, weapon_r);
+    if (weapon_r != entt::null) magicStat = Utils::get_magic(entitySystem, weapon_r);
   }
 
   const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);

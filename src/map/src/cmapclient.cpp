@@ -20,6 +20,7 @@
 #include "config.h"
 #include "connection.h"
 #include "epackettype.h"
+#include "entity.h"
 #include "srv_inventory_data.h"
 #include "srv_join_server_reply.h"
 #include "srv_quest_data.h"

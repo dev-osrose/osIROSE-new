@@ -128,7 +128,7 @@ class EntitySystem {
         bool is_loading() const { return loading; }
 
     private:
-        void register_name(Registry&, Entity entity, const Component::BasicInfo&);
+        void register_name(Registry&, Entity entity);
         void unregister_name(Registry&, Entity entity);
         void remove_object(Registry&, Entity entity);
         void remove_spawner(Registry&, Entity entity);
@@ -195,17 +195,17 @@ void EntitySystem::remove_component(Entity entity) {
     
 template <typename T>
 T& EntitySystem::add_component(Entity entity) {
-    return registry.assign<T>(entity);
+    return registry.emplace<T>(entity);
 }
 
 template <typename T>
 void EntitySystem::add_component(Entity entity, T&& comp) {
-    registry.assign<T>(entity, std::forward<T>(comp));
+    registry.emplace<T>(entity, std::forward<T>(comp));
 }
 
 template <typename T>
 T& EntitySystem::add_or_replace_component(Entity entity) {
-    return registry.assign_or_replace<T>(entity);
+    return registry.emplace_or_replace<T>(entity);
 }
 
 template <typename T>

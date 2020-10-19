@@ -462,7 +462,7 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
 
   switch (type) {
     case CliReviveReq::ReviveRequest::REVIVE_POSITION: {
-      if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+      if (Entity e = get_closest_spawn(entitySystem, entity); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
         x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
         y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
@@ -470,11 +470,11 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
       break;
     }
     case CliReviveReq::ReviveRequest::SAVE_POSITION: {
-      if (Entity e = get_saved_spawn(entitySystem, entity); e) {
+      if (Entity e = get_saved_spawn(entitySystem, entity); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
 
         if (dest.map == 20 && basicInfo.job) {
-          if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+          if (Entity e = get_closest_spawn(entitySystem, entity); e != entt::null) {
             auto& dest = entitySystem.get_component<Component::Position>(e);
             x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
             y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
@@ -491,7 +491,7 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
       break;
     }
     case CliReviveReq::ReviveRequest::START_POSITION: {
-      if (Entity e = get_start_spawn(entitySystem); e) {
+      if (Entity e = get_start_spawn(entitySystem); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
         x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
         y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
