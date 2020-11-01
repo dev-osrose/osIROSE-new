@@ -23,6 +23,7 @@ namespace RoseCommon {
 constexpr unsigned int MIN_SELL_TYPE = 1;
 constexpr unsigned int MAX_SELL_TYPE = 11;
 
+constexpr unsigned int MAX_STAT = 300; //changed by davidix
 constexpr unsigned int MAX_STACK = 999;
 
 constexpr unsigned int MAX_UNION_COUNT = 10;

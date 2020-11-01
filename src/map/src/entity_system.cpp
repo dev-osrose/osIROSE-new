@@ -41,6 +41,7 @@
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
 #include "combat/combat.h"
+#include "combat/player.h"
 #include "items/inventory.h"
 
 #include "utils/calculation.h"
@@ -204,6 +205,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::attack});
     register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});
+    register_dispatcher(std::function{Player::add_stat});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
 
@@ -593,6 +595,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
         item.isCreated = false;
         item.life = 1000;
         item.hasSocket = row.socket;
+        item.durability = row.durability; //changed by davidixx
         item.isAppraised = true;
         item.refine = row.refine;
         item.count = row.amount;
@@ -625,7 +628,7 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
     pos.map = charRow.map;
-
+// changed by davidixx - add here respawn at START_POSITION for the same map!
     auto skillRes =
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
     auto& skills = prototype.set<Skills>();
@@ -756,6 +759,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
+                inventory.durability = item.durability, //changed by davidixx
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket)
@@ -768,6 +772,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
+                inventory.durability = item.durability, //changed by davidixx
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket),

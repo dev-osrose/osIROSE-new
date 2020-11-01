@@ -70,6 +70,9 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
 CMapClient::~CMapClient() {}
 
 bool CMapClient::handlePacket(uint8_t* _buffer) {
+  fmt::memory_buffer out; //changed by davidixx
+  for (int i = 0; i < sizeof(_buffer); i++) format_to(out, "0x{0:02x} ", _buffer[i]); //changed by davidixx
+  logger_->warn("Packet recv data is {}", fmt::to_string(out) ); //changed by davidixx
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE:
       if (login_state_ != eSTATE::LOGGEDIN) {

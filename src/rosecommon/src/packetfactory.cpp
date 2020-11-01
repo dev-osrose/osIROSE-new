@@ -17,6 +17,7 @@
 #include "cli_login_req.h"
 #include "cli_mouse_cmd.h"
 #include "cli_normal_chat.h"
+#include "cli_stat_add_req.h"
 #include "cli_revive_req.h"
 #include "cli_select_char_req.h"
 #include "cli_shout_chat.h"
@@ -56,6 +57,7 @@
 #include "srv_switch_server.h"
 #include "srv_teleport_reply.h"
 #include "srv_whisper_chat.h"
+#include "srv_stat_add_reply.h"
 
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
@@ -84,6 +86,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SHOUT_CHAT, CliShoutChat);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SRV_SELECT_REQ, CliSrvSelectReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_STOP_MOVING, CliStopMoving);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_STAT_ADD_REQ, CliStatAddReq); //changed by davidixx
     REGISTER_RECV_PACKET(ePacketType::PAKCS_TELEPORT_REQ, CliTeleportReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat);
     REGISTER_RECV_PACKET(ePacketType::ISC_ALIVE, IscAlive);
@@ -118,6 +121,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SELECT_CHAR_REPLY, SrvSelectCharReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_ITEM, SrvSetItem);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SHOUT_CHAT, SrvShoutChat);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_STAT_ADD_REPLY, SrvStatAddReply); //changed by davidixx
     REGISTER_SEND_PACKET(ePacketType::PAKWC_SET_HP_AND_MP, SrvSetHpAndMp);
     REGISTER_SEND_PACKET(ePacketType::PAKLC_SRV_SELECT_REPLY, SrvSrvSelectReply);
     REGISTER_SEND_PACKET(ePacketType::PAKCC_SWITCH_SERVER, SrvSwitchServer);
