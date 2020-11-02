@@ -4,9 +4,8 @@
 
 #include "cli_stat_add_req.h"
 #include "dataconsts.h"
+#include <optional>
 
-using namespace RoseCommon;
-using namespace RoseCommon::Packet;
 
 class EntitySystem;
 

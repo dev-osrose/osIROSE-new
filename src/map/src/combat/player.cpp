@@ -6,8 +6,12 @@
 #include "entity_system.h"
 #include "components/basic_info.h"
 #include "components/stats.h"
+#include "cli_stat_add_req.h"
 #include "srv_stat_add_reply.h"
 #include <cmath>
+
+using namespace RoseCommon;
+using namespace Player;
 
 void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliStatAddReq& packet) {
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
@@ -40,7 +44,7 @@ void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, con
 
 		// Updating HP & MP
 		Combat::updateStats(entitySystem, entity);
-		auto pStat = SrvStatAddReply::create(static_cast<Packet::SrvStatAddReply::Stat>(statId), newStatValue);
+		auto pStat = RoseCommon::Packet::SrvStatAddReply::create(static_cast<Packet::SrvStatAddReply::Stat>(statId), newStatValue);
 		entitySystem.send_to(entity, pStat);
 	}
 
