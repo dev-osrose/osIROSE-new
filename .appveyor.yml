@@ -49,7 +49,7 @@ install:
 - ps: Start-FileDownload http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-winx64.msi -FileName C:\projects\osIROSE\mysql-connector-c.msi
 - ps: Start-FileDownload https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName C:\projects\osIROSE\ninja-win.zip
 - ps: Expand-Archive C:\projects\osIROSE\ninja-win.zip -DestinationPath C:\projects\osIROSE\build\3rdparty\bin -Force
-- cmd: pip install pyparsing
+- cmd: C:\Python39-x64\Scripts\pip install pyparsing
 - cmd: "./cmake/scripts/msvc_mysqlpp_install.bat"
 - cmd: "./cmake/scripts/msvc_install.bat"
 - cmd: "%PROJECT_PATH%/cmake/scripts/robocopy.bat %PROJECT_PATH%/scripts %PROJECT_PATH%/build/bin/scripts *.lua"
