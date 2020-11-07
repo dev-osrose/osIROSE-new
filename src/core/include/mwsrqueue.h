@@ -7,7 +7,7 @@
 
 namespace Core {
 
-// Simple multiple writer siingle reader queue implementation with infinite growth
+// Simple multiple writer single reader queue implementation with infinite growth
 template <class Collection>
 class MWSRQueue {
   public:

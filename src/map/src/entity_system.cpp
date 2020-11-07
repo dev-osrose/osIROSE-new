@@ -103,7 +103,7 @@ void check_for_target(EntitySystem& self, RoseCommon::Entity entity) {
 }
 
 EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::milliseconds maxTimePerUpdate) :
-    loading(true), 
+    loading(true),
     maxTimePerUpdate(maxTimePerUpdate),
     lua_loader(*this, map_id, Core::Config::getInstance().mapServer().luaScript),
     server(server) {
@@ -142,34 +142,37 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
               }
             }
             if(computed.runSpeed < 200) computed.runSpeed = 200;
-            
+
             computed.atkSpeed = Calculations::get_attackspeed(self, entity);
             // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;
         });
-        self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self](auto entity, auto& pos, auto& dest, auto& values) {
-            const std::chrono::duration<double, std::milli> delta{100.0};
-            const float speed = values.runSpeed;
-            const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.dist / speed)};
-            const float dx = dest.x - pos.x;
-            const float dy = dest.y - pos.y;
-            const float distance = std::sqrt(dx * dx + dy * dy);
-            dest.dist = distance;
-            if (ntime <= delta || distance == 0) {
-                self.remove_component<Component::Destination>(entity);
-                self.update_position(entity, dest.x, dest.y);
-                check_for_target(self, entity);
-            } else {
-                const auto tmp = delta / ntime;
-                self.update_position(entity, pos.x + dx * tmp, pos.y + dy * tmp);
-            }
-        });
     });
-    
+
     prevTime = Core::Time::GetTickCount();
     add_recurrent_timer(50ms, [](EntitySystem& self) {
       auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
+
+      self.registry.view<Component::Position, Component::Destination, Component::ComputedValues>().each([&self, &dt](auto entity, auto& pos, auto& dest, auto& values) {
+        const std::chrono::duration<double, std::milli> delta{dt};
+        const float speed = values.runSpeed;
+        const std::chrono::milliseconds ntime{static_cast<int>(1000.f * dest.dist / speed)};
+        const float dx = dest.x - pos.x;
+        const float dy = dest.y - pos.y;
+        const float distance = std::sqrt(dx * dx + dy * dy);
+        dest.dist = distance;
+        if (ntime <= delta || distance <= 0.0001f) {
+          self.remove_component<Component::Destination>(entity);
+          self.update_position(entity, dest.x, dest.y);
+          check_for_target(self, entity);
+        } else {
+          const auto tmp = delta / ntime;
+          self.update_position(entity, pos.x + dx * tmp, pos.y + dy * tmp);
+        }
+      });
+
       // we can use std::for_each(std::execution::par, view.begin(), view.end()) if we need more speed here
+      dt = std::chrono::duration_cast<std::chrono::milliseconds>(Core::Time::GetTickCount() - self.prevTime).count();
       self.registry.view<Component::Level, Component::Life, Component::ComputedValues>().each([&self, &dt](auto entity, [[maybe_unused]] auto& level, [[maybe_unused]] auto& life, [[maybe_unused]] auto& values) {
         Combat::update(self, entity, dt);
       });
@@ -775,7 +778,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
     });
 }
 
-RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count) {
+RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint8_t itemRefine, uint8_t itemDura, uint8_t itemSocket) {
     using namespace Component;
     entt::prototype prototype(registry);
 
@@ -789,13 +792,15 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     auto& item = prototype.set<Item>();
     item.isCreated = false;
     item.life = 1000;
-    item.durability = 100;
+    item.durability = std::min(int(itemDura), 120);
     item.hasSocket = false;
+    if (itemSocket > 0)
+        item.hasSocket = true;
     item.isAppraised = false;
-    item.refine = 0;
+    item.refine = std::min(int(itemRefine), 9);
     item.count = count;
     item.gemOpt = 0;
-    item.price = 0;
+    item.price = 1000;
     item.is_zuly = false;
 
     prototype.set<RoseCommon::ItemDef>(def);
@@ -842,7 +847,7 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     auto& basic = prototype.set<BasicInfo>();
     basic.id = idManager.get_free_id();
     basic.teamId = basic.id;
-    
+
     auto ptr = lua_loader.get_data(npc_id);
     auto data = ptr.lock();
     if(!data)
@@ -852,10 +857,10 @@ RoseCommon::Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id
     computed_values.moveMode = RoseCommon::MoveMode::WALK;
     computed_values.command = RoseCommon::Command::STOP;
     computed_values.statusFlag = 0;
-    
+
     auto& level = prototype.set<Level>();
     level.level = data ? data->get_level() : 1;
-    
+
     if(level.level <= 0)
         level.level = 1;
 
@@ -980,13 +985,13 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     basic_info.id = idManager.get_free_id();
     basic_info.tag = basic_info.id;
     basic_info.teamId = -1;
-    
+
     auto& level = prototype.set<Level>();
     level.level = data ? data->get_level() : 1;
-    
+
     if(level.level <= 0)
         level.level = 1;
-    
+
     auto& position = prototype.set<Position>();
     auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
     position.x = std::get<0>(pos);
@@ -1007,7 +1012,7 @@ RoseCommon::Entity EntitySystem::create_mob(RoseCommon::Entity spawner) {
     auto temp_hp = data ? data->get_hp() : 1;
     life.maxHp = temp_hp * level.level;
     life.hp = life.maxHp;
-    
+
     auto& magic = prototype.set<Magic>();
     magic.mp = 0;
     magic.maxMp = 0;

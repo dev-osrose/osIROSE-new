@@ -93,12 +93,12 @@ class Parser<> {
 };
 
 
-void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int> parser) {
+void item(EntitySystem& entitySystem, RoseCommon::Entity entity, Parser<int, int, int, int, int, int> parser) {
     if (!parser.is_good()) {
-        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /item <type> <id>");
+        Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /item <id> <type> <amount> <refine> <durability> <socket>");
         return;
     }
-    const auto item = entitySystem.create_item(parser.get_arg<0>(), parser.get_arg<1>());
+    const auto item = entitySystem.create_item(parser.get_arg<1>(), parser.get_arg<0>(), parser.get_arg<2>(), parser.get_arg<3>(), parser.get_arg<4>(), parser.get_arg<5>());
     if (item == entt::null) {
         Chat::send_whisper(entitySystem, entity, fmt::format("No existing item ({}, {})", parser.get_arg<0>(), parser.get_arg<1>()));
         return;
@@ -170,7 +170,7 @@ void help(EntitySystem&, RoseCommon::Entity, Parser<std::optional<std::string>>)
 
 static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<void(EntitySystem&, RoseCommon::Entity, std::stringstream&&)>, std::string>> commands = {
     {"/help", {1, REGISTER_FUNCTION(help), "Prints this help. Usage: /help [command]"}},
-    {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <type> <id>"}},
+    {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <id> <type> <amount> <refine> <durability> <socket>"}},
     {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}},
     {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}},
