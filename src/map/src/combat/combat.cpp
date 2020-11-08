@@ -68,6 +68,7 @@ void Combat::check_for_level_up(EntitySystem& entitySystem, Entity entity, uint1
     // TODO:: adjust our hp and mp based on our level here
     // TODO:: give the player attr and skill points
     basicInfo.statPoints += 9 + attackerLevel.level - ((attackerLevel.level - 1) / 5);
+    basicInfo.skillPoints += (attackerLevel.level / 2) + 1;
 
     exp_required = get_exp_to_level(attackerLevel.level + 1);
   }
