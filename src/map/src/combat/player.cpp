@@ -1,5 +1,3 @@
-//ALL ADDED BY DAVIDIXX
-
 #include "dataconsts.h"
 #include "cmapclient.h"
 #include "combat/player.h"

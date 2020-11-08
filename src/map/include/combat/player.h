@@ -1,5 +1,3 @@
-//ALL ADDED BY DAVIDIXX
-
 #pragma once
 
 #include "cli_stat_add_req.h"
