@@ -21,6 +21,7 @@
 #include "cli_revive_req.h"
 #include "cli_select_char_req.h"
 #include "cli_shout_chat.h"
+#include "cli_toggle_move.h"
 #include "cli_srv_select_req.h"
 #include "cli_stop_moving.h"
 #include "cli_teleport_req.h"
@@ -42,6 +43,7 @@
 #include "srv_join_server_reply.h"
 #include "srv_login_reply.h"
 #include "srv_mob_char.h"
+#include "srv_toggle_move.h"
 #include "srv_mouse_cmd.h"
 #include "srv_normal_chat.h"
 #include "srv_npc_char.h"
@@ -81,6 +83,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_LOGIN_REQ, CliLoginReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_MOUSE_CMD, CliMouseCmd);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_NORMAL_CHAT, CliNormalChat);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_TOGGLE_MOVE, CliToggleMove); //changed by davidixx
     REGISTER_RECV_PACKET(ePacketType::PAKCS_REVIVE_REQ, CliReviveReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SELECT_CHAR_REQ, CliSelectCharReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_SHOUT_CHAT, CliShoutChat);
@@ -115,6 +118,7 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NORMAL_CHAT, SrvNormalChat);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_NPC_CHAR, SrvNpcChar);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_PLAYER_CHAR, SrvPlayerChar);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_TOGGLE_MOVE, SrvToggleMove); //changed by davidixx
     REGISTER_SEND_PACKET(ePacketType::PAKWC_QUEST_DATA, SrvQuestData);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_REMOVE_OBJECT, SrvRemoveObject);
     REGISTER_SEND_PACKET(ePacketType::PAKSC_SCREEN_SHOT_TIME_REPLY, SrvScreenShotTimeReply);

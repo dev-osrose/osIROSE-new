@@ -23,7 +23,7 @@ namespace RoseCommon {
 constexpr unsigned int MIN_SELL_TYPE = 1;
 constexpr unsigned int MAX_SELL_TYPE = 11;
 
-constexpr unsigned int MAX_STAT = 300; //changed by davidix
+constexpr unsigned int MAX_STAT = 300;
 constexpr unsigned int MAX_STACK = 999;
 
 constexpr unsigned int MAX_UNION_COUNT = 10;
@@ -32,6 +32,8 @@ constexpr unsigned int MAX_SKILL_COUNT = 120;
 constexpr unsigned int MAX_HOTBAR_ITEMS = 32;
 
 constexpr unsigned int MAX_DAMAGE = 99999999;
+constexpr unsigned int WALK_SPEED = 200;
+constexpr unsigned int BASE_MOVE_SPEED = 425;
 
 constexpr unsigned int DAMAGE_ACTION_IMMEDIATE = 0x02;
 constexpr unsigned int DAMAGE_ACTION_HIT = 0x04;
@@ -48,6 +50,8 @@ constexpr unsigned int MAX_SWITCHES = 16;
 constexpr unsigned int MAX_QUEST_SWITCHES = 32;
 constexpr unsigned int MAX_QUEST_VARS = 10;
 constexpr unsigned int MAX_QUEST_ITEMS = 6;
+
+constexpr uint8_t TAB_SIZE = 30;
 
 constexpr float        DROP_RANGE = 50.f;
 constexpr unsigned int MAX_VISIBLE_ITEMS = 8;

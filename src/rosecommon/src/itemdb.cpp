@@ -34,7 +34,7 @@ void ItemDatabase::initialize() {
       newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
       newItem.sell_price = static_cast<uint32_t>(row.priceSell);
       newItem.weight = static_cast<uint16_t>(row.weight);
-      newItem.is_stackable = newItem.type == ItemType::ITEM_CONSUMABLE || newItem.type == ItemType::ITEM_ETC || newItem.type == ItemType::ITEM_ETC2;
+      newItem.is_stackable = newItem.type == ItemType::ITEM_CONSUMABLE || newItem.type == ItemType::ITEM_ETC || newItem.type == ItemType::ITEM_ETC2 || newItem.type == ItemType::ITEM_ETC_GEM;
       newItem.atk = static_cast<uint16_t>(row.attack);
       newItem.def = static_cast<uint16_t>(row.defense);
       newItem.slots = static_cast<uint8_t>(row.slots);

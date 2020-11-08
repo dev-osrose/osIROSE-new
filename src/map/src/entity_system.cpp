@@ -133,7 +133,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
               case RoseCommon::MoveMode::WALK:
               {
                 // This is a fixed speed
-                computed.runSpeed = 200;
+                computed.runSpeed = RoseCommon::WALK_SPEED;
                 break;
               }
               default:
@@ -142,7 +142,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 break;
               }
             }
-            if(computed.runSpeed < 200) computed.runSpeed = 200;
+            if(computed.runSpeed < 200) computed.runSpeed = RoseCommon::WALK_SPEED;
 
             computed.atkSpeed = Calculations::get_attackspeed(self, entity);
             // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
@@ -206,6 +206,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});
     register_dispatcher(std::function{Player::add_stat});
+    register_dispatcher(std::function{Player::toggle_player_move});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
 
@@ -595,12 +596,13 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
         item.isCreated = false;
         item.life = 1000;
         item.hasSocket = row.socket;
-        item.durability = row.durability; //changed by davidixx
+        item.durability = row.durability;
         item.isAppraised = true;
         item.refine = row.refine;
         item.count = row.amount;
         item.gemOpt = row.gemOpt;
         item.price = row.price;
+        item.is_zuly = false;
         auto to_emplace = load_item(row.itemtype, row.itemid, item);
         if (is_inventory) {
             inventory.items[row.slot] = to_emplace;
@@ -628,7 +630,6 @@ RoseCommon::Entity EntitySystem::load_character(uint32_t charId, uint16_t access
     pos.z = 0;
     pos.spawn = charRow.reviveMap;
     pos.map = charRow.map;
-// changed by davidixx - add here respawn at START_POSITION for the same map!
     auto skillRes =
       conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
     auto& skills = prototype.set<Skills>();
@@ -759,7 +760,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
-                inventory.durability = item.durability, //changed by davidixx
+                inventory.durability = item.durability,
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket)
@@ -772,7 +773,7 @@ void EntitySystem::save_character(RoseCommon::Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
-                inventory.durability = item.durability, //changed by davidixx
+                inventory.durability = item.durability,
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket),
@@ -809,7 +810,7 @@ RoseCommon::Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t
     item.is_zuly = false;
 
     prototype.set<RoseCommon::ItemDef>(def);
-
+    
     auto& lua = prototype.set<ItemLua>();
     lua.api = lua_loader.get_lua_item(type, id);
     if (const auto tmp = lua.api.lock(); tmp) {

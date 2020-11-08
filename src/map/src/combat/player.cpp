@@ -1,14 +1,20 @@
 //ALL ADDED BY DAVIDIXX
 
 #include "dataconsts.h"
+#include "cmapclient.h"
 #include "combat/player.h"
 #include "combat/combat.h"
 #include "entity_system.h"
 #include "components/basic_info.h"
 #include "components/stats.h"
+#include "components/computed_values.h"
 #include "cli_stat_add_req.h"
+#include "cli_toggle_move.h"
 #include "srv_stat_add_reply.h"
+#include "srv_toggle_move.h"
 #include <cmath>
+#include "utils/calculation.h"
+
 
 using namespace RoseCommon;
 using namespace Player;
@@ -31,7 +37,7 @@ void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, con
 	}
 
 	// Is there enough stat points AND stat is not maxed?
-	if (basicInfo.statPoints >= neededStatPoints && neededStatPoints <(MAX_STAT / 5)) {
+	if (basicInfo.statPoints >= neededStatPoints && neededStatPoints < (MAX_STAT / 5)) {
 		switch(statId)
         {
 			case 0: newStatValue = ++stats.str; break;
@@ -41,11 +47,33 @@ void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, con
 			case 4: newStatValue = ++stats.charm; break;
 			case 5: newStatValue = ++stats.sense; break;
 		}
-
+		basicInfo.statPoints -= neededStatPoints;
 		// Updating HP & MP
 		Combat::updateStats(entitySystem, entity);
-		auto pStat = RoseCommon::Packet::SrvStatAddReply::create(static_cast<Packet::SrvStatAddReply::Stat>(statId), newStatValue);
+		auto pStat = Packet::SrvStatAddReply::create(static_cast<Packet::SrvStatAddReply::Stat>(statId), newStatValue);
 		entitySystem.send_to(entity, pStat);
 	}
 
+}
+
+void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliToggleMove& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+
+	Packet::CliToggleMove::ToggleMove moveType = packet.get_type();
+	auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
+	if(moveType == 0) {
+		if (computedValues.moveMode == MoveMode::RUN) {
+			computedValues.moveMode = MoveMode::WALK;
+		} else if (computedValues.moveMode == MoveMode::WALK) {
+			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
+			computedValues.moveMode = MoveMode::RUN;
+		}
+	}
+	entitySystem.save_character(entity);
+	
+	auto pToggle = Packet::SrvToggleMove::create(static_cast<Packet::SrvToggleMove::ToggleMove>(computedValues.moveMode));
+	pToggle.set_run_speed(computedValues.runSpeed);
+	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+	pToggle.set_object_id(basicInfo.id);
+	entitySystem.send_map(pToggle);
 }

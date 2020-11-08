@@ -29,6 +29,7 @@
 #include "srv_logout_reply.h"
 #include "srv_chan_char_reply.h"
 #include "combat/combat.h"
+#include "utils/calculation.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -70,9 +71,6 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
 CMapClient::~CMapClient() {}
 
 bool CMapClient::handlePacket(uint8_t* _buffer) {
-  fmt::memory_buffer out; //changed by davidixx
-  for (int i = 0; i < sizeof(_buffer); i++) format_to(out, "0x{0:02x} ", _buffer[i]); //changed by davidixx
-  logger_->warn("Packet recv data is {}", fmt::to_string(out) ); //changed by davidixx
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE:
       if (login_state_ != eSTATE::LOGGEDIN) {
@@ -228,6 +226,8 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           const auto& stamina = entitySystem->get_component<Component::Stamina>(entity);
           const auto& skills = entitySystem->get_component<Component::Skills>(entity);
           const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
+          auto& computed_values = entitySystem->get_component<Component::ComputedValues>(entity);
+          computed_values.runSpeed = Calculations::get_runspeed(*entitySystem, entity);
           packet.set_race(characterGraphics.race);
 
           if(position.map == 20)
