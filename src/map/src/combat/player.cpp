@@ -67,7 +67,6 @@ void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity e
 			computedValues.moveMode = MoveMode::RUN;
 		}
 	}
-	entitySystem.save_character(entity);
 	
 	auto pToggle = Packet::SrvToggleMove::create(static_cast<Packet::SrvToggleMove::ToggleMove>(computedValues.moveMode));
 	pToggle.set_run_speed(computedValues.runSpeed);
