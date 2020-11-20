@@ -77,7 +77,7 @@ size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCom
 
     if (itemTab == 1 || itemTab ==2) {
         for(int i = 0; i < RoseCommon::TAB_SIZE; i++) {
-            size_t res = 12;
+            size_t res = EquippedPosition::MAX_EQUIP_ITEMS;
             res += (RoseCommon::TAB_SIZE * itemTab) + i;
             if(inv.items[res] != entt::null) {
                 const auto& item = entitySystem.get_component<Component::Item>(inv.items[res]);
@@ -90,7 +90,7 @@ size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCom
     }
 
     for (int i = 0; i < RoseCommon::TAB_SIZE; i++) {
-        size_t res = 12;
+        size_t res = EquippedPosition::MAX_EQUIP_ITEMS;
         res += (RoseCommon::TAB_SIZE * itemTab) + i;
         if (inv.items[res] == entt::null) return res;
     }
