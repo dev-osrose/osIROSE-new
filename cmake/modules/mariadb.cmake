@@ -3,7 +3,6 @@ if (WIN32)
   find_path(MYSQL_INCLUDE_DIR
       NAMES "mysql.h"
       PATHS "${CMAKE_THIRD_PARTY_INCLUDE_DIR}"
-      "${CMAKE_EXTERNAL_INCLUDE_DIR}"
       "$ENV{PROGRAMFILES}/MariaDB/MariaDB Connector C 64-bit/include"
       "$ENV{PROGRAMFILES}/MariaDB/MariaDB 10.4/include/mysql"
       "$ENV{SYSTEMDRIVE}/MariaDB/MariaDB Connector C 64-bit/include"
@@ -13,7 +12,6 @@ if (WIN32)
   find_path(MYSQL_LIBRARY_PATH
       NAMES "libmysql.lib" "mysqlclient_r.lib" "libmariadb.lib" "mariadbclient.lib"
       PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-      "${CMAKE_EXTERNAL_LIBRARY_DIR}"
       "$ENV{PROGRAMFILES}/MariaDB/MariaDB Connector C 64-bit/lib"
       "$ENV{PROGRAMFILES}/MariaDB/MariaDB 10.4/lib"
       "$ENV{SYSTEMDRIVE}/MariaDB/MariaDB Connector C 64-bit/lib"
@@ -23,7 +21,6 @@ if (WIN32)
   find_library(MYSQL_LIBRARY
       NAMES "libmysql" "mysqlclient_r" "libmariadb" "mariadbclient"
       PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
-      "${CMAKE_EXTERNAL_LIBRARY_DIR}"
       "${MYSQL_LIBRARY_PATH}"
       )
 else ()

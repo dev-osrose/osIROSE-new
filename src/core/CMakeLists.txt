@@ -106,7 +106,7 @@ target_link_libraries(${PROJECT}
 
 if (WITH_CRASH_REPORTS)
   if (NOT CRASHPAD)
-    if (NOT BREAKPAD_FOUND)
+    if (NOT Breakpad_FOUND)
       add_dependencies(${PROJECT} breakpad-build utils::breakpad)
     endif ()
 
