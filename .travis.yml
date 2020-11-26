@@ -91,6 +91,7 @@ jobs:
           - lcov
           - g++-8
           - libcurl4-openssl-dev
+          - libmysqlclient-dev
           - python3
           - python3-pip
           - ccache
