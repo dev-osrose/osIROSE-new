@@ -21,7 +21,7 @@
 #include "crosepacket.h"
 #include <chrono>
 
-#include "entity_system.h"
+#include "map.h"
 
 class CMapISC;
 
@@ -31,7 +31,7 @@ class CMapServer : public RoseCommon::CRoseServer {
   virtual ~CMapServer();
 
   int16_t GetMapIDX() const { return map_idx_; }
-  std::shared_ptr<EntitySystem> get_entity_system() { return entitySystem; }
+  std::shared_ptr<Map> get_map() { return map; }
 
   void stop();
   void run();
@@ -61,7 +61,7 @@ class CMapServer : public RoseCommon::CRoseServer {
  private:
   CMapServer *iscServer_;
   CMapISC    *isc_client_;
-  std::shared_ptr<EntitySystem> entitySystem;
+  std::shared_ptr<Map> map;
 };
 
 #endif
