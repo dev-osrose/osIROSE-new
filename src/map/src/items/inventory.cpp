@@ -125,6 +125,7 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, RoseCommon::Entity entit
                 return ReturnValue::NO_SPACE;
             }
         }
+        entitySystem.delete_entity(item);
     }
     RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(pos);
     index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(inv.items[pos]));
