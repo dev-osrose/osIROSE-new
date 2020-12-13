@@ -50,6 +50,7 @@ Note, you may need to install the following packages depending on your OS:
     libssl-dev
     libncurses5-dev
     libreadline-dev
+    libmysqlclient-dev
 ```
 
 To build the servers, execute the following:
