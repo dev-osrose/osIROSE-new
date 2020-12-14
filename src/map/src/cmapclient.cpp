@@ -29,6 +29,7 @@
 #include "srv_logout_reply.h"
 #include "srv_chan_char_reply.h"
 #include "combat/combat.h"
+#include "utils/calculation.h"
 
 #include "components/basic_info.h"
 #include "components/faction.h"
@@ -225,6 +226,8 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           const auto& stamina = entitySystem->get_component<Component::Stamina>(entity);
           const auto& skills = entitySystem->get_component<Component::Skills>(entity);
           const auto& hotbar = entitySystem->get_component<Component::Hotbar>(entity);
+          auto& computed_values = entitySystem->get_component<Component::ComputedValues>(entity);
+          computed_values.runSpeed = Calculations::get_runspeed(*entitySystem, entity);
           packet.set_race(characterGraphics.race);
 
           if(position.map == 20)
