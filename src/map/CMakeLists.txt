@@ -22,6 +22,7 @@ SET( SOURCES_HEADER
   include/chat/shout_chat.h
   include/chat/whisper_chat.h
   include/combat/combat.h
+  include/combat/player.h
   include/map/change_map.h
   include/mouse/mouse_cmd.h
   include/lua_api.h
@@ -50,6 +51,7 @@ SET( SOURCES_MAIN
   src/chat/shout_chat.cpp
   src/chat/whisper_chat.cpp
   src/combat/combat.cpp
+  src/combat/player.cpp
   src/map/change_map.cpp
   src/mouse/mouse_cmd.cpp
   src/lua_db.cpp
@@ -85,9 +87,12 @@ target_link_libraries(${PROJECT}
 
 set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
-if(WITH_CRASH_REPORTS)
-  generate_symbol_data(${PROJECT})
-#  generate_crashpad_symbol_data(${PROJECT})
+if (WITH_CRASH_REPORTS)
+  if (NOT CRASHPAD)
+    generate_symbol_data(${PROJECT})
+  else()
+    generate_crashpad_symbol_data(${PROJECT})
+  endif()
 endif()
 
 install(TARGETS ${PROJECT}
