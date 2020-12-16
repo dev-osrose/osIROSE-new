@@ -230,14 +230,9 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
           computed_values.runSpeed = Calculations::get_runspeed(*entitySystem, entity);
           packet.set_race(characterGraphics.race);
 
-          if(position.map == 20)
-          {
-            auto spawn = Combat::get_spawn_point(*entitySystem, entity, Packet::CliReviveReq::ReviveRequest::START_POSITION);
-            position.map = std::get<0>(spawn);
-            position.x = std::get<1>(spawn);
-            position.y = std::get<2>(spawn);
-          }
-
+          auto spawn = Combat::get_spawn_point(*entitySystem, entity, Packet::CliReviveReq::ReviveRequest::START_POSITION);
+          entitySystem->update_position(entity, std::get<1>(spawn), std::get<2>(spawn));
+          
           packet.set_map(position.map);
           packet.set_x(position.x);
           packet.set_y(position.y);
