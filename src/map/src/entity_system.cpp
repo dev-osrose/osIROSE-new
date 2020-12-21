@@ -207,6 +207,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::revive});
     register_dispatcher(std::function{Player::add_stat});
     register_dispatcher(std::function{Player::toggle_player_move});
+    register_dispatcher(std::function{Player::set_animation});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
 
