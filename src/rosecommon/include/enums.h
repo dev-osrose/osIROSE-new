@@ -29,7 +29,7 @@ enum ItemSubType : uint16_t {
     STAFF = 241,
     WAND,
     KATAR = 251,
-    DUAL_WEILD,
+    DUAL_WIELD,
     XBOW = 271
 };
 

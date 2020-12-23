@@ -53,7 +53,7 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
 }
 
 inline bool is_two_handed(uint16_t subtype) {
-    return ((subtype >= ItemSubType::TWOH_SWORD && subtype <= ItemSubType::DUAL_WEILD) && (subtype != ItemSubType::WAND));
+    return ((subtype >= ItemSubType::TWOH_SWORD && subtype <= ItemSubType::DUAL_WIELD) && (subtype != ItemSubType::WAND));
 }
 
 inline bool is_spot_equipped(size_t spot) {

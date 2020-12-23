@@ -78,7 +78,7 @@ void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity e
 }
 
 void Player::set_animation(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliSetAnimation& packet) {
-	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+	const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	auto pAnimation = Packet::SrvSetAnimation::create();
 	pAnimation.set_id(packet.get_id());
 	pAnimation.set_value(packet.get_value());
