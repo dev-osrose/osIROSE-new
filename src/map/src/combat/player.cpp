@@ -8,8 +8,10 @@
 #include "components/computed_values.h"
 #include "cli_stat_add_req.h"
 #include "cli_toggle_move.h"
+#include "cli_set_animation.h"
 #include "srv_stat_add_reply.h"
 #include "srv_toggle_move.h"
+#include "srv_set_animation.h"
 #include <cmath>
 #include "utils/calculation.h"
 
@@ -73,4 +75,13 @@ void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity e
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	pToggle.set_object_id(basicInfo.id);
 	entitySystem.send_map(pToggle);
+}
+
+void Player::set_animation(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliSetAnimation& packet) {
+	const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+	auto pAnimation = Packet::SrvSetAnimation::create();
+	pAnimation.set_id(packet.get_id());
+	pAnimation.set_value(packet.get_value());
+	pAnimation.set_object_id(basicInfo.id);
+	entitySystem.send_nearby(entity, pAnimation);
 }

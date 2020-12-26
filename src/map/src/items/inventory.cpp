@@ -52,6 +52,10 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
     }
 }
 
+inline bool is_two_handed(uint16_t subtype) {
+    return ((subtype >= ItemSubType::TWOH_SWORD && subtype <= ItemSubType::DUAL_WIELD) && (subtype != ItemSubType::WAND));
+}
+
 inline bool is_spot_equipped(size_t spot) {
     return spot < EquippedPosition::MAX_EQUIP_ITEMS;
 }
@@ -190,6 +194,12 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
 
     const RoseCommon::Entity equipped = inv.items[to];
     const RoseCommon::Entity to_equip = inv.items[from];
+    const auto& item = entitySystem.get_component<RoseCommon::ItemDef>(to_equip);
+    if (item.type == ItemType::ITEM_WEAPON_R && (is_two_handed(item.subtype) == true) && (inv.items[EquippedPosition::WEAPON_L] != entt::null))
+    {
+        if (unequip_item(entitySystem, entity, (size_t)EquippedPosition::WEAPON_L) == ReturnValue::NO_SPACE) return ReturnValue::NO_SPACE;
+    }
+
     if (!is_spot_correct(entitySystem, to_equip, to)) {
         return ReturnValue::REQUIREMENTS_NOT_MET;
     }
@@ -201,7 +211,7 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
             }
         }
     }
-    if (from != entt::null) {
+    if (to_equip != entt::null) {
         const auto& lua = entitySystem.get_component<Component::ItemLua>(to_equip);
         if (const auto tmp = lua.api.lock(); tmp) {
             if (!tmp->on_equip(entity)) {
@@ -229,12 +239,13 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity ent
 }
 
 ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t from) {
-    const size_t to = get_first_available_spot(entitySystem, entity);
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    const size_t to = get_first_available_spot(entitySystem, entity, inv.items[from]);
+    
     if (to == 0) {
         return ReturnValue::NO_SPACE;
     }
 
-    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     if (from < decltype(inv.getEquipped())::offset() || from >= decltype(inv.getEquipped())::size()) {
         return ReturnValue::WRONG_INDEX;
     }
