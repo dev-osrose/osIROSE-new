@@ -59,6 +59,8 @@ constexpr unsigned int MAX_INVENTORY = 120;
 constexpr unsigned int MAX_ITEMS = MAX_INVENTORY + BulletType::MAX_BULLET_TYPES + RidingItem::MAX_RIDING_ITEMS + EquippedPosition::MAX_EQUIP_ITEMS;
 static_assert(MAX_ITEMS == 140, "The client expects 140 total items");
 
+constexpr uint8_t FIRST_BULLET_SLOT = MAX_INVENTORY + EquippedPosition::MAX_EQUIP_ITEMS;
+
 constexpr unsigned int MAX_STATUS_EFFECTS = 40;
 
 constexpr unsigned int MAX_WISHLIST = 30;

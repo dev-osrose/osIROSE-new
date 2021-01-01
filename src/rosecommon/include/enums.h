@@ -18,6 +18,9 @@ enum RidingItem : uint8_t {
 };
 
 enum ItemSubType : uint16_t {
+    RRING = 171,
+    NNECKLACE,
+    EARRING,
     ONEH_SWORD = 211,
     ONEH_BLUNT, 
     TWOH_SWORD = 221,

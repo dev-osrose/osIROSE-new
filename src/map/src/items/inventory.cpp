@@ -14,10 +14,12 @@
 #include "srv_equip_item.h"
 #include "srv_set_item.h"
 #include "srv_set_money.h"
+#include "srv_equip_projectile.h"
 
 #include <limits>
 
 using namespace RoseCommon;
+using namespace RoseCommon::Packet;
 using namespace Items;
 
 namespace {
@@ -42,7 +44,14 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, RoseCommon::Entity
         case ItemType::ITEM_BACKPACK:
             return pos == EquippedPosition::BACKPACK;
         case ItemType::ITEM_RING:
-            return pos == EquippedPosition::RING;
+            switch (item.subtype) {
+                case ItemSubType::RRING:
+                    return pos == EquippedPosition::RING;
+                case ItemSubType::NNECKLACE:
+                    return pos == EquippedPosition::NECKLACE;
+                case ItemSubType::EARRING:
+                    return pos == EquippedPosition::EARING;
+            }
         case ItemType::ITEM_WEAPON_R:
             return pos == EquippedPosition::WEAPON_R;
         case ItemType::ITEM_WEAPON_L:
@@ -66,6 +75,24 @@ inline size_t get_item_tab(ItemType type) {
     else if (type == ItemType::ITEM_ETC || type == ItemType::ITEM_ETC2 || type == ItemType::ITEM_ETC_GEM) return 2;
     else return 3;
     }
+}
+
+bool Items::is_bullet_weapon(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    const auto& weaponInfo = entitySystem.get_component<RoseCommon::ItemDef>(inv.items[EquippedPosition::WEAPON_R]);
+    return ((weaponInfo.subtype >= ItemSubType::BOW && weaponInfo.subtype <= ItemSubType::LAUNCHER) || (weaponInfo.subtype == ItemSubType::XBOW));
+}
+
+uint8_t Items::has_bullets(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    uint8_t slot = 0;
+    if (inv.items[EquippedPosition::WEAPON_R] != entt::null) {
+        const auto& weaponInfo = entitySystem.get_component<RoseCommon::ItemDef>(inv.items[EquippedPosition::WEAPON_R]);
+        slot = FIRST_BULLET_SLOT + (weaponInfo.subtype % 10 - 1);
+        if (inv.items[slot] == entt::null)
+            slot = 0;
+    }
+    return slot;
 }
 
 size_t Items::get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item) {
@@ -182,13 +209,44 @@ void Items::swap_item(EntitySystem& entitySystem, RoseCommon::Entity entity, siz
     std::swap(inv.items[pos1], inv.items[pos2]);
 }
 
+void Items::set_projectile(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipProjectile& packet) {
+    RoseCommon::Packet::CliEquipProjectile::ProjectileTypeAndIndex projectile = packet.get_projectile();
+    uint16_t projType = projectile.get_type();
+    uint16_t from = projectile.get_index();
+    uint16_t to = FIRST_BULLET_SLOT + projType;
+    if (projType >= BulletType::MAX_BULLET_TYPES) {
+        return;
+    } else {
+        const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+        if (from == 0) { //Unequip the item
+            const auto& item = entitySystem.get_component<Component::Item>(inv.items[to]);
+            if (item.count == 0)  {
+                entitySystem.delete_entity(remove_item(entitySystem, entity, from, item.count));
+            } else {
+                unequip_item(entitySystem, entity, to);
+            }
+        } else { //Equip the item
+            if(inv.items[from] != entt::null) {
+                equip_item(entitySystem, entity, from, to);
+
+                const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+                RoseCommon::Packet::SrvEquipProjectile::ProjectileData projectData;
+                projectData.set_type(projType);
+                projectData.set_id(to);
+                auto packet = RoseCommon::Packet::SrvEquipProjectile::create(basicInfo.id, projectData);
+                entitySystem.send_to(entity, packet);
+            }
+        }
+    }
+}
+
 ReturnValue Items::equip_item(EntitySystem& entitySystem, RoseCommon::Entity entity, size_t from, size_t to) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
 
     if (from < decltype(inv.getInventory())::offset() || from >= decltype(inv.getInventory())::size()) {
         return ReturnValue::WRONG_INDEX;
     }
-    if (to < decltype(inv.getEquipped())::offset() || to >= decltype(inv.getEquipped())::size()) {
+    if (to < decltype(inv.getEquipped())::offset() || (to >= decltype(inv.getEquipped())::size() && to < FIRST_BULLET_SLOT) || to >= MAX_ITEMS) {
         return ReturnValue::WRONG_INDEX;
     }
 
@@ -246,7 +304,7 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, RoseCommon::Entity e
         return ReturnValue::NO_SPACE;
     }
 
-    if (from < decltype(inv.getEquipped())::offset() || from >= decltype(inv.getEquipped())::size()) {
+    if (from < decltype(inv.getEquipped())::offset() || (from >= decltype(inv.getEquipped())::size() && from < FIRST_BULLET_SLOT) || from >= MAX_ITEMS) {
         return ReturnValue::WRONG_INDEX;
     }
 

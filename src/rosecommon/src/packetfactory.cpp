@@ -27,6 +27,7 @@
 #include "cli_stop_moving.h"
 #include "cli_teleport_req.h"
 #include "cli_whisper_chat.h"
+#include "cli_equip_projectile.h"
 #include "isc_alive.h"
 #include "isc_server_register.h"
 #include "isc_shutdown.h"
@@ -62,6 +63,8 @@
 #include "srv_teleport_reply.h"
 #include "srv_whisper_chat.h"
 #include "srv_stat_add_reply.h"
+#include "srv_equip_projectile.h"
+#include "srv_stop.h"
 
 using namespace RoseCommon;
 using namespace RoseCommon::Packet;
@@ -95,6 +98,7 @@ void RoseCommon::register_recv_packets() {
     REGISTER_RECV_PACKET(ePacketType::PAKCS_STAT_ADD_REQ, CliStatAddReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_TELEPORT_REQ, CliTeleportReq);
     REGISTER_RECV_PACKET(ePacketType::PAKCS_WHISPER_CHAT, CliWhisperChat);
+    REGISTER_RECV_PACKET(ePacketType::PAKCS_EQUIP_PROJECTILE, CliEquipProjectile);
     REGISTER_RECV_PACKET(ePacketType::ISC_ALIVE, IscAlive);
     REGISTER_RECV_PACKET(ePacketType::ISC_SERVER_REGISTER, IscServerRegister);
     REGISTER_RECV_PACKET(ePacketType::ISC_SHUTDOWN, IscShutdown);
@@ -135,4 +139,6 @@ void RoseCommon::register_send_packets() {
     REGISTER_SEND_PACKET(ePacketType::PAKCC_SWITCH_SERVER, SrvSwitchServer);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_TELEPORT_REPLY, SrvTeleportReply);
     REGISTER_SEND_PACKET(ePacketType::PAKWC_WHISPER_CHAT, SrvWhisperChat);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_EQUIP_PROJECTILE, SrvEquipProjectile);
+    REGISTER_SEND_PACKET(ePacketType::PAKWC_STOP, SrvStop);
 }

@@ -29,7 +29,7 @@ void ItemDatabase::initialize() {
     ItemDef newItem;
     for ( const auto& row : conn( sqlpp::select( sqlpp::all_of( itemdb ) ).from( itemdb ).where(itemdb.type != 0).order_by(itemdb.id.asc()) ) ) {
       newItem.type = static_cast<ItemType>(static_cast<uint8_t>(row.type));
-      newItem.subtype = static_cast<uint8_t>(row.subtype);
+      newItem.subtype = static_cast<uint16_t>(row.subtype);
       newItem.id = static_cast<uint16_t>(row.id);
       newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
       newItem.sell_price = static_cast<uint32_t>(row.priceSell);
