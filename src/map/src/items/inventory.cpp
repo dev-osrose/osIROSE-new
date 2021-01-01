@@ -83,7 +83,7 @@ bool Items::is_bullet_weapon(const EntitySystem& entitySystem, RoseCommon::Entit
     return ((weaponInfo.subtype >= ItemSubType::BOW && weaponInfo.subtype <= ItemSubType::LAUNCHER) || (weaponInfo.subtype == ItemSubType::XBOW));
 }
 
-uint8_t Items::has_bullets(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
+uint8_t Items::get_bullet_slot(const EntitySystem& entitySystem, RoseCommon::Entity entity) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     uint8_t slot = 0;
     if (inv.items[EquippedPosition::WEAPON_R] != entt::null) {
