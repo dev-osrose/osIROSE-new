@@ -17,6 +17,22 @@ enum RidingItem : uint8_t {
     MAX_RIDING_ITEMS
 };
 
+enum ItemSubType : uint16_t {
+    ONEH_SWORD = 211,
+    ONEH_BLUNT, 
+    TWOH_SWORD = 221,
+    SPEAR = 222,
+    TWOH_AXE = 223,
+    BOW = 231,
+    GUN,
+    LAUNCHER,
+    STAFF = 241,
+    WAND,
+    KATAR = 251,
+    DUAL_WIELD,
+    XBOW = 271
+};
+
 enum EquippedPosition : uint8_t {
     GOGGLES = 1,
     HELMET = 2,
@@ -33,10 +49,10 @@ enum EquippedPosition : uint8_t {
 };
 
 enum MoveMode : uint8_t {
-    WALK = 0,
-    RUN = 1,
-    DRIVE = 2,
-    RIDEON = 4
+    WALK = 2,
+    RUN = 3,
+    DRIVE = 4,
+    // RIDEON = 4
 };
 
 enum Command : uint16_t {
@@ -64,6 +80,7 @@ enum ItemType : uint8_t {
     ITEM_WEAPON_R = 8,
     ITEM_WEAPON_L = 9,
     ITEM_CONSUMABLE = 10,
+    ITEM_ETC_GEM = 11,
     ITEM_ETC = 12,
     ITEM_ETC2 = 13,
     ITEM_RIDING = 14,

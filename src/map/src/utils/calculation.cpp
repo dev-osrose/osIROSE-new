@@ -23,7 +23,7 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   // const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
-  float moveSpeed = 0;
+  float moveSpeed = BASE_MOVE_SPEED;
 
   if (values.moveMode <= MoveMode::RUN) {
     int itemSpeed = 65, itemNumber = 0;
@@ -38,7 +38,7 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     }
     itemSpeed += 20;
 
-    moveSpeed =
+    moveSpeed +=
         itemSpeed * (stats.dex + 500.f) / 100.f + 0;  // TODO: Change 0 to value calcd from buffs for movement speed
     // passiveSpeed = passiveSkillValue[MoveSpeed] + moveSpeed * passiveSkillRate[MoveSpeed] / 100.f
     float passiveSpeed = 0 + moveSpeed * 0 / 100.f;
@@ -50,8 +50,8 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
 
     moveSpeed += 0;  // Get buffs value for movement speed
 
-    if (get_weight(entitySystem, entity) >= 100 && moveSpeed > 300) moveSpeed = 300;
   }
+  if (get_weight(entitySystem, entity) >= 100 && moveSpeed > 300) moveSpeed = WALK_SPEED;
   values.runSpeed = moveSpeed;
   return moveSpeed;
 }

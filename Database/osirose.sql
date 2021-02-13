@@ -131,6 +131,7 @@ CREATE TABLE `inventory` (
   `slot` int(11) unsigned NOT NULL DEFAULT '0',
   `gem_opt` int(11) unsigned NOT NULL DEFAULT '0',
   `socket` int(10) unsigned NOT NULL DEFAULT '0',
+  `durability` int(10) unsigned NOT NULL DEFAULT '0',
   `price` int(11) unsigned NOT NULL DEFAULT '0',
   `storage_type` enum('inventory','wishlist','storage') NOT NULL DEFAULT 'inventory',
   PRIMARY KEY (`uid`),
@@ -405,14 +406,14 @@ BEGIN
   DECLARE hatuid INT(10);
 	insert into characters(userid, name, race, face, hair, stone) values(_userid, _name, _race, _face, _hair, _stone);
 	SET charid = LAST_INSERT_ID();
-	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 30, 3, 1, 3);
-	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, 1, 8, 1, 7);
+	insert into inventory(char_id, itemid, itemtype, amount, slot, durability) values(charid, 30, 3, 1, 3, 45);
+	insert into inventory(char_id, itemid, itemtype, amount, slot, durability) values(charid, 1, 8, 1, 7, 45);
 	
 	if _race = 0 then SET hatuid = 222;
 	else SET hatuid = 221;
 	end if;
 	
-	insert into inventory(char_id, itemid, itemtype, amount, slot) values(charid, hatuid, 2, 1, 12);
+	insert into inventory(char_id, itemid, itemtype, amount, slot, durability) values(charid, hatuid, 2, 1, 12, 45);
 	
 	insert into skill(char_id, id, level) values(charid, 11, 1);
 	insert into skill(char_id, id, level) values(charid, 12, 1);
