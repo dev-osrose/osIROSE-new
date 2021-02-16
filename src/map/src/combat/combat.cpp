@@ -57,9 +57,6 @@ void Combat::check_for_level_up(EntitySystem& entitySystem, Entity entity, uint1
   auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   auto& attackerLevel = entitySystem.get_component<Component::Level>(entity);
 
-  uint16_t addedStatPoints = 0;
-  uint16_t addedSkillPoints = 0;
-
   bool leveled = false;
   auto exp_required = get_exp_to_level(attackerLevel.level + 1);
   while ((int64_t)attackerLevel.xp >= exp_required) {
@@ -70,8 +67,8 @@ void Combat::check_for_level_up(EntitySystem& entitySystem, Entity entity, uint1
 
     // TODO:: adjust our hp and mp based on our level here
     // TODO:: give the player attr and skill points
-    addedStatPoints += 1;
-    addedSkillPoints += 1;
+    basicInfo.statPoints += 9 + attackerLevel.level - ((attackerLevel.level - 1) / 5);
+    basicInfo.skillPoints += (attackerLevel.level / 2) + 1;
 
     exp_required = get_exp_to_level(attackerLevel.level + 1);
   }
@@ -79,7 +76,7 @@ void Combat::check_for_level_up(EntitySystem& entitySystem, Entity entity, uint1
   if (leveled) {
     updateStats(entitySystem, entity);
     auto pLevel =
-        SrvLevelup::create(basicInfo.id, attackerLevel.level, attackerLevel.xp, addedStatPoints, addedSkillPoints);
+        SrvLevelup::create(basicInfo.id, attackerLevel.level, attackerLevel.xp, basicInfo.statPoints, basicInfo.skillPoints);
     entitySystem.send_to(entity, pLevel);
   }
 

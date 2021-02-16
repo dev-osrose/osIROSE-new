@@ -6,7 +6,7 @@ namespace Component {
   struct ComputedValues {
     RoseCommon::Command command = RoseCommon::Command::STOP;
     RoseCommon::MoveMode moveMode = RoseCommon::MoveMode::RUN;
-    uint16_t runSpeed = 200;
+    uint16_t runSpeed = RoseCommon::BASE_MOVE_SPEED;
     uint16_t atkSpeed = 30;
     uint8_t weightRate = 0;
     uint32_t statusFlag = 0;

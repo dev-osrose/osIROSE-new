@@ -41,6 +41,7 @@
 #include "map/change_map.h"
 #include "mouse/mouse_cmd.h"
 #include "combat/combat.h"
+#include "combat/player.h"
 #include "items/inventory.h"
 
 #include "utils/calculation.h"
@@ -140,7 +141,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
               case RoseCommon::MoveMode::WALK:
               {
                 // This is a fixed speed
-                computed.runSpeed = 200;
+                computed.runSpeed = RoseCommon::WALK_SPEED;
                 break;
               }
               default:
@@ -149,7 +150,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 break;
               }
             }
-            if(computed.runSpeed < 200) computed.runSpeed = 200;
+            if(computed.runSpeed < 200) computed.runSpeed = RoseCommon::WALK_SPEED;
 
             computed.atkSpeed = Calculations::get_attackspeed(self, entity);
             // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
@@ -213,6 +214,9 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Combat::attack});
     register_dispatcher(std::function{Combat::hp_request});
     register_dispatcher(std::function{Combat::revive});
+    register_dispatcher(std::function{Player::add_stat});
+    register_dispatcher(std::function{Player::toggle_player_move});
+    register_dispatcher(std::function{Player::set_animation});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
 
@@ -633,6 +637,7 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
             item.count = row.amount;
             item.gemOpt = row.gemOpt;
             item.price = row.price;
+            item.is_zuly = false;
             auto to_emplace = self.load_item(row.itemtype, row.itemid, item);
             if (is_inventory) {
                 inventory.items[row.slot] = to_emplace;
@@ -749,7 +754,9 @@ void EntitySystem::save_character(Entity character) {
             characters.zuly = inv.zuly,
             characters.level = level.level,
             characters.penaltyExp = level.penaltyXp,
+            characters.currentHp = life.hp,
             characters.maxHp = life.maxHp,
+            characters.currentMp = magic.mp,
             characters.maxMp = magic.maxMp,
             characters.x = pos.x,
             characters.y = pos.y,
@@ -807,6 +814,7 @@ void EntitySystem::save_character(Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
+                inventory.durability = item.durability,
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket)
@@ -819,6 +827,7 @@ void EntitySystem::save_character(Entity character) {
                 inventory.itemid = itemDef.id,
                 inventory.itemtype = static_cast<int>(itemDef.type),
                 inventory.amount = item.count,
+                inventory.durability = item.durability,
                 inventory.refine = item.refine,
                 inventory.gemOpt = item.gemOpt,
                 inventory.socket = static_cast<int>(item.hasSocket),
