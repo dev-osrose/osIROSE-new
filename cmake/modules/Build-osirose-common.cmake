@@ -1,10 +1,18 @@
 set(OSIROSE_COMMON_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
 
+set(_byproducts
+    ${OSIROSE_COMMON_INSTALL_DIR}/lib/osIROSE-common-core.lib
+    ${OSIROSE_COMMON_INSTALL_DIR}/lib/osIROSE-common-rosecommon.lib
+    ${OSIROSE_COMMON_INSTALL_DIR}/lib/libosIROSE-common-core.a
+    ${OSIROSE_COMMON_INSTALL_DIR}/lib/libosIROSE-common-rosecommon.a
+  )
+
 ExternalProject_Add(
     OSIROSE_COMMON
     GIT_REPOSITORY https://github.com/dev-osrose/packets
     CMAKE_ARGS -G ${CMAKE_GENERATOR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${OSIROSE_COMMON_INSTALL_DIR} -DENABLE_TESTS=OFF
     INSTALL_DIR ${OSIROSE_COMMON_INSTALL_DIR}
+    BUILD_BYPRODUCTS ${_byproducts}
 )
 
 ExternalProject_Get_Property(

@@ -44,6 +44,14 @@ target_link_libraries(${PROJECT}
     osirose_common::osirose_common
 )
 
+if (NOT CURL_FOUND)
+  add_dependencies(${PROJECT} curl)
+endif ()
+target_link_libraries(${PROJECT}
+    INTERFACE
+    CURL::libcurl
+    )
+
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT}
   PRIVATE

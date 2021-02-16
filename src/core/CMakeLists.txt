@@ -80,6 +80,12 @@ target_include_directories(${PROJECT}
 # Make sure the SQL headers are created before core is created
 add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
 
+add_dependencies(${PROJECT} osirose_common::osirose_common)
+target_link_libraries(${PROJECT}
+    PRIVATE
+    osirose_common::osirose_common
+)
+
 target_link_libraries(${PROJECT}
     INTERFACE
     ${CMAKE_THREAD_LIBS_INIT}
