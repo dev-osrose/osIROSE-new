@@ -34,7 +34,7 @@ CMapServer::CMapServer(bool _isc, int16_t mapidx, CMapServer *server, CMapISC *c
   if (mapidx >= 0) {
     // We are a worker thread/process
     // We need to connect to the master thread/process to get data to handle
-    map = std::make_shared<Map>(map_idx_, this);
+    entitySystem = std::make_shared<EntitySystem>(map_idx_, this);
   } else {
     // We are a master/node process
     // We accept player connections and redirect their packet data to the
@@ -70,8 +70,8 @@ void CMapServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   //}
 }
 
-void CMapServer::stop() { map->stop(); }
-void CMapServer::run() { map->run(); }
+void CMapServer::stop() { entitySystem->stop(); }
+void CMapServer::run() { entitySystem->run(); }
 
 void CMapServer::send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps, uint32_t originatorId) {
     auto packet = RoseCommon::Packet::IscTransfer::create(originatorId, maps);

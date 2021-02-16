@@ -10,7 +10,6 @@ if (GCC)
 endif()
 
 SET( SOURCES_HEADER
-  include/map.h
   include/entity.h
   include/cmapserver.h
   include/cmapclient.h
@@ -64,12 +63,10 @@ SET( SOURCES_HEADER
   include/utils/calculation.h
   include/utils/transfer_to_char_server.h
   include/utils/transfer_to_char.h
-  include/utils/serializers.h
   )
 
 SET( SOURCES_MAIN
-  src/map.cpp
-  src/main.cpp
+  src/main
   src/cmapserver.cpp
   src/cmapclient.cpp
   src/cmapisc.cpp
@@ -92,7 +89,6 @@ SET( SOURCES_MAIN
   src/utils/name_to_session.cpp
   src/utils/calculation.cpp
   src/utils/getters.cpp
-  src/utils/serializers.cpp
 )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
