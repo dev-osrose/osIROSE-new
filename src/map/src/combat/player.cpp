@@ -19,7 +19,7 @@
 using namespace RoseCommon;
 using namespace Player;
 
-void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliStatAddReq& packet) {
+void Player::add_stat(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliStatAddReq& packet) {
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	auto& stats = entitySystem.get_component<Component::Stats>(entity);
 	uint8_t statId = packet.get_stat();
@@ -56,7 +56,7 @@ void Player::add_stat(EntitySystem& entitySystem, RoseCommon::Entity entity, con
 
 }
 
-void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliToggleMove& packet) {
+void Player::toggle_player_move(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliToggleMove& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
 
 	Packet::CliToggleMove::ToggleMove moveType = packet.get_type();
@@ -77,7 +77,7 @@ void Player::toggle_player_move(EntitySystem& entitySystem, RoseCommon::Entity e
 	entitySystem.send_map(pToggle);
 }
 
-void Player::set_animation(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliSetAnimation& packet) {
+void Player::set_animation(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliSetAnimation& packet) {
 	const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	auto pAnimation = Packet::SrvSetAnimation::create();
 	pAnimation.set_id(packet.get_id());

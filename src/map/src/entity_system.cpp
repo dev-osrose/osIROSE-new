@@ -242,7 +242,7 @@ void EntitySystem::remove_spawner(Registry&, Entity entity) {
 
 void EntitySystem::remove_object(Registry& r, Entity entity) {
     logger->trace("EntitySystem::remove_object");
-    if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo->id) {
+    if (auto* basicInfo = try_get_component<Component::BasicInfo>(entity); basicInfo && basicInfo->id) {
         send_nearby_except_me(entity, RoseCommon::Packet::SrvRemoveObject::create(basicInfo->id));
         idManager.release_id(basicInfo->id);
         id_to_entity.erase(basicInfo->id);
@@ -1008,8 +1008,10 @@ Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
         limit,
         std::chrono::seconds(interval),
         range * 100,
-        std::vector<Entity>(mob_count)
+        std::vector<Entity>{}
     );
+
+    spawner.mobs.reserve(mob_count);
 
     registry.emplace<Position>(
         entity,
