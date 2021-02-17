@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 *.sw*
+.vs/*
+.vscode/*
 
 # CMake files
 CMakeCache.txt

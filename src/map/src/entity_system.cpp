@@ -648,8 +648,8 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<Level>(
             entity,
-            charRow.exp,
             charRow.level,
+            charRow.exp,
             charRow.penaltyExp
         );
 
@@ -882,8 +882,16 @@ Entity EntitySystem::create_zuly(int64_t zuly) {
 
     registry.emplace<Item>(
         entity,
+        false,
         true,
-        zuly
+        0,
+        0,
+        false,
+        true,
+        0,
+        zuly,
+        0,
+        0
     );
 
     return entity;
