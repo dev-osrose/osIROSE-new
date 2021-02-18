@@ -41,6 +41,7 @@ src/proto/include
 [Rr]elease/
 x64/
 build/
+[wc]build/
 [Bb]in/
 [Oo]bj/
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 if (CMAKE_CXX_COMPILER_LAUNCHER)
   set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
