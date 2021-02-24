@@ -557,40 +557,31 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<BasicInfo>(
             entity,
-            charRow.name,
-            self.idManager.get_free_id(),
-            sessionId,
-            sessionId,
-            charRow.job,
-            charRow.statPoints,
-            charRow.skillPoints,
-            charRow.pkFlag,
-            charRow.stone,
-            charId
+            charRow.name, // name
+            static_cast<uint16_t>(self.idManager.get_free_id()), // map id
+            static_cast<uint32_t>(sessionId), // session id
+            static_cast<int32_t>(sessionId), // team id
+            static_cast<uint16_t>(charRow.job), // job
+            static_cast<uint32_t>(charRow.statPoints), // stat points
+            static_cast<uint32_t>(charRow.skillPoints), // skill points
+            static_cast<uint16_t>(charRow.pkFlag), // pk flag
+            static_cast<uint8_t>(charRow.stone), // stone
+            static_cast<uint32_t>(charId) // char id
         );
 
         self.registry.emplace<Client>(
             entity,
-            client,
-            access_level
+            client, // cmapclient
+            access_level // access level
         );
 
-        self.registry.emplace<ComputedValues>(
-            entity,
-            RoseCommon::Command::STOP,
-            RoseCommon::MoveMode::RUN,
-            200, // 200 is walk speed. min this value can be is 200
-            30,
-            0,
-            0,
-            0
-        );
+        self.registry.emplace<ComputedValues>(entity);
 
         auto& faction = self.registry.emplace<Faction>(
             entity,
-            charRow.factionid,
-            charRow.factionRank,
-            charRow.fame
+            static_cast<uint8_t>(charRow.factionid), // id
+            static_cast<uint8_t>(charRow.factionRank), // rank
+            static_cast<uint8_t>(charRow.fame) // fame
         );
         faction.factionFame[0] = charRow.factionFame1;
         faction.factionFame[1] = charRow.factionFame2;
@@ -600,16 +591,16 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<CharacterGraphics>(
             entity,
-            charRow.face,
-            charRow.hair,
-            charRow.race
+            static_cast<uint8_t>(charRow.face), // face
+            static_cast<uint8_t>(charRow.hair), // hair
+            static_cast<uint8_t>(charRow.race) // race
         );
 
         self.registry.emplace<Guild>(
             entity,
-            charRow.clanid,
-            charRow.clanContribution,
-            charRow.clanRank
+            static_cast<uint32_t>(charRow.clanid), // id
+            static_cast<uint16_t>(charRow.clanContribution), // contribution
+            static_cast<uint8_t>(charRow.clanRank) // rank
         );
 
         self.registry.emplace<Hotbar>(entity);
@@ -648,30 +639,30 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<Level>(
             entity,
-            charRow.level,
-            charRow.exp,
-            charRow.penaltyExp
+            static_cast<uint16_t>(charRow.level), // level
+            static_cast<uint64_t>(charRow.exp), // xp
+            static_cast<uint64_t>(charRow.penaltyExp) // penalty xp
         );
 
         self.registry.emplace<Life>(
             entity,
-            (charRow.currentHp <= 0 ? charRow.maxHp / 3 : charRow.currentHp),
-            charRow.maxHp
+            static_cast<int32_t>(charRow.currentHp <= 0 ? charRow.maxHp / 3 : charRow.currentHp), // current hp
+            static_cast<int32_t>(charRow.maxHp) // max hp
         );
 
         self.registry.emplace<Magic>(
             entity,
-            (charRow.currentMp <= 0 ? charRow.maxMp / 3 : charRow.currentMp),
-            charRow.maxMp
+            static_cast<int32_t>(charRow.currentMp <= 0 ? charRow.maxMp / 3 : charRow.currentMp), // current mp
+            static_cast<int32_t>(charRow.maxMp) // max mp
         );
 
         self.registry.emplace<Position>(
             entity,
-            charRow.x,
-            charRow.y,
-            0,
-            charRow.reviveMap,
-            charRow.map
+            static_cast<float>(charRow.x), // x
+            static_cast<float>(charRow.y), // y
+            static_cast<uint16_t>(0), // z
+            static_cast<uint16_t>(charRow.reviveMap), // spawn point
+            static_cast<uint16_t>(charRow.map) // map
         );
 
         auto skillRes =
@@ -684,19 +675,20 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<Stamina>(
             entity,
-            charRow.stamina
+            static_cast<uint16_t>(charRow.stamina), // current stamina
+            static_cast<uint16_t>(charRow.stamina) // max stamina
         );
 
         self.registry.emplace<Stats>(
             entity,
-            charRow.str,
-            charRow.dex,
-            charRow.int_,
-            charRow.con,
-            charRow.charm,
-            charRow.sense,
-            100,
-            100
+            static_cast<uint16_t>(charRow.str), //  str
+            static_cast<uint16_t>(charRow.dex), // dex
+            static_cast<uint16_t>(charRow.int_), // intel
+            static_cast<uint16_t>(charRow.con), // concentration
+            static_cast<uint16_t>(charRow.charm), // charm
+            static_cast<uint16_t>(charRow.sense), // sense
+            static_cast<uint8_t>(100), // body size
+            static_cast<uint8_t>(100) // head size
         );
 
         self.registry.emplace<StatusEffects>(entity);
@@ -853,16 +845,16 @@ Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint
 
     registry.emplace<Item>(
         entity,
-        false,
-        1000,
-        std::min(int(itemDura), 120),
-        (itemSocket > 0),
-        false,
-        std::min(int(itemRefine), 9),
-        count,
-        0,
-        1000,
-        false
+        false, // is created
+        false, // is zuly
+        static_cast<uint16_t>(1000), // life
+        static_cast<uint8_t>(std::min(int(itemDura), 120)), // durability
+        (itemSocket > 0), // has socket
+        false, // is appraised
+        static_cast<uint8_t>(std::min(int(itemRefine), 9)), // refine
+        static_cast<uint32_t>(count), // count
+        static_cast<uint16_t>(0), // gem opt
+        static_cast<uint32_t>(1000) // price
     );
 
     registry.emplace<RoseCommon::ItemDef>(entity, def);
@@ -882,16 +874,16 @@ Entity EntitySystem::create_zuly(int64_t zuly) {
 
     registry.emplace<Item>(
         entity,
-        false,
-        true,
-        0,
-        0,
-        false,
-        true,
-        0,
-        zuly,
-        0,
-        0
+        false, // is created
+        true, // is zuly
+        static_cast<uint16_t>(0), // life
+        static_cast<uint8_t>(0), // durability
+        false, // has socket
+        true, // is appraised
+        static_cast<uint8_t>(0), // refine
+        static_cast<uint32_t>(zuly), // count
+        static_cast<uint16_t>(0), // gem opt
+        static_cast<uint32_t>(0) // price
     );
 
     return entity;
@@ -919,9 +911,16 @@ Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, f
     const auto id = idManager.get_free_id();
     registry.emplace<BasicInfo>(
         entity,
-        "",
-        id,
-        id
+        "", // name
+        static_cast<uint16_t>(id), // map id
+        static_cast<uint32_t>(id), // world id
+        static_cast<int32_t>(0), // team id
+        static_cast<uint16_t>(0), // job
+        static_cast<uint32_t>(0), // stat points
+        static_cast<uint32_t>(0), // skill points
+        static_cast<uint16_t>(0), // pk flag
+        static_cast<uint8_t>(0), // stone
+        static_cast<uint32_t>(0) // char id
     );
 
     auto ptr = lua_loader.get_data(npc_id);
@@ -931,37 +930,40 @@ Entity EntitySystem::create_npc(int quest_id, int npc_id, int map_id, float x, f
 
     registry.emplace<ComputedValues>(
         entity,
-        RoseCommon::Command::STOP,
-        RoseCommon::MoveMode::WALK,
-        0
+        RoseCommon::Command::STOP, // command
+        RoseCommon::MoveMode::WALK, // move mode
+        static_cast<uint16_t>(0) // run speed
     );
 
     const auto& level = registry.emplace<Level>(
         entity,
-        (data && data->get_level() > 0 ? data->get_level() : 1)
+        static_cast<uint16_t>(data && data->get_level() > 0 ? data->get_level() : 1), // current level,
+        static_cast<uint64_t>(0), // xp
+        static_cast<uint64_t>(0) // penalty xp
     );
 
     const auto temp_hp = data ? data->get_hp() : 1;
     registry.emplace<Life>(
         entity,
-        temp_hp * level.level,
-        temp_hp * level.level
+        temp_hp * level.level, // current hp
+        temp_hp * level.level // max hp
     );
 
     registry.emplace<Npc>(
         entity,
-        npc_id,
-        quest_id,
-        angle,
-        0
+        static_cast<uint16_t>(npc_id), // id
+        static_cast<uint16_t>(quest_id), // quest id
+        angle, // angle
+        static_cast<uint16_t>(0) // event status
     );
 
     registry.emplace<Position>(
         entity,
-        x * 100,
-        y * 100,
-        static_cast<uint16_t>(z),
-        map_id
+        x * 100.f, // x
+        y * 100.f, // y
+        static_cast<uint16_t>(z), // z
+        static_cast<uint16_t>(0), // spawn point
+        static_cast<uint16_t>(map_id) // map
     );
 
     // TODO: add lua
@@ -980,21 +982,22 @@ Entity EntitySystem::create_warpgate([[maybe_unused]] std::string alias,
 
     registry.emplace<Warpgate>(
         entity,
-        id,
-        dest_map_id,
-        min_x * 100.f,
-        min_y * 100.f,
-        min_z,
-        max_x * 100.f,
-        max_y * 100.f,
-        max_z
+        static_cast<int16_t>(id), // id
+        min_x * 100.f, // min x
+        min_y * 100.f, // min y
+        static_cast<float>(min_z), // min z
+        max_x * 100.f, // max x
+        max_y * 100.f, // max y
+        static_cast<float>(max_z), // max z
+        static_cast<uint16_t>(dest_map_id) // destination map
     );
 
     registry.emplace<Destination>(
         entity,
-        dest_x * 100,
-        dest_y * 100,
-        dest_z * 100
+        dest_x * 100.f, // x
+        dest_y * 100.f, // y
+        static_cast<int16_t>(dest_z * 100), // z
+        static_cast<uint16_t>(0) // distance
     );
 
     // TODO: add lua
@@ -1011,22 +1014,23 @@ Entity EntitySystem::create_spawner([[maybe_unused]] std::string alias,
 
     auto& spawner = registry.emplace<Spawner>(
         entity,
-        mob_id,
-        mob_count,
-        limit,
-        std::chrono::seconds(interval),
-        range * 100,
-        std::vector<Entity>{}
+        mob_id, // mob id
+        mob_count, // mob count
+        limit, // mob limit
+        std::chrono::seconds(interval), // spawn interval
+        range * 100, // range
+        std::vector<Entity>{} // current spawned mobs
     );
 
     spawner.mobs.reserve(mob_count);
 
     registry.emplace<Position>(
         entity,
-        x * 100,
-        y * 100,
-        z * 100,
-        map_id
+        x * 100.f, // x
+        y * 100.f, // y
+        static_cast<uint16_t>(z * 100), // z
+        static_cast<uint16_t>(0), // spawn point
+        static_cast<uint16_t>(map_id) // map id
     );
 
     spawner.callback = add_recurrent_timer(spawner.interval, [entity](EntitySystem& self) {
@@ -1055,15 +1059,16 @@ Entity EntitySystem::create_player_spawn(Component::PlayerSpawn::Type type, int 
 
     registry.emplace<PlayerSpawn>(
         entity,
-        type
+        type // player spawn type
     );
 
     registry.emplace<Position>(
         entity,
-        x * 100,
-        y * 100,
-        0, // we don't care about Z for now
-        map_id
+        x * 100.f, // x
+        y * 100.f, // y
+        static_cast<uint16_t>(0), // we don't care about Z for now
+        static_cast<uint16_t>(0), // spawn point
+        static_cast<uint16_t>(map_id) // map id
     );
 
     return entity;
@@ -1086,60 +1091,66 @@ Entity EntitySystem::create_mob(Entity spawner) {
     const auto id = idManager.get_free_id();
     registry.emplace<BasicInfo>(
         entity,
-        "",
-        id,
-        id,
-        -1
+        "", // name
+        static_cast<uint16_t>(id), // map id
+        static_cast<uint32_t>(id), // world id
+        static_cast<int32_t>(id), // team id
+        static_cast<uint16_t>(0), // job
+        static_cast<uint32_t>(0), // stat points
+        static_cast<uint32_t>(0), // skill points
+        static_cast<uint16_t>(0), // pk flag
+        static_cast<uint8_t>(0), // stone
+        static_cast<uint32_t>(0) // char id
     );
 
     const auto& level = registry.emplace<Level>(
         entity,
-        (data && data->get_level() > 0 ? data->get_level() : 1)
+        static_cast<uint16_t>(data && data->get_level() > 0 ? data->get_level() : 1), // level
+        static_cast<uint64_t>(0), // xp
+        static_cast<uint64_t>(0) // penalty xp
     );
 
-    auto pos = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
+    auto [x, y] = Core::Random::getInstance().random_in_circle(spos.x, spos.y, static_cast<float>(spawn.range));
 
     registry.emplace<Position>(
         entity,
-        std::get<0>(pos),
-        std::get<1>(pos),
-        spos.z,
-        spos.map
+        static_cast<float>(x), // x
+        static_cast<float>(y), // y
+        spos.z, // z
+        static_cast<uint16_t>(0), // spawn
+        spos.map // map
     );
 
     registry.emplace<ComputedValues>(
         entity,
-        RoseCommon::Command::STOP,
-        RoseCommon::MoveMode::WALK,
-        data ? data->get_run_speed() : 0,
-        data ? data->get_attack_spd() : 0,
-        0,
-        0,
-        0
+        RoseCommon::Command::STOP, // command
+        RoseCommon::MoveMode::WALK, // move mode
+        static_cast<uint16_t>(data ? data->get_run_speed() : 0), // run speed
+        static_cast<uint16_t>(data ? data->get_attack_spd() : 0) // attack speed
     );
 
     auto temp_hp = data ? data->get_hp() : 1;
     registry.emplace<Life>(
         entity,
-        temp_hp * level.level,
-        temp_hp * level.level
+        temp_hp * level.level, // current life
+        temp_hp * level.level // max life
     );
 
     registry.emplace<Magic>(
         entity,
-        0,
-        0
+        static_cast<int32_t>(0), // current mp
+        static_cast<int32_t>(0) // max mp
     );
 
     registry.emplace<Mob>(
         entity,
-        spawn.mob_id,
-        0
+        static_cast<uint16_t>(spawn.mob_id), // id
+        static_cast<uint16_t>(0) // quest
     );
 
     registry.emplace<Owner>(
         entity,
-        spawner
+        spawner // owner
     );
 
     auto& lua = registry.emplace<NpcLua>(entity);
