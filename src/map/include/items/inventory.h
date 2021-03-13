@@ -19,11 +19,11 @@ enum class ReturnValue {
 
 // returns the first available spot in the inventory or 0 if there is no more space
 size_t get_first_available_spot(const EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity item = entt::null);
-uint8_t get_bullet_slot(const EntitySystem& entitySystem, RoseCommon::Entity entity);
+RoseCommon::Entity get_bullet_slot(const EntitySystem& entitySystem, RoseCommon::Entity entity);
 bool is_bullet_weapon(const EntitySystem& entitySystem, RoseCommon::Entity entity);
 ReturnValue add_item(EntitySystem&, RoseCommon::Entity entity, RoseCommon::Entity item);
 // will be entt::null if there is no item at that position
-RoseCommon::Entity remove_item(EntitySystem&, RoseCommon::Entity entity, size_t pos, uint32_t quantity);
+RoseCommon::Entity remove_item(EntitySystem&, RoseCommon::Entity entity, RoseCommon::Entity item, uint32_t quantity);
 void swap_item(EntitySystem&, RoseCommon::Entity entity, size_t pos1, size_t pos2);
 void set_projectile(EntitySystem&, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipProjectile&);
 ReturnValue equip_item(EntitySystem&, RoseCommon::Entity, size_t from, size_t to);

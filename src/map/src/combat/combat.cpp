@@ -56,8 +56,8 @@ void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const CliHpRe
 }
 
 inline bool reduce_bullets(EntitySystem& entitySystem, Entity entity) {
-  uint8_t slot = Items::get_bullet_slot(entitySystem, entity);
-  if (slot != 0) {
+  RoseCommon::Entity slot = Items::get_bullet_slot(entitySystem, entity);
+  if (slot != entt::null) {
     RoseCommon::Entity bullets = Items::remove_item(entitySystem, entity, slot, 1);
     const auto& i = entitySystem.get_component<Component::Item>(bullets);
     if (i.count == 0) entitySystem.delete_entity(bullets);
@@ -165,10 +165,8 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
         const float dy = pos.y - dest.y;
         dest.dist = std::sqrt(dx * dx + dy * dy);
 
-        if ((Items::is_bullet_weapon(entitySystem, entity) && Items::get_bullet_slot(entitySystem, entity) != 0) || !(Items::is_bullet_weapon(entitySystem, entity))) {
-          // auto p = SrvMouseCmd::create(basicInfo.id);
+        if ((Items::is_bullet_weapon(entitySystem, entity) && Items::get_bullet_slot(entitySystem, entity) != entt::null) || !(Items::is_bullet_weapon(entitySystem, entity))) {
           auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
-          // p.set_targetId(0);
           p.set_x(dest.x);
           p.set_y(dest.y);
           p.set_z(0);
@@ -177,7 +175,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
       } else {
         // This packet acts as an attack and mouse_cmd all in one, we don't want the mouse_cmd portion
         // of it as it can cause some issues with attack animations going off before it should
-        if ((Items::is_bullet_weapon(entitySystem, entity) && Items::get_bullet_slot(entitySystem, entity) != 0) || !(Items::is_bullet_weapon(entitySystem, entity))) {
+        if ((Items::is_bullet_weapon(entitySystem, entity) && Items::get_bullet_slot(entitySystem, entity) != entt::null) || !(Items::is_bullet_weapon(entitySystem, entity))) {
           auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
           p.set_x(pos.x);
           p.set_y(pos.y);
