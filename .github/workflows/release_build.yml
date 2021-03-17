@@ -18,7 +18,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=ON
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
 
     - name: Build
       working-directory: ${{github.workspace}}/build
