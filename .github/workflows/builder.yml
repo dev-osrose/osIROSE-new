@@ -1,0 +1,82 @@
+name: AMD64 Build
+on: [push, pull_request]
+
+env:
+  SUITE: coverage
+  WITH_CRASH_REPORTS: ON
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_TYPE: Debug
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Cache 3rdparty builds
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{github.workspace}}/build/3rdparty/bin
+            ${{github.workspace}}/build/3rdparty/usr
+            ${{github.workspace}}/build/3rdparty/lib
+            ${{github.workspace}}/build/3rdparty/include
+          key: ${{ runner.os }}-${{BUILD_TYPE}}-${{ hashFiles('3rdparty/**') }}
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: ctest -C $BUILD_TYPE
+  release:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_TYPE: Release
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - uses: seanmiddleditch/gha-setup-ninja@v3
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Cache 3rdparty builds
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{github.workspace}}/build/3rdparty/bin
+          ${{github.workspace}}/build/3rdparty/usr
+          ${{github.workspace}}/build/3rdparty/lib
+          ${{github.workspace}}/build/3rdparty/include
+        key: ${{ runner.os }}-${{BUILD_TYPE}}-${{ hashFiles('3rdparty/**') }}
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: ctest -C $BUILD_TYPE
