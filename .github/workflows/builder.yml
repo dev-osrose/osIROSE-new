@@ -27,7 +27,7 @@ jobs:
             ${{github.workspace}}/build/3rdparty/usr
             ${{github.workspace}}/build/3rdparty/lib
             ${{github.workspace}}/build/3rdparty/include
-          key: ${{ runner.os }}-${{BUILD_TYPE}}-${{ hashFiles('3rdparty/**') }}
+          key: ${{ runner.os }}-Debug-${{ hashFiles('3rdparty/**') }}
 
       - name: Configure CMake
         shell: bash
@@ -64,7 +64,7 @@ jobs:
           ${{github.workspace}}/build/3rdparty/usr
           ${{github.workspace}}/build/3rdparty/lib
           ${{github.workspace}}/build/3rdparty/include
-        key: ${{ runner.os }}-${{BUILD_TYPE}}-${{ hashFiles('3rdparty/**') }}
+        key: ${{ runner.os }}-Release-${{ hashFiles('3rdparty/**') }}
 
     - name: Configure CMake
       shell: bash
