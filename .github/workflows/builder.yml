@@ -74,7 +74,7 @@ jobs:
           ${{github.workspace}}/build/3rdparty/usr
           ${{github.workspace}}/build/3rdparty/lib
           ${{github.workspace}}/build/3rdparty/include
-        key: ${{ runner.os }}-Debug-${{ hashFiles('submodule_info') }}
+        key: ${{ runner.os }}-Release-${{ hashFiles('submodule_info') }}
 
     - name: Configure CMake
       shell: bash
