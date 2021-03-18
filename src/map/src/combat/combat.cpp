@@ -191,7 +191,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   if (values.regenDt >= 4000)  // Regen happens every 4 seconds
   {
     values.regenDt = 0;
-    int hp = life.hp, mp = 0;
+    int32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1);  // This should be if sitting
     if (life.hp > 0 && life.hp < life.maxHp) {
       auto amount = (int32_t)std::ceil(life.maxHp * 0.02);
