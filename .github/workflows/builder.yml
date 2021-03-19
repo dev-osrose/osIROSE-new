@@ -52,6 +52,8 @@ jobs:
         run: ctest -C $BUILD_TYPE
 
       - name: Prepare Release
+        working-directory: ${{github.workspace}}/build/bin
+        shell: bash
         run: tar -C ${{github.workspace}}/build/bin --exclude='*.sym' --exclude='*.a' --exclude='**/symbols/*' --exclude='**/unity/*' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
       - name: Upload linux build
         uses: actions/upload-artifact@v2
@@ -104,6 +106,8 @@ jobs:
       run: ctest -C $BUILD_TYPE
 
     - name: Prepare Release
+      working-directory: ${{github.workspace}}/build/bin
+      shell: bash
       run: tar -C ${{github.workspace}}/build/bin --exclude='*.sym' --exclude='*.a' --exclude='**/symbols/*' --exclude='**/unity/*' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
     - name: Upload linux build
       uses: actions/upload-artifact@v2
