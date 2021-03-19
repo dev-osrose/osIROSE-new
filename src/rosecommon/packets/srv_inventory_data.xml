@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_INVENTORY_DATA">
-    <element name = "zuly" type = "int64_t" />
-    <include path = "dataconsts.h" />
-    <includeXml path = "item.xml" />
-    <element name = "items" type = "Item" occurs = "MAX_ITEMS" default = "{}" ref = "true" />
-</packet>

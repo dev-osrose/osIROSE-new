@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKWC_SETEXP">
-    <element name = "exp" type = "int64_t" />
-    <element name = "stamina" type = "int16_t" />
-    <element name = "sourceId" type = "uint16_t" default = "0" />
-</packet>

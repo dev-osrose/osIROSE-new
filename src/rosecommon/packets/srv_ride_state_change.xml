@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_RIDE_STATE_CHANGE">
-    <element name = "enabled" type = "int8_t" />
-    <element name = "cooldown" type = "uint32_t" />
-    <element name = "max_hp" type = "int16_t" />
-    <element name = "target" type = "uint16_t" />
-</packet>

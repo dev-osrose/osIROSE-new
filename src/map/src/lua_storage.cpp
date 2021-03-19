@@ -1,6 +1,6 @@
 #include "lua_storage.h"
 
-void LuaStorage::register_lua(const std::string& filename, sol::environment env, RoseCommon::Entity entity) {
+void LuaStorage::register_lua(const std::string& filename, sol::environment env, Entity entity) {
     filename_to_entity.emplace(filename, entity);
     Data d;
     d.filename = filename;
@@ -8,7 +8,7 @@ void LuaStorage::register_lua(const std::string& filename, sol::environment env,
     data.emplace(entity, d);
 }
 
-void LuaStorage::delete_entity(RoseCommon::Entity entity) {
+void LuaStorage::delete_entity(Entity entity) {
     if (const auto it = data.find(entity); it != data.end()) {
         const auto range = filename_to_entity.equal_range(it->second.filename);
         for (auto jt = range.first; jt != range.second; ++jt) {
@@ -21,9 +21,9 @@ void LuaStorage::delete_entity(RoseCommon::Entity entity) {
     }
 }
 
-std::vector<RoseCommon::Entity> LuaStorage::delete_filename(const std::string& filename) {
+std::vector<Entity> LuaStorage::delete_filename(const std::string& filename) {
     const auto range = filename_to_entity.equal_range(filename);
-    std::vector<RoseCommon::Entity> res;
+    std::vector<Entity> res;
     res.reserve(std::distance(range.first, range.second));
     for (auto it = range.first; it != range.second; ++it) {
         data.erase(it->second);

@@ -1,7 +1,0 @@
-<packet ePacketType = "PAKCS_SELECT_CHAR_REQ">
-    <element name = "charId" type = "uint8_t" />
-    <element name = "runMode" type = "uint8_t" />
-    <element name = "rideMode" type = "uint8_t" />
-    <include path = "string" system = "true" />
-    <element name = "name" type = "std::string" ref = "true" />
-</packet>

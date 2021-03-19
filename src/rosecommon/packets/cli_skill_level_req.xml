@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKCS_SKILL_LEVEL_REQ">
-    <element name = "slot" type = "uint8_t" />
-    <!-- Not used, always zero -->
-    <element name = "next_index" type = "int16_t" default = "0" />
-</packet>

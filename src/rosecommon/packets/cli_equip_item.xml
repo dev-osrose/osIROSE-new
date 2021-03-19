@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_EQUIP_ITEM">
-    <element name = "slotTo" type = "int16_t" />
-    <element name = "slotFrom" type = "int16_t" />
-</packet>

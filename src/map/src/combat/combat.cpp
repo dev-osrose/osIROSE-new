@@ -191,9 +191,9 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   if (values.regenDt >= 4000)  // Regen happens every 4 seconds
   {
     values.regenDt = 0;
-    uint32_t hp = life.hp, mp = 0;
+    int32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1);  // This should be if sitting
-    if (life.hp > 0 && life.hp != life.maxHp) {
+    if (life.hp > 0 && life.hp < life.maxHp) {
       auto amount = (int32_t)std::ceil(life.maxHp * 0.02);
       amount = amount * stanceModifier;
       // TODO: update amount based on equipment values
@@ -392,15 +392,15 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
   }
 }
 
-RoseCommon::Entity Combat::get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+Entity Combat::get_closest_spawn(EntitySystem& entitySystem, Entity player) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_closest_spawn start");
   const auto& position = entitySystem.get_component<Component::Position>(player);
 
-  RoseCommon::Entity closest = {};
+  Entity closest = {};
   float closestDist = 999999999999;
 
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
     const auto& spawnPosition = entitySystem.get_component<Component::Position>(entity);
 
@@ -419,12 +419,12 @@ RoseCommon::Entity Combat::get_closest_spawn(EntitySystem& entitySystem, RoseCom
   return closest;
 }
 
-RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player) {
+Entity Combat::get_saved_spawn(EntitySystem& entitySystem, Entity player) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_saved_spawn start");
   const auto& position = entitySystem.get_component<Component::Position>(player);
 
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
     if (spawninfo.type == Component::PlayerSpawn::RESPAWN_POINT) {
@@ -438,10 +438,10 @@ RoseCommon::Entity Combat::get_saved_spawn(EntitySystem& entitySystem, RoseCommo
   return {};
 }
 
-RoseCommon::Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
+Entity Combat::get_start_spawn(EntitySystem& entitySystem) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   logger->trace("Combat::get_start_spawn start");
-  for (RoseCommon::Entity entity :
+  for (Entity entity :
        entitySystem.get_entities_with_components<Component::Position, Component::PlayerSpawn>()) {
     const auto& spawninfo = entitySystem.get_component<Component::PlayerSpawn>(entity);
     if (spawninfo.type == Component::PlayerSpawn::START_POINT) return entity;
@@ -459,7 +459,7 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
 
   switch (type) {
     case CliReviveReq::ReviveRequest::REVIVE_POSITION: {
-      if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+      if (Entity e = get_closest_spawn(entitySystem, entity); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
         x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
         y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
@@ -467,11 +467,11 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
       break;
     }
     case CliReviveReq::ReviveRequest::SAVE_POSITION: {
-      if (Entity e = get_saved_spawn(entitySystem, entity); e) {
+      if (Entity e = get_saved_spawn(entitySystem, entity); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
 
         if (dest.map == 20 && basicInfo.job) {
-          if (Entity e = get_closest_spawn(entitySystem, entity); e) {
+          if (Entity e = get_closest_spawn(entitySystem, entity); e != entt::null) {
             auto& dest = entitySystem.get_component<Component::Position>(e);
             x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
             y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
@@ -488,7 +488,7 @@ std::tuple<uint16_t, float, float> Combat::get_spawn_point(EntitySystem& entityS
       break;
     }
     case CliReviveReq::ReviveRequest::START_POSITION: {
-      if (Entity e = get_start_spawn(entitySystem); e) {
+      if (Entity e = get_start_spawn(entitySystem); e != entt::null) {
         auto& dest = entitySystem.get_component<Component::Position>(e);
         x = dest.x + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
         y = dest.y + (Core::Random::getInstance().get_uniform(0, 1001) - 500);
@@ -538,7 +538,7 @@ int64_t Combat::get_exp_to_level(int level) {
   return (int64_t)((level - 15) * (level + 7) * (level - 126) * 41);
 }
 
-void Combat::drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner) {
+void Combat::drop_loot(EntitySystem& entitySystem, Entity entity, Entity owner) {
   // TODO: compute drop
   const auto& lua_component = entitySystem.get_component<Component::NpcLua>(entity);
   const auto& lua_data = lua_component.data.lock();

@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_DROP_ITEM">
-    <element name = "index" type = "uint8_t" />
-    <element name = "quantity" type = "uint32_t" />
-</packet>

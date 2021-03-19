@@ -1,9 +1,0 @@
-<packet ePacketType = "PAKWC_DROP_ITEM">
-    <element name = "x" type = "float" default = "0.f" />
-    <element name = "y" type = "float" default = "0.f" />
-    <includeXml path = "item.xml" />
-    <element name = "item" type = "Item" default = "{}" />
-    <element name = "id" type = "uint16_t" default = "0" />
-    <element name = "ownerId" type = "uint16_t" default = "0" />
-    <element name = "timeToLive" type = "uint16_t" default = "5" />
-</packet>

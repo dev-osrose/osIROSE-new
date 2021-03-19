@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_EQUIP_ITEM">
-    <element name = "id" type = "uint16_t" />
-    <element name = "slot" type = "int16_t" />
-    <includeXml path = "equipped_item.xml" />
-    <element name = "item" type = "EquippedItem" />
-</packet>

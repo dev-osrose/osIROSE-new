@@ -1,14 +1,14 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_whisper_chat.h"
 #include "srv_whisper_chat.h"
 
 class EntitySystem;
 
 namespace Chat {
-void whisper_chat(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliWhisperChat&);
-void whisper_chat_srv(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::SrvWhisperChat&);
+void whisper_chat(EntitySystem&, Entity, const RoseCommon::Packet::CliWhisperChat&);
+void whisper_chat_srv(EntitySystem&, Entity, const RoseCommon::Packet::SrvWhisperChat&);
 
-void send_whisper(EntitySystem& entitySystem, RoseCommon::Entity entity, const std::string& msg);
+void send_whisper(EntitySystem& entitySystem, Entity entity, const std::string& msg);
 }

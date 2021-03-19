@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKCC_DELETE_CHAR_REPLY">
-    <element name = "remainingTime" type = "uint32_t" />
-    <include path = "string" system = "true" />
-    <element name = "name" type = "std::string" ref = "true" />
-</packet>

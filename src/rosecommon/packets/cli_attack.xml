@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_ATTACK">
-  <element name = "targetId" type = "uint16_t" />
-</packet>

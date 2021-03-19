@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_GM_COMMAND_CODE">
-    <include path = "string" system = "true" />
-
-    <element name = "target" type = "uint16_t" />
-    <element name = "command" type = "std::string" ref = "true" />
-</packet>

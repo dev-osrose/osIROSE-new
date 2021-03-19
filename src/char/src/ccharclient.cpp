@@ -68,6 +68,10 @@ CCharClient::CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _s
       channelId_(0),
       server_(server) {}
 
+CCharClient::~CCharClient() {
+    server_->unload_user(charId_);
+}
+
 bool CCharClient::handlePacket(uint8_t *_buffer) {
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_JOIN_SERVER_REQ:
@@ -296,6 +300,10 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
   Core::CharacterTable table{};
   auto charRes = conn(sqlpp::select(table.map).from(table).where(table.id == characterRealId_[selected_id]));
   uint16_t map_id = charRes.front().map;
+
+  server_->load_user(weak_from_this(), characterRealId_[selected_id]);
+
+  charId_ = characterRealId_[selected_id];
 
   std::lock_guard<std::mutex> lock(server_->GetISCListMutex());
   for (auto &server : server_->GetISCList()) {

@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKCS_USE_ITEM">
-    <element name = "index" type = "uint16_t" />
-    <!-- Seems to be only set if the item is a special kind of skill casting item "ITEM_SKILL" -->
-    <element name = "item_id" type = "uint16_t" />
-</packet>

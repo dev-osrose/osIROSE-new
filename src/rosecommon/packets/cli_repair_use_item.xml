@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_REPAIR_USE_ITEM">
-    <element name = "index" type = "uint16_t" />
-    <element name = "target_index" type = "uint16_t" />
-</packet>

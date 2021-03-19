@@ -1,5 +1,0 @@
-<!-- Value is 15 bits for for data, 1 bit for running -->
-<packet ePacketType = "PAKCS_SET_ANIMATION">
-    <element name = "id" type = "uint16_t" default = "0" />
-    <element name = "value" type = "uint16_t" default = "0" />
-</packet>

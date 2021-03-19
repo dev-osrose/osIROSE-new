@@ -1,8 +1,0 @@
-<!-- Changes the model of cart/castle gear items, only for other players -->
-<packet ePacketType = "PAKWC_CHANGE_SKIN">
-    <includeXml path = "equipped_position_ride.xml" />
-
-    <element name = "char_id" type = "uint16_t" />
-    <element name = "slot" type = "EquippedPositionRide" />
-    <element name = "item_id" type = "uint32_t" />
-</packet>

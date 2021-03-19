@@ -1,9 +1,0 @@
-<packet ePacketType = "PAKWC_GLOBAL_VARS">
-    <include path = "dataconsts.h" />
-    <element name = "world_product" type = "int16_t" default = "100" />
-    <element name = "update_time" type = "int32_t" default= "0" />
-    <element name = "world_rate" type = "int16_t"  default = "100" />
-    <element name = "town_rate" type = "uint8_t"  default = "100" />
-    <element name = "item_rate" type = "uint8_t" occurs = "MAX_SELL_TYPE" default="{50}" ref = "true" />
-    <element name= "flags" type="uint32_t" default = "0" />
-</packet>

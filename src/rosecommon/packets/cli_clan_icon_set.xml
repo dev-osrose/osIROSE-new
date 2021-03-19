@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_CLAN_ICON_SET">
-    <element name = "crc" type = "uint16_t" />
-    <element name = "data" type = "uint8_t" occurs="unbounded" />
-</packet>

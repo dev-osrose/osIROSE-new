@@ -1,10 +1,12 @@
 #pragma once
 
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_mouse_cmd.h"
+#include "cli_stop_moving.h"
 
 class EntitySystem;
 
 namespace Mouse {
-void mouse_cmd(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliMouseCmd&);
+void mouse_cmd(EntitySystem&, Entity, const RoseCommon::Packet::CliMouseCmd&);
+void stop_moving(EntitySystem&, Entity, const RoseCommon::Packet::CliStopMoving&);
 }

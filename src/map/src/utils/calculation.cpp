@@ -15,11 +15,12 @@
 #include "components/stamina.h"
 #include "components/stats.h"
 #include "random.h"
+#include "dataconsts.h"
 
 using namespace RoseCommon;
 
 namespace Calculations {
-float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+float get_runspeed(EntitySystem& entitySystem, Entity entity) {
   // const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
@@ -31,7 +32,7 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
     if (entitySystem.has_component<Component::Inventory>(entity)) {
       auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
       const auto& boots = inventory.boots();
-      if (boots) itemSpeed = Utils::get_move_speed(entitySystem, boots);
+      if (boots != entt::null) itemSpeed = Utils::get_move_speed(entitySystem, boots);
 
       const auto& backpack = inventory.backpack();
       itemSpeed += Utils::get_move_speed(entitySystem, backpack);
@@ -56,7 +57,7 @@ float get_runspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   return moveSpeed;
 }
 
-float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+float get_attackspeed(EntitySystem& entitySystem, Entity entity) {
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   float weaponAtkSpd = 8, passiveAtkSpeed = 0;
@@ -64,7 +65,7 @@ float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   if (entitySystem.has_component<Component::Inventory>(entity)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) weaponAtkSpd = Utils::get_attack_speed(entitySystem, weapon_r);
+    if (weapon_r != entt::null) weaponAtkSpd = Utils::get_attack_speed(entitySystem, weapon_r);
   }
   // Note: passiveAtkSpeed is only set depending on your job?
   float attackSpeed = (passiveAtkSpeed + 1500.f / (weaponAtkSpd + 5));
@@ -76,11 +77,11 @@ float get_attackspeed(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   return attackSpeed;
 }
 
-int get_weight(EntitySystem& entitySystem, RoseCommon::Entity entity) { return 0; }
+int get_weight(EntitySystem& entitySystem, Entity entity) { return 0; }
 
-int get_maxweight(EntitySystem& entitySystem, RoseCommon::Entity entity) { return 0; }
+int get_maxweight(EntitySystem& entitySystem, Entity entity) { return 0; }
 
-int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+int get_maxhp(EntitySystem& entitySystem, Entity entity) {
   auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& life = entitySystem.get_component<Component::Life>(entity);
@@ -135,7 +136,7 @@ int get_maxhp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   return life.maxHp;
 }
 
-int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
+int get_maxmp(EntitySystem& entitySystem, Entity entity) {
   auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   auto& level = entitySystem.get_component<Component::Level>(entity);
   auto& magic = entitySystem.get_component<Component::Magic>(entity);
@@ -188,7 +189,7 @@ int get_maxmp(EntitySystem& entitySystem, RoseCommon::Entity entity) {
   return magic.maxMp;
 }
 
-int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender) {
+int get_successrate(EntitySystem& entitySystem, Entity attacker, Entity defender) {
   int success_rate = 0;
   int final_success_rate = 100;  // TODO: set this to 0 once the calc is finished
   auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
@@ -216,20 +217,20 @@ int get_successrate(EntitySystem& entitySystem, RoseCommon::Entity attacker, Ros
   return final_success_rate;
 }
 
-int64_t get_magicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender,
+int64_t get_magicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,
                         int hit_count, int success_rate) {
   // TODO
   int magic_value = 0;
   if (entitySystem.has_component<Component::Inventory>(attacker)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) magic_value = Utils::get_magic(entitySystem, weapon_r);
+    if (weapon_r != entt::null) magic_value = Utils::get_magic(entitySystem, weapon_r);
   }
 
   return 50;
 }
 
-int64_t get_basicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender,
+int64_t get_basicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,
                         int hit_count, int success_rate) {
   int64_t damage = 0, critChance = 0;
   const auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
@@ -241,7 +242,7 @@ int64_t get_basicdamage(EntitySystem& entitySystem, RoseCommon::Entity attacker,
   return 50;
 }
 
-int64_t get_damage(EntitySystem& entitySystem, RoseCommon::Entity attacker, RoseCommon::Entity defender,
+int64_t get_damage(EntitySystem& entitySystem, Entity attacker, Entity defender,
                    int hit_count) {
   auto successRate = get_successrate(entitySystem, attacker, defender);
 
@@ -258,7 +259,7 @@ int64_t get_damage(EntitySystem& entitySystem, RoseCommon::Entity attacker, Rose
   if (entitySystem.has_component<Component::Inventory>(attacker)) {
     auto& inventory = entitySystem.get_component<Component::Inventory>(attacker);
     const auto& weapon_r = inventory.weapon_r();
-    if (weapon_r) magicStat = Utils::get_magic(entitySystem, weapon_r);
+    if (weapon_r != entt::null) magicStat = Utils::get_magic(entitySystem, weapon_r);
   }
 
   const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);

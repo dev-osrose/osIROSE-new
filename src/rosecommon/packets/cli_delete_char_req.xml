@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCS_DELETE_CHAR_REQ">
-    <element name = "charId" type = "uint8_t" />
-    <element name = "isDelete" type = "uint8_t" />
-    <include path = "string" system = "true" />
-    <element name = "name" type = "std::string" ref = "true" />
-</packet>
