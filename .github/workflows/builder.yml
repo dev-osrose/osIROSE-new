@@ -54,7 +54,7 @@ jobs:
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
         shell: bash
-        run: tar -C ${{github.workspace}}/build/bin --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
+        run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
 
       - name: Upload linux build
         uses: actions/upload-artifact@v2
@@ -109,7 +109,7 @@ jobs:
     - name: Prepare Release
       working-directory: ${{github.workspace}}/build/bin
       shell: bash
-      run: tar -C ${{github.workspace}}/build/bin --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
+      run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
 
     - name: Upload linux build
       uses: actions/upload-artifact@v2
