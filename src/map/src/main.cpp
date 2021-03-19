@@ -52,11 +52,11 @@ void CheckUser() {
 }
 
 void ParseCommandLine(int argc, char** argv) {
-  cxxopts::Options options(argv[0], "osIROSE map server");
+  cxxopts::Options parser(argv[0], "osIROSE map server");
 
   try {
     std::string config_file_path = "";
-    options.add_options()
+    parser.add_options()
     ("f,config_file",  "Config file path", cxxopts::value<std::string>(config_file_path)
       ->default_value("server.json"), "FILE_PATH")
     ("l,log_level", "Logging level (0-9)", cxxopts::value<int>()
@@ -70,7 +70,7 @@ void ParseCommandLine(int argc, char** argv) {
     ("h,help",  "Print this help text")
     ;
 
-    options.add_options("Networking")
+    parser.add_options("Networking")
     ("external_ip", "external IP Address", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "IP")
     ("client_ip", "Client listen IP Address", cxxopts::value<std::string>()
@@ -87,7 +87,7 @@ void ParseCommandLine(int argc, char** argv) {
       ->default_value("http://myexternalip.com/raw"), "URL")
     ;
 
-    options.add_options("Database")
+    parser.add_options("Database")
     ("db_host", "", cxxopts::value<std::string>()
       ->default_value("127.0.0.1"), "DB_HOST")
     ("db_port", "", cxxopts::value<int>()
@@ -100,14 +100,14 @@ void ParseCommandLine(int argc, char** argv) {
       ->default_value(""), "DB_PASS")
     ;
 
-    options.add_options("Map server")
+    parser.add_options("Map server")
     ("map_ids", "Map ids this server runs", cxxopts::value<std::vector<uint16_t>>(), "MAP_IDS");
 
-    options.parse(argc, argv);
+    auto options = parser.parse(argc, argv);
 
     // Check to see if the user wants to see the help text
     if (options.count("help")) {
-      std::cout << options.help({"", "Database", "Networking"}) << std::endl;
+      std::cout << parser.help({"", "Database", "Networking"}) << std::endl;
       exit(0);
     }
 
@@ -148,7 +148,7 @@ void ParseCommandLine(int argc, char** argv) {
     if (options.count("map_ids")) config.mapServer().mapId = options["map_ids"].as<std::vector<uint16_t>>();
   } catch (const cxxopts::OptionException& ex) {
     std::cout << ex.what() << std::endl;
-    std::cout << options.help({"", "Database", "Networking"}) << std::endl;
+    std::cout << parser.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
   }
 }
@@ -205,10 +205,9 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+
     if (auto log = console.lock()) log->info("Server shutting down...");
-    Core::NetworkThreadPool::DeleteInstance();
-    spdlog::shutdown();
-    spdlog::drop_all();
   } catch (const spdlog::spdlog_ex& ex) {
     std::cout << "Log failed: " << ex.what() << std::endl;
   }

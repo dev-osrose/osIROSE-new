@@ -1,9 +1,0 @@
-<packet ePacketType = "PAKWC_SKILL_CAST_SELF">
-    <includeXml path = "mob_animation.xml" />
-
-    <element name = "target" type = "uint16_t" />
-    <element name = "id" type = "int8_t" />
-
-     <!-- If `source` points to a MOB then this is the NPC animation id -->
-    <element name = "animation" type = "MobAnimation" default = "MobAnimation::STOP" />
-</packet>

@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKWC_NPC_EVENT">
-    <element name = "id" type = "int16_t" />
-</packet>

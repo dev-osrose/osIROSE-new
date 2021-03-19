@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_PICKUP_ITEM_REQ">
-    <element name = "item_id" type = "uint16_t" />
-</packet>

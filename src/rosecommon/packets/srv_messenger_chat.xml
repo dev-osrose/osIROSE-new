@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCC_MESSENGER_CHAT">
-    <include path = "string" system = "true" />
-
-    <element name = "tag" type = "uint16_t" />
-    <element name = "message" type = "std::string" ref = "true" />
-</packet>

@@ -1,7 +1,0 @@
-<packet ePacketType = "PAKWC_SPEED_CHANGED">
-    <element name = "target" type = "uint16_t" />
-    <element name = "move_speed" type = "int16_t" />
-    <element name = "attack_speed" type = "int16_t" />
-    <element name = "weight" type = "uint8_t" />
-</packet>
-

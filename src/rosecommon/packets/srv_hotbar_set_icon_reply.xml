@@ -1,8 +1,0 @@
-<packet ePacketType = "PAKWC_HOTBAR_SET_ICON_REPLY">
-    <!-- TODO: Pending idl union updates 7/14/2019
-    <includeXml path="hotbar_icon.xml" />
-
-    <element name = "index" type = "uint8_t" />
-    <element name = "icon" type = "HotbarIcon" />
-    -->
-</packet>

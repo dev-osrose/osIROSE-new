@@ -14,18 +14,8 @@ set(SOURCES_HEADER
     include/inetwork.h
     include/connectionpool.h
     include/connection.h
-    include/singleton.h
     include/platform_defines.h
-    include/factory.h
     include/crash_report.h
-    include/hash.h
-    include/fuzzy_matching.h
-    include/random.h
-    include/mwsrqueue.h
-    include/enumerate.h
-    include/transform.h
-    include/fire_once.h
-    include/tuple_iterate.h
     )
 
 set(SOURCES_BASE
@@ -33,7 +23,6 @@ set(SOURCES_BASE
     src/cnetwork_asio.cpp
     src/config.cpp
     src/connection.cpp
-    src/fuzzy_matching.cpp
     )
 
 if (GCC OR CLANG)
@@ -90,6 +79,12 @@ target_include_directories(${PROJECT}
 
 # Make sure the SQL headers are created before core is created
 add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
+
+add_dependencies(${PROJECT} osirose_common::osirose_common)
+target_link_libraries(${PROJECT}
+    PRIVATE
+    osirose_common::osirose_common
+)
 
 target_link_libraries(${PROJECT}
     INTERFACE

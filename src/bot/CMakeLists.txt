@@ -5,16 +5,25 @@ set(PROJECT Bot)
 
 project(${PROJECT})
 
-add_compiler_flags($<$<CXX_COMPILER_ID:Clang>:-Wno-keyword-compat>)
+#add_compiler_flags($<$<CXX_COMPILER_ID:Clang>:-Wno-keyword-compat>)
 
 SET( SOURCES_MAIN
-  src/main.cpp )
+  src/main.cpp
+  src/client.cpp
+  src/login_client.cpp
+  src/char_client.cpp
+  src/map_client.cpp
+)
 
 SET( SOURCES_HEADER
-    )
+  include/client.h
+  include/login_client.h
+  include/char_client.h
+  include/map_client.h
+)
 
 SET( SOURCES_BASE
-    )
+)
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
 
@@ -38,7 +47,7 @@ if(WITH_CRASH_REPORTS)
 endif()
 
 add_dependencies(${PROJECT} RoseCommon)
-target_link_libraries(${PROJECT} RoseCommon)
+target_link_libraries(${PROJECT} RoseCommon osirose_common::osirose_common)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
 
 if (MSVC)

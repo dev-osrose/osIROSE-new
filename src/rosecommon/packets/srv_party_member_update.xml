@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_PARTY_MEMBER_UPDATE">
-    <includeXml path = "party_member.xml" />
-    <element name = "member" type = "PartyMember"/>
-</packet>

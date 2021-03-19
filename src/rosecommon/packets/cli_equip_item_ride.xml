@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCS_EQUIP_ITEM_RIDE">
-    <includeXml path = "equipped_position_ride.xml" />
-    
-    <element name = "slot" type = "EquippedPositionRide" />
-    <element name = "index" type = "uint16_t" />
-</packet>

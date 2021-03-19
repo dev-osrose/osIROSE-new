@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_FAIRY">
-    <element name = "enabled" type = "int8_t" />
-    <element name = "target" type = "uint16_t" />
-</packet>

@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCS_MOUSE_CMD">
-    <element name = "targetId" type = "uint16_t" />
-    <element name = "x" type = "float" />
-    <element name = "y" type = "float" />
-    <element name = "z" type = "uint16_t" />
-</packet>

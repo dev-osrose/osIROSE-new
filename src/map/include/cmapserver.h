@@ -47,7 +47,7 @@ class CMapServer : public RoseCommon::CRoseServer {
       return RoseCommon::CRoseServer::GetISCListMutex();
   }
 
-  void send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps);
+  void send_to_maps(const RoseCommon::CRosePacket& p, const std::vector<uint16_t>& maps, uint32_t originatorId);
   void send_to_chars(const RoseCommon::CRosePacket& p, const std::vector<std::string>& chars);
 
  protected:

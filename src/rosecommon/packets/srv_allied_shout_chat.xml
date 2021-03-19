@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_ALLIED_SHOUT_CHAT">
-    <include path = "string" system = "true" />
-    <element name = "team" type = "uint32_t" />
-    <element name = "sender" type = "std::string" ref = "true" />
-    <element name = "message" type = "std::string" ref = "true" />
-</packet>

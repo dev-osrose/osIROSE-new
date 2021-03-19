@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKWC_UPDATE_NAME">
-    <include path = "string" system = "true" />
-
-    <element name = "target" type = "uint16_t" />
-    <element name = "name" type = "std::string" ref = "true" />
-</packet>

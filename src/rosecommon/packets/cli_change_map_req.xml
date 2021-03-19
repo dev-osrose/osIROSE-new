@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_CHANGE_MAP_REQ">
-  <element name = "weightRate" type = "uint8_t" />
-  <element name = "z" type = "uint16_t" />
-</packet>

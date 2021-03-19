@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_APPRAISAL_REQ">
-    <element name = "index" type = "uint16_t" />
-</packet>
-

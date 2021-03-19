@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKCS_DAMAGE">
-  <element name = "targetId" type = "uint16_t" default = "0" />
-  <!-- Client always sends zero for this value -->
-  <element name = "_randomId" type = "uint16_t" default = "0" />
-</packet>
