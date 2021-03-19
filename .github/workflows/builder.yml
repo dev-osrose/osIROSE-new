@@ -15,6 +15,8 @@ jobs:
         with:
           submodules: recursive
       - uses: seanmiddleditch/gha-setup-ninja@v3
+      - name: Get processor arch
+        run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -48,6 +50,14 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: ctest -C $BUILD_TYPE
+
+      - name: Prepare Release
+        run: tar --transform 's/.*\///g' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz ${{github.workspace}}/build/bin/*
+      - name: Upload linux build
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux_debug_build
+          path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
   release:
     runs-on: ubuntu-latest
     env:
@@ -57,6 +67,8 @@ jobs:
       with:
         submodules: recursive
     - uses: seanmiddleditch/gha-setup-ninja@v3
+    - name: Get processor arch
+      run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{github.workspace}}/build
@@ -90,3 +102,11 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       run: ctest -C $BUILD_TYPE
+
+    - name: Prepare Release
+      run: tar --transform 's/.*\///g' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz ${{github.workspace}}/build/bin/*
+    - name: Upload linux build
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux_release_build
+        path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
