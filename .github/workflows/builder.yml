@@ -135,7 +135,6 @@ jobs:
       - name: Get Submodule Info
         id: get-submodule-info
         run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
-        shell: bash
 
       - name: Cache 3rdparty builds
         uses: actions/cache@v2
