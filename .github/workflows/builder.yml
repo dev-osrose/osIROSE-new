@@ -147,7 +147,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
 
       - name: Build
         working-directory: ${{github.workspace}}/build
