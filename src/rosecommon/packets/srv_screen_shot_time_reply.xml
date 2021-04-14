@@ -1,7 +1,0 @@
-<packet ePacketType = "PAKSC_SCREEN_SHOT_TIME_REPLY">
-    <element name = "year" type = "uint16_t" />
-    <element name = "month" type = "uint8_t" />
-    <element name = "day" type = "uint8_t" />
-    <element name = "hour" type = "uint8_t" />
-    <element name = "min" type = "uint8_t" />
-</packet>

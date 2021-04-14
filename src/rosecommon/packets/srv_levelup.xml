@@ -1,7 +1,0 @@
-<packet ePacketType = "PAKWC_LEVELUP">
-    <element name = "id" type = "uint16_t" />
-    <element name = "level" type = "int16_t" />
-    <element name = "exp" type = "int64_t" />
-    <element name = "stat_points" type = "int16_t" />
-    <element name = "skill_points" type = "int16_t" />
-</packet>

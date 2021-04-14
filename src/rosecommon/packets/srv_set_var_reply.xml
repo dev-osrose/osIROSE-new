@@ -1,5 +1,0 @@
-<!-- Type 0x080 denotes a failure to set the var -->
-<packet ePacketType = "PAKWC_SET_SERVER_VAR_REPLY">
-    <element name = "type" type = "uint8_t" default = "0" />
-    <element name = "value" type = "uint32_t" default = "0" />
-</packet>

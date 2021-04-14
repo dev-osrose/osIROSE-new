@@ -24,6 +24,8 @@ if(WIN32)
       COMMAND msbuild <SOURCE_DIR>/src/client/windows/crash_generation/crash_generation_client.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
       COMMAND msbuild <SOURCE_DIR>/src/client/windows/handler/exception_handler.vcxproj /nologo /t:rebuild /m:2 /p:Configuration=$<CONFIG> /p:Platform=${BUILD_PLATFORM}
 
+    PATCH_COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/breakpad.patch
+
     INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/lib" "*.lib"
       COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/src/" "<INSTALL_DIR>/bin" "*.dll"
       COMMAND ${CMAKE_SCRIPT_PATH}/robocopy_flat.bat "<SOURCE_DIR>/src/tools/windows/binaries/" "<INSTALL_DIR>/bin" "*.exe"
@@ -81,6 +83,8 @@ else()
     #PATCH_COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/breakpad_upload.patch
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${BREAKPAD_EXCEPTION_HANDLER_INSTALL_DIR} --quiet --config-cache
     BUILD_BYPRODUCTS ${_byproducts}
+
+    PATCH_COMMAND ${PATCH_SCRIPT_PATH} ${CMAKE_PATCH_DIR}/breakpad.patch
   )
 
   ExternalProject_Add_Step(

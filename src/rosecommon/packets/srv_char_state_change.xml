@@ -1,4 +1,0 @@
-<packet ePacketType = "PAWKC_CHAR_STATE_CHANGE">
-    <element name = "target" type = "uint16_t" />
-    <element name = "flag" type = "uint32_t" />
-</packet>

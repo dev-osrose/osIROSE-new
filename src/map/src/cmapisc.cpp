@@ -48,14 +48,22 @@ bool CMapISC::transfer(RoseCommon::Packet::IscTransfer&& P) {
     if (P.get_maps().empty()) {
         for (auto map : maps) {
             if (auto ptr = map.second.lock()) {
-                ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                if (P.get_serverPacket()) {
+                    ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                } else {
+                    ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
+                }
             }
         }
     } else {
         for (auto map : P.get_maps()) {
             if (auto it = maps.find(map); it != maps.end()) {
                 if (auto ptr = it->second.lock()) {
-                    ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    if (P.get_serverPacket()) {
+                        ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    } else {
+                        ptr->dispatch_packet(entt::null, RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    }
                 }
             }
         }
@@ -69,7 +77,11 @@ bool CMapISC::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
             if (auto ptr = map.lock()) {
                 auto entity = ptr->get_entity_from_name(name);
                 if (entity != entt::null) {
-                    ptr->dispatch_packet(entity, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    if (P.get_serverPacket()) {
+                        ptr->dispatch_packet(entity, RoseCommon::fetchPacket<true>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    } else {
+                        ptr->dispatch_packet(entity, RoseCommon::fetchPacket<false>(static_cast<const uint8_t*>(P.get_blob().data())));
+                    }
                 }
             }
         }

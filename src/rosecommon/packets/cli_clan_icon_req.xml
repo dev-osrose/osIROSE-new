@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_CLAN_ICON_REQ">
-    <element name = "id" type = "uint32_t" />
-</packet>

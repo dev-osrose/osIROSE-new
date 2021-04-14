@@ -13,7 +13,7 @@ struct Spawner {
     std::chrono::seconds interval;
     int range;
 
-    std::vector<RoseCommon::Entity> mobs;
+    std::vector<Entity> mobs;
 
     TimedCallbacks::Wrapper callback;
 };

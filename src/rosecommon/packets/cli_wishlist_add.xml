@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCS_WISHLIST_ADD">
-    <includeXml path = "item.xml" />
-
-    <element name = "index" type = "uint8_t" />
-    <element name = "item" type = "Item" />
-</packet>

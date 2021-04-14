@@ -1,8 +1,0 @@
-<packet ePacketType = "PAKWC_TELEPORT_REPLY">
-    <element name = "id" type = "uint16_t" />
-    <element name = "map" type = "uint16_t" />
-    <element name = "x" type = "float" />
-    <element name = "y" type = "float" />
-    <element name = "moveMode" type = "uint8_t" />
-    <element name = "rideMode" type = "uint8_t" />
-</packet>

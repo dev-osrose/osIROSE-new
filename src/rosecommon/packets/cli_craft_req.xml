@@ -1,6 +1,0 @@
-<packet ePacketType = "PAKCS_CRAFT_REQ">
-    <element name = "slot" type = "uint8_t" />
-    <element name = "type" type = "int8_t" />
-    <element name = "id" type = "int8_t" />
-    <element name = "material_slots" occurs="4" type = "int16_t" ref="true" />
-</packet>

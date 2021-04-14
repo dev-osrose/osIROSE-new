@@ -15,6 +15,8 @@
 #ifndef __CCHARCLIENT_H__
 #define __CCHARCLIENT_H__
 
+#include <memory>
+
 #include "croseclient.h"
 
 #include "cli_create_char_req.h"
@@ -24,12 +26,15 @@
 
 class CCharServer;
 
-class CCharClient : public RoseCommon::CRoseClient {
+class CCharClient : public RoseCommon::CRoseClient, public std::enable_shared_from_this<CCharClient> {
  public:
   CCharClient();
   CCharClient(CCharServer *server, std::unique_ptr<Core::INetwork> _sock);
+  ~CCharClient();
 
   uint32_t sessionId() const { return sessionId_; }
+
+  void send_packet(const RoseCommon::CRosePacket& packet) { CRoseClient::send(packet); } 
 
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
@@ -39,7 +44,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   bool sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P);
   bool sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P);
   bool sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P);
-
+ 
   virtual void onDisconnected() override;
 
  protected:
@@ -56,6 +61,7 @@ class CCharClient : public RoseCommon::CRoseClient {
   uint32_t sessionId_;
   uint32_t userId_;
   uint32_t channelId_;
+  uint32_t charId_;
 
   std::vector<uint32_t> characterRealId_;
   CCharServer *server_;

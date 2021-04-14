@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKWC_SHOP_OPEN">
-    <include path = "string" system = "true" />
-    <element name = "id" type = "uint16_t" />
-    <element name = "name" type = "std::string" ref = "true" />
-</packet>

@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 *.sw*
+.vs/*
+.vscode/*
 
 # CMake files
 CMakeCache.txt
@@ -39,6 +41,7 @@ src/proto/include
 [Rr]elease/
 x64/
 build/
+[wc]build/
 [Bb]in/
 [Oo]bj/
 
@@ -85,6 +88,7 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+.vs/*
 
 # Guidance Automation Toolkit
 *.gpState

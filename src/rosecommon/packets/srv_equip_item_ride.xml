@@ -1,9 +1,0 @@
-<packet ePacketType = "PAKWC_EQUIP_ITEM_RIDE">
-    <includeXml path = "equipped_item.xml" />
-    <includeXml path = "equipped_position_ride.xml" />
-
-    <element name = "char_id" type = "uint16_t" />
-    <element name = "slot" type = "EquippedPositionRide" />
-    <element name = "item" type = "EquippedItem" />
-    <element name = "move_speed" type = "uint16_t" />
-</packet>

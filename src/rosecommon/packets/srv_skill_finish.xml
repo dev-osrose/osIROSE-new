@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKWC_SKILL_FINISH">
-    <element name = "target" type = "uint16_t" />
-    <element name = "id" type = "uint16_t" />
-</packet>
-

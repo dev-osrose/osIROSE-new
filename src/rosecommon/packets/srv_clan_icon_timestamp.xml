@@ -1,8 +1,0 @@
-<packet ePacketType = "PAKCC_CLAN_ICON_TIMESTAMP">
-    <element name = "year" type = "uint16_t" />
-    <element name = "month" type = "uint8_t" />
-    <element name = "day" type = "uint8_t" />
-    <element name = "hour" type = "uint8_t" />
-    <element name = "min" type = "uint8_t" />
-    <element name = "sec" type = "uint8_t" />
-</packet>

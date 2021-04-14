@@ -28,11 +28,7 @@ MapManager::MapManager(std::vector<uint16_t> maps):
         CMapServer* map_ptr = map.get();
         maps_.emplace_back(std::pair([this, map = std::move(map)] () {
             map->run();
-        }, [this, map_ptr]() {
-            std::unique_lock<std::mutex> lock(mutex);
-            cv.wait(lock);
-            map_ptr->stop();
-        }));
+        }, map_ptr));
     }
 }
 
@@ -43,11 +39,11 @@ MapManager::~MapManager() {
 }
 
 void MapManager::stop() {
-    cv.notify_all();
-    std::lock_guard<std::mutex> lock(mutex);
     for (auto& map : maps_) {
-        map.second.join();
-        map.first.join();
+        if (map.second) {
+            map.second->stop();
+            map.first.join();
+        }
     }
     maps_.clear();
 }
