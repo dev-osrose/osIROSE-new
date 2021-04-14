@@ -44,39 +44,6 @@ stages:
 
 jobs:
   include:
-    - &gccinit
-      stage: prepare cache
-      name: "AMD64 Ubuntu/GCC"
-      arch: amd64
-      os: linux
-      compiler: g++
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 CC_FOR_BUILD=gcc-8 CXX_FOR_BUILD=g++-8
-      addons:
-        apt:
-          packages:
-          - lcov
-          - g++-8
-          - libcurl4-openssl-dev
-
-      install:
-        - |
-          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            if [ ! -f "$TRAVIS_BUILD_DIR/cmake_app/bin/cmake" ]; then
-              CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4-Linux-x86_64.tar.gz"
-              travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
-            else
-              echo 'Using cached cmake_app directory.';
-            fi
-          else
-            brew upgrade cmake || brew install cmake
-          fi
-        - cmake --version
-        - bash $CI_DIRECTORY/install-lcov.sh
-        - bash $CI_DIRECTORY/install-ninja.sh
-        - pip install --user pyparsing
-      script: true
-
     - &gccarminit
       stage: prepare cache
       name: "ARM64 Ubuntu/GCC"
@@ -114,16 +81,6 @@ jobs:
 
 #----------------------------
 #GCC Compile step
-    - <<: *gccinit
-      stage: compile
-      name: "AMD64 G++-8 Release"
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8 CC_FOR_BUILD=gcc-8 CXX_FOR_BUILD=g++-8
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-
     - <<: *gccarminit
       stage: compile
       name: "ARM64 G++-8 Release"
