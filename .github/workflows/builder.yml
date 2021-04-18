@@ -166,7 +166,7 @@ jobs:
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
         run: |
-          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin
+          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
           7z a ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip ${{github.workspace}}/build/bin/*
 
       - name: Upload windows build
