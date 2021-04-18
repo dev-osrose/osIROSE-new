@@ -131,7 +131,8 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1.7.0
         with:
           arch: x64
-
+      - name: get pyparsing
+        run: python -m pip install pyparsing
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=%PROCESSOR_ARCHITECTURE%" >> $GITHUB_ENV
