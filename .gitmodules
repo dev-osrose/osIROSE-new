@@ -4,6 +4,7 @@
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
+	branch = v1.8.5
 [submodule "3rdparty/sol2"]
 	path = 3rdparty/sol2
 	url = https://github.com/ThePhD/sol2.git

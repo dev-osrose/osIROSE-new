@@ -1,7 +1,7 @@
 #pragma once
 
 #include <entt.hpp>
-#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/fmt.h>
 
 using Entity = entt::entity;
 using Registry = entt::registry;
