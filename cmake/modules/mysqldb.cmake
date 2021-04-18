@@ -8,17 +8,16 @@ if (WIN32)
       "$ENV{PROGRAMFILES}/MySQL/*/include"
       "$ENV{SYSTEMDRIVE}/MySQL/*/include"
       "C:/Program Files/MySQL/*/include"
-      "$ENV{SYSTEMDRIVE}/mysql*/include"
       )
 
   find_path(MYSQL_LIBRARY_PATH
       NAMES "libmysql.lib" "mysqlclient_r.lib" "libmariadb.lib" "mariadbclient.lib"
       PATHS "${CMAKE_THIRD_PARTY_LIBRARY_DIR}"
+      "${MYSQL_INCLUDE_DIR}/../lib"
       "$ENV{SYSTEMDRIVE}/MySQL/MySQL Connector.C */lib"
       "$ENV{PROGRAMFILES}/MySQL/*/lib"
       "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
       "C:/Program Files/MySQL/*/lib"
-      "$ENV{SYSTEMDRIVE}/mysql*/lib"
       )
 
   find_library(MYSQL_LIBRARY
