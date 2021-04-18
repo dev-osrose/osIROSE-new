@@ -66,7 +66,7 @@ jobs:
       install:
         - |
           if [ ! -f "$TRAVIS_BUILD_DIR/cmake_app/bin/cmake" ]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.15.4/cmake-3.15.4.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-linux-x86_64.tar.gz"
             mkdir cmake_src && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_src
             cd cmake_src && ./bootstrap --prefix=$TRAVIS_BUILD_DIR/cmake_app && make -j ${BUILD_JOB_COUNT} && make install
             cd ..
