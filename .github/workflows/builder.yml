@@ -127,6 +127,11 @@ jobs:
           submodules: recursive
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.7.0
+        with:
+          arch: x64
+
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=%PROCESSOR_ARCHITECTURE%" >> $GITHUB_ENV
