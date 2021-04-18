@@ -8,6 +8,7 @@ if (WIN32)
       "$ENV{PROGRAMFILES}/MySQL/*/include"
       "$ENV{SYSTEMDRIVE}/MySQL/*/include"
       "C:/Program Files/MySQL/*/include"
+      "$ENV{SYSTEMDRIVE}/mysql*/include"
       )
 
   find_path(MYSQL_LIBRARY_PATH
@@ -17,6 +18,7 @@ if (WIN32)
       "$ENV{PROGRAMFILES}/MySQL/*/lib"
       "$ENV{SYSTEMDRIVE}/MySQL/*/lib"
       "C:/Program Files/MySQL/*/lib"
+      "$ENV{SYSTEMDRIVE}/mysql*/lib"
       )
 
   find_library(MYSQL_LIBRARY
