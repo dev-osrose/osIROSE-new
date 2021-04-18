@@ -175,6 +175,64 @@ jobs:
           name: windows_debug_build
           path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip
 
+  windows_release:
+    runs-on: windows-latest
+    env:
+      CMAKE_BUILD_TYPE: Release
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.7.0
+        with:
+          arch: x64
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+      - name: Get processor arch
+        run: echo "PROCESSOR_ARCH=%PROCESSOR_ARCHITECTURE%" >> $GITHUB_ENV
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Get Submodule Info
+        id: get-submodule-info
+        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+
+      - name: Cache 3rdparty builds
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{github.workspace}}/build/3rdparty/bin
+            ${{github.workspace}}/build/3rdparty/lib
+            ${{github.workspace}}/build/3rdparty/include
+          key: ${{ runner.os }}-Debug-${{ hashFiles('submodule_info') }}
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake ${{github.workspace}} -GNinja -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config $CMAKE_BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C $CMAKE_BUILD_TYPE
+
+      - name: Prepare Release
+        working-directory: ${{github.workspace}}/build/bin
+        run: |
+          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
+          7z a ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip ${{github.workspace}}/build/bin/*
+
+      - name: Upload windows build
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_release_build
+          path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip
+
 #  deploy:
 #    runs-on: ubuntu-latest
 #    needs: [ linux_release ]
