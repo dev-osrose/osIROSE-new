@@ -348,7 +348,7 @@ function(find_python_module module)
     # A module's location is usually a directory, but for binary modules
     # it's a .so file.
     execute_process(
-            COMMAND "${Python_EXECUTABLE}" "-c" "import sys, ${module}; sys.stdout.write(${module}.__version__.replace('.', ';'))"
+            COMMAND Python::Interpreter "-c" "import sys, ${module}; sys.stdout.write(${module}.__version__.replace('.', ';'))"
             RESULT_VARIABLE _${module}_status
             OUTPUT_VARIABLE _${module}_location
             ERROR_QUIET
