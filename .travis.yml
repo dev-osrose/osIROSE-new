@@ -24,9 +24,6 @@ env:
   - GCOV_EXEC=gcov-8
   - SUITE=tests
 
-#services:
-#  mysql
-
 cache:
   pip: true
   ccache: true
@@ -46,35 +43,35 @@ stages:
 
 jobs:
   include:
-    - &gccinit
-      stage: prepare cache
-      name: "AMD64 Ubuntu/GCC"
-      arch: amd64
-      os: linux
-      compiler: g++
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8
-      addons:
-        apt:
-          packages:
-          - lcov
-          - g++-8
-          - libcurl4-openssl-dev
-      install:
-        - |
-          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
-            mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
-          else
-            brew upgrade cmake || brew install cmake
-          fi
-        - cmake --version
-        - ccache --version
-        - ccache --show-stats
-        - bash $CI_DIRECTORY/install-lcov.sh
-        - bash $CI_DIRECTORY/install-ninja.sh
-        - pip install --user pyparsing
-      script: true
+#    - &gccinit
+#      stage: prepare cache
+#      name: "AMD64 Ubuntu/GCC"
+#      arch: amd64
+#      os: linux
+#      compiler: g++
+#      if: branch != coverity_scan
+#      env: CC=gcc-8 CXX=g++-8
+#      addons:
+#        apt:
+#          packages:
+#          - lcov
+#          - g++-8
+#          - libcurl4-openssl-dev
+#      install:
+#        - |
+#          if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+#            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-linux-x86_64.tar.gz"
+#            mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
+#          else
+#            brew upgrade cmake || brew install cmake
+#          fi
+#        - cmake --version
+#        - ccache --version
+#        - ccache --show-stats
+#        - bash $CI_DIRECTORY/install-lcov.sh
+#        - bash $CI_DIRECTORY/install-ninja.sh
+#        - pip install --user pyparsing
+#      script: true
 
     - &clanginit
       stage: prepare cache
@@ -94,7 +91,7 @@ jobs:
       install:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-linux-x86_64.tar.gz"
             mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
@@ -108,58 +105,58 @@ jobs:
       script: true
 #----------------------------
 #GCC Compile step
-    - <<: *gccinit
-      stage: compile
-      name: "AMD64 G++-8 Debug - Coverage Tests"
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8
-      before_install:
-        - export SUITE=coverage
-        - export BUILD_TYPE=Debug
-#      before_script:
-#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-#        - mysql --user="root" -e 'create database osirose;'
-#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir -p ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
-        - cp lib/*.so bin
-        - cd ${TRAVIS_BUILD_DIR}
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts > /dev/null
-        - curl --ftp-create-dirs --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --upload-file ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz --url ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz
-
-    - <<: *gccinit
-      stage: compile
-      name: "AMD64 G++-8 Release"
-      if: branch != coverity_scan
-      env: CC=gcc-8 CXX=g++-8
-#      before_script:
-#        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
-#        - mysql --user="root" -e 'create database osirose;'
-#        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
-      script:
-        - cd build
-        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
-        - cmake --build . -- -j ${BUILD_JOB_COUNT}
-      after_script:
-        - ctest --output-on-failure
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/build
-        - mkdir -p ${TRAVIS_BUILD_DIR}/public
-        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
-        - cp lib/*.so bin
-        - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
-        - curl --data-binary @LoginServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @CharServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @MapServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - curl --data-binary @NodeServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
-        - rm *.sym
-        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts > /dev/null
+#    - <<: *gccinit
+#      stage: compile
+#      name: "AMD64 G++-8 Debug - Coverage Tests"
+#      if: branch != coverity_scan
+#      env: CC=gcc-8 CXX=g++-8
+#      before_install:
+#        - export SUITE=coverage
+#        - export BUILD_TYPE=Debug
+##      before_script:
+##        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+##        - mysql --user="root" -e 'create database osirose;'
+##        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+#      script:
+#        - cd build
+#        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} -DWITH_COVERAGE_REPORTS=ON ..
+#        - cmake --build . -- -j ${BUILD_JOB_COUNT}
+#      after_success:
+#        - cd ${TRAVIS_BUILD_DIR}/build
+#        - mkdir -p ${TRAVIS_BUILD_DIR}/public
+#        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
+#        - cp lib/*.so bin
+#        - cd ${TRAVIS_BUILD_DIR}
+#        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz build 3rdparty/include ${TRAVIS_BUILD_DIR}/scripts > /dev/null
+#        - curl --ftp-create-dirs --ftp-pasv --user ${AZG_FTP_USER}:${AZG_FTP_PASS} --upload-file ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz --url ${AZG_HOST}/success/${TRAVIS_BUILD_NUMBER}/${TRAVIS_OS_NAME}/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz
+#
+#    - <<: *gccinit
+#      stage: compile
+#      name: "AMD64 G++-8 Release"
+#      if: branch != coverity_scan
+#      env: CC=gcc-8 CXX=g++-8
+##      before_script:
+##        - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+##        - mysql --user="root" -e 'create database osirose;'
+##        - mysql --user="root" --database="osirose" --password="" < "$TRAVIS_BUILD_DIR/Database/osirose.sql"
+#      script:
+#        - cd build
+#        - cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_CRASH_REPORTS=${WITH_CRASH_REPORTS} ..
+#        - cmake --build . -- -j ${BUILD_JOB_COUNT}
+#      after_script:
+#        - ctest --output-on-failure
+#      after_success:
+#        - cd ${TRAVIS_BUILD_DIR}/build
+#        - mkdir -p ${TRAVIS_BUILD_DIR}/public
+#        - cp ${TRAVIS_BUILD_DIR}/build/3rdparty/lib/*.so bin
+#        - cp lib/*.so bin
+#        - cd ${TRAVIS_BUILD_DIR}/build/bin/symbols
+#        - curl --data-binary @LoginServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+#        - curl --data-binary @CharServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+#        - curl --data-binary @MapServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+#        - curl --data-binary @NodeServer.sym "$BACKTRACE_URL/post?format=symbols&token=$BACKTRACE_TOKEN"
+#        - rm *.sym
+#        - tar -zcvf ${TRAVIS_BUILD_DIR}/public/${TRAVIS_OS_NAME}-${PROCESSOR_ARCH}-${SUITE}-${BUILD_TYPE}.tar.gz ${TRAVIS_BUILD_DIR}/build/bin ${TRAVIS_BUILD_DIR}/scripts > /dev/null
 #----------------------------
 #Clang compile step
     - <<: *clanginit
@@ -199,7 +196,7 @@ jobs:
       install:
         - |
           if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.tar.gz"
+            CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-linux-x86_64.tar.gz"
             mkdir -p cmake_app && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C $TRAVIS_BUILD_DIR/cmake_app
           else
             brew upgrade cmake || brew install cmake
