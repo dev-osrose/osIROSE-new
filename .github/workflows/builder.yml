@@ -120,7 +120,7 @@ jobs:
   windows_debug:
     runs-on: windows-latest
     env:
-      BUILD_TYPE: Debug
+      CMAKE_BUILD_TYPE: Debug
     steps:
       - uses: actions/checkout@v2
         with:
@@ -154,15 +154,15 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build
-        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DWITH_CRASH_REPORTS=%WITH_CRASH_REPORTS% -DWITH_COVERAGE_REPORTS=OFF
+        run: cmake ${{github.workspace}} -GNinja -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config %BUILD_TYPE%
+        run: cmake --build . --config $BUILD_TYPE
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C %BUILD_TYPE%
+        run: ctest -C $BUILD_TYPE
 
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
