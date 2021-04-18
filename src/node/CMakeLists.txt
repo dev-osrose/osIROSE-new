@@ -11,7 +11,7 @@ if (GCC)
 endif()
 
 set( SOURCES_MAIN
-  src/main )
+  src/main.cpp )
 
 set( SOURCES_HEADER
   include/nodeserver.h

@@ -67,7 +67,7 @@ SET( SOURCES_HEADER
   )
 
 SET( SOURCES_MAIN
-  src/main
+  src/main.cpp
   src/cmapserver.cpp
   src/cmapclient.cpp
   src/cmapisc.cpp

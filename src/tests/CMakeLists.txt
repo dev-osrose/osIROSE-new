@@ -78,7 +78,7 @@ macro (compile_test name path)
     SYSTEM ${BREAKPAD_EXCEPTION_HANDLER_INCLUDE_DIR}
   )
 
-  add_executable(${TEST_NAME} main ${path})
+  add_executable(${TEST_NAME} main.cpp ${path})
   target_include_directories(${TEST_NAME}
     PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

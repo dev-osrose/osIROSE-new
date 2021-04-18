@@ -11,7 +11,7 @@ if (GCC)
 endif()
 
 SET( SOURCES_MAIN
-  src/main )
+  src/main.cpp )
 
 SET( SOURCES_HEADER
   include/cloginserver.h

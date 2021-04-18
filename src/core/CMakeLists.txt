@@ -38,7 +38,7 @@ else ()
       include/win32/crash_report.h
       )
   list(APPEND SOURCES_BASE
-      src/win32/crash_report
+      src/win32/crash_report.cpp
       )
 endif ()
 
