@@ -96,6 +96,9 @@ ENDIF ()
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_python_module(pyparsing REQUIRED)
+if (NOT PY_PYPARSING)
+  install_python_module(pyparsing)
+endif()
 
 find_package(Patch REQUIRED)
 if (MSVC)
