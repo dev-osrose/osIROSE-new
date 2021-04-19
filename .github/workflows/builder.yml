@@ -173,7 +173,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: windows_debug_build
-          path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip
+          path: ${{github.workspace}}/build/bin/*
 
   windows_release:
     runs-on: windows-latest
@@ -225,13 +225,12 @@ jobs:
         working-directory: ${{github.workspace}}/build/bin
         run: |
           copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
-          7z a ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip ${{github.workspace}}/build/bin/*
 
       - name: Upload windows build
         uses: actions/upload-artifact@v2
         with:
           name: windows_release_build
-          path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.zip
+          path: ${{github.workspace}}/build/bin/*
 
 #  deploy:
 #    runs-on: ubuntu-latest
@@ -245,7 +244,7 @@ jobs:
 ##      - name: Download windows build
 ##        uses: actions/download-artifact@v2
 ##        with:
-##          name: windows_build
+##          name: windows_release_build
 #      - name: Release
 #        uses: ncipollo/release-action@v1.8.1
 #        with:
