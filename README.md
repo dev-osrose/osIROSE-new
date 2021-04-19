@@ -1,9 +1,8 @@
 # osIROSE - Open Source International R.O.S.E Online Server
 
 ## Build status
-[![lin-badge]][lin-link] [![win-badge]][win-link]
-[![cov-badge]][cov-link] [![ccov-badge]][ccov-link]
-[![coverity-scan]][coverity-scan-link] [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d344fcc15a1b4dd79df64c5198aaaa41)](https://www.codacy.com/gh/dev-osrose/osIROSE-new?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dev-osrose/osIROSE-new&amp;utm_campaign=Badge_Grade)
+[![AMD64 Build](https://github.com/dev-osrose/osIROSE-new/actions/workflows/builder.yml/badge.svg)](https://github.com/dev-osrose/osIROSE-new/actions/workflows/builder.yml)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d344fcc15a1b4dd79df64c5198aaaa41)](https://www.codacy.com/gh/dev-osrose/osIROSE-new?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dev-osrose/osIROSE-new&amp;utm_campaign=Badge_Grade)
 
 ## Development and Community
 [![GitHub Repository](https://img.shields.io/badge/github-dev--osrose/osIROSE--new-green.svg)](https://github.com/dev-osrose/osIROSE-new)
@@ -35,7 +34,6 @@ If you get the source from github, you need to setup the build environment:
 
 ```cmd
     git submodule update --init --recursive
-    pip install --user pyparsing
     mkdir build
     cd build
     cmake ..
@@ -98,7 +96,6 @@ After downloading and installing the above applications, to compile the servers 
 
 ```cmd
     git submodule update --init --recursive
-    pip install pyparsing
     mkdir build
     cd build
     cmake ..
@@ -221,7 +218,7 @@ If you want to contribute, please read the [code of conduct](CODE_OF_CONDUCT.md)
 [coverity-scan-link]: https://scan.coverity.com/projects/dev-osrose-osirose-new
 [backtrace-badge]: https://img.shields.io/badge/Crash%20Report%20Analysis-backtrace.io-informational
 [backtrace-link]: https://backtrace.io
-[gpp]: https://img.shields.io/badge/g++-v7%20or%20higher-blue.svg "G++ 7 or higher"
+[gpp]: https://img.shields.io/badge/g++-v8%20or%20higher-blue.svg "G++ 8 or higher"
 [libmysql]: https://img.shields.io/badge/libmysql-v5.7%20or%20higher-blue.svg "libmysql 5.7 or higher"
 [vis-studio]: https://img.shields.io/badge/Visual%20Studio-Download-blue.svg "Download Visual Stuido"
 [vis-studio-link]: https://visualstudio.microsoft.com/downloads/ "Download Visual Stuido"
@@ -229,7 +226,7 @@ If you want to contribute, please read the [code of conduct](CODE_OF_CONDUCT.md)
 [cmake-link]: https://cmake.org/download/ "Download CMake"
 [mysql]: https://img.shields.io/badge/MySQL%20Connector%20C%20x64--bit-Download-blue.svg "Download MySQL Connector:C 64-bit"
 [mysql-link]: http://dev.mysql.com/downloads/connector/c/ "Download MySQL Connector:C 64-bit"
-[python]: https://img.shields.io/badge/Python%202.7-Download-blue.svg "Download Python 2.7"
-[python-link]: https://www.python.org/downloads/release/python-2715/ "Download Python 2.7"
+[python]: https://img.shields.io/badge/Python%203-Download-blue.svg "Download Python 3.9.4"
+[python-link]: https://www.python.org/downloads/release/python-394/ "Download Python 3.9.4"
 [openssl]: https://img.shields.io/badge/OpenSSL%201.0.2t%20x64-Download-blue.svg "Download OpenSSL 1.0.2t x64"
 [openssl-link]: https://slproweb.com/products/Win32OpenSSL.html "Download OpenSSL x64"
