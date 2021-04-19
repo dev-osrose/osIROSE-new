@@ -36,7 +36,6 @@ cache:
 stages:
   - prepare cache
   - compile
-  - test
   - notify
 
 jobs:
@@ -96,8 +95,3 @@ jobs:
         submodules: false
       after_success:
         - $CI_DIRECTORY/notify-discord.sh success $DISCORD_WEBHOOK_URL
-
-
-  allow_failures:
-    - arch: arm64
-    - os: windows
