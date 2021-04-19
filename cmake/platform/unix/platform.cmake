@@ -14,7 +14,7 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RavenX8#3180")
 add_compile_definitions(ASIO_STANDALONE)
 add_compile_options(-Wall -Wextra)
 
-if(DEBUG)
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_compile_definitions(_DEBUG DEBUG)
   message(STATUS "Configured for Debug")
 else()
