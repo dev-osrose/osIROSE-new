@@ -176,6 +176,13 @@ jobs:
             ${{github.workspace}}/build/bin/*
             !${{github.workspace}}/build/bin/*.lib
             !${{github.workspace}}/build/bin/*.pdb
+            !${{github.workspace}}/build/bin/*.ilk
+      - name: Upload windows pdbs
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_debug_pdbs
+          path: |
+            ${{github.workspace}}/build/bin/*.pdb
 
 
   windows_release:
@@ -237,6 +244,12 @@ jobs:
             ${{github.workspace}}/build/bin/*
             !${{github.workspace}}/build/bin/*.lib
             !${{github.workspace}}/build/bin/*.pdb
+      - name: Upload windows pdbs
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_release_pdbs
+          path: |
+            ${{github.workspace}}/build/bin/*.pdb
 
 #  deploy:
 #    runs-on: ubuntu-latest
