@@ -16,8 +16,10 @@ add_compile_options(-Wall -Wextra)
 
 if(DEBUG)
   add_compile_definitions(_DEBUG DEBUG)
+  message(STATUS "Configured for Debug")
 else()
   add_compile_definitions(NDEBUG)
+  message(STATUS "Configured for Release")
 endif()
 
 set(COPY_SCRIPT_PATH "")

@@ -36,8 +36,10 @@ endmacro()
 
 if(DEBUG)
   add_definitions(-DDEBUG -D_DEBUG)
+  message(STATUS "Configured for Debug")
 else()
   add_definitions(-DNDEBUG -D_NDEBUG)
+  message(STATUS "Configured for Release")
   
   #This is needed if we want a pdb file to be generated
   if(WITH_CRASH_REPORTS)
