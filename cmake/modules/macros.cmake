@@ -348,7 +348,7 @@ function(find_python_module module)
     # A module's location is usually a directory, but for binary modules
     # it's a .so file.
     execute_process(
-            COMMAND "${Python_EXECUTABLE}" "-c" "import sys, ${module}; sys.stdout.write(${module}.__version__.replace('.', ';'))"
+            COMMAND ${Python_EXECUTABLE} -c "import sys, ${module}; sys.stdout.write(${module}.__version__.replace('.', ';'))"
             RESULT_VARIABLE _${module}_status
             OUTPUT_VARIABLE _${module}_location
             ERROR_QUIET
@@ -372,5 +372,27 @@ function(find_python_module module)
   endif(NOT PY_${module_upper})
   find_package_handle_standard_args(PY_${module} DEFAULT_MSG PY_${module_upper})
 endfunction(find_python_module)
+
+function(install_python_module module)
+  string(TOUPPER ${module} module_upper)
+  if(NOT PY_${module_upper})
+    if(DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+      set(_pip_args)
+    else()
+      set(_pip_args "--user")
+    endif()
+    # A module's location is usually a directory, but for binary modules
+    # it's a .so file.
+    execute_process(
+            COMMAND ${Python_EXECUTABLE} -m pip install ${module} ${_pip_args}
+            RESULT_VARIABLE _${module}_status
+            OUTPUT_VARIABLE _${module}_location
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    message(STATUS ${_${module}_location})
+  endif(NOT PY_${module_upper})
+endfunction(install_python_module)
+
 
 message(STATUS "osIROSE cmake macros loaded.")

@@ -36,9 +36,9 @@ ExternalProject_Get_Property(
 
 set(CURL_INCLUDE_DIR "${install_dir}/include")
 if(WIN32)
-  if("${BUILD_TYPE}" STREQUAL "Debug")
+  if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     set(CURL_LIBRARY "${install_dir}/lib/libcurl-d_imp.lib")
-  elseif("${BUILD_TYPE}" STREQUAL "$<CONFIG>")
+  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "$<CONFIG>")
     set(CURL_LIBRARY "${install_dir}/lib/libcurl$<$<CONFIG:Debug>:-d>_imp.lib")
   else()
     set(CURL_LIBRARY "${install_dir}/lib/libcurl_imp.lib")
