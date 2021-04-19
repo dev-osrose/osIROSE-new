@@ -120,7 +120,7 @@ jobs:
   windows_debug:
     runs-on: windows-latest
     env:
-      CMAKE_BUILD_TYPE: Debug
+      BUILD_TYPE: Debug
     steps:
       - uses: actions/checkout@v2
         with:
@@ -149,7 +149,7 @@ jobs:
             ${{github.workspace}}/build/3rdparty/bin
             ${{github.workspace}}/build/3rdparty/lib
             ${{github.workspace}}/build/3rdparty/include
-          key: ${{ runner.os }}-Debug-${{ hashFiles('submodule_info') }}
+          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build
@@ -157,11 +157,11 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config $CMAKE_BUILD_TYPE
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C $CMAKE_BUILD_TYPE
+        run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
@@ -181,7 +181,7 @@ jobs:
   windows_release:
     runs-on: windows-latest
     env:
-      CMAKE_BUILD_TYPE: Release
+      BUILD_TYPE: Release
     steps:
       - uses: actions/checkout@v2
         with:
@@ -210,7 +210,7 @@ jobs:
             ${{github.workspace}}/build/3rdparty/bin
             ${{github.workspace}}/build/3rdparty/lib
             ${{github.workspace}}/build/3rdparty/include
-          key: ${{ runner.os }}-Debug-${{ hashFiles('submodule_info') }}
+          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build
@@ -218,11 +218,11 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config $CMAKE_BUILD_TYPE
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C $CMAKE_BUILD_TYPE
+        run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
