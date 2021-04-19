@@ -133,7 +133,7 @@ jobs:
           arch: x64
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
-        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file $GITHUB_ENV
+        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file $GITHUB_ENV -append
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -194,7 +194,7 @@ jobs:
           arch: x64
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
-        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file $GITHUB_ENV
+        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file $GITHUB_ENV -append
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
