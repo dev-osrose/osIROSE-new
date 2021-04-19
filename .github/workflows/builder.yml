@@ -175,6 +175,7 @@ jobs:
           path: |
             ${{github.workspace}}/build/bin/*
             !${{github.workspace}}/build/bin/*.lib
+            !${{github.workspace}}/build/bin/*.pdb
 
 
   windows_release:
@@ -235,6 +236,7 @@ jobs:
           path: |
             ${{github.workspace}}/build/bin/*
             !${{github.workspace}}/build/bin/*.lib
+            !${{github.workspace}}/build/bin/*.pdb
 
 #  deploy:
 #    runs-on: ubuntu-latest
