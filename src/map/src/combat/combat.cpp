@@ -276,7 +276,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
           api->on_damaged(entity, attacker);
         }
         auto p = SrvDamage::create(attack.attacker_, basicInfo.id, attack.value_, attack.action_);
-//        entitySystem.send_nearby(entity, p);
+//        entitySystem.send_nearby(entity, p); // Send to party
         entitySystem.send_to(entity, p);
         entitySystem.send_to(attacker, p);
       }

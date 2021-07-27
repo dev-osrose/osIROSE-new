@@ -48,7 +48,7 @@ bool Nearby::is_nearby(const EntitySystem& entitySystem, Entity first, Entity se
 }
     
 std::vector<Entity> Nearby::get_nearby(const EntitySystem& entitySystem, Entity entity) const {
-  std::set<Entity> tmp;
+  std::set<Entity> tmp, result;
   auto pos = get_grid_position(entitySystem, entity);
   for (uint16_t x = std::max(0, std::get<0>(pos) - 10); x < std::get<0>(pos) + 10; ++x) {
       for (uint16_t y = std::max(0, std::get<1>(pos) - 10); y < std::get<1>(pos) + 10; ++y) {
@@ -57,8 +57,16 @@ std::vector<Entity> Nearby::get_nearby(const EntitySystem& entitySystem, Entity 
           }
       }
   }
-  tmp.erase(entity);
-  return {tmp.cbegin(), tmp.cend()};
+
+  for (auto en : tmp) {
+    if (entitySystem.is_valid(en)) {
+      result.insert(en);
+    } else {
+      //TODO: Remove invalid entity from the list
+    }
+  }
+  result.erase(entity);
+  return {result.cbegin(), result.cend()};
 }
     
 void Nearby::update_position(Entity entity, float old_x, float old_y, float x, float y) {

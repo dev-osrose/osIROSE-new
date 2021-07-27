@@ -192,8 +192,8 @@ int get_maxmp(EntitySystem& entitySystem, Entity entity) {
 int get_successrate(EntitySystem& entitySystem, Entity attacker, Entity defender) {
   int success_rate = 0;
   int final_success_rate = 100;  // TODO: set this to 0 once the calc is finished
-  auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
-  auto& defenderStats = entitySystem.get_component<Component::Stats>(defender);
+//  auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
+//  auto& defenderStats = entitySystem.get_component<Component::Stats>(defender);
 
   if (entitySystem.has_component<Component::Client>(attacker)) {
     if (entitySystem.has_component<Component::Client>(defender)) {
