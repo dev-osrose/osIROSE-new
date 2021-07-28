@@ -61,6 +61,7 @@ jobs:
         with:
           name: linux_debug_build
           path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
+  
   linux_release:
     runs-on: ubuntu-latest
     env:
@@ -183,7 +184,6 @@ jobs:
           name: windows_debug_pdbs
           path: |
             ${{github.workspace}}/build/bin/*.pdb
-
 
   windows_release:
     runs-on: windows-latest
