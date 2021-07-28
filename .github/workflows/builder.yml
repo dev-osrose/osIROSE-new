@@ -251,6 +251,17 @@ jobs:
           path: |
             ${{github.workspace}}/build/bin/*.pdb
 
+  notify:
+    runs-on: ubuntu-latest
+    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+    steps:
+      - name: Discord Webhook Notify
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          details: Build succeeded.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
   deploy:
     runs-on: ubuntu-latest
     needs: [ linux_release, windows_release ]
