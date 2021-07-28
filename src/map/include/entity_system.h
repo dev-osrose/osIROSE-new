@@ -210,7 +210,7 @@ T& EntitySystem::add_or_replace_component(Entity entity) {
 
 template <typename T>
 bool EntitySystem::has_component(Entity entity) const {
-    return registry.has<T>(entity);
+    return registry.all_of<T>(entity);
 }
     
 template <typename T>

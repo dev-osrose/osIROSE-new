@@ -1094,7 +1094,7 @@ Entity EntitySystem::create_mob(Entity spawner) {
         "", // name
         static_cast<uint16_t>(id), // map id
         static_cast<uint32_t>(id), // world id
-        static_cast<int32_t>(id), // team id
+        static_cast<int32_t>(-1), // team id
         static_cast<uint16_t>(0), // job
         static_cast<uint32_t>(0), // stat points
         static_cast<uint32_t>(0), // skill points

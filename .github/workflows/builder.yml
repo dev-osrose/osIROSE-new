@@ -61,6 +61,7 @@ jobs:
         with:
           name: linux_debug_build
           path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
+  
   linux_release:
     runs-on: ubuntu-latest
     env:
@@ -184,7 +185,6 @@ jobs:
           path: |
             ${{github.workspace}}/build/bin/*.pdb
 
-
   windows_release:
     runs-on: windows-latest
     env:
@@ -250,6 +250,17 @@ jobs:
           name: windows_release_pdbs
           path: |
             ${{github.workspace}}/build/bin/*.pdb
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+    steps:
+      - name: Discord Webhook Notify
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          details: Build succeeded.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   deploy:
     runs-on: ubuntu-latest
