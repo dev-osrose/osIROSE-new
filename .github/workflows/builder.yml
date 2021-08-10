@@ -169,15 +169,16 @@ jobs:
         run: |
           copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
 
+      - name: Archive build
+        working-directory: ${{github.workspace}}/build/bin
+        run: tar.exe --exclude='*.pdb' --exclude='*.lib' --exclude='./symbols' --exclude='./unity' -cf ${{github.workspace}}/windows_debug_build.zip *
+
       - name: Upload windows build
         uses: actions/upload-artifact@v2
         with:
           name: windows_debug_build
-          path: |
-            ${{github.workspace}}/build/bin/*
-            !${{github.workspace}}/build/bin/*.lib
-            !${{github.workspace}}/build/bin/*.pdb
-            !${{github.workspace}}/build/bin/*.ilk
+          path: ${{github.workspace}}/windows_debug_build.zip
+
       - name: Upload windows pdbs
         uses: actions/upload-artifact@v2
         with:
@@ -229,21 +230,22 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -C ${{env.BUILD_TYPE}
 
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
         run: |
           copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
 
+      - name: Archive build
+        working-directory: ${{github.workspace}}/build/bin
+        run: tar.exe --exclude='*.pdb' --exclude='*.lib' --exclude='./symbols' --exclude='./unity' -cf ${{github.workspace}}/windows_release_build.zip *
+
       - name: Upload windows build
         uses: actions/upload-artifact@v2
         with:
           name: windows_release_build
-          path: |
-            ${{github.workspace}}/build/bin/*
-            !${{github.workspace}}/build/bin/*.lib
-            !${{github.workspace}}/build/bin/*.pdb
+          path: ${{github.workspace}}/windows_release_build.zip
       - name: Upload windows pdbs
         uses: actions/upload-artifact@v2
         with:
