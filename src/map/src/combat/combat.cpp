@@ -56,9 +56,9 @@ void Combat::hp_request(EntitySystem& entitySystem, Entity entity, const CliHpRe
 }
 
 inline bool reduce_bullets(EntitySystem& entitySystem, Entity entity) {
-  RoseCommon::Entity slot = Items::get_bullet_slot(entitySystem, entity);
+  Entity slot = Items::get_bullet_slot(entitySystem, entity);
   if (slot != entt::null) {
-    RoseCommon::Entity bullets = Items::remove_item(entitySystem, entity, slot, 1);
+    Entity bullets = Items::remove_item(entitySystem, entity, slot, 1);
     const auto& i = entitySystem.get_component<Component::Item>(bullets);
     if (i.count == 0) entitySystem.delete_entity(bullets);
     return true;

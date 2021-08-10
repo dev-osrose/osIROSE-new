@@ -23,7 +23,7 @@ ReturnValue add_item(EntitySystem&, Entity entity, Entity item);
 Entity get_bullet_slot(const EntitySystem& entitySystem, Entity entity);
 bool is_bullet_weapon(const EntitySystem& entitySystem, Entity entity);
 // will be entt::null if there is no item at that position
-Entity remove_item(EntitySystem&, Entity entity, size_t pos, uint32_t quantity);
+Entity remove_item(EntitySystem&, Entity entity, Entity item, uint32_t quantity);
 void swap_item(EntitySystem&, Entity entity, size_t pos1, size_t pos2);
 ReturnValue equip_item(EntitySystem&, Entity, size_t from, size_t to);
 // the unequipped item will be put in the first available spot

@@ -83,7 +83,7 @@ bool Items::is_bullet_weapon(const EntitySystem& entitySystem, Entity entity) {
   return ((weaponInfo.subtype >= ItemSubType::BOW && weaponInfo.subtype <= ItemSubType::LAUNCHER) || (weaponInfo.subtype == ItemSubType::XBOW));
 }
 
-RoseCommon::Entity Items::get_bullet_slot(const EntitySystem& entitySystem, Entity entity) {
+Entity Items::get_bullet_slot(const EntitySystem& entitySystem, Entity entity) {
   const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
   uint8_t slot = 0;
   if (inv.items[EquippedPosition::WEAPON_R] != entt::null) {
@@ -164,13 +164,12 @@ ReturnValue Items::add_item(EntitySystem& entitySystem, Entity entity, Entity it
     return ReturnValue::OK;
 }
 
-Entity Items::remove_item(EntitySystem& entitySystem, Entity entity, size_t pos, uint32_t quantity) {
+Entity Items::remove_item(EntitySystem& entitySystem, Entity entity, Entity item, uint32_t quantity) {
     auto& inv = entitySystem.get_component<Component::Inventory>(entity);
-    Entity item = inv.items[pos];
     auto& i = entitySystem.get_component<Component::Item>(item);
     const auto& it = entitySystem.get_component<ItemDef>(item);
     uint8_t pos = 0;
-    for (uint j = 0; j < MAX_ITEMS; j++)
+    for (int j = 0; j < MAX_ITEMS; j++)
     {
         if (inv.items[j] == item) pos = j;
     }
@@ -212,7 +211,7 @@ void Items::swap_item(EntitySystem& entitySystem, Entity entity, size_t pos1, si
     std::swap(inv.items[pos1], inv.items[pos2]);
 }
 
-void Items::set_projectile(EntitySystem& entitySystem, RoseCommon::Entity entity, const RoseCommon::Packet::CliEquipProjectile& packet) {
+void Items::set_projectile(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliEquipProjectile& packet) {
   RoseCommon::Packet::CliEquipProjectile::ProjectileTypeAndIndex projectile = packet.get_projectile();
   uint16_t projType = projectile.get_type();
   uint16_t from = projectile.get_index();
