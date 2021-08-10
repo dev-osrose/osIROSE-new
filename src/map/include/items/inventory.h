@@ -5,6 +5,7 @@
 
 #include "cli_equip_item.h"
 #include "cli_drop_item.h"
+#include "cli_equip_projectile.h"
 
 class EntitySystem;
 
@@ -19,6 +20,8 @@ enum class ReturnValue {
 // returns the first available spot in the inventory or 0 if there is no more space
 size_t get_first_available_spot(const EntitySystem& entitySystem, Entity entity, Entity item = entt::null);
 ReturnValue add_item(EntitySystem&, Entity entity, Entity item);
+Entity get_bullet_slot(const EntitySystem& entitySystem, Entity entity);
+bool is_bullet_weapon(const EntitySystem& entitySystem, Entity entity);
 // will be entt::null if there is no item at that position
 Entity remove_item(EntitySystem&, Entity entity, size_t pos, uint32_t quantity);
 void swap_item(EntitySystem&, Entity entity, size_t pos1, size_t pos2);
@@ -33,4 +36,6 @@ bool add_zuly(EntitySystem&, Entity, int64_t zuly);
 
 void equip_item_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliEquipItem&);
 void drop_item_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliDropItem&);
+
+void set_projectile(EntitySystem&, Entity entity, const RoseCommon::Packet::CliEquipProjectile&);
 }

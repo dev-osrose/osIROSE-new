@@ -219,6 +219,7 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Player::set_animation});
     register_dispatcher(std::function{Items::equip_item_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
+    register_dispatcher(std::function{Items::set_projectile});
 
     register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReq>});
     register_dispatcher(std::function{Utils::transfer_to_char<RoseCommon::Packet::SrvPartyReq>});
