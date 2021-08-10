@@ -1,0 +1,57 @@
+{
+  "categories": [
+    {
+      "title": "## 🚀 Features",
+      "labels": ["feature"]
+    },
+    {
+      "title": "## 🐛 Fixes",
+      "labels": ["fix", "fixed", "fixes"]
+    },
+    {
+      "title": "## 🧪 Tests",
+      "labels": ["test"]
+    },
+    {
+      "title": "## 💬 Other",
+      "labels": ["other", "added", "updated", "merge"]
+    }
+  ],
+  "ignore_labels": [
+    "ignore",
+    "ci"
+  ],
+  "sort": "ASC",
+  "template": "${{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n${{UNCATEGORIZED}}\n</details>",
+  "pr_template": "- ${{TITLE}}\n   - PR: #${{NUMBER}}",
+  "empty_template": "- no changes",
+  "label_extractor": [
+    {
+      "pattern": "(.) (.+)",
+      "target": "$1",
+      "flags": "gu"
+    },
+    {
+      "pattern": "(.) (.+)",
+      "target": "$1",
+      "on_property": "title"
+    }
+  ],
+  "transformers": [
+    {
+      "pattern": "[\\-\\*] (\\[(...|TEST|CI|SKIP)\\])( )?(.+?)\n(.+?[\\-\\*] )(.+)",
+      "target": "- $4\n  - $6"
+    }
+  ],
+  "max_tags_to_fetch": 200,
+  "max_pull_requests": 200,
+  "max_back_track_time_days": 365,
+  "exclude_merge_branches": [
+    "osIROSE-new/qa",
+    "osIROSE-new/coverity_scan"
+  ],
+  "tag_resolver": {
+    "method": "semver"
+  },
+  "base_branches": []
+}
