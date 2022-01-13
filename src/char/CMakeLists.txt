@@ -10,18 +10,22 @@ if (GCC)
 endif()
 
 set( SOURCES_MAIN
-  src/main
+  src/main.cpp
 )
 
 set( SOURCES_HEADER
   include/ccharserver.h
   include/ccharclient.h
-  include/ccharisc.h )
+  include/ccharisc.h
+  include/party.h
+  include/user.h
+)
 
 set( SOURCES_BASE
   src/ccharserver.cpp
   src/ccharclient.cpp
   src/ccharisc.cpp
+  src/party.cpp
 )
 
 add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_BASE} ${SOURCES_HEADER})
@@ -32,6 +36,7 @@ add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT}
   PRIVATE
     RoseCommon
+    osirose_common::osirose_common
 )
 
 if(WITH_CRASH_REPORTS)

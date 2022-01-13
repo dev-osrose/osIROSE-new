@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_SCREEN_SHOT_TIME_REQ">
-    <element name = "count" type = "uint16_t" default = "1" />
-</packet>

@@ -11,7 +11,7 @@ if (GCC)
 endif()
 
 SET( SOURCES_MAIN
-  src/main )
+  src/main.cpp )
 
 SET( SOURCES_HEADER
   include/cloginserver.h
@@ -34,6 +34,7 @@ add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT}
   PRIVATE
     RoseCommon
+    osirose_common::osirose_common
 )
 
 if(WITH_CRASH_REPORTS)

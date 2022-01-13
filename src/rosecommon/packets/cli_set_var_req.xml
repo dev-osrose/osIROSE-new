@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_SET_SERVER_VAR_REQ">
-    <element name = "type" type = "uint8_t" default = "0" />
-    <element name = "value" type = "uint32_t" default = "0" />
-</packet>

@@ -10,6 +10,7 @@ if (GCC)
 endif()
 
 SET( SOURCES_HEADER
+  include/entity.h
   include/cmapserver.h
   include/cmapclient.h
   include/cmapisc.h
@@ -31,14 +32,42 @@ SET( SOURCES_HEADER
   include/lua_loader.h
   include/lua_storage.h
   include/components/spawner.h
+  include/components/basic_info.h
+  include/components/combat.h
+  include/components/computed_values.h
+  include/components/destination.h
+  include/components/faction.h
+  include/components/character_graphics.h
+  include/components/guild.h
+  include/components/hotbar.h
+  include/components/inventory.h
+  include/components/item.h
+  include/components/level.h
+  include/components/life.h
+  include/components/lua.h
+  include/components/magic.h
+  include/components/mob.h
+  include/components/npc.h
+  include/components/owner.h
+  include/components/pat.h
+  include/components/position.h
+  include/components/skills.h
+  include/components/stamina.h
+  include/components/stats.h
+  include/components/status_effects.h
+  include/components/target.h
+  include/components/warpgate.h
+  include/components/wishlist.h
   include/items/inventory.h
   include/utils/name_to_session.h
   include/utils/getters.h
   include/utils/calculation.h
-)
+  include/utils/transfer_to_char_server.h
+  include/utils/transfer_to_char.h
+  )
 
 SET( SOURCES_MAIN
-  src/main
+  src/main.cpp
   src/cmapserver.cpp
   src/cmapclient.cpp
   src/cmapisc.cpp
@@ -68,8 +97,6 @@ add_executable(${PROJECT} ${SOURCES_MAIN} ${SOURCES_HEADER})
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-add_dependencies(${PROJECT} RosePackets_generated)
-
 target_link_libraries(${PROJECT} PUBLIC CURL::libcurl)
 if(NOT LUA_FOUND)
   add_dependencies(${PROJECT} lua::lua)
@@ -77,6 +104,7 @@ endif()
 target_link_libraries(${PROJECT}
   PUBLIC
     lua::lua
+    osirose_common::osirose_common
 )
 
 add_dependencies(${PROJECT} RoseCommon)

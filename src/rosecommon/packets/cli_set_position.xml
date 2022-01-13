@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_SET_POSITION">
-  <element name = "x" type = "float" />
-  <element name = "y" type = "float" />
-</packet>

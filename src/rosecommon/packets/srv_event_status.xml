@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_EVENT_STATUS">
-    <element name = "object_id" type = "uint16_t" />
-    <element name = "status" type = "int16_t" />
-</packet>

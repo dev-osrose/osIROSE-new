@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_SRV_SELECT_REQ">
-    <element name = "serverId" type = "uint32_t" />
-    <element name = "channelId" type = "uint8_t" />
-</packet>

@@ -1,0 +1,288 @@
+name: AMD64 Build
+on: [push, pull_request]
+
+env:
+  SUITE: coverage
+  WITH_CRASH_REPORTS: ON
+
+jobs:
+  linux_debug:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_TYPE: Debug
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+      - name: Get processor arch
+        run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Get Submodule Info
+        id: get-submodule-info
+        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+        shell: bash
+
+      - name: Cache 3rdparty builds
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{github.workspace}}/build/3rdparty/bin
+            ${{github.workspace}}/build/3rdparty/usr
+            ${{github.workspace}}/build/3rdparty/lib
+            ${{github.workspace}}/build/3rdparty/include
+          key: ${{ runner.os }}-Debug-${{ hashFiles('submodule_info') }}
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: ctest -C $BUILD_TYPE
+
+      - name: Prepare Release
+        working-directory: ${{github.workspace}}/build/bin
+        shell: bash
+        run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
+
+      - name: Upload linux build
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux_debug_build
+          path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
+  
+  linux_release:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_TYPE: Release
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - uses: seanmiddleditch/gha-setup-ninja@v3
+    - name: Get processor arch
+      run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Get Submodule Info
+      id: get-submodule-info
+      run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+      shell: bash
+
+    - name: Cache 3rdparty builds
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{github.workspace}}/build/3rdparty/bin
+          ${{github.workspace}}/build/3rdparty/usr
+          ${{github.workspace}}/build/3rdparty/lib
+          ${{github.workspace}}/build/3rdparty/include
+        key: ${{ runner.os }}-Release-${{ hashFiles('submodule_info') }}
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: ctest -C $BUILD_TYPE
+
+    - name: Prepare Release
+      working-directory: ${{github.workspace}}/build/bin
+      shell: bash
+      run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
+
+    - name: Upload linux build
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux_release_build
+        path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
+
+  windows_debug:
+    runs-on: windows-latest
+    env:
+      BUILD_TYPE: Debug
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.7.0
+        with:
+          arch: x64
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+      - name: Get processor arch
+        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Get Submodule Info
+        id: get-submodule-info
+        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+
+      - name: Cache 3rdparty builds
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{github.workspace}}/build/3rdparty/bin
+            ${{github.workspace}}/build/3rdparty/lib
+            ${{github.workspace}}/build/3rdparty/include
+          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}}
+
+      - name: Prepare Release
+        working-directory: ${{github.workspace}}/build/bin
+        run: |
+          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
+
+      - name: Upload windows build
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_debug_build
+          path: |
+            ${{github.workspace}}/build/bin/*
+            !${{github.workspace}}/build/bin/*.lib
+            !${{github.workspace}}/build/bin/*.pdb
+            !${{github.workspace}}/build/bin/*.ilk
+      - name: Upload windows pdbs
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_debug_pdbs
+          path: |
+            ${{github.workspace}}/build/bin/*.pdb
+
+  windows_release:
+    runs-on: windows-latest
+    env:
+      BUILD_TYPE: Release
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.7.0
+        with:
+          arch: x64
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+      - name: Get processor arch
+        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Get Submodule Info
+        id: get-submodule-info
+        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+
+      - name: Cache 3rdparty builds
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{github.workspace}}/build/3rdparty/bin
+            ${{github.workspace}}/build/3rdparty/lib
+            ${{github.workspace}}/build/3rdparty/include
+          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}}
+
+      - name: Prepare Release
+        working-directory: ${{github.workspace}}/build/bin
+        run: |
+          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
+
+      - name: Upload windows build
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_release_build
+          path: |
+            ${{github.workspace}}/build/bin/*
+            !${{github.workspace}}/build/bin/*.lib
+            !${{github.workspace}}/build/bin/*.pdb
+      - name: Upload windows pdbs
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows_release_pdbs
+          path: |
+            ${{github.workspace}}/build/bin/*.pdb
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+    steps:
+      - name: Discord Webhook Notify
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          details: Build succeeded.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ linux_release, windows_release ]
+    if: github.ref == 'refs/heads/tags'
+    steps:
+      - name: Download linux build
+        uses: actions/download-artifact@v2
+        with:
+          name: linux_release_build
+      - name: Download windows build
+        uses: actions/download-artifact@v2
+        with:
+          name: windows_release_build
+      - name: Release
+        uses: ncipollo/release-action@v1.8.1
+        with:
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          replacesArtifacts: true
+          body: latest osirose build
+          artifacts: "linux_release_build.tar.gz,windows_release_build.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+

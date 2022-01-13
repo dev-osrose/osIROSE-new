@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_HP_REPLY">
-    <element name = "id" type = "uint16_t" />
-    <element name = "hp" type = "int32_t" />
-</packet>

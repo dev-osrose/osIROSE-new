@@ -1,0 +1,14 @@
+<root main_tree_to_execute="LoginTree">
+    <BehaviorTree ID="LoginTree">
+        <sequence>
+            <RetryUntilSuccessful num_attempts="1">
+                <Login username="test" password="test" />
+            </RetryUntilSuccessful>
+            <SelectChannelAndWorld channel="Athena" world="0" />
+            <FallBack>
+                <SelectAndLogCharacter name="test" />
+                <CreateAndLogCharacter name="test" />
+            </FallBack>
+        </sequence>
+    </BehaviorTree>
+</root>

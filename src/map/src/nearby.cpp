@@ -1,8 +1,8 @@
 #include "nearby.h"
-#include "components/position.h"
 #include "entity_system.h"
 
 #include <algorithm>
+#include <set>
 
 namespace {
 constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
@@ -11,31 +11,33 @@ constexpr std::tuple<uint16_t, uint16_t> get_grid_position(float x, float y) {
     return {gx, gy};
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const RoseCommon::Registry& registry, RoseCommon::Entity e) {
-    const auto* pos = registry.try_get<Component::Position>(e);
-    if (!pos) return {0, 0};
-    return get_grid_position(pos->x, pos->y);
+std::tuple<uint16_t, uint16_t> get_grid_position(const Component::Position& pos) {
+    return get_grid_position(pos.x, pos.y);
 }
 
-std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, RoseCommon::Entity e) {
+std::tuple<uint16_t, uint16_t> get_grid_position(const EntitySystem& entitySystem, Entity e) {
     const auto* pos = entitySystem.try_get_component<Component::Position>(e);
     if (!pos) return {0, 0};
     return get_grid_position(pos->x, pos->y);
 }
 }
 
-void Nearby::add_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+void Nearby::add_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
-  grid[get_grid_position(registry, entity)].push_back(entity);
+  if (const auto* pos = registry.try_get<Component::Position>(entity)) {
+    grid[get_grid_position(*pos)].insert(entity);
+  }
 }
 
-void Nearby::remove_entity(RoseCommon::Registry& registry, RoseCommon::Entity entity) {
+void Nearby::remove_entity(Registry& registry, Entity entity) {
   if (entity == entt::null || !registry.valid(entity)) return;
-  auto& list = grid[get_grid_position(registry, entity)];
-  list.erase(std::remove(list.begin(), list.end(), entity), list.end());
+  if (const auto* pos = registry.try_get<Component::Position>(entity)) {
+      auto& list = grid[get_grid_position(*pos)];
+      list.erase(entity);
+  }
 }
     
-bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity first, RoseCommon::Entity second) const {
+bool Nearby::is_nearby(const EntitySystem& entitySystem, Entity first, Entity second) const {
   if (first == entt::null || second == entt::null) return false;
     auto pos_first = get_grid_position(entitySystem, first);
     auto pos_second = get_grid_position(entitySystem, second);
@@ -45,25 +47,32 @@ bool Nearby::is_nearby(const EntitySystem& entitySystem, RoseCommon::Entity firs
     return false;
 }
     
-std::vector<RoseCommon::Entity> Nearby::get_nearby(const EntitySystem& entitySystem, RoseCommon::Entity entity) const {
-  std::vector<RoseCommon::Entity> res;
-  // TODO: populate res and sort it by entity
+std::vector<Entity> Nearby::get_nearby(const EntitySystem& entitySystem, Entity entity) const {
+  std::set<Entity> tmp, result;
   auto pos = get_grid_position(entitySystem, entity);
   for (uint16_t x = std::max(0, std::get<0>(pos) - 10); x < std::get<0>(pos) + 10; ++x) {
       for (uint16_t y = std::max(0, std::get<1>(pos) - 10); y < std::get<1>(pos) + 10; ++y) {
           if (const auto it = grid.find({x, y}); it != grid.cend()) {
-              res.insert(res.end(), it->second.cbegin(), it->second.cend());
+              tmp.insert(it->second.cbegin(), it->second.cend());
           }
       }
   }
-  std::sort(res.begin(), res.end());
-  return res;
+
+  for (auto en : tmp) {
+    if (entitySystem.is_valid(en)) {
+      result.insert(en);
+    } else {
+      //TODO: Remove invalid entity from the list
+    }
+  }
+  result.erase(entity);
+  return {result.cbegin(), result.cend()};
 }
     
-void Nearby::update_position(RoseCommon::Entity entity, float old_x, float old_y, float x, float y) {
+void Nearby::update_position(Entity entity, float old_x, float old_y, float x, float y) {
   if (old_x && old_y) {
     auto &list = grid[get_grid_position(old_x, old_y)];
-    list.erase(std::remove(list.begin(), list.end(), entity), list.end());
+    list.erase(entity);
   }
-  grid[get_grid_position(x, y)].push_back(entity);
+  grid[get_grid_position(x, y)].insert(entity);
 }

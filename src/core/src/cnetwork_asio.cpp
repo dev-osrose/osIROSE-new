@@ -273,6 +273,7 @@ bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
                 break;
 
               case asio::error::basic_errors::connection_aborted:
+              case asio::error::basic_errors::operation_aborted:
               case asio::error::basic_errors::connection_reset:
               case asio::error::basic_errors::network_reset:
               case asio::error::basic_errors::network_down:
@@ -288,10 +289,12 @@ bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
 
               default:
                 {
-                  logger_->debug( "Socket {}({}): Error {}: {}", get_id(), get_name(), errorCode.value(),
+                  logger_->debug( "Socket Error {}: {}", errorCode.value(),
                                   errorCode.message() );
-                  shutdown( true );
-                  OnDisconnected();
+//                  logger_->debug( "Socket {}({}): Error {}: {}", get_id(), get_name(), errorCode.value(),
+//                                  errorCode.message() );
+//                  shutdown( true );
+//                  OnDisconnected();
                 }
                 break;
             }

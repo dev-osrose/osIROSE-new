@@ -2,7 +2,7 @@
 
 #include <tuple>
 #include <utility>
-#include "dataconsts.h"
+#include "entity.h"
 #include "cli_attack.h"
 #include "cli_hp_req.h"
 #include "cli_revive_req.h"
@@ -10,24 +10,24 @@
 class EntitySystem;
 
 namespace Combat {
-  void attack(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliAttack&);
-  void hp_request(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliHpReq&);
-  void revive(EntitySystem&, RoseCommon::Entity, const RoseCommon::Packet::CliReviveReq&);
+  void attack(EntitySystem&, Entity, const RoseCommon::Packet::CliAttack&);
+  void hp_request(EntitySystem&, Entity, const RoseCommon::Packet::CliHpReq&);
+  void revive(EntitySystem&, Entity, const RoseCommon::Packet::CliReviveReq&);
 
-  void update(EntitySystem&, RoseCommon::Entity, uint32_t dt);
-  void updateStats(EntitySystem&, RoseCommon::Entity);
-  void check_for_level_up(EntitySystem& entitySystem, RoseCommon::Entity entity, uint16_t sourceId);
+  void update(EntitySystem&, Entity, uint32_t dt);
+  void updateStats(EntitySystem&, Entity);
+  void check_for_level_up(EntitySystem& entitySystem, Entity entity, uint16_t sourceId);
 
-  std::pair<float, float> get_range_position(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target, float range = 100);
-  float get_range_to(const EntitySystem& entitySystem, RoseCommon::Entity character, RoseCommon::Entity target);
+  std::pair<float, float> get_range_position(const EntitySystem& entitySystem, Entity character, Entity target, float range = 100);
+  float get_range_to(const EntitySystem& entitySystem, Entity character, Entity target);
 
-  RoseCommon::Entity get_closest_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
-  RoseCommon::Entity get_saved_spawn(EntitySystem& entitySystem, RoseCommon::Entity player);
-  RoseCommon::Entity get_start_spawn(EntitySystem& entitySystem);
+  Entity get_closest_spawn(EntitySystem& entitySystem, Entity player);
+  Entity get_saved_spawn(EntitySystem& entitySystem, Entity player);
+  Entity get_start_spawn(EntitySystem& entitySystem);
 
   int64_t get_exp_to_level(int level);
 
-  std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, RoseCommon::Entity entity, int type = 1);
+  std::tuple<uint16_t, float, float> get_spawn_point(EntitySystem& entitySystem, Entity entity, int type = 1);
 
-  void drop_loot(EntitySystem& entitySystem, RoseCommon::Entity entity, RoseCommon::Entity owner);
+  void drop_loot(EntitySystem& entitySystem, Entity entity, Entity owner);
 }

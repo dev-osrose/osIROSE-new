@@ -48,3 +48,13 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     p.set_y(packet.get_y());
     entitySystem.send_nearby(entity, p);
 }
+
+void Mouse::stop_moving(EntitySystem& entitySystem, Entity entity, const CliStopMoving& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("Mouse::stop_moving");
+    logger->trace("entity {}, x {} y {} z {}", entity, packet.get_x(), packet.get_y(), packet.get_z());
+
+    entitySystem.remove_component<Component::Destination>(entity);
+
+    entitySystem.update_position(entity, packet.get_x(), packet.get_y());
+}

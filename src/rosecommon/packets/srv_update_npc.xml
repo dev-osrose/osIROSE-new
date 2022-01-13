@@ -1,6 +1,0 @@
-<!-- Update the type of the npc with this id -->
-<packet ePacketType = "PAKWC_UPDATE_NPC">
-    <element name = "id" type = "uint16_t" />
-    <!-- NPC ID in the STBs -->
-    <element name = "npc_id" type = "int16_t" default = "0" />
-</packet>

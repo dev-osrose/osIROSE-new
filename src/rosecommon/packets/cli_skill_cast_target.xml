@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_SKILL_CAST_TARGET">
-    <element name = "target" type = "uint16_t" />
-    <element name = "slot" type = "uint8_t" />
-</packet>

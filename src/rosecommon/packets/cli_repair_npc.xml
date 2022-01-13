@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKCS_REPAIR_NPC">
-    <element name = "npc_id" type = "uint16_t" />
-    <element name = "target_index" type = "uint16_t" />
-</packet>

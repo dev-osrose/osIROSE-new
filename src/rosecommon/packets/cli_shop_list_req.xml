@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_SHOP_LIST_REQ">
-    <element name = "id" type = "uint16_t" />
-</packet>

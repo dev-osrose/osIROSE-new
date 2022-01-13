@@ -1,5 +1,0 @@
-<packet ePacketType = "PAKCS_TRADE_ITEM">
-    <element name = "slot" type = "uint8_t" />
-    <element name = "index" type = "uint16_t" />
-    <element name = "amount" type = "uint32_t" />
-</packet>

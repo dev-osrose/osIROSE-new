@@ -1,4 +1,0 @@
-<packet ePacketType = "PAKWC_NPC_SHOW">
-    <element name = "id" type = "uint16_t" />
-    <element name = "show" type = "uint8_t" />
-</packet>

@@ -1,3 +1,0 @@
-<packet ePacketType = "PAKCS_CHANNEL_LIST_REQ">
-    <element name = "serverId" type = "uint32_t" />
-</packet>

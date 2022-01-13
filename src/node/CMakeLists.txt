@@ -11,7 +11,7 @@ if (GCC)
 endif()
 
 set( SOURCES_MAIN
-  src/main )
+  src/main.cpp )
 
 set( SOURCES_HEADER
   include/nodeserver.h
@@ -41,7 +41,16 @@ target_link_libraries(${PROJECT}
   PUBLIC
     sqlite3::sqlite3
     SQLPP11::sqlpp11_sqlite3
+    osirose_common::osirose_common
 )
+
+if (NOT CURL_FOUND)
+  add_dependencies(${PROJECT} curl)
+endif ()
+target_link_libraries(${PROJECT}
+    INTERFACE
+    CURL::libcurl
+    )
 
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT}

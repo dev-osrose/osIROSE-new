@@ -1,6 +1,7 @@
 #include "utils/getters.h"
+#include "components/lua.h"
 
-int Utils::get_attack_speed(EntitySystem& entitySystem, RoseCommon::Entity item) {
+int Utils::get_attack_speed(EntitySystem& entitySystem, Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   if (item != entt::null) {
     if (auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
@@ -16,7 +17,7 @@ int Utils::get_attack_speed(EntitySystem& entitySystem, RoseCommon::Entity item)
   return 0;
 }
 
-int Utils::get_move_speed(EntitySystem& entitySystem, RoseCommon::Entity item) {
+int Utils::get_move_speed(EntitySystem& entitySystem, Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   if (item != entt::null) {
     if (auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
@@ -32,7 +33,7 @@ int Utils::get_move_speed(EntitySystem& entitySystem, RoseCommon::Entity item) {
   return 0;
 }
 
-int Utils::get_magic(EntitySystem& entitySystem, RoseCommon::Entity item) {
+int Utils::get_magic(EntitySystem& entitySystem, Entity item) {
   auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   if (item != entt::null) {
     if (auto* lua = entitySystem.try_get_component<Component::ItemLua>(item); lua) {
