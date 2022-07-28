@@ -37,13 +37,13 @@ target_link_libraries(${PROJECT}
     osirose_common::osirose_common
 )
 
-if(WITH_CRASH_REPORTS)
-  if (NOT CRASHPAD)
-    generate_symbol_data(${PROJECT})
-  else()
-    generate_crashpad_symbol_data(${PROJECT})
-  endif()
-endif()
+#if(WITH_CRASH_REPORTS)
+#  if (NOT CRASHPAD)
+#    generate_symbol_data(${PROJECT})
+#  else()
+#    generate_crashpad_symbol_data(${PROJECT})
+#  endif()
+#endif()
 
 install(TARGETS ${PROJECT}
         RUNTIME
