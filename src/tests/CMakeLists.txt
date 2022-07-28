@@ -92,7 +92,7 @@ macro (compile_test name path)
   if(WITH_MYSQL)
       target_link_libraries(${TEST_NAME}
         PUBLIC
-          mysql::mysql
+          sqlpp11::mysql
       )
   endif()
 
@@ -119,13 +119,13 @@ macro (compile_test name path)
 
   gtest_discover_tests(${TEST_NAME})
 
-  if(WITH_CRASH_REPORTS)
-    if (NOT CRASHPAD)
-      generate_symbol_data(${TEST_NAME})
-    else()
-      generate_crashpad_symbol_data(${TEST_NAME})
-    endif()
-  endif()
+#  if(WITH_CRASH_REPORTS)
+#    if (NOT CRASHPAD)
+#      generate_symbol_data(${TEST_NAME})
+#    else()
+#      generate_crashpad_symbol_data(${TEST_NAME})
+#    endif()
+#  endif()
 
   SET_PROPERTY(TARGET ${TEST_NAME}                PROPERTY FOLDER "Tests")
 endmacro (compile_test)

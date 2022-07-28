@@ -99,27 +99,27 @@ target_link_libraries(${PROJECT}
     CURL::libcurl
     )
 
-if (WITH_CRASH_REPORTS)
-  if (NOT CRASHPAD)
-    if (NOT Breakpad_FOUND)
-      add_dependencies(${PROJECT} breakpad-build utils::breakpad)
-    endif ()
-
-    target_link_libraries(${PROJECT}
-        PUBLIC
-        utils::breakpad
-        )
-  else ()
-    if (NOT CRASHPAD_FOUND)
-      add_dependencies(${PROJECT} crashpad-build crashpad-install utils::crashpad)
-    endif ()
-
-    target_link_libraries(${PROJECT}
-        PUBLIC
-        utils::crashpad
-        )
-  endif ()
-endif ()
+#if (WITH_CRASH_REPORTS)
+#  if (NOT CRASHPAD)
+#    if (NOT Breakpad_FOUND)
+#      add_dependencies(${PROJECT} breakpad-build utils::breakpad)
+#    endif ()
+#
+#    target_link_libraries(${PROJECT}
+#        PUBLIC
+#        utils::breakpad
+#        )
+#  else ()
+#    if (NOT CRASHPAD_FOUND)
+#      add_dependencies(${PROJECT} crashpad-build crashpad-install utils::crashpad)
+#    endif ()
+#
+#    target_link_libraries(${PROJECT}
+#        PUBLIC
+#        utils::crashpad
+#        )
+#  endif ()
+#endif ()
 
 # Since we use networking, we need to link the winsock libs for windows
 if (MINGW)
@@ -135,11 +135,10 @@ elseif (MSVC)
 endif ()
 
 if (WITH_MYSQL)
-  add_dependencies(${PROJECT} SQLPP11::SQLPP11_MYSQL)
+  add_dependencies(${PROJECT} sqlpp11::mysql)
   target_link_libraries(${PROJECT}
       PUBLIC
-      mysql::mysql
-      SQLPP11::SQLPP11_MYSQL
+      sqlpp11::mysql
       )
 endif ()
 

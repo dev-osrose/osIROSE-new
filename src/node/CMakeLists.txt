@@ -36,11 +36,10 @@ add_executable(${PROJECT} ${SESSIONS_HEADER} ${SOURCES_MAIN} ${SOURCES_BASE} ${S
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-add_dependencies(${PROJECT} sqlite3::sqlite3 SQLPP11::sqlpp11_sqlite3)
+add_dependencies(${PROJECT} sqlpp11::sqlite3)
 target_link_libraries(${PROJECT}
   PUBLIC
-    sqlite3::sqlite3
-    SQLPP11::sqlpp11_sqlite3
+    sqlpp11::sqlite3
     osirose_common::osirose_common
 )
 
@@ -58,13 +57,13 @@ target_link_libraries(${PROJECT}
     RoseCommon
 )
 
-if(WITH_CRASH_REPORTS)
-  if (NOT CRASHPAD)
-    generate_symbol_data(${PROJECT})
-  else()
-    generate_crashpad_symbol_data(${PROJECT})
-  endif()
-endif()
+#if(WITH_CRASH_REPORTS)
+#  if (NOT CRASHPAD)
+#    generate_symbol_data(${PROJECT})
+#  else()
+#    generate_crashpad_symbol_data(${PROJECT})
+#  endif()
+#endif()
 
 install(TARGETS ${PROJECT}
         RUNTIME
