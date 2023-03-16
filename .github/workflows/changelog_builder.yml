@@ -1,0 +1,26 @@
+name: PR Changelog builder
+on: [pull_request]
+
+jobs:
+  changelogBuilder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Release Changelog Builder
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v2.0.0
+        with:
+          configuration: ".github/config/configuration.json"
+          commitMode: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          ignorePreReleases: ${{ !contains(github.ref, '-') }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Pull Request Description
+        uses: riskledger/update-pr-description@v2
+        with:
+          body: ${{steps.build_changelog.outputs.changelog}}
+          token: ${{ secrets.GITHUB_TOKEN }}

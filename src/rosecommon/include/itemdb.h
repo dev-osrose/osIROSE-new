@@ -42,7 +42,7 @@ namespace RoseCommon
 
   struct ItemDef {
     ItemType type;
-    uint8_t subtype;
+    uint16_t subtype;
     uint16_t id;
     uint32_t buy_price;
     uint32_t sell_price;

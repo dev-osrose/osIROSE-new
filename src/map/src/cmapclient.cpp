@@ -230,7 +230,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
           auto packet = Packet::SrvSelectCharReply::create();
           const auto& characterGraphics = entitySystem->get_component<Component::CharacterGraphics>(entity);
-          auto& position = entitySystem->get_component<Component::Position>(entity);
+          const auto& position = entitySystem->get_component<Component::Position>(entity);
           const auto& inventory = entitySystem->get_component<Component::Inventory>(entity);
           const auto& faction = entitySystem->get_component<Component::Faction>(entity);
           const auto& guild = entitySystem->get_component<Component::Guild>(entity);
