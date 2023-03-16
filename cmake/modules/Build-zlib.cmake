@@ -5,42 +5,14 @@ set(_byproducts
   ${ZLIB_INSTALL_DIR}/libzlib.a
 )
 
-#if(WIN32 OR MINGW)
-#  if(MINGW)
-#    ExternalProject_Add(
-#      zlib
-#      URL https://www.zlib.net/zlib1211.zip
-#	  URL_HASH SHA256=d7510a8ee1918b7d0cad197a089c0a2cd4d6df05fee22389f67f115e738b178d
-#      #CONFIGURE_COMMAND ""
-#      #BUILD_COMMAND gcc -shared 
-#      #<SOURCE_DIR>/adler32.c
-#      #<SOURCE_DIR>/compress.c
-#      #<SOURCE_DIR>/crc32.c
-#      #<SOURCE_DIR>/deflate.c
-#      #<SOURCE_DIR>/gzio.c
-#      #<SOURCE_DIR>/inffast.c
-#      #<SOURCE_DIR>/inflate.c
-#      #<SOURCE_DIR>/inftrees.c
-#      #<SOURCE_DIR>/trees.c
-#      #<SOURCE_DIR>/uncompr.c
-#      #<SOURCE_DIR>/zutil.c -o ${ZLIB_INSTALL_DIR}/zlib.a
-#      #BUILD_IN_SOURCE true
-#      BUILD_BYPRODUCTS ${_byproducts}
-#      #INSTALL_COMMAND ""
-#      INSTALL_DIR ${ZLIB_INSTALL_DIR}
-#    )
-#  else()
-    ExternalProject_Add(
-      zlib
-      URL https://www.zlib.net/zlib1211.zip
-	  URL_HASH SHA256=d7510a8ee1918b7d0cad197a089c0a2cd4d6df05fee22389f67f115e738b178d
-      CMAKE_ARGS -G${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${ZLIB_INSTALL_DIR}
-      BUILD_BYPRODUCTS ${_byproducts}
-      INSTALL_DIR ${ZLIB_INSTALL_DIR}
-    )
-#  endif()
-#endif()
-
+ExternalProject_Add(
+  zlib
+  URL https://www.zlib.net/zlib1212.zip
+  URL_HASH SHA256=173e89893dcb8b4a150d7731cd72f0602f1d6b45e60e2a54efdf7f3fc3325fd7
+  CMAKE_ARGS -G${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${ZLIB_INSTALL_DIR}
+  BUILD_BYPRODUCTS ${_byproducts}
+  INSTALL_DIR ${ZLIB_INSTALL_DIR}
+)
 
 ExternalProject_Get_Property(
   zlib

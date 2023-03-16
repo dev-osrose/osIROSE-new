@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 env:
   SUITE: coverage
-  WITH_CRASH_REPORTS: ON
+  WITH_CRASH_REPORTS: OFF
 
 jobs:
   linux_debug:
