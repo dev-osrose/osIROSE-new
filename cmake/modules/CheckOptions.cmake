@@ -13,7 +13,7 @@ option(BUILD_API_DOC "Build doxygen documentation" OFF)
 option(ENABLE_ASAN "Enable address sanitizer" OFF)
 option(BUILD_MYSQL "Download and build mysql libs if not found on the system" ON)
 
-set(DEV_SETTING ON)
+set(DEV_SETTING OFF)
 if(OFFICIAL_BUILD)
   message(STATUS "Official Build is set - Turning off dev options")
   set(DEV_SETTING OFF)

@@ -145,7 +145,7 @@ if (NOT SQLITE3_FOUND)
 endif ()
 
 if (WITH_MYSQL)
-  if (MSVC AND BUILD_MYSQL AND NOT MySQL_FOUND)
+  if (BUILD_MYSQL AND NOT MySQL_FOUND)
     include(Build-mysql)
   endif ()
 endif ()

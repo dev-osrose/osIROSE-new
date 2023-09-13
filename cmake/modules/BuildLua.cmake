@@ -31,6 +31,7 @@ else()
     lua
     URL https://www.lua.org/ftp/lua-5.3.4.tar.gz
     URL_HASH SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     INSTALL_DIR ${LUA_INSTALL_DIR}
     BUILD_IN_SOURCE TRUE
 
