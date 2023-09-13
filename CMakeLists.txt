@@ -105,8 +105,11 @@ else ()
   set(PATCH_SCRIPT_PATH ${CMAKE_SCRIPT_PATH}/patch.sh)
 endif ()
 
+if (NOT MSVC)
+  find_package(Curses ${REQUIRED_IF_OPTION})
+endif()
+
 find_package(Threads ${REQUIRED_IF_OPTION})
-find_package(Curses ${REQUIRED_IF_OPTION})
 find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(SQLite3 ${REQUIRED_IF_OPTION})
