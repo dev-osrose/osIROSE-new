@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -36,7 +36,7 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE RelWithDebInfo FORCE)
   elseif (DEBUG)
     set(CMAKE_BUILD_TYPE Debug FORCE)
-    add_compiler_flag(-DSPDLOG_TRACE_ON)
+    add_compiler_flag(-DSPDLOG_TR_ON)
   else ()
     set(CMAKE_BUILD_TYPE Release FORCE)
   endif ()
@@ -74,14 +74,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
 #TODO: move these to find/build modules
-set(SOL2_ROOT ${CMAKE_SUBMODULE_DIR}/sol2)
-set(SPDLOG_ROOT ${CMAKE_SUBMODULE_DIR}/spdlog/include)
-set(CXXOPT_ROOT ${CMAKE_SUBMODULE_DIR}/cxxopts/include)
+#set(SOL2_ROOT ${CMAKE_SUBMODULE_DIR}/sol2)
+#set(SPDLOG_ROOT ${CMAKE_SUBMODULE_DIR}/spdlog/include)
+#set(CXXOPT_ROOT ${CMAKE_SUBMODULE_DIR}/cxxopts/include)
 
 set(CONFIGURU ${CMAKE_SUBMODULE_DIR}/Configuru)
 set(VISIT_STRUCT ${CMAKE_SUBMODULE_DIR}/visit_struct/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/asio/asio/include)
-set(ENTT_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/entt/src/entt)
+#set(ENTT_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/entt/src/entt)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed
@@ -106,7 +106,8 @@ else ()
 endif ()
 
 find_package(Threads ${REQUIRED_IF_OPTION})
-#find_package(ZLIB ${REQUIRED_IF_OPTION})
+find_package(Curses ${REQUIRED_IF_OPTION})
+find_package(ZLIB ${REQUIRED_IF_OPTION})
 find_package(CURL ${REQUIRED_IF_OPTION})
 find_package(SQLite3 ${REQUIRED_IF_OPTION})
 
@@ -128,6 +129,11 @@ endif ()
 # build some external projects
 #------------------------------------------------------------------------------
 
+include(Build-sol2)
+include(Build-entt)
+include(Build-cxxopts)
+include(Build-spdlog)
+
 if (NOT LUA_FOUND)
   include(BuildLua)
 endif ()
@@ -144,11 +150,11 @@ if (NOT SQLITE3_FOUND)
   include(Build-sqlite3)
 endif ()
 
-if (WITH_MYSQL)
-  if (BUILD_MYSQL AND NOT MySQL_FOUND)
-    include(Build-mysql)
-  endif ()
-endif ()
+#if (WITH_MYSQL)
+#  if (BUILD_MYSQL AND NOT MySQL_FOUND)
+#    include(Build-mysql)
+#  endif ()
+#endif ()
 
 include(Build-sqlpp11)
 include(SQLPPGenerator)

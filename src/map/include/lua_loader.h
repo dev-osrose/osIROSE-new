@@ -5,7 +5,7 @@
 #include "lua_storage.h"
 #include "lua_item.h"
 
-#include <sol.hpp>
+#include <sol/sol.hpp>
 
 #include <string>
 

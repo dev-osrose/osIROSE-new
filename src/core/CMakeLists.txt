@@ -78,7 +78,7 @@ target_include_directories(${PROJECT}
     )
 
 # Make sure the SQL headers are created before core is created
-add_dependencies(${PROJECT} osiroseDatabase_generated logDatabase_generated)
+add_dependencies(${PROJECT} spdlog osiroseDatabase_generated logDatabase_generated)
 
 add_dependencies(${PROJECT} osirose_common::osirose_common)
 target_link_libraries(${PROJECT}
@@ -98,28 +98,6 @@ target_link_libraries(${PROJECT}
     INTERFACE
     CURL::libcurl
     )
-
-#if (WITH_CRASH_REPORTS)
-#  if (NOT CRASHPAD)
-#    if (NOT Breakpad_FOUND)
-#      add_dependencies(${PROJECT} breakpad-build utils::breakpad)
-#    endif ()
-#
-#    target_link_libraries(${PROJECT}
-#        PUBLIC
-#        utils::breakpad
-#        )
-#  else ()
-#    if (NOT CRASHPAD_FOUND)
-#      add_dependencies(${PROJECT} crashpad-build crashpad-install utils::crashpad)
-#    endif ()
-#
-#    target_link_libraries(${PROJECT}
-#        PUBLIC
-#        utils::crashpad
-#        )
-#  endif ()
-#endif ()
 
 # Since we use networking, we need to link the winsock libs for windows
 if (MINGW)

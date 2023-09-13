@@ -48,6 +48,8 @@ Note, you may need to install the following packages depending on your OS:
     libssl-dev
     libncurses5-dev
     libreadline-dev
+    libcurl4-openssl-dev
+    libsqlite3-dev
     libmysqlclient-dev
 ```
 

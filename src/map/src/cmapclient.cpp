@@ -163,7 +163,7 @@ bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliCh
   login_state_ = eSTATE::SWITCHING;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable sessions{};
-  conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::tvin(""), sessions.worldport = sqlpp::tvin(0)).where(sessions.id == sessionId_));
+  conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::value_or_null(""), sessions.worldport = sqlpp::value_or_null(0)).where(sessions.id == sessionId_));
   CRoseClient::send(Packet::SrvChanCharReply::create());
   return true;
 }
