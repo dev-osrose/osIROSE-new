@@ -5,7 +5,7 @@ set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
 FetchContent_Declare(
   sqlpp11
   GIT_REPOSITORY https://github.com/rbock/sqlpp11
-  GIT_TAG 4be8b9f6549c80351d12e89e89b7430f8e4c4e6a
+  GIT_TAG a50d71936465c26abc9093ed3b87059fe72aa711
 )
 
 # sqlpp11 settings
