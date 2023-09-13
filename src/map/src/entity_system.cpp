@@ -544,10 +544,10 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
         Core::InventoryTable inventoryTable{};
         Core::SkillTable skillsTable{};
 
-        auto charRes = conn(sqlpp::select(sqlpp::count(characters.id), sqlpp::all_of(characters))
+        auto charRes = conn(sqlpp::select(sqlpp::all_of(characters))
                               .from(characters).where(characters.id == charId));
 
-        if (static_cast<long>(charRes.front().count) != 1L) {
+        if (charRes.empty()) {
             promise.set_value(entt::null);
             return;
         }
