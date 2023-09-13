@@ -1,0 +1,11 @@
+set(CXXOPTS_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
+set(CMAKE_INSTALL_PREFIX ${CMAKE_THIRD_PARTY_DIR})
+set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
+
+FetchContent_Declare(
+  cxxopts
+  GIT_REPOSITORY https://github.com/jarro2783/cxxopts
+  GIT_TAG 302302b30839505703d37fb82f536c53cf9172fa
+)
+
+FetchContent_MakeAvailable(cxxopts)

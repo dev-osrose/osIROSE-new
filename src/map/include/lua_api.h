@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sol.hpp>
+#include <sol/sol.hpp>
 #include <string>
 #include <optional>
 #include "logconsole.h"
