@@ -23,7 +23,7 @@ if(WIN32 OR MINGW)
       sqlite3
       URL https://www.sqlite.org/2023/sqlite-amalgamation-3430100.zip
       URL_HASH SHA3_256=2110f85a90033016f5b5691812448e8dfa606fe407f4b2ebfec66dda2968fe3c
-      DOWNLOAD_EXTRACT_TIMESTAMP
+      DOWNLOAD_EXTRACT_TIMESTAMP TRUE
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ${_build_command}
 #      BUILD_IN_SOURCE true
