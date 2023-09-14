@@ -3,7 +3,7 @@ if(WIN32 OR MINGW)
   set(SQLITE3_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
   set(CMAKE_INSTALL_PREFIX ${CMAKE_THIRD_PARTY_DIR})
   set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
-  
+
   message(STATUS "Building sqlite3 since sqlite3 was not found")
 
   set(_byproducts
@@ -26,7 +26,7 @@ if(WIN32 OR MINGW)
       DOWNLOAD_EXTRACT_TIMESTAMP
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ${_build_command}
-      BUILD_IN_SOURCE true
+#      BUILD_IN_SOURCE true
       BUILD_BYPRODUCTS ${_byproducts}
       INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>/include/" "*.h"
       INSTALL_DIR ${SQLITE3_INSTALL_DIR}
