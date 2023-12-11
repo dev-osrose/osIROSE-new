@@ -26,7 +26,6 @@ if(WIN32 OR MINGW)
       DOWNLOAD_EXTRACT_TIMESTAMP TRUE
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ${_build_command}
-#      BUILD_IN_SOURCE true
       BUILD_BYPRODUCTS ${_byproducts}
       INSTALL_COMMAND ${CMAKE_SCRIPT_PATH}/robocopy.bat "<SOURCE_DIR>" "<INSTALL_DIR>/include/" "*.h"
       INSTALL_DIR ${SQLITE3_INSTALL_DIR}
