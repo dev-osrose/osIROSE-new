@@ -3,6 +3,7 @@
 #include "dataconsts.h"
 #include "random.h"
 
+#include "chat/whisper_chat.h"
 #include "components/basic_info.h"
 #include "components/inventory.h"
 #include "components/item.h"
@@ -12,8 +13,10 @@
 #include "itemdb.h"
 
 #include "srv_equip_item.h"
+#include "srv_equip_item_ride.h"
 #include "srv_set_item.h"
 #include "srv_set_money.h"
+#include "srv_craft_enhance_reply.h"
 
 #include <limits>
 
@@ -21,6 +24,29 @@ using namespace RoseCommon;
 using namespace Items;
 
 namespace {
+
+inline bool is_spot_correct_riding(const EntitySystem& entitySystem, Entity entity, size_t spot) {
+    const auto& item = entitySystem.get_component<ItemDef>(entity);
+    const RidingItem pos = static_cast<RidingItem>(spot);
+    if (pos >= MAX_ITEMS) {
+        return true;
+    }
+    switch (item.subtype / 10 % 10) {
+        case RidingSubType::FRAME:
+            return pos == RidingItem::BODY;
+        case RidingSubType::ENGINE_PART:
+            return pos == RidingItem::ENGINE;
+        case RidingSubType::WHEELS:
+            return pos == RidingItem::LEGS;
+        case RidingSubType::ABILITY_PART:
+            return pos == RidingItem::OPTION;
+        case RidingSubType::CART_WEAP:
+            return pos == RidingItem::ARMS;
+        default:
+            return false;
+    }
+}
+
 // only for items, not cart/castle gear
 inline bool is_spot_correct(const EntitySystem& entitySystem, Entity entity, size_t spot) {
     const auto& item = entitySystem.get_component<ItemDef>(entity);
@@ -47,6 +73,8 @@ inline bool is_spot_correct(const EntitySystem& entitySystem, Entity entity, siz
             return pos == EquippedPosition::WEAPON_R;
         case ItemType::ITEM_WEAPON_L:
             return pos == EquippedPosition::WEAPON_L;
+        case ItemType::ITEM_RIDING:
+            return is_spot_correct_riding(entitySystem, entity, spot);
         default:
             return false;
     }
@@ -182,13 +210,15 @@ void Items::swap_item(EntitySystem& entitySystem, Entity entity, size_t pos1, si
     std::swap(inv.items[pos1], inv.items[pos2]);
 }
 
+
+
 ReturnValue Items::equip_item(EntitySystem& entitySystem, Entity entity, size_t from, size_t to) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
 
     if (from < decltype(inv.getInventory())::offset() || from >= decltype(inv.getInventory())::size()) {
         return ReturnValue::WRONG_INDEX;
     }
-    if (to < decltype(inv.getEquipped())::offset() || to >= decltype(inv.getEquipped())::size()) {
+    if (to < decltype(inv.getEquipped())::offset() || (to >= decltype(inv.getEquipped())::size() && to < RidingItem::BODY) || to >= MAX_ITEMS) {
         return ReturnValue::WRONG_INDEX;
     }
 
@@ -222,9 +252,21 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, Entity entity, size_t 
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     {
-        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
-                entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[to]));
-        entitySystem.send_nearby(entity, packet);
+        switch (item.type) {
+            case ItemType::ITEM_RIDING:
+            {
+                const auto packet = RoseCommon::Packet::SrvEquipItemRide::create(basicInfo.id, static_cast<RoseCommon::Packet::SrvEquipItemRide::EquippedPositionRide>(to),
+                    entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItemRide>(inv.items[to]), static_cast<size_t>(800));
+                entitySystem.send_map(packet);
+                break;
+            }
+            default:
+            {
+                const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, to,
+                    entitySystem.item_to_equipped<RoseCommon::Packet::SrvEquipItem>(inv.items[to]));
+                entitySystem.send_map(packet);
+            }
+        }
     }
 
     RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(to);
@@ -238,6 +280,53 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, Entity entity, size_t 
     return ReturnValue::OK;
 }
 
+void enhance_gemming(EntitySystem & entitySystem, Entity entity, const RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementData data) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->warn("Item to get gemmed is {} gem slot is {}", data.get_gem_target(), data.get_gem_source());
+    const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
+    auto& gem = entitySystem.get_component<Component::Item>(inv.items[data.get_gem_source()]);
+    const auto& gemDef = entitySystem.get_component<RoseCommon::ItemDef>(inv.items[data.get_gem_source()]);
+    auto& item = entitySystem.get_component<Component::Item>(inv.items[data.get_gem_target()]);
+    auto result_packet = RoseCommon::Packet::SrvCraftEnhanceReply::create(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SUCCESS);
+    if(item.hasSocket) {
+        if (item.gemOpt == 0) {
+            if (gem.count > 0 && gemDef.type == ItemType::ITEM_ETC_GEM) {
+                // TODO: Success rate random :>
+                logger->warn("Success");
+                remove_item(entitySystem, entity, data.get_gem_source(), 1);
+                item.gemOpt = gemDef.id;
+                // RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(data.get_gem_target());
+                // index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(inv.items[data.get_gem_target()]));
+                // auto packet = RoseCommon::Packet::SrvSetItem::create();
+                // //somehow need to update the animation, inventory is fine!
+                // packet.add_items(index);
+                // entitySystem.send_to(entity, packet);
+                RoseCommon::Packet::SrvCraftEnhanceReply::Item new_item;
+                //weapon
+                new_item.set_header(entitySystem.item_to_header<RoseCommon::Packet::SrvCraftEnhanceReply::Header>(inv.items[data.get_gem_target()]));
+                new_item.set_data(entitySystem.item_to_data<RoseCommon::Packet::SrvCraftEnhanceReply::Data>(inv.items[data.get_gem_target()]));
+                result_packet.add_items(new_item);
+                //gem
+                // new_item.set_header(entitySystem.item_to_header<RoseCommon::Packet::SrvCraftEnhanceReply::Header>(inv.items[data.get_gem_source()]));
+                // new_item.set_data(entitySystem.item_to_data<RoseCommon::Packet::SrvCraftEnhanceReply::Data>(inv.items[data.get_gem_source()]));
+                // result_packet.add_items(new_item);
+                result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SUCCESS);
+            } else {
+                logger->warn("No gem/Not a gem");
+                Chat::send_whisper(entitySystem, entity, "Insufficient amount of gems/Not a gem");
+            }
+        } else {
+            result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SOCKET_FULL);
+            logger->warn("Socket is full");
+        }
+    } else {
+        result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_NO_SOCKET);
+        logger->warn("No socket");
+    }      
+    entitySystem.send_to(entity, result_packet);
+}
+
+
 ReturnValue Items::unequip_item(EntitySystem& entitySystem, Entity entity, size_t from) {
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     const size_t to = get_first_available_spot(entitySystem, entity, inv.items[from]);
@@ -246,7 +335,7 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, Entity entity, size_
         return ReturnValue::NO_SPACE;
     }
 
-    if (from < decltype(inv.getEquipped())::offset() || from >= decltype(inv.getEquipped())::size()) {
+    if (from < decltype(inv.getEquipped())::offset() || (from >= decltype(inv.getEquipped())::size() && from < RidingItem::BODY) || from >= MAX_ITEMS) {
         return ReturnValue::WRONG_INDEX;
     }
 
@@ -261,9 +350,21 @@ ReturnValue Items::unequip_item(EntitySystem& entitySystem, Entity entity, size_
     }
     swap_item(entitySystem, entity, from, to);
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
+    const auto& item = entitySystem.get_component<RoseCommon::ItemDef>(equipped);
     {
-        const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, from, {});
-        entitySystem.send_nearby(entity, packet);
+        switch (item.type) {
+            case ItemType::ITEM_RIDING:
+            {
+                const auto packet = RoseCommon::Packet::SrvEquipItemRide::create(basicInfo.id, static_cast<RoseCommon::Packet::SrvEquipItemRide::EquippedPositionRide>(from), {}, static_cast<size_t>(500));      
+                entitySystem.send_nearby(entity, packet);
+                break;
+            }
+            default:
+            {
+                const auto packet = RoseCommon::Packet::SrvEquipItem::create(basicInfo.id, from, {});
+                entitySystem.send_nearby(entity, packet);
+            }
+        }
     }
 
     RoseCommon::Packet::SrvSetItem::IndexAndItem index;
@@ -351,6 +452,36 @@ bool Items::add_zuly(EntitySystem& entitySystem, Entity entity, int64_t zuly) {
                          RoseCommon::Packet::SrvSetMoney::create(inv.zuly));
     return true;
 }
+
+void Items::equip_item_ride_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliEquipItemRide& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->trace("equip_item_ride_packet()");
+    logger->trace("from {} to {}", packet.get_index(), packet.get_slot() + 135);
+    const auto from = packet.get_index();
+    const auto to = packet.get_slot() + 135;
+    const auto res = from == 0 ?
+        unequip_item(entitySystem, entity, to):
+        equip_item(entitySystem, entity, from, to);
+    (void) res;
+
+}
+
+void Items::craft_enhance_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliCraftEnhanceReq& packet) {
+    auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
+    logger->warn("craft_enhance_packet");
+    //RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementData data;
+    RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementType type;
+    //data = packet.get_data();
+    type = packet.get_enhancement();
+    logger->warn("Enhance type is {}", type);
+    
+    switch (type) {
+        case RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementType::GEM:
+            enhance_gemming(entitySystem, entity, packet.get_data());
+    }
+
+}
+
 
 void Items::equip_item_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliEquipItem& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();

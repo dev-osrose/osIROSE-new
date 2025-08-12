@@ -218,8 +218,9 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
     register_dispatcher(std::function{Player::toggle_player_move});
     register_dispatcher(std::function{Player::set_animation});
     register_dispatcher(std::function{Items::equip_item_packet});
+    register_dispatcher(std::function{Items::equip_item_ride_packet});
     register_dispatcher(std::function{Items::drop_item_packet});
-
+    register_dispatcher(std::function{Items::craft_enhance_packet});
     register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReq>});
     register_dispatcher(std::function{Utils::transfer_to_char<RoseCommon::Packet::SrvPartyReq>});
     register_dispatcher(std::function{Utils::transfer_to_char_server<RoseCommon::Packet::CliPartyReply>});
@@ -624,6 +625,7 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
             item.life = 1000;
             item.hasSocket = row.socket;
             item.isAppraised = true;
+            item.durability = row.durability; //added by t0xic
             item.refine = row.refine;
             item.count = row.amount;
             item.gemOpt = row.gemOpt;
@@ -848,7 +850,7 @@ Entity EntitySystem::create_item(uint8_t type, uint16_t id, uint32_t count, uint
         false, // is created
         false, // is zuly
         static_cast<uint16_t>(1000), // life
-        static_cast<uint8_t>(std::min(int(itemDura), 120)), // durability
+        static_cast<uint8_t>(itemDura < 40 ? 40 : std::min(int(itemDura), 120)), // durability
         (itemSocket > 0), // has socket
         false, // is appraised
         static_cast<uint8_t>(std::min(int(itemRefine), 9)), // refine

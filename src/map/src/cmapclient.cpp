@@ -74,6 +74,7 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
 CMapClient::~CMapClient() {}
 
 bool CMapClient::handlePacket(uint8_t* _buffer) {
+  logger_->warn("new packet 0x{0:02x} arrived", to_underlying(CRosePacket::type(_buffer)));
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE:
       if (login_state_ != eSTATE::LOGGEDIN) {

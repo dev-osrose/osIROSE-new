@@ -122,6 +122,14 @@ void teleport(EntitySystem& entitySystem, Entity entity, Parser<int, int, int, s
     entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
 }
 
+// void teleport_map(EntitySystem& entitySystem, Entity entity, Parser<int, std::optional<uint16_t>> parser) {
+//     if (!parser.is_good()) {
+//         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /tp <map_id> <x> <y> [client_id]");
+//         return;
+//     }
+//     entitySystem.teleport_entity(entity, parser.get_arg<1>() * 100, parser.get_arg<2>() * 100, parser.get_arg<0>());
+// }
+
 void zuly(EntitySystem& entitySystem, Entity entity, Parser<int64_t> parser) {
     if (!parser.is_good()) {
         Chat::send_whisper(entitySystem, entity, "Error while parsing the command. Usage /zuly <amount>");
@@ -172,6 +180,7 @@ static const std::unordered_map<std::string, std::tuple<uint16_t, std::function<
     {"/item", {100, REGISTER_FUNCTION(item), "Creates an item. Usage: /item <id> <type> <amount> <refine> <durability> <socket>"}},
     {"/zuly", {100, REGISTER_FUNCTION(zuly), "Adds zulies to your inventory (you can add a negative amount). Usage: /zuly <amount>"}},
     {"/tp", {200, REGISTER_FUNCTION(teleport), "Teleports a player or self. usage: /tp <map_id> <x> <y> [client_id]"}},
+    // {"/tele", {200, REGISTER_FUNCTION(teleport_map), "Teleports a player or self w/revive x,y. usage: /tp <map_id> [client_id]"}},
     {"/pos", {100, REGISTER_FUNCTION(position), "Returns current position"}},
     {"/broadcast", {100, REGISTER_FUNCTION(broadcast), "Broadcast a message to all maps. Usage /broadcast <message>"}},
     {"/whisper", {100, REGISTER_FUNCTION(whisper), "Whisper a message to any char currently logged in. Usage /whisper <to> <message>"}},

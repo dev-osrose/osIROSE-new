@@ -4,7 +4,9 @@
 #include <optional>
 
 #include "cli_equip_item.h"
+#include "cli_equip_item_ride.h"
 #include "cli_drop_item.h"
+#include "cli_craft_enhance_req.h"
 
 class EntitySystem;
 
@@ -32,5 +34,7 @@ void pickup_item(EntitySystem&, Entity entity, Entity item);
 bool add_zuly(EntitySystem&, Entity, int64_t zuly);
 
 void equip_item_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliEquipItem&);
+void equip_item_ride_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliEquipItemRide&);
 void drop_item_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliDropItem&);
+void craft_enhance_packet(EntitySystem&, Entity, const RoseCommon::Packet::CliCraftEnhanceReq&);
 }

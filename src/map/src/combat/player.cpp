@@ -61,16 +61,43 @@ void Player::toggle_player_move(EntitySystem& entitySystem, Entity entity, const
 
 	Packet::CliToggleMove::ToggleMove moveType = packet.get_type();
 	auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
-	if(moveType == 0) {
-		if (computedValues.moveMode == MoveMode::RUN) {
+	logger->warn("moveType is {}", moveType);
+	if(moveType == 0) { // RUN-WALK
+		if (computedValues.runSpeed <= 200) {
 			computedValues.moveMode = MoveMode::WALK;
-		} else if (computedValues.moveMode == MoveMode::WALK) {
-			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
+		} else {
 			computedValues.moveMode = MoveMode::RUN;
+			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
+		}
+	} else if (moveType == 1) { // SIT
+		if (computedValues.moveMode == MoveMode::SITTING) {
+			if (computedValues.runSpeed <= 200) {
+				computedValues.moveMode = MoveMode::WALK;
+			} else {
+				computedValues.moveMode = MoveMode::RUN;
+				computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
+			}
+			computedValues.command = Command::MOVE;
+		} else if (computedValues.moveMode == MoveMode::WALK || computedValues.moveMode == MoveMode::RUN) {
+			computedValues.command = Command::SIT;
+			computedValues.moveMode = MoveMode::SITTING;
+		}
+	} else if (moveType == 2) { // DRIVE
+		if (computedValues.moveMode == MoveMode::DRIVE) {
+			if (computedValues.runSpeed <= 200) {
+				computedValues.moveMode = MoveMode::WALK;
+			} else {
+				computedValues.moveMode = MoveMode::RUN;
+				computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
+			}
+		} else if (computedValues.moveMode == MoveMode::WALK || computedValues.moveMode == MoveMode::RUN) {
+			computedValues.moveMode = MoveMode::DRIVE;
+			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
 		}
 	}
-	
+
 	auto pToggle = Packet::SrvToggleMove::create(static_cast<Packet::SrvToggleMove::ToggleMove>(computedValues.moveMode));
+	logger->warn("runSpd is {} moveMode is {}",computedValues.runSpeed, computedValues.moveMode);
 	pToggle.set_run_speed(computedValues.runSpeed);
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	pToggle.set_object_id(basicInfo.id);
