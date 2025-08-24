@@ -282,7 +282,7 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, Entity entity, size_t 
 
 void enhance_gemming(EntitySystem & entitySystem, Entity entity, const RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementData data) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->warn("Item to get gemmed is {} gem slot is {}", data.get_gem_target(), data.get_gem_source());
+    logger->debug("Item to get gemmed is {} gem slot is {}", data.get_gem_target(), data.get_gem_source());
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     auto& gem = entitySystem.get_component<Component::Item>(inv.items[data.get_gem_source()]);
     const auto& gemDef = entitySystem.get_component<RoseCommon::ItemDef>(inv.items[data.get_gem_source()]);
@@ -292,36 +292,29 @@ void enhance_gemming(EntitySystem & entitySystem, Entity entity, const RoseCommo
         if (item.gemOpt == 0) {
             if (gem.count > 0 && gemDef.type == ItemType::ITEM_ETC_GEM) {
                 // TODO: Success rate random :>
-                logger->warn("Success");
                 remove_item(entitySystem, entity, data.get_gem_source(), 1);
                 item.gemOpt = gemDef.id;
-                // RoseCommon::Packet::SrvSetItem::IndexAndItem index; index.set_index(data.get_gem_target());
-                // index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvSetItem>(inv.items[data.get_gem_target()]));
-                // auto packet = RoseCommon::Packet::SrvSetItem::create();
-                // //somehow need to update the animation, inventory is fine!
-                // packet.add_items(index);
-                // entitySystem.send_to(entity, packet);
-                RoseCommon::Packet::SrvCraftEnhanceReply::Item new_item;
-                //weapon
-                new_item.set_header(entitySystem.item_to_header<RoseCommon::Packet::SrvCraftEnhanceReply::Header>(inv.items[data.get_gem_target()]));
-                new_item.set_data(entitySystem.item_to_data<RoseCommon::Packet::SrvCraftEnhanceReply::Data>(inv.items[data.get_gem_target()]));
-                result_packet.add_items(new_item);
-                //gem
-                // new_item.set_header(entitySystem.item_to_header<RoseCommon::Packet::SrvCraftEnhanceReply::Header>(inv.items[data.get_gem_source()]));
-                // new_item.set_data(entitySystem.item_to_data<RoseCommon::Packet::SrvCraftEnhanceReply::Data>(inv.items[data.get_gem_source()]));
-                // result_packet.add_items(new_item);
                 result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SUCCESS);
+
+                RoseCommon::Packet::SrvCraftEnhanceReply::IndexAndItem index;
+                index.set_index(data.get_gem_target());
+                index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvCraftEnhanceReply>(inv.items[data.get_gem_target()]));
+                result_packet.add_items(index);
+                index.set_index(data.get_gem_source());
+                index.set_item(entitySystem.item_to_item<RoseCommon::Packet::SrvCraftEnhanceReply>(inv.items[data.get_gem_source()]));
+                result_packet.add_items(index);
+                entitySystem.send_to(entity, result_packet);
             } else {
-                logger->warn("No gem/Not a gem");
+                logger->debug("No gem/Not a gem");
                 Chat::send_whisper(entitySystem, entity, "Insufficient amount of gems/Not a gem");
             }
         } else {
             result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SOCKET_FULL);
-            logger->warn("Socket is full");
+            logger->debug("Socket is full");
         }
     } else {
         result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_NO_SOCKET);
-        logger->warn("No socket");
+        logger->debug("No socket");
     }      
     entitySystem.send_to(entity, result_packet);
 }
@@ -394,7 +387,7 @@ void Items::drop_item(EntitySystem& entitySystem, Entity item, float x, float y,
 
     entitySystem.update_position(item, x, y);
 
-    entitySystem.add_timer(2min, [item](EntitySystem& entitySystem) {
+    entitySystem.add_timer(1min, [item](EntitySystem& entitySystem) {
         if (!entitySystem.is_valid(item)) {
             return;
         }
@@ -405,7 +398,7 @@ void Items::drop_item(EntitySystem& entitySystem, Entity item, float x, float y,
         }
     });
 
-    entitySystem.add_timer(5min, [item](EntitySystem& entitySystem) {
+    entitySystem.add_timer(2min, [item](EntitySystem& entitySystem) {
         if (!entitySystem.is_valid(item)) {
             return;
         }
