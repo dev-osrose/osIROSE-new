@@ -144,14 +144,13 @@ EntitySystem::EntitySystem(uint16_t map_id, CMapServer *server, std::chrono::mil
                 computed.runSpeed = RoseCommon::WALK_SPEED;
                 break;
               }
-              default:
+              case RoseCommon::MoveMode::RUN:
               {
                 computed.runSpeed = Calculations::get_runspeed(self, entity);
                 break;
               }
             }
             if(computed.runSpeed < 200) computed.runSpeed = RoseCommon::WALK_SPEED;
-
             computed.atkSpeed = Calculations::get_attackspeed(self, entity);
             // get original speed + any move speed increase from items (stat 8) - any movement decrease from items (stat 9)
             if(computed.atkSpeed < 30) computed.atkSpeed = 30;

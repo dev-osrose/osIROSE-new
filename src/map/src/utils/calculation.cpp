@@ -21,13 +21,15 @@ using namespace RoseCommon;
 
 namespace Calculations {
 float get_runspeed(EntitySystem& entitySystem, Entity entity) {
+  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   // const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   float moveSpeed = BASE_MOVE_SPEED;
-
+  int itemSpeed = 65, itemNumber = 0;
+  
   if (values.moveMode <= MoveMode::RUN) {
-    int itemSpeed = 65, itemNumber = 0;
+    int itemSpeed = 65;
 
     if (entitySystem.has_component<Component::Inventory>(entity)) {
       auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
@@ -46,13 +48,18 @@ float get_runspeed(EntitySystem& entitySystem, Entity entity) {
     moveSpeed += passiveSpeed;
   } else {
     // We are riding a cart/gear
-
-    moveSpeed = 200;
-
-    moveSpeed += 0;  // Get buffs value for movement speed
-
+    if (entitySystem.has_component<Component::Inventory>(entity)) {
+      auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
+      const auto& riding_legs = inventory.riding_legs();
+      const auto& riding_engine = inventory.riding_engine();
+      if (riding_legs != entt::null && riding_engine != entt::null) {
+        moveSpeed = Utils::get_move_speed(entitySystem, riding_legs) * Utils::get_move_speed(entitySystem, riding_engine) / 10.f;
+      }
+    }
   }
-  if (get_weight(entitySystem, entity) >= 100 && moveSpeed > 300) moveSpeed = WALK_SPEED;
+  moveSpeed += 0;  // Get buffs value for movement speed
+  if (moveSpeed < 200) moveSpeed = WALK_SPEED;
+  if (get_weight(entitySystem, entity) >= 100 && moveSpeed > WALK_SPEED) moveSpeed = WALK_SPEED;
   values.runSpeed = moveSpeed;
   return moveSpeed;
 }
@@ -228,6 +235,13 @@ int64_t get_magicdamage(EntitySystem& entitySystem, Entity attacker, Entity defe
   }
 
   return 50;
+}
+int64_t get_hitrate(EntitySystem& entitySystem, Entity entity) {
+  if (entitySystem.has_component<Component::Inventory>(entity)) {
+    auto& inventory = entitySystem.get_component<Component::Inventory>(entity);
+    const auto& weapon_r = inventory.weapon_r();
+    if (weapon_r != entt::null) int magicStat = Utils::get_magic(entitySystem, weapon_r);
+  }
 }
 
 int64_t get_basicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,

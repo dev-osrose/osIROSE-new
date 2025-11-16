@@ -27,6 +27,26 @@ namespace Component {
       return items[RoseCommon::EquippedPosition::GOGGLES];
     }
 
+    inline Entity& riding_body() {
+      return items[RoseCommon::RidingItem::BODY];
+    }
+
+    inline Entity& riding_engine() {
+      return items[RoseCommon::RidingItem::ENGINE];
+    }
+
+    inline Entity& riding_legs() {
+      return items[RoseCommon::RidingItem::LEGS];
+    }
+
+    inline Entity& riding_option() {
+      return items[RoseCommon::RidingItem::OPTION];
+    }
+
+    inline Entity& riding_arms() {
+      return items[RoseCommon::RidingItem::ARMS];
+    }
+
     inline Entity& helmet() {
       return items[RoseCommon::EquippedPosition::HELMET];
     }
