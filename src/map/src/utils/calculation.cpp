@@ -21,7 +21,6 @@ using namespace RoseCommon;
 
 namespace Calculations {
 float get_runspeed(EntitySystem& entitySystem, Entity entity) {
-  auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
   // const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);

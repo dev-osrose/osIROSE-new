@@ -624,7 +624,7 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
             item.life = 1000;
             item.hasSocket = row.socket;
             item.isAppraised = true;
-            item.durability = row.durability; //added by t0xic
+            item.durability = row.durability;
             item.refine = row.refine;
             item.count = row.amount;
             item.gemOpt = row.gemOpt;

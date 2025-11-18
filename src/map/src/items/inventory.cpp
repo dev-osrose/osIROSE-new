@@ -282,7 +282,6 @@ ReturnValue Items::equip_item(EntitySystem& entitySystem, Entity entity, size_t 
 
 void enhance_gemming(EntitySystem & entitySystem, Entity entity, const RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementData data) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->debug("Item to get gemmed is {} gem slot is {}", data.get_gem_target(), data.get_gem_source());
     const auto& inv = entitySystem.get_component<Component::Inventory>(entity);
     auto& gem = entitySystem.get_component<Component::Item>(inv.items[data.get_gem_source()]);
     const auto& gemDef = entitySystem.get_component<RoseCommon::ItemDef>(inv.items[data.get_gem_source()]);
@@ -305,16 +304,15 @@ void enhance_gemming(EntitySystem & entitySystem, Entity entity, const RoseCommo
                 result_packet.add_items(index);
                 entitySystem.send_to(entity, result_packet);
             } else {
-                logger->debug("No gem/Not a gem");
-                Chat::send_whisper(entitySystem, entity, "Insufficient amount of gems/Not a gem");
+                logger->warn("[Packet Injection] No gem/Not a gem");
             }
         } else {
             result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_SOCKET_FULL);
-            logger->debug("Socket is full");
+            logger->warn("[Packet Injection] Socket is full");
         }
     } else {
         result_packet.set_result(RoseCommon::Packet::SrvCraftEnhanceReply::CraftEnhancementResult::GEM_NO_SOCKET);
-        logger->debug("No socket");
+        logger->warn("[Packet Injection] No socket");
     }      
     entitySystem.send_to(entity, result_packet);
 }
@@ -448,10 +446,8 @@ bool Items::add_zuly(EntitySystem& entitySystem, Entity entity, int64_t zuly) {
 
 void Items::equip_item_ride_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliEquipItemRide& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->trace("equip_item_ride_packet()");
-    logger->trace("from {} to {}", packet.get_index(), packet.get_slot() + 135);
     const auto from = packet.get_index();
-    const auto to = packet.get_slot() + 135;
+    const auto to = packet.get_slot() + RoseCommon::RidingItem::OFFSET;
     const auto res = from == 0 ?
         unequip_item(entitySystem, entity, to):
         equip_item(entitySystem, entity, from, to);
@@ -461,13 +457,8 @@ void Items::equip_item_ride_packet(EntitySystem& entitySystem, Entity entity, co
 
 void Items::craft_enhance_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliCraftEnhanceReq& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
-    logger->warn("craft_enhance_packet");
-    //RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementData data;
     RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementType type;
-    //data = packet.get_data();
     type = packet.get_enhancement();
-    logger->warn("Enhance type is {}", type);
-    
     switch (type) {
         case RoseCommon::Packet::CliCraftEnhanceReq::CraftEnhancementType::GEM:
             enhance_gemming(entitySystem, entity, packet.get_data());

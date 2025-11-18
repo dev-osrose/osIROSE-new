@@ -16,7 +16,6 @@
 #include "srv_set_hp_and_mp.h"
 
 #include "components/basic_info.h"
-#include "components/character_graphics.h" //added by t0xic
 #include "components/combat.h"
 #include "components/computed_values.h"
 #include "components/destination.h"
@@ -208,7 +207,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
 
     if (entitySystem.has_component<Component::Magic>(entity)) {
       auto& magic = entitySystem.get_component<Component::Magic>(entity);
-      mp = magic.mp; //added by t0xic
+      mp = magic.mp;
       if (magic.mp != magic.maxMp) {
         int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
         amount = amount * stanceModifier;
