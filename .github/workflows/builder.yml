@@ -11,10 +11,9 @@ jobs:
     env:
       BUILD_TYPE: Debug
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
-      - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
 
@@ -27,7 +26,7 @@ jobs:
         shell: bash
 
       - name: Cache 3rdparty builds
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{github.workspace}}/build/3rdparty/bin
@@ -57,7 +56,7 @@ jobs:
         run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
 
       - name: Upload linux build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v5
         with:
           name: linux_debug_build
           path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
@@ -67,7 +66,7 @@ jobs:
     env:
       BUILD_TYPE: Release
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
     - uses: seanmiddleditch/gha-setup-ninja@v3
@@ -83,7 +82,7 @@ jobs:
       shell: bash
 
     - name: Cache 3rdparty builds
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ${{github.workspace}}/build/3rdparty/bin
@@ -113,7 +112,7 @@ jobs:
       run: tar --exclude='*.sym' --exclude='*.a' --exclude='./symbols' --exclude='./unity' -zcvf ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz *
 
     - name: Upload linux build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v5
       with:
         name: linux_release_build
         path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
@@ -123,7 +122,7 @@ jobs:
     env:
       BUILD_TYPE: Debug
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
       - name: setup-msbuild
@@ -132,7 +131,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1.7.0
         with:
           arch: x64
-      - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
 
@@ -144,7 +142,7 @@ jobs:
         run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
 
       - name: Cache 3rdparty builds
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{github.workspace}}/build/3rdparty/bin
@@ -170,7 +168,7 @@ jobs:
           copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
 
       - name: Upload windows build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v5
         with:
           name: windows_debug_build
           path: |
@@ -179,7 +177,7 @@ jobs:
             !${{github.workspace}}/build/bin/*.pdb
             !${{github.workspace}}/build/bin/*.ilk
       - name: Upload windows pdbs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v5
         with:
           name: windows_debug_pdbs
           path: |
@@ -190,16 +188,15 @@ jobs:
     env:
       BUILD_TYPE: Release
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
       - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.7.0
+        uses: ilammy/msvc-dev-cmd@v1.13.0
         with:
           arch: x64
-      - uses: seanmiddleditch/gha-setup-ninja@v3
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
 
@@ -211,7 +208,7 @@ jobs:
         run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
 
       - name: Cache 3rdparty builds
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{github.workspace}}/build/3rdparty/bin
@@ -237,7 +234,7 @@ jobs:
           copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
 
       - name: Upload windows build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v5
         with:
           name: windows_release_build
           path: |
@@ -245,7 +242,7 @@ jobs:
             !${{github.workspace}}/build/bin/*.lib
             !${{github.workspace}}/build/bin/*.pdb
       - name: Upload windows pdbs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v5
         with:
           name: windows_release_pdbs
           path: |
@@ -268,11 +265,11 @@ jobs:
     if: github.ref == 'refs/heads/tags'
     steps:
       - name: Download linux build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v6
         with:
           name: linux_release_build
       - name: Download windows build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v6
         with:
           name: windows_release_build
       - name: Release
