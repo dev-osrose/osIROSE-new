@@ -61,16 +61,39 @@ void Player::toggle_player_move(EntitySystem& entitySystem, Entity entity, const
 
 	Packet::CliToggleMove::ToggleMove moveType = packet.get_type();
 	auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
-	if(moveType == 0) {
-		if (computedValues.moveMode == MoveMode::RUN) {
-			computedValues.moveMode = MoveMode::WALK;
-		} else if (computedValues.moveMode == MoveMode::WALK) {
-			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); //get real run speed
-			computedValues.moveMode = MoveMode::RUN;
+	logger->debug("movecmd is {} and current moveMode is {} and current cmd {} and currentspd is {}", moveType, computedValues.moveMode, computedValues.command, computedValues.runSpeed);
+	//NEED TO ADD DEFENSE AGAIN PACKET INJECTING FOR RIDING WHILE SITTING, SITTING WHILE RIDING AND ETC
+	if(moveType == 0) { // RUN-WALK
+		if (computedValues.runSpeed > WALK_SPEED) {
+			computedValues.moveMode = computedValues.moveMode == MoveMode::DRIVE ? MoveMode::DRIVE : MoveMode::WALK;
+			computedValues.runSpeed = WALK_SPEED;
+		} else {
+			computedValues.moveMode = computedValues.moveMode == MoveMode::DRIVE ? MoveMode::DRIVE : MoveMode::RUN;
+			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity); 
+		}
+	} else if (moveType == 1) {	 // SIT
+		if (computedValues.moveMode == MoveMode::SITTING) {
+			computedValues.command = Command::STOP;
+			computedValues.moveMode = computedValues.runSpeed == WALK_SPEED ? MoveMode::WALK : MoveMode::RUN;
+		} else if (computedValues.moveMode == MoveMode::WALK || computedValues.moveMode == MoveMode::RUN) {
+			computedValues.command = Command::SIT;
+		}
+		computedValues.moveMode = MoveMode::SITTING;
+	} else if (moveType == 2) { // DRIVE
+		if (computedValues.moveMode == MoveMode::DRIVE) {
+			if (computedValues.runSpeed <= 200) {
+				computedValues.moveMode = MoveMode::WALK;
+			} else {
+				computedValues.moveMode = MoveMode::RUN;
+				computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity);
+			}
+		} else if (computedValues.moveMode == MoveMode::WALK || computedValues.moveMode == MoveMode::RUN || (computedValues.command == Command::STOP && computedValues.moveMode == MoveMode::SITTING)) {
+			computedValues.moveMode = MoveMode::DRIVE;
+			computedValues.runSpeed = Calculations::get_runspeed(entitySystem, entity);
 		}
 	}
-	
 	auto pToggle = Packet::SrvToggleMove::create(static_cast<Packet::SrvToggleMove::ToggleMove>(computedValues.moveMode));
+	logger->debug("runSpd is {} new moveMode is {}",computedValues.runSpeed, computedValues.moveMode);
 	pToggle.set_run_speed(computedValues.runSpeed);
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	pToggle.set_object_id(basicInfo.id);

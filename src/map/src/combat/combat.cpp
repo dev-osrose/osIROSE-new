@@ -207,6 +207,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
 
     if (entitySystem.has_component<Component::Magic>(entity)) {
       auto& magic = entitySystem.get_component<Component::Magic>(entity);
+      mp = magic.mp;
       if (magic.mp != magic.maxMp) {
         int32_t amount = (int32_t)std::ceil(magic.maxMp * 0.02);
         amount = amount * stanceModifier;

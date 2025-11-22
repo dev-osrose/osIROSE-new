@@ -19,7 +19,6 @@ void Mouse::mouse_cmd(EntitySystem& entitySystem, Entity entity, const CliMouseC
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     logger->trace("Mouse::mouse_cmd");
     logger->trace("entity {}, target {} x {} y {}", entity, packet.get_targetId(), packet.get_x(), packet.get_y());
-
     const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     auto& dest = entitySystem.add_or_replace_component<Component::Destination>(entity);

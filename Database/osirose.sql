@@ -157,6 +157,7 @@ CREATE TABLE `item_db` (
   `price_buy` mediumint(10) unsigned DEFAULT NULL,
   `price_sell` mediumint(10) unsigned DEFAULT NULL,
   `weight` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `quality` smallint(5) unsigned NOT NULL DEFAULT '0',
   `attack` smallint(3) unsigned DEFAULT NULL,
   `defense` smallint(3) unsigned DEFAULT NULL,
   `range` smallint(2) unsigned DEFAULT NULL,
@@ -706,3 +707,14 @@ DELIMITER ;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2019-05-11  0:16:28
+DELIMITER ;;
+CREATE TRIGGER dura_check BEFORE UPDATE ON inventory
+       FOR EACH ROW
+       BEGIN
+           IF NEW.durability < 40 THEN
+               SET NEW.durability = 40;
+           ELSEIF NEW.durability > 120 THEN
+               SET NEW.durability = 120;
+           END IF;
+       END;;
+DELIMITER ;

@@ -1,5 +1,5 @@
 --[[ WARP GATE LIST
-warp_gate(<warp_alias>, <gate_to>, <this_gate_id>, <map_id>, <min_x_pos>, <min_y_pos>, <min_z_pos>, <max_x_pos>, <max_y_pos>, <max_z_pos>);
+warp_gate(<warp_alias>, <dest_map>, <dest_x>, <dest_y>, <dest_z>, <map_id>, <min_x_pos>, <min_y_pos>, <min_z_pos>, <max_x_pos>, <max_y_pos>, <max_z_pos>);
 --]]
 warp_gate("", 24, 5382.482, 4906.561, 35.82786, 23, 5044.684, 5565.922, 29.84301, 5052.181, 5573.419, 35.79301);
 warp_gate("", 1, 5512.29, 5177.15, -2.32, 23, 5006.546, 5201.557, 41.38383, 5012.553, 5207.563, 46.63383);
