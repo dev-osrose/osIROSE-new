@@ -172,7 +172,7 @@ bool CRoseSocket::onSend(uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer)
 
 bool CRoseSocket::handlePacket(uint8_t* _buffer) {
   logger_->trace("CRoseSocket::handlePacket start");
-  logger_->warn("new packet arrived, Type: 0x{0:04x}", static_cast<uint16_t>(CRosePacket::type(_buffer))); // added by t0xic
+  logger_->debug("Packet arrived, Type: 0x{0:04x}", static_cast<uint16_t>(CRosePacket::type(_buffer)));
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_ALIVE: {
 #ifdef STRESS_TEST
