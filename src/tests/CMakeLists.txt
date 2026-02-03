@@ -59,9 +59,9 @@ endif()
 
 add_dependencies(${PROJECT_LIB} RoseCommon)
 target_link_libraries(${PROJECT_LIB} PUBLIC RoseCommon)
-if (COMMAND cotire)
-  cotire(${PROJECT_LIB})
-endif()
+#if (COMMAND cotire)
+#  cotire(${PROJECT_LIB})
+#endif()
 
 SET_PROPERTY(TARGET ${PROJECT_LIB}                PROPERTY FOLDER "Tests")
 
@@ -113,9 +113,9 @@ macro (compile_test name path)
     target_link_libraries(${TEST_NAME} PRIVATE mysqlclient)
   endif()
 
-  if (COMMAND cotire)
-    cotire(${TEST_NAME})
-  endif()
+#  if (COMMAND cotire)
+#    cotire(${TEST_NAME})
+#  endif()
 
   gtest_discover_tests(${TEST_NAME})
 

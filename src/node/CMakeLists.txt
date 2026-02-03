@@ -70,10 +70,10 @@ install(TARGETS ${PROJECT}
           DESTINATION bin
           COMPONENT Runtime)
 
-set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
+#set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
-if (COMMAND cotire)
-  cotire(${PROJECT})
-endif()
+#if (COMMAND cotire)
+#  cotire(${PROJECT})
+#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

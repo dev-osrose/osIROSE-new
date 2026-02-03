@@ -43,7 +43,7 @@ else ()
 endif ()
 
 
-if (WITH_MYSQL)
+if (WITH_MYSQL OR WITH_MARIADB)
   list(APPEND SOURCES_HEADER
       include/mysqlconnection.h
       )
@@ -112,7 +112,13 @@ elseif (MSVC)
       )
 endif ()
 
-if (WITH_MYSQL)
+if (WITH_MARIADB)
+  add_dependencies(${PROJECT} sqlpp11::mariadb)
+  target_link_libraries(${PROJECT}
+      PUBLIC
+      sqlpp11::mariadb
+      )
+elseif (WITH_MYSQL)
   add_dependencies(${PROJECT} sqlpp11::mysql)
   target_link_libraries(${PROJECT}
       PUBLIC
@@ -120,9 +126,9 @@ if (WITH_MYSQL)
       )
 endif ()
 
-set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-if (COMMAND cotire)
-  cotire(${PROJECT})
-endif ()
+#set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
+#if (COMMAND cotire)
+#  cotire(${PROJECT})
+#endif ()
 
 set_property(TARGET ${PROJECT} PROPERTY FOLDER "Servers")

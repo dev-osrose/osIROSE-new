@@ -3,15 +3,16 @@
 #include "connectionpool.h"
 #include "osiroseDatabase.h"
 #include <sqlpp11/sqlpp11.h>
-#ifdef ENABLE_MYSQL
+#if defined(ENABLE_MYSQL) || defined(ENABLE_MARIADB)
 #  include <sqlpp11/mysql/connection.h>
 #  include "mysqlconnection.h"
 #endif
 
+
 namespace Core {
 
 
-#ifdef ENABLE_MYSQL
+#if defined(ENABLE_MYSQL) || defined(ENABLE_MARIADB)
 struct Osirose {
     using type = sqlpp::mysql::connection;
 };

@@ -6,7 +6,7 @@ option(PROJECT_DEBUG "Enable debugging messages support" ON)
 
 set(CMAKE_THIRD_PARTY_DIR "${CMAKE_BINARY_DIR}/3rdparty" CACHE PATH "Directory where 3rdparty libs will be installed during build time")
 
-option(WITH_COTIRE "Enable cotire pch and unity build targets" ON)
+#option(WITH_COTIRE "Enable cotire pch and unity build targets" ON)
 option(OFFICIAL_BUILD "do you want to compile an official build?" OFF)
 option(BUILD_LUA "Build Lua" ON)
 option(BUILD_API_DOC "Build doxygen documentation" OFF)
@@ -25,7 +25,8 @@ option(BUILD_TESTS "Build various unit tests." ${DEV_SETTING})
 option(WITH_CRASH_REPORTS "Enable crash dump generation" OFF)
 option(WITH_GTEST "Add GTest support" ${DEV_SETTING})
 option(WITH_GMOCK "Add GMock support" ${DEV_SETTING})
-option(WITH_MYSQL "Use MySQL connection" ON)
+option(WITH_MYSQL "Use MySQL connection" OFF)
+option(WITH_MARIADB "Use MariaDB connection" ON)
 option(DEBUG "enable debug build" OFF)
 
 if(MINGW)

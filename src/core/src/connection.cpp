@@ -3,7 +3,7 @@
 
 using Core::ConnectionPool;
 
-#ifdef ENABLE_MYSQL
+#if defined(ENABLE_MYSQL) || defined(ENABLE_MARIADB)
 ConnectionPool<Core::Osirose> &Core::connectionPool = ConnectionPool<Core::Osirose>::getInstance();
 #endif
 
