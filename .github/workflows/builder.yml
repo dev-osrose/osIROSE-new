@@ -127,188 +127,189 @@ jobs:
         name: linux_release_build
         path: ${{github.workspace}}/${{ runner.os }}-${{ env.PROCESSOR_ARCH }}-osirose.tar.gz
 
-  windows_debug:
-    runs-on: windows-latest
-    env:
-      BUILD_TYPE: Debug
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          submodules: recursive
-      - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.7.0
-        with:
-          arch: x64
-      - name: Get processor arch
-        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
-
-      - name: Download and install MariaDB Connector/C
-        shell: powershell
-        run: |
-          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
-          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
-          
-          Write-Host "Downloading MariaDB Connector/C from $url"
-          Invoke-WebRequest -Uri $url -OutFile $outputPath
-          
-          Write-Host "Installing MariaDB Connector/C"
-          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
-          
-          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
-            Write-Host "MariaDB Connector/C installed successfully."
-          } else {
-            Write-Host "Installation path not found, check version or installation logs."
-          }
-
-      - name: Set Environment Variables (Required for linking)
-        shell: cmd
-        run: |
-          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
-          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
-
-      - name: Create Build Environment
-        run: cmake -E make_directory ${{github.workspace}}/build
-
-      - name: Get Submodule Info
-        id: get-submodule-info
-        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
-
-      - name: Cache 3rdparty builds
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{github.workspace}}/build/3rdparty/bin
-            ${{github.workspace}}/build/3rdparty/lib
-            ${{github.workspace}}/build/3rdparty/include
-          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
-
-      - name: Configure CMake
-        working-directory: ${{github.workspace}}/build
-        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
-
-      - name: Build
-        working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config ${{env.BUILD_TYPE}}
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
-
-      - name: Prepare Release
-        working-directory: ${{github.workspace}}/build/bin
-        run: |
-          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
-
-      - name: Upload windows build
-        uses: actions/upload-artifact@v5
-        with:
-          name: windows_debug_build
-          path: |
-            ${{github.workspace}}/build/bin/*
-            !${{github.workspace}}/build/bin/*.lib
-            !${{github.workspace}}/build/bin/*.pdb
-            !${{github.workspace}}/build/bin/*.ilk
-      - name: Upload windows pdbs
-        uses: actions/upload-artifact@v5
-        with:
-          name: windows_debug_pdbs
-          path: |
-            ${{github.workspace}}/build/bin/*.pdb
-
-  windows_release:
-    runs-on: windows-latest
-    env:
-      BUILD_TYPE: Release
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          submodules: recursive
-      - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v2
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.13.0
-        with:
-          arch: x64
-      - name: Get processor arch
-        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
-
-      - name: Download and install MariaDB Connector/C
-        shell: powershell
-        run: |
-          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
-          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
-
-          Write-Host "Downloading MariaDB Connector/C from $url"
-          Invoke-WebRequest -Uri $url -OutFile $outputPath
-
-          Write-Host "Installing MariaDB Connector/C"
-          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
-
-          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
-            Write-Host "MariaDB Connector/C installed successfully."
-          } else {
-            Write-Host "Installation path not found, check version or installation logs."
-          }
-
-      - name: Set Environment Variables (Required for linking)
-        shell: cmd
-        run: |
-          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
-          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
-
-      - name: Create Build Environment
-        run: cmake -E make_directory ${{github.workspace}}/build
-
-      - name: Get Submodule Info
-        id: get-submodule-info
-        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
-
-      - name: Cache 3rdparty builds
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{github.workspace}}/build/3rdparty/bin
-            ${{github.workspace}}/build/3rdparty/lib
-            ${{github.workspace}}/build/3rdparty/include
-          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
-
-      - name: Configure CMake
-        working-directory: ${{github.workspace}}/build
-        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
-
-      - name: Build
-        working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config ${{env.BUILD_TYPE}}
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
-
-      - name: Prepare Release
-        working-directory: ${{github.workspace}}/build/bin
-        run: |
-          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
-
-      - name: Upload windows build
-        uses: actions/upload-artifact@v5
-        with:
-          name: windows_release_build
-          path: |
-            ${{github.workspace}}/build/bin/*
-            !${{github.workspace}}/build/bin/*.lib
-            !${{github.workspace}}/build/bin/*.pdb
-      - name: Upload windows pdbs
-        uses: actions/upload-artifact@v5
-        with:
-          name: windows_release_pdbs
-          path: |
-            ${{github.workspace}}/build/bin/*.pdb
+#  windows_debug:
+#    runs-on: windows-latest
+#    env:
+#      BUILD_TYPE: Debug
+#    steps:
+#      - uses: actions/checkout@v6
+#        with:
+#          submodules: recursive
+#      - name: setup-msbuild
+#        uses: microsoft/setup-msbuild@v1
+#      - name: Enable Developer Command Prompt
+#        uses: ilammy/msvc-dev-cmd@v1.7.0
+#        with:
+#          arch: x64
+#      - name: Get processor arch
+#        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+#
+#      - name: Download and install MariaDB Connector/C
+#        shell: powershell
+#        run: |
+#          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
+#          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
+#
+#          Write-Host "Downloading MariaDB Connector/C from $url"
+#          Invoke-WebRequest -Uri $url -OutFile $outputPath
+#
+#          Write-Host "Installing MariaDB Connector/C"
+#          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
+#
+#          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
+#            Write-Host "MariaDB Connector/C installed successfully."
+#          } else {
+#            Write-Host "Installation path not found, check version or installation logs."
+#          }
+#
+#      - name: Set Environment Variables (Required for linking)
+#        shell: cmd
+#        run: |
+#          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
+#          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
+#
+#      - name: Create Build Environment
+#        run: cmake -E make_directory ${{github.workspace}}/build
+#
+#      - name: Get Submodule Info
+#        id: get-submodule-info
+#        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+#
+#      - name: Cache 3rdparty builds
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ${{github.workspace}}/build/3rdparty/bin
+#            ${{github.workspace}}/build/3rdparty/lib
+#            ${{github.workspace}}/build/3rdparty/include
+#          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
+#
+#      - name: Configure CMake
+#        working-directory: ${{github.workspace}}/build
+#        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+#
+#      - name: Build
+#        working-directory: ${{github.workspace}}/build
+#        run: cmake --build . --config ${{env.BUILD_TYPE}}
+#
+#      - name: Test
+#        working-directory: ${{github.workspace}}/build
+#        run: ctest -C ${{env.BUILD_TYPE}}
+#
+#      - name: Prepare Release
+#        working-directory: ${{github.workspace}}/build/bin
+#        run: |
+#          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
+#
+#      - name: Upload windows build
+#        uses: actions/upload-artifact@v5
+#        with:
+#          name: windows_debug_build
+#          path: |
+#            ${{github.workspace}}/build/bin/*
+#            !${{github.workspace}}/build/bin/*.lib
+#            !${{github.workspace}}/build/bin/*.pdb
+#            !${{github.workspace}}/build/bin/*.ilk
+#      - name: Upload windows pdbs
+#        uses: actions/upload-artifact@v5
+#        with:
+#          name: windows_debug_pdbs
+#          path: |
+#            ${{github.workspace}}/build/bin/*.pdb
+#
+#  windows_release:
+#    runs-on: windows-latest
+#    env:
+#      BUILD_TYPE: Release
+#    steps:
+#      - uses: actions/checkout@v6
+#        with:
+#          submodules: recursive
+#      - name: setup-msbuild
+#        uses: microsoft/setup-msbuild@v2
+#      - name: Enable Developer Command Prompt
+#        uses: ilammy/msvc-dev-cmd@v1.13.0
+#        with:
+#          arch: x64
+#      - name: Get processor arch
+#        run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+#
+#      - name: Download and install MariaDB Connector/C
+#        shell: powershell
+#        run: |
+#          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
+#          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
+#
+#          Write-Host "Downloading MariaDB Connector/C from $url"
+#          Invoke-WebRequest -Uri $url -OutFile $outputPath
+#
+#          Write-Host "Installing MariaDB Connector/C"
+#          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
+#
+#          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
+#            Write-Host "MariaDB Connector/C installed successfully."
+#          } else {
+#            Write-Host "Installation path not found, check version or installation logs."
+#          }
+#
+#      - name: Set Environment Variables (Required for linking)
+#        shell: cmd
+#        run: |
+#          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
+#          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
+#
+#      - name: Create Build Environment
+#        run: cmake -E make_directory ${{github.workspace}}/build
+#
+#      - name: Get Submodule Info
+#        id: get-submodule-info
+#        run: git ls-tree -r HEAD:3rdparty > ${{github.workspace}}/submodule_info
+#
+#      - name: Cache 3rdparty builds
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ${{github.workspace}}/build/3rdparty/bin
+#            ${{github.workspace}}/build/3rdparty/lib
+#            ${{github.workspace}}/build/3rdparty/include
+#          key: ${{ runner.os }}-${{env.BUILD_TYPE}}-${{ hashFiles('submodule_info') }}
+#
+#      - name: Configure CMake
+#        working-directory: ${{github.workspace}}/build
+#        run: cmake ${{github.workspace}} -GNinja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DWITH_CRASH_REPORTS=$WITH_CRASH_REPORTS -DWITH_COVERAGE_REPORTS=OFF
+#
+#      - name: Build
+#        working-directory: ${{github.workspace}}/build
+#        run: cmake --build . --config ${{env.BUILD_TYPE}}
+#
+#      - name: Test
+#        working-directory: ${{github.workspace}}/build
+#        run: ctest -C ${{env.BUILD_TYPE}}
+#
+#      - name: Prepare Release
+#        working-directory: ${{github.workspace}}/build/bin
+#        run: |
+#          copy-item ${{github.workspace}}/scripts -destination ${{github.workspace}}/build/bin -force
+#
+#      - name: Upload windows build
+#        uses: actions/upload-artifact@v5
+#        with:
+#          name: windows_release_build
+#          path: |
+#            ${{github.workspace}}/build/bin/*
+#            !${{github.workspace}}/build/bin/*.lib
+#            !${{github.workspace}}/build/bin/*.pdb
+#      - name: Upload windows pdbs
+#        uses: actions/upload-artifact@v5
+#        with:
+#          name: windows_release_pdbs
+#          path: |
+#            ${{github.workspace}}/build/bin/*.pdb
 
   notify:
     runs-on: ubuntu-latest
-    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+#    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+    needs: [ linux_debug, linux_release ]
     steps:
       - name: Discord Webhook Notify
         uses: rjstone/discord-webhook-notify@v1.0.4
@@ -319,17 +320,18 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [ linux_release, windows_release ]
+#    needs: [ linux_release, windows_release ]
+    needs: [ linux_release ]
     if: github.ref == 'refs/heads/tags'
     steps:
       - name: Download linux build
         uses: actions/download-artifact@v6
         with:
           name: linux_release_build
-      - name: Download windows build
-        uses: actions/download-artifact@v6
-        with:
-          name: windows_release_build
+#      - name: Download windows build
+#        uses: actions/download-artifact@v6
+#        with:
+#          name: windows_release_build
       - name: Release
         uses: ncipollo/release-action@v1.8.1
         with:
@@ -338,6 +340,7 @@ jobs:
           omitNameDuringUpdate: true
           replacesArtifacts: true
           body: latest osirose build
-          artifacts: "linux_release_build.tar.gz,windows_release_build.zip"
+#          artifacts: "linux_release_build.tar.gz,windows_release_build.zip"
+          artifacts: "linux_release_build.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
 
