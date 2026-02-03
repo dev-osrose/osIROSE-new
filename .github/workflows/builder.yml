@@ -323,7 +323,7 @@ jobs:
         uses: rjstone/discord-webhook-notify@v2
         if: failure()
         with:
-          severity: info
+          severity: error
           details: Build failed. Check the logs at ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
