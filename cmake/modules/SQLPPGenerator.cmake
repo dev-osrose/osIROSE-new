@@ -90,12 +90,18 @@ function(GENERATE_SQL_HEADER HDRS)
 
     list(APPEND ${HDRS} "${H_FILE}")
 
+    if(WITH_MYSQL)
+      set(CONNECTOR_LIB sqlpp11::mysql)
+    elseif(WITH_MARIADB)
+      set(CONNECTOR_LIB sqlpp11::mariadb)
+    endif()
+
     add_custom_command(
       OUTPUT "${H_FILE}"
       COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
       COMMAND Python::Interpreter
        ARGS ${sqlpp11_SOURCE_DIR}/scripts/ddl2cpp ${MATCH_PATH} "${OUTPATH}/${ARG_NAME}" ${ARG_NAME}
-      DEPENDS ${ABS_FILE} sqlpp11::sqlpp11 sqlpp11::mysql
+      DEPENDS ${ABS_FILE} sqlpp11::sqlpp11 ${CONNECTOR_LIB}
       COMMENT "Running C++ sqlpp11 ddl12cpp compiler on ${MATCH_PATH} with root ${SQLROOT}, generating: ${H_FILE}"
       VERBATIM)
 

@@ -41,8 +41,8 @@ target_link_libraries(${PROJECT}
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${SOURCES_BASE})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${SOURCES_HEADER})
 
-if (COMMAND cotire)
-  cotire(${PROJECT})
-endif()
+#if (COMMAND cotire)
+#  cotire(${PROJECT})
+#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

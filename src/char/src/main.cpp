@@ -162,7 +162,7 @@ void ParseCommandLine(int argc, char** argv)
     if( options.count("db_pass") )
       config.database().password = options["db_pass"].as<std::string>();
   }
-  catch (const cxxopts::OptionException& ex) {
+  catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
     std::cout << parser.help({"", "Database", "Networking"}) << std::endl;
     exit(1);

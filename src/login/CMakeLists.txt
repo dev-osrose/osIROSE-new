@@ -50,8 +50,8 @@ install(TARGETS ${PROJECT}
           DESTINATION bin
           COMPONENT Runtime)
 
-if (COMMAND cotire)
-  cotire(${PROJECT})
-endif()
+#if (COMMAND cotire)
+#  cotire(${PROJECT})
+#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

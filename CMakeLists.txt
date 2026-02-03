@@ -87,10 +87,6 @@ set(ASIO_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/asio/asio/include)
 # find all packages which are needed
 #------------------------------------------------------------------------------
 
-if (WITH_COTIRE)
-  include(cotire OPTIONAL)
-endif ()
-
 find_package(Python COMPONENTS Interpreter REQUIRED)
 find_python_module(pyparsing REQUIRED)
 if (NOT PY_PYPARSING)

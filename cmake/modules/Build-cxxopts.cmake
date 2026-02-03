@@ -5,7 +5,7 @@ set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
 FetchContent_Declare(
   cxxopts
   GIT_REPOSITORY https://github.com/jarro2783/cxxopts
-  GIT_TAG 302302b30839505703d37fb82f536c53cf9172fa
+  GIT_TAG v3.3.1
 )
 
 FetchContent_MakeAvailable(cxxopts)

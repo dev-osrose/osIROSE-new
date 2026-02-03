@@ -146,7 +146,7 @@ void ParseCommandLine(int argc, char** argv) {
     if (options.count("db_pass")) config.database().password = options["db_pass"].as<std::string>();
 
     if (options.count("map_ids")) config.mapServer().mapId = options["map_ids"].as<std::vector<uint16_t>>();
-  } catch (const cxxopts::OptionException& ex) {
+  } catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
     std::cout << parser.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
