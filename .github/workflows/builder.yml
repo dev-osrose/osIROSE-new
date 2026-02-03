@@ -147,7 +147,7 @@ jobs:
       - name: Download and install MariaDB Connector/C
         shell: powershell
         run: |
-          $url = "https://downloads.mariadb.com" # Example URL
+          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
           $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
           
           Write-Host "Downloading MariaDB Connector/C from $url"
@@ -237,7 +237,7 @@ jobs:
       - name: Download and install MariaDB Connector/C
         shell: powershell
         run: |
-          $url = "https://downloads.mariadb.com" # Example URL
+          $url = "https://dlm.mariadb.com/4516894/Connectors/c/connector-c-3.4.8/mariadb-connector-c-3.4.8-win64.msi"
           $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
 
           Write-Host "Downloading MariaDB Connector/C from $url"
