@@ -220,7 +220,7 @@ void ParseCommandLine(int argc, char** argv)
     if( options.count("login_port") )
       config.nodeServer().loginPort = options["login_port"].as<int>();
   }
-  catch (const cxxopts::OptionException& ex) {
+  catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
     std::cout << parser.help({"", "Database", "Networking"}) << std::endl;
     exit(1);
