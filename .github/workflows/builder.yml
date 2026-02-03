@@ -17,6 +17,11 @@ jobs:
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
 
+      - name: Install MariaDB Client Library (Ubuntu/Debian)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libmariadb-dev mariadb-client
+
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
 
@@ -72,6 +77,11 @@ jobs:
     - uses: seanmiddleditch/gha-setup-ninja@v3
     - name: Get processor arch
       run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
+
+    - name: Install MariaDB Client Library (Ubuntu/Debian)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libmariadb-dev mariadb-client
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{github.workspace}}/build
@@ -133,6 +143,30 @@ jobs:
           arch: x64
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+
+      - name: Download and install MariaDB Connector/C
+        shell: powershell
+        run: |
+          $url = "https://downloads.mariadb.com" # Example URL
+          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
+          
+          Write-Host "Downloading MariaDB Connector/C from $url"
+          Invoke-WebRequest -Uri $url -OutFile $outputPath
+          
+          Write-Host "Installing MariaDB Connector/C"
+          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
+          
+          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
+            Write-Host "MariaDB Connector/C installed successfully."
+          } else {
+            Write-Host "Installation path not found, check version or installation logs."
+          }
+
+      - name: Set Environment Variables (Required for linking)
+        shell: cmd
+        run: |
+          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
+          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -199,6 +233,30 @@ jobs:
           arch: x64
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=$Env:PROCESSOR_ARCHITECTURE" | out-file -FilePath $Env:GITHUB_ENV -Encoding utf-8 -append
+
+      - name: Download and install MariaDB Connector/C
+        shell: powershell
+        run: |
+          $url = "https://downloads.mariadb.com" # Example URL
+          $outputPath = join-path $env:TEMP "mariadb-connector-c.msi"
+
+          Write-Host "Downloading MariaDB Connector/C from $url"
+          Invoke-WebRequest -Uri $url -OutFile $outputPath
+
+          Write-Host "Installing MariaDB Connector/C"
+          Start-Process msiexec -ArgumentList "/i $outputPath /qn /norestart" -Wait
+
+          if (Test-Path "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib\mariadb.lib") {
+            Write-Host "MariaDB Connector/C installed successfully."
+          } else {
+            Write-Host "Installation path not found, check version or installation logs."
+          }
+
+      - name: Set Environment Variables (Required for linking)
+        shell: cmd
+        run: |
+          echo "C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib" >> %GITHUB_PATH%
+          echo "MARIADB_CC_INSTALL_DIR=C:\Program Files\MariaDB\MariaDB Connector C 64-bit" >> %GITHUB_ENV%
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
