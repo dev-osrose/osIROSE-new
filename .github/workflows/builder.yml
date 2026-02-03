@@ -310,7 +310,7 @@ jobs:
     runs-on: ubuntu-latest
 #    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
     needs: [ linux_debug, linux_release ]
-    if: always()
+    if: always() && cancelled() == false
     steps:
       - name: Discord Webhook Notify
         uses: rjstone/discord-webhook-notify@v2
