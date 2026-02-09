@@ -1,41 +1,39 @@
 component:core:
-- src/core/*
-- src/core/**/*
+- changed-files:
+  - any-glob-to-any-file: ['src/core/*', 'src/core/**/*']
 
 component:core:rosecommon:
-- src/rosecommon/*
-- src/rosecommon/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'src/rosecommon/*', 'src/rosecommon/**/*' ]
 
 component:server:character:
-- src/char/*
-- src/char/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'src/char/*', 'src/char/**/*' ]
 
 component:server:login:
-- src/login/*
-- src/login/**/
+- changed-files:
+    - any-glob-to-any-file: [ 'src/login/*', 'src/login/**/*' ]
 
 component:server:map:
-- src/map/*
-- src/map/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'src/map/*', 'src/map/**/*' ]
 
 component:server:node:
-- src/node/*
-- src/node/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'src/node/*', 'src/node/**/*' ]
 
 component:databases:SQL:
-- Database/*.sql
-- Database/**/*.sql
+- changed-files:
+    - any-glob-to-any-file: [ 'Database/*.sql', 'Database/**/*.sql' ]
 
 component:scripting:
-- scripts/*.lua
-- scripts/**/*.lua
+- changed-files:
+    - any-glob-to-any-file: [ 'scripts/*.lua', 'scripts/**/*.lua' ]
 
 component:buildsystem:
-- cmake/*
-- cmake/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'cmake/*', 'cmake/**/*' ]
 
 component:other:
-- src/tests/*
-- src/tests/**/*
-- src/bot/*
-- src/bot/**/*
+- changed-files:
+    - any-glob-to-any-file: [ 'src/tests/*', 'src/tests/**/*', 'src/bot/*', 'src/bot/**/*' ]
