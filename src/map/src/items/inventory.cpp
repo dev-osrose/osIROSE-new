@@ -447,7 +447,7 @@ bool Items::add_zuly(EntitySystem& entitySystem, Entity entity, int64_t zuly) {
 void Items::equip_item_ride_packet(EntitySystem& entitySystem, Entity entity, const RoseCommon::Packet::CliEquipItemRide& packet) {
     auto logger = Core::CLog::GetLogger(Core::log_type::GENERAL).lock();
     const auto from = packet.get_index();
-    const auto to = packet.get_slot() + RoseCommon::RidingItem::OFFSET;
+    const auto to = packet.get_slot() + RoseCommon::RidingItem::BODY;
     const auto res = from == 0 ?
         unequip_item(entitySystem, entity, to):
         equip_item(entitySystem, entity, from, to);
