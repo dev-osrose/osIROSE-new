@@ -317,6 +317,11 @@ jobs:
         if: success()
         with:
           severity: info
+          description: |
+            - **Repository:** [${{github.repository}}](${{github.server_url}}/${{github.repository}})
+            - **Workflow:** ${{github.workflow}}
+            - **Event:** ${{github.event_name}}
+            - **Triggering Actor:** ${{github.triggering_actor}}
           details: Build succeeded. Check the logs at ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Discord Webhook Notify
@@ -324,6 +329,11 @@ jobs:
         if: failure()
         with:
           severity: error
+          description: |
+            - **Repository:** [${{github.repository}}](${{github.server_url}}/${{github.repository}})
+            - **Workflow:** ${{github.workflow}}
+            - **Event:** ${{github.event_name}}
+            - **Triggering Actor:** ${{github.triggering_actor}}
           details: Build failed. Check the logs at ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
