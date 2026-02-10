@@ -313,14 +313,14 @@ jobs:
     if: always() && cancelled() == false
     steps:
       - name: Discord Webhook Notify
-        uses: rjstone/discord-webhook-notify@v2
+        uses: RavenX8/discord-webhook-notify@v2.2.2
         if: success()
         with:
           severity: info
           details: Build succeeded. Check the logs at ${{github.server_url}}/${{github.repository}}/actions/runs/${{ github.run_id }}.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Discord Webhook Notify
-        uses: rjstone/discord-webhook-notify@v2
+        uses: RavenX8/discord-webhook-notify@v2.2.2
         if: failure()
         with:
           severity: error
