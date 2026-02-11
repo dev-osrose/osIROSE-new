@@ -241,6 +241,8 @@ int64_t get_hitrate(EntitySystem& entitySystem, Entity entity) {
     const auto& weapon_r = inventory.weapon_r();
     if (weapon_r != entt::null) int magicStat = Utils::get_magic(entitySystem, weapon_r);
   }
+
+  return 100;
 }
 
 int64_t get_basicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,
