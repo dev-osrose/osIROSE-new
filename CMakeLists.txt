@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 4.1.0 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -145,9 +145,7 @@ if (NOT CURL_FOUND)
   include(BuildCURL)
 endif ()
 
-if (NOT SQLITE3_FOUND)
-  include(Build-sqlite3)
-endif ()
+include(Build-sqlite3)
 
 #if (WITH_MYSQL)
 #  if (BUILD_MYSQL AND NOT MySQL_FOUND)
