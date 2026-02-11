@@ -308,8 +308,8 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-#    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
-    needs: [ linux_debug, linux_release ]
+    needs: [ linux_debug, linux_release, windows_debug, windows_release ]
+#    needs: [ linux_debug, linux_release ]
     if: always() && cancelled() == false
     steps:
       - name: Discord Webhook Notify
@@ -339,18 +339,18 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-#    needs: [ linux_release, windows_release ]
-    needs: [ linux_release ]
+    needs: [ linux_release, windows_release ]
+#    needs: [ linux_release ]
     if: github.ref == 'refs/heads/tags'
     steps:
       - name: Download linux build
         uses: actions/download-artifact@v6
         with:
           name: linux_release_build
-#      - name: Download windows build
-#        uses: actions/download-artifact@v6
-#        with:
-#          name: windows_release_build
+      - name: Download windows build
+        uses: actions/download-artifact@v6
+        with:
+          name: windows_release_build
       - name: Release
         uses: ncipollo/release-action@v1.8.1
         with:
@@ -359,7 +359,7 @@ jobs:
           omitNameDuringUpdate: true
           replacesArtifacts: true
           body: latest osirose build
-#          artifacts: "linux_release_build.tar.gz,windows_release_build.zip"
-          artifacts: "linux_release_build.tar.gz"
+          artifacts: "linux_release_build.tar.gz,windows_release_build.zip"
+#          artifacts: "linux_release_build.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
 
