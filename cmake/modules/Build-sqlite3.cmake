@@ -22,7 +22,9 @@ if(WIN32 OR MINGW)
   )
 
   # Also provide namespaced alias (some projects expect this)
-  add_library(SQLite::SQLite3 ALIAS SQLite3)
+  if(NOT TARGET SQLite::SQLite3)
+    add_library(SQLite::SQLite3 ALIAS SQLite3)
+  endif()
 
   # Make find_package(SQLite3) think it succeeded
   set(SQLite3_FOUND TRUE CACHE BOOL "" FORCE)
