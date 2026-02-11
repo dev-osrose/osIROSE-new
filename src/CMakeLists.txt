@@ -42,9 +42,9 @@ elseif(WITH_MYSQL)
   )
 endif()
 
-if(WITH_CRASH_REPORTS)
-  add_compiler_flags(-DENABLE_CRASH_REPORTS)
-endif()
+#if(WITH_CRASH_REPORTS)
+#  add_compiler_flags(-DENABLE_CRASH_REPORTS)
+#endif()
 
 #set(COTIRE_PREFIX_INCLUDE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty")
 #set(COTIRE_PREFIX_IGNORE_PATHS "${CMAKE_SOURCE_DIR}/3rdparty/include/breakpad"
