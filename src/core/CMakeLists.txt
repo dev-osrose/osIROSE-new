@@ -92,7 +92,7 @@ target_link_libraries(${PROJECT}
     )
 
 if (NOT CURL_FOUND)
-  add_dependencies(${PROJECT} curl)
+  add_dependencies(${PROJECT} CURL::libcurl)
 endif ()
 target_link_libraries(${PROJECT}
     INTERFACE
