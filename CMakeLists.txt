@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.1.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.31.0 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
