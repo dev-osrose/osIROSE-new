@@ -22,7 +22,7 @@
 NodeServer::NodeServer(bool _isc) : CRoseServer(_isc), client_count_(0), server_count_(0) {
 }
 
-NodeServer::~NodeServer() { socket_[RoseCommon::SocketType::Client]->shutdown(true); }
+NodeServer::~NodeServer() { socket_->shutdown(true); }
 
 void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   std::string _address = _sock->get_address();
@@ -33,8 +33,6 @@ void NodeServer::OnAccepted(std::unique_ptr<Core::INetwork> _sock) {
   nClient->set_update_time(Core::Time::GetTickCount());
   nClient->set_active(true);
   nClient->start_recv();
-  
-  nClient->set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
   
   logger_->info("Client connected from: {}", _address.c_str());
   client_list_.push_front(std::move(nClient));

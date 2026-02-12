@@ -291,10 +291,6 @@ bool CNetwork_Asio::recv_data([[maybe_unused]] uint16_t _size /*= 6*/) {
                 {
                   logger_->debug( "Socket Error {}: {}", errorCode.value(),
                                   errorCode.message() );
-//                  logger_->debug( "Socket {}({}): Error {}: {}", get_id(), get_name(), errorCode.value(),
-//                                  errorCode.message() );
-//                  shutdown( true );
-//                  OnDisconnected();
                 }
                 break;
             }

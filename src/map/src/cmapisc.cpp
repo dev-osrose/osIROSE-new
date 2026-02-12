@@ -29,9 +29,9 @@ CMapISC::CMapISC() : CRoseISC(), server_(nullptr) {
 }
 
 CMapISC::CMapISC(CMapServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), server_(server) {
-  socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
-  socket_[SocketType::Client]->registerOnConnected(std::bind(&CMapISC::onConnected, this));
-  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CMapISC::onShutdown, this));
+  socket_->set_type(to_underlying(Isc::ServerType::MAP_MASTER));
+  socket_->registerOnConnected(std::bind(&CMapISC::onConnected, this));
+  socket_->registerOnShutdown(std::bind(&CMapISC::onShutdown, this));
 }
 
 void CMapISC::add_maps(const std::vector<uint16_t>& maps) {
@@ -89,7 +89,7 @@ bool CMapISC::transfer_char(RoseCommon::Packet::IscTransferChar&& P) {
     return true;
 }
 
-bool CMapISC::isChar() const { return socket_[SocketType::Client]->get_type() == Isc::ServerType::CHAR; }
+bool CMapISC::isChar() const { return socket_->get_type() == Isc::ServerType::CHAR; }
 
 bool CMapISC::handlePacket(uint8_t* _buffer) {
   switch (CRosePacket::type(_buffer)) {
@@ -179,8 +179,8 @@ void CMapISC::onConnected() {
     send(packet);
   }
 
-  if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
-    socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
+  if (socket_->process_thread_.joinable() == false) {
+    socket_->process_thread_ = std::thread([this]() {
       while (is_active() == true && isChar() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
@@ -202,7 +202,7 @@ bool CMapISC::onShutdown() {
 
   if (is_active() == true) {
     if (get_type() == RoseCommon::Isc::ServerType::CHAR) {
-      if (socket_[SocketType::Client]->reconnect() == true) {
+      if (socket_->reconnect() == true) {
         logger_->info("Reconnected to character server.");
         result = false;
       }

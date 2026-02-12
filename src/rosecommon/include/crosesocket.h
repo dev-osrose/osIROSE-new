@@ -38,91 +38,89 @@ class CRoseSocket {
  public:
   CRoseSocket();
   CRoseSocket(std::unique_ptr<Core::INetwork> _sock);
-  CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server,
-              int socket_id = static_cast<int>(SocketType::Client));
+  CRoseSocket(std::unique_ptr<Core::INetwork> _sock, bool is_server);
   virtual ~CRoseSocket();
 
-  virtual void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
+  virtual void set_socket(std::unique_ptr<Core::INetwork> _val,
                           bool is_server = false) 
   {
-    socket_[socket_id] = std::move(_val);
-    socket_[socket_id]->set_socket_id(socket_id);
+    socket_ = std::move(_val);
+    socket_->set_socket_id(0);
 
     if(true == is_server)
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onServerDisconnected, this));
+      socket_->registerOnReceived(std::bind(&CRoseSocket::onServerReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+      socket_->registerOnSend(std::bind(&CRoseSocket::onServerSend, this, std::placeholders::_1, std::placeholders::_2));
+      socket_->registerOnDisconnected(std::bind(&CRoseSocket::onServerDisconnected, this));
     }
     else
     {
-      socket_[socket_id]->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-      socket_[socket_id]->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1, std::placeholders::_2));
-      socket_[socket_id]->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
+      socket_->registerOnReceived(std::bind(&CRoseSocket::onReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+      socket_->registerOnSend(std::bind(&CRoseSocket::onSend, this, std::placeholders::_1, std::placeholders::_2));
+      socket_->registerOnDisconnected(std::bind(&CRoseSocket::onDisconnected, this));
     }
   };
 
-  virtual bool send(const CRosePacket& _buffer, int socket_id = static_cast<int>(SocketType::Client));
-  virtual bool send(std::unique_ptr<uint8_t[]> _buffer, int socket_id = static_cast<int>(SocketType::Client));
+  virtual bool send(const CRosePacket& _buffer);
+  virtual bool send(std::unique_ptr<uint8_t[]> _buffer);
 
-  virtual uint32_t get_obj_id(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_id();
-  }
-
-  bool init(std::string _ip, uint16_t _port, int socket_id = static_cast<int>(SocketType::Client)) {
-    return socket_[socket_id]->init(_ip, _port);
-  }
-  bool listen(int socket_id = static_cast<int>(SocketType::Client)) {
-    return socket_[socket_id]->listen();
-  }
-  bool connect(int socket_id = static_cast<int>(SocketType::Client)) {
-    return socket_[socket_id]->connect();
-  }
-  bool is_active(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->is_active();
-  }
-  void set_active(bool _val, int socket_id = static_cast<int>(SocketType::Client)) {
-    socket_[socket_id]->set_active(_val);
-  }
-  void set_type(uint32_t _val, int socket_id = static_cast<int>(SocketType::Client)) {
-    socket_[socket_id]->set_type(_val);
-  }
-  uint32_t get_id(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_id();
-  }
-  Isc::ServerType get_type(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return static_cast<Isc::ServerType>(socket_[socket_id]->get_type());
-  }
-  uint16_t get_port(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_port();
-  }
-  std::string get_address(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_address();
-  }
-  std::chrono::steady_clock::time_point get_update_time(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_update_time();
-  }
-  std::string get_name(int socket_id = static_cast<int>(SocketType::Client)) const {
-    return socket_[socket_id]->get_name();
+  virtual uint32_t get_obj_id() const {
+    return socket_->get_id();
   }
 
-  virtual void set_name(const std::string _val, int socket_id = static_cast<int>(SocketType::Client)) {
-    socket_[socket_id]->set_name(_val);
+  bool init(std::string _ip, uint16_t _port) {
+    return socket_->init(_ip, _port);
+  }
+  bool listen() {
+    return socket_->listen();
+  }
+  bool connect() {
+    return socket_->connect();
+  }
+  bool is_active() const {
+    return socket_->is_active();
+  }
+  void set_active(bool _val) {
+    socket_->set_active(_val);
+  }
+  void set_type(uint32_t _val) {
+    socket_->set_type(_val);
+  }
+  uint32_t get_id() const {
+    return socket_->get_id();
+  }
+  Isc::ServerType get_type() const {
+    return static_cast<Isc::ServerType>(socket_->get_type());
+  }
+  uint16_t get_port() const {
+    return socket_->get_port();
+  }
+  std::string get_address() const {
+    return socket_->get_address();
+  }
+  std::chrono::steady_clock::time_point get_update_time() const {
+    return socket_->get_update_time();
+  }
+  std::string get_name() const {
+    return socket_->get_name();
   }
 
-  virtual void set_id(uint32_t _val) { socket_[static_cast<int>(SocketType::Client)]->set_id(_val); }
-  virtual void set_update_time(std::chrono::steady_clock::time_point _val,
-                               int socket_id = static_cast<int>(SocketType::Client)) {
-      socket_[socket_id]->set_update_time(_val);
+  virtual void set_name(const std::string _val) {
+    socket_->set_name(_val);
   }
-  virtual bool disconnect(int socket_id = static_cast<int>(SocketType::Client)) {
-    return socket_[socket_id]->disconnect();
+
+  virtual void set_id(uint32_t _val) { socket_->set_id(_val); }
+  virtual void set_update_time(std::chrono::steady_clock::time_point _val) {
+      socket_->set_update_time(_val);
   }
-  virtual bool shutdown(bool _final = false, int socket_id = static_cast<int>(SocketType::Client)) {
-    return socket_[socket_id]->shutdown(_final);
+  virtual bool disconnect() {
+    return socket_->disconnect();
   }
-  virtual void start_recv(int socket_id = static_cast<int>(SocketType::Client)) {
-    socket_[socket_id]->recv_data();
+  virtual bool shutdown(bool _final = false) {
+    return socket_->shutdown(_final);
+  }
+  virtual void start_recv() {
+    socket_->recv_data();
   }
 
   std::shared_ptr<spdlog::logger> logger_;
@@ -139,8 +137,8 @@ class CRoseSocket {
   virtual bool onServerSend(uint16_t socket_id_, [[maybe_unused]] uint8_t* _buffer) ;
   virtual bool handleServerPacket([[maybe_unused]] uint8_t* _buffer) ;
 
-  std::array<PacketCodec, static_cast<int>(SocketType::MaxSockets)> crypt_;
-  std::array<std::unique_ptr<Core::INetwork>, static_cast<int>(SocketType::MaxSockets)> socket_;
+  PacketCodec crypt_;
+  std::unique_ptr<Core::INetwork> socket_;
 
   std::mutex recv_mutex_;
   std::queue<std::unique_ptr<uint8_t[]>> recv_queue_;

@@ -50,6 +50,9 @@ class NodeClient : public RoseCommon::CRoseClient {
 
   uint32_t session_id_;
   std::unique_ptr<RoseCommon::CRosePacket> buffered_packet_;
+
+  RoseCommon::PacketCodec map_crypt_;
+  std::unique_ptr<Core::INetwork> map_socket_;
 };
 
 #endif

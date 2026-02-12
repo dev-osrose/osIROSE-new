@@ -30,9 +30,9 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
 
   std::function<void(std::unique_ptr<Core::INetwork>)> fnOnAccepted = std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1);
 
-  socket_[0]->registerOnAccepted(fnOnAccepted);
+  socket_->registerOnAccepted(fnOnAccepted);
 
-  socket_[0]->process_thread_ = std::thread([this]() {
+  socket_->process_thread_ = std::thread([this]() {
     while(is_active() == false) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
@@ -110,10 +110,8 @@ CRoseServer::~CRoseServer() {
     }
     isc_list_.clear();
   }
-  for (auto& s : socket_) {
-    if (s && s->process_thread_.joinable()) {
-        s->process_thread_.join();
-    }
+  if (socket_ && socket_->process_thread_.joinable()) {
+      socket_->process_thread_.join();
   }
 }
 
