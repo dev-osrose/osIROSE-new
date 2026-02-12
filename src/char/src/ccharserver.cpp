@@ -77,7 +77,7 @@ CCharServer::CCharServer(bool _isc, CCharServer *server) : CRoseServer(_isc), cl
 }
 
 CCharServer::~CCharServer() {
-    socket_[SocketType::Client]->shutdown();
+    socket_->shutdown();
     work_queue.kill();
     reactor_thread.join();
 }

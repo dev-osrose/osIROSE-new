@@ -31,18 +31,16 @@ NodeClient::NodeClient()
 NodeClient::NodeClient(std::unique_ptr<Core::INetwork> _sock)
   : CRoseClient( move( _sock ) ),
     session_id_( 0 ),
-    buffered_packet_(nullptr) {
-      socket_[SocketType::Client]->registerOnShutdown(std::bind(&NodeClient::onShutdown, this));
+    buffered_packet_(nullptr),
+    map_socket_(nullptr) {
+      socket_->registerOnShutdown(std::bind(&NodeClient::onShutdown, this));
     }
 
 NodeClient::~NodeClient() {
-  for( unsigned int i = 1; i < SocketType::MaxSockets; ++i )
+  if(map_socket_ != nullptr)
   {
-    if(socket_[i] != nullptr)
-    {
-      socket_[i]->shutdown(true);
-      socket_[i]->set_active(false);
-    }
+    map_socket_->shutdown(true);
+    map_socket_->set_active(false);
   }
 }
 
@@ -52,13 +50,13 @@ bool NodeClient::serverAcceptReply([[maybe_unused]] Packet::SrvAcceptReply&& P) 
   logger_->trace( "NodeClient::serverAcceptReply start" );
 
 #ifdef DYNAMIC_CRYPT
-  crypt_[SocketType::CurrentMap].changeSeed(P.get_randValue());
+  map_crypt_.changeSeed(P.get_randValue());
 #endif
 
   // Send the login packet to the server
   if(buffered_packet_ != nullptr)
   {
-    send(*(buffered_packet_.get()), SocketType::CurrentMap);
+    map_socket_->send_data(buffered_packet_->getPacked());
     buffered_packet_ = nullptr;
   }
   return true;
@@ -109,8 +107,8 @@ bool NodeClient::serverChangeCharReply(Packet::SrvChanCharReply&& P) {
   
   // Let the client know they are allowed to change.
   send(P);
-  socket_[SocketType::CurrentMap]->shutdown(true);
-  socket_[SocketType::CurrentMap]->set_active(false);
+  map_socket_->shutdown(true);
+  map_socket_->set_active(false);
   shutdown(true);
   return true;
 }
@@ -123,8 +121,8 @@ bool NodeClient::serverLogoutReply(Packet::SrvLogoutReply&& P) {
   
   if(P.get_waitTime() <= 0)
   {
-    socket_[SocketType::CurrentMap]->shutdown(true);
-    socket_[SocketType::CurrentMap]->set_active(false);
+    map_socket_->shutdown(true);
+    map_socket_->set_active(false);
     shutdown(true);
   }
   return true;
@@ -141,7 +139,7 @@ bool NodeClient::clientAcceptReq([[maybe_unused]] Packet::CliAcceptReq&& P) {
   
 #ifdef DYNAMIC_CRYPT
   // This may need to move to OnRecv to init the table AFTER the packet above is sent
-  crypt_[SocketType::Client].changeSeed(cryptKey);
+  crypt_.changeSeed(cryptKey);
 #endif
 
   return true;
@@ -151,13 +149,14 @@ bool NodeClient::clientLoginReq(Packet::CliLoginReq&& P) {
   logger_->trace( "NodeClient::clientLoginReq start" );
   auto& config = Core::Config::getInstance();
 
-  disconnect(RoseCommon::SocketType::CurrentMap);
-  init(config.nodeServer().loginIp, config.nodeServer().loginPort, RoseCommon::SocketType::CurrentMap);
-  connect(RoseCommon::SocketType::CurrentMap);
-  start_recv(RoseCommon::SocketType::CurrentMap);
+  if(map_socket_) map_socket_->disconnect();
+  map_socket_ = std::make_unique<Core::CNetwork_Asio>();
+  map_socket_->init(config.nodeServer().loginIp, config.nodeServer().loginPort);
+  map_socket_->connect();
+  map_socket_->recv_data();
   
   auto packet = Packet::CliAcceptReq::create();
-  send(packet, SocketType::CurrentMap);
+  map_socket_->send_data(packet.getPacked());
   
   auto username_ = Core::escapeData(P.get_username());
   set_name(username_);
@@ -197,14 +196,19 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
         logger_->debug("Some how we have an invalid state in the db? state: {}", row.state);
         return false;
     }
-    disconnect(RoseCommon::SocketType::CurrentMap);
-    set_socket(std::make_unique<Core::CNetwork_Asio>(), RoseCommon::SocketType::CurrentMap, true);
-    init(ip, port, RoseCommon::SocketType::CurrentMap);
-    connect(RoseCommon::SocketType::CurrentMap);
-    start_recv(RoseCommon::SocketType::CurrentMap);
+    if(map_socket_) map_socket_->disconnect();
+    map_socket_ = std::make_unique<Core::CNetwork_Asio>();
+    map_socket_->set_socket_id(0); // It's its own socket now
+    map_socket_->registerOnReceived(std::bind(&NodeClient::onServerReceived, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    map_socket_->registerOnSend(std::bind(&NodeClient::onServerSend, this, std::placeholders::_1, std::placeholders::_2));
+    map_socket_->registerOnDisconnected(std::bind(&NodeClient::onServerDisconnected, this));
+
+    map_socket_->init(ip, port);
+    map_socket_->connect();
+    map_socket_->recv_data();
     
     auto packet = Packet::CliAcceptReq::create();
-    send(packet, SocketType::CurrentMap);
+    map_socket_->send_data(packet.getPacked());
     buffered_packet_ = std::make_unique<Packet::CliJoinServerReq>(Packet::CliJoinServerReq::create(P.getPacked().get()));
   } else {
     logger_->warn("Lul, this guy!!! He's trying to join without logging in first! IP: {}", get_address());
@@ -236,7 +240,7 @@ bool NodeClient::handlePacket(uint8_t* _buffer) {
       // Send the packet to the server
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
       std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
-      send(std::move(res), SocketType::CurrentMap);
+      map_socket_->send_data(std::move(res));
       return true;
     }
   }
@@ -264,7 +268,7 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
     {
       auto res = std::make_unique<uint8_t[]>( CRosePacket::size(_buffer) );
       std::memcpy(res.get(), _buffer, CRosePacket::size(_buffer));
-      send( std::move(res), SocketType::Client );
+      send( std::move(res) );
       return true;
     }
   }
@@ -274,13 +278,10 @@ bool NodeClient::handleServerPacket(uint8_t* _buffer) {
 bool NodeClient::onShutdown() {
   logger_->trace("NodeClient::onShutdown()");
   set_active(false);
-  for( unsigned int i = 1; i < SocketType::MaxSockets; ++i )
+  if(map_socket_ != nullptr)
   {
-    if(socket_[i] != nullptr)
-    {
-      socket_[i]->shutdown(true);
-      socket_[i]->set_active(false);
-    }
+    map_socket_->shutdown(true);
+    map_socket_->set_active(false);
   }
   return true;
 }

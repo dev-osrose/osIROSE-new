@@ -31,8 +31,8 @@ using namespace RoseCommon;
 CCharISC::CCharISC() : CRoseISC(), state_(eSTATE::DEFAULT), server_(nullptr) {}
 
 CCharISC::CCharISC(CCharServer* server, std::unique_ptr<Core::INetwork> _sock) : CRoseISC(std::move(_sock)), state_(eSTATE::DEFAULT), server_(server) {
-  socket_[SocketType::Client]->registerOnConnected(std::bind(&CCharISC::onConnected, this));
-  socket_[SocketType::Client]->registerOnShutdown(std::bind(&CCharISC::onShutdown, this));
+  socket_->registerOnConnected(std::bind(&CCharISC::onConnected, this));
+  socket_->registerOnShutdown(std::bind(&CCharISC::onShutdown, this));
 }
 
 bool CCharISC::handlePacket(uint8_t* _buffer) {
@@ -108,13 +108,13 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
     // This is a node and we need to figure out something to do with this
   } else if (P.get_serverType() == RoseCommon::Isc::ServerType::MAP_MASTER) {
     name = P.get_name();
-    socket_[SocketType::Client]->set_address(P.get_addr());
-    socket_[SocketType::Client]->set_port(P.get_port());
+    socket_->set_address(P.get_addr());
+    socket_->set_port(P.get_port());
     type = P.get_serverType();
     right = P.get_right();
     server_->register_maps(this, P.get_maps());
 
-    socket_[SocketType::Client]->set_type(to_underlying(type));
+    socket_->set_type(to_underlying(type));
   }
 
   state_ = eSTATE::REGISTERED;
@@ -133,8 +133,8 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
     logger_->info("ISC Server {} serves maps: [{}]", get_id(), oss.str());
   }
 
-  auto packet = Packet::IscServerRegister::create(type, name, socket_[SocketType::Client]->get_address(),
-                                                             socket_[SocketType::Client]->get_port(), right, get_id());
+  auto packet = Packet::IscServerRegister::create(type, name, socket_->get_address(),
+                                                             socket_->get_port(), right, get_id());
 
   // todo: get the ISC connection to the login server and send the packet to
   // it
@@ -178,10 +178,10 @@ void CCharISC::onConnected() {
     send(packet);
   }
 
-  socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::LOGIN));
+  socket_->set_type(to_underlying(Isc::ServerType::LOGIN));
 
-  if (socket_[SocketType::Client]->process_thread_.joinable() == false) {
-    socket_[SocketType::Client]->process_thread_ = std::thread([this]() {
+  if (socket_->process_thread_.joinable() == false) {
+    socket_->process_thread_ = std::thread([this]() {
       while (this->is_active() == true && isLogin() == true) {
         std::chrono::steady_clock::time_point update = Core::Time::GetTickCount();
         int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(update - get_update_time()).count();
@@ -203,7 +203,7 @@ bool CCharISC::onShutdown() {
 
   if (is_active() == true) {
     if (get_type() == Isc::ServerType::LOGIN) {
-      if (socket_[SocketType::Client]->reconnect() == true) {
+      if (socket_->reconnect() == true) {
         logger_->info("Reconnected to login server.");
         result = false;
       }
@@ -249,5 +249,5 @@ bool CCharISC::isLogin() const {
 }
 
 void CCharISC::setLogin(bool val) {
-  if (val == true) socket_[SocketType::Client]->set_type(to_underlying(Isc::ServerType::LOGIN));
+  if (val == true) socket_->set_type(to_underlying(Isc::ServerType::LOGIN));
 }

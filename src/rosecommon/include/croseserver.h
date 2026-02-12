@@ -36,10 +36,10 @@ class CRoseServer : public CRoseSocket {
   std::mutex& GetClientListMutex() { return client_list_mutex_; }
   std::mutex& GetISCListMutex() { return isc_list_mutex_; }
 
-  void set_socket(std::unique_ptr<Core::INetwork> _val, int socket_id = static_cast<int>(SocketType::Client),
+  void set_socket(std::unique_ptr<Core::INetwork> _val,
                   [[maybe_unused]] bool is_server = false) override {
-    socket_[socket_id] = std::move(_val);
-    socket_[socket_id]->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
+    socket_ = std::move(_val);
+    socket_->registerOnAccepted(std::bind(&CRoseServer::OnAccepted, this, std::placeholders::_1));
   };
 
  protected:
