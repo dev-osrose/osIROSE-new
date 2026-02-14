@@ -36,7 +36,7 @@ class CLoginClient : public RoseCommon::CRoseClient {
   bool channelList(RoseCommon::Packet::CliChannelListReq&& P);
   bool serverSelect(RoseCommon::Packet::CliSrvSelectReq&& P);
 
-  void sendLoginReply(RoseCommon::Packet::SrvLoginReply::Result Result);
+  void sendLoginReply(RoseCommon::Packet::SrvLoginReply::LoginResult Result);
 
   virtual void onDisconnected() override;
 
