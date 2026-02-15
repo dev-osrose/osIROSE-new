@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <csignal>
+#include <cstdlib>
 #include <cxxopts.hpp>
 #include "cnetwork_asio.h"
 #include "config.h"
@@ -24,6 +25,7 @@
 #include "version.h"
 
 #include "map_manager.h"
+#include "health_server.h"
 #include "packetfactory.h"
 
 namespace {
@@ -145,6 +147,10 @@ void ParseCommandLine(int argc, char** argv) {
     if (options.count("db_user")) config.database().user = options["db_user"].as<std::string>();
     if (options.count("db_pass")) config.database().password = options["db_pass"].as<std::string>();
 
+    if (const char* env_p = std::getenv("HEALTH_PORT")) {
+      config.mapServer().healthPort = std::atoi(env_p);
+    }
+
     if (options.count("map_ids")) config.mapServer().mapId = options["map_ids"].as<std::vector<uint16_t>>();
   } catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
@@ -196,10 +202,25 @@ int main(int argc, char* argv[]) {
 
     MapManager app(config.mapServer().mapId);
 
+    Core::HealthServer healthServer;
+    // We don't have easy access to internal servers of MapManager without changing it,
+    // but we can check if MapManager itself is somewhat active if we had a method.
+    // For now, let's at least check DB.
+    healthServer.addCheck([]() {
+      try {
+        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+        return std::make_pair(true, "");
+      } catch (...) {
+        return std::make_pair(false, "DB connection is down");
+      }
+    });
+    healthServer.start(config.mapServer().healthPort);
+
     while (1) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       if(gSignalStatus != 0) {
+        healthServer.setUnhealthy("Service shutting down");
         app.stop();
         break;
       }

@@ -14,6 +14,8 @@
 #include <curl/curl.h>
 #include <cxxopts.hpp>
 #include <chrono>
+#include <cstdlib>
+#include <csignal>
 
 #include "crash_report.h"
 #include "nodeserver.h"
@@ -24,6 +26,8 @@
 #include "network_thread_pool.h"
 
 #include "connection.h"
+#include "health_server.h"
+
 
 namespace {
 void DisplayTitle()
@@ -219,6 +223,10 @@ void ParseCommandLine(int argc, char** argv)
       config.nodeServer().loginIp = options["login_ip"].as<std::string>();
     if( options.count("login_port") )
       config.nodeServer().loginPort = options["login_port"].as<int>();
+    
+    if (const char* env_p = std::getenv("HEALTH_PORT")) {
+      config.nodeServer().healthPort = std::atoi(env_p);
+    }
   }
   catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
@@ -226,10 +234,13 @@ void ParseCommandLine(int argc, char** argv)
     exit(1);
   }
 }
+volatile std::sig_atomic_t gSignalStatus = 0;
 } // end namespace
 
 int main(int argc, char* argv[]) {
   try {
+    std::signal(SIGINT, [](int signal){ gSignalStatus = signal; });
+    std::signal(SIGTERM, [](int signal){ gSignalStatus = signal; });
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
@@ -283,7 +294,7 @@ int main(int argc, char* argv[]) {
   		))");
 
   		// Clear the table everything
-  		conn(remove_from(table).unconditionally());
+  		conn(sqlpp::remove_from(table).unconditionally());
     }
 
     NodeServer loginServer;
@@ -299,8 +310,27 @@ int main(int argc, char* argv[]) {
     mapServer.init(config.serverData().listenIp, config.mapServer().clientPort);
     mapServer.listen();
 
+    Core::HealthServer healthServer;
+    healthServer.addCheck([&loginServer]() {
+      return std::make_pair(loginServer.is_active(), "Login TCP server is not active");
+    });
+    healthServer.addCheck([&charServer]() {
+      return std::make_pair(charServer.is_active(), "Char TCP server is not active");
+    });
+    healthServer.addCheck([&mapServer]() {
+      return std::make_pair(mapServer.is_active(), "Map TCP server is not active");
+    });
+    healthServer.start(config.nodeServer().healthPort);
+
     while (loginServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      if(gSignalStatus != 0) {
+        healthServer.setUnhealthy("Service shutting down");
+        loginServer.shutdown(true);
+        charServer.shutdown(true);
+        mapServer.shutdown(true);
+      }
     }
 
     if(auto log = console.lock())

@@ -12,6 +12,7 @@
 // limitations under the License.
 
 #include <csignal>
+#include <cstdlib>
 #include <chrono>
 #include <cxxopts.hpp>
 #include "config.h"
@@ -23,6 +24,7 @@
 #include "crash_report.h"
 
 #include "cloginserver.h"
+#include "health_server.h"
 
 namespace {
 void DisplayTitle()
@@ -159,6 +161,10 @@ void ParseCommandLine(int argc, char** argv)
       config.database().user = options["db_user"].as<std::string>();
     if( options.count("db_pass") )
       config.database().password = options["db_pass"].as<std::string>();
+    
+    if (const char* env_p = std::getenv("HEALTH_PORT")) {
+      config.loginServer().healthPort = std::atoi(env_p);
+    }
   }
   catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
@@ -236,11 +242,29 @@ int main(int argc, char* argv[]) {
     iscServer.init(config.serverData().iscListenIp, config.loginServer().iscPort);
     iscServer.listen();
 
+    Core::HealthServer healthServer;
+    healthServer.addCheck([&clientServer]() {
+      return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
+    });
+    healthServer.addCheck([&iscServer]() {
+      return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
+    });
+    healthServer.addCheck([]() {
+      try {
+        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+        return std::make_pair(true, "");
+      } catch (...) {
+        return std::make_pair(false, "DB connection is down");
+      }
+    });
+    healthServer.start(config.loginServer().healthPort);
+
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       deleteStaleSessions();
 
       if(gSignalStatus != 0) {
+        healthServer.setUnhealthy("Service shutting down");
         clientServer.shutdown(true);
         iscServer.shutdown(true);
       }
