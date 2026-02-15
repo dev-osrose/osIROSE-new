@@ -5,7 +5,7 @@ set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
 FetchContent_Declare(
   spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog
-  GIT_TAG 100f30043f33277122e0991c83845a2617172ffd
+  GIT_TAG v1.17.0
 )
 
 FetchContent_MakeAvailable(spdlog)

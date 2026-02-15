@@ -61,7 +61,7 @@ void Player::toggle_player_move(EntitySystem& entitySystem, Entity entity, const
 
 	Packet::CliToggleMove::ToggleMove moveType = packet.get_type();
 	auto& computedValues = entitySystem.get_component<Component::ComputedValues>(entity);
-	logger->debug("movecmd is {} and current moveMode is {} and current cmd {} and currentspd is {}", moveType, computedValues.moveMode, computedValues.command, computedValues.runSpeed);
+	logger->debug("movecmd is {} and current moveMode is {} and current cmd {} and currentspd is {}", static_cast<uint8_t>(moveType), static_cast<uint8_t>(computedValues.moveMode), static_cast<uint16_t>(computedValues.command), computedValues.runSpeed);
 	//NEED TO ADD DEFENSE AGAIN PACKET INJECTING FOR RIDING WHILE SITTING, SITTING WHILE RIDING AND ETC
 	if(moveType == 0) { // RUN-WALK
 		if (computedValues.runSpeed > WALK_SPEED) {
@@ -93,7 +93,7 @@ void Player::toggle_player_move(EntitySystem& entitySystem, Entity entity, const
 		}
 	}
 	auto pToggle = Packet::SrvToggleMove::create(static_cast<Packet::SrvToggleMove::ToggleMove>(computedValues.moveMode));
-	logger->debug("runSpd is {} new moveMode is {}",computedValues.runSpeed, computedValues.moveMode);
+	logger->debug("runSpd is {} new moveMode is {}",computedValues.runSpeed, static_cast<uint8_t>(computedValues.moveMode));
 	pToggle.set_run_speed(computedValues.runSpeed);
 	auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(entity);
 	pToggle.set_object_id(basicInfo.id);

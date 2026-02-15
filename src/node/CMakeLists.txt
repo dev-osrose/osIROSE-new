@@ -24,8 +24,8 @@ set( SOURCES_BASE
   src/nodesessions.cpp)
 
 set(args
-  SQLFILE ${CMAKE_SOURCE_DIR}/Database/nodeSessions.sql
-  SQLROOT ${CMAKE_SOURCE_DIR}/Database
+  SQLFILE ${CMAKE_SOURCE_DIR}/schema/sqlite/01-sessions.sql
+  SQLROOT ${CMAKE_SOURCE_DIR}/schema
   NAME nodeSessionDB
   OUTPATH ${CMAKE_GEN_SRC_DIR}
 )
@@ -57,23 +57,9 @@ target_link_libraries(${PROJECT}
     RoseCommon
 )
 
-#if(WITH_CRASH_REPORTS)
-#  if (NOT CRASHPAD)
-#    generate_symbol_data(${PROJECT})
-#  else()
-#    generate_crashpad_symbol_data(${PROJECT})
-#  endif()
-#endif()
-
 install(TARGETS ${PROJECT}
         RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
-
-#set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
-
-#if (COMMAND cotire)
-#  cotire(${PROJECT})
-#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

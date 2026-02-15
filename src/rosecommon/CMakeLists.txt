@@ -30,8 +30,7 @@ if (NOT MSVC)
   target_compile_options(${PROJECT} PRIVATE -Werror)
 endif()
 
-add_dependencies(${PROJECT} Core)
-add_dependencies(${PROJECT} Core osirose_common::osirose_common)
+add_dependencies(${PROJECT} Core )
 target_link_libraries(${PROJECT}
   PUBLIC
     Core
@@ -40,9 +39,5 @@ target_link_libraries(${PROJECT}
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${SOURCES_BASE})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${SOURCES_HEADER})
-
-#if (COMMAND cotire)
-#  cotire(${PROJECT})
-#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

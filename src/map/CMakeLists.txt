@@ -113,23 +113,9 @@ target_link_libraries(${PROJECT}
     RoseCommon
 )
 
-#set_target_properties(${PROJECT} PROPERTIES COTIRE_PREFIX_HEADER_IGNORE_PATH "${COTIRE_PREFIX_IGNORE_PATHS};${CMAKE_CURRENT_SOURCE_DIR}/include/")
-
-#if (WITH_CRASH_REPORTS)
-#  if (NOT CRASHPAD)
-#    generate_symbol_data(${PROJECT})
-#  else()
-#    generate_crashpad_symbol_data(${PROJECT})
-#  endif()
-#endif()
-
 install(TARGETS ${PROJECT}
         RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
-
-#if (COMMAND cotire)
-#  cotire(${PROJECT})
-#endif()
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")
