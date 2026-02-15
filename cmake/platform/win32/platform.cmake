@@ -81,6 +81,9 @@ else()
   add_linker_flags(/LARGEADDRESSAWARE)
 endif()
 
+# add /utf-8
+add_compiler_flags(/utf-8)
+
 macro(SetSharedRuntime target)
   if(DEBUG)
     set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/MDd")
