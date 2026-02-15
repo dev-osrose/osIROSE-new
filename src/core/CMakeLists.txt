@@ -53,8 +53,8 @@ if (WITH_MYSQL OR WITH_MARIADB)
 endif ()
 
 set(args
-    SQLFILE ${CMAKE_SOURCE_DIR}/Database/osirose.sql
-    SQLROOT ${CMAKE_SOURCE_DIR}/Database
+    SQLFILE ${CMAKE_SOURCE_DIR}/schema/migrations/01-osirose.sql
+    SQLROOT ${CMAKE_SOURCE_DIR}/schema
     NAME osiroseDatabase
     OUTPATH ${CMAKE_GEN_SRC_DIR}
     )
@@ -62,8 +62,8 @@ set(args
 generate_sql_header(OSIROSE_HEADER ${args})
 
 set(args
-    SQLFILE ${CMAKE_SOURCE_DIR}/Database/logs.sql
-    SQLROOT ${CMAKE_SOURCE_DIR}/Database
+    SQLFILE ${CMAKE_SOURCE_DIR}/schema/migrations/01-logs.sql
+    SQLROOT ${CMAKE_SOURCE_DIR}/schema
     NAME logDatabase
     OUTPATH ${CMAKE_GEN_SRC_DIR}
     )
@@ -125,10 +125,5 @@ elseif (WITH_MYSQL)
       sqlpp11::mysql
       )
 endif ()
-
-#set_target_properties(${PROJECT} PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
-#if (COMMAND cotire)
-#  cotire(${PROJECT})
-#endif ()
 
 set_property(TARGET ${PROJECT} PROPERTY FOLDER "Servers")

@@ -53,15 +53,8 @@ target_include_directories(${PROJECT_LIB} PUBLIC $<BUILD_INTERFACE:${SQLPP_INCLU
 
 target_compile_definitions(${PROJECT_LIB} PUBLIC SERVER_TESTING)
 
-if (MSVC)
-#  set_target_properties(${PROJECT_LIB} PROPERTIES COMPILE_FLAGS "/w")
-endif()
-
 add_dependencies(${PROJECT_LIB} RoseCommon)
 target_link_libraries(${PROJECT_LIB} PUBLIC RoseCommon)
-#if (COMMAND cotire)
-#  cotire(${PROJECT_LIB})
-#endif()
 
 SET_PROPERTY(TARGET ${PROJECT_LIB}                PROPERTY FOLDER "Tests")
 
@@ -113,19 +106,7 @@ macro (compile_test name path)
     target_link_libraries(${TEST_NAME} PRIVATE mysqlclient)
   endif()
 
-#  if (COMMAND cotire)
-#    cotire(${TEST_NAME})
-#  endif()
-
   gtest_discover_tests(${TEST_NAME})
-
-#  if(WITH_CRASH_REPORTS)
-#    if (NOT CRASHPAD)
-#      generate_symbol_data(${TEST_NAME})
-#    else()
-#      generate_crashpad_symbol_data(${TEST_NAME})
-#    endif()
-#  endif()
 
   SET_PROPERTY(TARGET ${TEST_NAME}                PROPERTY FOLDER "Tests")
 endmacro (compile_test)

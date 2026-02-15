@@ -50,7 +50,7 @@ CLoginClient::CLoginClient(CLoginServer* server, std::unique_ptr<Core::INetwork>
       server_(server) {}
 
 void CLoginClient::sendLoginReply(SrvLoginReply::LoginResult Result) {
-  logger_->debug("sendLoginReply({})", Result);
+  logger_->debug("sendLoginReply({})", static_cast<uint8_t>(Result));
   auto packet = SrvLoginReply::create(Result, 0, 0);
 
   if (Result == SrvLoginReply::OK) {

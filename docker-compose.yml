@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: osirose-mariadb
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./schema/migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${MYSQL_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  login:
+    build:
+      context: .
+      target: login
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./config/server.json:/app/bin/server.json:ro
+    ports:
+      - "${LOGIN_PORT}:29000"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/29000" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  character:
+    build:
+      context: .
+      target: character
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      login:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./config/server.json:/app/bin/server.json:ro
+    ports:
+      - "${CHARACTER_PORT}:29100"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/29100" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  map:
+    build:
+      context: .
+      target: map
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      character:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "${MAP_START_PORT}-${MAP_END_PORT}:${MAP_START_PORT}-${MAP_END_PORT}"
+    volumes:
+      - ./config/server.json:/app/bin/server.json:ro
+      - ./scripts:/app/bin/scripts:ro
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:

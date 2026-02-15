@@ -15,7 +15,7 @@ struct fmt::formatter<Entity>
   }
 
   template<typename FormatContext>
-  auto format(Entity const& entity, FormatContext& ctx) {
+  auto format(Entity const& entity, FormatContext& ctx) const {
       return fmt::format_to(ctx.out(), "{}", entt::to_integral(entity));
   }
 };

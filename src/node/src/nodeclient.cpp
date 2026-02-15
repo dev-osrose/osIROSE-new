@@ -174,7 +174,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
   const auto res = conn(sqlpp::select(table.id, table.name, table.state, table.charip, table.charport, table.worldip, table.worldport).from(table).where(table.id == P.get_sessionId()));
   if (!res.empty()) {
     const auto &row = res.front();
-    logger_->debug("id: '{}' name: '{}' state: '{}' charip: '{}' charport: '{}' worldip: '{}' worldport: '{}'", row.id, row.name, row.state, row.charip, row.charport, row.worldip, row.worldport);
+    logger_->debug("id: '{}' name: '{}' state: '{}' charip: '{}' charport: '{}' worldip: '{}' worldport: '{}'", row.id.value(), row.name.value(), row.state.value(), row.charip.value(), row.charport.value(), row.worldip.value(), row.worldport.value());
     
     std::string ip = "";
     uint16_t port = 0;
@@ -193,7 +193,7 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
         break;
       }
       default:
-        logger_->debug("Some how we have an invalid state in the db? state: {}", row.state);
+        logger_->debug("Some how we have an invalid state in the db? state: {}", row.state.value());
         return false;
     }
     if(map_socket_) map_socket_->disconnect();

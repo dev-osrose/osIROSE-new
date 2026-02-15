@@ -4,7 +4,7 @@ As with most rose servers, the project has 3 different executables: login, char 
 We are also working on a 4th executable: the node server. This executable will be responsible for rerouting all the packets from the client to the correct map server (assuming you have multiple). If you only have one map server, this executable will not be needed. The Node server would act as an edge server that would prevent the IP address of the Map server being exposed. (Basically a proxy.)
 
 The project is separated in 10 parts:
-* [Database (Database/)](Database/database.md) That's the database schema and basic item information
+* [Database (Database/)](schema/database.md) That's the database schema and basic item information
 * [Scripts (scripts/)](scripts/scripts.md) That's the lua code for gameplay scripting
 * [Integration testing (src/bot/)](src/bot/bot.md) That's the code for a pseudo client that does integration testing against the server
 * [Core (src/core/)](src/core/core.md) The core code that contains all of the shared code (database, factories, threading, networking and so on)

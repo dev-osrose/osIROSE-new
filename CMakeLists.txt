@@ -146,13 +146,6 @@ if (NOT CURL_FOUND)
 endif ()
 
 include(Build-sqlite3)
-
-#if (WITH_MYSQL)
-#  if (BUILD_MYSQL AND NOT MySQL_FOUND)
-#    include(Build-mysql)
-#  endif ()
-#endif ()
-
 include(Build-sqlpp11)
 include(SQLPPGenerator)
 include(Build-osirose-common)
@@ -192,9 +185,9 @@ file(COPY "${CMAKE_SOURCE_DIR}/scripts"
 add_subdirectory(src)
 add_subdirectory(tools)
 
-install(DIRECTORY Database/ DESTINATION Database/
+install(DIRECTORY schema/ DESTINATION schema/
     COMPONENT Runtime
-    PATTERN "Database/*"
+    PATTERN "schema/*"
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
     GROUP_EXECUTE GROUP_READ)
 
