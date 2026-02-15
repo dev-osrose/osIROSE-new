@@ -12,6 +12,32 @@
 ## Issues and Status
 [![GitHub issues](https://img.shields.io/github/issues/dev-osrose/osIROSE-new.svg)](https://github.com/dev-osrose/osIROSE-new/issues)
 
+## Health Checks
+
+Each service includes a lightweight HTTP health check server. By default, it listens on:
+- Login Server: `30000`
+- Char Server: `30100`
+- Map Server: `30200`
+- Node Server: `30000`
+
+You can override the port using the `HEALTH_PORT` environment variable.
+
+### Endpoints
+- `GET /health`: Returns `200 OK` with `{ "status": "ok" }` if the service is healthy, or `503 Service Unavailable` with a reason if it's unhealthy.
+
+### Kubernetes Compatibility
+These endpoints are suitable for Liveness and Readiness probes:
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 30000
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 30000
+```
+
 ## Project Info
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/dev-osrose/osIROSE-new/master/LICENSE.txt)

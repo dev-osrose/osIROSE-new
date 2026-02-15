@@ -37,7 +37,7 @@ services:
     ports:
       - "${LOGIN_PORT}:29000"
     healthcheck:
-      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/29000" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:30000/health" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -59,7 +59,7 @@ services:
     ports:
       - "${CHARACTER_PORT}:29100"
     healthcheck:
-      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/29100" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:30100/health" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -78,6 +78,11 @@ services:
       - .env
     ports:
       - "${MAP_START_PORT}-${MAP_END_PORT}:${MAP_START_PORT}-${MAP_END_PORT}"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:30200/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     volumes:
       - ./config/server.json:/app/bin/server.json:ro
       - ./scripts:/app/bin/scripts:ro

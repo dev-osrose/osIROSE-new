@@ -94,6 +94,7 @@ class Config {
     bool createAccountOnFail = false;
     uint16_t clientPort = 29000;
     uint16_t iscPort = 29010;
+    uint16_t healthPort = 30000;
     uint8_t accessLevel = 1;
     uint8_t logLevel = 2;
   };
@@ -104,6 +105,7 @@ class Config {
     std::string loginPassword = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     uint16_t clientPort = 29100;
     uint16_t iscPort = 29110;
+    uint16_t healthPort = 30100;
     bool instantCharDelete = true;
     uint8_t accessLevel = 1;
     uint8_t logLevel = 2;
@@ -115,6 +117,7 @@ class Config {
     std::string charPassword = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     uint16_t clientPort = 29200;
     uint16_t iscPort = 29210;
+    uint16_t healthPort = 30200;
     uint8_t accessLevel = 1;
     std::vector<uint16_t> mapId = {1, 2, 3, 5, 6, 8, 9, 11, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 37, 51, 52, 53, 54, 55, 56, 57, 59, 61, 62, 63};
     std::string luaScript = "scripts/root.lua";
@@ -123,6 +126,7 @@ class Config {
   struct NodeServer {
     std::string loginIp = "127.0.0.1";
     uint16_t loginPort = 29000;
+    uint16_t healthPort = 30000; // Same default as login server since it is basically a proxy
     uint8_t logLevel = 2;
   };
   struct Configuration {
@@ -151,10 +155,10 @@ class Config {
 
 VISITABLE_STRUCT(Core::Config::Database, host, database, user, password, port);
 VISITABLE_STRUCT(Core::Config::ServerData, id, externalIp, listenIp, iscListenIp, autoConfigureUrl, core_dump_path, crash_report_url, parentId, maxConnections, useThreads, autoConfigureAddress, maxThreads, accessLevel, mode);
-VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, instantCharDelete, accessLevel, logLevel);
-VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, accessLevel, mapId, luaScript, logLevel);
-VISITABLE_STRUCT(Core::Config::NodeServer, loginIp, loginPort, logLevel);
+VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, iscPort, healthPort, accessLevel, logLevel);
+VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, healthPort, instantCharDelete, accessLevel, logLevel);
+VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, healthPort, accessLevel, mapId, luaScript, logLevel);
+VISITABLE_STRUCT(Core::Config::NodeServer, loginIp, loginPort, healthPort, logLevel);
 VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer, nodeServer);
 
 #endif /* !_CONFIG_H_ */

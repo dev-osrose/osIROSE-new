@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <csignal>
+#include <cstdlib>
 #include <cxxopts.hpp>
 #include "config.h"
 #include "version.h"
@@ -25,6 +26,7 @@
 #include "ccharclient.h"
 #include "ccharserver.h"
 #include "ccharisc.h"
+#include "health_server.h"
 
 namespace {
 void DisplayTitle()
@@ -161,6 +163,10 @@ void ParseCommandLine(int argc, char** argv)
       config.database().user = options["db_user"].as<std::string>();
     if( options.count("db_pass") )
       config.database().password = options["db_pass"].as<std::string>();
+
+    if (const char* env_p = std::getenv("HEALTH_PORT")) {
+      config.charServer().healthPort = std::atoi(env_p);
+    }
   }
   catch (const cxxopts::exceptions::exception& ex) {
     std::cout << ex.what() << std::endl;
@@ -232,11 +238,32 @@ int main(int argc, char* argv[]) {
     iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
     iscServer.listen();
 
+    Core::HealthServer healthServer;
+    healthServer.addCheck([&clientServer]() {
+      return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
+    });
+    healthServer.addCheck([&iscServer]() {
+      return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
+    });
+    healthServer.addCheck([iscClient]() {
+      return std::make_pair(iscClient && iscClient->is_active(), "ISC Client (to Login Server) is not active");
+    });
+    healthServer.addCheck([]() {
+      try {
+        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+        return std::make_pair(true, "");
+      } catch (...) {
+        return std::make_pair(false, "DB connection is down");
+      }
+    });
+    healthServer.start(config.charServer().healthPort);
+
     while (clientServer.is_active()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       //updateSessions();
 
       if(gSignalStatus != 0) {
+        healthServer.setUnhealthy("Service shutting down");
         iscClient->shutdown(true);
         clientServer.shutdown(true);
         iscServer.shutdown(true);

@@ -16,6 +16,7 @@ set(SOURCES_HEADER
     include/connection.h
     include/platform_defines.h
     include/crash_report.h
+    include/health_server.h
     )
 
 set(SOURCES_BASE
@@ -23,6 +24,7 @@ set(SOURCES_BASE
     src/cnetwork_asio.cpp
     src/config.cpp
     src/connection.cpp
+    src/health_server.cpp
     )
 
 if (GCC OR CLANG)
