@@ -89,10 +89,10 @@ void HealthServer::run() {
 void HealthServer::handleRequest(int clientSocket) {
   std::array<char, 1024> buffer = {0};
   ssize_t bytesRead = read(clientSocket, buffer.data(), buffer.size() - 1);
-  if (bytesRead <= 0) return;
+  if (bytesRead <= 0 || bytesRead >= buffer.size()) return;
   buffer[bytesRead] = '\0';
 
-  std::string request(buffer.data());
+  std::string request(buffer.data(), bytesRead);
   if (request.find("GET /health") == std::string::npos) {
     std::string response404 = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
     send(clientSocket, response404.c_str(), response404.length(), 0);
