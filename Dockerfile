@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ noble main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null \
     && apt-get update \
     && test -f /usr/share/doc/kitware-archive-keyring/copyright || rm /usr/share/keyrings/kitware-archive-keyring.gpg \
-    && apt-get install kitware-archive-keyring \
+    && apt-get install -y --no-install-recommends kitware-archive-keyring \
     && apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
