@@ -17,6 +17,7 @@
 
 #include "croseclient.h"
 #include "cli_login_req.h"
+#include "cli_login_token_req.h"
 #include "cli_channel_list_req.h"
 #include "cli_srv_select_req.h"
 #include "srv_login_reply.h"
@@ -31,8 +32,15 @@ class CLoginClient : public RoseCommon::CRoseClient {
  protected:
   virtual bool handlePacket(uint8_t* _buffer) override;
 
+  enum class eAUTH_TYPE {
+    PASSWORD,
+    TOKEN,
+  };
+
   // Packet Helper Functions
-  bool userLogin(RoseCommon::Packet::CliLoginReq&& P);
+  bool userLogin(eAUTH_TYPE AuthType, std::string authString);
+  bool userLoginPassword(RoseCommon::Packet::CliLoginReq&& P);
+  bool userLoginToken(RoseCommon::Packet::CliLoginTokenReq&& P);
   bool channelList(RoseCommon::Packet::CliChannelListReq&& P);
   bool serverSelect(RoseCommon::Packet::CliSrvSelectReq&& P);
 

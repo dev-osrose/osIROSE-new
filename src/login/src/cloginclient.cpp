@@ -79,12 +79,30 @@ void CLoginClient::sendLoginReply(SrvLoginReply::LoginResult Result) {
   send(packet);
 }
 
-bool CLoginClient::userLogin(CliLoginReq&& P) {
+bool CLoginClient::userLoginToken(CliLoginTokenReq&& P) {
+  std::string client_token = Core::escapeData(P.get_token());
+  return userLogin(eAUTH_TYPE::TOKEN, client_token);
+}
+
+bool CLoginClient::userLoginPassword(CliLoginReq&& P) {
+  username_ = Core::escapeData(P.get_username());
+  std::string password = Core::escapeData(P.get_password());
+  return userLogin(eAUTH_TYPE::PASSWORD, password);
+}
+
+bool CLoginClient::userLogin(eAUTH_TYPE AuthType, std::string authString) {
   if (login_state_ != eSTATE::DEFAULT) {
     logger_->warn("Client {} is attempting to login when already logged in.",
                   get_id());
     return true;
   }
+
+  // Reject token auth until implemented
+  if (AuthType == eAUTH_TYPE::TOKEN) {
+    sendLoginReply(SrvLoginReply::INVALID_VERSION);
+    return true;
+  }
+
   uint32_t serverCount = 0;
 
   server_->GetISCListMutex().lock();
@@ -100,13 +118,10 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
     sendLoginReply(SrvLoginReply::FAILED);
     return true;
   }
-
-  username_ = Core::escapeData(P.get_username());
-  std::string clientpass = Core::escapeData(P.get_password());
   
   set_name(username_);
 
-  logger_->debug("Client sent '{}' as the password", clientpass);
+  logger_->debug("Client sent '{}' as the password", authString);
 
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::AccountTable table{};
@@ -114,7 +129,7 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
   try {
     const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.accountType == "user" and table.username == username_
-                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
+                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", authString))));
 
         if (!res.empty()) {
             const auto &row = res.front();
@@ -151,7 +166,7 @@ bool CLoginClient::userLogin(CliLoginReq&& P) {
                 auto& config = Core::Config::getInstance();
                 if (config.loginServer().createAccountOnFail) {
                   logger_->debug("Creating account");
-                    std::string query = fmt::format("CALL create_account('{}', '{}');", username_, clientpass);
+                    std::string query = fmt::format("CALL create_account('{}', '{}');", username_, authString);
                     conn->execute(query);
                 }
                 sendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
@@ -255,17 +270,14 @@ bool CLoginClient::handlePacket(uint8_t* _buffer) {
   logger_->trace("CLoginClient::handlePacket start");
   switch (CRosePacket::type(_buffer)) {
     case ePacketType::PAKCS_CHANNEL_LIST_REQ:
-      return channelList(
-          CliChannelListReq::create(_buffer));
+      return channelList(CliChannelListReq::create(_buffer));
     case ePacketType::PAKCS_SRV_SELECT_REQ:
-      return serverSelect(
-          CliSrvSelectReq::create(_buffer));
+      return serverSelect(CliSrvSelectReq::create(_buffer));
     case ePacketType::PAKCS_LOGIN_REQ:
-      return userLogin(CliLoginReq::create(_buffer));
-
+      return userLoginPassword(CliLoginReq::create(_buffer));
+    case ePacketType::PAKCS_LOGIN_TOKEN_REQ:
+      return userLoginToken(CliLoginTokenReq::create(_buffer));
     default:
       return CRoseClient::handlePacket(_buffer);
   }
-  logger_->trace("CLoginClient::handlePacket end");
-  return true;
 }
