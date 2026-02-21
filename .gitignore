@@ -9,6 +9,8 @@
 *.sw*
 .vs/*
 .vscode/*
+.idea/*
+config/*
 
 # CMake files
 CMakeCache.txt
