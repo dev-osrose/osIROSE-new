@@ -6,7 +6,7 @@
 #include <chrono>
 
 namespace Component {
-struct Spawner {
+  struct Spawner {
     int mob_id;
     int max_mobs;
     int max_once;
@@ -16,5 +16,5 @@ struct Spawner {
     std::vector<Entity> mobs;
 
     TimedCallbacks::Wrapper callback;
-};
+  };
 }

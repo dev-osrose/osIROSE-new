@@ -159,7 +159,7 @@ void Combat::attack(EntitySystem& entitySystem, Entity entity, const CliAttack& 
         p.set_z(0);
         entitySystem.send_nearby(entity, p);
       } else {
-        // This packet acts as an attack and mouse_cmd all in one, we don't want the mouse_cmd portion
+        // This packet acts as an attack and mouse_cmd all in one; we don't want the mouse_cmd portion
         // of it as it can cause some issues with attack animations going off before it should
         auto p = SrvAttack::create(basicInfo.id, packet.get_targetId());
         p.set_x(pos.x);
@@ -194,7 +194,7 @@ void Combat::update(EntitySystem& entitySystem, Entity entity, uint32_t dt) {
     int32_t hp = life.hp, mp = 0;
     int stanceModifier = (values.command == RoseCommon::Command::SIT ? 4 : 1);  // This should be if sitting
     if (life.hp > 0 && life.hp < life.maxHp) {
-      auto amount = (int32_t)std::ceil(life.maxHp * 0.02);
+      auto amount = static_cast<int32_t>(std::ceil(life.maxHp * 0.02));
       amount = amount * stanceModifier;
       // TODO: update amount based on equipment values
       // TODO: Take into account HP regen buffs
@@ -399,7 +399,7 @@ Entity Combat::get_closest_spawn(EntitySystem& entitySystem, Entity player) {
   const auto& position = entitySystem.get_component<Component::Position>(player);
 
   Entity closest = {};
-  float closestDist = 999999999999;
+  float closestDist = 99999999999.f;
 
   for (Entity entity :
        entitySystem.get_entities_with_components<Component::BasicInfo, Component::Position, Component::PlayerSpawn>()) {
@@ -528,15 +528,15 @@ void Combat::revive(EntitySystem& entitySystem, Entity entity, const RoseCommon:
 int64_t Combat::get_exp_to_level(int level) {
   if (level > 210) level = 210;
 
-  if (level <= 15) return (int64_t)((level + 3) * (level) * (level + 10) * 0.7);
+  if (level <= 15) return static_cast<int64_t>((level + 3) * (level) * (level + 10) * 0.7);
 
-  if (level <= 50) return (int64_t)((level - 5) * (level + 2) * (level + 2) * 2.2);
+  if (level <= 50) return static_cast<int64_t>((level - 5) * (level + 2) * (level + 2) * 2.2);
 
-  if (level <= 100) return (int64_t)((level - 5) * (level + 2) * (level - 38) * 9);
+  if (level <= 100) return static_cast<int64_t>((level - 5) * (level + 2) * (level - 38) * 9);
 
-  if (level <= 139) return (int64_t)((level + 27) * (level + 34) * (level + 220));
+  if (level <= 139) return static_cast<int64_t>((level + 27) * (level + 34) * (level + 220));
 
-  return (int64_t)((level - 15) * (level + 7) * (level - 126) * 41);
+  return static_cast<int64_t>((level - 15) * (level + 7) * (level - 126) * 41);
 }
 
 void Combat::drop_loot(EntitySystem& entitySystem, Entity entity, Entity owner) {

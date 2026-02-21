@@ -3,7 +3,7 @@
 #include "entity.h"
 
 namespace Component {
-struct Owner {
+  struct Owner {
     Entity owner;
-};
+  };
 }

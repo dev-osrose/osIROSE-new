@@ -6,7 +6,7 @@ namespace Component {
   // This is not a component! Just the data!
   struct tDamage {
     tDamage() : action_(0), attacker_(0), value_(0), apply_(false) {}
-    tDamage(uint32_t action, uint32_t attacker, int32_t value) : action_(action), attacker_(attacker), value_(value), apply_(false) {}
+    tDamage(const uint32_t action, const uint32_t attacker, const int32_t value) : action_(action), attacker_(attacker), value_(value), apply_(false) {}
 
     uint32_t action_;
     uint32_t attacker_;
@@ -15,7 +15,7 @@ namespace Component {
   };
 
   struct Combat {
-    static const uint16_t maxConcurentDamage = 300;
+    static constexpr uint16_t max_concurrent_damage_damage = 300;
 
     bool addDamage(uint32_t attacker, uint32_t action, int32_t damage = 0) {
       tDamage newDamage = tDamage(action, attacker, damage);

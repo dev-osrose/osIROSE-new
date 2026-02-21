@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <cmath>
+#include <utility>
 #include "transform.h"
 #include "cmapclient.h"
 #include "cmapisc.h"
@@ -69,7 +70,7 @@ CMapClient::CMapClient(std::unique_ptr<Core::INetwork> _sock, std::shared_ptr<En
       sessionId_(0),
       userid_(0),
       charid_(0),
-      entitySystem(entitySystem) {}
+      entitySystem(std::move(entitySystem)) {}
 
 CMapClient::~CMapClient() {}
 
@@ -119,13 +120,13 @@ void CMapClient::switch_server() {
   login_state_ = eSTATE::SWITCHING;
 }
 
-void CMapClient::send(const RoseCommon::CRosePacket& packet, bool force) {
+void CMapClient::send(const RoseCommon::CRosePacket& packet, const bool force) {
     if (login_state_ == eSTATE::ONMAP || force) {
         CRoseClient::send(packet);
     }
 }
 
-void CMapClient::updateSession() {
+void CMapClient::updateSession() const {
   logger_->trace("CMapClient::updateSession()");
   using namespace std::chrono_literals;
   static std::chrono::steady_clock::time_point time{};
@@ -356,8 +357,8 @@ RoseCommon::Packet::SrvPlayerChar CMapClient::create_srv_player_char(const Entit
     }
     packet.set_command(computedValues.command);
     if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
-        const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
-        packet.set_targetId(basicInfo.id);
+        const auto& target_basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
+        packet.set_targetId(target_basicInfo.id);
     } else {
         packet.set_targetId(0);
     }
@@ -402,8 +403,8 @@ RoseCommon::Packet::SrvNpcChar CMapClient::create_srv_npc_char(const EntitySyste
   }
   packet.set_command(computedValues.command);
   if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
-      const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
-      packet.set_targetId(basicInfo.id);
+      const auto& target_basic_info = entitySystem.get_component<Component::BasicInfo>(target->target);
+      packet.set_targetId(target_basic_info.id);
   } else {
       packet.set_targetId(0);
   }
@@ -435,8 +436,8 @@ RoseCommon::Packet::SrvMobChar CMapClient::create_srv_mob_char(const EntitySyste
   }
   packet.set_command(computedValues.command);
   if (const auto* target = entitySystem.try_get_component<Component::Target>(entity); target && target->target != entt::null) {
-      const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
-      packet.set_targetId(basicInfo.id);
+      const auto& target_basicInfo = entitySystem.get_component<Component::BasicInfo>(target->target);
+      packet.set_targetId(target_basicInfo.id);
   } else {
       packet.set_targetId(0);
   }
@@ -460,8 +461,8 @@ RoseCommon::Packet::SrvDropItem CMapClient::create_srv_drop_item(const EntitySys
     packet.set_item(entitySystem.item_to_item<Packet::SrvDropItem>(entity));
     packet.set_id(basicInfo.id);
     if (const auto* owner = entitySystem.try_get_component<Component::Owner>(entity); owner && owner->owner != entt::null) {
-        const auto& basicInfo = entitySystem.get_component<Component::BasicInfo>(owner->owner);
-        packet.set_ownerId(basicInfo.id);
+        const auto& owner_basic_info = entitySystem.get_component<Component::BasicInfo>(owner->owner);
+        packet.set_ownerId(owner_basic_info.id);
     }
     return packet;
 }

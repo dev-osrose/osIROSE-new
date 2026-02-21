@@ -5,7 +5,7 @@
 #include "dataconsts.h"
 
 namespace Component {
-struct Hotbar {
+  struct Hotbar {
     std::array<RoseCommon::Packet::SrvSelectCharReply::HotbarItem, RoseCommon::MAX_HOTBAR_ITEMS> items;
-};
+  };
 }

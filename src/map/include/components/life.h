@@ -1,8 +1,8 @@
 #pragma once
 
 namespace Component {
-struct Life {
+  struct Life {
     int32_t hp;
     int32_t maxHp;
-};
+  };
 }

@@ -14,7 +14,7 @@ namespace Component {
     };
     
     PlayerSpawn() : type(RESPAWN_POINT) {}
-    PlayerSpawn(Type type) : type(type) {}
+    explicit PlayerSpawn(const Type type) : type(type) {}
     
     Type type;
   };

@@ -4,7 +4,7 @@
 #include <array>
 
 namespace Component {
-struct Skills {
+  struct Skills {
     std::array<RoseCommon::Skill, RoseCommon::MAX_SKILL_COUNT> skills;
-};
+  };
 }

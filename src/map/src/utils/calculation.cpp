@@ -14,8 +14,8 @@
 #include "components/skills.h"
 #include "components/stamina.h"
 #include "components/stats.h"
-#include "random.h"
 #include "dataconsts.h"
+#include "random.h"
 
 using namespace RoseCommon;
 
@@ -25,8 +25,7 @@ float get_runspeed(EntitySystem& entitySystem, Entity entity) {
   const auto& stats = entitySystem.get_component<Component::Stats>(entity);
   auto& values = entitySystem.get_component<Component::ComputedValues>(entity);
   float moveSpeed = BASE_MOVE_SPEED;
-  int itemSpeed = 65, itemNumber = 0;
-  
+
   if (values.moveMode <= MoveMode::RUN) {
     int itemSpeed = 65;
 
@@ -52,7 +51,8 @@ float get_runspeed(EntitySystem& entitySystem, Entity entity) {
       const auto& riding_legs = inventory.riding_legs();
       const auto& riding_engine = inventory.riding_engine();
       if (riding_legs != entt::null && riding_engine != entt::null) {
-        moveSpeed = Utils::get_move_speed(entitySystem, riding_legs) * Utils::get_move_speed(entitySystem, riding_engine) / 10.f;
+        moveSpeed = Utils::get_move_speed(entitySystem, riding_legs) *
+                    Utils::get_move_speed(entitySystem, riding_engine) / 10.f;
       }
     }
   }
@@ -93,7 +93,7 @@ int get_maxhp(EntitySystem& entitySystem, Entity entity) {
   auto& life = entitySystem.get_component<Component::Life>(entity);
   auto& stats = entitySystem.get_component<Component::Stats>(entity);
 
-  //TODO:: Move this calc to lua?
+  // TODO:: Move this calc to lua?
   int levelAddition, levelModifier;
   float clampValue;
   switch (basicInfo.job) {
@@ -135,8 +135,8 @@ int get_maxhp(EntitySystem& entitySystem, Entity entity) {
       break;
   }
 
-  life.maxHp = (short)((level.level + levelAddition) * sqrtf(level.level + levelModifier) * clampValue + (stats.str * 2) +
-                       0); // AddValue[AT_MAX_HP]);
+  life.maxHp = static_cast<short>((level.level + levelAddition) * sqrtf(level.level + levelModifier) * clampValue +
+                                  (stats.str * 2) + 0);  // AddValue[AT_MAX_HP]);
   // levelAddition = passiveSkillValue[ maxHP ] + (short)(life.maxHp * passiveSkillRate[maxHp] / 100.f);
   life.maxHp += levelAddition;
   return life.maxHp;
@@ -148,7 +148,7 @@ int get_maxmp(EntitySystem& entitySystem, Entity entity) {
   auto& magic = entitySystem.get_component<Component::Magic>(entity);
   auto& stats = entitySystem.get_component<Component::Stats>(entity);
 
-  //TODO:: Move this calc to lua?
+  // TODO:: Move this calc to lua?
   int addValue, statModifier;
   float levelModifier;
   switch (basicInfo.job) {
@@ -189,7 +189,8 @@ int get_maxmp(EntitySystem& entitySystem, Entity entity) {
       break;
   }
 
-  magic.maxMp = (short)((level.level + addValue) * levelModifier + (stats.int_ * statModifier)) + 0;  // AddValue[AT_MAX_MP];
+  magic.maxMp =
+      static_cast<short>((level.level + addValue) * levelModifier + (stats.int_ * statModifier)) + 0;  // AddValue[AT_MAX_MP];
   // addValue = passiveSkillValue[ maxMP ] + (short)(magic.maxMp * passiveSkillRate[maxMp] / 100.f);
   magic.maxMp += addValue;
   return magic.maxMp;
@@ -198,8 +199,8 @@ int get_maxmp(EntitySystem& entitySystem, Entity entity) {
 int get_successrate(EntitySystem& entitySystem, Entity attacker, Entity defender) {
   int success_rate = 0;
   int final_success_rate = 100;  // TODO: set this to 0 once the calc is finished
-//  auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
-//  auto& defenderStats = entitySystem.get_component<Component::Stats>(defender);
+  // auto& attackerStats = entitySystem.get_component<Component::Stats>(attacker);
+  // auto& defenderStats = entitySystem.get_component<Component::Stats>(defender);
 
   if (entitySystem.has_component<Component::Client>(attacker)) {
     if (entitySystem.has_component<Component::Client>(defender)) {
@@ -210,10 +211,10 @@ int get_successrate(EntitySystem& entitySystem, Entity attacker, Entity defender
       const auto& defenderLevel = entitySystem.get_component<Component::Level>(defender);
       auto random1 = 1 + Core::Random::getInstance().get_uniform(0, 50);
       auto random2 = 1 + Core::Random::getInstance().get_uniform(0, 60);
-      success_rate = (int)((attackerLevel.level + 10) - defenderLevel.level * 1.1f + random1);
+      success_rate = static_cast<int>((attackerLevel.level + 10) - defenderLevel.level * 1.1f + random1);
       if (success_rate <= 0) return 0;
 
-      // final_success_rate =  (int)(success_rate * (attacker_hit * 1.1f - defender_avoidance * 0.93f + random2
+      // final_success_rate = (int)(success_rate * (attacker_hit * 1.1f - defender_avoidance * 0.93f + random2
       // + 5 + attackerLevel.level * 0.2f) / 80.f);
     }
   } else {
@@ -223,8 +224,7 @@ int get_successrate(EntitySystem& entitySystem, Entity attacker, Entity defender
   return final_success_rate;
 }
 
-int64_t get_magicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,
-                        int hit_count, int success_rate) {
+int64_t get_magicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender, int hit_count, int success_rate) {
   // TODO
   int magic_value = 0;
   if (entitySystem.has_component<Component::Inventory>(attacker)) {
@@ -245,20 +245,18 @@ int64_t get_hitrate(EntitySystem& entitySystem, Entity entity) {
   return 100;
 }
 
-int64_t get_basicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender,
-                        int hit_count, int success_rate) {
+int64_t get_basicdamage(EntitySystem& entitySystem, Entity attacker, Entity defender, int hit_count, int success_rate) {
   int64_t damage = 0, critChance = 0;
   const auto& attackerLevel = entitySystem.get_component<Component::Level>(attacker);
   const auto& values = entitySystem.get_component<Component::ComputedValues>(attacker);
 
-  critChance = (int)(28 - ((values.critChance / 2.0f + attackerLevel.level) / (attackerLevel.level + 8)) * 20) + 1 +
+  critChance = static_cast<int>(28 - ((values.critChance / 2.0f + attackerLevel.level) / (attackerLevel.level + 8)) * 20) + 1 +
                Core::Random::getInstance().get_uniform(0, 100);
 
   return 50;
 }
 
-int64_t get_damage(EntitySystem& entitySystem, Entity attacker, Entity defender,
-                   int hit_count) {
+int64_t get_damage(EntitySystem& entitySystem, Entity attacker, Entity defender, int hit_count) {
   auto successRate = get_successrate(entitySystem, attacker, defender);
 
   if (successRate < 20) {
@@ -266,7 +264,8 @@ int64_t get_damage(EntitySystem& entitySystem, Entity attacker, Entity defender,
     const auto& defenderLevel = entitySystem.get_component<Component::Level>(defender);
 
     if (94 >
-        (int)(1 + Core::Random::getInstance().get_uniform(0, 100) + (attackerLevel.level - defenderLevel.level) * 0.6f))
+        static_cast<int>(1 + Core::Random::getInstance().get_uniform(0, 100) +
+                              (attackerLevel.level - defenderLevel.level) * 0.6f))
       return 0;
   }
 

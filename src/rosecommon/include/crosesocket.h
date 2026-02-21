@@ -64,7 +64,7 @@ class CRoseSocket {
   virtual bool send(const CRosePacket& _buffer);
   virtual bool send(std::unique_ptr<uint8_t[]> _buffer);
 
-  virtual uint32_t get_obj_id() const {
+  [[nodiscard]] virtual uint32_t get_obj_id() const {
     return socket_->get_id();
   }
 
@@ -77,7 +77,7 @@ class CRoseSocket {
   bool connect() {
     return socket_->connect();
   }
-  bool is_active() const {
+  [[nodiscard]] bool is_active() const {
     return socket_->is_active();
   }
   void set_active(bool _val) {
@@ -86,22 +86,22 @@ class CRoseSocket {
   void set_type(uint32_t _val) {
     socket_->set_type(_val);
   }
-  uint32_t get_id() const {
+  [[nodiscard]] uint32_t get_id() const {
     return socket_->get_id();
   }
-  Isc::ServerType get_type() const {
+  [[nodiscard]] Isc::ServerType get_type() const {
     return static_cast<Isc::ServerType>(socket_->get_type());
   }
-  uint16_t get_port() const {
+  [[nodiscard]] uint16_t get_port() const {
     return socket_->get_port();
   }
-  std::string get_address() const {
+  [[nodiscard]] std::string get_address() const {
     return socket_->get_address();
   }
-  std::chrono::steady_clock::time_point get_update_time() const {
+  [[nodiscard]] std::chrono::steady_clock::time_point get_update_time() const {
     return socket_->get_update_time();
   }
-  std::string get_name() const {
+  [[nodiscard]] std::string get_name() const {
     return socket_->get_name();
   }
 

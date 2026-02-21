@@ -3,7 +3,7 @@
 #include "entity.h"
 
 namespace Component {
-struct Target {
+  struct Target {
     Entity target;
-};
+  };
 }

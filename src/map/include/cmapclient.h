@@ -48,10 +48,10 @@ class CMapClient : public RoseCommon::CRoseClient, public std::enable_shared_fro
   static RoseCommon::Packet::SrvDropItem create_srv_drop_item(const EntitySystem&, Entity entity);
 
  protected:
-  virtual bool handlePacket(uint8_t* _buffer) override;
-  virtual void onDisconnected() override;
+  bool handlePacket(uint8_t* _buffer) override;
+  void onDisconnected() override;
 
-  void updateSession();
+  void updateSession() const;
 
   bool logoutReply();
   bool joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P);

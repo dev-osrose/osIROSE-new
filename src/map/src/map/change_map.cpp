@@ -62,8 +62,8 @@ void Map::teleport_request(EntitySystem& entitySystem, Entity entity, const Rose
     const auto& pos = entitySystem.get_component<Component::Position>(entity);
     logger->trace("packet position ({},{}), server position ({},{})", packet.get_x(), packet.get_y(), pos.x, pos.y);
     float closest = std::numeric_limits<float>::max();
-    Component::Warpgate warp;
-    Component::Destination dest;
+    Component::Warpgate warp{};
+    Component::Destination dest{};
     for (const auto w : entitySystem.get_entities_with_components<Component::Warpgate>()) {
         const auto [cx, cy, _] = entitySystem.get_component<Component::Warpgate>(w).get_center();
         float dist = (cx - pos.x) * (cx - pos.x) + (cy - pos.y) * (cy - pos.y);

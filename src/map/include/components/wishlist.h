@@ -6,10 +6,10 @@
 #include <entt.hpp>
 
 namespace Component {
-struct Wishlist {
+  struct Wishlist {
     Wishlist() {
-        items.fill(entt::null);
+      items.fill(entt::null);
     }
-    std::array<Entity, RoseCommon::MAX_WISHLIST> items;
-};
+    std::array<Entity, RoseCommon::MAX_WISHLIST> items{};
+  };
 }

@@ -4,7 +4,7 @@
 #include <array>
 
 namespace Component {
-struct StatusEffects {
+  struct StatusEffects {
     std::array<RoseCommon::StatusEffect, RoseCommon::MAX_STATUS_EFFECTS> effects;
-};
+  };
 }

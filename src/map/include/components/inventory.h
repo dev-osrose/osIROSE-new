@@ -13,8 +13,8 @@ namespace Component {
     Inventory() {
       items.fill(entt::null);
     }
-    int64_t zuly;
-    std::array<Entity, RoseCommon::MAX_ITEMS> items;
+    int64_t zuly{};
+    std::array<Entity, RoseCommon::MAX_ITEMS> items{};
 
     template <typename T, size_t N, size_t L>
     using base_wrapper = Core::array_wrapper<T, N, L>;
@@ -107,23 +107,23 @@ namespace Component {
       return { items };
     }
 
-    constexpr const_wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
+    [[nodiscard]] constexpr const_wrapper<1, RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS> getEquipped() const {
       return { items };
     }
 
-    constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
+    [[nodiscard]] constexpr const_wrapper<1, RoseCommon::MAX_VISIBLE_ITEMS> getVisible() const {
       return { items };
     }
 
-    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() const {
+    [[nodiscard]] constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS, RoseCommon::MAX_INVENTORY> getInventory() const {
       return { items };
     }
 
-    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() const {
+    [[nodiscard]] constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY, RoseCommon::MAX_BULLET_TYPES> getBullets() const {
       return { items };
     }
 
-    constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() const {
+    [[nodiscard]] constexpr const_wrapper<RoseCommon::EquippedPosition::MAX_EQUIP_ITEMS + RoseCommon::MAX_INVENTORY + RoseCommon::MAX_BULLET_TYPES, RoseCommon::MAX_RIDING_ITEMS> getRidingItems() const {
       return { items };
     }
   };
