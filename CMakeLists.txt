@@ -72,16 +72,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
-#TODO: move these to find/build modules
-#set(SOL2_ROOT ${CMAKE_SUBMODULE_DIR}/sol2)
-#set(SPDLOG_ROOT ${CMAKE_SUBMODULE_DIR}/spdlog/include)
-#set(CXXOPT_ROOT ${CMAKE_SUBMODULE_DIR}/cxxopts/include)
-
 set(CONFIGURU ${CMAKE_SUBMODULE_DIR}/Configuru)
 set(VISIT_STRUCT ${CMAKE_SUBMODULE_DIR}/visit_struct/include)
 set(ASIO_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/asio/asio/include)
-#set(ENTT_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/entt/src/entt)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed

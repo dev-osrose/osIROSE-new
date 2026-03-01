@@ -1,22 +1,9 @@
 [submodule "3rdparty/asio"]
 	path = 3rdparty/asio
 	url = https://github.com/chriskohlhoff/asio.git
-[submodule "3rdparty/spdlog"]
-	path = 3rdparty/spdlog
-	url = https://github.com/gabime/spdlog.git
-	branch = v1.8.5
-[submodule "3rdparty/sol2"]
-	path = 3rdparty/sol2
-	url = https://github.com/ThePhD/sol2.git
-[submodule "3rdparty/cxxopts"]
-	path = 3rdparty/cxxopts
-	url = https://github.com/jarro2783/cxxopts.git
 [submodule "3rdparty/Configuru"]
 	path = 3rdparty/Configuru
 	url = https://github.com/emilk/Configuru
 [submodule "3rdparty/visit_struct"]
 	path = 3rdparty/visit_struct
 	url = https://github.com/cbeck88/visit_struct
-[submodule "3rdparty/entt"]
-	path = 3rdparty/entt
-	url = https://github.com/skypjack/entt
