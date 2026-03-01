@@ -149,6 +149,10 @@ void ParseCommandLine(int argc, char** argv)
       config.serverData().maxThreads = options["max_threads"].as<int>();
       Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
     }
+    else
+    {
+      Core::NetworkThreadPool::GetInstance();
+    }
 
     if( options.count("core_path") )
       config.serverData().core_dump_path = options["core_path"].as<std::string>();

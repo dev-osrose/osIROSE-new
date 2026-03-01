@@ -130,9 +130,9 @@ if (NOT LUA_FOUND)
   include(BuildLua)
 endif ()
 
-if (NOT ZLIB_FOUND)
-  include(Build-zlib)
-endif ()
+#if (NOT ZLIB_FOUND)
+#  include(Build-zlib)
+#endif ()
 
 if (NOT CURL_FOUND)
   include(BuildCURL)

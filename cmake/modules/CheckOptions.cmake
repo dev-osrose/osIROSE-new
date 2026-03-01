@@ -12,6 +12,7 @@ option(BUILD_LUA "Build Lua" ON)
 option(BUILD_API_DOC "Build doxygen documentation" OFF)
 option(ENABLE_ASAN "Enable address sanitizer" OFF)
 option(BUILD_MYSQL "Download and build mysql libs if not found on the system" ON)
+option(ENABLE_SSL "Enable TLS/SSL support via OpenSSL and asio::ssl (requires OpenSSL)" OFF)
 
 set(DEV_SETTING OFF)
 if(OFFICIAL_BUILD)
