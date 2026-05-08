@@ -74,7 +74,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CONFIGURU ${CMAKE_SUBMODULE_DIR}/Configuru)
 set(VISIT_STRUCT ${CMAKE_SUBMODULE_DIR}/visit_struct/include)
-set(ASIO_INCLUDE_DIR ${CMAKE_SUBMODULE_DIR}/asio/asio/include)
 
 #------------------------------------------------------------------------------
 # find all packages which are needed

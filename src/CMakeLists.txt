@@ -4,7 +4,6 @@ if( DISABLE_CRYPT )
 endif()
 
 include_directories(
-  SYSTEM ${ASIO_INCLUDE_DIR}
   SYSTEM ${CMAKE_THIRD_PARTY_INCLUDE_DIR}
   SYSTEM ${spdlog_SOURCE_DIR}/include
   SYSTEM ${sol2_SOURCE_DIR}/include
