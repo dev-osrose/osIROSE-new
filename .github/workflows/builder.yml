@@ -21,7 +21,7 @@ jobs:
       - name: Install MariaDB Client Library (Ubuntu/Debian)
         run: |
           sudo apt-get update
-          sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev
+          sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev g++-14
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -44,17 +44,25 @@ jobs:
       - name: Configure CMake
         shell: bash
         working-directory: ${{github.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF
+        env:
+          CC: gcc-14
+          CXX: g++-14
+        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF -DBUILD_TESTS=ON -DWITH_GTEST=ON
 
       - name: Build
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: cmake --build . --config $BUILD_TYPE
 
+      # ctest ran against zero registered tests for years, so a green run is
+      # not evidence on its own -- fail the job if nothing was discovered.
       - name: Test
         working-directory: ${{github.workspace}}/build
         shell: bash
-        run: ctest -C $BUILD_TYPE
+        run: |
+          ctest -C $BUILD_TYPE -N | tail -1
+          test "$(ctest -C $BUILD_TYPE -N | sed -n 's/^Total Tests: //p')" -gt 0
+          ctest -C $BUILD_TYPE --output-on-failure
 
       - name: Prepare Release
         working-directory: ${{github.workspace}}/build/bin
@@ -83,7 +91,7 @@ jobs:
     - name: Install MariaDB Client Library (Ubuntu/Debian)
       run: |
         sudo apt-get update
-        sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev
+        sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev g++-14
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{github.workspace}}/build
@@ -106,17 +114,25 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF
+      env:
+        CC: gcc-14
+        CXX: g++-14
+      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF -DBUILD_TESTS=ON -DWITH_GTEST=ON
 
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
 
+    # ctest ran against zero registered tests for years, so a green run is
+    # not evidence on its own -- fail the job if nothing was discovered.
     - name: Test
       working-directory: ${{github.workspace}}/build
       shell: bash
-      run: ctest -C $BUILD_TYPE
+      run: |
+        ctest -C $BUILD_TYPE -N | tail -1
+        test "$(ctest -C $BUILD_TYPE -N | sed -n 's/^Total Tests: //p')" -gt 0
+        ctest -C $BUILD_TYPE --output-on-failure
 
     - name: Prepare Release
       working-directory: ${{github.workspace}}/build/bin

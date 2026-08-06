@@ -36,10 +36,13 @@ add_executable(${PROJECT} ${SESSIONS_HEADER} ${SOURCES_MAIN} ${SOURCES_BASE} ${S
 
 target_include_directories(${PROJECT} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-add_dependencies(${PROJECT} sqlpp11::sqlite3)
+# Make sure the SQL header is created before the node server is built
+add_dependencies(${PROJECT} nodeSessionDB_generated)
+
+add_dependencies(${PROJECT} sqlpp23::sqlite3)
 target_link_libraries(${PROJECT}
   PUBLIC
-    sqlpp11::sqlite3
+    sqlpp23::sqlite3
     osirose_common::osirose_common
 )
 
@@ -61,5 +64,7 @@ install(TARGETS ${PROJECT}
         RUNTIME
           DESTINATION bin
           COMPONENT Runtime)
+
+generate_crash_symbols(${PROJECT})
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

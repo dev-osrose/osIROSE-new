@@ -15,25 +15,9 @@ set(SOURCES_HEADER
 set(SOURCES_BASE
     src/config.cpp
     src/connection.cpp
+    src/crash_report.cpp
     src/health_server.cpp
     )
-
-if (GCC OR CLANG)
-  list(APPEND SOURCES_HEADER
-      include/unix/crash_report.h
-      )
-
-  list(APPEND SOURCES_BASE
-      src/unix/crash_report.cpp
-      )
-else ()
-  list(APPEND SOURCES_HEADER
-      include/win32/crash_report.h
-      )
-  list(APPEND SOURCES_BASE
-      src/win32/crash_report.cpp
-      )
-endif ()
 
 
 if (WITH_MYSQL OR WITH_MARIADB)
@@ -99,17 +83,30 @@ if (MINGW)
       )
 endif ()
 
+# Crashpad stays PRIVATE: crash_report.h is pimpl'd, so nothing outside
+# crash_report.cpp needs crashpad's headers or libraries. The servers only need
+# crashpad_handler to exist next to them at runtime.
+if (WITH_CRASH_REPORTS)
+  target_compile_definitions(${PROJECT} PRIVATE ENABLE_CRASH_REPORTS)
+  target_link_libraries(${PROJECT}
+      PRIVATE
+      utils::crashpad
+      )
+  # Nothing links the handler, so make sure it is still built and copied.
+  add_dependencies(${PROJECT} crashpad_handler)
+endif ()
+
 if (WITH_MARIADB)
-  add_dependencies(${PROJECT} sqlpp11::mariadb)
+  add_dependencies(${PROJECT} sqlpp23::mariadb)
   target_link_libraries(${PROJECT}
       PUBLIC
-      sqlpp11::mariadb
+      sqlpp23::mariadb
       )
 elseif (WITH_MYSQL)
-  add_dependencies(${PROJECT} sqlpp11::mysql)
+  add_dependencies(${PROJECT} sqlpp23::mysql)
   target_link_libraries(${PROJECT}
       PUBLIC
-      sqlpp11::mysql
+      sqlpp23::mysql
       )
 endif ()
 

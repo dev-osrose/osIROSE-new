@@ -31,19 +31,19 @@ void ItemDatabase::initialize() {
       newItem.type = static_cast<ItemType>(static_cast<uint8_t>(row.type));
       newItem.subtype = static_cast<uint8_t>(row.subtype);
       newItem.id = static_cast<uint16_t>(row.id);
-      newItem.buy_price = static_cast<uint32_t>(row.priceBuy);
-      newItem.sell_price = static_cast<uint32_t>(row.priceSell);
+      newItem.buy_price = static_cast<uint32_t>(row.priceBuy.value_or(0));
+      newItem.sell_price = static_cast<uint32_t>(row.priceSell.value_or(0));
       newItem.weight = static_cast<uint16_t>(row.weight);
       newItem.is_stackable = newItem.type == ItemType::ITEM_CONSUMABLE || newItem.type == ItemType::ITEM_ETC || newItem.type == ItemType::ITEM_ETC2 || newItem.type == ItemType::ITEM_ETC_GEM;
-      newItem.atk = static_cast<uint16_t>(row.attack);
-      newItem.def = static_cast<uint16_t>(row.defense);
-      newItem.slots = static_cast<uint8_t>(row.slots);
-      newItem.level = static_cast<uint8_t>(row.equipLevel);
-      newItem.view_id = static_cast<uint32_t>(row.viewId);
-      
-      newItem.name = row.name;
-      newItem.desc = row.desc;
-      newItem.script = row.script;
+      newItem.atk = static_cast<uint16_t>(row.attack.value_or(0));
+      newItem.def = static_cast<uint16_t>(row.defense.value_or(0));
+      newItem.slots = static_cast<uint8_t>(row.slots.value_or(0));
+      newItem.level = static_cast<uint8_t>(row.equipLevel.value_or(0));
+      newItem.view_id = static_cast<uint32_t>(row.viewId.value_or(0));
+
+      newItem.name = std::string{row.name};
+      newItem.desc = std::string{row.desc};
+      newItem.script = std::string{row.script.value_or("")};
       
       _database[ItemDatabase::key_t{row.type, row.id}] = newItem;
     }

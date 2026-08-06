@@ -2,9 +2,9 @@
 
 #include "connectionpool.h"
 #include "osiroseDatabase.h"
-#include <sqlpp11/sqlpp11.h>
+#include <sqlpp23/sqlpp23.h>
 #if defined(ENABLE_MYSQL) || defined(ENABLE_MARIADB)
-#  include <sqlpp11/mysql/connection.h>
+#  include <sqlpp23/mysql/mysql.h>
 #  include "mysqlconnection.h"
 #endif
 

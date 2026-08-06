@@ -94,10 +94,10 @@ void cache_write_party_members(std::shared_ptr<Party> party) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::PartyMembersTable partyMembersTable{};
 
-  conn(sqlpp::remove_from(partyMembersTable).where(partyMembersTable.id == party->id));
+  conn(sqlpp::delete_from(partyMembersTable).where(partyMembersTable.id == party->id));
   auto insert = sqlpp::insert_into(partyMembersTable).columns(partyMembersTable.id, partyMembersTable.memberId);
   for (auto m : party-> members) {
-    insert.values.add(partyMembersTable.id = party->id, partyMembersTable.memberId = m);
+    insert.add_values(partyMembersTable.id = party->id, partyMembersTable.memberId = m);
   }
   conn(insert);
 }
@@ -107,7 +107,7 @@ void cache_remove_party(std::shared_ptr<Party> party) {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::PartyTable partyTable{};
   
-  conn(sqlpp::remove_from(partyTable).where(partyTable.id == party->id));
+  conn(sqlpp::delete_from(partyTable).where(partyTable.id == party->id));
 }
 
 std::shared_ptr<Party> PartyManager::get_party(uint32_t charId) {

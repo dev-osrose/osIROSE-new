@@ -11,6 +11,7 @@
 .vscode/*
 .idea/*
 config/*
+build-*
 
 # CMake files
 CMakeCache.txt

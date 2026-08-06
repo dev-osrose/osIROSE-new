@@ -27,7 +27,6 @@
 #include "srv_switch_server.h"
 
 using namespace RoseCommon;
-const auto now = ::sqlpp::chrono::floor<::std::chrono::seconds>(std::chrono::system_clock::now());
 
 namespace {
 constexpr size_t convertSlot(uint8_t slot) {
@@ -126,13 +125,13 @@ bool CCharClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
     const auto res = conn(
         sqlpp::select(sessions.userid, sessions.channelid)
             .from(sessions.join(accounts).on(sessions.userid == accounts.id))
-            .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format(
+            .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::text>(fmt::format(
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
     if (!res.empty()) {
       loginState_ = eSTATE::LOGGEDIN;
       const auto &row = res.front();
       userId_ = row.userid;
-      channelId_ = row.channelid;
+      channelId_ = row.channelid.value_or(0);
 
       sessionId_ = sessionID;
       
@@ -169,16 +168,16 @@ bool CCharClient::sendCharListReply() {
   characterRealId_.clear();
   for (const auto &row : conn(sqlpp::select(sqlpp::all_of(table)).from(table).where(table.userid == userId_))) {
     Packet::SrvCharListReply::CharInfo charInfo;
-    charInfo.set_name(row.name);
+    charInfo.set_name(std::string{row.name});
     charInfo.set_race(row.race);
     charInfo.set_level(row.level);
-    charInfo.set_job(row.job);
+    charInfo.set_job(row.job.value_or(0));
     charInfo.set_face(row.face);
     charInfo.set_hair(row.hair);
     auto _remaining_time = 0;  // Get time in seconds until delete
-  
-    if(row.deleteDate.is_null() == false)
-      _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(row.deleteDate.value()), now_c);
+
+    if(row.deleteDate.has_value())
+      _remaining_time = std::difftime(std::chrono::system_clock::to_time_t(*row.deleteDate), now_c);
   
     charInfo.set_remainSecsUntilDelete(_remaining_time);
     characterRealId_.push_back(row.id);
@@ -211,7 +210,7 @@ bool CCharClient::sendCharCreateReply(RoseCommon::Packet::CliCreateCharReq&& P) 
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   auto res = Packet::SrvCreateCharReply::OK;
   try {
-    conn->execute(query);
+    conn(query);
   } catch (sqlpp::exception &) {
     res = Packet::SrvCreateCharReply::NAME_TAKEN;
   }
@@ -252,7 +251,7 @@ bool CCharClient::sendCharDeleteReply(RoseCommon::Packet::CliDeleteCharReq&& P) 
   std::string query = fmt::format("CALL delete_character({}, '{}', {});", userId_, Core::escapeData(P.get_name().c_str()), delete_type);
 
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  conn->execute(query);
+  conn(query);
 
   // if time == -1, delete failed
   auto packet = Packet::SrvDeleteCharReply::create(time, P.get_name());
@@ -267,7 +266,7 @@ void CCharClient::onDisconnected() {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   const auto res = conn(sqlpp::select(table.online).from(table).where(table.id == userId_));
   if (!res.empty())
-    if (res.front().online) conn(sqlpp::remove_from(session).where(session.userid == userId_));
+    if (res.front().online.value_or(0)) conn(sqlpp::delete_from(session).where(session.userid == userId_));
   conn(sqlpp::update(table).set(table.online = 0).where(table.id == userId_));
 }
 
@@ -295,7 +294,7 @@ bool CCharClient::sendCharSelectReply(RoseCommon::Packet::CliSelectCharReq&& P) 
       fmt::format("CALL update_session_with_character({}, '{}');", sessionId_, characterRealId_[selected_id]);
 
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-  conn->execute(query);
+  conn(query);
 
   Core::CharacterTable table{};
   auto charRes = conn(sqlpp::select(table.map).from(table).where(table.id == characterRealId_[selected_id]));

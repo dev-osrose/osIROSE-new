@@ -1,20 +1,13 @@
 # -------- base --------
-FROM ubuntu:24.04 AS base
+# 26.04 LTS ships gcc 15.2 (sqlpp23 needs >= 14.2 for C++23) and cmake 4.2
+# (we need >= 3.31), so no third-party apt repo is required for either.
+FROM ubuntu:26.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    gpg \
-    wget \
-    && rm -rf /var/lib/apt/lists/* \
-    && test -f /usr/share/doc/kitware-archive-keyring/copyright || wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
-    && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ noble main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null \
-    && apt-get update \
-    && test -f /usr/share/doc/kitware-archive-keyring/copyright || rm /usr/share/keyrings/kitware-archive-keyring.gpg \
-    && apt-get install -y --no-install-recommends kitware-archive-keyring \
-    && apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     ninja-build \
@@ -45,7 +38,7 @@ RUN cmake -B build -G Ninja \
 RUN cmake --build build
 
 # -------- runtime --------
-FROM ubuntu:24.04 AS runtime
+FROM ubuntu:26.04 AS runtime
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -53,7 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libstdc++6 \
     libmariadb3 \
     libsqlite3-0 \
-    libreadline8 \
+    libreadline8t64 \
     ca-certificates \
     curl \
     && rm -rf /var/lib/apt/lists/*

@@ -34,6 +34,7 @@ services:
       - ./config/server.json:/app/bin/server.json:ro
     ports:
       - "${LOGIN_PORT}:29000"
+      - "29010:29010"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:30000/health" ]
       interval: 5s
@@ -56,6 +57,7 @@ services:
       - ./config/server.json:/app/bin/server.json:ro
     ports:
       - "${CHARACTER_PORT}:29100"
+      - "29110:29110"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:30100/health" ]
       interval: 5s

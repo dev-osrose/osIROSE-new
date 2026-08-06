@@ -129,13 +129,13 @@ bool CLoginClient::userLogin(eAUTH_TYPE AuthType, std::string authString) {
   try {
     const auto res = conn(sqlpp::select(table.id, table.password, table.access, table.active, table.online, table.loginCount)
               .from(table).where(table.accountType == "user" and table.username == username_
-                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", authString))));
+                  and table.password == sqlpp::verbatim<sqlpp::text>(fmt::format("SHA2(CONCAT('{}', salt), 256)", authString))));
 
         if (!res.empty()) {
             const auto &row = res.front();
             const auto ses = conn(sqlpp::select(session.id).from(session).where(session.userid == row.id));
-            if (!row.access.is_null())
-                access_rights_ = row.access;
+            if (row.access.has_value())
+                access_rights_ = *row.access;
 
             if (access_rights_ < 1) {
                 // Banned
@@ -143,12 +143,12 @@ bool CLoginClient::userLogin(eAUTH_TYPE AuthType, std::string authString) {
                 return false;
             }
 
-            if (!row.online && ses.empty()) {
+            if (!row.online.value_or(0) && ses.empty()) {
                 // Okay to login!!
                 userid_ = row.id;
                 session_id_ = std::time(nullptr);
                 conn(sqlpp::update(table).set(table.online = 1,
-                                              table.loginCount = row.loginCount + 1,
+                                              table.loginCount = row.loginCount.value_or(0) + 1,
                                               table.lastip = get_address(),
                                               table.lasttime = std::chrono::system_clock::now())
                      .where(table.id == userid_));
@@ -167,7 +167,7 @@ bool CLoginClient::userLogin(eAUTH_TYPE AuthType, std::string authString) {
                 if (config.loginServer().createAccountOnFail) {
                   logger_->debug("Creating account");
                     std::string query = fmt::format("CALL create_account('{}', '{}');", username_, authString);
-                    conn->execute(query);
+                    conn(query);
                 }
                 sendLoginReply(SrvLoginReply::UNKNOWN_ACCOUNT);
             }

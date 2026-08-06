@@ -118,4 +118,6 @@ install(TARGETS ${PROJECT}
           DESTINATION bin
           COMPONENT Runtime)
 
+generate_crash_symbols(${PROJECT})
+
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Servers")

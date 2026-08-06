@@ -174,26 +174,26 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
   const auto res = conn(sqlpp::select(table.id, table.name, table.state, table.charip, table.charport, table.worldip, table.worldport).from(table).where(table.id == P.get_sessionId()));
   if (!res.empty()) {
     const auto &row = res.front();
-    logger_->debug("id: '{}' name: '{}' state: '{}' charip: '{}' charport: '{}' worldip: '{}' worldport: '{}'", row.id.value(), row.name.value(), row.state.value(), row.charip.value(), row.charport.value(), row.worldip.value(), row.worldport.value());
-    
+    logger_->debug("id: '{}' name: '{}' state: '{}' charip: '{}' charport: '{}' worldip: '{}' worldport: '{}'", row.id, row.name.value_or(""), row.state, row.charip.value_or(""), row.charport.value_or(0), row.worldip.value_or(""), row.worldport.value_or(0));
+
     std::string ip = "";
     uint16_t port = 0;
     switch((uint16_t)row.state) {
       case 0: // Login server
       case 1: // Character server
       {
-        ip = row.charip;
-        port = row.charport;
+        ip = std::string{row.charip.value_or("")};
+        port = static_cast<uint16_t>(row.charport.value_or(0));
         break;
       }
       case 2: // Map server
       {
-        ip = row.worldip;
-        port = row.worldport;
+        ip = std::string{row.worldip.value_or("")};
+        port = static_cast<uint16_t>(row.worldport.value_or(0));
         break;
       }
       default:
-        logger_->debug("Some how we have an invalid state in the db? state: {}", row.state.value());
+        logger_->debug("Some how we have an invalid state in the db? state: {}", row.state);
         return false;
     }
     if(map_socket_) map_socket_->disconnect();

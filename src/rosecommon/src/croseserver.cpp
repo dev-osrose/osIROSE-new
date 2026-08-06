@@ -39,30 +39,30 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
 
     std::forward_list<std::shared_ptr<CRoseClient>>* list_ptr = nullptr;
     std::mutex* mutex_ptr = nullptr;
-    std::string inactive_log = "";
-    std::string timeout_log = "";
+    // The format strings have to be literals: spdlog checks them with a
+    // consteval constructor, and under C++23 a runtime format string would
+    // escalate the enclosing lambda to an immediate function.
+    const char* peer_kind = nullptr;
 
     if (IsISCServer() == false) {
       list_ptr = &client_list_;
       mutex_ptr = &client_list_mutex_;
-      inactive_log = "Client {} is inactive, removing the socket.";
-      timeout_log = "Client {} timed out.";
+      peer_kind = "Client";
     } else {
       list_ptr = &isc_list_;
       mutex_ptr = &isc_list_mutex_;
-      inactive_log = "Server {} is inactive, removing the socket.";
-      timeout_log = "Server {} timed out.";
+      peer_kind = "Server";
     }
 
     do {
       (*mutex_ptr).lock();
-        (*list_ptr).remove_if([this, inactive_log] (auto &i) {
+        (*list_ptr).remove_if([this, peer_kind] (auto &i) {
             std::chrono::steady_clock::time_point update =
               Core::Time::GetTickCount();
             auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(
                            update - i->get_update_time());
             if (i->is_active() == false && dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(30))  ) {
-              logger_->debug(inactive_log.c_str(), i->get_id());
+              logger_->debug("{} {} is inactive, removing the socket.", peer_kind, i->get_id());
               return true;
             }
             return false;
@@ -75,7 +75,7 @@ CRoseServer::CRoseServer(bool _iscServer) : CRoseSocket(std::make_unique<Core::C
                            update - client->get_update_time());
           if (dt > std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::minutes(5)) && client->is_active() == true)  // wait some time before time out
           {
-            logger_->info(timeout_log.c_str(), client->get_id());
+            logger_->info("{} {} timed out.", peer_kind, client->get_id());
             client->shutdown();
             // Do not delete them now. Do it next time.
           }

@@ -72,7 +72,7 @@ bool CCharISC::serverAuth(RoseCommon::Packet::CliLoginReq&& P) {
   try {
     const auto res = conn(sqlpp::select(table.id, table.password)
               .from(table).where(table.accountType == "system" and table.username == username_
-                  and table.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
+                  and table.password == sqlpp::verbatim<sqlpp::text>(fmt::format("SHA2(CONCAT('{}', salt), 256)", clientpass))));
 
         if (!res.empty()) {
           state_ = eSTATE::LOGGEDIN;

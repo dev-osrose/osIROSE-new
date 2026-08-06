@@ -26,7 +26,6 @@ if(MAKEFILES AND "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
   set(BUILD_TOOLS OFF CACHE BOOL "" FORCE)
   set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
   set(WITH_GTEST OFF CACHE BOOL "" FORCE )
-  set(WITH_GMOCK OFF CACHE BOOL "" FORCE )
   set(DEBUG OFF CACHE BOOL "" FORCE)
 endif()
 
@@ -57,7 +56,8 @@ add_linker_flags(/ignore:4075)
 add_compiler_flags(/wd4503)
 add_compiler_flags(/MP) # build with multi processors
 add_compiler_flags(/FS) # build with multi processors
-add_compiler_flags(/std:c++17)
+# The language standard comes from CMAKE_CXX_STANDARD; hardcoding it here
+# would override it.
 add_compiler_flags(/EHsc)
 add_compiler_flags(/bigobj)
 

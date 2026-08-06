@@ -1,6 +1,4 @@
 set(MYSQL_INSTALL_DIR ${CMAKE_THIRD_PARTY_DIR})
-set(CMAKE_INSTALL_PREFIX ${CMAKE_THIRD_PARTY_DIR})
-set(INSTALL_PLUGINDIR ${CMAKE_INSTALL_PREFIX})
 
 message(STATUS "Building MySQL since MySQL not found")
 
@@ -21,7 +19,7 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS NAMES MySQL
 )
 
-# sqlpp11 settings
+# sqlpp settings
 set(WITHOUT_SERVER ON)
 set(WITH_UNIT_TESTS OFF)
 

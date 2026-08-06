@@ -23,24 +23,23 @@ endif()
 
 option(BUILD_TOOLS "Build server tools" OFF)
 option(BUILD_TESTS "Build various unit tests." ${DEV_SETTING})
-option(WITH_CRASH_REPORTS "Enable crash dump generation" OFF)
+option(WITH_CRASH_REPORTS "Enable crash dump generation via Google Crashpad" OFF)
 option(WITH_GTEST "Add GTest support" ${DEV_SETTING})
-option(WITH_GMOCK "Add GMock support" ${DEV_SETTING})
 option(WITH_MYSQL "Use MySQL connection" OFF)
 option(WITH_MARIADB "Use MariaDB connection" ON)
 option(DEBUG "enable debug build" OFF)
 
 if(MINGW)
-  message(STATUS "MINGW doesn't support gtest, gmock, or breakpad. Disabling these features...")
+  # Crashpad's MinGW support needs an external MASM assembler (uasm/jwasm),
+  # which we do not require anywhere else in the build.
+  message(STATUS "MINGW doesn't support gtest or crashpad. Disabling these features...")
   set(BUILD_TESTS OFF)
   set(WITH_GTEST OFF)
-  set(WITH_GMOCK OFF)
   set(WITH_CRASH_REPORTS OFF)
 endif()
 
-if(NOT WITH_CRASH_REPORTS AND NOT BUILD_TESTS)
+if(NOT BUILD_TESTS)
   set(WITH_GTEST OFF)
-  set(WITH_GMOCK OFF)
 endif()
 
 if(BUILD_TESTS OR WITH_GTEST)

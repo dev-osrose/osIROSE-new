@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.31.0 FATAL_ERROR)
 project("osIROSE")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (CMAKE_CXX_COMPILER_LAUNCHER)
   set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
@@ -107,11 +108,6 @@ if (WITH_GTEST)
   add_definitions(-DWITH_GTEST)
 endif ()
 
-if (WITH_GTEST AND WITH_GMOCK)
-  find_package(GMock ${REQUIRED_IF_OPTION})
-  add_definitions(-DWITH_GMOCK)
-endif ()
-
 if (WITH_TRACING)
   add_definitions(-DWITH_TRACING)
 endif ()
@@ -138,12 +134,20 @@ if (NOT CURL_FOUND)
 endif ()
 
 include(Build-sqlite3)
-include(Build-sqlpp11)
+include(Build-sqlpp23)
 include(SQLPPGenerator)
 include(Build-osirose-common)
 
 if (NOT GTEST_FOUND AND WITH_GTEST)
   include(BuildGTest)
+endif ()
+
+# generate_crash_symbols() is called by the server targets whether or not crash
+# reports are on, so the module is always included and no-ops when disabled.
+include(crashpad-symbol-generation)
+
+if (WITH_CRASH_REPORTS)
+  include(Build-crashpad)
 endif ()
 
 #--------------------------------

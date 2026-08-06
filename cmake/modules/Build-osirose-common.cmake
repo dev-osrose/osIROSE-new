@@ -18,10 +18,13 @@ endif()
 #   -DFETCHCONTENT_SOURCE_DIR_OSIROSE_COMMON=/path/to/local/packets
 # on the CMake command line.
 # ---------------------------------------------------------------------------
+# SYSTEM demotes this project's headers to -isystem, so warnings coming out of
+# vendored third-party code (json.hpp) do not trip our own -Werror.
 FetchContent_Declare(
     osirose_common
     GIT_REPOSITORY https://github.com/dev-osrose/packets
     GIT_TAG idl-module-updates
+    SYSTEM
 )
 
 FetchContent_MakeAvailable(osirose_common)

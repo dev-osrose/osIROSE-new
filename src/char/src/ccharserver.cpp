@@ -306,7 +306,7 @@ void CCharServer::load_user(std::weak_ptr<CCharClient> client, uint32_t id) {
     if (charRes.empty()) {
         return;
     }
-    User user(client, charRes.front().name, id, charRes.front().map);
+    User user(client, std::string{charRes.front().name}, id, charRes.front().map);
     user.set_party(partys.get_party(id)); // we load the party if there is one for that character
 
     users.emplace(std::make_pair(id, user));

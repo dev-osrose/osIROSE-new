@@ -244,8 +244,8 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "NodeServer");
-    crash_reporter.set_url(config.serverData().crash_report_url);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "NodeServer",
+                                     config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     if(auto log = console.lock())
@@ -271,18 +271,22 @@ int main(int argc, char* argv[]) {
       config.serverData().externalIp = ip_addr;
     }
 
-    sqlpp::sqlite3::connection_config db_config;
-    db_config.path_to_database = ":memory:";
-    db_config.flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
+    auto db_config = std::make_shared<sqlpp::sqlite3::connection_config>();
+    db_config->path_to_database = ":memory:";
+    db_config->flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
 
     if(config.nodeServer().logLevel <= spdlog::level::level_enum::debug)
-      db_config.debug = true;
+      db_config->debug = sqlpp::debug_logger{{sqlpp::log_category::all},
+          [](sqlpp::log_category, const std::string& message) {
+            if(auto log = Core::CLog::GetLogger(Core::log_type::GENERAL).lock())
+              log->debug(message);
+          }};
 
-    connectionPoolMem.addConnector<NodeDB>([&db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
+    connectionPoolMem.addConnector<NodeDB>([db_config]() { return std::make_unique<sqlpp::sqlite3::connection>(db_config); });
     {
       auto conn = connectionPoolMem.getConnection<NodeDB>();
       NodeSessionsTable table{};
-      conn->execute(R"(CREATE TABLE sessions (
+      conn(std::string{R"(CREATE TABLE sessions (
   		  id int(10) NOT NULL,
   		  name varchar(64) DEFAULT NULL,
         state int(2) NOT NULL DEFAULT 0,
@@ -291,10 +295,10 @@ int main(int argc, char* argv[]) {
         worldip varchar(20) DEFAULT NULL,
         worldport int(20) DEFAULT NULL,
         PRIMARY KEY (`id`)
-  		))");
+  		))"});
 
   		// Clear the table everything
-  		conn(sqlpp::remove_from(table).unconditionally());
+  		conn(sqlpp::delete_from(table));
     }
 
     NodeServer loginServer;

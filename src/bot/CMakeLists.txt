@@ -34,18 +34,6 @@ if(WITH_MYSQL)
   target_link_libraries(${PROJECT} ${MYSQL_LIBRARIES})
 endif()
 
-#if(WITH_CRASH_REPORTS)
-#  if (NOT CRASHPAD)
-#    if(NOT Breakpad_FOUND)
-#      add_dependencies(${PROJECT} breakpad-build)
-#    endif()
-#  else()
-#    if(NOT CRASHPAD_FOUND)
-#      add_dependencies(${PROJECT} crashpad-build)
-#    endif()
-#  endif()
-#endif()
-
 add_dependencies(${PROJECT} RoseCommon)
 target_link_libraries(${PROJECT} RoseCommon osirose_common::osirose_common)
 target_link_libraries(${PROJECT} ${CMAKE_THREAD_LIBS_INIT})
@@ -55,10 +43,7 @@ if (MSVC)
   target_link_libraries(${PROJECT} wsock32.lib)
 endif()
 
-#if (NOT CRASHPAD)
-#  generate_symbol_data(${PROJECT})
-#else()
-#  generate_crashpad_symbol_data(${PROJECT})
-#endif()
+# The bot is a test client, not a server: it never starts a crash handler, so
+# there is nothing to symbolise dumps against.
 
 SET_PROPERTY(TARGET ${PROJECT}                PROPERTY FOLDER "Tools")

@@ -1,7 +1,6 @@
 message("-- using clang")
 
 add_compile_options(-pthread)
-add_compile_options(-frelaxed-template-template-args)
 add_compile_options(-Wno-keyword-compat -Wno-unused-command-line-argument)
 
 if(APPLE)

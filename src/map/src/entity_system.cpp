@@ -4,6 +4,7 @@
 #include "cmapserver.h"
 #include "enumerate.h"
 #include "itemdb.h"
+#include <ranges>
 #include "config.h"
 #include <entt.hpp>
 #include "components/basic_info.h"
@@ -557,11 +558,11 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
 
         self.registry.emplace<BasicInfo>(
             entity,
-            charRow.name, // name
+            std::string{charRow.name}, // name
             static_cast<uint16_t>(self.idManager.get_free_id()), // map id
             static_cast<uint32_t>(sessionId), // session id
             static_cast<int32_t>(sessionId), // team id
-            static_cast<uint16_t>(charRow.job), // job
+            static_cast<uint16_t>(charRow.job.value_or(0)), // job
             static_cast<uint32_t>(charRow.statPoints), // stat points
             static_cast<uint32_t>(charRow.skillPoints), // skill points
             static_cast<uint16_t>(charRow.pkFlag), // pk flag
@@ -642,7 +643,7 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
             entity,
             static_cast<uint16_t>(charRow.level), // level
             static_cast<uint64_t>(charRow.exp), // xp
-            static_cast<uint64_t>(charRow.penaltyExp) // penalty xp
+            static_cast<uint64_t>(charRow.penaltyExp.value_or(0)) // penalty xp
         );
 
         self.registry.emplace<Life>(
@@ -669,7 +670,7 @@ std::future<Entity> EntitySystem::load_character(uint32_t charId, uint16_t acces
         auto skillRes =
           conn(sqlpp::select(skillsTable.id, skillsTable.level).from(skillsTable).where(skillsTable.charId == charId));
         auto& skills = self.registry.emplace<Skills>(entity);
-        for (const auto& [i, row] : Core::enumerate(skillRes)) {
+        for (const auto& [i, row] : std::views::enumerate(skillRes)) {
             skills.skills[i].set_id(row.id);
             skills.skills[i].set_level(row.level);
         }
@@ -704,7 +705,6 @@ void EntitySystem::save_character(Entity character) {
         auto conn = Core::connectionPool.getConnection<Core::Osirose>();
         Core::CharacterTable characters{};
         Core::InventoryTable inventory{};
-        using sqlpp::parameter;
         using namespace Component;
 
         const auto& basicInfo = self.get_component<BasicInfo>(character);
@@ -798,7 +798,7 @@ void EntitySystem::save_character(Entity character) {
         }
 
         for (const auto it : to_delete) {
-            conn(sqlpp::remove_from(inventory).where(inventory.charId == basicInfo.charId and inventory.slot == it));
+            conn(sqlpp::delete_from(inventory).where(inventory.charId == basicInfo.charId and inventory.slot == it));
         }
         for (const auto it : to_update) {
             const auto& item = self.get_component<Component::Item>(inv.items[it]);

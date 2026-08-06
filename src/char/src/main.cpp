@@ -191,8 +191,8 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "CharServer");
-    crash_reporter.set_url(config.serverData().crash_report_url);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "CharServer",
+                                     config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
 

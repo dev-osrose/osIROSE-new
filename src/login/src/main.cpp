@@ -179,7 +179,7 @@ void ParseCommandLine(int argc, char** argv)
 
 void deleteStaleSessions() {
   using namespace std::chrono_literals;
-  using ::date::floor;
+  using std::chrono::floor;
   static std::chrono::steady_clock::time_point time{};
   if (Core::Time::GetTickCount() - time < 5min)
     return;
@@ -187,8 +187,13 @@ void deleteStaleSessions() {
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable session{};
   Core::AccountTable table{};
-  conn(sqlpp::update(table.join(session).on(table.id == session.userid)).set(table.online = 0).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
-  conn(sqlpp::remove_from(session).where(session.time < floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min));
+  const auto cutoff = floor<std::chrono::minutes>(std::chrono::system_clock::now()) - 5min;
+  // sqlpp23 dropped UPDATE ... JOIN, so the join becomes a sub-select. The
+  // sub-select reads `sessions` while we update `accounts`, so this stays a
+  // legal MySQL statement.
+  conn(sqlpp::update(table).set(table.online = 0)
+       .where(table.id.in(sqlpp::select(session.userid).from(session).where(session.time < cutoff))));
+  conn(sqlpp::delete_from(session).where(session.time < cutoff));
 }
 
 volatile std::sig_atomic_t gSignalStatus = 0;
@@ -201,8 +206,8 @@ int main(int argc, char* argv[]) {
     ParseCommandLine(argc, argv);
 
     Core::Config& config = Core::Config::getInstance();
-    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "LoginServer");
-    crash_reporter.set_url(config.serverData().crash_report_url);
+    Core::CrashReport crash_reporter(config.serverData().core_dump_path, "LoginServer",
+                                     config.serverData().crash_report_url);
 
     auto console = Core::CLog::GetLogger(Core::log_type::GENERAL);
     Core::CLog::SetLevel((spdlog::level::level_enum)config.loginServer().logLevel);

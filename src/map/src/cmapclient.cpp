@@ -165,7 +165,7 @@ bool CMapClient::changeCharacterReply([[maybe_unused]] RoseCommon::Packet::CliCh
   login_state_ = eSTATE::SWITCHING;
   auto conn = Core::connectionPool.getConnection<Core::Osirose>();
   Core::SessionTable sessions{};
-  conn(sqlpp::update(sessions).set(sessions.worldip = sqlpp::value_or_null(""), sessions.worldport = sqlpp::value_or_null(0)).where(sessions.id == sessionId_));
+  conn(sqlpp::update(sessions).set(sessions.worldip = "", sessions.worldport = 0).where(sessions.id == sessionId_));
   CRoseClient::send(Packet::SrvChanCharReply::create());
   return true;
 }
@@ -195,17 +195,17 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
     const auto res = conn(
         sqlpp::select(sessions.userid, sessions.charid, sessions.worldip, accounts.platinium, accounts.access)
             .from(sessions.join(accounts).on(sessions.userid == accounts.id))
-            .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::varchar>(fmt::format(
+            .where(sessions.id == sessionID and accounts.password == sqlpp::verbatim<sqlpp::text>(fmt::format(
                                                                          "SHA2(CONCAT('{}', salt), 256)", password))));
 
     if (!res.empty()) {
       logger_->debug("Client {} auth OK.", get_id());
       const auto& row = res.front();
       userid_ = row.userid;
-      charid_ = row.charid;
+      charid_ = row.charid.value_or(0);
       sessionId_ = sessionID;
 
-      auto entity_future = entitySystem->load_character(charid_, row.access, sessionID, weak_from_this());
+      auto entity_future = entitySystem->load_character(charid_, row.access.value_or(0), sessionID, weak_from_this());
       if (!entity_future.valid()) {
           logger_->error("Error, future on character loading is not valid!");
           CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::FAILED, 0));
@@ -227,7 +227,7 @@ bool CMapClient::joinServerReply(RoseCommon::Packet::CliJoinServerReq&& P) {
 
         CRoseClient::send(Packet::SrvJoinServerReply::create(Packet::SrvJoinServerReply::OK, basicInfo.id));
 
-        if (row.worldip.is_null()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
+        if (!row.worldip.has_value()) { // if there is already a world ip, the client is switching servers so we shouldn't send it the starting data
           // SEND PLAYER DATA HERE!!!!!!
 
           auto packet = Packet::SrvSelectCharReply::create();

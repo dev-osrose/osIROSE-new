@@ -1,7 +1,8 @@
 #pragma once
 
-#include <sqlpp11/mysql/mysql.h>
+#include <sqlpp23/mysql/mysql.h>
 
+#include <memory>
 #include <string>
 
 namespace Core {
