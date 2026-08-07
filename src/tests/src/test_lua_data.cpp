@@ -171,18 +171,34 @@ TEST_F(LuaFixture, AcceptsOnlyIntegerSubtypeArithmetic) {
 // BUG, pinned as current behavior rather than fixed here.
 //
 // get_data is `static_cast<T>(data[name])` on a sol proxy, with no check that
-// the key exists. A missing key trips sol2's panic handler, which prints to
-// stderr and throws sol::error. Nothing in the map server catches that, so one
-// typo'd key in any of the 573 files under scripts/ takes the process down.
+// the key exists. What that does depends on the build type, which is why the
+// block below is split in two.
 //
-// Catching it does not help either, which is the part worth knowing: the
+// sol2 gates its type checks on SOL_SAFE_GETTER, which defaults to the value of
+// SOL_DEBUG_BUILD -- and that is off whenever NDEBUG is defined
+// (cmake/platform/*/platform.cmake defines it for every non-Debug build). So:
+//
+//   * Debug   -- sol2 routes the read through check_get, which trips the panic
+//                handler. One typo'd key in any of the 573 files under scripts/
+//                takes the process down.
+//   * Release -- sol2 routes it through unchecked_get. Nothing dies: a missing
+//                key reads as 0, a float is truncated, a string is coerced.
+//
+// The Release half is the worse one. An NPC whose script misspells a stat gets
+// silently given zero for it, and there is no log line, no error and no crash
+// to connect the wrong behavior back to the script that caused it. The Debug
+// abort is the same defect, only loud.
+//
+// Catching the Debug panic does not help either, which is worth knowing: the
 // lua_State is left corrupt, and a caller that swallows the sol::error and
 // carries on dies later in the allocator ("free(): invalid size") with no
 // remaining connection to the script that caused it.
 //
 // The fix would be a sol::optional read with a default, but that changes the
 // value every existing script sees for keys it omits, so it is out of scope for
-// this test pass. This test is what such a fix has to flip.
+// this test pass. Both halves below are what such a fix has to flip.
+#if SOL_IS_ON(SOL_SAFE_GETTER)
+
 TEST(LuaDataDeathTest, MissingKeyAbortsTheProcess) {
   EXPECT_DEATH(
       {
@@ -242,6 +258,56 @@ TEST(LuaDataDeathTest, StringStatAbortsTheProcess) {
       },
       "expected number");
 }
+
+#else  // SOL_IS_OFF(SOL_SAFE_GETTER) -- any build with NDEBUG defined
+
+// The same four inputs against the unchecked getter. Nothing dies, and nothing
+// is reported: the values below are what the map server actually hands the rest
+// of the game in a release build.
+
+TEST(LuaDataUncheckedGetter, MissingKeyReadsAsZero) {
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  sol::table t = lua.create_table();
+  t["level"] = 5;
+  LuaData data(t);
+
+  // "level" is present; "hp" is not. A mob whose script misspells the key is
+  // given zero hit points, silently.
+  EXPECT_EQ(0, data.get_hp());
+}
+
+TEST(LuaDataUncheckedGetter, AFloatStatIsTruncatedSilently) {
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  sol::table t = lua.create_table();
+  t["hp"] = 10.0;
+  LuaData data(t);
+
+  EXPECT_EQ(10, data.get_hp());
+}
+
+TEST(LuaDataUncheckedGetter, FloatDivisionInAScriptIsTruncatedSilently) {
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  sol::environment env(lua, sol::create, lua.globals());
+  lua.script(R"(mob = { hp = 100 / 4 })", env);
+  LuaData data(env["mob"].get<sol::table>());
+
+  EXPECT_EQ(25, data.get_hp());
+}
+
+TEST(LuaDataUncheckedGetter, AStringStatIsCoercedSilently) {
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  sol::table t = lua.create_table();
+  t["hp"] = "100";
+  LuaData data(t);
+
+  EXPECT_EQ(100, data.get_hp());
+}
+
+#endif  // SOL_IS_ON(SOL_SAFE_GETTER)
 
 // ---------------------------------------------------------------------------
 // LuaApi::safe_lua_call

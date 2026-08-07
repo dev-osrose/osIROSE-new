@@ -27,7 +27,9 @@ Each file gets its own binary, so each gets its own process — which is what ma
 
 ## Tests that need extra build flags
 
-Two tests depend on a flag beyond `BUILD_TESTS`/`WITH_GTEST`.
+Two tests depend on a flag beyond `BUILD_TESTS`/`WITH_GTEST`. A third,
+`test_lua_data.cpp`, changes shape with `CMAKE_BUILD_TYPE` rather than a flag —
+see "Tests that document bugs" below.
 
 ### `ENABLE_SSL`
 
@@ -93,7 +95,7 @@ Several tests pin *current* behavior rather than correct behavior, because fixin
 
 - `test_inventory_layout.cpp` — `getEquipped()` spans one slot too many and overlaps the first inventory slot.
 - `test_id_manager.cpp` — `release_id` has no ownership check, and `_max_id` wraps silently at 65535.
-- `test_lua_data.cpp` — `LuaData::get_data` aborts the process on a missing key, a non-integer value, or a float-subtype value.
+- `test_lua_data.cpp` — `LuaData::get_data` is an unguarded `static_cast` whose behavior depends on the build type, because sol2 gates its type checks on `SOL_SAFE_GETTER`, which follows `NDEBUG`. In Debug it aborts the process on a missing key, a string, or a float-subtype value; in Release it silently reads a missing key as `0`, truncates floats and coerces strings. The file asserts both halves — `LuaDataDeathTest` in Debug, `LuaDataUncheckedGetter` in Release. The Release half is the more dangerous one: a script that misspells a stat produces a zeroed mob with no crash, no log line and nothing tying the result back to the script.
 - `test_exp_curve.cpp` — `get_exp_to_level` clamps at the top but not the bottom.
 - `test_escape_data.cpp` — `escapeData` does not escape backslashes and is not idempotent.
 - `test_config.cpp` — `Config::getInstance` ignores the filename after the first call, and its accessors hand out mutable references to singleton state.
