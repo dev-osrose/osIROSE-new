@@ -27,10 +27,38 @@ Each file gets its own binary, so each gets its own process — which is what ma
 
 ## Tests that need extra build flags
 
-`test_crash_report.cpp` is the only test whose coverage depends on a flag beyond
-`BUILD_TESTS`/`WITH_GTEST`. Crashpad is only compiled in with
+Two tests depend on a flag beyond `BUILD_TESTS`/`WITH_GTEST`.
+
+### `ENABLE_SSL`
+
+`test_ssl_config.cpp` covers `rose_ssl_config.h`, the bridge between the `[ssl]`
+block in `server.json` and the TLS setters on the sockets. It has a body for
+*both* build flavours rather than a skip: with `-DENABLE_SSL=ON` it asserts the
+field mapping, the SNI precedence and the `ApplySsl*Config` return values;
+without it, it asserts that the helpers really do compile down to no-ops that
+never touch the socket. `TestConfig`'s `[ssl]` cases are flag-independent —
+`Core::Config::Ssl` is a plain struct in every build.
+
+```bash
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DWITH_GTEST=ON -DENABLE_SSL=ON
+cmake --build build
+ctest --test-dir build --output-on-failure -R 'Config|SslConfig'
+```
+
+CI's `linux_debug` job builds with `-DENABLE_SSL=ON`; `linux_release` stays
+plaintext, so both sides of every `#ifdef USE_SSL` keep compiling.
+
+The TLS implementation itself — `enable_ssl_server`/`enable_ssl_client`, the
+handshake, the handshake timeout — lives in the upstream `packets` repo and is
+tested there, against certificates minted at runtime. See `tests/` in that
+repo; its CI runs the suite with `ENABLE_SSL=ON`.
+
+### `WITH_CRASH_REPORTS`
+
+Crashpad is only compiled in with
 `-DWITH_CRASH_REPORTS=ON`; without it `Core::CrashReport` is an empty stub, so
-two of the three tests `GTEST_SKIP()` rather than pass vacuously:
+two of the three tests in `test_crash_report.cpp` `GTEST_SKIP()` rather than
+pass vacuously:
 
 | Test | needs `WITH_CRASH_REPORTS=ON` |
 | --- | --- |
@@ -69,3 +97,9 @@ Several tests pin *current* behavior rather than correct behavior, because fixin
 - `test_exp_curve.cpp` — `get_exp_to_level` clamps at the top but not the bottom.
 - `test_escape_data.cpp` — `escapeData` does not escape backslashes and is not idempotent.
 - `test_config.cpp` — `Config::getInstance` ignores the filename after the first call, and its accessors hand out mutable references to singleton state.
+- `test_ssl_config.cpp` — `requireClientCert` is a server-side flag that `MakeSslClientConfig` also reads as "present our own certificate outbound"; the coupling is invisible at every call site.
+
+Upstream, in `packets/tests/`:
+
+- `test_ssl_config.cpp` — OpenSSL does not stat a `CApath`, so a typo'd `ssl.caPath` configures cleanly and then fails every handshake.
+- `test_ssl_handshake.cpp` — `DrainNetwork()` exists because `CNetwork_Asio`'s asynchronous handlers capture a raw `this` with no tie to the object's lifetime. `shutdown(true)` only *schedules* the cancelled operations' handlers, and the accept loop's re-arm (`cnetwork_asio.cpp:635`) then makes a virtual call on a destroyed object. The servers survive the same teardown only because `main()` sleeps for a second first.

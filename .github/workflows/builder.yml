@@ -18,10 +18,13 @@ jobs:
       - name: Get processor arch
         run: echo "PROCESSOR_ARCH=`uname -p`" >> $GITHUB_ENV
 
+      # libssl-dev is for ENABLE_SSL below. This job is the only one that
+      # compiles the USE_SSL branch; linux_release stays plaintext so both
+      # sides of every #ifdef keep building.
       - name: Install MariaDB Client Library (Ubuntu/Debian)
         run: |
           sudo apt-get update
-          sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev g++-14
+          sudo apt-get install -y libmariadb-dev mariadb-client libreadline-dev g++-14 libssl-dev
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -47,7 +50,7 @@ jobs:
         env:
           CC: gcc-14
           CXX: g++-14
-        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF -DBUILD_TESTS=ON -DWITH_GTEST=ON
+        run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DWITH_CRASH_REPORTS=OFF -DWITH_COVERAGE_REPORTS=OFF -DBUILD_TESTS=ON -DWITH_GTEST=ON -DENABLE_SSL=ON
 
       - name: Build
         working-directory: ${{github.workspace}}/build

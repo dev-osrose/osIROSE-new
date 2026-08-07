@@ -88,6 +88,18 @@ constexpr const char* kConfigJson = R"({
     "loginPort": 39001,
     "healthPort": 40001,
     "logLevel": 5
+  },
+  "ssl": {
+    "certificateChainFile": "/etc/rose/chain.pem",
+    "privateKeyFile": "/etc/rose/key.pem",
+    "privateKeyPassword": "keypass",
+    "dhParamsFile": "/etc/rose/dh.pem",
+    "clientCaFile": "/etc/rose/clients.pem",
+    "requireClientCert": true,
+    "caFile": "/etc/rose/ca.pem",
+    "caPath": "/etc/rose/ca.d",
+    "sniHostname": "isc.example.invalid",
+    "cipherList": "ECDHE-RSA-AES256-GCM-SHA384"
   }
 }
 )";
@@ -169,6 +181,8 @@ TEST(Config, ParsesBooleansInBothDirections) {
   EXPECT_TRUE(sd.autoConfigureAddress) << "default is false, file says true";
   EXPECT_TRUE(Core::Config::getInstance().loginServer().createAccountOnFail);
   EXPECT_FALSE(Core::Config::getInstance().charServer().instantCharDelete);
+  EXPECT_TRUE(Core::Config::getInstance().ssl().requireClientCert)
+      << "default is false, file says true";
 }
 
 TEST(Config, ParsesTheLoginServerSection) {
@@ -243,6 +257,44 @@ TEST(Config, ParsesTheNodeServerSection) {
   EXPECT_EQ(39001, node.loginPort);
   EXPECT_EQ(40001, node.healthPort);
   EXPECT_EQ(5, node.logLevel);
+}
+
+// The [ssl] section is a plain struct in every build -- config.h does not guard
+// it with USE_SSL -- so it parses whether or not OpenSSL was compiled in, and
+// this test needs no flag gating.
+TEST(Config, ParsesTheSslSection) {
+  auto& ssl = Core::Config::getInstance().ssl();
+
+  EXPECT_EQ("/etc/rose/chain.pem", ssl.certificateChainFile);
+  EXPECT_EQ("/etc/rose/key.pem", ssl.privateKeyFile);
+  EXPECT_EQ("keypass", ssl.privateKeyPassword);
+  EXPECT_EQ("/etc/rose/dh.pem", ssl.dhParamsFile);
+  EXPECT_EQ("/etc/rose/clients.pem", ssl.clientCaFile);
+  EXPECT_TRUE(ssl.requireClientCert);
+  EXPECT_EQ("/etc/rose/ca.pem", ssl.caFile);
+  EXPECT_EQ("/etc/rose/ca.d", ssl.caPath);
+  EXPECT_EQ("isc.example.invalid", ssl.sniHostname);
+  EXPECT_EQ("ECDHE-RSA-AES256-GCM-SHA384", ssl.cipherList);
+
+  // Every one of these defaults to the empty string, so without this the test
+  // could not tell parsing from not-parsing.
+  EXPECT_NE("", ssl.certificateChainFile);
+  EXPECT_NE("", ssl.privateKeyFile);
+}
+
+// The security-relevant half. verifyPeer and handshakeTimeoutSeconds are
+// deliberately absent from kConfigJson above, and the shipped
+// config/server.json is likewise free to omit them -- a deserialiser that
+// zeroed verifyPeer while parsing its siblings would leave every ISC link
+// encrypted but unauthenticated, and nothing at the call sites would show it.
+TEST(Config, SslKeysAbsentFromTheFileKeepTheirCompiledDefault) {
+  auto& ssl = Core::Config::getInstance().ssl();
+
+  EXPECT_TRUE(ssl.verifyPeer) << "default from config.h; the file does not set it";
+  EXPECT_EQ(10u, ssl.handshakeTimeoutSeconds) << "default from config.h";
+
+  // Sibling keys in the same partial section still parse.
+  EXPECT_EQ("/etc/rose/ca.pem", ssl.caFile);
 }
 
 // The documented footgun, asserted rather than left to the reader: the filename

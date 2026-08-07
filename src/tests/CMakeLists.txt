@@ -129,6 +129,7 @@ compile_unit_test(EscapeData src/test_escape_data.cpp)
 compile_unit_test(InventoryLayout src/test_inventory_layout.cpp)
 compile_unit_test(Config src/test_config.cpp)
 compile_unit_test(CrashReport src/test_crash_report.cpp)
+compile_unit_test(SslConfig src/test_ssl_config.cpp)
 
 # Core defines ENABLE_CRASH_REPORTS PRIVATE (crash_report.h is pimpl'd, so no
 # consumer needs crashpad's headers). The test does need to know which of the
@@ -140,6 +141,11 @@ endif ()
 
 target_include_directories(TestIdManager PRIVATE ${CMAKE_SOURCE_DIR}/src/map/include)
 target_include_directories(TestInventoryLayout PRIVATE ${CMAKE_SOURCE_DIR}/src/map/include)
+
+# rose_ssl_config.h is header-only, so the test needs the include path but not
+# the RoseCommon library. USE_SSL arrives on its own: Core links osirose_common
+# PUBLIC and osIROSE-common-core defines it PUBLIC when ENABLE_SSL is on.
+target_include_directories(TestSslConfig PRIVATE ${CMAKE_SOURCE_DIR}/src/rosecommon/include)
 
 # These reach translation units that transitively require the server lib.
 compile_test(ExpCurve src/test_exp_curve.cpp)
