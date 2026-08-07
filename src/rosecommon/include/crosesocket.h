@@ -77,6 +77,18 @@ class CRoseSocket {
   bool connect() {
     return socket_->connect();
   }
+#ifdef USE_SSL
+  /// Install the TLS material this socket terminates connections with.
+  /// Must be called before listen(); listen() fails without it.
+  bool enable_ssl_server(const Core::SslServerConfig& _cfg) {
+    return socket_->enable_ssl_server(_cfg);
+  }
+  /// Install the TLS material this socket connects out with.
+  /// Must be called before connect().
+  bool enable_ssl_client(const Core::SslClientConfig& _cfg) {
+    return socket_->enable_ssl_client(_cfg);
+  }
+#endif
   [[nodiscard]] bool is_active() const {
     return socket_->is_active();
   }

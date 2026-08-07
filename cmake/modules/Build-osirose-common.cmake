@@ -23,7 +23,7 @@ endif()
 FetchContent_Declare(
     osirose_common
     GIT_REPOSITORY https://github.com/dev-osrose/packets
-    GIT_TAG idl-module-updates
+    GIT_TAG idl-module-updates+ssl
     SYSTEM
 )
 

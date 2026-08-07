@@ -20,6 +20,7 @@
 #include "epackettype.h"
 #include "config.h"
 #include "nodesessions.h"
+#include "rose_ssl_config.h"
 
 using namespace RoseCommon;
 
@@ -152,6 +153,8 @@ bool NodeClient::clientLoginReq(Packet::CliLoginReq&& P) {
   if(map_socket_) map_socket_->disconnect();
   map_socket_ = std::make_unique<Core::CNetwork_Asio>();
   map_socket_->init(config.nodeServer().loginIp, config.nodeServer().loginPort);
+  if (!RoseCommon::ApplySslClientConfig(*map_socket_, config, config.nodeServer().loginIp,
+                                        "node -> login")) return false;
   map_socket_->connect();
   map_socket_->recv_data();
   
@@ -204,6 +207,8 @@ bool NodeClient::clientJoinServerReq(Packet::CliJoinServerReq&& P) {
     map_socket_->registerOnDisconnected(std::bind(&NodeClient::onServerDisconnected, this));
 
     map_socket_->init(ip, port);
+    if (!RoseCommon::ApplySslClientConfig(*map_socket_, Core::Config::getInstance(), ip,
+                                          "node -> world")) return false;
     map_socket_->connect();
     map_socket_->recv_data();
     

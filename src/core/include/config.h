@@ -129,6 +129,30 @@ class Config {
     uint16_t healthPort = 30000; // Same default as login server since it is basically a proxy
     uint8_t logLevel = 2;
   };
+  /// TLS material, shared by every server and ISC client in this deployment.
+  /// Only consulted in a build with ENABLE_SSL=ON; in that build a listening
+  /// server refuses to start without a usable certificate and key.
+  struct Ssl {
+    // Server side (listening sockets).
+    std::string certificateChainFile = "";
+    std::string privateKeyFile = "";
+    std::string privateKeyPassword = "";
+    std::string dhParamsFile = "";
+    std::string clientCaFile = "";
+    bool requireClientCert = false;
+    uint32_t handshakeTimeoutSeconds = 10;
+
+    // Client side (outbound ISC connections).
+    // verifyPeer defaults to true: a private deployment using its own CA must
+    // point caFile at that CA. Turning verification off leaves the connection
+    // encrypted but unauthenticated.
+    bool verifyPeer = true;
+    std::string caFile = "";
+    std::string caPath = "";
+    std::string sniHostname = "";
+
+    std::string cipherList = "";
+  };
   struct Configuration {
     Database database;
     ServerData serverData;
@@ -136,6 +160,7 @@ class Config {
     CharServer charServer;
     MapServer mapServer;
     NodeServer nodeServer;
+    Ssl ssl;
   };
 
  private:
@@ -148,6 +173,7 @@ class Config {
   CharServer& charServer() { return config_.charServer; }
   MapServer& mapServer() { return config_.mapServer; }
   NodeServer& nodeServer() { return config_.nodeServer; }
+  Ssl& ssl() { return config_.ssl; }
 
 };
 
@@ -159,6 +185,7 @@ VISITABLE_STRUCT(Core::Config::LoginServer, createAccountOnFail, clientPort, isc
 VISITABLE_STRUCT(Core::Config::CharServer, worldName, loginIp, loginUser, loginPassword, clientPort, iscPort, healthPort, instantCharDelete, accessLevel, logLevel);
 VISITABLE_STRUCT(Core::Config::MapServer, channelName, charIp, charUser, charPassword, clientPort, iscPort, healthPort, accessLevel, mapId, luaScript, logLevel);
 VISITABLE_STRUCT(Core::Config::NodeServer, loginIp, loginPort, healthPort, logLevel);
-VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer, nodeServer);
+VISITABLE_STRUCT(Core::Config::Ssl, certificateChainFile, privateKeyFile, privateKeyPassword, dhParamsFile, clientCaFile, requireClientCert, handshakeTimeoutSeconds, verifyPeer, caFile, caPath, sniHostname, cipherList);
+VISITABLE_STRUCT(Core::Config::Configuration, database, serverData, loginServer, charServer, mapServer, nodeServer, ssl);
 
 #endif /* !_CONFIG_H_ */

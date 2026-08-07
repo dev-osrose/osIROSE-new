@@ -25,6 +25,7 @@
 
 #include "cloginserver.h"
 #include "health_server.h"
+#include "rose_ssl_config.h"
 
 namespace {
 void DisplayTitle()
@@ -242,47 +243,64 @@ int main(int argc, char* argv[]) {
                 config.database().host,
                 config.database().port));
 
-    CLoginServer iscServer(true);
-    CLoginServer clientServer(false, &iscServer);
+    // The servers live in their own scope so they are destroyed *before*
+    // DeleteInstance() below. They hold a raw pointer to the thread pool and
+    // were constructed against the io_context it owns, so destroying them after
+    // the pool is a use-after-free in ~CNetwork_Asio.
+    {
+      CLoginServer iscServer(true);
+      CLoginServer clientServer(false, &iscServer);
 
-    clientServer.init(config.serverData().listenIp, config.loginServer().clientPort);
-    clientServer.listen();
-
-    iscServer.init(config.serverData().iscListenIp, config.loginServer().iscPort);
-    iscServer.listen();
-
-    Core::HealthServer healthServer;
-    healthServer.addCheck([&clientServer]() {
-      return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
-    });
-    healthServer.addCheck([&iscServer]() {
-      return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
-    });
-    healthServer.addCheck([]() {
-      try {
-        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-        return std::make_pair(true, "");
-      } catch (...) {
-        return std::make_pair(false, "DB connection is down");
+      clientServer.init(config.serverData().listenIp, config.loginServer().clientPort);
+      if (!RoseCommon::ApplySslServerConfig(clientServer, config, "login client")) return 1;
+      if (!clientServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the client port. Aborting.");
+        return 1;
       }
-    });
-    healthServer.start(config.loginServer().healthPort);
 
-    while (clientServer.is_active()) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      deleteStaleSessions();
-
-      if(gSignalStatus != 0) {
-        healthServer.setUnhealthy("Service shutting down");
-        clientServer.shutdown(true);
-        iscServer.shutdown(true);
+      iscServer.init(config.serverData().iscListenIp, config.loginServer().iscPort);
+      if (!RoseCommon::ApplySslServerConfig(iscServer, config, "login ISC")) return 1;
+      if (!iscServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the ISC port. Aborting.");
+        return 1;
       }
-    }
 
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+      Core::HealthServer healthServer;
+      healthServer.addCheck([&clientServer]() {
+        return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
+      });
+      healthServer.addCheck([&iscServer]() {
+        return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
+      });
+      healthServer.addCheck([]() {
+        try {
+          auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+          return std::make_pair(true, "");
+        } catch (...) {
+          return std::make_pair(false, "DB connection is down");
+        }
+      });
+      healthServer.start(config.loginServer().healthPort);
 
-    if(auto log = console.lock())
-      log->info( "Server shutting down..." );
+      while (clientServer.is_active()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        deleteStaleSessions();
+
+        if(gSignalStatus != 0) {
+          healthServer.setUnhealthy("Service shutting down");
+          clientServer.shutdown(true);
+          iscServer.shutdown(true);
+        }
+      }
+
+      std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+
+      if(auto log = console.lock())
+        log->info( "Server shutting down..." );
+    }   // servers destroyed here, while the io_context is still alive
+
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::shutdown();
     spdlog::drop_all();

@@ -27,6 +27,7 @@
 #include "ccharserver.h"
 #include "ccharisc.h"
 #include "health_server.h"
+#include "rose_ssl_config.h"
 
 namespace {
 void DisplayTitle()
@@ -227,57 +228,76 @@ int main(int argc, char* argv[]) {
               config.database().host,
               config.database().port));
 
-    CCharServer iscServer(true);
-    CCharServer clientServer(false, &iscServer);
-    CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
-    iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
-    iscClient->setLogin(true);
-    iscClient->connect();
-    iscClient->start_recv();
+    // The servers live in their own scope so they are destroyed *before*
+    // DeleteInstance() below. They hold a raw pointer to the thread pool and
+    // were constructed against the io_context it owns, so destroying them after
+    // the pool is a use-after-free in ~CNetwork_Asio.
+    {
+      CCharServer iscServer(true);
+      CCharServer clientServer(false, &iscServer);
+      CCharISC* iscClient = new CCharISC(&iscServer, std::make_unique<Core::CNetwork_Asio>());
+      iscClient->init(config.charServer().loginIp, config.loginServer().iscPort);
+      iscClient->setLogin(true);
+      if (!RoseCommon::ApplySslClientConfig(*iscClient, config, config.charServer().loginIp,
+                                            "char -> login ISC")) return 1;
+      iscClient->connect();
+      iscClient->start_recv();
 
-    clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
-    clientServer.listen();
-    clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
-
-    iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
-    iscServer.listen();
-
-    Core::HealthServer healthServer;
-    healthServer.addCheck([&clientServer]() {
-      return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
-    });
-    healthServer.addCheck([&iscServer]() {
-      return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
-    });
-    healthServer.addCheck([iscClient]() {
-      return std::make_pair(iscClient && iscClient->is_active(), "ISC Client (to Login Server) is not active");
-    });
-    healthServer.addCheck([]() {
-      try {
-        auto conn = Core::connectionPool.getConnection<Core::Osirose>();
-        return std::make_pair(true, "");
-      } catch (...) {
-        return std::make_pair(false, "DB connection is down");
+      clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
+      if (!RoseCommon::ApplySslServerConfig(clientServer, config, "char client")) return 1;
+      if (!clientServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the client port. Aborting.");
+        return 1;
       }
-    });
-    healthServer.start(config.charServer().healthPort);
+      clientServer.GetISCList().push_front(std::unique_ptr<RoseCommon::CRoseClient>(iscClient));
 
-    while (clientServer.is_active()) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      //updateSessions();
-
-      if(gSignalStatus != 0) {
-        healthServer.setUnhealthy("Service shutting down");
-        iscClient->shutdown(true);
-        clientServer.shutdown(true);
-        iscServer.shutdown(true);
+      iscServer.init(config.serverData().iscListenIp, config.charServer().iscPort);
+      if (!RoseCommon::ApplySslServerConfig(iscServer, config, "char ISC")) return 1;
+      if (!iscServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the ISC port. Aborting.");
+        return 1;
       }
-    }
 
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+      Core::HealthServer healthServer;
+      healthServer.addCheck([&clientServer]() {
+        return std::make_pair(clientServer.is_active(), "Client TCP server is not active");
+      });
+      healthServer.addCheck([&iscServer]() {
+        return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
+      });
+      healthServer.addCheck([iscClient]() {
+        return std::make_pair(iscClient && iscClient->is_active(), "ISC Client (to Login Server) is not active");
+      });
+      healthServer.addCheck([]() {
+        try {
+          auto conn = Core::connectionPool.getConnection<Core::Osirose>();
+          return std::make_pair(true, "");
+        } catch (...) {
+          return std::make_pair(false, "DB connection is down");
+        }
+      });
+      healthServer.start(config.charServer().healthPort);
 
-    if(auto log = console.lock())
-      log->info( "Server shutting down..." );
+      while (clientServer.is_active()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        //updateSessions();
+
+        if(gSignalStatus != 0) {
+          healthServer.setUnhealthy("Service shutting down");
+          iscClient->shutdown(true);
+          clientServer.shutdown(true);
+          iscServer.shutdown(true);
+        }
+      }
+
+      std::this_thread::sleep_for(std::chrono::seconds(1)); // we sleep to let all of the other threads time to catch up
+
+      if(auto log = console.lock())
+        log->info( "Server shutting down..." );
+    }   // servers destroyed here, while the io_context is still alive
+
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::shutdown();
     spdlog::drop_all();

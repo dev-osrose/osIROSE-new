@@ -27,6 +27,7 @@
 
 #include "connection.h"
 #include "health_server.h"
+#include "rose_ssl_config.h"
 
 
 namespace {
@@ -301,44 +302,66 @@ int main(int argc, char* argv[]) {
   		conn(sqlpp::delete_from(table));
     }
 
-    NodeServer loginServer;
-    NodeServer charServer;
-    NodeServer mapServer;
+    // The servers live in their own scope so they are destroyed *before*
+    // DeleteInstance() below. They hold a raw pointer to the thread pool and
+    // were constructed against the io_context it owns, so destroying them after
+    // the pool is a use-after-free in ~CNetwork_Asio.
+    {
+      NodeServer loginServer;
+      NodeServer charServer;
+      NodeServer mapServer;
 
-    loginServer.init(config.serverData().listenIp, config.loginServer().clientPort);
-    loginServer.listen();
-
-    charServer.init(config.serverData().listenIp, config.charServer().clientPort);
-    charServer.listen();
-
-    mapServer.init(config.serverData().listenIp, config.mapServer().clientPort);
-    mapServer.listen();
-
-    Core::HealthServer healthServer;
-    healthServer.addCheck([&loginServer]() {
-      return std::make_pair(loginServer.is_active(), "Login TCP server is not active");
-    });
-    healthServer.addCheck([&charServer]() {
-      return std::make_pair(charServer.is_active(), "Char TCP server is not active");
-    });
-    healthServer.addCheck([&mapServer]() {
-      return std::make_pair(mapServer.is_active(), "Map TCP server is not active");
-    });
-    healthServer.start(config.nodeServer().healthPort);
-
-    while (loginServer.is_active()) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-      if(gSignalStatus != 0) {
-        healthServer.setUnhealthy("Service shutting down");
-        loginServer.shutdown(true);
-        charServer.shutdown(true);
-        mapServer.shutdown(true);
+      loginServer.init(config.serverData().listenIp, config.loginServer().clientPort);
+      if (!RoseCommon::ApplySslServerConfig(loginServer, config, "node login")) return 1;
+      if (!loginServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the login port. Aborting.");
+        return 1;
       }
-    }
 
-    if(auto log = console.lock())
-      log->info( "Server shutting down..." );
+      charServer.init(config.serverData().listenIp, config.charServer().clientPort);
+      if (!RoseCommon::ApplySslServerConfig(charServer, config, "node char")) return 1;
+      if (!charServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the char port. Aborting.");
+        return 1;
+      }
+
+      mapServer.init(config.serverData().listenIp, config.mapServer().clientPort);
+      if (!RoseCommon::ApplySslServerConfig(mapServer, config, "node map")) return 1;
+      if (!mapServer.listen()) {
+        if(auto log = console.lock())
+          log->critical("Failed to listen on the map port. Aborting.");
+        return 1;
+      }
+
+      Core::HealthServer healthServer;
+      healthServer.addCheck([&loginServer]() {
+        return std::make_pair(loginServer.is_active(), "Login TCP server is not active");
+      });
+      healthServer.addCheck([&charServer]() {
+        return std::make_pair(charServer.is_active(), "Char TCP server is not active");
+      });
+      healthServer.addCheck([&mapServer]() {
+        return std::make_pair(mapServer.is_active(), "Map TCP server is not active");
+      });
+      healthServer.start(config.nodeServer().healthPort);
+
+      while (loginServer.is_active()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        if(gSignalStatus != 0) {
+          healthServer.setUnhealthy("Service shutting down");
+          loginServer.shutdown(true);
+          charServer.shutdown(true);
+          mapServer.shutdown(true);
+        }
+      }
+
+      if(auto log = console.lock())
+        log->info( "Server shutting down..." );
+    }   // servers destroyed here, while the io_context is still alive
+
     Core::NetworkThreadPool::DeleteInstance();
     spdlog::shutdown();
     spdlog::drop_all();

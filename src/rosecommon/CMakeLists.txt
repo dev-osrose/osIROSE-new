@@ -10,6 +10,7 @@ set( SOURCES_HEADER
   include/croseclient.h
   include/croseisc.h
   include/itemdb.h
+  include/rose_ssl_config.h
 )
 
 SET(SOURCES_BASE
