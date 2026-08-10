@@ -1,5 +1,5 @@
-# Only do this for windows platforms
-if(WIN32 OR MINGW)
+# Only do this for windows platforms, and only when the system search failed.
+if((WIN32 OR MINGW) AND NOT SQLite3_FOUND)
   message(STATUS "Building sqlite3 since sqlite3 was not found")
 
   include(FetchContent)
@@ -21,12 +21,14 @@ if(WIN32 OR MINGW)
           ${sqlite3_SOURCE_DIR}
   )
 
-  # Also provide namespaced alias (some projects expect this)
   if(NOT TARGET SQLite::SQLite3)
     add_library(SQLite::SQLite3 ALIAS SQLite3)
   endif()
 
-  # Make find_package(SQLite3) think it succeeded
+  if(NOT TARGET SQLite3::SQLite3)
+    add_library(SQLite3::SQLite3 ALIAS SQLite3)
+  endif()
+
   set(SQLite3_FOUND TRUE CACHE BOOL "" FORCE)
   set(SQLite3_LIBRARIES SQLite3 CACHE STRING "" FORCE)
   set(SQLite3_INCLUDE_DIR ${sqlite3_SOURCE_DIR} CACHE STRING "" FORCE)
