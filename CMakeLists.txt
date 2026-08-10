@@ -32,20 +32,38 @@ include(ExternalProject)
 include(FetchContent)
 include(CheckOptions)
 
-if (NOT CMAKE_BUILD_TYPE)
-  if (OFFICIAL_BUILD)
-    set(CMAKE_BUILD_TYPE RelWithDebInfo FORCE)
+# Multi-config generators pick the configuration at build time and ignore
+# CMAKE_BUILD_TYPE, so only supply a default for the single-config ones.
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  if (OFFICIAL_DEBUG_BUILD)
+    set(_default_build_type Debug)
+  elseif (OFFICIAL_BUILD)
+    set(_default_build_type RelWithDebInfo)
   elseif (DEBUG)
-    set(CMAKE_BUILD_TYPE Debug FORCE)
-    add_compiler_flag(-DSPDLOG_TR_ON)
+    set(_default_build_type Debug)
   else ()
-    set(CMAKE_BUILD_TYPE Release FORCE)
+    set(_default_build_type Release)
   endif ()
 
-  if (OFFICIAL_DEBUG_BUILD)
-    set(CMAKE_BUILD_TYPE Debug FORCE)
-  endif ()
+  # FORCE is only meaningful together with CACHE, and it is needed here because
+  # CMake pre-creates CMAKE_BUILD_TYPE as an empty cache entry. The bare
+  # `set(CMAKE_BUILD_TYPE Release FORCE)` this replaces instead stored the
+  # two-element list "Release;FORCE" in a normal variable, which matched no
+  # known configuration - so no CMAKE_<LANG>_FLAGS_<CONFIG> were ever applied
+  # and default builds came out with no optimisation flags at all.
+  set(CMAKE_BUILD_TYPE "${_default_build_type}" CACHE STRING "Choose the type of build" FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
+  message(STATUS "No build type specified - defaulting to ${CMAKE_BUILD_TYPE}")
+  unset(_default_build_type)
 endif ()
+
+# The Debug branch above used to also call `add_compiler_flag(-DSPDLOG_TR_ON)`.
+# That was dead in three separate ways: the macro is spelled add_compiler_flags
+# and is not even included until further down this file, the define is spelled
+# SPDLOG_TRACE_ON in the sources that test it, and the blocks it would enable
+# still use fmt::MemoryWriter, which fmt removed long before the version spdlog
+# pulls in now. Enabling it verbatim would break the build, so it is left out
+# until that tracing code is ported.
 
 set(BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 

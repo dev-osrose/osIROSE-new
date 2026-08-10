@@ -1,7 +1,6 @@
 message("-- using GCC")
 
 add_compiler_flags(DEBUG -O0 -fno-omit-frame-pointer -g3)
-add_compiler_flags(RELEASE -O2)
 add_compile_options(-Wno-packed-bitfield-compat)
 
 add_compile_options(-pipe)
