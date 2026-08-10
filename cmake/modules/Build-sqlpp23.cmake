@@ -28,3 +28,41 @@ set(BUILD_SQLCIPHER_CONNECTOR OFF)
 # touching BUILD_TESTING. Forcing that cache variable here would clobber the
 # one CTest sets for our own suite.
 FetchContent_MakeAvailable(sqlpp23)
+
+# On Windows there is no system sqlite3, so Build-sqlite3 compiles the
+# amalgamation into a target of our own and aliases it as SQLite3::SQLite3.
+# sqlpp23 links that alias into sqlpp23_sqlite3 and hands the target to
+# install(EXPORT Sqlpp23Targets); CMake then refuses to generate the export
+# because our SQLite3 target belongs to no export set. Nothing installs sqlpp23
+# (see EXCLUDE_FROM_ALL above), so scope the dependency to the build tree with
+# $<BUILD_LOCAL_INTERFACE:...>: targets in this build still link sqlite3, and
+# the export drops the mention. Unix keeps the plain link - there SQLite3 is an
+# imported target, which exports without complaint.
+if(TARGET SQLite3)
+  get_target_property(_sqlite3_is_imported SQLite3 IMPORTED)
+  if(NOT _sqlite3_is_imported)
+    foreach(_sqlpp23_target sqlpp23_sqlite3 sqlpp23_sqlite3_module)
+      if(NOT TARGET ${_sqlpp23_target})
+        continue()
+      endif()
+
+      get_target_property(_deps ${_sqlpp23_target} INTERFACE_LINK_LIBRARIES)
+      set(_local_deps "")
+      foreach(_dep IN LISTS _deps)
+        if(_dep MATCHES "^SQLite3?::SQLite3$")
+          set(_dep "$<BUILD_LOCAL_INTERFACE:${_dep}>")
+        endif()
+        list(APPEND _local_deps "${_dep}")
+      endforeach()
+
+      set_target_properties(${_sqlpp23_target} PROPERTIES
+        INTERFACE_LINK_LIBRARIES "${_local_deps}")
+    endforeach()
+
+    unset(_deps)
+    unset(_dep)
+    unset(_local_deps)
+    unset(_sqlpp23_target)
+  endif()
+  unset(_sqlite3_is_imported)
+endif()
