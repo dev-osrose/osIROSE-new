@@ -145,14 +145,13 @@ void ParseCommandLine(int argc, char** argv)
       config.serverData().autoConfigureUrl = options["url"].as<std::string>();
     }
 
+    // Only record the override here. The pool is created further down, once
+    // serverData().maxThreads holds its final value -- only the first
+    // GetInstance() sizes it, so creating it in this block left the configured
+    // maxThreads permanently ignored in favour of the default.
     if( options.count("max_threads") )
     {
       config.serverData().maxThreads = options["max_threads"].as<int>();
-      Core::NetworkThreadPool::GetInstance(config.serverData().maxThreads);
-    }
-    else
-    {
-      Core::NetworkThreadPool::GetInstance();
     }
 
     if( options.count("core_path") )
