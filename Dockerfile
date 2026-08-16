@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libreadline-dev \
     libmariadb-dev \
     libsqlite3-dev \
+    libssl-dev \
     python3-pyparsing \
     curl \
     && rm -rf /var/lib/apt/lists/* \
@@ -33,7 +34,9 @@ ARG BUILD_TYPE=Release
 COPY . .
 
 RUN cmake -B build -G Ninja \
-    -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    -DENABLE_SSL:BOOL=ON \
+    -DWITH_CRASH_REPORTS:BOOL=ON
 
 RUN cmake --build build
 
@@ -48,6 +51,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsqlite3-0 \
     libreadline8t64 \
     ca-certificates \
+    openssl \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

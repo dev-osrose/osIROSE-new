@@ -23,6 +23,8 @@
 #include "isccommon.h"
 #include <queue>
 #include <array>
+#include <chrono>
+#include <thread>
 
 namespace RoseCommon {
 
@@ -76,6 +78,22 @@ class CRoseSocket {
   }
   bool connect() {
     return socket_->connect();
+  }
+  /*!
+   * \brief Connect, then wait until the socket is ready to be read from.
+   *
+   * connect() returns as soon as the TCP session is up. In a TLS build the
+   * handshake is still in flight at that point, and asio's ssl::stream cannot
+   * service a read mid-handshake - posting one aborts the handshake with
+   * operation_aborted, which closes the transport without a close_notify and
+   * leaves the peer logging a truncated stream. Any caller that follows a
+   * connect with start_recv() must use this instead.
+   *
+   * \return false if the connect failed outright, or if the handshake had not
+   *         resolved within \a _timeout.
+   */
+  bool connect_and_wait(std::chrono::milliseconds _timeout = std::chrono::seconds(10)) {
+    return socket_->connect_and_wait(_timeout);
   }
 #ifdef USE_SSL
   /// Install the TLS material this socket terminates connections with.

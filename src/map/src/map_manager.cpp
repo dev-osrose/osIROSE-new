@@ -9,9 +9,12 @@ using namespace std::chrono_literals;
 
 MapManager::MapManager(std::vector<uint16_t> maps):
     isc_server_{true},
-    isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()},
-    maps_{maps.size()} {
+    isc_client_{&isc_server_, std::make_unique<Core::CNetwork_Asio>()} {
     Core::Config& config = Core::Config::getInstance();
+    // reserve(), not vector(count): the latter default-constructs that many
+    // entries with a null CMapServer*, which the emplace_back below then
+    // appends to - leaving half the vector null.
+    maps_.reserve(maps.size());
     //isc_server_.init(config.serverData().iscListenIp, config.mapServer().iscPort);
     //isc_server_.listen();
 
@@ -21,8 +24,10 @@ MapManager::MapManager(std::vector<uint16_t> maps):
     if (!RoseCommon::ApplySslClientConfig(isc_client_, config, config.mapServer().charIp,
                                           "map -> char ISC"))
         throw std::runtime_error("Could not configure TLS for the map -> char ISC connection");
-    isc_client_.connect();
-    isc_client_.start_recv();
+    // CRoseISC::onConnected() arms the read once the handshake has resolved,
+    // so there is no start_recv() call here.
+    if (!isc_client_.connect_and_wait())
+        throw std::runtime_error("Could not establish the ISC connection to the char server");
 
     for (uint16_t id : maps) {
         auto map = std::make_unique<CMapServer>(false, id, &isc_server_, &isc_client_);

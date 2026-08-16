@@ -152,6 +152,7 @@ bool CMapISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
 }
 
 void CMapISC::onConnected() {
+  CRoseISC::onConnected();  // marks the link connected for is_connected()
   Core::Config& config = Core::Config::getInstance();
   {
     auto packet = Packet::CliLoginReq::create(
@@ -198,6 +199,9 @@ void CMapISC::onConnected() {
 
 bool CMapISC::onShutdown() {
   logger_->trace("CMapISC::onDisconnected");
+  // Clears is_connected(); a successful reconnect below re-raises it through
+  // onConnected().
+  CRoseISC::onShutdown();
   bool result = true;
 
   if (is_active() == true) {

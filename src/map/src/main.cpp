@@ -203,9 +203,12 @@ int main(int argc, char* argv[]) {
     MapManager app(config.mapServer().mapId);
 
     Core::HealthServer healthServer;
-    // We don't have easy access to internal servers of MapManager without changing it,
-    // but we can check if MapManager itself is somewhat active if we had a method.
-    // For now, let's at least check DB.
+    healthServer.addCheck([&app]() {
+      return std::make_pair(app.are_maps_listening(), "One or more map listeners are not active");
+    });
+    healthServer.addCheck([&app]() {
+      return std::make_pair(app.is_isc_connected(), "ISC Client (to Char Server) is not connected");
+    });
     healthServer.addCheck([]() {
       try {
         auto conn = Core::connectionPool.getConnection<Core::Osirose>();

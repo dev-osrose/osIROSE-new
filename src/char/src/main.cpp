@@ -239,8 +239,14 @@ int main(int argc, char* argv[]) {
       iscClient->setLogin(true);
       if (!RoseCommon::ApplySslClientConfig(*iscClient, config, config.charServer().loginIp,
                                             "char -> login ISC")) return 1;
-      iscClient->connect();
-      iscClient->start_recv();
+      // Not connect(): a read posted while the TLS handshake is still in
+      // flight aborts it. CRoseISC::onConnected() arms the read once the
+      // handshake has resolved, so there is no start_recv() call here.
+      if (!iscClient->connect_and_wait()) {
+        if(auto log = console.lock())
+          log->critical("Failed to establish the ISC connection to the login server. Aborting.");
+        return 1;
+      }
 
       clientServer.init(config.serverData().listenIp, config.charServer().clientPort);
       if (!RoseCommon::ApplySslServerConfig(clientServer, config, "char client")) return 1;
@@ -267,7 +273,10 @@ int main(int argc, char* argv[]) {
         return std::make_pair(iscServer.is_active(), "ISC TCP server is not active");
       });
       healthServer.addCheck([iscClient]() {
-        return std::make_pair(iscClient && iscClient->is_active(), "ISC Client (to Login Server) is not active");
+        // is_connected(), not is_active(): the latter is raised by CRoseClient's
+        // constructor and so reports healthy on a link that never came up.
+        return std::make_pair(iscClient && iscClient->is_connected(),
+                              "ISC Client (to Login Server) is not connected");
       });
       healthServer.addCheck([]() {
         try {

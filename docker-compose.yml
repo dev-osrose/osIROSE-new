@@ -21,20 +21,78 @@ services:
       timeout: 3s
       retries: 10
 
+  # Docker marks a container unhealthy but never restarts it on its own, and
+  # depends_on: service_healthy only gates startup. Without this, the health
+  # checks report a dead ISC link accurately and nothing acts on it.
+  autoheal:
+    image: willfarrell/autoheal:latest
+    container_name: osirose-autoheal
+    environment:
+      # Watch only containers carrying `autoheal=true` (see the game services).
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+      AUTOHEAL_INTERVAL: 15
+      # Grace period after this container starts, so a stack-wide `up` is not
+      # cut short while the servers are still working through their own waits.
+      AUTOHEAL_START_PERIOD: 120
+      # MapServer does not act on SIGTERM - under Docker it exits 137, i.e. it
+      # had to be SIGKILLed - so a restart always costs the full timeout. Keep
+      # it short enough that recovery is not dominated by the wait.
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 15
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  certbot:
+    build:
+      context: ./docker/certbot
+      args:
+        ACME_DNS_IMAGE: ${ACME_DNS_IMAGE}
+    container_name: osirose-certbot
+    env_file:
+      - .env
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot_work:/var/lib/letsencrypt
+      - certs:/certs
+      # The whole directory, not the file: bind-mounting a missing file makes
+      # docker create a directory in its place, and the plugins that need no
+      # credentials file (route53) legitimately have none.
+      - ./secrets:/secrets:ro
+      # Needed by the deploy hook to restart the game servers after a renewal.
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      # The servers are built with ENABLE_SSL=ON and refuse to listen without a
+      # certificate, so they gate on this rather than racing the first issuance.
+      test: ["CMD-SHELL", "test -s /certs/fullchain.pem && test -s /certs/privkey.pem"]
+      interval: 10s
+      timeout: 3s
+      # Ten minutes of headroom for DNS-01 propagation on the first issuance.
+      retries: 60
+    restart: unless-stopped
+
   login:
     build:
       context: .
       target: login
+    container_name: osirose-login
+    labels:
+      # Restarted by the autoheal service when its health check starts failing.
+      autoheal: "true"
     depends_on:
       mariadb:
+        condition: service_healthy
+      certbot:
         condition: service_healthy
     env_file:
       - .env
     volumes:
       - ./config/server.json:/app/bin/server.json:ro
+      - certs:/certs:ro
     ports:
       - "${LOGIN_PORT}:29000"
-      - "29010:29010"
+    expose:
+      # ISC, server-to-server only - reachable by name on the compose network.
+      - "29010"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:30000/health" ]
       interval: 5s
@@ -46,18 +104,27 @@ services:
     build:
       context: .
       target: character
+    container_name: osirose-character
+    labels:
+      # Restarted by the autoheal service when its health check starts failing.
+      autoheal: "true"
     depends_on:
       mariadb:
         condition: service_healthy
       login:
         condition: service_healthy
+      certbot:
+        condition: service_healthy
     env_file:
       - .env
     volumes:
       - ./config/server.json:/app/bin/server.json:ro
+      - certs:/certs:ro
     ports:
       - "${CHARACTER_PORT}:29100"
-      - "29110:29110"
+    expose:
+      # ISC, server-to-server only - reachable by name on the compose network.
+      - "29110"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:30100/health" ]
       interval: 5s
@@ -69,10 +136,16 @@ services:
     build:
       context: .
       target: map
+    container_name: osirose-map
+    labels:
+      # Restarted by the autoheal service when its health check starts failing.
+      autoheal: "true"
     depends_on:
       mariadb:
         condition: service_healthy
       character:
+        condition: service_healthy
+      certbot:
         condition: service_healthy
     env_file:
       - .env
@@ -86,7 +159,13 @@ services:
     volumes:
       - ./config/server.json:/app/bin/server.json:ro
       - ./scripts:/app/bin/scripts:ro
+      - certs:/certs:ro
     restart: unless-stopped
 
 volumes:
   mariadb_data:
+  # ACME account, lineages and archive - losing this forces a re-issue.
+  letsencrypt:
+  certbot_work:
+  # Published certificate at fixed names, read-only for the game servers.
+  certs:

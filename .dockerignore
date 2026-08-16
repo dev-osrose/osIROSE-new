@@ -5,3 +5,4 @@ cmake-build-*/
 .gitignore
 docker-compose.dev.yml
 .env
+secrets/

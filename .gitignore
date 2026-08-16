@@ -11,7 +11,13 @@
 .vscode/*
 .idea/*
 config/*
+!config/server.example.json
 build-*
+
+# TLS / ACME - real credentials and issued material never get committed.
+secrets/*
+!secrets/dns.ini.example
+*.pem
 
 # CMake files
 CMakeCache.txt

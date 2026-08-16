@@ -32,9 +32,30 @@ CRoseISC::CRoseISC(std::unique_ptr<Core::INetwork> _sock) : CRoseClient(std::mov
 CRoseISC::~CRoseISC() {}
 
 void CRoseISC::onConnected() {
+  // Fired once the transport is up - after the TLS handshake in a TLS build.
+  connected_.store(true, std::memory_order_release);
+
+  // Arm the read here rather than at the call site, so that a link revived by
+  // reconnect() starts receiving again. Nothing else re-posts a read on that
+  // path: the error handler calls shutdown(), onShutdown() reconnects and
+  // returns false, and shutdown() then bails out without re-arming - which
+  // left the socket able to send but never receive.
+  //
+  // This is also the earliest safe point. Posting a read straight after
+  // connect() would race the TLS handshake still in flight and abort it.
+  start_recv();
 }
 
-bool CRoseISC::onShutdown() { return true; }
+void CRoseISC::onDisconnected() {
+  // Covers both a clean teardown and a failed handshake: connect_impl() calls
+  // OnDisconnected() on the error path too.
+  connected_.store(false, std::memory_order_release);
+}
+
+bool CRoseISC::onShutdown() {
+  connected_.store(false, std::memory_order_release);
+  return true;
+}
 
 bool CRoseISC::onReceived([[maybe_unused]] uint16_t socket_id_, uint16_t& packet_size_, uint8_t* buffer_) {
   bool rtnVal = true;

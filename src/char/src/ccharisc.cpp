@@ -154,6 +154,7 @@ bool CCharISC::serverRegister(RoseCommon::Packet::IscServerRegister&& P) {
 
 void CCharISC::onConnected() {
   logger_->trace("CCharISC::onConnected()");
+  CRoseISC::onConnected();  // marks the link connected for is_connected()
 
   Core::Config& config = Core::Config::getInstance();
   {
@@ -199,6 +200,9 @@ void CCharISC::onConnected() {
 
 bool CCharISC::onShutdown() {
   logger_->trace("CCharISC::onShutdown()");
+  // Clears is_connected(); a successful reconnect below re-raises it through
+  // onConnected().
+  CRoseISC::onShutdown();
   bool result = true;
 
   if (is_active() == true) {
